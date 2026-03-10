@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/backend/">
+    <Project Path="src/backend/DomusMind.Api/DomusMind.Api.csproj" />
+    <Project Path="src/backend/DomusMind.Application/DomusMind.Application.csproj" />
+    <Project Path="src/backend/DomusMind.Contracts/DomusMind.Contracts.csproj" />
+    <Project Path="src/backend/DomusMind.Domain/DomusMind.Domain.csproj" />
+    <Project Path="src/backend/DomusMind.Infrastructure/DomusMind.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/backend/">
+    <Project Path="tests/backend/DomusMind.Api.Tests/DomusMind.Api.Tests.csproj" />
+    <Project Path="tests/backend/DomusMind.Application.Tests/DomusMind.Application.Tests.csproj" />
+    <Project Path="tests/backend/DomusMind.Domain.Tests/DomusMind.Domain.Tests.csproj" />
+    <Project Path="tests/backend/DomusMind.Infrastructure.Tests/DomusMind.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>

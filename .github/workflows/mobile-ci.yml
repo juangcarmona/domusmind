@@ -1,0 +1,30 @@
+name: mobile-ci
+
+on:
+  pull_request:
+    paths:
+      - 'src/mobile/**'
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/mobile/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore src/mobile/DomusMind.Mobile/DomusMind.Mobile.csproj
+
+      - name: Build
+        run: dotnet build src/mobile/DomusMind.Mobile/DomusMind.Mobile.csproj -c Release
