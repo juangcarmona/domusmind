@@ -11,7 +11,7 @@ It is part of the main repository (not a submodule).
 ## Run locally
 
 ```bash
-cd /home/runner/work/Domus-Mind/Domus-Mind/src/web/public
+cd src/web/public
 npm ci
 npm run dev
 ```
@@ -19,7 +19,7 @@ npm run dev
 ## Build
 
 ```bash
-cd /home/runner/work/Domus-Mind/Domus-Mind/src/web/public
+cd src/web/public
 npm run build
 ```
 

@@ -11,8 +11,7 @@ function normalizePath(pathname: string): string {
     return '/';
   }
 
-  const withLeadingSlash = pathname.startsWith('/') ? pathname : `/${pathname}`;
-  return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
+  return pathname.startsWith('/') ? pathname : `/${pathname}`;
 }
 
 export function localeUrl(locale: Locale, pathname: string): string {

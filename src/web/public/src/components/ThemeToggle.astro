@@ -46,12 +46,7 @@
     }
   };
 
-  const storedTheme = getStoredTheme();
-  if (!storedTheme) {
-    applyTheme(media.matches ? 'dark' : 'light');
-  } else {
-    applyTheme(storedTheme);
-  }
+  getStoredTheme();
 
   button?.addEventListener('click', () => {
     const next = currentTheme() === 'dark' ? 'light' : 'dark';
