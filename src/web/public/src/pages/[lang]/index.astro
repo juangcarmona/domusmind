@@ -5,17 +5,18 @@ import SectionBlock from '@/components/SectionBlock.astro';
 import CtaBlock from '@/components/CtaBlock.astro';
 import { locales, normalizeLocale } from '@/lib/i18n';
 import { getContent } from '@/lib/content';
+import type { HomeContent, SectionContent } from '@/lib/content-types';
 
 export function getStaticPaths() {
   return locales.map((lang) => ({ params: { lang } }));
 }
 
 const locale = normalizeLocale(Astro.params.lang);
-const content = getContent(locale, 'home') as any;
+const content = getContent<HomeContent>(locale, 'home');
 ---
 <BaseLayout locale={locale} title={content.title} description={content.description} currentPath="/">
   <HeroSection {...content.hero} locale={locale} />
-  {content.sections.map((section: any) => <SectionBlock section={section} />)}
+  {content.sections.map((section: SectionContent) => <SectionBlock section={section} />)}
   <section class="cta-grid" aria-label="Call to action">
     <CtaBlock {...content.cta.developer} locale={locale} />
     <CtaBlock {...content.cta.family} locale={locale} />

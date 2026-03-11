@@ -3,19 +3,20 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionBlock from '@/components/SectionBlock.astro';
 import { locales, normalizeLocale, withLocale } from '@/lib/i18n';
 import { getContent } from '@/lib/content';
+import type { DocsContent, LinkItem, SectionContent } from '@/lib/content-types';
 
 export function getStaticPaths() {
   return locales.map((lang) => ({ params: { lang } }));
 }
 
 const locale = normalizeLocale(Astro.params.lang);
-const content = getContent(locale, 'docs') as any;
+const content = getContent<DocsContent>(locale, 'docs');
 ---
 <BaseLayout locale={locale} title={content.title} description={content.description} currentPath="/docs">
   <h1>{content.title}</h1>
-  {content.sections.map((section: any) => <SectionBlock section={section} />)}
+  {content.sections.map((section: SectionContent) => <SectionBlock section={section} />)}
   <ul>
-    {content.links.map((link: any) => (
+    {content.links.map((link: LinkItem) => (
       <li><a href={link.href}>{link.label}</a></li>
     ))}
   </ul>

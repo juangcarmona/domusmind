@@ -1,5 +1,13 @@
 ---
-const { title, body, primaryCta, secondaryCta, locale } = Astro.props;
+interface HeroProps {
+  title: string;
+  body: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta: { label: string; href: string };
+  locale: string;
+}
+
+const { title, body, primaryCta, secondaryCta, locale } = Astro.props as HeroProps;
 ---
 <section class="hero">
   <h1>DomusMind</h1>

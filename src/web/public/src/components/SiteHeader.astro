@@ -1,12 +1,13 @@
 ---
 import type { Locale } from '@/lib/i18n';
 import { withLocale } from '@/lib/i18n';
+import type { UiContent } from '@/lib/content-types';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import ThemeToggle from './ThemeToggle.astro';
 
 const { locale, ui, currentPath = '/' } = Astro.props as {
   locale: Locale;
-  ui: any;
+  ui: UiContent;
   currentPath?: string;
 };
 

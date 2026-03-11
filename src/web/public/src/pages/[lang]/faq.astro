@@ -2,18 +2,19 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { locales, normalizeLocale } from '@/lib/i18n';
 import { getContent } from '@/lib/content';
+import type { FaqContent } from '@/lib/content-types';
 
 export function getStaticPaths() {
   return locales.map((lang) => ({ params: { lang } }));
 }
 
 const locale = normalizeLocale(Astro.params.lang);
-const content = getContent(locale, 'faq') as any;
+const content = getContent<FaqContent>(locale, 'faq');
 ---
 <BaseLayout locale={locale} title={content.title} description={content.description} currentPath="/faq">
   <h1>{content.title}</h1>
   <dl class="faq-list">
-    {content.items.map((item: any) => (
+    {content.items.map((item) => (
       <>
         <dt>{item.q}</dt>
         <dd>{item.a}</dd>

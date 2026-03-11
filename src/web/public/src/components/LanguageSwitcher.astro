@@ -17,9 +17,17 @@ const localeNames: Record<Locale, string> = {
   id="locale-switcher"
   class="locale-select"
   aria-label={Astro.props.label ?? 'Language'}
-  onChange="window.location.href = this.value"
 >
   {locales.map((candidate) => (
     <option value={withLocale(candidate, path)} selected={candidate === locale}>{localeNames[candidate]}</option>
   ))}
 </select>
+
+<script is:inline>
+  const localeSwitcher = document.getElementById('locale-switcher');
+  localeSwitcher?.addEventListener('change', (event) => {
+    if (event.target instanceof HTMLSelectElement) {
+      window.location.href = event.target.value;
+    }
+  });
+</script>

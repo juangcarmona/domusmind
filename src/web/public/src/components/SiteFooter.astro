@@ -1,8 +1,9 @@
 ---
 import type { Locale } from '@/lib/i18n';
 import { withLocale } from '@/lib/i18n';
+import type { UiContent } from '@/lib/content-types';
 
-const { locale, ui } = Astro.props as { locale: Locale; ui: any };
+const { locale, ui } = Astro.props as { locale: Locale; ui: UiContent };
 ---
 <footer class="site-footer">
   <div>

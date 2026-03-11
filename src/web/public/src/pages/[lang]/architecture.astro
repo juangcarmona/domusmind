@@ -3,17 +3,18 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import SectionBlock from '@/components/SectionBlock.astro';
 import { locales, normalizeLocale } from '@/lib/i18n';
 import { getContent } from '@/lib/content';
+import type { SectionContent, SectionsPageContent } from '@/lib/content-types';
 
 export function getStaticPaths() {
   return locales.map((lang) => ({ params: { lang } }));
 }
 
 const locale = normalizeLocale(Astro.params.lang);
-const content = getContent(locale, 'architecture') as any;
+const content = getContent<SectionsPageContent>(locale, 'architecture');
 ---
 <BaseLayout locale={locale} title={content.title} description={content.description} currentPath="/architecture">
   <h1>{content.title}</h1>
   <p class="lead">API-first, domain-centric, event-driven infrastructure.</p>
   <pre class="diagram" aria-label="High level architecture diagram">Clients → API → Application Slices → Domain Model → Infrastructure</pre>
-  {content.sections.map((section: any) => <SectionBlock section={section} />)}
+  {content.sections.map((section: SectionContent) => <SectionBlock section={section} />)}
 </BaseLayout>

@@ -5,6 +5,7 @@ import { canonicalUrl, pageTitle } from '@/lib/seo';
 import SiteHeader from '@/components/SiteHeader.astro';
 import SiteFooter from '@/components/SiteFooter.astro';
 import { getContent } from '@/lib/content';
+import type { UiContent } from '@/lib/content-types';
 
 const {
   locale,
@@ -18,7 +19,7 @@ const {
   currentPath?: string;
 };
 
-const ui = getContent(locale, 'ui') as any;
+const ui = getContent<UiContent>(locale, 'ui');
 const canonical = canonicalUrl(locale, currentPath === '/' ? '' : currentPath);
 ---
 <!doctype html>

@@ -1,5 +1,7 @@
 ---
-const { section } = Astro.props as { section: any };
+import type { SectionContent } from '@/lib/content-types';
+
+const { section } = Astro.props as { section: SectionContent };
 ---
 <section class="section-block">
   <h2>{section.title}</h2>
