@@ -7,45 +7,26 @@ export interface UiContent {
   footer: Record<string, string>;
 }
 
-export interface LinkItem {
-  label: string;
-  href: string;
-}
-
-export interface SectionContent {
-  title: string;
-  body?: string;
-  list?: string[];
-}
-
-export interface HomeContent {
+export interface HomeFrontmatter {
   title: string;
   description: string;
-  hero: {
-    title: string;
-    body: string;
-    primaryCta: LinkItem;
-    secondaryCta: LinkItem;
-  };
-  sections: SectionContent[];
-  cta: {
-    developer: { title: string; body: string; label: string; href: string };
-    family: { title: string; body: string; label: string; href: string };
-  };
+  heroTitle: string;
+  heroBody: string;
+  primaryCtaLabel: string;
+  primaryCtaHref: string;
+  secondaryCtaLabel: string;
+  secondaryCtaHref: string;
+  developerCtaTitle: string;
+  developerCtaBody: string;
+  developerCtaLabel: string;
+  developerCtaHref: string;
+  familyCtaTitle: string;
+  familyCtaBody: string;
+  familyCtaLabel: string;
+  familyCtaHref: string;
 }
 
-export interface SectionsPageContent {
+export interface PageFrontmatter {
   title: string;
   description: string;
-  sections: SectionContent[];
-}
-
-export interface DocsContent extends SectionsPageContent {
-  links: LinkItem[];
-}
-
-export interface FaqContent {
-  title: string;
-  description: string;
-  items: Array<{ q: string; a: string }>;
 }

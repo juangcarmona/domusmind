@@ -16,5 +16,5 @@ export function normalizeLocale(value?: string): Locale {
 
 export function withLocale(locale: Locale, path: string): string {
   const normalized = path.startsWith('/') ? path : `/${path}`;
-  return `/${locale}${normalized === '/' ? '' : normalized}`;
+  return normalized === '/' ? `/${locale}/` : `/${locale}${normalized}`;
 }

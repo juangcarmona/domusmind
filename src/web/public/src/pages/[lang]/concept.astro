@@ -1,18 +1,22 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import SectionBlock from '@/components/SectionBlock.astro';
-import { locales, normalizeLocale } from '@/lib/i18n';
-import { getContent } from '@/lib/content';
-import type { SectionContent, SectionsPageContent } from '@/lib/content-types';
+import { locales, normalizeLocale, withLocale } from '@/lib/i18n';
+import { getPageContent } from '@/lib/content';
+import type { PageFrontmatter } from '@/lib/content-types';
 
 export function getStaticPaths() {
   return locales.map((lang) => ({ params: { lang } }));
 }
 
 const locale = normalizeLocale(Astro.params.lang);
-const content = getContent<SectionsPageContent>(locale, 'concept');
+const { content, sourceLocale } = getPageContent<PageFrontmatter>(locale, 'concept');
+if (sourceLocale !== locale) {
+  return Astro.redirect(withLocale(sourceLocale, '/concept'));
+}
+const { frontmatter } = content;
+const Content = content.Content as unknown as () => unknown;
 ---
-<BaseLayout locale={locale} title={content.title} description={content.description} currentPath="/concept">
-  <h1>{content.title}</h1>
-  {content.sections.map((section: SectionContent) => <SectionBlock section={section} />)}
+<BaseLayout locale={locale} title={frontmatter.title} description={frontmatter.description} currentPath="/concept">
+  <h1>{frontmatter.title}</h1>
+  <Content />
 </BaseLayout>

@@ -1,11 +1,11 @@
 ---
 import '@/styles/global.css';
 import type { Locale } from '@/lib/i18n';
-import { canonicalUrl, pageTitle } from '@/lib/seo';
+import { canonicalUrl, localeUrl, pageTitle } from '@/lib/seo';
 import SiteHeader from '@/components/SiteHeader.astro';
 import SiteFooter from '@/components/SiteFooter.astro';
-import { getContent } from '@/lib/content';
-import type { UiContent } from '@/lib/content-types';
+import { getUiContent } from '@/lib/content';
+import { locales } from '@/lib/i18n';
 
 const {
   locale,
@@ -19,8 +19,8 @@ const {
   currentPath?: string;
 };
 
-const ui = getContent<UiContent>(locale, 'ui');
-const canonical = canonicalUrl(locale, currentPath === '/' ? '' : currentPath);
+const ui = getUiContent(locale);
+const canonical = canonicalUrl(locale, currentPath);
 ---
 <!doctype html>
 <html lang={locale}>
@@ -34,12 +34,19 @@ const canonical = canonicalUrl(locale, currentPath === '/' ? '' : currentPath);
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content="https://domusmind.org/og/default.svg" />
     <link rel="canonical" href={canonical} />
+    {locales.map((candidate) => (
+      <link rel="alternate" hreflang={candidate} href={localeUrl(candidate, currentPath)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={localeUrl('en', currentPath)} />
     <link rel="icon" href="/favicon.svg" />
     <title>{pageTitle(title)}</title>
     <script is:inline>
       (() => {
         const storageKey = 'domusmind-theme';
-        const stored = localStorage.getItem(storageKey);
+        let stored = null;
+        try {
+          stored = localStorage.getItem(storageKey);
+        } catch {}
         const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const theme = stored || (systemDark ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', theme);
