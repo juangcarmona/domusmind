@@ -1,0 +1,8 @@
+---
+const { title, body, label, href, locale } = Astro.props;
+---
+<article class="cta-card">
+  <h3>{title}</h3>
+  <p>{body}</p>
+  <a class="button" href={`/${locale}${href}`}>{label}</a>
+</article>

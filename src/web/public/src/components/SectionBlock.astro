@@ -1,0 +1,12 @@
+---
+const { section } = Astro.props as { section: any };
+---
+<section class="section-block">
+  <h2>{section.title}</h2>
+  {section.body && <p>{section.body}</p>}
+  {section.list && (
+    <ul>
+      {section.list.map((item: string) => <li>{item}</li>)}
+    </ul>
+  )}
+</section>

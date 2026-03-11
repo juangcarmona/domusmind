@@ -1,0 +1,13 @@
+{
+  "title": "Architecture",
+  "description": "Domain-centric and API-first technical architecture.",
+  "sections": [
+    { "title": "Domain-driven architecture", "body": "DomusMind is domain-centric: technology and interfaces are secondary to household invariants and business concepts." },
+    { "title": "Bounded contexts", "body": "Core contexts include Family, Responsibilities, Calendar, Tasks, Properties, Food, Pets, and Administration." },
+    { "title": "Vertical slices", "body": "Capabilities are delivered through vertical slices that include request, validation, application logic, persistence interaction, and API endpoint." },
+    { "title": "Command and query model", "body": "Application behavior uses command/query separation to keep write-side intent and read-side views explicit." },
+    { "title": "Domain events", "body": "Meaningful changes such as MemberAdded or RoutineTriggered are represented as events for loose coupling and collaboration." },
+    { "title": "Modular monolith", "body": "The current execution model is modular monolith, enabling strong boundaries while keeping operational complexity manageable." },
+    { "title": "API-first platform", "body": "Web, mobile, messaging, and automations interact through a capability-oriented API, not direct database exposure." }
+  ]
+}

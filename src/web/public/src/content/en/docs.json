@@ -1,0 +1,15 @@
+{
+  "title": "Documentation",
+  "description": "Entry point to technical documentation.",
+  "sections": [
+    { "title": "Vision and mission", "body": "Purpose, mission, and product principles." },
+    { "title": "Architecture", "body": "Domain model, bounded contexts, slices, events, and interfaces." },
+    { "title": "Domain", "body": "Household concepts, ubiquitous language, and context map." },
+    { "title": "Roadmap", "body": "Delivery phases from foundation through intelligence." }
+  ],
+  "links": [
+    { "label": "Repository Documentation", "href": "https://github.com/juangcarmona/Domus-Mind/tree/main/docs" },
+    { "label": "Architecture Docs", "href": "https://github.com/juangcarmona/Domus-Mind/tree/main/docs/03_architecture" },
+    { "label": "Domain Docs", "href": "https://github.com/juangcarmona/Domus-Mind/tree/main/docs/04_domain" }
+  ]
+}

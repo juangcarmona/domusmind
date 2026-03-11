@@ -1,0 +1,8 @@
+{
+  "title": "Domain Model",
+  "description": "Operational structure of household life.",
+  "sections": [
+    { "title": "Core entities", "list": ["Family", "Member", "Responsibility Domain", "Event", "Timeline", "Task", "Routine", "Property", "Document", "Inventory", "Meal Planning", "Pets"] },
+    { "title": "System view", "body": "The model represents people, obligations, assets, logistics, and time as coherent state with explicit ownership." }
+  ]
+}

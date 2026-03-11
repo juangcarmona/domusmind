@@ -1,0 +1,40 @@
+{
+  "title": "DomusMind",
+  "description": "Open household infrastructure that models and coordinates family operations.",
+  "hero": {
+    "title": "The Operating System for Family Life",
+    "body": "DomusMind turns the invisible cognitive load of household coordination into shared operational infrastructure.",
+    "primaryCta": { "label": "Read the Manifesto", "href": "/manifesto" },
+    "secondaryCta": { "label": "Join the Project", "href": "/community" }
+  },
+  "sections": [
+    {
+      "title": "The Problem",
+      "body": "Modern households run complex systems, but coordination usually lives inside one person’s head. This creates stress, imbalance, and nonstop context switching."
+    },
+    {
+      "title": "What DomusMind Is",
+      "body": "DomusMind is not a task app, calendar app, budget tool, or grocery list. Those tools manage fragments. DomusMind models the household system itself."
+    },
+    {
+      "title": "Household Model",
+      "list": ["Family", "Members", "Responsibilities", "Timeline", "Events", "Tasks", "Routines", "Documents", "Properties", "Inventory", "Pets", "Food"]
+    },
+    {
+      "title": "How It Works",
+      "list": ["1. Capture", "2. Model", "3. Coordinate", "4. Anticipate", "5. Automate"]
+    },
+    {
+      "title": "Architecture Credibility",
+      "list": ["API-first platform", "Domain-centric architecture", "Event-driven collaboration", "Bounded contexts", "Self-hostable infrastructure"]
+    },
+    {
+      "title": "Open Infrastructure Movement",
+      "body": "Families deserve infrastructure. Household data should belong to the family. DomusMind is open household infrastructure built in the open."
+    }
+  ],
+  "cta": {
+    "developer": { "title": "For developers", "body": "Explore architecture, domain, and contribution paths.", "href": "/architecture", "label": "Explore Architecture" },
+    "family": { "title": "For families", "body": "Follow the project and become an early adopter.", "href": "/community", "label": "Follow the Project" }
+  }
+}

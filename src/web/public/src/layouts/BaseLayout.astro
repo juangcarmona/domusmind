@@ -1,0 +1,55 @@
+---
+import '@/styles/global.css';
+import type { Locale } from '@/lib/i18n';
+import { canonicalUrl, pageTitle } from '@/lib/seo';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import { getContent } from '@/lib/content';
+
+const {
+  locale,
+  title,
+  description,
+  currentPath = '/',
+} = Astro.props as {
+  locale: Locale;
+  title: string;
+  description: string;
+  currentPath?: string;
+};
+
+const ui = getContent(locale, 'ui') as any;
+const canonical = canonicalUrl(locale, currentPath === '/' ? '' : currentPath);
+---
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={pageTitle(title)} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content="https://domusmind.org/og/default.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" />
+    <title>{pageTitle(title)}</title>
+    <script is:inline>
+      (() => {
+        const storageKey = 'domusmind-theme';
+        const stored = localStorage.getItem(storageKey);
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (systemDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <SiteHeader locale={locale} ui={ui} currentPath={currentPath} />
+    <main>
+      <slot />
+    </main>
+    <SiteFooter locale={locale} ui={ui} />
+  </body>
+</html>

@@ -1,0 +1,26 @@
+<button class="icon-button" type="button" id="theme-toggle" aria-label={Astro.props.label ?? 'Toggle theme'}>
+  <span aria-hidden="true" id="theme-icon">◐</span>
+</button>
+
+<script is:inline>
+  const storageKey = 'domusmind-theme';
+  const root = document.documentElement;
+  const button = document.getElementById('theme-toggle');
+  const icon = document.getElementById('theme-icon');
+
+  const currentTheme = () => root.getAttribute('data-theme') || 'light';
+  const applyIcon = () => {
+    if (icon) {
+      icon.textContent = currentTheme() === 'dark' ? '☀' : '☾';
+    }
+  };
+
+  button?.addEventListener('click', () => {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem(storageKey, next);
+    applyIcon();
+  });
+
+  applyIcon();
+</script>

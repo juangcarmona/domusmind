@@ -1,0 +1,18 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SectionBlock from '@/components/SectionBlock.astro';
+import { locales, normalizeLocale } from '@/lib/i18n';
+import { getContent } from '@/lib/content';
+
+export function getStaticPaths() {
+  return locales.map((lang) => ({ params: { lang } }));
+}
+
+const locale = normalizeLocale(Astro.params.lang);
+const content = getContent(locale, 'community') as any;
+---
+<BaseLayout locale={locale} title={content.title} description={content.description} currentPath="/community">
+  <h1>{content.title}</h1>
+  {content.sections.map((section: any) => <SectionBlock section={section} />)}
+  <p><a class="button" href="https://github.com/juangcarmona/Domus-Mind">GitHub</a></p>
+</BaseLayout>
