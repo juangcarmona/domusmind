@@ -84,6 +84,7 @@ const links = [
   });
 
   navMenu?.addEventListener('click', (event) => {
+    if (!mobileMediaQuery.matches) return;
     const target = event.target;
     if (target instanceof Element && target.closest('a')) {
       closeNavMenu();
