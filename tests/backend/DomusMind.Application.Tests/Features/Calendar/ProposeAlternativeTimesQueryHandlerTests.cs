@@ -92,7 +92,7 @@ public sealed class ProposeAlternativeTimesQueryHandlerTests
             new ProposeAlternativeTimesQuery(familyId.Value, evt.Id.Value, 2, Guid.NewGuid()),
             CancellationToken.None);
 
-        result.Suggestions.Count.Should().BeLessOrEqualTo(2);
+        result.Suggestions.Count.Should().BeLessThanOrEqualTo(2);
     }
 
     [Fact]
