@@ -4,7 +4,7 @@
 
 This document defines the external HTTP API conventions for DomusMind.
 
-The API is the main system boundary for clients and integrations. It exposes domain capabilities through REST endpoints backed by controllers. 
+The API is the main system boundary for clients and integrations. It exposes domain capabilities through REST endpoints backed by controllers.
 
 ---
 
@@ -29,7 +29,7 @@ Minimal APIs are not the default style.
 - handlers execute application behavior
 - the API is stateless
 - read endpoints should use efficient projection queries
-- write endpoints should target one command and one aggregate boundary 
+- write endpoints should target one command and one aggregate boundary
 
 ---
 
@@ -55,6 +55,34 @@ Rules:
 
 ---
 
+## Current Authentication Surface
+
+DomusMind currently exposes built-in local authentication endpoints.
+
+Implemented endpoints:
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/auth/refresh`
+- `POST /api/auth/logout`
+- `POST /api/auth/change-password`
+- `GET /api/auth/me`
+
+These endpoints manage authentication identity (`User`), not household domain identity (`Member`).
+
+Successful login returns:
+
+- `accessToken`
+- `refreshToken`
+
+Protected endpoints use:
+
+- `Authorization: Bearer <access-token>`
+
+Swagger / OpenAPI must document authentication requirements and allow bearer token testing during development.
+
+---
+
 ## Model Naming Conventions
 
 DomusMind uses explicit request and response models.
@@ -74,6 +102,8 @@ Requests:
 - `AddMemberRequest`
 - `ScheduleEventRequest`
 - `AssignTaskRequest`
+- `LoginRequest`
+- `RegisterUserRequest`
 
 Responses:
 
@@ -81,6 +111,8 @@ Responses:
 - `MemberResponse`
 - `EventResponse`
 - `TaskResponse`
+- `LoginResponse`
+- `RefreshTokenResponse`
 
 Composite models:
 
@@ -89,13 +121,15 @@ Composite models:
 
 API models live under:
 
-Model.*
+`Model.*`
 
 Domain entities live under:
 
-Domain.*
+`Domain.*`
 
 The API contract must never expose domain entities directly.
+
+---
 
 ## Model Evolution
 
@@ -107,6 +141,8 @@ Rules:
 - existing fields must not change meaning
 - breaking changes require versioning
 - clients must tolerate additional fields
+
+---
 
 ## Controllers
 
@@ -138,12 +174,6 @@ Rules:
 - API models do not use `Dto` suffix
 - exposed models should have clear domain-aligned names
 
-Examples:
-
-- `CreateFamily`
-- `AddMember`
-- `FamilyTimelineItem`
-
 The API model is a contract, not a domain entity.
 
 ---
@@ -172,7 +202,7 @@ Query endpoints should prefer:
 
 This is the default approach for stateless API reads.
 
-Generic repositories are not required. The application may query directly through the EF Core DbContext using module-aware boundaries. 
+Generic repositories are not required. The application may query directly through the EF Core DbContext using module-aware boundaries.
 
 ---
 
@@ -188,7 +218,7 @@ Commands must:
 
 - target one capability
 - modify one aggregate
-- return explicit results 
+- return explicit results
 
 ---
 
@@ -219,7 +249,7 @@ Example:
   "message": "Family was not found.",
   "details": {}
 }
-```
+````
 
 Validation errors may include field-level details.
 

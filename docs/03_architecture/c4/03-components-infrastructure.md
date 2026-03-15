@@ -90,12 +90,19 @@ Responsibilities:
 
 - credential storage
 - password hashing and verification
-- session or token issuance
-- password reset flows
-- invitation handling
-- authenticated user resolution
+- JWT access token generation
+- refresh token persistence
+- authenticated user resolution via request context
 
-Authentication is implemented **internally** according to ADR-002.
+Typical services include:
+
+- AccessTokenGenerator
+- PasswordHasher
+- RefreshTokenStore
+- CurrentUserAccessor
+- AuthUserRepository
+
+Identity data is stored in the primary database alongside other system persistence.
 
 ---
 
@@ -129,19 +136,23 @@ Container_Boundary(infrastructure, "Infrastructure") {
 
     Component(integrations, "Integration Adapters", ".NET", "External system connectors")
 
-    Component(auth, "Authentication Services", ".NET", "Local authentication and credential management")
+    Component(authRepo, "AuthUserRepository", ".NET", "Stores and loads authentication identities")
+    Component(passwordHasher, "PasswordHasher", ".NET", "Hashes and verifies passwords")
+    Component(tokenGenerator, "AccessTokenGenerator", ".NET", "Issues JWT access tokens")
+    Component(refreshTokens, "RefreshTokenStore", ".NET", "Stores and rotates refresh tokens")
+    Component(currentUser, "CurrentUserAccessor", ".NET", "Resolves authenticated user from request context")
 
     Component(systemservices, "System Services", ".NET", "Clock, background services, utilities")
-
 }
 
 Rel(persistence, eventlog, "Appends committed domain events")
 Rel(eventlog, projections, "Feeds projections")
 
 Rel(integrations, persistence, "Triggers commands via API")
-
 Rel(projections, persistence, "Updates read models")
-Rel(auth, persistence, "Stores identity data")
+
+Rel(authRepo, persistence, "Uses")
+Rel(refreshTokens, persistence, "Uses")
 ```
 
 ---

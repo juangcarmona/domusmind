@@ -5,8 +5,13 @@ var postgres = builder.AddPostgres("postgres")
 
 var domusmindDb = postgres.AddDatabase("domusmind");
 
-builder.AddProject<Projects.DomusMind_Api>("api")
+var api = builder.AddProject<Projects.DomusMind_Api>("api")
     .WithReference(domusmindDb)
     .WaitFor(domusmindDb);
+
+builder.AddViteApp("web-app", "../../web/app")
+    .WithReference(api)
+    .WaitFor(api)    
+    .WithEnvironment("PORT", "3000");
 
 builder.Build().Run();

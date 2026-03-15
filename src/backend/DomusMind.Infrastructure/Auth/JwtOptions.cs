@@ -11,4 +11,6 @@ public sealed class JwtOptions
     public string Audience { get; init; } = "domusmind";
 
     public int ExpiryMinutes { get; init; } = 60;
+
+    public int RefreshTokenExpiryDays { get; init; } = 30;
 }
