@@ -21,6 +21,9 @@ public sealed class DomusMindDbContext : DbContext, IDomusMindDbContext
 
     public DbSet<UserFamilyAccess> UserFamilyAccesses => Set<UserFamilyAccess>();
 
+    public DbSet<Domain.Responsibilities.ResponsibilityDomain> ResponsibilityDomains
+        => Set<Domain.Responsibilities.ResponsibilityDomain>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DomusMindDbContext).Assembly);

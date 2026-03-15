@@ -9,8 +9,13 @@ using DomusMind.Application.Features.Family.AddMember;
 using DomusMind.Application.Features.Family.CreateFamily;
 using DomusMind.Application.Features.Family.GetFamily;
 using DomusMind.Application.Features.Family.GetFamilyMembers;
+using DomusMind.Application.Features.Responsibilities.AssignPrimaryOwner;
+using DomusMind.Application.Features.Responsibilities.AssignSecondaryOwner;
+using DomusMind.Application.Features.Responsibilities.CreateResponsibilityDomain;
+using DomusMind.Application.Features.Responsibilities.TransferResponsibility;
 using DomusMind.Contracts.Auth;
 using DomusMind.Contracts.Family;
+using DomusMind.Contracts.Responsibilities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DomusMind.Application.DependencyInjection;
@@ -33,6 +38,12 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<AddMemberCommand, AddMemberResponse>, AddMemberCommandHandler>();
         services.AddScoped<IQueryHandler<GetFamilyQuery, FamilyResponse>, GetFamilyQueryHandler>();
         services.AddScoped<IQueryHandler<GetFamilyMembersQuery, IReadOnlyCollection<FamilyMemberResponse>>, GetFamilyMembersQueryHandler>();
+
+        // Responsibilities slices
+        services.AddScoped<ICommandHandler<CreateResponsibilityDomainCommand, CreateResponsibilityDomainResponse>, CreateResponsibilityDomainCommandHandler>();
+        services.AddScoped<ICommandHandler<AssignPrimaryOwnerCommand, AssignPrimaryOwnerResponse>, AssignPrimaryOwnerCommandHandler>();
+        services.AddScoped<ICommandHandler<AssignSecondaryOwnerCommand, AssignSecondaryOwnerResponse>, AssignSecondaryOwnerCommandHandler>();
+        services.AddScoped<ICommandHandler<TransferResponsibilityCommand, TransferResponsibilityResponse>, TransferResponsibilityCommandHandler>();
 
         return services;
     }
