@@ -1,4 +1,4 @@
-using DomusMind.Application.Family;
+using DomusMind.Application.Features.Family;
 using DomusMind.Application.Features.Family.CreateFamily;
 using DomusMind.Infrastructure.Events;
 using DomusMind.Infrastructure.Persistence;

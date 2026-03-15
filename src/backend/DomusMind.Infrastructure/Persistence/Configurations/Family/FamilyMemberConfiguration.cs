@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DomusMind.Infrastructure.Persistence.Configurations.Family;
 
-public sealed class MemberConfiguration : IEntityTypeConfiguration<Member>
+public sealed class FamilyMemberConfiguration : IEntityTypeConfiguration<FamilyMember>
 {
-    public void Configure(EntityTypeBuilder<Member> builder)
+    public void Configure(EntityTypeBuilder<FamilyMember> builder)
     {
-        builder.ToTable("members");
+        builder.ToTable("family_members");
 
         builder.HasKey(m => m.Id);
 

@@ -40,7 +40,7 @@ public sealed class FamilyTests
         var family = BuildFamily();
 
         family.DomainEvents.Should().HaveCount(1);
-        family.DomainEvents.Single().Should().BeOfType<FamilyCreatedEvent>();
+        family.DomainEvents.Single().Should().BeOfType<FamilyCreated>();
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public sealed class FamilyTests
         var id = FamilyId.New();
         var family = Domain.Family.Family.Create(id, FamilyName.Create("Test"), DateTime.UtcNow);
 
-        var evt = family.DomainEvents.OfType<FamilyCreatedEvent>().Single();
+        var evt = family.DomainEvents.OfType<FamilyCreated>().Single();
         evt.FamilyId.Should().Be(id.Value);
     }
 
@@ -82,7 +82,7 @@ public sealed class FamilyTests
         family.AddMember(MemberId.New(), MemberName.Create("Bob"), MemberRole.Child, DateTime.UtcNow);
 
         family.DomainEvents.Should().HaveCount(1);
-        family.DomainEvents.Single().Should().BeOfType<MemberAddedEvent>();
+        family.DomainEvents.Single().Should().BeOfType<MemberAdded>();
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public sealed class FamilyTests
         var memberId = MemberId.New();
         family.AddMember(memberId, MemberName.Create("Carol"), MemberRole.Adult, DateTime.UtcNow);
 
-        var evt = family.DomainEvents.OfType<MemberAddedEvent>().Single();
+        var evt = family.DomainEvents.OfType<MemberAdded>().Single();
         evt.FamilyId.Should().Be(family.Id.Value);
         evt.MemberId.Should().Be(memberId.Value);
     }

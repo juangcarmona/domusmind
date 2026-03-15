@@ -1,6 +1,6 @@
 using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Security;
-using DomusMind.Application.Family;
+using DomusMind.Application.Features.Family;
 using DomusMind.Application.Features.Family.AddMember;
 using DomusMind.Application.Features.Family.CreateFamily;
 using DomusMind.Application.Features.Family.GetFamily;

@@ -1,4 +1,4 @@
-namespace DomusMind.Application.Family;
+namespace DomusMind.Application.Features.Family;
 
 public enum FamilyErrorCode
 {

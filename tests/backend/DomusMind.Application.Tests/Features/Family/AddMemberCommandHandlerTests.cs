@@ -1,4 +1,4 @@
-using DomusMind.Application.Family;
+using DomusMind.Application.Features.Family;
 using DomusMind.Application.Features.Family.AddMember;
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Family.ValueObjects;
@@ -61,7 +61,7 @@ public sealed class AddMemberCommandHandlerTests
             new AddMemberCommand(family.Id.Value, "Bob", "Child", userId),
             CancellationToken.None);
 
-        var saved = await db.Set<Member>().FindAsync(MemberId.From(result.MemberId));
+        var saved = await db.Set<FamilyMember>().FindAsync(MemberId.From(result.MemberId));
         saved.Should().NotBeNull();
     }
 

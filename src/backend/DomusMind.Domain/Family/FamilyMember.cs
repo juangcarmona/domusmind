@@ -3,13 +3,13 @@ using DomusMind.Domain.Family.ValueObjects;
 
 namespace DomusMind.Domain.Family;
 
-public sealed class Member : Entity<MemberId>
+public sealed class FamilyMember : Entity<MemberId>
 {
     public MemberName Name { get; private set; }
     public MemberRole Role { get; private set; }
     public DateTime JoinedAtUtc { get; private set; }
 
-    private Member(MemberId id, MemberName name, MemberRole role, DateTime joinedAtUtc)
+    private FamilyMember(MemberId id, MemberName name, MemberRole role, DateTime joinedAtUtc)
         : base(id)
     {
         Name = name;
@@ -17,11 +17,11 @@ public sealed class Member : Entity<MemberId>
         JoinedAtUtc = joinedAtUtc;
     }
 
-    internal static Member Create(MemberId id, MemberName name, MemberRole role, DateTime joinedAtUtc)
+    internal static FamilyMember Create(MemberId id, MemberName name, MemberRole role, DateTime joinedAtUtc)
         => new(id, name, role, joinedAtUtc);
 
 #pragma warning disable CS8618
     // EF Core parameterless constructor
-    private Member() : base(default) { }
+    private FamilyMember() : base(default) { }
 #pragma warning restore CS8618
 }

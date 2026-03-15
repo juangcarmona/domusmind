@@ -6,11 +6,11 @@ namespace DomusMind.Domain.Family;
 
 public sealed class Family : AggregateRoot<FamilyId>
 {
-    private readonly List<Member> _members = [];
+    private readonly List<FamilyMember> _members = [];
 
     public FamilyName Name { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
-    public IReadOnlyCollection<Member> Members => _members.AsReadOnly();
+    public IReadOnlyCollection<FamilyMember> Members => _members.AsReadOnly();
 
     private Family(FamilyId id, FamilyName name, DateTime createdAtUtc)
         : base(id)
@@ -22,20 +22,20 @@ public sealed class Family : AggregateRoot<FamilyId>
     public static Family Create(FamilyId id, FamilyName name, DateTime createdAtUtc)
     {
         var family = new Family(id, name, createdAtUtc);
-        family.RaiseDomainEvent(new FamilyCreatedEvent(Guid.NewGuid(), id.Value, createdAtUtc));
+        family.RaiseDomainEvent(new FamilyCreated(Guid.NewGuid(), id.Value, createdAtUtc));
         return family;
     }
 
-    public Member AddMember(MemberId memberId, MemberName name, MemberRole role, DateTime addedAtUtc)
+    public FamilyMember AddMember(MemberId memberId, MemberName name, MemberRole role, DateTime addedAtUtc)
     {
         if (_members.Any(m => m.Id == memberId))
             throw new InvalidOperationException(
                 $"A member with id '{memberId.Value}' already exists in this family.");
 
-        var member = Member.Create(memberId, name, role, addedAtUtc);
+        var member = FamilyMember.Create(memberId, name, role, addedAtUtc);
         _members.Add(member);
 
-        RaiseDomainEvent(new MemberAddedEvent(Guid.NewGuid(), Id.Value, memberId.Value, addedAtUtc));
+        RaiseDomainEvent(new MemberAdded(Guid.NewGuid(), Id.Value, memberId.Value, addedAtUtc));
 
         return member;
     }
