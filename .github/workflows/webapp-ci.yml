@@ -4,39 +4,38 @@ on:
   pull_request:
     paths:
       - 'src/web/app/**'
+      - '.github/workflows/webapp-ci.yml'
   push:
-    branches: [ main ]
+    branches: [main]
     paths:
       - 'src/web/app/**'
+      - '.github/workflows/webapp-ci.yml'
   workflow_dispatch:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     defaults:
       run:
         working-directory: src/web/app
 
+    permissions:
+      contents: read
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
           cache-dependency-path: src/web/app/package-lock.json
 
-      - name: Install
+      - name: Install dependencies
         run: npm ci
 
       - name: Build
         run: npm run build
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: domusmind-webapp
-          path: src/web/app/dist
