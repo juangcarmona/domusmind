@@ -37,4 +37,14 @@ public sealed class CurrentUserAccessor : ICurrentUser
                 .Value;
         }
     }
+
+    public bool IsAuthenticated
+        => _httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true;
+
+    public IReadOnlyCollection<string> Roles
+        => _httpContextAccessor.HttpContext?.User?.Claims
+               .Where(c => c.Type == ClaimTypes.Role)
+               .Select(c => c.Value)
+               .ToList()
+           ?? [];
 }

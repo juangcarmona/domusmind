@@ -15,6 +15,8 @@ public sealed class DomusMindDbContext : DbContext, IDomusMindDbContext
 
     public DbSet<AuthUser> AuthUsers => Set<AuthUser>();
 
+    public DbSet<RefreshTokenRecord> RefreshTokens => Set<RefreshTokenRecord>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DomusMindDbContext).Assembly);
