@@ -20,8 +20,10 @@ using DomusMind.Application.Features.Calendar.SuggestEventParticipants;
 using DomusMind.Application.Features.Family.AddMember;
 using DomusMind.Application.Features.Family.CompleteOnboarding;
 using DomusMind.Application.Features.Family.CreateFamily;
+using DomusMind.Application.Features.Family.UpdateFamilySettings;
 using DomusMind.Application.Features.Family.GetEnrichedTimeline;
 using DomusMind.Application.Features.Family.GetFamily;
+using DomusMind.Application.Features.Family.GetWeeklyGrid;
 using DomusMind.Application.Features.Family.GetFamilyMembers;
 using DomusMind.Application.Features.Family.GetHouseholdTimeline;
 using DomusMind.Application.Features.Family.GetMemberActivity;
@@ -72,6 +74,7 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<CreateFamilyCommand, CreateFamilyResponse>, CreateFamilyCommandHandler>();
         services.AddScoped<ICommandHandler<AddMemberCommand, AddMemberResponse>, AddMemberCommandHandler>();
         services.AddScoped<ICommandHandler<CompleteOnboardingCommand, CompleteOnboardingResponse>, CompleteOnboardingCommandHandler>();
+        services.AddScoped<ICommandHandler<UpdateFamilySettingsCommand, UpdateFamilySettingsResponse>, UpdateFamilySettingsCommandHandler>();
         services.AddScoped<IQueryHandler<GetFamilyQuery, FamilyResponse>, GetFamilyQueryHandler>();
         services.AddScoped<IQueryHandler<GetFamilyMembersQuery, IReadOnlyCollection<FamilyMemberResponse>>, GetFamilyMembersQueryHandler>();
         services.AddScoped<IQueryHandler<GetHouseholdTimelineQuery, HouseholdTimelineResponse>, GetHouseholdTimelineQueryHandler>();
@@ -122,6 +125,7 @@ public static class ApplicationServices
 
         // Timeline enrichment slices (Phase 6)
         services.AddScoped<IQueryHandler<GetEnrichedTimelineQuery, EnrichedTimelineResponse>, GetEnrichedTimelineQueryHandler>();
+        services.AddScoped<IQueryHandler<GetWeeklyGridQuery, WeeklyGridResponse>, GetWeeklyGridQueryHandler>();
 
         // Languages
         services.AddScoped<IQueryHandler<GetSupportedLanguagesQuery, SupportedLanguagesResponse>, GetSupportedLanguagesQueryHandler>();

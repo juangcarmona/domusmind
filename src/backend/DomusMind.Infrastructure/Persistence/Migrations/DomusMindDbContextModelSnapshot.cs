@@ -86,6 +86,16 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at_utc");
 
+                    b.Property<string>("DateFormatPreference")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("date_format_preference");
+
+                    b.Property<string>("FirstDayOfWeek")
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("first_day_of_week");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)

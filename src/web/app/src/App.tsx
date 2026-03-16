@@ -12,14 +12,16 @@ import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { bootstrapHousehold } from "./store/householdSlice";
 import { UI_LANG_KEY, setUiLanguage } from "./i18n/index";
 import { AppShell } from "./components/AppShell";
-import { LoginPage } from "./pages/LoginPage";
-import { RegisterPage } from "./pages/RegisterPage";
-import { OnboardingPage } from "./pages/OnboardingPage";
-import { TimelinePage } from "./pages/TimelinePage";
-import { PeoplePage } from "./pages/PeoplePage";
-import { AreasPage } from "./pages/AreasPage";
-import { PlansPage } from "./pages/PlansPage";
-import { TasksPage } from "./pages/TasksPage";
+import { LoginPage } from "./features/auth/pages/LoginPage";
+import { RegisterPage } from "./features/auth/pages/RegisterPage";
+import { OnboardingPage } from "./features/onboarding/pages/OnboardingPage";
+import { TimelinePage } from "./features/timeline/pages/TimelinePage";
+import { PeoplePage } from "./features/people/pages/PeoplePage";
+import { AreasPage } from "./features/areas/pages/AreasPage";
+import { PlansPage } from "./features/plans/pages/PlansPage";
+import { TasksPage } from "./features/tasks/pages/TasksPage";
+import { SettingsPage } from "./features/settings/pages/SettingsPage";
+import { WeekPage } from "./features/week/pages/WeekPage";
 
 function AuthedApp() {
   const dispatch = useAppDispatch();
@@ -62,6 +64,8 @@ function AuthedApp() {
         <Route path="/areas" element={<AreasPage />} />
         <Route path="/plans" element={<PlansPage />} />
         <Route path="/tasks" element={<TasksPage />} />
+        <Route path="/week" element={<WeekPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/timeline" replace />} />
       </Routes>
     </AppShell>

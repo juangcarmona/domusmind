@@ -42,6 +42,8 @@ public sealed class GetFamilyQueryHandler : IQueryHandler<GetFamilyQuery, Family
             family.Name.Value,
             family.PrimaryLanguageCode,
             family.CreatedAtUtc,
-            family.Members.Count);
+            family.Members.Count,
+            family.FirstDayOfWeek,
+            family.DateFormatPreference);
     }
 }

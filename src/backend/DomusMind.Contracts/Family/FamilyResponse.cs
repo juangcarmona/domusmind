@@ -5,4 +5,6 @@ public sealed record FamilyResponse(
     string Name,
     string? PrimaryLanguageCode,
     DateTime CreatedAtUtc,
-    int MemberCount);
+    int MemberCount,
+    string? FirstDayOfWeek,
+    string? DateFormatPreference);

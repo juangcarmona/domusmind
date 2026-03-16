@@ -32,6 +32,14 @@ public sealed class FamilyConfiguration : IEntityTypeConfiguration<Domain.Family
             .HasColumnName("primary_language_code")
             .HasMaxLength(10);
 
+        builder.Property(f => f.FirstDayOfWeek)
+            .HasColumnName("first_day_of_week")
+            .HasMaxLength(10);
+
+        builder.Property(f => f.DateFormatPreference)
+            .HasColumnName("date_format_preference")
+            .HasMaxLength(20);
+
         builder.Property(f => f.CreatedAtUtc)
             .HasColumnName("created_at_utc")
             .IsRequired();

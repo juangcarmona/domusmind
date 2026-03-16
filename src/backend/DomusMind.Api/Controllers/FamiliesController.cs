@@ -4,11 +4,13 @@ using DomusMind.Application.Features.Family;
 using DomusMind.Application.Features.Family.AddMember;
 using DomusMind.Application.Features.Family.CompleteOnboarding;
 using DomusMind.Application.Features.Family.CreateFamily;
+using DomusMind.Application.Features.Family.UpdateFamilySettings;
 using DomusMind.Application.Features.Family.GetEnrichedTimeline;
 using DomusMind.Application.Features.Family.GetFamily;
 using DomusMind.Application.Features.Family.GetFamilyMembers;
 using DomusMind.Application.Features.Family.GetHouseholdTimeline;
 using DomusMind.Application.Features.Family.GetMemberActivity;
+using DomusMind.Application.Features.Family.GetWeeklyGrid;
 using DomusMind.Contracts.Family;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -105,6 +107,38 @@ public sealed class FamiliesController : ControllerBase
                     request.SelfName,
                     request.SelfBirthDate,
                     additionalMembers),
+                cancellationToken);
+
+            return Ok(response);
+        }
+        catch (FamilyException ex)
+        {
+            return MapFamilyException(ex);
+        }
+    }
+
+    /// <summary>Updates household settings: name, primary language, first day of week, date format.</summary>
+    [HttpPut("{familyId:guid}/settings")]
+    [ProducesResponseType(typeof(UpdateFamilySettingsResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateSettings(
+        Guid familyId,
+        [FromBody] UpdateFamilySettingsRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new UpdateFamilySettingsCommand(
+                    familyId,
+                    _currentUser.UserId!.Value,
+                    request.Name,
+                    request.PrimaryLanguageCode,
+                    request.FirstDayOfWeek,
+                    request.DateFormatPreference),
                 cancellationToken);
 
             return Ok(response);
@@ -240,6 +274,37 @@ public sealed class FamiliesController : ControllerBase
                 new GetEnrichedTimelineQuery(
                     familyId, typeFilter, memberFilter, from, to, statusFilter,
                     _currentUser.UserId!.Value),
+                cancellationToken);
+
+            return Ok(response);
+        }
+        catch (FamilyException ex)
+        {
+            return MapFamilyException(ex);
+        }
+    }
+
+    /// <summary>Returns a weekly coordination grid of events, tasks, and routines for all family members.</summary>
+    [HttpGet("{familyId:guid}/weekly-grid")]
+    [ProducesResponseType(typeof(WeeklyGridResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetWeeklyGrid(
+        Guid familyId,
+        [FromQuery] DateTime? weekStart,
+        [FromServices] IQueryDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        // ASP.NET Core model binding can produce DateTimeKind.Unspecified for date-only strings.
+        // Treat the incoming value as a UTC date — only the calendar date part is used.
+        var start = DateTime.SpecifyKind(
+            (weekStart ?? DateTime.UtcNow).Date,
+            DateTimeKind.Utc);
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new GetWeeklyGridQuery(familyId, start, _currentUser.UserId!.Value),
                 cancellationToken);
 
             return Ok(response);
