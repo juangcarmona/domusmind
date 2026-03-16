@@ -391,4 +391,12 @@ export const domusmindApi = {
   getSupportedLanguages: () =>
     // Public endpoint — no auth token needed
     request<{ languages: SupportedLanguageItem[] }>("/api/languages", {}, null),
+
+  /* Weekly grid */
+  getWeeklyGrid: (familyId: string, weekStart?: string) => {
+    const params = weekStart ? `?weekStart=${encodeURIComponent(weekStart)}` : "";
+    return request<import("../features/week/types").WeeklyGridResponse>(
+      `/api/families/${familyId}/weekly-grid${params}`,
+    );
+  },
 };

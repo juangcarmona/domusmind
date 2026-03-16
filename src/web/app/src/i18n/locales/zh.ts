@@ -19,6 +19,7 @@ export default {
     areas: "区域",
     plans: "计划",
     chores: "家务",
+    week: "周",
     signOut: "退出",
     settings: "设置",
   },
@@ -206,5 +207,14 @@ export default {
         sunday: "星期日",
       },
     },
+  },
+  week: {
+    title: "周视图",
+    prevWeek: "← 上一周",
+    nextWeek: "下一周 →",
+    routines: "日常事务",
+    empty: "暂无家庭成员。",
+    loading: "正在加载周视图…",
+    error: "加载周视图失败。",
   },
 } as const;

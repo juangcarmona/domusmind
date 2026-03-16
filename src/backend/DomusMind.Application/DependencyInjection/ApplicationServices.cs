@@ -23,6 +23,7 @@ using DomusMind.Application.Features.Family.CreateFamily;
 using DomusMind.Application.Features.Family.UpdateFamilySettings;
 using DomusMind.Application.Features.Family.GetEnrichedTimeline;
 using DomusMind.Application.Features.Family.GetFamily;
+using DomusMind.Application.Features.Family.GetWeeklyGrid;
 using DomusMind.Application.Features.Family.GetFamilyMembers;
 using DomusMind.Application.Features.Family.GetHouseholdTimeline;
 using DomusMind.Application.Features.Family.GetMemberActivity;
@@ -124,6 +125,7 @@ public static class ApplicationServices
 
         // Timeline enrichment slices (Phase 6)
         services.AddScoped<IQueryHandler<GetEnrichedTimelineQuery, EnrichedTimelineResponse>, GetEnrichedTimelineQueryHandler>();
+        services.AddScoped<IQueryHandler<GetWeeklyGridQuery, WeeklyGridResponse>, GetWeeklyGridQueryHandler>();
 
         // Languages
         services.AddScoped<IQueryHandler<GetSupportedLanguagesQuery, SupportedLanguagesResponse>, GetSupportedLanguagesQueryHandler>();

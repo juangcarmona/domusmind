@@ -19,6 +19,7 @@ export default {
     areas: "Areas",
     plans: "Plans",
     chores: "Chores",
+    week: "Week",
     signOut: "Sign out",
     settings: "Settings",
   },
@@ -206,5 +207,14 @@ export default {
         sunday: "Sunday",
       },
     },
+  },
+  week: {
+    title: "Week",
+    prevWeek: "← Previous week",
+    nextWeek: "Next week →",
+    routines: "Routines",
+    empty: "No household members yet.",
+    loading: "Loading weekly grid…",
+    error: "Failed to load weekly grid.",
   },
 } as const;

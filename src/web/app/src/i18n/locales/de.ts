@@ -19,6 +19,7 @@ export default {
     areas: "Bereiche",
     plans: "Pläne",
     chores: "Aufgaben",
+    week: "Woche",
     signOut: "Abmelden",
     settings: "Einstellungen",
   },
@@ -206,5 +207,14 @@ export default {
         sunday: "Sonntag",
       },
     },
+  },
+  week: {
+    title: "Woche",
+    prevWeek: "← Vorherige Woche",
+    nextWeek: "Nächste Woche →",
+    routines: "Routinen",
+    empty: "Noch keine Haushaltsmitglieder.",
+    loading: "Wochenübersicht wird geladen…",
+    error: "Wochenübersicht konnte nicht geladen werden.",
   },
 } as const;

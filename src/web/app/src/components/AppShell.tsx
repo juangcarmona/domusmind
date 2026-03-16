@@ -50,6 +50,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {t("nav.chores")}
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/week" className={({ isActive }) => isActive ? "active" : undefined}>
+                {t("nav.week")}
+              </NavLink>
+            </li>
           </ul>
         </nav>
 

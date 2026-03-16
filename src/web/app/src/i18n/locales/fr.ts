@@ -19,6 +19,7 @@ export default {
     areas: "Espaces",
     plans: "Plannings",
     chores: "Tâches",
+    week: "Semaine",
     signOut: "Se déconnecter",
     settings: "Paramètres",
   },
@@ -206,5 +207,14 @@ export default {
         sunday: "Dimanche",
       },
     },
+  },
+  week: {
+    title: "Semaine",
+    prevWeek: "← Semaine précédente",
+    nextWeek: "Semaine suivante →",
+    routines: "Routines",
+    empty: "Aucun membre du foyer pour l’instant.",
+    loading: "Chargement de la semaine…",
+    error: "Impossible de charger la semaine.",
   },
 } as const;

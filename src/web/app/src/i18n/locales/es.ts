@@ -19,6 +19,7 @@ export default {
     areas: "Áreas",
     plans: "Planes",
     chores: "Tareas",
+    week: "Semana",
     signOut: "Cerrar sesión",
     settings: "Configuración",
   },
@@ -206,5 +207,14 @@ export default {
         sunday: "Domingo",
       },
     },
+  },
+  week: {
+    title: "Semana",
+    prevWeek: "← Semana anterior",
+    nextWeek: "Semana siguiente →",
+    routines: "Rutinas",
+    empty: "Aún no hay miembros en el hogar.",
+    loading: "Cargando la semana…",
+    error: "Error al cargar la semana.",
   },
 } as const;

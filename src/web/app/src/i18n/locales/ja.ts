@@ -19,6 +19,7 @@ export default {
     areas: "エリア",
     plans: "予定",
     chores: "家事",
+    week: "週間",
     signOut: "サインアウト",
     settings: "設定",
   },
@@ -206,5 +207,14 @@ export default {
         sunday: "日曜日",
       },
     },
+  },
+  week: {
+    title: "週間",
+    prevWeek: "← 前の週",
+    nextWeek: "次の週 →",
+    routines: "ルーティン",
+    empty: "まだメンバーがいません。",
+    loading: "週間表を読み込んでいます…",
+    error: "週間表の読み込みに失敗しました。",
   },
 } as const;
