@@ -4,6 +4,7 @@ import {
   type FamilyResponse,
   type FamilyMemberResponse,
   type AdditionalMemberRequest,
+  type UpdateFamilySettingsRequest,
 } from "../api/domusmindApi";
 
 const FAMILY_KEY = "dm_family_id";
@@ -119,6 +120,27 @@ export const completeOnboarding = createAsyncThunk(
   },
 );
 
+export const updateHouseholdSettings = createAsyncThunk(
+  "household/updateSettings",
+  async (
+    payload: { familyId: string } & UpdateFamilySettingsRequest,
+    { rejectWithValue },
+  ) => {
+    try {
+      return await domusmindApi.updateFamilySettings(payload.familyId, {
+        name: payload.name,
+        primaryLanguageCode: payload.primaryLanguageCode,
+        firstDayOfWeek: payload.firstDayOfWeek,
+        dateFormatPreference: payload.dateFormatPreference,
+      });
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to update settings",
+      );
+    }
+  },
+);
+
 const householdSlice = createSlice({
   name: "household",
   initialState,
@@ -172,6 +194,14 @@ const householdSlice = createSlice({
         }));
         state.bootstrapStatus = "ready";
         state.error = null;
+      })
+      .addCase(updateHouseholdSettings.fulfilled, (state, action) => {
+        if (state.family) {
+          state.family.name = action.payload.name;
+          state.family.primaryLanguageCode = action.payload.primaryLanguageCode;
+          state.family.firstDayOfWeek = action.payload.firstDayOfWeek;
+          state.family.dateFormatPreference = action.payload.dateFormatPreference;
+        }
       });
   },
 });

@@ -20,6 +20,7 @@ export default {
     plans: "Piani",
     chores: "Faccende",
     signOut: "Esci",
+    settings: "Impostazioni",
   },
   onboarding: {
     welcome: {
@@ -170,5 +171,40 @@ export default {
     error: "Qualcosa è andato storto.",
     loading: "Caricamento…",
     selectPerson: "— seleziona persona —",
+  },
+  settings: {
+    title: "Impostazioni",
+    account: {
+      title: "Account",
+      email: "E-mail",
+      userId: "ID utente",
+      changePassword: "Cambia password",
+      currentPassword: "Password attuale",
+      newPassword: "Nuova password",
+      confirmPassword: "Conferma nuova password",
+      passwordMismatch: "Le password non corrispondono.",
+      passwordSuccess: "Password modificata. Sei stato disconnesso.",
+      save: "Cambia password",
+      saving: "Modifica…",
+    },
+    household: {
+      title: "Casa",
+      name: "Nome della casa",
+      language: "Lingua predefinita",
+      firstDayOfWeek: "Primo giorno della settimana",
+      dateFormat: "Formato data",
+      save: "Salva impostazioni",
+      saving: "Salvataggio…",
+      saved: "Impostazioni salvate.",
+      days: {
+        monday: "Lunedì",
+        tuesday: "Martedì",
+        wednesday: "Mercoledì",
+        thursday: "Giovedì",
+        friday: "Venerdì",
+        saturday: "Sabato",
+        sunday: "Domenica",
+      },
+    },
   },
 } as const;

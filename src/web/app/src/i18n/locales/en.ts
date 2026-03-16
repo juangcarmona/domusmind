@@ -20,6 +20,7 @@ export default {
     plans: "Plans",
     chores: "Chores",
     signOut: "Sign out",
+    settings: "Settings",
   },
   onboarding: {
     welcome: {
@@ -170,5 +171,40 @@ export default {
     error: "Something went wrong.",
     loading: "Loading…",
     selectPerson: "— select person —",
+  },
+  settings: {
+    title: "Settings",
+    account: {
+      title: "Account",
+      email: "Email",
+      userId: "User ID",
+      changePassword: "Change password",
+      currentPassword: "Current password",
+      newPassword: "New password",
+      confirmPassword: "Confirm new password",
+      passwordMismatch: "Passwords do not match.",
+      passwordSuccess: "Password changed. You have been signed out.",
+      save: "Change password",
+      saving: "Changing…",
+    },
+    household: {
+      title: "Household",
+      name: "Household name",
+      language: "Default language",
+      firstDayOfWeek: "First day of week",
+      dateFormat: "Date format",
+      save: "Save settings",
+      saving: "Saving…",
+      saved: "Settings saved.",
+      days: {
+        monday: "Monday",
+        tuesday: "Tuesday",
+        wednesday: "Wednesday",
+        thursday: "Thursday",
+        friday: "Friday",
+        saturday: "Saturday",
+        sunday: "Sunday",
+      },
+    },
   },
 } as const;

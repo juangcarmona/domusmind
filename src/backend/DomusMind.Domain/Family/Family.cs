@@ -10,6 +10,8 @@ public sealed class Family : AggregateRoot<FamilyId>
 
     public FamilyName Name { get; private set; }
     public string? PrimaryLanguageCode { get; private set; }
+    public string? FirstDayOfWeek { get; private set; }
+    public string? DateFormatPreference { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
     public IReadOnlyCollection<FamilyMember> Members => _members.AsReadOnly();
 
@@ -26,6 +28,15 @@ public sealed class Family : AggregateRoot<FamilyId>
         var family = new Family(id, name, primaryLanguageCode, createdAtUtc);
         family.RaiseDomainEvent(new FamilyCreated(Guid.NewGuid(), id.Value, createdAtUtc));
         return family;
+    }
+
+    public void UpdateSettings(FamilyName name, string? primaryLanguageCode, string? firstDayOfWeek, string? dateFormatPreference, DateTime updatedAtUtc)
+    {
+        Name = name;
+        PrimaryLanguageCode = primaryLanguageCode;
+        FirstDayOfWeek = firstDayOfWeek;
+        DateFormatPreference = dateFormatPreference;
+        RaiseDomainEvent(new Events.FamilySettingsUpdated(Guid.NewGuid(), Id.Value, updatedAtUtc));
     }
 
     // Backward-compatible overload

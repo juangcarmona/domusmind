@@ -54,6 +54,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </nav>
 
         <div className="header-controls">
+          <NavLink to="/settings" className={({ isActive }) => `btn btn-ghost btn-sm${isActive ? " active" : ""}`}>
+            {t("nav.settings")}
+          </NavLink>
           <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
             {t("nav.signOut")}
           </button>

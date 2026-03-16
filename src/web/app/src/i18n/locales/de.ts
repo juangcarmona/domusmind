@@ -20,6 +20,7 @@ export default {
     plans: "Pläne",
     chores: "Aufgaben",
     signOut: "Abmelden",
+    settings: "Einstellungen",
   },
   onboarding: {
     welcome: {
@@ -170,5 +171,40 @@ export default {
     error: "Etwas ist schiefgelaufen.",
     loading: "Lädt…",
     selectPerson: "— Person auswählen —",
+  },
+  settings: {
+    title: "Einstellungen",
+    account: {
+      title: "Konto",
+      email: "E-Mail",
+      userId: "Benutzer-ID",
+      changePassword: "Passwort ändern",
+      currentPassword: "Aktuelles Passwort",
+      newPassword: "Neues Passwort",
+      confirmPassword: "Neues Passwort bestätigen",
+      passwordMismatch: "Passwörter stimmen nicht überein.",
+      passwordSuccess: "Passwort geändert. Sie wurden abgemeldet.",
+      save: "Passwort ändern",
+      saving: "Wird geändert…",
+    },
+    household: {
+      title: "Haushalt",
+      name: "Name des Haushalts",
+      language: "Standardsprache",
+      firstDayOfWeek: "Erster Wochentag",
+      dateFormat: "Datumsformat",
+      save: "Einstellungen speichern",
+      saving: "Speichert…",
+      saved: "Einstellungen gespeichert.",
+      days: {
+        monday: "Montag",
+        tuesday: "Dienstag",
+        wednesday: "Mittwoch",
+        thursday: "Donnerstag",
+        friday: "Freitag",
+        saturday: "Samstag",
+        sunday: "Sonntag",
+      },
+    },
   },
 } as const;

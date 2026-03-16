@@ -20,6 +20,7 @@ import { PeoplePage } from "./pages/PeoplePage";
 import { AreasPage } from "./pages/AreasPage";
 import { PlansPage } from "./pages/PlansPage";
 import { TasksPage } from "./pages/TasksPage";
+import { SettingsPage } from "./features/settings/pages/SettingsPage";
 
 function AuthedApp() {
   const dispatch = useAppDispatch();
@@ -62,6 +63,7 @@ function AuthedApp() {
         <Route path="/areas" element={<AreasPage />} />
         <Route path="/plans" element={<PlansPage />} />
         <Route path="/tasks" element={<TasksPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/timeline" replace />} />
       </Routes>
     </AppShell>

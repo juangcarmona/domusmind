@@ -44,6 +44,8 @@ export interface FamilyResponse {
   primaryLanguageCode: string | null;
   createdAtUtc: string;
   memberCount: number;
+  firstDayOfWeek: string | null;
+  dateFormatPreference: string | null;
 }
 
 export interface CreateFamilyRequest {
@@ -225,6 +227,21 @@ export interface CompleteOnboardingResponse {
   members: OnboardingMemberItem[];
 }
 
+export interface UpdateFamilySettingsRequest {
+  name: string;
+  primaryLanguageCode?: string | null;
+  firstDayOfWeek?: string | null;
+  dateFormatPreference?: string | null;
+}
+
+export interface UpdateFamilySettingsResponse {
+  familyId: string;
+  name: string;
+  primaryLanguageCode: string | null;
+  firstDayOfWeek: string | null;
+  dateFormatPreference: string | null;
+}
+
 /* ---- API client ---- */
 
 export const domusmindApi = {
@@ -250,6 +267,12 @@ export const domusmindApi = {
   completeOnboarding: (familyId: string, body: CompleteOnboardingRequest) =>
     request<CompleteOnboardingResponse>(`/api/families/${familyId}/onboarding`, {
       method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  updateFamilySettings: (familyId: string, body: UpdateFamilySettingsRequest) =>
+    request<UpdateFamilySettingsResponse>(`/api/families/${familyId}/settings`, {
+      method: "PUT",
       body: JSON.stringify(body),
     }),
 

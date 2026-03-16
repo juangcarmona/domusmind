@@ -20,6 +20,7 @@ export default {
     plans: "予定",
     chores: "家事",
     signOut: "サインアウト",
+    settings: "設定",
   },
   onboarding: {
     welcome: {
@@ -170,5 +171,40 @@ export default {
     error: "エラーが発生しました。",
     loading: "読み込み中…",
     selectPerson: "— 担当者を選択 —",
+  },
+  settings: {
+    title: "設定",
+    account: {
+      title: "アカウント",
+      email: "メールアドレス",
+      userId: "ユーザー ID",
+      changePassword: "パスワード変更",
+      currentPassword: "現在のパスワード",
+      newPassword: "新しいパスワード",
+      confirmPassword: "新しいパスワード（確認）",
+      passwordMismatch: "パスワードが一致しません。",
+      passwordSuccess: "パスワードを変更しました。サインアウトされました。",
+      save: "パスワード変更",
+      saving: "変更中…",
+    },
+    household: {
+      title: "世帯",
+      name: "世帯名",
+      language: "デフォルト言語",
+      firstDayOfWeek: "週の最初の日",
+      dateFormat: "日付形式",
+      save: "設定を保存",
+      saving: "保存中…",
+      saved: "設定を保存しました。",
+      days: {
+        monday: "月曜日",
+        tuesday: "火曜日",
+        wednesday: "水曜日",
+        thursday: "木曜日",
+        friday: "金曜日",
+        saturday: "土曜日",
+        sunday: "日曜日",
+      },
+    },
   },
 } as const;

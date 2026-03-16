@@ -1,10 +1,7 @@
 namespace DomusMind.Contracts.Family;
 
-public sealed record FamilyResponse(
-    Guid FamilyId,
+public sealed record UpdateFamilySettingsRequest(
     string Name,
     string? PrimaryLanguageCode,
-    DateTime CreatedAtUtc,
-    int MemberCount,
     string? FirstDayOfWeek,
     string? DateFormatPreference);

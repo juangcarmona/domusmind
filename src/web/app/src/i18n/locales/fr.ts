@@ -20,6 +20,7 @@ export default {
     plans: "Plannings",
     chores: "Tâches",
     signOut: "Se déconnecter",
+    settings: "Paramètres",
   },
   onboarding: {
     welcome: {
@@ -170,5 +171,40 @@ export default {
     error: "Une erreur s'est produite.",
     loading: "Chargement…",
     selectPerson: "— sélectionner une personne —",
+  },
+  settings: {
+    title: "Paramètres",
+    account: {
+      title: "Compte",
+      email: "E-mail",
+      userId: "Identifiant utilisateur",
+      changePassword: "Changer le mot de passe",
+      currentPassword: "Mot de passe actuel",
+      newPassword: "Nouveau mot de passe",
+      confirmPassword: "Confirmer le nouveau mot de passe",
+      passwordMismatch: "Les mots de passe ne correspondent pas.",
+      passwordSuccess: "Mot de passe modifié. Vous avez été déconnecté.",
+      save: "Changer le mot de passe",
+      saving: "Modification…",
+    },
+    household: {
+      title: "Foyer",
+      name: "Nom du foyer",
+      language: "Langue par défaut",
+      firstDayOfWeek: "Premier jour de la semaine",
+      dateFormat: "Format de date",
+      save: "Enregistrer les paramètres",
+      saving: "Enregistrement…",
+      saved: "Paramètres enregistrés.",
+      days: {
+        monday: "Lundi",
+        tuesday: "Mardi",
+        wednesday: "Mercredi",
+        thursday: "Jeudi",
+        friday: "Vendredi",
+        saturday: "Samedi",
+        sunday: "Dimanche",
+      },
+    },
   },
 } as const;

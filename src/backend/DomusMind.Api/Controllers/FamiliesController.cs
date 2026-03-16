@@ -4,6 +4,7 @@ using DomusMind.Application.Features.Family;
 using DomusMind.Application.Features.Family.AddMember;
 using DomusMind.Application.Features.Family.CompleteOnboarding;
 using DomusMind.Application.Features.Family.CreateFamily;
+using DomusMind.Application.Features.Family.UpdateFamilySettings;
 using DomusMind.Application.Features.Family.GetEnrichedTimeline;
 using DomusMind.Application.Features.Family.GetFamily;
 using DomusMind.Application.Features.Family.GetFamilyMembers;
@@ -105,6 +106,38 @@ public sealed class FamiliesController : ControllerBase
                     request.SelfName,
                     request.SelfBirthDate,
                     additionalMembers),
+                cancellationToken);
+
+            return Ok(response);
+        }
+        catch (FamilyException ex)
+        {
+            return MapFamilyException(ex);
+        }
+    }
+
+    /// <summary>Updates household settings: name, primary language, first day of week, date format.</summary>
+    [HttpPut("{familyId:guid}/settings")]
+    [ProducesResponseType(typeof(UpdateFamilySettingsResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateSettings(
+        Guid familyId,
+        [FromBody] UpdateFamilySettingsRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new UpdateFamilySettingsCommand(
+                    familyId,
+                    _currentUser.UserId!.Value,
+                    request.Name,
+                    request.PrimaryLanguageCode,
+                    request.FirstDayOfWeek,
+                    request.DateFormatPreference),
                 cancellationToken);
 
             return Ok(response);
