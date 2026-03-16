@@ -1,0 +1,321 @@
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+const ACCESS_KEY = "dm_access_token";
+
+export function getStoredToken(): string | null {
+  return localStorage.getItem(ACCESS_KEY);
+}
+
+export interface ApiError {
+  status: number;
+  message: string;
+}
+
+async function request<T>(
+  path: string,
+  options?: RequestInit,
+  token?: string | null,
+): Promise<T> {
+  const resolvedToken = token ?? getStoredToken();
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...(resolvedToken ? { Authorization: `Bearer ${resolvedToken}` } : {}),
+    ...options?.headers,
+  };
+  const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
+  if (!res.ok) {
+    let message = res.statusText;
+    try {
+      const body = await res.json();
+      if (body?.error) message = body.error;
+    } catch {
+      // ignore
+    }
+    throw { status: res.status, message } as ApiError;
+  }
+  if (res.status === 204) return undefined as T;
+  return res.json() as Promise<T>;
+}
+
+/* ---- Types ---- */
+
+export interface FamilyResponse {
+  familyId: string;
+  name: string;
+  createdAtUtc: string;
+  memberCount: number;
+}
+
+export interface CreateFamilyRequest {
+  name: string;
+}
+
+export interface FamilyMemberResponse {
+  memberId: string;
+  familyId: string;
+  name: string;
+  role: string;
+  joinedAtUtc: string;
+}
+
+export interface AddMemberRequest {
+  name: string;
+  role: string;
+}
+
+export interface AddMemberResponse {
+  memberId: string;
+  familyId: string;
+  name: string;
+  role: string;
+  joinedAtUtc: string;
+}
+
+export interface EnrichedTimelineEntry {
+  entryId: string;
+  entryType: "CalendarEvent" | "Task" | "Routine";
+  title: string;
+  effectiveDate: string | null;
+  status: string;
+  priority: "High" | "Medium" | "Low";
+  group: "Overdue" | "Today" | "Tomorrow" | "ThisWeek" | "Later" | "Undated";
+  isOverdue: boolean;
+  isUnassigned: boolean;
+  assigneeId: string | null;
+}
+
+export interface TimelineGroup {
+  groupKey: string;
+  entries: EnrichedTimelineEntry[];
+}
+
+export interface EnrichedTimelineResponse {
+  groups: TimelineGroup[];
+  totalEntries: number;
+}
+
+export interface ScheduleEventRequest {
+  title: string;
+  familyId: string;
+  startTime: string;
+  endTime?: string;
+  description?: string;
+}
+
+export interface ScheduleEventResponse {
+  calendarEventId: string;
+  familyId: string;
+  title: string;
+  startTime: string;
+  endTime: string | null;
+  status: string;
+  createdAtUtc: string;
+}
+
+export interface FamilyTimelineEventItem {
+  calendarEventId: string;
+  title: string;
+  startTime: string;
+  endTime: string | null;
+  status: string;
+  participantMemberIds: string[];
+}
+
+export interface FamilyTimelineResponse {
+  events: FamilyTimelineEventItem[];
+}
+
+export interface RescheduleEventRequest {
+  newStartTime: string;
+  newEndTime?: string | null;
+}
+
+export interface HouseholdAreaItem {
+  areaId: string;
+  name: string;
+  primaryOwnerId: string | null;
+  primaryOwnerName: string | null;
+  secondaryOwnerIds: string[];
+}
+
+export interface HouseholdAreasResponse {
+  areas: HouseholdAreaItem[];
+}
+
+export interface CreateResponsibilityDomainRequest {
+  name: string;
+  familyId: string;
+}
+
+export interface CreateResponsibilityDomainResponse {
+  responsibilityDomainId: string;
+  familyId: string;
+  name: string;
+  createdAtUtc: string;
+}
+
+export interface AssignPrimaryOwnerRequest {
+  memberId: string;
+}
+
+export interface AssignSecondaryOwnerRequest {
+  memberId: string;
+}
+
+export interface TransferResponsibilityRequest {
+  newPrimaryOwnerId: string;
+}
+
+export interface CreateTaskRequest {
+  title: string;
+  familyId: string;
+  description?: string;
+  dueDate?: string | null;
+}
+
+export interface CreateTaskResponse {
+  taskId: string;
+  familyId: string;
+  title: string;
+  description: string | null;
+  dueDate: string | null;
+  status: string;
+  createdAtUtc: string;
+}
+
+export interface AssignTaskRequest {
+  assigneeId: string;
+}
+
+/* ---- API client ---- */
+
+export const domusmindApi = {
+  /* Family */
+  createFamily: (body: CreateFamilyRequest) =>
+    request<FamilyResponse>("/api/families", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  getFamily: (familyId: string) =>
+    request<FamilyResponse>(`/api/families/${familyId}`),
+
+  getMembers: (familyId: string) =>
+    request<FamilyMemberResponse[]>(`/api/families/${familyId}/members`),
+
+  addMember: (familyId: string, body: AddMemberRequest) =>
+    request<AddMemberResponse>(`/api/families/${familyId}/members`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  getEnrichedTimeline: (
+    familyId: string,
+    opts?: {
+      types?: string;
+      memberFilter?: string;
+      from?: string;
+      to?: string;
+      statuses?: string;
+    },
+  ) => {
+    const params = new URLSearchParams();
+    if (opts?.types) params.set("types", opts.types);
+    if (opts?.memberFilter) params.set("memberFilter", opts.memberFilter);
+    if (opts?.from) params.set("from", opts.from);
+    if (opts?.to) params.set("to", opts.to);
+    if (opts?.statuses) params.set("statuses", opts.statuses);
+    const qs = params.toString();
+    return request<EnrichedTimelineResponse>(
+      `/api/families/${familyId}/timeline/enriched${qs ? `?${qs}` : ""}`,
+    );
+  },
+
+  /* Events / Plans */
+  scheduleEvent: (body: ScheduleEventRequest) =>
+    request<ScheduleEventResponse>("/api/events", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  getEvents: (familyId: string, from?: string, to?: string) => {
+    const params = new URLSearchParams({ familyId });
+    if (from) params.set("from", from);
+    if (to) params.set("to", to);
+    return request<FamilyTimelineResponse>(`/api/events?${params}`);
+  },
+
+  rescheduleEvent: (id: string, body: RescheduleEventRequest) =>
+    request<unknown>(`/api/events/${id}/reschedule`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  cancelEvent: (id: string) =>
+    request<unknown>(`/api/events/${id}/cancel`, { method: "POST" }),
+
+  addEventParticipant: (id: string, memberId: string) =>
+    request<unknown>(`/api/events/${id}/participants`, {
+      method: "POST",
+      body: JSON.stringify({ memberId }),
+    }),
+
+  removeEventParticipant: (id: string, memberId: string) =>
+    request<unknown>(`/api/events/${id}/participants/${memberId}`, {
+      method: "DELETE",
+    }),
+
+  /* Responsibility Domains / Areas */
+  getAreas: (familyId: string) =>
+    request<HouseholdAreasResponse>(
+      `/api/responsibility-domains?familyId=${familyId}`,
+    ),
+
+  createArea: (body: CreateResponsibilityDomainRequest) =>
+    request<CreateResponsibilityDomainResponse>(
+      "/api/responsibility-domains",
+      { method: "POST", body: JSON.stringify(body) },
+    ),
+
+  assignPrimaryOwner: (areaId: string, body: AssignPrimaryOwnerRequest) =>
+    request<unknown>(`/api/responsibility-domains/${areaId}/primary-owner`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  assignSecondaryOwner: (areaId: string, body: AssignSecondaryOwnerRequest) =>
+    request<unknown>(
+      `/api/responsibility-domains/${areaId}/secondary-owners`,
+      { method: "POST", body: JSON.stringify(body) },
+    ),
+
+  transferArea: (areaId: string, body: TransferResponsibilityRequest) =>
+    request<unknown>(`/api/responsibility-domains/${areaId}/transfer`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  /* Tasks */
+  createTask: (body: CreateTaskRequest) =>
+    request<CreateTaskResponse>("/api/tasks", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  assignTask: (taskId: string, body: AssignTaskRequest) =>
+    request<unknown>(`/api/tasks/${taskId}/assign`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  completeTask: (taskId: string) =>
+    request<unknown>(`/api/tasks/${taskId}/complete`, { method: "POST" }),
+
+  cancelTask: (taskId: string) =>
+    request<unknown>(`/api/tasks/${taskId}/cancel`, { method: "POST" }),
+
+  rescheduleTask: (taskId: string, newDueDate: string | null) =>
+    request<unknown>(`/api/tasks/${taskId}/reschedule`, {
+      method: "POST",
+      body: JSON.stringify({ newDueDate }),
+    }),
+};
