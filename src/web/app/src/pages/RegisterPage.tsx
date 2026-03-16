@@ -1,11 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { useAuth } from "../auth/AuthProvider";
 import type { ApiError } from "../api/authApi";
+import { HouseholdLogo } from "../components/HouseholdLogo";
 
-interface Props {
-  onSuccess?: () => void;
-  onGoToLogin?: () => void;
-}
+interface Props { onSuccess?: () => void; onGoToLogin?: () => void; }
 
 export function RegisterPage({ onSuccess, onGoToLogin }: Props) {
   const { register } = useAuth();
@@ -19,72 +17,56 @@ export function RegisterPage({ onSuccess, onGoToLogin }: Props) {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    try {
-      await register(email, password);
-      setDone(true);
-      onSuccess?.();
-    } catch (err) {
-      setError((err as ApiError).message ?? "Registration failed.");
-    } finally {
-      setLoading(false);
-    }
+    try { await register(email, password); setDone(true); onSuccess?.(); }
+    catch (err) { setError((err as ApiError).message ?? "Registration failed."); }
+    finally { setLoading(false); }
   }
 
   if (done) {
     return (
-      <div style={styles.card}>
-        <p>Account created. <button style={styles.link} onClick={onGoToLogin}>Sign in</button></p>
+      <div className="auth-wrap">
+        <div className="auth-card" style={{ textAlign: "center" }}>
+          <p>Account created.</p>
+          <button className="btn" style={{ width: "100%", justifyContent: "center" }} onClick={onGoToLogin}>
+            Sign in
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={styles.card}>
-      <h2>Create account</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <label>
-          Email
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={styles.input}
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={8}
-            style={styles.input}
-          />
-        </label>
-        {error && <p style={styles.error}>{error}</p>}
-        <button type="submit" disabled={loading} style={styles.button}>
-          {loading ? "Creating…" : "Create account"}
-        </button>
-      </form>
-      {onGoToLogin && (
-        <p>
-          Have an account?{" "}
-          <button style={styles.link} onClick={onGoToLogin}>
-            Sign in
+    <div className="auth-wrap">
+      <div className="auth-card">
+        <div style={{ textAlign: "center", marginBottom: "1.25rem", color: "var(--primary)" }}>
+          <HouseholdLogo size={40} />
+        </div>
+        <h1 style={{ textAlign: "center", marginBottom: "1.25rem" }}>Create account</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="reg-email">Email</label>
+            <input id="reg-email" className="form-control" type="email" value={email}
+              onChange={(e) => setEmail(e.target.value)} required autoFocus />
+          </div>
+          <div className="form-group">
+            <label htmlFor="reg-password">Password</label>
+            <input id="reg-password" className="form-control" type="password" value={password}
+              onChange={(e) => setPassword(e.target.value)} required minLength={8} />
+            <span className="form-hint">At least 8 characters</span>
+          </div>
+          {error && <p className="error-msg">{error}</p>}
+          <button type="submit" className="btn" disabled={loading}
+            style={{ width: "100%", justifyContent: "center", marginTop: "0.5rem" }}>
+            {loading ? "Creating\u2026" : "Create account"}
           </button>
-        </p>
-      )}
+        </form>
+        {onGoToLogin && (
+          <p className="auth-footer">
+            Have an account?{" "}
+            <button onClick={onGoToLogin}>Sign in</button>
+          </p>
+        )}
+      </div>
     </div>
   );
 }
-
-const styles = {
-  card: { maxWidth: 360, margin: "60px auto", padding: 24, border: "1px solid #ccc", borderRadius: 8 } as const,
-  form: { display: "flex", flexDirection: "column" as const, gap: 12 },
-  input: { display: "block", width: "100%", marginTop: 4, padding: "6px 8px", boxSizing: "border-box" as const },
-  error: { color: "crimson", margin: 0 } as const,
-  button: { padding: "8px 16px", cursor: "pointer" } as const,
-  link: { background: "none", border: "none", color: "#0066cc", cursor: "pointer", padding: 0 } as const,
-};

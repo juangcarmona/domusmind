@@ -1,13 +1,11 @@
 import { useState, type FormEvent } from "react";
 import { useAuth } from "../auth/AuthProvider";
 import type { ApiError } from "../api/authApi";
+import { HouseholdLogo } from "../components/HouseholdLogo";
 
-interface Props {
-  onSuccess?: () => void;
-  onGoToLogin?: () => void;
-}
+interface Props { onSuccess?: () => void; onGoToRegister?: () => void; }
 
-export function LoginPage({ onSuccess, onGoToLogin }: Props) {
+export function LoginPage({ onSuccess, onGoToRegister }: Props) {
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,62 +16,42 @@ export function LoginPage({ onSuccess, onGoToLogin }: Props) {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    try {
-      await login(email, password);
-      onSuccess?.();
-    } catch (err) {
-      setError((err as ApiError).message ?? "Login failed.");
-    } finally {
-      setLoading(false);
-    }
+    try { await login(email, password); onSuccess?.(); }
+    catch (err) { setError((err as ApiError).message ?? "Sign in failed."); }
+    finally { setLoading(false); }
   }
 
   return (
-    <div style={styles.card}>
-      <h2>Sign in</h2>
-      <form onSubmit={handleSubmit} style={styles.form}>
-        <label>
-          Email
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={styles.input}
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={styles.input}
-          />
-        </label>
-        {error && <p style={styles.error}>{error}</p>}
-        <button type="submit" disabled={loading} style={styles.button}>
-          {loading ? "Signing in…" : "Sign in"}
-        </button>
-      </form>
-      {onGoToLogin && (
-        <p>
-          No account?{" "}
-          <button style={styles.link} onClick={onGoToLogin}>
-            Register
+    <div className="auth-wrap">
+      <div className="auth-card">
+        <div style={{ textAlign: "center", marginBottom: "1.25rem", color: "var(--primary)" }}>
+          <HouseholdLogo size={40} />
+        </div>
+        <h1 style={{ textAlign: "center", marginBottom: "1.25rem" }}>Sign in</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input id="email" className="form-control" type="email" value={email}
+              onChange={(e) => setEmail(e.target.value)} required autoFocus />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input id="password" className="form-control" type="password" value={password}
+              onChange={(e) => setPassword(e.target.value)} required />
+          </div>
+          {error && <p className="error-msg">{error}</p>}
+          <button type="submit" className="btn" disabled={loading}
+            style={{ width: "100%", justifyContent: "center", marginTop: "0.5rem" }}>
+            {loading ? "Signing in\u2026" : "Sign in"}
           </button>
-        </p>
-      )}
+        </form>
+        {onGoToRegister && (
+          <p className="auth-footer">
+            No account?{" "}
+            <button onClick={onGoToRegister}>Create one</button>
+          </p>
+        )}
+      </div>
     </div>
   );
 }
-
-const styles = {
-  card: { maxWidth: 360, margin: "60px auto", padding: 24, border: "1px solid #ccc", borderRadius: 8 } as const,
-  form: { display: "flex", flexDirection: "column" as const, gap: 12 },
-  input: { display: "block", width: "100%", marginTop: 4, padding: "6px 8px", boxSizing: "border-box" as const },
-  error: { color: "crimson", margin: 0 } as const,
-  button: { padding: "8px 16px", cursor: "pointer" } as const,
-  link: { background: "none", border: "none", color: "#0066cc", cursor: "pointer", padding: 0 } as const,
-};

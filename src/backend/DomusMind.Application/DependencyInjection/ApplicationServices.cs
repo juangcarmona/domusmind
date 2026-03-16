@@ -18,12 +18,14 @@ using DomusMind.Application.Features.Calendar.RescheduleEvent;
 using DomusMind.Application.Features.Calendar.ScheduleEvent;
 using DomusMind.Application.Features.Calendar.SuggestEventParticipants;
 using DomusMind.Application.Features.Family.AddMember;
+using DomusMind.Application.Features.Family.CompleteOnboarding;
 using DomusMind.Application.Features.Family.CreateFamily;
 using DomusMind.Application.Features.Family.GetEnrichedTimeline;
 using DomusMind.Application.Features.Family.GetFamily;
 using DomusMind.Application.Features.Family.GetFamilyMembers;
 using DomusMind.Application.Features.Family.GetHouseholdTimeline;
 using DomusMind.Application.Features.Family.GetMemberActivity;
+using DomusMind.Application.Features.Languages.GetSupportedLanguages;
 using DomusMind.Application.Features.Responsibilities.AssignPrimaryOwner;
 using DomusMind.Application.Features.Responsibilities.AssignSecondaryOwner;
 using DomusMind.Application.Features.Responsibilities.CreateResponsibilityDomain;
@@ -46,6 +48,7 @@ using DomusMind.Application.Features.Tasks.UpdateRoutine;
 using DomusMind.Contracts.Auth;
 using DomusMind.Contracts.Calendar;
 using DomusMind.Contracts.Family;
+using DomusMind.Contracts.Languages;
 using DomusMind.Contracts.Responsibilities;
 using DomusMind.Contracts.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,6 +71,7 @@ public static class ApplicationServices
         // Family slices
         services.AddScoped<ICommandHandler<CreateFamilyCommand, CreateFamilyResponse>, CreateFamilyCommandHandler>();
         services.AddScoped<ICommandHandler<AddMemberCommand, AddMemberResponse>, AddMemberCommandHandler>();
+        services.AddScoped<ICommandHandler<CompleteOnboardingCommand, CompleteOnboardingResponse>, CompleteOnboardingCommandHandler>();
         services.AddScoped<IQueryHandler<GetFamilyQuery, FamilyResponse>, GetFamilyQueryHandler>();
         services.AddScoped<IQueryHandler<GetFamilyMembersQuery, IReadOnlyCollection<FamilyMemberResponse>>, GetFamilyMembersQueryHandler>();
         services.AddScoped<IQueryHandler<GetHouseholdTimelineQuery, HouseholdTimelineResponse>, GetHouseholdTimelineQueryHandler>();
@@ -118,6 +122,9 @@ public static class ApplicationServices
 
         // Timeline enrichment slices (Phase 6)
         services.AddScoped<IQueryHandler<GetEnrichedTimelineQuery, EnrichedTimelineResponse>, GetEnrichedTimelineQueryHandler>();
+
+        // Languages
+        services.AddScoped<IQueryHandler<GetSupportedLanguagesQuery, SupportedLanguagesResponse>, GetSupportedLanguagesQueryHandler>();
 
         return services;
     }
