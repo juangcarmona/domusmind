@@ -7,6 +7,7 @@ interface WeeklyGridItemProps {
   title: string;
   time?: string;
   status?: string;
+  subtitle?: string;
 }
 
 function typeLabel(type: ItemType): string {
@@ -17,12 +18,14 @@ function typeLabel(type: ItemType): string {
   }
 }
 
-export function WeeklyGridItem({ type, title, time, status }: WeeklyGridItemProps) {
+export function WeeklyGridItem({ type, title, time, status, subtitle }: WeeklyGridItemProps) {
+  const tooltipText = [title, subtitle, status ? `(${status})` : ""].filter(Boolean).join(" · ");
   return (
-    <div className={`wg-item wg-item--${type}`} title={`${title}${status ? ` (${status})` : ""}`}>
+    <div className={`wg-item wg-item--${type}`} title={tooltipText}>
       <span className="wg-item-type">{typeLabel(type)}</span>
       <span className="wg-item-title">{title}</span>
       {time && <span className="wg-item-time">{time}</span>}
+      {subtitle && <span className="wg-item-subtitle">{subtitle}</span>}
     </div>
   );
 }
@@ -33,6 +36,7 @@ export function eventToItem(e: WeeklyGridEventItem) {
     minute: "2-digit",
     hour12: false,
   });
+  const participantNames = e.participants?.map((p) => p.displayName).join(", ");
   return (
     <WeeklyGridItem
       key={e.eventId}
@@ -40,6 +44,7 @@ export function eventToItem(e: WeeklyGridEventItem) {
       title={e.title}
       time={time}
       status={e.status}
+      subtitle={participantNames || undefined}
     />
   );
 }

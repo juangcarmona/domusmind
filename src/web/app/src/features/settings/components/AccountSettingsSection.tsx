@@ -4,7 +4,8 @@ import { useAuth } from "../../../auth/AuthProvider";
 import type { ApiError } from "../../../api/authApi";
 
 export function AccountSettingsSection() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("settings");
+  const { t: tCommon } = useTranslation("common");
   const { user, changePassword, logout } = useAuth();
 
   const [currentPw, setCurrentPw] = useState("");
@@ -20,20 +21,20 @@ export function AccountSettingsSection() {
     setSuccess(null);
 
     if (newPw !== confirmPw) {
-      setError(t("settings.account.passwordMismatch"));
+      setError(t("account.passwordMismatch"));
       return;
     }
 
     setSaving(true);
     try {
       await changePassword(currentPw, newPw);
-      setSuccess(t("settings.account.passwordSuccess"));
+      setSuccess(t("account.passwordSuccess"));
       setCurrentPw("");
       setNewPw("");
       setConfirmPw("");
       await logout();
     } catch (err) {
-      setError((err as ApiError).message ?? t("common.failed"));
+      setError((err as ApiError).message ?? tCommon("failed"));
     } finally {
       setSaving(false);
     }
@@ -41,24 +42,24 @@ export function AccountSettingsSection() {
 
   return (
     <section className="settings-section">
-      <h2 className="settings-section-title">{t("settings.account.title")}</h2>
+      <h2 className="settings-section-title">{t("account.title")}</h2>
 
       <div className="settings-field-group">
         <div className="settings-field">
-          <span className="settings-field-label">{t("settings.account.email")}</span>
+          <span className="settings-field-label">{t("account.email")}</span>
           <span className="settings-field-value">{user?.email ?? "—"}</span>
         </div>
         <div className="settings-field">
-          <span className="settings-field-label">{t("settings.account.userId")}</span>
+          <span className="settings-field-label">{t("account.userId")}</span>
           <span className="settings-field-value settings-field-mono">{user?.userId ?? "—"}</span>
         </div>
       </div>
 
       <div className="settings-subsection">
-        <h3 className="settings-subsection-title">{t("settings.account.changePassword")}</h3>
+        <h3 className="settings-subsection-title">{t("account.changePassword")}</h3>
         <form onSubmit={handleChangePassword} className="settings-form">
           <div className="form-group">
-            <label htmlFor="current-pw">{t("settings.account.currentPassword")}</label>
+            <label htmlFor="current-pw">{t("account.currentPassword")}</label>
             <input
               id="current-pw"
               type="password"
@@ -70,7 +71,7 @@ export function AccountSettingsSection() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="new-pw">{t("settings.account.newPassword")}</label>
+            <label htmlFor="new-pw">{t("account.newPassword")}</label>
             <input
               id="new-pw"
               type="password"
@@ -83,7 +84,7 @@ export function AccountSettingsSection() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="confirm-pw">{t("settings.account.confirmPassword")}</label>
+            <label htmlFor="confirm-pw">{t("account.confirmPassword")}</label>
             <input
               id="confirm-pw"
               type="password"
@@ -102,7 +103,7 @@ export function AccountSettingsSection() {
             className="btn"
             disabled={saving || !currentPw || !newPw || !confirmPw}
           >
-            {saving ? t("settings.account.saving") : t("settings.account.save")}
+            {saving ? t("account.saving") : t("account.save")}
           </button>
         </form>
       </div>

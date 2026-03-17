@@ -1,9 +1,12 @@
+import type { ParticipantProjection } from "../../api/domusmindApi";
+
 export interface WeeklyGridEventItem {
   eventId: string;
   title: string;
   startTime: string;
   endTime: string | null;
   status: string;
+  participants: ParticipantProjection[];
 }
 
 export interface WeeklyGridTaskItem {

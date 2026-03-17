@@ -5,6 +5,7 @@ using DomusMind.Domain.Calendar.ValueObjects;
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Family.ValueObjects;
 using DomusMind.Domain.Tasks;
+using DomusMind.Domain.Tasks.Enums;
 using DomusMind.Domain.Tasks.ValueObjects;
 using DomusMind.Infrastructure.Persistence;
 using FluentAssertions;
@@ -65,7 +66,17 @@ public sealed class GetWeeklyGridQueryHandlerTests
     }
 
     private static Routine MakeRoutine(FamilyId familyId, string name)
-        => Routine.Create(RoutineId.New(), familyId, RoutineName.Create(name), "Daily", DateTime.UtcNow);
+        => Routine.Create(
+            RoutineId.New(), familyId,
+            RoutineName.Create(name),
+            RoutineScope.Household,
+            RoutineKind.Cue,
+            RoutineColor.From("#3B82F6"),
+            RoutineSchedule.Weekly(
+                new[] { DayOfWeek.Sunday, DayOfWeek.Monday, DayOfWeek.Tuesday,
+                         DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday }),
+            null,
+            DateTime.UtcNow);
 
     // ---- Authorization / guarding ----
 
@@ -256,11 +267,12 @@ public sealed class GetWeeklyGridQueryHandlerTests
     // ---- Routines ----
 
     [Fact]
-    public async Task Handle_ActiveRoutine_AppearsInRoutinesCollection()
+    public async Task Handle_ActiveRoutine_AppearsInCells()
     {
         var db = CreateDb();
         var familyId = FamilyId.New();
-        db.Set<Domain.Family.Family>().Add(MakeFamily(familyId));
+        var memberId = MemberId.New();
+        db.Set<Domain.Family.Family>().Add(MakeFamily(familyId, (memberId, "Alice")));
         db.Set<Routine>().Add(MakeRoutine(familyId, "Morning Walk"));
         await db.SaveChangesAsync();
         var handler = BuildHandler(db);
@@ -269,7 +281,7 @@ public sealed class GetWeeklyGridQueryHandlerTests
             new GetWeeklyGridQuery(familyId.Value, DateTime.UtcNow, Guid.NewGuid()),
             CancellationToken.None);
 
-        result.Routines.Should().ContainSingle(r => r.Name == "Morning Walk");
+        result.Members.First().Cells.SelectMany(c => c.Routines).Should().Contain(r => r.Name == "Morning Walk");
     }
 
     // ---- Response shape ----
