@@ -1,31 +1,39 @@
-import type { WeeklyGridEventItem, WeeklyGridTaskItem } from "../types";
+import type { WeeklyGridEventItem, WeeklyGridTaskItem, WeeklyGridRoutineItem } from "../types";
 
 type ItemType = "event" | "task" | "routine";
 
 interface WeeklyGridItemProps {
   type: ItemType;
   title: string;
-  time?: string;
+  time?: string | null;
   status?: string;
   subtitle?: string;
+  color?: string | null;
 }
 
-function typeLabel(type: ItemType): string {
-  switch (type) {
-    case "event": return "E";
-    case "task": return "T";
-    case "routine": return "R";
-  }
-}
+export function WeeklyGridItem({
+  type,
+  title,
+  time,
+  status,
+  subtitle,
+  color,
+}: WeeklyGridItemProps) {
+  const tooltipText = [title, time, subtitle, status ? `(${status})` : ""]
+    .filter(Boolean)
+    .join(" · ");
 
-export function WeeklyGridItem({ type, title, time, status, subtitle }: WeeklyGridItemProps) {
-  const tooltipText = [title, subtitle, status ? `(${status})` : ""].filter(Boolean).join(" · ");
+  const style = color
+    ? ({ ["--wg-item-accent" as string]: color } as React.CSSProperties)
+    : undefined;
+
   return (
-    <div className={`wg-item wg-item--${type}`} title={tooltipText}>
-      <span className="wg-item-type">{typeLabel(type)}</span>
-      <span className="wg-item-title">{title}</span>
-      {time && <span className="wg-item-time">{time}</span>}
-      {subtitle && <span className="wg-item-subtitle">{subtitle}</span>}
+    <div
+      className={`wg-item wg-item--${type}`}
+      title={tooltipText}
+      style={style}
+    >
+      <span className="wg-item-title">{title} {time && `· ${time}`}</span>
     </div>
   );
 }
@@ -56,6 +64,19 @@ export function taskToItem(t: WeeklyGridTaskItem) {
       type="task"
       title={t.title}
       status={t.status}
+    />
+  );
+}
+
+export function routineToItem(r: WeeklyGridRoutineItem) {
+  return (
+    <WeeklyGridItem
+      key={`routine-${r.routineId}`}
+      type="routine"
+      title={r.name}
+      time={r.time ?? r.frequency}
+      status={r.kind}
+      color={r.color}
     />
   );
 }

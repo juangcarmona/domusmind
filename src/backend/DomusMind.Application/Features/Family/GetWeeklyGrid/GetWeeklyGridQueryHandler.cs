@@ -80,6 +80,29 @@ public sealed class GetWeeklyGridQueryHandler
             .Select(i => weekStart.AddDays(i))
             .ToList();
 
+        var householdRoutines = routines.Where(r => r.Scope == RoutineScope.Household).ToList();
+        var memberRoutines = routines.Where(r => r.Scope == RoutineScope.Members).ToList();
+
+        var sharedCells = days
+            .Select(day =>
+            {
+                var cellDate = DateOnly.FromDateTime(day);
+                var dayRoutines = householdRoutines
+                    .Where(r => r.Schedule.OccursOn(cellDate))
+                    .Select(r => new WeeklyGridRoutineItem(
+                        r.Id.Value,
+                        r.Name.Value,
+                        r.Kind.ToString(),
+                        r.Color.Value,
+                        r.Schedule.Frequency.ToString(),
+                        r.Schedule.Time,
+                        r.Scope.ToString()))
+                    .ToList();
+
+                return new WeeklyGridCell(day, [], [], dayRoutines);
+            })
+            .ToList();
+
         var memberRows = family.Members
             .Select(member =>
             {
@@ -120,7 +143,7 @@ public sealed class GetWeeklyGridQueryHandler
 
                         var cellDate = DateOnly.FromDateTime(day);
 
-                        var memberRoutines = routines
+                        var cellRoutines = memberRoutines
                             .Where(r => r.AppliesTo(member.Id) && r.Schedule.OccursOn(cellDate))
                             .Select(r => new WeeklyGridRoutineItem(
                                 r.Id.Value,
@@ -136,7 +159,7 @@ public sealed class GetWeeklyGridQueryHandler
                             day,
                             memberEvents,
                             memberTasks,
-                            memberRoutines);
+                            cellRoutines);
                     })
                     .ToList();
 
@@ -151,6 +174,7 @@ public sealed class GetWeeklyGridQueryHandler
         return new WeeklyGridResponse(
             weekStart,
             weekEnd.AddDays(-1),
-            memberRows);
+            memberRows,
+            sharedCells);
     }
 }

@@ -12,6 +12,10 @@ export default {
     passwordSuccess: "Contraseña cambiada. Has sido desconectado.",
     save: "Cambiar contraseña",
     saving: "Cambiando…",
+    householdContext: "Hogar",
+    linkedFamily: "Familia",
+    linkedMembers: "Miembros",
+    noHousehold: "Sin hogar vinculado.",
   },
   household: {
     title: "Hogar",

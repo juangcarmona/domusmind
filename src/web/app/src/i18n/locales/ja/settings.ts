@@ -12,6 +12,10 @@ export default {
     passwordSuccess: "パスワードを変更しました。サインアウトされました。",
     save: "パスワード変更",
     saving: "変更中…",
+    householdContext: "世帯",
+    linkedFamily: "家族",
+    linkedMembers: "メンバー",
+    noHousehold: "世帯が未登録です。",
   },
   household: {
     title: "世帯",

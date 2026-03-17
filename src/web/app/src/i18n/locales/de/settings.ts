@@ -12,6 +12,10 @@ export default {
     passwordSuccess: "Passwort geändert. Sie wurden abgemeldet.",
     save: "Passwort ändern",
     saving: "Wird geändert…",
+    householdContext: "Haushalt",
+    linkedFamily: "Familie",
+    linkedMembers: "Mitglieder",
+    noHousehold: "Kein Haushalt verknüpft.",
   },
   household: {
     title: "Haushalt",

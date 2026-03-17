@@ -12,6 +12,10 @@ export default {
     passwordSuccess: "密码已更改。您已被退出登录。",
     save: "修改密码",
     saving: "修改中…",
+    householdContext: "家庭",
+    linkedFamily: "家庭",
+    linkedMembers: "成员",
+    noHousehold: "未关联家庭。",
   },
   household: {
     title: "家庭",

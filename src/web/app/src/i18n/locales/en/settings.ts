@@ -12,6 +12,10 @@ export default {
     passwordSuccess: "Password changed. You have been signed out.",
     save: "Change password",
     saving: "Changing…",
+    householdContext: "Household",
+    linkedFamily: "Family",
+    linkedMembers: "Members",
+    noHousehold: "No household linked.",
   },
   household: {
     title: "Household",

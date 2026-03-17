@@ -16,10 +16,21 @@ export interface WeeklyGridTaskItem {
   status: string;
 }
 
+export interface WeeklyGridRoutineItem {
+  routineId: string;
+  name: string;
+  kind: string;
+  color: string | null;
+  frequency: string;
+  time: string | null;
+  scope: string;
+}
+
 export interface WeeklyGridCell {
   date: string;
   events: WeeklyGridEventItem[];
   tasks: WeeklyGridTaskItem[];
+  routines: WeeklyGridRoutineItem[];
 }
 
 export interface WeeklyGridMember {
@@ -29,16 +40,9 @@ export interface WeeklyGridMember {
   cells: WeeklyGridCell[];
 }
 
-export interface WeeklyGridRoutineItem {
-  routineId: string;
-  name: string;
-  cadence: string;
-  status: string;
-}
-
 export interface WeeklyGridResponse {
   weekStart: string;
   weekEnd: string;
   members: WeeklyGridMember[];
-  routines: WeeklyGridRoutineItem[];
+  sharedCells: WeeklyGridCell[];
 }

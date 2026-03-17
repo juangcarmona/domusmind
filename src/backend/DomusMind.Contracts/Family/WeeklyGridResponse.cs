@@ -40,4 +40,5 @@ public sealed record WeeklyGridRoutineItem(
 public sealed record WeeklyGridResponse(
     DateTime WeekStart,
     DateTime WeekEnd,
-    IReadOnlyCollection<WeeklyGridMember> Members);
+    IReadOnlyCollection<WeeklyGridMember> Members,
+    IReadOnlyCollection<WeeklyGridCell> SharedCells);

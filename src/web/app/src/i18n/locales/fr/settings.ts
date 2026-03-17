@@ -12,6 +12,10 @@ export default {
     passwordSuccess: "Mot de passe modifié. Vous avez été déconnecté.",
     save: "Changer le mot de passe",
     saving: "Modification…",
+    householdContext: "Foyer",
+    linkedFamily: "Famille",
+    linkedMembers: "Membres",
+    noHousehold: "Aucun foyer associé.",
   },
   household: {
     title: "Foyer",
