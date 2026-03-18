@@ -36,6 +36,7 @@ export function CoordinationWeekView({
         grid={grid}
         selectedDate={selectedDate}
         onDayClick={onDayClick}
+        suppressTodaySummary
       />
     </div>
   );

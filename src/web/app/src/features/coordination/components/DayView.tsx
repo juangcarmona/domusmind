@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import type { WeeklyGridResponse } from "../../week/types";
+import type { WeeklyGridResponse, WeeklyGridCell } from "../../week/types";
 import { eventToItem, taskToItem, routineToItem } from "../../week/components/WeeklyGridItem";
 
 interface DayViewProps {
@@ -9,40 +9,25 @@ interface DayViewProps {
   error: string | null;
 }
 
-function MemberDaySection({
-  name,
-  role,
-  events,
-  tasks,
-  routines,
-  emptyLabel,
-}: {
-  name: string;
-  role?: string;
-  events: React.ReactNode[];
-  tasks: React.ReactNode[];
-  routines: React.ReactNode[];
-  emptyLabel: string;
-}) {
+function DayMemberSection({ name, cell }: { name: string; cell: WeeklyGridCell }) {
+  const { t: tWeek } = useTranslation("week");
+  const events = cell.events ?? [];
+  const tasks = cell.tasks ?? [];
+  const routines = cell.routines ?? [];
   const isEmpty = events.length === 0 && tasks.length === 0 && routines.length === 0;
 
   return (
-    <div className="coord-day-member">
-      <div className="coord-day-member-label">
-        <span className="coord-day-member-name">{name}</span>
-        {role && <span className="coord-day-member-role">{role}</span>}
-      </div>
-      <div className="coord-day-member-items">
-        {isEmpty ? (
-          <span className="coord-day-empty-member">{emptyLabel}</span>
-        ) : (
-          <>
-            {events}
-            {tasks}
-            {routines}
-          </>
-        )}
-      </div>
+    <div className="today-summary-member">
+      <div className="today-summary-member-name">{name}</div>
+      {isEmpty ? (
+        <span className="today-summary-empty">{tWeek("todayEmpty")}</span>
+      ) : (
+        <div className="today-summary-items">
+          {events.map((e) => eventToItem(e))}
+          {tasks.map((t) => taskToItem(t))}
+          {routines.map((r) => routineToItem(r))}
+        </div>
+      )}
     </div>
   );
 }
@@ -52,9 +37,12 @@ export function DayView({ grid, selectedDate, loading, error }: DayViewProps) {
   const { t: tWeek } = useTranslation("week");
   const { t: tCommon } = useTranslation("common");
 
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const isToday = selectedDate === todayIso;
+
   const dateLabel = new Date(selectedDate + "T00:00:00").toLocaleDateString(
     i18n.language,
-    { weekday: "long", day: "numeric", month: "long", year: "numeric" },
+    { weekday: "long", day: "numeric", month: "long" },
   );
 
   if (loading) {
@@ -70,7 +58,9 @@ export function DayView({ grid, selectedDate, loading, error }: DayViewProps) {
   const members = grid.members ?? [];
   const sharedCells = grid.sharedCells ?? [];
 
-  // Extract each member's cell for the selected date
+  const sharedCell = sharedCells.find((c) => c.date.slice(0, 10) === selectedDate);
+  const hasSharedItems = (sharedCell?.routines?.length ?? 0) > 0;
+
   const memberDays = members.map((member) => ({
     member,
     cell: member.cells.find((c) => c.date.slice(0, 10) === selectedDate) ?? {
@@ -81,10 +71,6 @@ export function DayView({ grid, selectedDate, loading, error }: DayViewProps) {
     },
   }));
 
-  // Shared/household cell for the selected date
-  const sharedCell = sharedCells.find((c) => c.date.slice(0, 10) === selectedDate);
-  const hasSharedItems = (sharedCell?.routines?.length ?? 0) > 0;
-
   const hasAnyContent =
     hasSharedItems ||
     memberDays.some(
@@ -94,49 +80,34 @@ export function DayView({ grid, selectedDate, loading, error }: DayViewProps) {
         (cell.routines?.length ?? 0) > 0,
     );
 
-  const nothingLabel = t("day.empty");
-  const emptyMemberLabel = tWeek("todayEmpty");
-
   return (
-    <div className="coord-day-view">
-      <div className="coord-day-header">
-        <h2 className="coord-day-title">{dateLabel}</h2>
+    <div className="today-summary coord-day-panel">
+      <div className="today-summary-header">
+        <span className="today-summary-label">
+          {isToday ? tWeek("today") : t("day.title")}
+        </span>
+        <span className="today-summary-date">{dateLabel}</span>
       </div>
 
       {members.length === 0 && (
-        <p className="empty-note">{t("day.noMembers")}</p>
+        <p className="today-summary-empty">{t("day.noMembers")}</p>
       )}
 
       {members.length > 0 && !hasAnyContent && (
-        <div className="empty-state">
-          <p>{nothingLabel}</p>
-        </div>
+        <p className="today-summary-empty">{t("day.empty")}</p>
       )}
 
-      {(hasSharedItems || members.length > 0) && hasAnyContent && (
-        <div className="coord-day-sections">
+      {members.length > 0 && hasAnyContent && (
+        <div className="today-summary-body">
           {hasSharedItems && sharedCell && (
-            <MemberDaySection
-              name={t("day.household")}
-              events={[]}
-              tasks={[]}
-              routines={(sharedCell.routines ?? []).map((r) => routineToItem(r))}
-              emptyLabel={emptyMemberLabel}
-            />
+            <DayMemberSection name={t("day.household")} cell={sharedCell} />
           )}
           {memberDays.map(({ member, cell }) => (
-            <MemberDaySection
-              key={member.memberId}
-              name={member.name}
-              role={member.role}
-              events={(cell.events ?? []).map((e) => eventToItem(e))}
-              tasks={(cell.tasks ?? []).map((t) => taskToItem(t))}
-              routines={(cell.routines ?? []).map((r) => routineToItem(r))}
-              emptyLabel={emptyMemberLabel}
-            />
+            <DayMemberSection key={member.memberId} name={member.name} cell={cell} />
           ))}
         </div>
       )}
     </div>
   );
 }
+

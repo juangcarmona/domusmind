@@ -1,9 +1,10 @@
 import { useTranslation } from "react-i18next";
 
 interface MonthViewProps {
-  selectedDate: string; // ISO YYYY-MM-DD
+  selectedDate: string; // ISO YYYY-MM-DD — day to highlight as selected
   today: string; // ISO YYYY-MM-DD
   firstDayOfWeek?: string | null;
+  displayAnchor?: string; // ISO YYYY-MM-DD — which month to show (defaults to selectedDate)
   onSelectDay: (date: string) => void;
   onPrevMonth: () => void;
   onNextMonth: () => void;
@@ -72,13 +73,16 @@ export function MonthView({
   selectedDate,
   today,
   firstDayOfWeek,
+  displayAnchor,
   onSelectDay,
   onPrevMonth,
   onNextMonth,
 }: MonthViewProps) {
   const { t, i18n } = useTranslation("coordination");
 
-  const anchor = new Date(selectedDate + "T00:00:00");
+  // Use displayAnchor to decide which month to show, falling back to selectedDate
+  const anchorIso = displayAnchor ?? selectedDate;
+  const anchor = new Date(anchorIso + "T00:00:00");
   const year = anchor.getFullYear();
   const month = anchor.getMonth();
 

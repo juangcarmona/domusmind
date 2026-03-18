@@ -9,6 +9,7 @@ interface WeeklyGridProps {
   grid: WeeklyGridResponse;
   selectedDate?: string; // Optional: highlight selected day column
   onDayClick?: (date: string) => void; // Optional: handle day header click
+  suppressTodaySummary?: boolean; // When true, don't render TodaySummary above the grid
 }
 
 function SharedRow({
@@ -36,7 +37,7 @@ function SharedRow({
   );
 }
 
-export function WeeklyGrid({ grid, selectedDate, onDayClick }: WeeklyGridProps) {
+export function WeeklyGrid({ grid, selectedDate, onDayClick, suppressTodaySummary }: WeeklyGridProps) {
   const { t } = useTranslation("week");
   const todayIso = new Date().toISOString().slice(0, 10);
   const members = grid.members ?? [];
@@ -58,7 +59,7 @@ export function WeeklyGrid({ grid, selectedDate, onDayClick }: WeeklyGridProps) 
 
   return (
     <>
-      {isCurrentWeek && <TodaySummary grid={grid} today={todayIso} />}
+      {isCurrentWeek && !suppressTodaySummary && <TodaySummary grid={grid} today={todayIso} />}
       <div className="weekly-grid">
         <WeekHeader
           days={days}
