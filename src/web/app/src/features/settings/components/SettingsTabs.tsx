@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-export type SettingsTab = "account" | "household";
+export type SettingsTab = "account" | "household" | "members";
 
 interface SettingsTabsProps {
   active: SettingsTab;
@@ -28,6 +28,15 @@ export function SettingsTabs({ active, onChange }: SettingsTabsProps) {
         type="button"
       >
         {t("household.title")}
+      </button>
+      <button
+        role="tab"
+        aria-selected={active === "members"}
+        className={`settings-tab${active === "members" ? " active" : ""}`}
+        onClick={() => onChange("members")}
+        type="button"
+      >
+        {t("membersTab.title")}
       </button>
     </div>
   );

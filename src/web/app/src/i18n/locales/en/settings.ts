@@ -59,6 +59,7 @@ export default {
       credentialsSaveWarning: "⚠ This password will not be shown again. Copy it now and share it securely with the member.",
       done: "Done",
       managerBadge: "Manager",
+      youBadge: "You",
       noMembers: "No members yet.",
       linkAccountError: "Failed to link account.",
       updateError: "Failed to update member.",
@@ -69,5 +70,10 @@ export default {
         Caregiver: "Caregiver",
       },
     },
+  },
+  membersTab: {
+    title: "Members",
+    myProfile: "My profile",
+    youBadge: "You",
   },
 } as const;

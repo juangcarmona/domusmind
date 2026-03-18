@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { updateHouseholdSettings } from "../../../store/householdSlice";
 import { FIRST_DAY_OPTIONS, DATE_FORMAT_OPTIONS } from "../types";
-import { MembersManagementSection } from "./MembersManagementSection";
 
 export function HouseholdSettingsSection() {
   const { t } = useTranslation("settings");
@@ -126,9 +125,6 @@ export function HouseholdSettingsSection() {
           </button>
         </form>
       </section>
-
-      <MembersManagementSection />
     </>
   );
 }
-

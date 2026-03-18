@@ -51,7 +51,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     nav("/login");
   }
 
-  const userName = user?.email?.split("@")[0] ?? "";
+  const members = useAppSelector((s) => s.household.members);
+  const currentMember = members.find((m) => m.authUserId === user?.userId);
+  const userName = currentMember?.name ?? user?.email?.split("@")[0] ?? "";
 
   return (
     <div className="app-layout">

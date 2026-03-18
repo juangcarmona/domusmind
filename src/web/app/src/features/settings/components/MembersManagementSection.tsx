@@ -43,7 +43,6 @@ export function MembersManagementSection() {
   const { user } = useAuth();
   const dispatch = useAppDispatch();
   const { family, members } = useAppSelector((s) => s.household);
-
   const isCurrentUserManager = members.some(
     (m) => m.authUserId === user?.userId && m.isManager,
   );
@@ -374,6 +373,20 @@ export function MembersManagementSection() {
                           }}
                         >
                           {tM("managerBadge")}
+                        </span>
+                      )}
+                      {m.authUserId === user?.userId && (
+                        <span
+                          style={{
+                            fontSize: "0.7rem",
+                            padding: "0.1rem 0.4rem",
+                            borderRadius: 4,
+                            background: "color-mix(in srgb, var(--primary) 12%, transparent)",
+                            color: "var(--primary)",
+                            fontStyle: "italic",
+                          }}
+                        >
+                          {tM("youBadge")}
                         </span>
                       )}
                       <span
