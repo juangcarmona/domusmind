@@ -7,6 +7,10 @@ interface DayViewProps {
   selectedDate: string; // ISO YYYY-MM-DD
   loading: boolean;
   error: string | null;
+  isToday: boolean;
+  onPrevDay: () => void;
+  onNextDay: () => void;
+  onToday: () => void;
 }
 
 function DayMemberSection({ name, cell }: { name: string; cell: WeeklyGridCell }) {
@@ -32,13 +36,19 @@ function DayMemberSection({ name, cell }: { name: string; cell: WeeklyGridCell }
   );
 }
 
-export function DayView({ grid, selectedDate, loading, error }: DayViewProps) {
+export function DayView({
+  grid,
+  selectedDate,
+  loading,
+  error,
+  isToday,
+  onPrevDay,
+  onNextDay,
+  onToday,
+}: DayViewProps) {
   const { t, i18n } = useTranslation("coordination");
   const { t: tWeek } = useTranslation("week");
   const { t: tCommon } = useTranslation("common");
-
-  const todayIso = new Date().toISOString().slice(0, 10);
-  const isToday = selectedDate === todayIso;
 
   const dateLabel = new Date(selectedDate + "T00:00:00").toLocaleDateString(
     i18n.language,
@@ -82,11 +92,40 @@ export function DayView({ grid, selectedDate, loading, error }: DayViewProps) {
 
   return (
     <div className="today-summary coord-day-panel">
-      <div className="today-summary-header">
-        <span className="today-summary-label">
-          {isToday ? tWeek("today") : t("day.title")}
-        </span>
-        <span className="today-summary-date">{dateLabel}</span>
+      <div className="today-summary-header coord-day-header">
+        <button
+          className="btn btn-ghost btn-sm coord-nav-btn"
+          onClick={onPrevDay}
+          type="button"
+          aria-label={t("nav.prevDay")}
+        >
+          ‹
+        </button>
+        <div className="coord-day-header-label">
+          <span className="today-summary-label">
+            {isToday ? tWeek("today") : t("day.title")}
+          </span>
+          <span className="today-summary-date">{dateLabel}</span>
+        </div>
+        <div className="coord-day-header-right">
+          {!isToday && (
+            <button
+              className="btn btn-ghost btn-sm coord-today-btn"
+              onClick={onToday}
+              type="button"
+            >
+              {t("nav.today")}
+            </button>
+          )}
+          <button
+            className="btn btn-ghost btn-sm coord-nav-btn"
+            onClick={onNextDay}
+            type="button"
+            aria-label={t("nav.nextDay")}
+          >
+            ›
+          </button>
+        </div>
       </div>
 
       {members.length === 0 && (

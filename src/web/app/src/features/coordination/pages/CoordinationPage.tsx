@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { setSelectedDate } from "../../../store/coordinationSlice";
@@ -100,6 +100,18 @@ export function CoordinationPage() {
   const [gridLoading, setGridLoading] = useState(false);
   const [gridError, setGridError] = useState<string | null>(null);
 
+  // Month grid cache: weekStart → WeeklyGridResponse (for month calendar dots)
+  const [monthGridCache, setMonthGridCache] = useState<Record<string, WeeklyGridResponse>>({});
+  // Track which week starts have already been requested so we never double-fetch.
+  // A ref is used intentionally — it doesn't need to be part of any effect's dep array.
+  const requestedMonthWeeks = useRef<Set<string>>(new Set());
+
+  // Reset the month grid cache and request tracker when the active household changes
+  useEffect(() => {
+    setMonthGridCache({});
+    requestedMonthWeeks.current.clear();
+  }, [familyId]);
+
   // Compute week start for the selected date
   const weekStartForSelected = toIsoDate(
     startOfWeek(new Date(selectedDate + "T00:00:00"), firstDayOfWeek),
@@ -130,7 +142,63 @@ export function CoordinationPage() {
     }
   }, [weekStartForSelected, fetchGrid, familyId]);
 
-  // Load timeline data (for the ruler + month dots).
+  // Fetch weekly grids for all weeks visible in the month calendar.
+  // Uses requestedMonthWeeks ref to track already-requested weeks, so
+  // monthGridCache itself does not need to be in the dependency array.
+  useEffect(() => {
+    if (midTermView !== "month" || !familyId) return;
+
+    // Reset the request tracker when familyId changes so fresh data is loaded
+    // (handled implicitly: when familyId changes the cache is already empty via state reset)
+
+    // Compute first visible date for the month grid
+    const anchor = new Date(monthAnchor + "T00:00:00");
+    const year = anchor.getFullYear();
+    const month = anchor.getMonth();
+    const firstDayIdx = Math.max(
+      0,
+      DAY_ORDER.indexOf((firstDayOfWeek ?? "monday").toLowerCase()),
+    );
+    const firstOfMonth = new Date(year, month, 1);
+    let startPad = firstOfMonth.getDay() - firstDayIdx;
+    if (startPad < 0) startPad += 7;
+    const firstVisible = new Date(year, month, 1 - startPad);
+    const lastOfMonth = new Date(year, month + 1, 0);
+
+    // Collect week starts for all visible weeks
+    const weekStarts: string[] = [];
+    let cursor = new Date(firstVisible);
+    while (cursor <= lastOfMonth) {
+      weekStarts.push(toIsoDate(cursor));
+      cursor = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate() + 7);
+    }
+
+    // Only request weeks that haven't been fetched/requested yet
+    const missing = weekStarts.filter(
+      (ws) => !requestedMonthWeeks.current.has(ws),
+    );
+    if (missing.length === 0) return;
+
+    // Mark them as requested immediately so concurrent effect runs don't double-fetch
+    missing.forEach((ws) => requestedMonthWeeks.current.add(ws));
+
+    Promise.all(missing.map((ws) => weekApi.getWeeklyGrid(familyId, ws)))
+      .then((grids) => {
+        setMonthGridCache((prev) => {
+          const next = { ...prev };
+          grids.forEach((g, i) => {
+            next[missing[i]] = g;
+          });
+          return next;
+        });
+      })
+      .catch(() => {
+        // silently ignore — dots are best-effort; remove from requested so retry is possible
+        missing.forEach((ws) => requestedMonthWeeks.current.delete(ws));
+      });
+  }, [midTermView, monthAnchor, familyId, firstDayOfWeek]);
+
+  // Load timeline data (for the ruler only — month dots now use weekly grids).
   // Re-fetches whenever familyId changes or if a previous attempt failed.
   useEffect(() => {
     if (!familyId) return;
@@ -180,81 +248,59 @@ export function CoordinationPage() {
     year: "numeric",
   })}`;
 
-  // ---- Month calendar dots: per-day member colors from timeline data ----
-  const dayDots: Record<string, string[]> = {};
-  if (timelineStatus === "success" && timelineData) {
-    // Build memberId → index map for consistent colors
+  // ---- Month calendar dots: per-day member colors from weekly grid cache ----
+  const monthDayDots = useMemo(() => {
+    const dots: Record<string, string[]> = {};
+    if (Object.keys(monthGridCache).length === 0) return dots;
+
     const memberIndexMap = new Map<string, number>();
     members.forEach((m, idx) => memberIndexMap.set(m.memberId, idx));
 
-    for (const group of timelineData.groups) {
-      for (const entry of group.entries) {
-        if (!entry.effectiveDate || entry.entryType === "Routine") continue;
-        const dayKey = entry.effectiveDate.slice(0, 10);
-        if (!dayDots[dayKey]) dayDots[dayKey] = [];
-
-        // Collect member colors for this entry (assignee or participants)
-        const memberIds = new Set<string>();
-        if (entry.assigneeId) memberIds.add(entry.assigneeId);
-        if (entry.participants) {
-          for (const p of entry.participants) memberIds.add(p.memberId);
-        }
-
-        if (memberIds.size === 0) {
-          // Unassigned entry — show a generic muted dot
-          if (!dayDots[dayKey].includes(UNASSIGNED_DOT_COLOR)) {
-            dayDots[dayKey].push(UNASSIGNED_DOT_COLOR);
+    for (const weekGrid of Object.values(monthGridCache)) {
+      // Household-level shared cells (plans / tasks with no individual assignee)
+      for (const cell of weekGrid.sharedCells ?? []) {
+        const dayKey = cell.date.slice(0, 10);
+        const hasItems =
+          (cell.events?.length ?? 0) > 0 || (cell.tasks?.length ?? 0) > 0;
+        if (hasItems) {
+          if (!dots[dayKey]) dots[dayKey] = [];
+          if (!dots[dayKey].includes(UNASSIGNED_DOT_COLOR)) {
+            dots[dayKey].push(UNASSIGNED_DOT_COLOR);
           }
-        } else {
-          for (const memberId of memberIds) {
-            const idx = memberIndexMap.get(memberId);
-            const color = idx !== undefined ? getMemberColor(idx) : getMemberColor(0);
-            if (!dayDots[dayKey].includes(color)) {
-              dayDots[dayKey].push(color);
+        }
+      }
+      // Per-member cells
+      for (const member of weekGrid.members ?? []) {
+        const idx = memberIndexMap.get(member.memberId) ?? 0;
+        const color = getMemberColor(idx);
+        for (const cell of member.cells) {
+          const dayKey = cell.date.slice(0, 10);
+          const hasItems =
+            (cell.events?.length ?? 0) > 0 || (cell.tasks?.length ?? 0) > 0;
+          if (hasItems) {
+            if (!dots[dayKey]) dots[dayKey] = [];
+            if (!dots[dayKey].includes(color)) {
+              dots[dayKey].push(color);
             }
           }
         }
       }
     }
-  }
+    return dots;
+  }, [monthGridCache, members]);
 
   return (
     <div className="page-content coord-page">
-      {/* ── Day navigation bar (prev/next/today only — date shown in Day View) ── */}
-      <div className="coord-date-nav">
-        <button
-          className="btn btn-ghost btn-sm coord-nav-btn"
-          onClick={handlePrevDay}
-          type="button"
-          aria-label={t("nav.prevDay")}
-        >
-          ‹
-        </button>
-        {!isToday && (
-          <button
-            className="btn btn-ghost btn-sm coord-today-btn"
-            onClick={handleToday}
-            type="button"
-          >
-            {t("nav.today")}
-          </button>
-        )}
-        <button
-          className="btn btn-ghost btn-sm coord-nav-btn"
-          onClick={handleNextDay}
-          type="button"
-          aria-label={t("nav.nextDay")}
-        >
-          ›
-        </button>
-      </div>
-
-      {/* ── Section 1: Day View (always visible) ── */}
+      {/* ── Section 1: Day View (always visible, nav integrated inside) ── */}
       <DayView
         grid={grid}
         selectedDate={selectedDate}
         loading={gridLoading}
         error={gridError}
+        isToday={isToday}
+        onPrevDay={handlePrevDay}
+        onNextDay={handleNextDay}
+        onToday={handleToday}
       />
 
       {/* ── Section 2: Mid-term navigation (Week / Month) ── */}
@@ -319,7 +365,7 @@ export function CoordinationPage() {
               today={todayIso}
               firstDayOfWeek={firstDayOfWeek}
               displayAnchor={monthAnchor}
-              dayDots={dayDots}
+              dayDots={monthDayDots}
               onSelectDay={handleDaySelect}
               onPrevMonth={() => setMonthAnchor(addMonths(monthAnchor, -1))}
               onNextMonth={() => setMonthAnchor(addMonths(monthAnchor, 1))}
