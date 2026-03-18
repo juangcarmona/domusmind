@@ -86,6 +86,23 @@ export interface AddMemberResponse {
   joinedAtUtc: string;
 }
 
+export interface LinkMemberAccountRequest {
+  username: string;
+  temporaryPassword: string;
+}
+
+export interface LinkMemberAccountResponse {
+  memberId: string;
+  familyId: string;
+  name: string;
+  role: string;
+  isManager: boolean;
+  birthDate: string | null;
+  username: string;
+  authUserId: string;
+  linkedAtUtc: string;
+}
+
 export interface InviteMemberRequest {
   name: string;
   role: string;
@@ -367,6 +384,15 @@ export const domusmindApi = {
       method: "POST",
       body: JSON.stringify(body),
     }),
+
+  linkMemberAccount: (familyId: string, memberId: string, body: LinkMemberAccountRequest) =>
+    request<LinkMemberAccountResponse>(
+      `/api/families/${familyId}/members/${memberId}/link-account`,
+      {
+        method: "POST",
+        body: JSON.stringify(body),
+      },
+    ),
 
   updateMember: (familyId: string, memberId: string, body: UpdateMemberRequest) =>
     request<UpdateMemberResponse>(`/api/families/${familyId}/members/${memberId}`, {

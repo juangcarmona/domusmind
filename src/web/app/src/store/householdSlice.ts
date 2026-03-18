@@ -6,6 +6,7 @@ import {
   type AdditionalMemberRequest,
   type UpdateFamilySettingsRequest,
   type InviteMemberRequest,
+  type LinkMemberAccountRequest,
   type UpdateMemberRequest,
 } from "../api/domusmindApi";
 
@@ -108,6 +109,23 @@ export const inviteMember = createAsyncThunk(
       return response;
     } catch (err: unknown) {
       return rejectWithValue((err as { message?: string }).message ?? "Failed to invite member");
+    }
+  },
+);
+
+export const linkMemberAccount = createAsyncThunk(
+  "household/linkMemberAccount",
+  async (
+    { familyId, memberId, ...body }: { familyId: string; memberId: string } & LinkMemberAccountRequest,
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      const response = await domusmindApi.linkMemberAccount(familyId, memberId, body);
+      // Refresh member list to get updated authUserId
+      dispatch(fetchMembers(familyId));
+      return response;
+    } catch (err: unknown) {
+      return rejectWithValue((err as { message?: string }).message ?? "Failed to link account");
     }
   },
 );
@@ -245,6 +263,17 @@ const householdSlice = createSlice({
             role: action.payload.role,
             isManager: action.payload.isManager,
             birthDate: action.payload.birthDate,
+          };
+        }
+      })
+      .addCase(linkMemberAccount.fulfilled, (state, action) => {
+        const idx = state.members.findIndex(
+          (m) => m.memberId === action.payload.memberId,
+        );
+        if (idx !== -1) {
+          state.members[idx] = {
+            ...state.members[idx],
+            authUserId: action.payload.authUserId,
           };
         }
       })

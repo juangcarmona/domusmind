@@ -78,6 +78,23 @@ public sealed class Family : AggregateRoot<FamilyId>
         return member;
     }
 
+    public FamilyMember LinkMemberAccount(MemberId memberId, Guid authUserId, DateTime linkedAtUtc)
+    {
+        var member = _members.SingleOrDefault(m => m.Id == memberId)
+            ?? throw new InvalidOperationException(
+                $"A member with id '{memberId.Value}' does not exist in this family.");
+
+        if (member.AuthUserId.HasValue)
+            throw new InvalidOperationException(
+                $"Member '{memberId.Value}' already has a linked account.");
+
+        member.LinkAccount(authUserId);
+
+        RaiseDomainEvent(new Events.MemberAccountLinked(Guid.NewGuid(), Id.Value, memberId.Value, authUserId, linkedAtUtc));
+
+        return member;
+    }
+
 #pragma warning disable CS8618
     // EF Core parameterless constructor
     private Family() : base(default) { }

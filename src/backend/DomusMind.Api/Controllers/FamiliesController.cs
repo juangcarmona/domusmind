@@ -13,6 +13,7 @@ using DomusMind.Application.Features.Family.GetMemberActivity;
 using DomusMind.Application.Features.Family.GetMyFamily;
 using DomusMind.Application.Features.Family.GetWeeklyGrid;
 using DomusMind.Application.Features.Family.InviteMember;
+using DomusMind.Application.Features.Family.LinkMemberAccount;
 using DomusMind.Application.Features.Family.UpdateMember;
 using DomusMind.Contracts.Family;
 using Microsoft.AspNetCore.Authorization;
@@ -372,6 +373,40 @@ public sealed class FamiliesController : ControllerBase
 
             return Created(
                 $"/api/families/{familyId}/members/{response.MemberId}",
+                response);
+        }
+        catch (FamilyException ex)
+        {
+            return MapFamilyException(ex);
+        }
+    }
+
+    /// <summary>Links an existing family member to a new login account. Manager only.</summary>
+    [HttpPost("{familyId:guid}/members/{memberId:guid}/link-account")]
+    [ProducesResponseType(typeof(LinkMemberAccountResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> LinkMemberAccount(
+        Guid familyId,
+        Guid memberId,
+        [FromBody] LinkMemberAccountRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new LinkMemberAccountCommand(
+                    familyId,
+                    memberId,
+                    request.Username,
+                    request.TemporaryPassword,
+                    _currentUser.UserId!.Value),
+                cancellationToken);
+
+            return Created(
+                $"/api/families/{familyId}/members/{memberId}",
                 response);
         }
         catch (FamilyException ex)

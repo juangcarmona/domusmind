@@ -45,6 +45,12 @@ public sealed class FamilyMember : Entity<MemberId>
         BirthDate = birthDate;
     }
 
+    /// <summary>Links this member to an existing auth user account.</summary>
+    internal void LinkAccount(Guid authUserId)
+    {
+        AuthUserId = authUserId;
+    }
+
 #pragma warning disable CS8618
     // EF Core parameterless constructor
     private FamilyMember() : base(default) { }
