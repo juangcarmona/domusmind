@@ -67,7 +67,10 @@ export interface FamilyMemberResponse {
   familyId: string;
   name: string;
   role: string;
+  isManager: boolean;
+  birthDate: string | null;
   joinedAtUtc: string;
+  authUserId: string | null;
 }
 
 export interface AddMemberRequest {
@@ -80,6 +83,60 @@ export interface AddMemberResponse {
   familyId: string;
   name: string;
   role: string;
+  joinedAtUtc: string;
+}
+
+export interface LinkMemberAccountRequest {
+  username: string;
+  temporaryPassword: string;
+}
+
+export interface LinkMemberAccountResponse {
+  memberId: string;
+  familyId: string;
+  name: string;
+  role: string;
+  isManager: boolean;
+  birthDate: string | null;
+  username: string;
+  authUserId: string;
+  linkedAtUtc: string;
+}
+
+export interface InviteMemberRequest {
+  name: string;
+  role: string;
+  birthDate?: string | null;
+  isManager: boolean;
+  username: string;
+  temporaryPassword: string;
+}
+
+export interface InviteMemberResponse {
+  memberId: string;
+  familyId: string;
+  name: string;
+  role: string;
+  isManager: boolean;
+  birthDate: string | null;
+  username: string;
+  joinedAtUtc: string;
+}
+
+export interface UpdateMemberRequest {
+  name: string;
+  role: string;
+  birthDate?: string | null;
+  isManager: boolean;
+}
+
+export interface UpdateMemberResponse {
+  memberId: string;
+  familyId: string;
+  name: string;
+  role: string;
+  isManager: boolean;
+  birthDate: string | null;
   joinedAtUtc: string;
 }
 
@@ -319,6 +376,27 @@ export const domusmindApi = {
   addMember: (familyId: string, body: AddMemberRequest) =>
     request<AddMemberResponse>(`/api/families/${familyId}/members`, {
       method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  inviteMember: (familyId: string, body: InviteMemberRequest) =>
+    request<InviteMemberResponse>(`/api/families/${familyId}/members/invite`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  linkMemberAccount: (familyId: string, memberId: string, body: LinkMemberAccountRequest) =>
+    request<LinkMemberAccountResponse>(
+      `/api/families/${familyId}/members/${memberId}/link-account`,
+      {
+        method: "POST",
+        body: JSON.stringify(body),
+      },
+    ),
+
+  updateMember: (familyId: string, memberId: string, body: UpdateMemberRequest) =>
+    request<UpdateMemberResponse>(`/api/families/${familyId}/members/${memberId}`, {
+      method: "PUT",
       body: JSON.stringify(body),
     }),
 

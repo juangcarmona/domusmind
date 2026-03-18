@@ -12,6 +12,9 @@ using DomusMind.Application.Features.Family.GetHouseholdTimeline;
 using DomusMind.Application.Features.Family.GetMemberActivity;
 using DomusMind.Application.Features.Family.GetMyFamily;
 using DomusMind.Application.Features.Family.GetWeeklyGrid;
+using DomusMind.Application.Features.Family.InviteMember;
+using DomusMind.Application.Features.Family.LinkMemberAccount;
+using DomusMind.Application.Features.Family.UpdateMember;
 using DomusMind.Contracts.Family;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -342,6 +345,110 @@ public sealed class FamiliesController : ControllerBase
         }
     }
 
+    /// <summary>Invites a new family member by generating temporary login credentials. Manager only.</summary>
+    [HttpPost("{familyId:guid}/members/invite")]
+    [ProducesResponseType(typeof(InviteMemberResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> InviteMember(
+        Guid familyId,
+        [FromBody] InviteMemberRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new InviteMemberCommand(
+                    familyId,
+                    request.Name,
+                    request.Role,
+                    request.BirthDate,
+                    request.IsManager,
+                    request.Username,
+                    request.TemporaryPassword,
+                    _currentUser.UserId!.Value),
+                cancellationToken);
+
+            return Created(
+                $"/api/families/{familyId}/members/{response.MemberId}",
+                response);
+        }
+        catch (FamilyException ex)
+        {
+            return MapFamilyException(ex);
+        }
+    }
+
+    /// <summary>Links an existing family member to a new login account. Manager only.</summary>
+    [HttpPost("{familyId:guid}/members/{memberId:guid}/link-account")]
+    [ProducesResponseType(typeof(LinkMemberAccountResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> LinkMemberAccount(
+        Guid familyId,
+        Guid memberId,
+        [FromBody] LinkMemberAccountRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new LinkMemberAccountCommand(
+                    familyId,
+                    memberId,
+                    request.Username,
+                    request.TemporaryPassword,
+                    _currentUser.UserId!.Value),
+                cancellationToken);
+
+            return Created(
+                $"/api/families/{familyId}/members/{memberId}",
+                response);
+        }
+        catch (FamilyException ex)
+        {
+            return MapFamilyException(ex);
+        }
+    }
+
+    /// <summary>Updates the details of a family member. Manager only.</summary>
+    [HttpPut("{familyId:guid}/members/{memberId:guid}")]
+    [ProducesResponseType(typeof(UpdateMemberResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateMember(
+        Guid familyId,
+        Guid memberId,
+        [FromBody] UpdateMemberRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new UpdateMemberCommand(
+                    familyId,
+                    memberId,
+                    request.Name,
+                    request.Role,
+                    request.BirthDate,
+                    request.IsManager,
+                    _currentUser.UserId!.Value),
+                cancellationToken);
+
+            return Ok(response);
+        }
+        catch (FamilyException ex)
+        {
+            return MapFamilyException(ex);
+        }
+    }
+
     private IActionResult MapFamilyException(FamilyException ex) => ex.Code switch
     {
         FamilyErrorCode.FamilyNotFound =>
@@ -350,6 +457,8 @@ public sealed class FamiliesController : ControllerBase
             StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message }),
         FamilyErrorCode.MemberAlreadyExists =>
             Conflict(new { error = ex.Message }),
+        FamilyErrorCode.MemberNotFound =>
+            NotFound(new { error = ex.Message }),
         FamilyErrorCode.FamilyAlreadyExists =>
             Conflict(new { error = ex.Message }),
         FamilyErrorCode.InvalidInput =>

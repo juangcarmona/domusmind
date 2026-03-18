@@ -5,6 +5,9 @@ import {
   type FamilyMemberResponse,
   type AdditionalMemberRequest,
   type UpdateFamilySettingsRequest,
+  type InviteMemberRequest,
+  type LinkMemberAccountRequest,
+  type UpdateMemberRequest,
 } from "../api/domusmindApi";
 
 const FAMILY_KEY = "dm_family_id";
@@ -89,6 +92,54 @@ export const addMember = createAsyncThunk(
       return await domusmindApi.addMember(familyId, { name, role });
     } catch (err: unknown) {
       return rejectWithValue((err as { message?: string }).message ?? "Failed to add person");
+    }
+  },
+);
+
+export const inviteMember = createAsyncThunk(
+  "household/inviteMember",
+  async (
+    { familyId, ...body }: { familyId: string } & InviteMemberRequest,
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      const response = await domusmindApi.inviteMember(familyId, body);
+      // Refresh member list to pick up full member data
+      dispatch(fetchMembers(familyId));
+      return response;
+    } catch (err: unknown) {
+      return rejectWithValue((err as { message?: string }).message ?? "Failed to invite member");
+    }
+  },
+);
+
+export const linkMemberAccount = createAsyncThunk(
+  "household/linkMemberAccount",
+  async (
+    { familyId, memberId, ...body }: { familyId: string; memberId: string } & LinkMemberAccountRequest,
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      const response = await domusmindApi.linkMemberAccount(familyId, memberId, body);
+      // Refresh member list to get updated authUserId
+      dispatch(fetchMembers(familyId));
+      return response;
+    } catch (err: unknown) {
+      return rejectWithValue((err as { message?: string }).message ?? "Failed to link account");
+    }
+  },
+);
+
+export const updateMember = createAsyncThunk(
+  "household/updateMember",
+  async (
+    { familyId, memberId, ...body }: { familyId: string; memberId: string } & UpdateMemberRequest,
+    { rejectWithValue },
+  ) => {
+    try {
+      return await domusmindApi.updateMember(familyId, memberId, body);
+    } catch (err: unknown) {
+      return rejectWithValue((err as { message?: string }).message ?? "Failed to update member");
     }
   },
 );
@@ -180,7 +231,12 @@ const householdSlice = createSlice({
         state.members = action.payload;
       })
       .addCase(addMember.fulfilled, (state, action) => {
-        state.members.push(action.payload);
+        state.members.push({
+          ...action.payload,
+          isManager: false,
+          birthDate: null,
+          authUserId: null,
+        });
       })
       .addCase(completeOnboarding.fulfilled, (state, action) => {
         state.members = action.payload.members.map((m) => ({
@@ -188,10 +244,38 @@ const householdSlice = createSlice({
           familyId: action.payload.familyId,
           name: m.name,
           role: m.role,
+          isManager: m.isManager,
+          birthDate: m.birthDate,
           joinedAtUtc: m.joinedAtUtc,
+          authUserId: null,
         }));
         state.bootstrapStatus = "ready";
         state.error = null;
+      })
+      .addCase(updateMember.fulfilled, (state, action) => {
+        const idx = state.members.findIndex(
+          (m) => m.memberId === action.payload.memberId,
+        );
+        if (idx !== -1) {
+          state.members[idx] = {
+            ...state.members[idx],
+            name: action.payload.name,
+            role: action.payload.role,
+            isManager: action.payload.isManager,
+            birthDate: action.payload.birthDate,
+          };
+        }
+      })
+      .addCase(linkMemberAccount.fulfilled, (state, action) => {
+        const idx = state.members.findIndex(
+          (m) => m.memberId === action.payload.memberId,
+        );
+        if (idx !== -1) {
+          state.members[idx] = {
+            ...state.members[idx],
+            authUserId: action.payload.authUserId,
+          };
+        }
       })
       .addCase(updateHouseholdSettings.fulfilled, (state, action) => {
         if (state.family) {

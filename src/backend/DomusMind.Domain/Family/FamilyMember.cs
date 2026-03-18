@@ -37,6 +37,20 @@ public sealed class FamilyMember : Entity<MemberId>
     internal static FamilyMember Create(MemberId id, MemberName name, MemberRole role, bool isManager, DateOnly? birthDate, DateTime joinedAtUtc, Guid? authUserId = null)
         => new(id, name, role, isManager, birthDate, joinedAtUtc, authUserId);
 
+    internal void Update(MemberName name, MemberRole role, bool isManager, DateOnly? birthDate)
+    {
+        Name = name;
+        Role = role;
+        IsManager = isManager;
+        BirthDate = birthDate;
+    }
+
+    /// <summary>Links this member to an existing auth user account.</summary>
+    internal void LinkAccount(Guid authUserId)
+    {
+        AuthUserId = authUserId;
+    }
+
 #pragma warning disable CS8618
     // EF Core parameterless constructor
     private FamilyMember() : base(default) { }
