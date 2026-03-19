@@ -170,23 +170,20 @@ export function DetailPage() {
     (type === "event" && plansStatus === "loading");
 
   return (
-    <div className="page-wrap">
-      <div className="page-header">
-        <h1>
-          {type === "task"
-            ? tTasks("title")
-            : type === "routine"
-              ? tRoutines("title")
-              : tPlans("title")}
-        </h1>
-        <button className="btn btn-ghost" type="button" onClick={() => navigate(-1)}>
-          {tCommon("back")}
-        </button>
-      </div>
+    <div className="detail-panel-wrap">
+      <section className="modal planning-modal detail-modal" role="region" aria-live="polite">
+        <div className="detail-header">
+          <h1 className="detail-title">
+            {type === "task"
+              ? tTasks("title")
+              : type === "routine"
+                ? tRoutines("title")
+                : tPlans("title")}
+          </h1>
+        </div>
 
-      <section className="settings-section">
         {type === "task" && task && (
-          <form className="card" onSubmit={handleSaveTask}>
+          <form className="detail-form" onSubmit={handleSaveTask}>
             <h2>{task.title}</h2>
             <p className="item-card-subtitle">{task.status.toLowerCase()}</p>
             <div className="inline-form" style={{ marginTop: "0.75rem" }}>
@@ -211,6 +208,9 @@ export function DetailPage() {
             </div>
             {error && <p className="error-msg">{error}</p>}
             <div className="modal-footer">
+              <button className="btn btn-ghost" type="button" onClick={() => navigate(-1)}>
+                {tCommon("back")}
+              </button>
               <button className="btn" type="submit" disabled={saving}>
                 {saving ? tCommon("saving") : tCommon("save")}
               </button>
@@ -219,7 +219,7 @@ export function DetailPage() {
         )}
 
         {type === "routine" && routine && (
-          <form className="card" onSubmit={handleSaveRoutine}>
+          <form className="detail-form" onSubmit={handleSaveRoutine}>
             <h2>{routine.name}</h2>
             <div className="form-group">
               <label>{tRoutines("nameLabel")}</label>
@@ -242,6 +242,9 @@ export function DetailPage() {
             </div>
             {error && <p className="error-msg">{error}</p>}
             <div className="modal-footer">
+              <button className="btn btn-ghost" type="button" onClick={() => navigate(-1)}>
+                {tCommon("back")}
+              </button>
               <button className="btn" type="submit" disabled={saving}>
                 {saving ? tCommon("saving") : tRoutines("save")}
               </button>
@@ -250,7 +253,7 @@ export function DetailPage() {
         )}
 
         {type === "event" && event && (
-          <form className="card" onSubmit={handleSaveEvent}>
+          <form className="detail-form" onSubmit={handleSaveEvent}>
             <h2>{event.title}</h2>
             <div className="inline-form">
               <div className="form-group" style={{ flex: 1 }}>
@@ -295,6 +298,9 @@ export function DetailPage() {
             </div>
             {error && <p className="error-msg">{error}</p>}
             <div className="modal-footer">
+              <button className="btn btn-ghost" type="button" onClick={() => navigate(-1)}>
+                {tCommon("back")}
+              </button>
               <button className="btn" type="submit" disabled={saving}>
                 {saving ? tCommon("saving") : tCommon("save")}
               </button>
