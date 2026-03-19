@@ -183,7 +183,9 @@ export interface ScheduleEventResponse {
   calendarEventId: string;
   familyId: string;
   title: string;
-  startTime: string;
+  date: string;
+  time: string | null;
+  endDate: string | null;
   endTime: string | null;
   status: string;
   createdAtUtc: string;
@@ -197,6 +199,10 @@ export interface FamilyTimelineEventItem {
   status: string;
   participantMemberIds: string[];
   participants: ParticipantProjection[];
+  date?: string;
+  time?: string | null;
+  endDate?: string | null;
+  endTimeValue?: string | null;
 }
 
 export interface RoutineListItem {

@@ -21,6 +21,7 @@ function toLocalDateInput(value?: string | null): string {
 
 function toLocalTimeInput(value?: string | null): string {
   if (!value) return "";
+  if (!value.includes("T") && !value.includes(":")) return "";
   if (value.includes("T")) {
     const d = new Date(value);
     return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
