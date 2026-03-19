@@ -7,6 +7,9 @@ import { TodaySummary } from "./TodaySummary";
 
 interface WeeklyGridProps {
   grid: WeeklyGridResponse;
+  selectedDate?: string; // Optional: highlight selected day column
+  onDayClick?: (date: string) => void; // Optional: handle day header click
+  suppressTodaySummary?: boolean; // When true, don't render TodaySummary above the grid
 }
 
 function SharedRow({
@@ -34,12 +37,18 @@ function SharedRow({
   );
 }
 
-export function WeeklyGrid({ grid }: WeeklyGridProps) {
+export function WeeklyGrid({ grid, selectedDate, onDayClick, suppressTodaySummary }: WeeklyGridProps) {
   const { t } = useTranslation("week");
-  const todayIso = new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  const todayIso = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const members = grid.members ?? [];
   const sharedCells = grid.sharedCells ?? [];
-  const hasSharedContent = sharedCells.some((c) => (c.routines?.length ?? 0) > 0);
+  const hasSharedContent = sharedCells.some(
+    (c) =>
+      (c.events?.length ?? 0) > 0 ||
+      (c.tasks?.length ?? 0) > 0 ||
+      (c.routines?.length ?? 0) > 0,
+  );
 
   const days: string[] =
     members.length > 0
@@ -56,9 +65,14 @@ export function WeeklyGrid({ grid }: WeeklyGridProps) {
 
   return (
     <>
-      {isCurrentWeek && <TodaySummary grid={grid} today={todayIso} />}
+      {isCurrentWeek && !suppressTodaySummary && <TodaySummary grid={grid} today={todayIso} />}
       <div className="weekly-grid">
-        <WeekHeader days={days} today={todayIso} />
+        <WeekHeader
+          days={days}
+          today={todayIso}
+          selectedDate={selectedDate}
+          onDayClick={onDayClick}
+        />
         {hasSharedContent && (
           <SharedRow cells={sharedCells} label={t("household")} today={todayIso} />
         )}
