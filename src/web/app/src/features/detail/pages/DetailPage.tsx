@@ -139,9 +139,9 @@ export function DetailPage() {
     try {
       await domusmindApi.rescheduleEvent(id, {
         date: (formData.get("eventDate") as string) ?? "",
-        time: ((formData.get("eventTime") as string) || undefined),
-        endDate: ((formData.get("eventEndDate") as string) || undefined),
-        endTime: ((formData.get("eventEndTime") as string) || undefined),
+        time: (formData.get("eventTime") as string) || undefined,
+        endDate: (formData.get("eventEndDate") as string) || undefined,
+        endTime: (formData.get("eventEndTime") as string) || undefined,
       });
       if (familyId) {
         await dispatch(fetchPlans(familyId));
@@ -223,23 +223,23 @@ export function DetailPage() {
             <h2>{routine.name}</h2>
             <div className="form-group">
               <label>{tRoutines("nameLabel")}</label>
-                <input
-                  className="form-control"
-                  type="text"
-                  name="routineName"
-                  defaultValue={routine.name}
-                  required
-                />
-              </div>
+              <input
+                className="form-control"
+                type="text"
+                name="routineName"
+                defaultValue={routine.name}
+                required
+              />
+            </div>
             <div className="form-group">
               <label>{tRoutines("timeLabel")}</label>
-                <input
-                  className="form-control"
-                  type="time"
-                  name="routineTime"
-                  defaultValue={toLocalTimeInput(routine.time)}
-                />
-              </div>
+              <input
+                className="form-control"
+                type="time"
+                name="routineTime"
+                defaultValue={toLocalTimeInput(routine.time)}
+              />
+            </div>
             {error && <p className="error-msg">{error}</p>}
             <div className="modal-footer">
               <button className="btn" type="submit" disabled={saving}>

@@ -38,10 +38,13 @@ export function WeeklyGridItem({
       onKeyDown={
         onClick
           ? (e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onClick();
+              if (e.key !== "Enter" && e.key !== " ") {
+                return;
               }
+              if (e.key === " ") {
+                e.preventDefault();
+              }
+              onClick();
             }
           : undefined
       }

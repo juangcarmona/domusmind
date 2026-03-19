@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { addMember, linkMemberAccount, updateMember } from "../../../store/householdSlice";
 
 const MEMBER_ROLES = ["Adult", "Child", "Pet", "Caregiver"] as const;
+const ADD_MEMBER_ROLES = MEMBER_ROLES.filter((r) => r !== "Caregiver");
 
 /** Generate a random temporary password: 8 chars, mixed upper/lower/digits.
  *  Uses crypto.getRandomValues() for unpredictable output.
@@ -208,7 +209,7 @@ export function MembersManagementSection() {
                 value={addRole}
                 onChange={(e) => setAddRole(e.target.value)}
               >
-                {(["Adult", "Child", "Pet"] as const).map((r) => (
+                {ADD_MEMBER_ROLES.map((r) => (
                   <option key={r} value={r}>
                     {t(`household.members.roles.${r}` as never)}
                   </option>
