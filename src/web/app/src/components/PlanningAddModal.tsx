@@ -20,10 +20,6 @@ export function PlanningAddModal({ familyId, members, onClose, onSuccess, initia
 
   const [step, setStep] = useState<ConceptStep>(initialStep ?? "choose");
 
-  function goBack() {
-    setStep("choose");
-  }
-
   return (
     <div className="modal-backdrop" onClick={onClose}>
       <div className="modal planning-modal" onClick={(e) => e.stopPropagation()}>
@@ -68,7 +64,7 @@ export function PlanningAddModal({ familyId, members, onClose, onSuccess, initia
           <TaskCrudForm
             mode="create"
             familyId={familyId}
-            onBack={goBack}
+            onCancel={onClose}
             onSuccess={onSuccess}
           />
         )}
@@ -77,7 +73,7 @@ export function PlanningAddModal({ familyId, members, onClose, onSuccess, initia
           <PlanCrudForm
             mode="create"
             familyId={familyId}
-            onBack={goBack}
+            onCancel={onClose}
             onSuccess={onSuccess}
           />
         )}
@@ -87,7 +83,7 @@ export function PlanningAddModal({ familyId, members, onClose, onSuccess, initia
             mode="create"
             familyId={familyId}
             members={members}
-            onBack={goBack}
+            onCancel={onClose}
             onSuccess={onSuccess}
           />
         )}

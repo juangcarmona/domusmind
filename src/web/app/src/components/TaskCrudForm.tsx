@@ -10,7 +10,7 @@ interface TaskCrudFormProps {
   taskId?: string;
   initialTitle?: string;
   initialDueDate?: string | null;
-  onBack: () => void;
+  onCancel: () => void;
   onSuccess: () => void | Promise<void>;
 }
 
@@ -34,7 +34,7 @@ export function TaskCrudForm({
   taskId,
   initialTitle,
   initialDueDate,
-  onBack,
+  onCancel,
   onSuccess,
 }: TaskCrudFormProps) {
   const dispatch = useAppDispatch();
@@ -131,8 +131,8 @@ export function TaskCrudForm({
         )}
         {error && <p className="error-msg">{error}</p>}
         <div className="modal-footer">
-          <button type="button" className="btn btn-ghost" onClick={onBack}>
-            {tCommon("back")}
+          <button type="button" className="btn btn-ghost" onClick={onCancel}>
+            {tCommon("cancel")}
           </button>
           <button type="submit" className="btn" disabled={submitting}>
             {submitting ? tCommon("saving") : mode === "create" ? tCommon("add") : tCommon("save")}

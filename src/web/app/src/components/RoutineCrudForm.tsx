@@ -9,7 +9,7 @@ interface RoutineCrudFormProps {
   familyId: string;
   members: { memberId: string; name: string }[];
   initialRoutine?: RoutineListItem;
-  onBack: () => void;
+  onCancel: () => void;
   onSuccess: () => void | Promise<void>;
 }
 
@@ -38,7 +38,7 @@ export function RoutineCrudForm({
   familyId,
   members,
   initialRoutine,
-  onBack,
+  onCancel,
   onSuccess,
 }: RoutineCrudFormProps) {
   const dispatch = useAppDispatch();
@@ -135,7 +135,6 @@ export function RoutineCrudForm({
             className="form-control"
             value={routineScope}
             onChange={(e) => setRoutineScope(e.target.value)}
-            disabled={mode === "edit"}
           >
             <option value="Household">{tRoutines("scopeHousehold")}</option>
             <option value="Members">{tRoutines("scopeMembers")}</option>
@@ -160,7 +159,6 @@ export function RoutineCrudForm({
                         setRoutineTargetMemberIds((prev) => prev.filter((id) => id !== m.memberId));
                       }
                     }}
-                    disabled={mode === "edit"}
                   />
                   {m.name}
                 </label>
@@ -180,7 +178,6 @@ export function RoutineCrudForm({
               setRoutineDaysOfMonth("");
               setRoutineMonthOfYear("");
             }}
-            disabled={mode === "edit"}
           >
             <option value="Weekly">{tRoutines("frequencyWeekly")}</option>
             <option value="Monthly">{tRoutines("frequencyMonthly")}</option>
@@ -214,7 +211,6 @@ export function RoutineCrudForm({
                         setRoutineDaysOfWeek((prev) => prev.filter((v) => v !== d.value));
                       }
                     }}
-                    disabled={mode === "edit"}
                   />
                   {d.label}
                 </label>
@@ -232,7 +228,6 @@ export function RoutineCrudForm({
               value={routineDaysOfMonth}
               onChange={(e) => setRoutineDaysOfMonth(e.target.value)}
               placeholder={tRoutines("daysOfMonthPlaceholder")}
-              disabled={mode === "edit"}
             />
           </div>
         )}
@@ -244,7 +239,6 @@ export function RoutineCrudForm({
               className="form-control"
               value={routineMonthOfYear}
               onChange={(e) => setRoutineMonthOfYear(e.target.value)}
-              disabled={mode === "edit"}
             >
               <option value="">{tRoutines("selectMonth")}</option>
               {Array.from({ length: 12 }, (_, i) => (
@@ -262,7 +256,6 @@ export function RoutineCrudForm({
             className="form-control"
             value={routineKind}
             onChange={(e) => setRoutineKind(e.target.value)}
-            disabled={mode === "edit"}
           >
             <option value="Scheduled">{tRoutines("executionTypeGeneratesTasks")}</option>
             <option value="Cue">{tRoutines("executionTypeReminderOnly")}</option>
@@ -286,13 +279,12 @@ export function RoutineCrudForm({
             type="color"
             value={routineColor}
             onChange={(e) => setRoutineColor(e.target.value.toUpperCase())}
-            disabled={mode === "edit"}
           />
         </div>
         {error && <p className="error-msg">{error}</p>}
         <div className="modal-footer">
-          <button type="button" className="btn btn-ghost" onClick={onBack}>
-            {tCommon("back")}
+          <button type="button" className="btn btn-ghost" onClick={onCancel}>
+            {tCommon("cancel")}
           </button>
           <button type="submit" className="btn" disabled={submitting}>
             {submitting ? tCommon("saving") : tCommon("save")}

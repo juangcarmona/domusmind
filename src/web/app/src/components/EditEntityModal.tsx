@@ -14,9 +14,10 @@ interface EditEntityModalProps {
   type: EditableEntityType;
   id: string;
   onClose: () => void;
+  onEntitySaved?: () => void | Promise<void>;
 }
 
-export function EditEntityModal({ type, id, onClose }: EditEntityModalProps) {
+export function EditEntityModal({ type, id, onClose, onEntitySaved }: EditEntityModalProps) {
   const dispatch = useAppDispatch();
   const { t: tCommon } = useTranslation("common");
 
@@ -68,20 +69,29 @@ export function EditEntityModal({ type, id, onClose }: EditEntityModalProps) {
     (type === "routine" && routinesStatus === "loading") ||
     (type === "event" && plansStatus === "loading");
 
-  async function refreshAndClose() {
+  async function refreshAfterSave() {
     if (!familyId) {
-      onClose();
       return;
     }
 
     if (type === "task") {
-      await dispatch(fetchTimeline({ familyId, types: "Task" }));
+      await dispatch(fetchTimeline({ familyId }));
+      return;
     }
+
     if (type === "routine") {
       await dispatch(fetchRoutines(familyId));
+      return;
     }
-    if (type === "event") {
-      await dispatch(fetchPlans(familyId));
+
+    await dispatch(fetchPlans(familyId));
+  }
+
+  async function handleSuccess() {
+    await refreshAfterSave();
+    if (onEntitySaved) {
+      await Promise.resolve(onEntitySaved());
+      return;
     }
     onClose();
   }
@@ -101,8 +111,8 @@ export function EditEntityModal({ type, id, onClose }: EditEntityModalProps) {
             taskId={task.entryId}
             initialTitle={task.title}
             initialDueDate={task.effectiveDate}
-            onBack={onClose}
-            onSuccess={refreshAndClose}
+            onCancel={onClose}
+            onSuccess={handleSuccess}
           />
         )}
 
@@ -112,8 +122,8 @@ export function EditEntityModal({ type, id, onClose }: EditEntityModalProps) {
             familyId={familyId}
             members={members}
             initialRoutine={routine}
-            onBack={onClose}
-            onSuccess={refreshAndClose}
+            onCancel={onClose}
+            onSuccess={handleSuccess}
           />
         )}
 
@@ -125,8 +135,8 @@ export function EditEntityModal({ type, id, onClose }: EditEntityModalProps) {
             initialTitle={event.title}
             initialStartTime={event.startTime}
             initialEndTime={event.endTime}
-            onBack={onClose}
-            onSuccess={refreshAndClose}
+            onCancel={onClose}
+            onSuccess={handleSuccess}
           />
         )}
 

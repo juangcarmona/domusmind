@@ -403,6 +403,15 @@ export function CoordinationPage() {
           type={editTarget.type}
           id={editTarget.id}
           onClose={() => setEditTarget(null)}
+          onEntitySaved={async () => {
+            setEditTarget(null);
+            if (familyId) {
+              await Promise.all([
+                fetchGrid(weekStartForSelected),
+                dispatch(fetchTimeline({ familyId })),
+              ]);
+            }
+          }}
         />
       )}
     </div>

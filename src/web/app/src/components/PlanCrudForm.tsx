@@ -12,7 +12,7 @@ interface PlanCrudFormProps {
   initialStartTime?: string | null;
   initialEndTime?: string | null;
   initialDescription?: string | null;
-  onBack: () => void;
+  onCancel: () => void;
   onSuccess: () => void | Promise<void>;
 }
 
@@ -38,7 +38,7 @@ export function PlanCrudForm({
   initialStartTime,
   initialEndTime,
   initialDescription,
-  onBack,
+  onCancel,
   onSuccess,
 }: PlanCrudFormProps) {
   const dispatch = useAppDispatch();
@@ -179,8 +179,8 @@ export function PlanCrudForm({
         </div>
         {error && <p className="error-msg">{error}</p>}
         <div className="modal-footer">
-          <button type="button" className="btn btn-ghost" onClick={onBack}>
-            {tCommon("back")}
+          <button type="button" className="btn btn-ghost" onClick={onCancel}>
+            {tCommon("cancel")}
           </button>
           <button type="submit" className="btn" disabled={submitting}>
             {submitting ? tCommon("saving") : mode === "create" ? tPlans("form.save") : tCommon("save")}

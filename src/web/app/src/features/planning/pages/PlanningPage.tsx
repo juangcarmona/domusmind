@@ -526,6 +526,12 @@ export function PlanningPage() {
           type={editTarget.type}
           id={editTarget.id}
           onClose={() => setEditTarget(null)}
+          onEntitySaved={async () => {
+            setEditTarget(null);
+            loadPlans();
+            loadTasks();
+            await dispatch(fetchRoutines(familyId));
+          }}
         />
       )}
 
