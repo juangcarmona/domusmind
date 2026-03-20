@@ -3,7 +3,9 @@ import type { ParticipantProjection } from "../../api/domusmindApi";
 export interface WeeklyGridEventItem {
   eventId: string;
   title: string;
-  startTime: string;
+  date: string;        // YYYY-MM-DD
+  time: string | null; // HH:mm
+  endDate: string | null;
   endTime: string | null;
   status: string;
   participants: ParticipantProjection[];

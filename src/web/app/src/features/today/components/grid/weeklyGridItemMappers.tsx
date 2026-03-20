@@ -6,11 +6,7 @@ import type {
 import { WeeklyGridItem } from "./WeeklyGridItem";
 
 function eventToItem(e: WeeklyGridEventItem, onClick?: () => void) {
-  const time = new Date(e.startTime).toLocaleTimeString(undefined, {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  const time = e.time ?? undefined; // already HH:mm or null
   const participantNames = e.participants?.map((p) => p.displayName).join(", ");
   return (
     <WeeklyGridItem

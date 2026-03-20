@@ -7,6 +7,7 @@ import tasksReducer from "./tasksSlice";
 import routinesReducer from "./routinesSlice";
 import languagesReducer from "./languagesSlice";
 import todayReducer from "./todaySlice";
+import uiReducer from "./uiSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     routines: routinesReducer,
     languages: languagesReducer,
     today: todayReducer,
+    ui: uiReducer,
   },
 });
 

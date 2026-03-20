@@ -49,6 +49,9 @@ public sealed class RescheduleEventCommandHandler
         Domain.Calendar.ValueObjects.EventTime newTime;
         try
         {
+            if (string.IsNullOrWhiteSpace(command.EndDate))
+                throw new CalendarException(CalendarErrorCode.InvalidInput, "A plan must have an end date. Use the same date as the start for single-day events.");
+
             newTime = TemporalParser.ParseEventTime(command.Date, command.Time, command.EndDate, command.EndTime);
         }
         catch (Exception ex) when (ex is FormatException or ArgumentException or InvalidOperationException)

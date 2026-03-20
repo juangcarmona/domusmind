@@ -4,6 +4,7 @@ import { domusmindApi } from "../../../api/domusmindApi";
 import { scheduleEvent } from "../../../store/plansSlice";
 import { useAppDispatch } from "../../../store/hooks";
 import { toLocalDateInput, toLocalTimeInput } from "../utils";
+import { DateInput } from "../../../components/DateInput";
 
 interface PlanCrudFormProps {
   mode: "create" | "edit";
@@ -66,6 +67,19 @@ export function PlanCrudForm({
     setSubmitting(true);
     setError(null);
 
+    // Domain invariant: every plan must span a range (DayRange or Range).
+    if (!endDate) {
+      setError(tPlans("form.endDateRequired"));
+      setSubmitting(false);
+      return;
+    }
+
+    if (endDate && startTime && !endTime) {
+      setError(tPlans("form.endTimeRequired"));
+      setSubmitting(false);
+      return;
+    }
+
     if (mode === "create") {
       if (!title.trim() || !startDate) {
         setSubmitting(false);
@@ -77,7 +91,7 @@ export function PlanCrudForm({
           title: title.trim(),
           date: startDate,
           time: startTime || undefined,
-          endDate: endDate || undefined,
+          endDate: endDate,
           endTime: endTime || undefined,
           description: description.trim() || undefined,
         }),
@@ -100,7 +114,7 @@ export function PlanCrudForm({
       await domusmindApi.rescheduleEvent(eventId, {
         date: startDate,
         time: startTime || undefined,
-        endDate: endDate || undefined,
+        endDate: endDate,
         endTime: endTime || undefined,
         title: title.trim(),
         description: description.trim() || null,
@@ -132,12 +146,11 @@ export function PlanCrudForm({
         <div className="inline-form">
           <div className="form-group" style={{ flex: 1 }}>
             <label htmlFor="plan-form-start-date">{tPlans("form.startDate")}</label>
-            <input
+            <DateInput
               id="plan-form-start-date"
               className="form-control"
-              type="date"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              onChange={setStartDate}
               required
             />
           </div>
@@ -155,12 +168,12 @@ export function PlanCrudForm({
         <div className="inline-form">
           <div className="form-group" style={{ flex: 1 }}>
             <label htmlFor="plan-form-end-date">{tPlans("form.endDate")}</label>
-            <input
+            <DateInput
               id="plan-form-end-date"
               className="form-control"
-              type="date"
               value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
+              onChange={setEndDate}
+              required
             />
           </div>
           <div className="form-group" style={{ flex: 1 }}>

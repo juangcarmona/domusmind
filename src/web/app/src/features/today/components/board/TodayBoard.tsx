@@ -86,7 +86,10 @@ export function TodayBoard({
   const sharedCells = grid.sharedCells ?? [];
 
   const sharedCell = sharedCells.find((c) => c.date.slice(0, 10) === selectedDate);
-  const hasSharedItems = (sharedCell?.routines?.length ?? 0) > 0;
+  const hasSharedItems =
+    (sharedCell?.events?.length ?? 0) > 0 ||
+    (sharedCell?.tasks?.length ?? 0) > 0 ||
+    (sharedCell?.routines?.length ?? 0) > 0;
 
   const memberDays = members.map((member) => ({
     member,

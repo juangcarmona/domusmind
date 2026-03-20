@@ -87,6 +87,14 @@ export function TodayPage() {
   const { data: timelineData, status: timelineStatus, error: timelineError } =
     useAppSelector((s) => s.timeline);
 
+  // Reset to today every time the user enters this page.
+  // selectedDate is shared Redux state and would otherwise persist whatever
+  // date the user had scrolled to in a previous visit.
+  useEffect(() => {
+    dispatch(setSelectedDate(toIsoDate(new Date())));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Mid-term section: local tab state
   const [midTermView, setMidTermView] = useState<"week" | "month">("week");
 

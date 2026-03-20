@@ -130,6 +130,10 @@ const plansSlice = createSlice({
             return {
               ...event,
               startTime: eventStartIso(event.date, event.time),
+              // Preserve the raw end time string before endTime is overwritten
+              // with the computed ISO datetime. EditEntityModal reads endTimeValue
+              // to populate the end-time field of PlanCrudForm.
+              endTimeValue: event.endDate ? (event.endTime ?? null) : null,
               endTime: event.endDate ? eventEndIso(event.endDate, event.endTime) : null,
             };
           }

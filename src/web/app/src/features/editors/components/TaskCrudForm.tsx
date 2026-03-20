@@ -4,6 +4,7 @@ import { domusmindApi } from "../../../api/domusmindApi";
 import { createTask } from "../../../store/tasksSlice";
 import { useAppDispatch } from "../../../store/hooks";
 import { toLocalDateInput, toLocalTimeInput } from "../utils";
+import { DateInput } from "../../../components/DateInput";
 
 interface TaskCrudFormProps {
   mode: "create" | "edit";
@@ -101,12 +102,11 @@ export function TaskCrudForm({
         </div>
         <div className="form-group">
           <label htmlFor="task-form-due">{tTasks("dueLabel")}</label>
-          <input
+          <DateInput
             id="task-form-due"
             className="form-control"
-            type="date"
             value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
+            onChange={setDueDate}
           />
         </div>
         <div className="form-group">

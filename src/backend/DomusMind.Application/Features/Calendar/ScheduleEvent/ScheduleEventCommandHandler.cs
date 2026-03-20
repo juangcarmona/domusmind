@@ -34,6 +34,9 @@ public sealed class ScheduleEventCommandHandler
         if (string.IsNullOrWhiteSpace(command.Title))
             throw new CalendarException(CalendarErrorCode.InvalidInput, "Event title is required.");
 
+        if (string.IsNullOrWhiteSpace(command.EndDate))
+            throw new CalendarException(CalendarErrorCode.InvalidInput, "A plan must have an end date. Use the same date as the start for single-day events.");
+
         var canAccess = await _authorizationService.CanAccessFamilyAsync(
             command.RequestedByUserId, command.FamilyId, cancellationToken);
 

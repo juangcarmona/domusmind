@@ -93,9 +93,6 @@ import zhRoutines from "./locales/zh/routines";
 import zhSettings from "./locales/zh/settings";
 import zhToday from "./locales/zh/today";
 
-// The explicit UI language choice key stored in localStorage.
-export const UI_LANG_KEY = "dm_ui_lang";
-
 export const SUPPORTED_LANG_CODES = ["en", "de", "es", "fr", "it", "ja", "zh"] as const;
 export type SupportedLangCode = (typeof SUPPORTED_LANG_CODES)[number];
 
@@ -119,8 +116,7 @@ i18n
     // setUiLanguage(), so the detector must not auto-persist browser language
     // into that key (it would be treated as an explicit user choice).
     detection: {
-      order: ["localStorage", "navigator"],
-      lookupLocalStorage: UI_LANG_KEY,
+      order: ["navigator"],
     },
     fallbackLng: "en",
     supportedLngs: SUPPORTED_LANG_CODES,
@@ -138,14 +134,3 @@ i18n.on("languageChanged", (lng) => {
 });
 
 export default i18n;
-
-/** Persists an explicit language selection. */
-export function setUiLanguage(code: string): void {
-  localStorage.setItem(UI_LANG_KEY, code);
-  i18n.changeLanguage(code);
-}
-
-/** Returns the currently active language code. */
-export function getCurrentLanguage(): string {
-  return i18n.language?.split("-")[0] ?? "en";
-}

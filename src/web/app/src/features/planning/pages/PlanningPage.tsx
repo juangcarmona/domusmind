@@ -28,9 +28,8 @@ export function PlanningPage() {
   const { t: tTasks } = useTranslation("tasks");
   const { t: tRoutines } = useTranslation("routines");
   const { t: tCommon } = useTranslation("common");
-  const { t: tNav, i18n } = useTranslation("nav");
-  const locale = i18n.language;
-  const { formatDate, formatDateTime } = useDateFormatter(locale);
+  const { t: tNav } = useTranslation("nav");
+  const { formatDate, formatDateTime } = useDateFormatter();
 
   const [activeTab, setActiveTab] = useState<PlanningTab>("routines");
   const [addModal, setAddModal] = useState<"plan" | "task" | "routine" | "choose" | null>(null);

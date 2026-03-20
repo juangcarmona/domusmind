@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 import { AuthProvider, useAuth } from "./auth/AuthProvider";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { bootstrapHousehold } from "./store/householdSlice";
-import { UI_LANG_KEY, setUiLanguage } from "./i18n/index";
 import { AppShell } from "./components/AppShell";
 import { LoginPage } from "./features/auth/pages/LoginPage";
 import { RegisterPage } from "./features/auth/pages/RegisterPage";
@@ -22,20 +21,19 @@ import { TodayPage } from "./features/today/pages/TodayPage";
 
 function AuthedApp() {
   const dispatch = useAppDispatch();
-  const { bootstrapStatus, family } = useAppSelector((s) => s.household);
+  const { bootstrapStatus } = useAppSelector((s) => s.household);
+  const uiLanguage = useAppSelector((s) => s.ui.language);
   const { i18n } = useTranslation("common");
 
   useEffect(() => {
     dispatch(bootstrapHousehold());
   }, [dispatch]);
 
-  // Sync language precedence: explicit UI choice > household language > browser/fallback
+  // Keep i18n in sync with the language resolved by uiSlice
+  // (set from household.primaryLanguageCode after bootstrap / settings save).
   useEffect(() => {
-    const explicitChoice = localStorage.getItem(UI_LANG_KEY);
-    if (!explicitChoice && family?.primaryLanguageCode) {
-      setUiLanguage(family.primaryLanguageCode);
-    }
-  }, [family?.primaryLanguageCode, i18n]);
+    i18n.changeLanguage(uiLanguage);
+  }, [uiLanguage, i18n]);
 
   if (bootstrapStatus === "idle" || bootstrapStatus === "loading") {
     return <div className="loading-wrap">Loading your household…</div>;
