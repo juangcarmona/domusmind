@@ -1,9 +1,8 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
-const ACCESS_KEY = "dm_access_token";
+import { getStoredToken } from "../lib/tokenStorage";
 
-export function getStoredToken(): string | null {
-  return localStorage.getItem(ACCESS_KEY);
-}
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+
+export { getStoredToken };
 
 export interface ApiError {
   status: number;

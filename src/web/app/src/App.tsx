@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -75,13 +75,7 @@ type AuthPage = "login" | "register";
 
 function UnauthApp() {
   const nav = useNavigate();
-  const [page, setPage] = [
-    (sessionStorage.getItem("dm_auth_page") as AuthPage) ?? "login",
-    (p: AuthPage) => {
-      sessionStorage.setItem("dm_auth_page", p);
-      nav(".", { replace: true });
-    },
-  ];
+  const [page, setPage] = useState<AuthPage>("login");
 
   if (page === "register") {
     return (

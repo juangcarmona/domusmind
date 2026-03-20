@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { createRoutine, updateRoutine } from "../../../store/routinesSlice";
 import { useAppDispatch } from "../../../store/hooks";
 import type { RoutineListItem } from "../../../api/domusmindApi";
+import { toLocalTimeInput } from "../utils";
 
 interface RoutineCrudFormProps {
   mode: "create" | "edit";
@@ -22,15 +23,6 @@ function parseDaysOfMonth(raw: string): number[] {
 
 function toRoutineDaysOfMonthValue(days: number[]): string {
   return days.length ? days.join(",") : "";
-}
-
-function toLocalTimeInput(value?: string | null): string {
-  if (!value) return "";
-  if (value.includes("T")) {
-    const d = new Date(value);
-    return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-  }
-  return value.slice(0, 5);
 }
 
 export function RoutineCrudForm({
