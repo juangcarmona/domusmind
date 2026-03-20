@@ -115,10 +115,12 @@ i18n
   .init({
     resources,
     // i18next-browser-languagedetector order: localStorage → navigator
+    // caches is intentionally omitted: we write UI_LANG_KEY ourselves via
+    // setUiLanguage(), so the detector must not auto-persist browser language
+    // into that key (it would be treated as an explicit user choice).
     detection: {
       order: ["localStorage", "navigator"],
       lookupLocalStorage: UI_LANG_KEY,
-      caches: ["localStorage"],
     },
     fallbackLng: "en",
     supportedLngs: SUPPORTED_LANG_CODES,
@@ -128,6 +130,12 @@ i18n
       escapeValue: false,
     },
   });
+
+// Keep <html lang> in sync so <input type="date"> and other browser
+// features that read the lang attribute use the correct locale.
+i18n.on("languageChanged", (lng) => {
+  document.documentElement.lang = lng;
+});
 
 export default i18n;
 
