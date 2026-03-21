@@ -1284,6 +1284,19 @@ p {
   color: var(--muted);
   font-style: italic;
 }
+.today-household {
+  margin-top: 0.65rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+}
+.today-household-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
 
 /* ---- Week nav ---- */
 .week-nav {
