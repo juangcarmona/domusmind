@@ -222,9 +222,10 @@ A routine is **not any recurring activity in the system**.
 
 Specifically:
 
-* routines generate **operational tasks**
+* routines define **recurring operational patterns**
 * routines belong to the **Tasks context**
-* routines produce tasks according to recurrence rules
+* routines appear in read models (timeline, weekly grid) by being projected on-the-fly against their recurrence schedule
+* routines do **not generate Task aggregates** — tasks are created independently through explicit user action
 
 Examples of things that are **not routines**:
 

@@ -171,6 +171,7 @@ export function RoutineCrudForm({
               setRoutineMonthOfYear("");
             }}
           >
+            <option value="Daily">{tRoutines("frequencyDaily")}</option>
             <option value="Weekly">{tRoutines("frequencyWeekly")}</option>
             <option value="Monthly">{tRoutines("frequencyMonthly")}</option>
             <option value="Yearly">{tRoutines("frequencyYearly")}</option>

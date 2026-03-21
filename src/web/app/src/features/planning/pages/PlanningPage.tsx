@@ -9,12 +9,12 @@ import { ConfirmDialog } from "../../../components/ConfirmDialog";
 import { PlanningAddModal } from "../components/modals/PlanningAddModal";
 import { EditEntityModal } from "../../editors/components/EditEntityModal";
 import { AssignTaskModal } from "../components/modals/AssignTaskModal";
-import { useDateFormatter } from "../../../hooks/useDateFormatter";
-import type { FamilyTimelineEventItem, EnrichedTimelineEntry, RoutineListItem } from "../../../api/domusmindApi";
+import { RoutinesTab } from "../components/RoutinesTab";
+import { TasksTab } from "../components/TasksTab";
+import { PlansTab } from "../components/PlansTab";
+import type { FamilyTimelineEventItem, EnrichedTimelineEntry } from "../../../api/domusmindApi";
 
 type PlanningTab = "routines" | "tasks" | "plans";
-
-const DAY_KEYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
 
 export function PlanningPage() {
   const dispatch = useAppDispatch();
@@ -24,12 +24,11 @@ export function PlanningPage() {
   const { items: routineItems, status: routinesStatus } = useAppSelector((s) => s.routines);
   const familyId = family?.familyId;
 
-  const { t: tPlans } = useTranslation("plans");
-  const { t: tTasks } = useTranslation("tasks");
   const { t: tRoutines } = useTranslation("routines");
+  const { t: tTasks } = useTranslation("tasks");
+  const { t: tPlans } = useTranslation("plans");
   const { t: tCommon } = useTranslation("common");
   const { t: tNav } = useTranslation("nav");
-  const { formatDate, formatDateTime } = useDateFormatter();
 
   const [activeTab, setActiveTab] = useState<PlanningTab>("routines");
   const [addModal, setAddModal] = useState<"plan" | "task" | "routine" | "choose" | null>(null);
@@ -93,48 +92,15 @@ export function PlanningPage() {
     await dispatch(resumeRoutine({ routineId, familyId }));
   }
 
-  function formatRoutineDays(routine: RoutineListItem): string {
-    if (routine.frequency === "Weekly" && routine.daysOfWeek.length > 0) {
-      return routine.daysOfWeek
-        .slice()
-        .sort((a, b) => a - b)
-        .map((d) => tRoutines(DAY_KEYS[d]))
-        .join(", ");
-    }
-    if (
-      (routine.frequency === "Monthly" || routine.frequency === "Yearly") &&
-      routine.daysOfMonth.length > 0
-    ) {
-      return routine.daysOfMonth.join(", ");
-    }
-    return "";
-  }
-
-  function routineAssignedLabel(routine: RoutineListItem): string {
-    if (routine.scope === "Members" && routine.targetMemberIds.length > 0) {
-      const names = routine.targetMemberIds
-        .map((id) => memberMap[id] ?? id)
-        .join(", ");
-      return names;
-    }
-    return tRoutines("scopeHousehold");
-  }
-
   if (!familyId) return null;
 
   const activePlans = planItems.filter((p) => p.status !== "Cancelled");
 
   const tasks: EnrichedTimelineEntry[] =
-    timeline?.groups.flatMap((g) =>
-      g.entries.filter((e) => e.entryType === "Task"),
-    ) ?? [];
+    timeline?.groups.flatMap((g) => g.entries.filter((e) => e.entryType === "Task")) ?? [];
 
-  const activeTasks = tasks.filter(
-    (t) => t.status !== "Completed" && t.status !== "Cancelled",
-  );
-  const doneTasks = tasks.filter(
-    (t) => t.status === "Completed" || t.status === "Cancelled",
-  );
+  const activeTasks = tasks.filter((t) => t.status !== "Completed" && t.status !== "Cancelled");
+  const doneTasks = tasks.filter((t) => t.status === "Completed" || t.status === "Cancelled");
 
   const tabs: { key: PlanningTab; label: string }[] = [
     { key: "routines", label: tRoutines("title") },
@@ -151,7 +117,6 @@ export function PlanningPage() {
         </button>
       </div>
 
-      {/* ── Tab navigation ── */}
       <div className="settings-tabs" style={{ marginBottom: "1.5rem" }}>
         {tabs.map((tab) => (
           <button
@@ -165,275 +130,39 @@ export function PlanningPage() {
         ))}
       </div>
 
-      {/* ── Routines tab ── */}
       {activeTab === "routines" && (
-        <section>
-          {routinesStatus === "loading" && <div className="loading-wrap">{tCommon("loading")}</div>}
-
-          {routinesStatus !== "loading" && routineItems.length === 0 && (
-            <div className="empty-state">
-              <p>{tRoutines("empty")}</p>
-              <p>{tRoutines("emptyHint")}</p>
-            </div>
-          )}
-
-          {routineItems.length > 0 && (
-            <div className="item-list">
-              {routineItems.map((routine: RoutineListItem) => {
-                const days = formatRoutineDays(routine);
-                const assigned = routineAssignedLabel(routine);
-                const isGeneratesTasks = routine.kind === "Scheduled";
-                return (
-                  <div
-                    key={routine.routineId}
-                    className="item-card"
-                    style={{ borderLeft: `3px solid ${routine.color}` }}
-                    onClick={() => setEditTarget({ type: "routine", id: routine.routineId })}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setEditTarget({ type: "routine", id: routine.routineId });
-                      }
-                    }}
-                  >
-                    <div className="item-card-body">
-                      <div className="item-card-title">{routine.name}</div>
-                      <div className="item-card-subtitle">
-                        {tRoutines(`frequency${routine.frequency}` as Parameters<typeof tRoutines>[0])}
-                        {days ? ` · ${days}` : ""}
-                        {routine.time ? ` · ${routine.time.slice(0, 5)}` : ""}
-                        {` · ${assigned}`}
-                      </div>
-                      <div className="item-card-subtitle" style={{ marginTop: "0.2rem" }}>
-                        <span style={{ color: routine.status === "Paused" ? "var(--muted)" : "var(--success)", fontWeight: 600 }}>
-                          {routine.status === "Paused" ? tRoutines("paused") : tRoutines("active")}
-                        </span>
-                        <span style={{ color: "var(--muted)" }}>
-                          {" · "}
-                          {isGeneratesTasks
-                            ? `→ ${tRoutines("executionTypeGeneratesTasks")}`
-                            : `→ ${tRoutines("executionTypeReminderOnly")}`}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="item-card-actions">
-                      {routine.status === "Active" ? (
-                        <button
-                          className="btn btn-ghost btn-sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handlePauseRoutine(routine.routineId);
-                          }}
-                        >
-                          {tRoutines("pause")}
-                        </button>
-                      ) : (
-                        <button
-                          className="btn btn-sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleResumeRoutine(routine.routineId);
-                          }}
-                        >
-                          {tRoutines("resume")}
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </section>
+        <RoutinesTab
+          routineItems={routineItems}
+          routinesStatus={routinesStatus}
+          memberMap={memberMap}
+          onEdit={(id) => setEditTarget({ type: "routine", id })}
+          onPause={handlePauseRoutine}
+          onResume={handleResumeRoutine}
+        />
       )}
 
-      {/* ── Tasks tab ── */}
       {activeTab === "tasks" && (
-        <section>
-          {timelineStatus === "loading" && <div className="loading-wrap">{tCommon("loading")}</div>}
-
-          {activeTasks.length === 0 && timelineStatus !== "loading" && (
-            <div className="empty-state">
-              <p>{tTasks("empty")}</p>
-            </div>
-          )}
-
-          {activeTasks.length > 0 && (
-            <>
-              <div style={{ marginBottom: "0.4rem", fontSize: "0.82rem", color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                {tTasks("active")} ({activeTasks.length})
-              </div>
-              <div className="item-list" style={{ marginBottom: "1rem" }}>
-                {activeTasks.map((task) => (
-                  <div
-                    key={task.entryId}
-                    className={`item-card ${task.isOverdue ? "overdue" : ""}`}
-                    style={task.isOverdue ? { borderLeft: "3px solid var(--danger)" } : undefined}
-                    onClick={() => setEditTarget({ type: "task", id: task.entryId })}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setEditTarget({ type: "task", id: task.entryId });
-                      }
-                    }}
-                  >
-                    <div className="item-card-body">
-                      <div className="item-card-title">{task.title}</div>
-                      <div className="item-card-subtitle">
-                        {task.effectiveDate ? formatDate(task.effectiveDate) : tTasks("noDueDate")}
-                        {task.assigneeId && memberMap[task.assigneeId]
-                          ? ` · ${memberMap[task.assigneeId]}`
-                          : task.isUnassigned
-                            ? ` · ${tTasks("unassigned")}`
-                            : ""}
-                        {task.isOverdue && (
-                          <span style={{ color: "var(--danger)" }}> · {tTasks("overdue")}</span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="item-card-actions">
-                      <button
-                        className="btn btn-ghost btn-sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setAssignTarget(task);
-                        }}
-                        title={tTasks("assignTitle")}
-                      >
-                        {tTasks("assign")}
-                      </button>
-                      <button
-                        className="btn btn-sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCompleteTask(task.entryId);
-                        }}
-                        title={tTasks("markDoneTitle")}
-                      >
-                        ✓ {tTasks("done")}
-                      </button>
-                      <button
-                        className="btn btn-ghost btn-sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCancelTask(task.entryId);
-                        }}
-                        title={tCommon("cancel")}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-
-          {doneTasks.length > 0 && (
-            <>
-              <div style={{ marginBottom: "0.4rem", fontSize: "0.82rem", color: "var(--muted)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                {tTasks("completedCancelled")}
-              </div>
-              <div className="item-list">
-                {doneTasks.slice(0, 10).map((task) => (
-                  <div
-                    key={task.entryId}
-                    className="item-card"
-                    style={{ opacity: 0.65 }}
-                    onClick={() => setEditTarget({ type: "task", id: task.entryId })}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setEditTarget({ type: "task", id: task.entryId });
-                      }
-                    }}
-                  >
-                    <div className="item-card-body">
-                      <div
-                        className="item-card-title"
-                        style={{ textDecoration: task.status === "Completed" ? "line-through" : undefined }}
-                      >
-                        {task.title}
-                      </div>
-                      <div className="item-card-subtitle">{task.status.toLowerCase()}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
-        </section>
+        <TasksTab
+          activeTasks={activeTasks}
+          doneTasks={doneTasks}
+          timelineStatus={timelineStatus}
+          memberMap={memberMap}
+          onEdit={(id) => setEditTarget({ type: "task", id })}
+          onAssign={setAssignTarget}
+          onComplete={handleCompleteTask}
+          onCancel={handleCancelTask}
+        />
       )}
 
-      {/* ── Plans tab ── */}
       {activeTab === "plans" && (
-        <section>
-          {plansStatus === "loading" && <div className="loading-wrap">{tCommon("loading")}</div>}
-
-          {plansStatus === "success" && activePlans.length === 0 && (
-            <div className="empty-state">
-              <p>{tPlans("noPlans")}</p>
-            </div>
-          )}
-
-          {activePlans.length > 0 && (
-            <div className="item-list">
-              {activePlans.map((plan) => (
-                <div
-                  key={plan.calendarEventId}
-                  className="item-card"
-                  onClick={() => setEditTarget({ type: "event", id: plan.calendarEventId })}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setEditTarget({ type: "event", id: plan.calendarEventId });
-                    }
-                  }}
-                >
-                  <div className="item-card-body">
-                    <div className="item-card-title">{plan.title}</div>
-                    <div className="item-card-subtitle">
-                      {formatDateTime(plan.startTime)}
-                      {plan.endTime && ` → ${formatDateTime(plan.endTime)}`}
-                      {plan.participants?.length > 0 && (
-                        <span> · {plan.participants.map((p) => p.displayName).join(", ")}</span>
-                      )}
-                    </div>
-                    <div className="item-card-subtitle" style={{ marginTop: "0.2rem" }}>
-                      <span className={`entry-status-badge ${plan.status.toLowerCase()}`}>
-                        {plan.status.toLowerCase()}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="item-card-actions">
-                    {plan.status !== "Cancelled" && (
-                      <button
-                        className="btn btn-ghost btn-sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setCancelTarget(plan);
-                        }}
-                      >
-                        {tPlans("cancelEvent")}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
+        <PlansTab
+          activePlans={activePlans}
+          plansStatus={plansStatus}
+          onEdit={(id) => setEditTarget({ type: "event", id })}
+          onCancelPlan={setCancelTarget}
+        />
       )}
 
-      {/* Modals */}
       {addModal && (
         <PlanningAddModal
           familyId={familyId}
