@@ -58,7 +58,6 @@ export function RoutinesTab({ routineItems, routinesStatus, memberMap, onEdit, o
       {routineItems.map((routine) => {
         const days = formatDays(routine);
         const assigned = assignedLabel(routine);
-        const isGeneratesTasks = routine.kind === "Scheduled";
         return (
           <div
             key={routine.routineId}
@@ -85,12 +84,6 @@ export function RoutinesTab({ routineItems, routinesStatus, memberMap, onEdit, o
               <div className="item-card-subtitle" style={{ marginTop: "0.2rem" }}>
                 <span style={{ color: routine.status === "Paused" ? "var(--muted)" : "var(--success)", fontWeight: 600 }}>
                   {routine.status === "Paused" ? t("paused") : t("active")}
-                </span>
-                <span style={{ color: "var(--muted)" }}>
-                  {" · "}
-                  {isGeneratesTasks
-                    ? `→ ${t("executionTypeGeneratesTasks")}`
-                    : `→ ${t("executionTypeReminderOnly")}`}
                 </span>
               </div>
             </div>

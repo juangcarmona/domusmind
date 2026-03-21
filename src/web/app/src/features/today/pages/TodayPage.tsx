@@ -7,6 +7,7 @@ import { weekApi } from "../api/weekApi";
 import type { WeeklyGridResponse, DayTypeSummary } from "../types";
 import type { ApiError } from "../../../api/domusmindApi";
 import { EditEntityModal, type EditableEntityType } from "../../editors/components/EditEntityModal";
+import { PlanningAddModal } from "../../planning/components/modals/PlanningAddModal";
 import { TodayBoard } from "../components/board/TodayBoard";
 import { MonthView } from "../components/MonthView";
 import { WeeklyHouseholdGrid } from "../components/grid/WeeklyHouseholdGrid";
@@ -64,6 +65,7 @@ export function TodayPage() {
   const family = useAppSelector((s) => s.household.family);
   const familyId = family?.familyId ?? "";
   const firstDayOfWeek = family?.firstDayOfWeek ?? null;
+  const members = useAppSelector((s) => s.household.members);
 
   const selectedDate = useAppSelector((s) => s.today.selectedDate);
   const { data: timelineData, status: timelineStatus, error: timelineError } =
@@ -93,6 +95,7 @@ export function TodayPage() {
   const [editTarget, setEditTarget] = useState<{ type: EditableEntityType; id: string } | null>(
     null,
   );
+  const [addModal, setAddModal] = useState(false);
 
   // Month grid cache: weekStart → WeeklyGridResponse (for month calendar dots)
   const [monthGridCache, setMonthGridCache] = useState<Record<string, WeeklyGridResponse>>({});
@@ -381,6 +384,25 @@ export function TodayPage() {
                 dispatch(fetchTimeline({ familyId })),
               ]);
             }
+          }}
+        />
+      )}
+      <button
+        className="fab-add"
+        type="button"
+        aria-label={t("addItem")}
+        onClick={() => setAddModal(true)}
+      >
+        +
+      </button>
+      {addModal && (
+        <PlanningAddModal
+          familyId={familyId}
+          members={members}
+          onClose={() => setAddModal(false)}
+          onSuccess={() => {
+            setAddModal(false);
+            fetchGrid(weekStartForSelected);
           }}
         />
       )}
