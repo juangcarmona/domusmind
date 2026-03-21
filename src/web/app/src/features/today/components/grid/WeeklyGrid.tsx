@@ -68,8 +68,6 @@ export function WeeklyGrid({
             return d.toISOString().slice(0, 10);
           });
 
-  const isCurrentWeek = days.includes(todayIso);
-
   // Compute per-day total item count across shared + all member cells
   const dayCounts: Record<string, number> = {};
   for (const day of days) {
