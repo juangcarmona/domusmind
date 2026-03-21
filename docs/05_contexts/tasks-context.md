@@ -61,6 +61,8 @@ The Task aggregate owns:
 
 A **Task** represents a concrete executable instance of work.
 
+**"Task" is both the household-facing term and the internal domain term.** No translation is needed between layers.
+
 ---
 
 ## Routine
@@ -89,8 +91,8 @@ Fixed-time commitments belong to the **Calendar context**.
 Example distinction:
 
 ```
-Football practice every Tuesday → Calendar Event
-Pack sports bag before practice → Household Task (manually created)
+Football practice every Tuesday → Calendar Event (Plan in household language)
+Pack sports bag before practice → Task (created explicitly by the user)
 ```
 
 ---

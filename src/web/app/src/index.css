@@ -1219,6 +1219,24 @@ p {
   background: var(--primary);
   margin: 0.15rem auto 0;
 }
+.wg-load-bar {
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  margin: 0.2rem 0.25rem 0;
+}
+.wg-load-bar--low {
+  background: var(--primary);
+  opacity: 0.2;
+}
+.wg-load-bar--medium {
+  background: var(--primary);
+  opacity: 0.55;
+}
+.wg-load-bar--high {
+  background: var(--warning, #f59e0b);
+  opacity: 0.85;
+}
 .wg-cell--today {
   background: color-mix(in srgb, var(--primary) 6%, var(--surface));
   border-left-color: color-mix(in srgb, var(--primary) 40%, var(--border));
@@ -1732,6 +1750,48 @@ p {
 .coord-month-pip--routine {
   background: var(--muted);
   opacity: 0.7;
+}
+
+/* Glyph+count indicators replacing old dot pips */
+.month-cell-pips {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  min-height: 10px;
+  margin-top: 1px;
+}
+
+.month-cell-pip {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  font-size: 0.6rem;
+  line-height: 1;
+  font-weight: 600;
+}
+
+.month-cell-pip-glyph {
+  font-size: 0.55rem;
+  line-height: 1;
+}
+
+.month-cell-pip--event {
+  color: var(--primary);
+}
+
+.month-cell-pip--task {
+  color: var(--accent);
+}
+
+.month-cell-pip--routine {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.6;
+  flex-shrink: 0;
 }
 
 /* ================================================================

@@ -179,19 +179,27 @@ export function MonthView({
                   aria-pressed={isSelected}
                 >
                   <span className="coord-month-day-num">{dayNum}</span>
-                  {daySummary && daySummary[iso] && (
-                    <span className="coord-month-type-pips">
-                      {daySummary[iso].events > 0 && (
-                        <span className="coord-month-pip coord-month-pip--event" />
-                      )}
-                      {daySummary[iso].tasks > 0 && (
-                        <span className="coord-month-pip coord-month-pip--task" />
-                      )}
-                      {daySummary[iso].routines > 0 && (
-                        <span className="coord-month-pip coord-month-pip--routine" />
-                      )}
-                    </span>
-                  )}
+                  {(() => {
+                    const s = daySummary?.[iso];
+                    if (!s || (s.events === 0 && s.tasks === 0 && s.routines === 0)) return null;
+                    return (
+                      <div className="month-cell-pips">
+                        {s.events > 0 && (
+                          <span className="month-cell-pip month-cell-pip--event">
+                            <span className="month-cell-pip-glyph">◆</span>{s.events}
+                          </span>
+                        )}
+                        {s.tasks > 0 && (
+                          <span className="month-cell-pip month-cell-pip--task">
+                            <span className="month-cell-pip-glyph">□</span>{s.tasks}
+                          </span>
+                        )}
+                        {s.routines > 0 && (
+                          <span className="month-cell-pip month-cell-pip--routine" aria-hidden="true" />
+                        )}
+                      </div>
+                    );
+                  })()}
                 </button>
               );
             })}
