@@ -1,4 +1,4 @@
-# Build context: repo root (d:\repos\domusmind)
+# Build context: repository root (e.g., /path/to/repo-root)
 # docker build -f src/backend/DomusMind.Api/Dockerfile -t domusmind-api .
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
