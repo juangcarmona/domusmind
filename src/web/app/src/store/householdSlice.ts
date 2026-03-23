@@ -7,6 +7,7 @@ import {
   type UpdateFamilySettingsRequest,
   type InviteMemberRequest,
   type LinkMemberAccountRequest,
+  type ProvisionMemberAccessRequest,
   type UpdateMemberRequest,
 } from "../api/domusmindApi";
 
@@ -85,11 +86,11 @@ export const fetchMembers = createAsyncThunk(
 export const addMember = createAsyncThunk(
   "household/addMember",
   async (
-    { familyId, name, role }: { familyId: string; name: string; role: string },
+    { familyId, name, role, birthDate, isManager }: { familyId: string; name: string; role: string; birthDate?: string | null; isManager?: boolean },
     { rejectWithValue },
   ) => {
     try {
-      return await domusmindApi.addMember(familyId, { name, role });
+      return await domusmindApi.addMember(familyId, { name, role, birthDate, isManager });
     } catch (err: unknown) {
       return rejectWithValue((err as { message?: string }).message ?? "Failed to add person");
     }
@@ -126,6 +127,52 @@ export const linkMemberAccount = createAsyncThunk(
       return response;
     } catch (err: unknown) {
       return rejectWithValue((err as { message?: string }).message ?? "Failed to link account");
+    }
+  },
+);
+
+export const provisionMemberAccess = createAsyncThunk(
+  "household/provisionMemberAccess",
+  async (
+    { familyId, memberId, ...body }: { familyId: string; memberId: string } & ProvisionMemberAccessRequest,
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      const response = await domusmindApi.provisionMemberAccess(familyId, memberId, body);
+      dispatch(fetchMembers(familyId));
+      return response;
+    } catch (err: unknown) {
+      return rejectWithValue((err as { message?: string }).message ?? "Failed to provision access");
+    }
+  },
+);
+
+export const regeneratePassword = createAsyncThunk(
+  "household/regeneratePassword",
+  async (
+    { familyId, memberId }: { familyId: string; memberId: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      return await domusmindApi.regeneratePassword(familyId, memberId);
+    } catch (err: unknown) {
+      return rejectWithValue((err as { message?: string }).message ?? "Failed to regenerate password");
+    }
+  },
+);
+
+export const disableMemberAccess = createAsyncThunk(
+  "household/disableMemberAccess",
+  async (
+    { familyId, memberId }: { familyId: string; memberId: string },
+    { dispatch, rejectWithValue },
+  ) => {
+    try {
+      const response = await domusmindApi.disableMemberAccess(familyId, memberId);
+      dispatch(fetchMembers(familyId));
+      return response;
+    } catch (err: unknown) {
+      return rejectWithValue((err as { message?: string }).message ?? "Failed to disable access");
     }
   },
 );
@@ -236,6 +283,8 @@ const householdSlice = createSlice({
           isManager: false,
           birthDate: null,
           authUserId: null,
+          accessStatus: "None",
+          linkedEmail: null,
         });
       })
       .addCase(completeOnboarding.fulfilled, (state, action) => {
@@ -248,6 +297,8 @@ const householdSlice = createSlice({
           birthDate: m.birthDate,
           joinedAtUtc: m.joinedAtUtc,
           authUserId: null,
+          accessStatus: "None" as const,
+          linkedEmail: null,
         }));
         state.bootstrapStatus = "ready";
         state.error = null;

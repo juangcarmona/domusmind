@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../auth/AuthProvider";
 import { HouseholdLogo } from "./HouseholdLogo";
 import { UserAvatar } from "./UserAvatar";
+import { ThemeToggle } from "./ThemeToggle";
 import { useAppSelector } from "../store/hooks";
 
 const NAV_ITEMS = [
@@ -50,8 +51,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   const members = useAppSelector((s) => s.household.members);
-  const currentMember = members.find((m) => m.authUserId === user?.userId);
-  const userName = currentMember?.name ?? user?.email?.split("@")[0] ?? "";
+  const currentMember = members.find(
+    (m) => m.authUserId === user?.userId || (user?.memberId != null && m.memberId === user?.memberId),
+  );
+  const userName = user?.displayName ?? user?.memberName ?? currentMember?.name ?? user?.email ?? "";
 
   return (
     <div className="app-layout">
@@ -90,6 +93,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* Avatar + dropdown */}
         <div className="header-end" ref={avatarMenuRef}>
           <UserAvatar name={userName} onClick={() => setAvatarMenuOpen((o) => !o)} />
+          <ThemeToggle />
           {avatarMenuOpen && (
             <div className="avatar-menu" role="menu">
               <NavLink

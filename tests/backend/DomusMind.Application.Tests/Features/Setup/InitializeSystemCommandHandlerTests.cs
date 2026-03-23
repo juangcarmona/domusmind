@@ -175,6 +175,10 @@ public sealed class InitializeSystemCommandHandlerTests
         public Task AddAsync(AuthUserRecord user, CancellationToken ct) { Users.Add(user); return Task.CompletedTask; }
         public Task UpdatePasswordHashAsync(Guid userId, string hash, CancellationToken ct) => Task.CompletedTask;
         public Task UpdateMustChangePasswordAsync(Guid userId, bool mustChangePassword, CancellationToken ct) => Task.CompletedTask;
+        public Task UpdatePasswordChangedAtAsync(Guid userId, DateTime changedAt, CancellationToken ct) => Task.CompletedTask;
+        public Task DisableUserAsync(Guid userId, CancellationToken ct) => Task.CompletedTask;
+        public Task<IReadOnlyDictionary<Guid, AuthUserStatusProjection>> GetStatusByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken ct)
+            => Task.FromResult<IReadOnlyDictionary<Guid, AuthUserStatusProjection>>(new Dictionary<Guid, AuthUserStatusProjection>());
         public Task<bool> AnyUsersAsync(CancellationToken ct) => Task.FromResult(Users.Count > 0);
         public Task SaveChangesAsync(CancellationToken ct) => Task.CompletedTask;
     }

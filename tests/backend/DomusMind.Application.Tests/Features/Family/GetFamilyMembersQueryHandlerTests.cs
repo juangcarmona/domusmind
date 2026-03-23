@@ -1,5 +1,6 @@
 using DomusMind.Application.Features.Family;
 using DomusMind.Application.Features.Family.GetFamilyMembers;
+using DomusMind.Application.Tests.Features.Auth;
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Family.ValueObjects;
 using DomusMind.Infrastructure.Persistence;
@@ -18,7 +19,7 @@ public sealed class GetFamilyMembersQueryHandlerTests
     private static GetFamilyMembersQueryHandler BuildHandler(
         DomusMindDbContext db,
         StubFamilyAuthorizationService? auth = null)
-        => new(db, auth ?? new StubFamilyAuthorizationService());
+        => new(db, auth ?? new StubFamilyAuthorizationService(), new InMemoryAuthUserRepository());
 
     private static async Task<(DomusMindDbContext Db, Domain.Family.Family Family)> BuildWithFamilyAsync()
     {

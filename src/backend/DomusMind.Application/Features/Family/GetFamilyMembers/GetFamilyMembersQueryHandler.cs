@@ -13,13 +13,16 @@ public sealed class GetFamilyMembersQueryHandler
 {
     private readonly IDomusMindDbContext _dbContext;
     private readonly IFamilyAuthorizationService _authorizationService;
+    private readonly IAuthUserRepository _authUserRepository;
 
     public GetFamilyMembersQueryHandler(
         IDomusMindDbContext dbContext,
-        IFamilyAuthorizationService authorizationService)
+        IFamilyAuthorizationService authorizationService,
+        IAuthUserRepository authUserRepository)
     {
         _dbContext = dbContext;
         _authorizationService = authorizationService;
+        _authUserRepository = authUserRepository;
     }
 
     public async Task<IReadOnlyCollection<FamilyMemberResponse>> Handle(
@@ -40,17 +43,54 @@ public sealed class GetFamilyMembersQueryHandler
         if (family is null)
             throw new FamilyException(FamilyErrorCode.FamilyNotFound, "Family was not found.");
 
+        var linkedUserIds = family.Members
+            .Where(m => m.AuthUserId.HasValue)
+            .Select(m => m.AuthUserId!.Value)
+            .ToList();
+
+        var authStatus = await _authUserRepository.GetStatusByIdsAsync(linkedUserIds, cancellationToken);
+
         return family.Members
-            .Select(m => new FamilyMemberResponse(
-                m.Id.Value,
-                family.Id.Value,
-                m.Name.Value,
-                m.Role.Value,
-                m.IsManager,
-                m.BirthDate,
-                m.JoinedAtUtc,
-                m.AuthUserId))
+            .OrderBy(m => m.Role.Value switch { "Adult" => 0, "Child" => 1, "Pet" => 2, _ => 3 })
+            .ThenByDescending(m => m.IsManager)
+            .ThenBy(m => m.Name.Value, StringComparer.OrdinalIgnoreCase)
+            .Select(m =>
+            {
+                MemberAccessStatus status;
+                string? linkedEmail = null;
+
+                if (!m.AuthUserId.HasValue)
+                {
+                    status = MemberAccessStatus.None;
+                }
+                else if (authStatus.TryGetValue(m.AuthUserId.Value, out var projection))
+                {
+                    linkedEmail = projection.Email;
+                    status = projection.IsDisabled
+                        ? MemberAccessStatus.Disabled
+                        : projection.MustChangePassword
+                            ? MemberAccessStatus.PasswordChangeRequired
+                            : MemberAccessStatus.Active;
+                }
+                else
+                {
+                    status = MemberAccessStatus.None;
+                }
+
+                return new FamilyMemberResponse(
+                    m.Id.Value,
+                    family.Id.Value,
+                    m.Name.Value,
+                    m.Role.Value,
+                    m.IsManager,
+                    m.BirthDate,
+                    m.JoinedAtUtc,
+                    m.AuthUserId,
+                    status,
+                    linkedEmail);
+            })
             .ToList()
             .AsReadOnly();
     }
 }
+

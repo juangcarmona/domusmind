@@ -40,6 +40,32 @@ internal sealed class InMemoryAuthUserRepository : IAuthUserRepository
         return Task.CompletedTask;
     }
 
+    public Task UpdatePasswordChangedAtAsync(Guid userId, DateTime changedAtUtc, CancellationToken ct)
+    {
+        // no-op in test stub
+        return Task.CompletedTask;
+    }
+
+    public Task DisableUserAsync(Guid userId, CancellationToken ct)
+    {
+        var index = Users.FindIndex(u => u.UserId == userId);
+        if (index >= 0)
+            Users[index] = Users[index] with { IsDisabled = true };
+        return Task.CompletedTask;
+    }
+
+    public Task<IReadOnlyDictionary<Guid, AuthUserStatusProjection>> GetStatusByIdsAsync(
+        IReadOnlyCollection<Guid> userIds,
+        CancellationToken ct)
+    {
+        IReadOnlyDictionary<Guid, AuthUserStatusProjection> result = Users
+            .Where(u => userIds.Contains(u.UserId))
+            .ToDictionary(
+                u => u.UserId,
+                u => new AuthUserStatusProjection(u.UserId, u.Email, u.IsDisabled, u.MustChangePassword));
+        return Task.FromResult(result);
+    }
+
     public Task<bool> AnyUsersAsync(CancellationToken ct)
         => Task.FromResult(Users.Count > 0);
 

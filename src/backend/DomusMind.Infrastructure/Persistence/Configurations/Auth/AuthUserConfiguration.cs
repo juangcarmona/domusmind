@@ -28,5 +28,18 @@ public sealed class AuthUserConfiguration : IEntityTypeConfiguration<AuthUser>
         builder.Property(x => x.MustChangePassword)
             .IsRequired()
             .HasDefaultValue(false);
+
+        builder.Property(x => x.DisplayName)
+            .HasMaxLength(150);
+
+        builder.Property(x => x.IsDisabled)
+            .IsRequired()
+            .HasDefaultValue(false);
+
+        builder.Property(x => x.PasswordChangedAtUtc);
+
+        builder.Property(x => x.MemberId);
+
+        builder.Property(x => x.CreatedByUserId);
     }
 }

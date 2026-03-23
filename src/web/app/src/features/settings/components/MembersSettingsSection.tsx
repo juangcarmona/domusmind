@@ -1,14 +1,46 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../../auth/AuthProvider";
-import { useAppSelector } from "../../../store/hooks";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { updateMember } from "../../../store/householdSlice";
+import { EditMemberModal, type MemberFormValues } from "./MemberModals";
 import { MembersManagementSection } from "./MembersManagementSection";
 
 export function MembersSettingsSection() {
   const { t } = useTranslation("settings");
   const { user } = useAuth();
-  const members = useAppSelector((s) => s.household.members);
+  const dispatch = useAppDispatch();
+  const { family, members } = useAppSelector((s) => s.household);
+  const me = members.find(
+    (m) => m.authUserId === user?.userId || (user?.memberId != null && m.memberId === user?.memberId),
+  );
+  const tM = (key: string) => t(`household.members.${key}` as never);
 
-  const me = members.find((m) => m.authUserId === user?.userId);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editSaving, setEditSaving] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
+  async function handleProfileSave(values: MemberFormValues) {
+    if (!me || !family) return;
+    setEditSaving(true);
+    setEditError(null);
+    const result = await dispatch(
+      updateMember({
+        familyId: family.familyId,
+        memberId: me.memberId,
+        name: values.name,
+        role: values.role,
+        birthDate: values.birthDate || null,
+        isManager: values.isManager,
+      }),
+    );
+    setEditSaving(false);
+    if (updateMember.fulfilled.match(result)) {
+      setIsEditing(false);
+    } else {
+      setEditError((result.payload as string) ?? tM("updateError"));
+    }
+  }
 
   return (
     <>
@@ -42,8 +74,8 @@ export function MembersSettingsSection() {
             >
               {me.name[0]?.toUpperCase()}
             </div>
-            <div>
-              <div style={{ fontWeight: 700, fontSize: "1.05rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontWeight: 700, fontSize: "1.05rem", display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
                 <span>{me.name}</span>
                 {me.isManager && (
                   <span
@@ -55,7 +87,7 @@ export function MembersSettingsSection() {
                       color: "var(--primary)",
                     }}
                   >
-                    {t("household.members.managerBadge")}
+                    {tM("managerBadge")}
                   </span>
                 )}
                 <span
@@ -83,7 +115,25 @@ export function MembersSettingsSection() {
                 {user?.email}
               </div>
             </div>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              style={{ flexShrink: 0 }}
+              onClick={() => { setIsEditing(true); setEditError(null); }}
+            >
+              {t("membersTab.editProfile")}
+            </button>
           </div>
+
+          {isEditing && (
+            <EditMemberModal
+              member={me}
+              saving={editSaving}
+              error={editError}
+              onSave={handleProfileSave}
+              onClose={() => { setIsEditing(false); setEditError(null); }}
+            />
+          )}
         </section>
       )}
 

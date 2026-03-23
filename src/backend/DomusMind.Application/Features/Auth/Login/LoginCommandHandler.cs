@@ -32,6 +32,9 @@ public sealed class LoginCommandHandler : ICommandHandler<LoginCommand, LoginRes
         if (user is null || !_hasher.Verify(command.Password, user.PasswordHash))
             throw new AuthException(AuthErrorCode.InvalidCredentials, "Invalid email or password.");
 
+        if (user.IsDisabled)
+            throw new AuthException(AuthErrorCode.AccountDisabled, "This account has been disabled.");
+
         var accessToken = _tokenGenerator.Generate(user.UserId, user.Email);
         var refreshToken = await _refreshTokens.CreateAsync(user.UserId, cancellationToken);
 

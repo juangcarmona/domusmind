@@ -74,6 +74,7 @@ public static class AuthInfrastructureExtensions
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IRefreshTokenService, RefreshTokenStore>();
         services.AddScoped<IAuthUserRepository, AuthUserRepository>();
+        services.AddScoped<ITemporaryPasswordGenerator, TemporaryPasswordGenerator>();
         services.AddScoped<IFamilyAuthorizationService, FamilyAuthorizationService>();
         services.AddScoped<IFamilyAccessGranter, FamilyAccessGranter>();
         services.AddScoped<IUserFamilyAccessReader, UserFamilyAccessReader>();

@@ -14,6 +14,7 @@ import { bootstrapHousehold } from "./store/householdSlice";
 import { AppShell } from "./components/AppShell";
 import { LoginPage } from "./features/auth/pages/LoginPage";
 import { RegisterPage } from "./features/auth/pages/RegisterPage";
+import { ForceChangePasswordPage } from "./features/auth/pages/ForceChangePasswordPage";
 import { SetupPage } from "./features/setup/pages/SetupPage";
 import { OnboardingPage } from "./features/onboarding/pages/OnboardingPage";
 import { AreasPage } from "./features/areas/pages/AreasPage";
@@ -21,6 +22,22 @@ import { PlanningPage } from "./features/planning/pages/PlanningPage";
 import { SettingsPage } from "./features/settings/pages/SettingsPage";
 import { TodayPage } from "./features/today/pages/TodayPage";
 import { setupApi } from "./api/setupApi";
+
+/** Keeps document.documentElement[data-theme] in sync with Redux ui.theme. */
+function ThemeApplier() {
+  const theme = useAppSelector((s) => s.ui.theme);
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "dark") {
+      root.setAttribute("data-theme", "dark");
+    } else if (theme === "light") {
+      root.setAttribute("data-theme", "light");
+    } else {
+      root.removeAttribute("data-theme");
+    }
+  }, [theme]);
+  return null;
+}
 
 function AuthedApp() {
   const dispatch = useAppDispatch();
@@ -135,6 +152,14 @@ function AppRoutes() {
     );
   }
 
+  if (user.mustChangePassword) {
+    return (
+      <Routes>
+        <Route path="*" element={<ForceChangePasswordPage />} />
+      </Routes>
+    );
+  }
+
   return <AuthedApp />;
 }
 
@@ -142,6 +167,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ThemeApplier />
         <AppRoutes />
       </BrowserRouter>
     </AuthProvider>

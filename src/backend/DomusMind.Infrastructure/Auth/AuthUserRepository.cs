@@ -31,6 +31,22 @@ public sealed class AuthUserRepository : IAuthUserRepository
         return entity is null ? null : Map(entity);
     }
 
+    public async Task<IReadOnlyDictionary<Guid, AuthUserStatusProjection>> GetStatusByIdsAsync(
+        IReadOnlyCollection<Guid> userIds,
+        CancellationToken cancellationToken)
+    {
+        if (userIds.Count == 0)
+            return new Dictionary<Guid, AuthUserStatusProjection>();
+
+        var result = await _db.Set<AuthUser>()
+            .AsNoTracking()
+            .Where(u => userIds.Contains(u.UserId))
+            .Select(u => new AuthUserStatusProjection(u.UserId, u.Email, u.IsDisabled, u.MustChangePassword))
+            .ToListAsync(cancellationToken);
+
+        return result.ToDictionary(p => p.UserId);
+    }
+
     public async Task AddAsync(AuthUserRecord user, CancellationToken cancellationToken)
     {
         var entity = new AuthUser
@@ -40,6 +56,9 @@ public sealed class AuthUserRepository : IAuthUserRepository
             PasswordHash = user.PasswordHash,
             CreatedAtUtc = DateTime.UtcNow,
             MustChangePassword = user.MustChangePassword,
+            DisplayName = user.DisplayName,
+            IsDisabled = user.IsDisabled,
+            MemberId = user.MemberId,
         };
 
         await _db.Set<AuthUser>().AddAsync(entity, cancellationToken);
@@ -63,6 +82,24 @@ public sealed class AuthUserRepository : IAuthUserRepository
                 cancellationToken);
     }
 
+    public async Task UpdatePasswordChangedAtAsync(Guid userId, DateTime changedAtUtc, CancellationToken cancellationToken)
+    {
+        await _db.Set<AuthUser>()
+            .Where(u => u.UserId == userId)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(u => u.PasswordChangedAtUtc, changedAtUtc),
+                cancellationToken);
+    }
+
+    public async Task DisableUserAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        await _db.Set<AuthUser>()
+            .Where(u => u.UserId == userId)
+            .ExecuteUpdateAsync(
+                s => s.SetProperty(u => u.IsDisabled, true),
+                cancellationToken);
+    }
+
     public async Task<bool> AnyUsersAsync(CancellationToken cancellationToken)
     {
         return await _db.Set<AuthUser>().AnyAsync(cancellationToken);
@@ -72,5 +109,12 @@ public sealed class AuthUserRepository : IAuthUserRepository
         => _db.SaveChangesAsync(cancellationToken);
 
     private static AuthUserRecord Map(AuthUser entity)
-        => new(entity.UserId, entity.Email, entity.PasswordHash, entity.MustChangePassword);
+        => new(
+            entity.UserId,
+            entity.Email,
+            entity.PasswordHash,
+            entity.MustChangePassword,
+            entity.DisplayName,
+            entity.IsDisabled,
+            entity.MemberId);
 }

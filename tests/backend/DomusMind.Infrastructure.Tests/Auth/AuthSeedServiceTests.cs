@@ -174,6 +174,15 @@ public sealed class AuthSeedServiceTests
         public Task UpdateMustChangePasswordAsync(Guid userId, bool mustChangePassword, CancellationToken ct)
             => Task.CompletedTask;
 
+        public Task UpdatePasswordChangedAtAsync(Guid userId, DateTime changedAt, CancellationToken ct)
+            => Task.CompletedTask;
+
+        public Task DisableUserAsync(Guid userId, CancellationToken ct)
+            => Task.CompletedTask;
+
+        public Task<IReadOnlyDictionary<Guid, AuthUserStatusProjection>> GetStatusByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken ct)
+            => Task.FromResult<IReadOnlyDictionary<Guid, AuthUserStatusProjection>>(new Dictionary<Guid, AuthUserStatusProjection>());
+
         public Task<bool> AnyUsersAsync(CancellationToken ct)
             => Task.FromResult(Users.Count > 0);
 
