@@ -9,6 +9,7 @@ public enum AuthErrorCode
     UserNotFound,
     WeakPassword,
     SamePassword,
+    AccountDisabled,
 }
 
 public sealed class AuthException : Exception

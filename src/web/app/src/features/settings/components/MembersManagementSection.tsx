@@ -2,42 +2,47 @@ import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../../auth/AuthProvider";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { addMember, linkMemberAccount, updateMember } from "../../../store/householdSlice";
+import {
+  addMember,
+  disableMemberAccess,
+  provisionMemberAccess,
+  regeneratePassword,
+  updateMember,
+} from "../../../store/householdSlice";
 
 const MEMBER_ROLES = ["Adult", "Child", "Pet", "Caregiver"] as const;
 const ADD_MEMBER_ROLES = MEMBER_ROLES.filter((r) => r !== "Caregiver");
 
-/** Generate a random temporary password: 8 chars, mixed upper/lower/digits.
- *  Uses crypto.getRandomValues() for unpredictable output.
- *  Ambiguous characters (0, O, I, l, 1) are excluded to improve readability. */
-function generatePassword(): string {
-  const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-  const lower = "abcdefghjkmnpqrstuvwxyz";
-  const digits = "23456789";
-  const all = upper + lower + digits;
-
-  function pick(charset: string): string {
-    const arr = new Uint32Array(1);
-    do {
-      crypto.getRandomValues(arr);
-    } while (arr[0] >= Math.floor(0x100000000 / charset.length) * charset.length);
-    return charset[arr[0] % charset.length];
-  }
-
-  // Guarantee at least 2 of each category
-  const chars = [pick(upper), pick(upper), pick(lower), pick(lower), pick(digits), pick(digits)];
-  for (let i = 6; i < 8; i++) chars.push(pick(all));
-  // Fisher-Yates shuffle using crypto.getRandomValues
-  for (let i = chars.length - 1; i > 0; i--) {
-    const arr = new Uint32Array(1);
-    crypto.getRandomValues(arr);
-    const j = arr[0] % (i + 1);
-    [chars[i], chars[j]] = [chars[j], chars[i]];
-  }
-  return chars.join("");
+function AccessStatusBadge({
+  status,
+  tM,
+}: {
+  status: string;
+  tM: (key: string) => string;
+}) {
+  const map: Record<string, { label: string; color: string }> = {
+    None: { label: tM("noAccount"), color: "var(--muted)" },
+    PasswordChangeRequired: { label: tM("passwordChangeRequired"), color: "#f5a623" },
+    Active: { label: tM("accountActive"), color: "#22c55e" },
+    Disabled: { label: tM("accountDisabled"), color: "#ef4444" },
+  };
+  const badge = map[status] ?? map["None"];
+  return (
+    <span
+      style={{
+        fontSize: "0.7rem",
+        padding: "0.1rem 0.4rem",
+        borderRadius: 4,
+        background: `color-mix(in srgb, ${badge.color} 18%, transparent)`,
+        color: badge.color,
+      }}
+    >
+      {badge.label}
+    </span>
+  );
 }
 
-type EditMode = "profile" | "linkAccount";
+type EditMode = "profile" | "provisionAccess";
 
 export function MembersManagementSection() {
   const { t } = useTranslation("settings");
@@ -62,15 +67,26 @@ export function MembersManagementSection() {
   const [editSaving, setEditSaving] = useState(false);
   const [editError, setEditError] = useState<string | null>(null);
 
-  // Link account form
-  const [linkEmail, setLinkEmail] = useState("");
-  const [linkPassword, setLinkPassword] = useState("");
-  const [linkSaving, setLinkSaving] = useState(false);
-  const [linkError, setLinkError] = useState<string | null>(null);
-  const [linkedCredentials, setLinkedCredentials] = useState<{
-    username: string;
-    password: string;
+  // Provision access form
+  const [provisionEmail, setProvisionEmail] = useState("");
+  const [provisionDisplayName, setProvisionDisplayName] = useState("");
+  const [provisionSaving, setProvisionSaving] = useState(false);
+  const [provisionError, setProvisionError] = useState<string | null>(null);
+  const [provisioned, setProvisioned] = useState<{
+    email: string;
+    temporaryPassword: string;
   } | null>(null);
+
+  // Regenerate password state (per-member, shown inline)
+  const [regenMemberId, setRegenMemberId] = useState<string | null>(null);
+  const [regenResult, setRegenResult] = useState<string | null>(null);
+  const [regenSaving, setRegenSaving] = useState(false);
+  const [regenError, setRegenError] = useState<string | null>(null);
+
+  // Disable access state
+  const [disableSaving, setDisableSaving] = useState<string | null>(null);
+  const [disableError, setDisableError] = useState<{ memberId: string; message: string } | null>(null);
+
   const [showAddMember, setShowAddMember] = useState(false);
   const [addName, setAddName] = useState("");
   const [addRole, setAddRole] = useState("Adult");
@@ -78,6 +94,28 @@ export function MembersManagementSection() {
   const [addError, setAddError] = useState<string | null>(null);
 
   if (!family) return null;
+
+  const myMemberId = members.find((m) => m.authUserId === user?.userId)?.memberId;
+
+  const roleOrder = (role: string) => {
+    switch (role) {
+      case "Adult": return 0;
+      case "Child": return 1;
+      case "Pet": return 2;
+      default: return 3;
+    }
+  };
+
+  const visibleMembers = members
+    .filter((m) => m.memberId !== myMemberId)
+    .slice()
+    .sort((a, b) => {
+      const rd = roleOrder(a.role) - roleOrder(b.role);
+      if (rd !== 0) return rd;
+      const md = (b.isManager ? 1 : 0) - (a.isManager ? 1 : 0);
+      if (md !== 0) return md;
+      return a.name.localeCompare(b.name);
+    });
 
   // ── Edit helpers ────────────────────────────────────────────────────────────
   function openEdit(memberId: string) {
@@ -90,17 +128,17 @@ export function MembersManagementSection() {
     setEditBirthDate(m.birthDate ?? "");
     setEditIsManager(m.isManager);
     setEditError(null);
-    setLinkEmail("");
-    setLinkPassword("");
-    setLinkError(null);
-    setLinkedCredentials(null);
+    setProvisionEmail("");
+    setProvisionDisplayName("");
+    setProvisionError(null);
+    setProvisioned(null);
   }
 
   function cancelEdit() {
     setEditingId(null);
-    setLinkedCredentials(null);
+    setProvisioned(null);
     setEditError(null);
-    setLinkError(null);
+    setProvisionError(null);
   }
 
   async function handleProfileSave(e: FormEvent) {
@@ -128,29 +166,64 @@ export function MembersManagementSection() {
     }
   }
 
-  async function handleLinkAccount(e: FormEvent) {
+  async function handleProvisionAccess(e: FormEvent) {
     e.preventDefault();
     if (!editingId) return;
-    setLinkSaving(true);
-    setLinkError(null);
+    setProvisionSaving(true);
+    setProvisionError(null);
 
     const result = await dispatch(
-      linkMemberAccount({
+      provisionMemberAccess({
         familyId: family!.familyId,
         memberId: editingId,
-        username: linkEmail.trim().toLowerCase(),
-        temporaryPassword: linkPassword,
+        email: provisionEmail.trim().toLowerCase(),
+        displayName: provisionDisplayName.trim() || null,
       }),
     );
 
-    setLinkSaving(false);
-    if (linkMemberAccount.fulfilled.match(result)) {
-      setLinkedCredentials({
-        username: linkEmail.trim().toLowerCase(),
-        password: linkPassword,
+    setProvisionSaving(false);
+    if (provisionMemberAccess.fulfilled.match(result)) {
+      setProvisioned({
+        email: result.payload.email,
+        temporaryPassword: result.payload.temporaryPassword,
       });
     } else {
-      setLinkError((result.payload as string) ?? tM("linkAccountError"));
+      setProvisionError((result.payload as string) ?? tM("provisionError"));
+    }
+  }
+
+  async function handleRegenPassword(memberId: string) {
+    setRegenMemberId(memberId);
+    setRegenResult(null);
+    setRegenError(null);
+    setRegenSaving(true);
+
+    const result = await dispatch(
+      regeneratePassword({ familyId: family!.familyId, memberId }),
+    );
+
+    setRegenSaving(false);
+    if (regeneratePassword.fulfilled.match(result)) {
+      setRegenResult(result.payload.temporaryPassword);
+    } else {
+      setRegenError((result.payload as string) ?? tM("regenError"));
+    }
+  }
+
+  async function handleDisableAccess(memberId: string) {
+    setDisableSaving(memberId);
+    setDisableError(null);
+
+    const result = await dispatch(
+      disableMemberAccess({ familyId: family!.familyId, memberId }),
+    );
+
+    setDisableSaving(null);
+    if (!disableMemberAccess.fulfilled.match(result)) {
+      setDisableError({
+        memberId,
+        message: (result.payload as string) ?? tM("disableError"),
+      });
     }
   }
 
@@ -238,16 +311,16 @@ export function MembersManagementSection() {
         </div>
       )}
 
-      {members.length === 0 ? (
+      {visibleMembers.length === 0 ? (
         <p style={{ color: "var(--muted)", fontSize: "0.9rem" }}>{tM("noMembers")}</p>
       ) : (
         <div className="item-list">
-          {members.map((m) => (
+          {visibleMembers.map((m) => (
             <div key={m.memberId}>
               {editingId === m.memberId ? (
                 <div className="card" style={{ padding: "1rem" }}>
-                  {/* Credentials display after successful link */}
-                  {linkedCredentials ? (
+                  {/* Credentials display after successful provisioning */}
+                  {provisioned ? (
                     <div>
                       <p style={{ fontWeight: 600, marginBottom: "0.5rem" }}>{tM("credentialsTitle")}</p>
                       <div
@@ -273,11 +346,19 @@ export function MembersManagementSection() {
                       >
                         <div>
                           <span style={{ color: "var(--muted)", marginRight: 8 }}>{tM("email")}:</span>
-                          <strong>{linkedCredentials.username}</strong>
+                          <strong>{provisioned.email}</strong>
                         </div>
                         <div>
                           <span style={{ color: "var(--muted)", marginRight: 8 }}>{tM("temporaryPassword")}:</span>
-                          <strong>{linkedCredentials.password}</strong>
+                          <strong>{provisioned.temporaryPassword}</strong>
+                          <button
+                            type="button"
+                            className="btn btn-ghost"
+                            style={{ fontSize: "0.7rem", padding: "0.1rem 0.5rem", marginLeft: 8 }}
+                            onClick={() => navigator.clipboard?.writeText(provisioned!.temporaryPassword)}
+                          >
+                            {tM("copy")}
+                          </button>
                         </div>
                       </div>
                       <button type="button" className="btn" onClick={cancelEdit}>
@@ -299,11 +380,11 @@ export function MembersManagementSection() {
                         {isCurrentUserManager && !m.authUserId && (
                           <button
                             type="button"
-                            className={`btn btn-ghost${editMode === "linkAccount" ? " active" : ""}`}
-                            style={{ fontSize: "0.85rem", padding: "0.25rem 0.6rem", fontWeight: editMode === "linkAccount" ? 700 : undefined }}
-                            onClick={() => setEditMode("linkAccount")}
+                            className={`btn btn-ghost${editMode === "provisionAccess" ? " active" : ""}`}
+                            style={{ fontSize: "0.85rem", padding: "0.25rem 0.6rem", fontWeight: editMode === "provisionAccess" ? 700 : undefined }}
+                            onClick={() => setEditMode("provisionAccess")}
                           >
-                            {tM("linkAccount")}
+                            {tM("provisionAccess")}
                           </button>
                         )}
                       </div>
@@ -373,49 +454,38 @@ export function MembersManagementSection() {
                         </form>
                       )}
 
-                      {editMode === "linkAccount" && (
-                        <form onSubmit={handleLinkAccount}>
+                      {editMode === "provisionAccess" && (
+                        <form onSubmit={handleProvisionAccess}>
                           <p style={{ fontSize: "0.85rem", color: "var(--muted)", marginBottom: "0.75rem" }}>
-                            {tM("linkAccountSubtitle")}
+                            {tM("provisionAccessSubtitle")}
                           </p>
                           <div className="form-group">
                             <label>{tM("email")}</label>
                             <input
                               className="form-control"
                               type="email"
-                              value={linkEmail}
-                              onChange={(e) => setLinkEmail(e.target.value)}
+                              value={provisionEmail}
+                              onChange={(e) => setProvisionEmail(e.target.value)}
                               required
                               autoFocus
                               autoComplete="off"
                             />
                           </div>
                           <div className="form-group">
-                            <label style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                              <span>{tM("temporaryPassword")}</span>
-                              <button
-                                type="button"
-                                className="btn btn-ghost"
-                                style={{ fontSize: "0.75rem", padding: "0.1rem 0.5rem" }}
-                                onClick={() => setLinkPassword(generatePassword())}
-                              >
-                                {tM("generatePassword")}
-                              </button>
-                            </label>
+                            <label>{tM("displayName")}</label>
                             <input
                               className="form-control"
                               type="text"
-                              value={linkPassword}
-                              onChange={(e) => setLinkPassword(e.target.value)}
-                              required
-                              minLength={6}
+                              value={provisionDisplayName}
+                              onChange={(e) => setProvisionDisplayName(e.target.value)}
+                              placeholder={tM("displayNamePlaceholder")}
                               autoComplete="off"
                             />
                           </div>
-                          {linkError && <p className="error-msg">{linkError}</p>}
+                          {provisionError && <p className="error-msg">{provisionError}</p>}
                           <div style={{ display: "flex", gap: "0.5rem" }}>
-                            <button type="submit" className="btn" disabled={linkSaving}>
-                              {linkSaving ? tM("saving") : tM("linkAccount")}
+                            <button type="submit" className="btn" disabled={provisionSaving}>
+                              {provisionSaving ? tM("saving") : tM("provisionAccess")}
                             </button>
                             <button type="button" className="btn btn-ghost" onClick={cancelEdit}>
                               {tM("cancel")}
@@ -475,34 +545,94 @@ export function MembersManagementSection() {
                           {tM("youBadge")}
                         </span>
                       )}
-                      <span
-                        style={{
-                          fontSize: "0.7rem",
-                          padding: "0.1rem 0.4rem",
-                          borderRadius: 4,
-                          background: m.authUserId
-                            ? "color-mix(in srgb, #22c55e 18%, transparent)"
-                            : "color-mix(in srgb, var(--muted) 20%, transparent)",
-                          color: m.authUserId ? "#22c55e" : "var(--muted)",
-                        }}
-                      >
-                        {m.authUserId ? `🔗 ${tM("accountLinked")}` : tM("noAccount")}
-                      </span>
+                      <AccessStatusBadge status={m.accessStatus} tM={tM} />
                     </div>
                     <div style={{ fontSize: "0.8rem", color: "var(--muted)" }}>
                       {t(`household.members.roles.${m.role}` as never, m.role)}
+                      {m.linkedEmail && (
+                        <span style={{ marginLeft: 8 }}>{m.linkedEmail}</span>
+                      )}
                     </div>
+                    {/* Inline regen result */}
+                    {regenMemberId === m.memberId && regenResult && (
+                      <div
+                        style={{
+                          marginTop: "0.5rem",
+                          background: "color-mix(in srgb, var(--primary) 8%, transparent)",
+                          borderRadius: 6,
+                          padding: "0.5rem 0.75rem",
+                          fontFamily: "monospace",
+                          fontSize: "0.85rem",
+                        }}
+                      >
+                        <span style={{ color: "var(--muted)", marginRight: 8 }}>
+                          {tM("newTemporaryPassword")}:
+                        </span>
+                        <strong>{regenResult}</strong>
+                        <button
+                          type="button"
+                          className="btn btn-ghost"
+                          style={{ fontSize: "0.7rem", padding: "0.1rem 0.5rem", marginLeft: 8 }}
+                          onClick={() => navigator.clipboard?.writeText(regenResult!)}
+                        >
+                          {tM("copy")}
+                        </button>
+                        <div style={{ fontSize: "0.75rem", color: "var(--warning, #f5a623)", marginTop: "0.25rem" }}>
+                          {tM("credentialsSaveWarning")}
+                        </div>
+                      </div>
+                    )}
+                    {regenMemberId === m.memberId && regenError && (
+                      <p className="error-msg" style={{ marginTop: "0.25rem" }}>{regenError}</p>
+                    )}
+                    {disableError?.memberId === m.memberId && (
+                      <p className="error-msg" style={{ marginTop: "0.25rem" }}>{disableError.message}</p>
+                    )}
                   </div>
-                  {(isCurrentUserManager || m.authUserId === user?.userId) && (
-                    <button
-                      type="button"
-                      className="btn btn-ghost"
-                      style={{ fontSize: "0.8rem", padding: "0.25rem 0.6rem", flexShrink: 0 }}
-                      onClick={() => openEdit(m.memberId)}
-                    >
-                      {tM("edit")}
-                    </button>
-                  )}
+                  <div style={{ display: "flex", gap: "0.4rem", flexShrink: 0, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                    {(isCurrentUserManager || m.authUserId === user?.userId) && (
+                      <button
+                        type="button"
+                        className="btn btn-ghost"
+                        style={{ fontSize: "0.8rem", padding: "0.25rem 0.6rem" }}
+                        onClick={() => openEdit(m.memberId)}
+                      >
+                        {tM("edit")}
+                      </button>
+                    )}
+                    {/* Admin-only: regenerate password */}
+                    {isCurrentUserManager &&
+                      m.authUserId &&
+                      m.accessStatus !== "Disabled" &&
+                      m.authUserId !== user?.userId && (
+                        <button
+                          type="button"
+                          className="btn btn-ghost"
+                          style={{ fontSize: "0.8rem", padding: "0.25rem 0.6rem" }}
+                          disabled={regenSaving && regenMemberId === m.memberId}
+                          onClick={() => handleRegenPassword(m.memberId)}
+                        >
+                          {regenSaving && regenMemberId === m.memberId
+                            ? tM("saving")
+                            : tM("regeneratePassword")}
+                        </button>
+                      )}
+                    {/* Admin-only: disable access */}
+                    {isCurrentUserManager &&
+                      m.authUserId &&
+                      m.accessStatus !== "Disabled" &&
+                      m.authUserId !== user?.userId && (
+                        <button
+                          type="button"
+                          className="btn btn-ghost"
+                          style={{ fontSize: "0.8rem", padding: "0.25rem 0.6rem", color: "#ef4444" }}
+                          disabled={disableSaving === m.memberId}
+                          onClick={() => handleDisableAccess(m.memberId)}
+                        >
+                          {disableSaving === m.memberId ? tM("saving") : tM("disableAccess")}
+                        </button>
+                      )}
+                  </div>
                 </div>
               )}
             </div>

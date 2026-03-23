@@ -14,6 +14,7 @@ import { bootstrapHousehold } from "./store/householdSlice";
 import { AppShell } from "./components/AppShell";
 import { LoginPage } from "./features/auth/pages/LoginPage";
 import { RegisterPage } from "./features/auth/pages/RegisterPage";
+import { ForceChangePasswordPage } from "./features/auth/pages/ForceChangePasswordPage";
 import { SetupPage } from "./features/setup/pages/SetupPage";
 import { OnboardingPage } from "./features/onboarding/pages/OnboardingPage";
 import { AreasPage } from "./features/areas/pages/AreasPage";
@@ -131,6 +132,14 @@ function AppRoutes() {
     return (
       <Routes>
         <Route path="*" element={<UnauthApp />} />
+      </Routes>
+    );
+  }
+
+  if (user.mustChangePassword) {
+    return (
+      <Routes>
+        <Route path="*" element={<ForceChangePasswordPage />} />
       </Routes>
     );
   }

@@ -66,6 +66,11 @@ export interface RefreshTokenResponse {
 export interface MeResponse {
   userId: string;
   email: string | null;
+  displayName: string | null;
+  memberId: string | null;
+  memberName: string | null;
+  isManager: boolean;
+  mustChangePassword: boolean;
 }
 
 export interface ChangePasswordRequest {

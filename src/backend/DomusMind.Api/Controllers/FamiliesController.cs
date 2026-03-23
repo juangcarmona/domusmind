@@ -4,6 +4,7 @@ using DomusMind.Application.Features.Family;
 using DomusMind.Application.Features.Family.AddMember;
 using DomusMind.Application.Features.Family.CompleteOnboarding;
 using DomusMind.Application.Features.Family.CreateFamily;
+using DomusMind.Application.Features.Family.DisableMemberAccess;
 using DomusMind.Application.Features.Family.UpdateFamilySettings;
 using DomusMind.Application.Features.Family.GetEnrichedTimeline;
 using DomusMind.Application.Features.Family.GetFamily;
@@ -14,6 +15,8 @@ using DomusMind.Application.Features.Family.GetMyFamily;
 using DomusMind.Application.Features.Family.GetWeeklyGrid;
 using DomusMind.Application.Features.Family.InviteMember;
 using DomusMind.Application.Features.Family.LinkMemberAccount;
+using DomusMind.Application.Features.Family.ProvisionMemberAccess;
+using DomusMind.Application.Features.Family.RegenerateTemporaryPassword;
 using DomusMind.Application.Features.Family.UpdateMember;
 using DomusMind.Contracts.Family;
 using Microsoft.AspNetCore.Authorization;
@@ -443,6 +446,107 @@ public sealed class FamiliesController : ControllerBase
                     request.Role,
                     request.BirthDate,
                     request.IsManager,
+                    _currentUser.UserId!.Value),
+                cancellationToken);
+
+            return Ok(response);
+        }
+        catch (FamilyException ex)
+        {
+            return MapFamilyException(ex);
+        }
+    }
+
+    /// <summary>
+    /// Provisions a login account for an existing family member. Manager only.
+    /// The generated temporary password is returned once and cannot be retrieved again.
+    /// </summary>
+    [HttpPost("{familyId:guid}/members/{memberId:guid}/provision-access")]
+    [ProducesResponseType(typeof(ProvisionMemberAccessResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ProvisionMemberAccess(
+        Guid familyId,
+        Guid memberId,
+        [FromBody] ProvisionMemberAccessRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new ProvisionMemberAccessCommand(
+                    familyId,
+                    memberId,
+                    request.Email,
+                    request.DisplayName,
+                    _currentUser.UserId!.Value),
+                cancellationToken);
+
+            return Created(
+                $"/api/families/{familyId}/members/{memberId}",
+                response);
+        }
+        catch (FamilyException ex)
+        {
+            return MapFamilyException(ex);
+        }
+    }
+
+    /// <summary>
+    /// Generates a new temporary password for a member's existing account. Manager only.
+    /// All existing sessions for that user are revoked. The new password is returned once.
+    /// </summary>
+    [HttpPost("{familyId:guid}/members/{memberId:guid}/regenerate-password")]
+    [ProducesResponseType(typeof(RegenerateTemporaryPasswordResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RegeneratePassword(
+        Guid familyId,
+        Guid memberId,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new RegenerateTemporaryPasswordCommand(
+                    familyId,
+                    memberId,
+                    _currentUser.UserId!.Value),
+                cancellationToken);
+
+            return Ok(response);
+        }
+        catch (FamilyException ex)
+        {
+            return MapFamilyException(ex);
+        }
+    }
+
+    /// <summary>
+    /// Disables a member's login access. Manager only.
+    /// All active sessions for that user are revoked immediately.
+    /// </summary>
+    [HttpPost("{familyId:guid}/members/{memberId:guid}/disable-access")]
+    [ProducesResponseType(typeof(DisableMemberAccessResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DisableMemberAccess(
+        Guid familyId,
+        Guid memberId,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new DisableMemberAccessCommand(
+                    familyId,
+                    memberId,
                     _currentUser.UserId!.Value),
                 cancellationToken);
 

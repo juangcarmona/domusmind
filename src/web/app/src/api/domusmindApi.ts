@@ -70,6 +70,9 @@ export interface FamilyMemberResponse {
   birthDate: string | null;
   joinedAtUtc: string;
   authUserId: string | null;
+  /** "None" | "PasswordChangeRequired" | "Active" | "Disabled" */
+  accessStatus: "None" | "PasswordChangeRequired" | "Active" | "Disabled";
+  linkedEmail: string | null;
 }
 
 export interface AddMemberRequest {
@@ -88,6 +91,28 @@ export interface AddMemberResponse {
 export interface LinkMemberAccountRequest {
   username: string;
   temporaryPassword: string;
+}
+
+export interface ProvisionMemberAccessRequest {
+  email: string;
+  displayName?: string | null;
+}
+
+export interface ProvisionMemberAccessResponse {
+  userId: string;
+  memberId: string;
+  email: string;
+  temporaryPassword: string;
+  mustChangePassword: boolean;
+}
+
+export interface RegenerateTemporaryPasswordResponse {
+  temporaryPassword: string;
+  mustChangePassword: boolean;
+}
+
+export interface DisableMemberAccessResponse {
+  memberId: string;
 }
 
 export interface LinkMemberAccountResponse {
@@ -412,6 +437,27 @@ export const domusmindApi = {
         method: "POST",
         body: JSON.stringify(body),
       },
+    ),
+
+  provisionMemberAccess: (familyId: string, memberId: string, body: ProvisionMemberAccessRequest) =>
+    request<ProvisionMemberAccessResponse>(
+      `/api/families/${familyId}/members/${memberId}/provision-access`,
+      {
+        method: "POST",
+        body: JSON.stringify(body),
+      },
+    ),
+
+  regeneratePassword: (familyId: string, memberId: string) =>
+    request<RegenerateTemporaryPasswordResponse>(
+      `/api/families/${familyId}/members/${memberId}/regenerate-password`,
+      { method: "POST" },
+    ),
+
+  disableMemberAccess: (familyId: string, memberId: string) =>
+    request<DisableMemberAccessResponse>(
+      `/api/families/${familyId}/members/${memberId}/disable-access`,
+      { method: "POST" },
     ),
 
   updateMember: (familyId: string, memberId: string, body: UpdateMemberRequest) =>

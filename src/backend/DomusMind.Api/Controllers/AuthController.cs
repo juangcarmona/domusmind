@@ -116,6 +116,10 @@ public sealed class AuthController : ControllerBase
         {
             return Unauthorized(new { error = ex.Message });
         }
+        catch (AuthException ex) when (ex.Code == AuthErrorCode.AccountDisabled)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message });
+        }
     }
 
     /// <summary>
