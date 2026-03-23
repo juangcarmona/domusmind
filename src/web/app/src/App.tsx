@@ -21,7 +21,10 @@ import { AreasPage } from "./features/areas/pages/AreasPage";
 import { PlanningPage } from "./features/planning/pages/PlanningPage";
 import { SettingsPage } from "./features/settings/pages/SettingsPage";
 import { TodayPage } from "./features/today/pages/TodayPage";
+import { MembersPage } from "./features/members/pages/MembersPage";
+import { MemberDetailPage } from "./features/members/pages/MemberDetailPage";
 import { setupApi } from "./api/setupApi";
+import { SplashScreen } from "./components/SplashScreen";
 
 /** Keeps document.documentElement[data-theme] in sync with Redux ui.theme. */
 function ThemeApplier() {
@@ -62,7 +65,7 @@ function AuthedApp() {
   void i18n;
 
   if (bootstrapStatus === "idle" || bootstrapStatus === "loading") {
-    return <div className="loading-wrap">Loading your household…</div>;
+    return <SplashScreen />;
   }
 
   if (bootstrapStatus === "needsOnboarding") {
@@ -74,7 +77,7 @@ function AuthedApp() {
   }
 
   if (bootstrapStatus !== "ready") {
-    return <div className="loading-wrap">Loading your household…</div>;
+    return <SplashScreen />;
   }
 
   return (
@@ -82,6 +85,8 @@ function AuthedApp() {
       <Routes>
         <Route path="/areas" element={<AreasPage />} />
         <Route path="/planning" element={<PlanningPage />} />
+        <Route path="/members" element={<MembersPage />} />
+        <Route path="/members/:memberId" element={<MemberDetailPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/timeline" element={<Navigate to="/planning" replace />} />
         <Route path="/" element={<TodayPage />} />
@@ -130,7 +135,7 @@ function AppRoutes() {
   }, []);
 
   if (setupStatus === "loading" || isLoading) {
-    return <div className="loading-wrap">Loading\u2026</div>;
+    return <SplashScreen />;
   }
 
   if (setupStatus === "needed") {
