@@ -90,6 +90,8 @@ IQueryHandler<TQuery, TResponse>
 
 Queries often produce **projections tailored for UI surfaces**.
 
+Those surfaces may use product language that differs from domain names, but the application layer must preserve explicit domain semantics in commands, queries, and events.
+
 ---
 
 # Read Models
@@ -110,6 +112,14 @@ ResponsibilityBalance
 MemberActivity
 ```
 
+Examples of product-language mappings:
+
+```
+ResponsibilityDomain -> Area
+PrimaryOwner -> Owner
+SecondaryOwner -> Support
+```
+
 Read models may aggregate data from:
 
 ```
@@ -121,6 +131,8 @@ Responsibilities
 ```
 
 They exist **only in the application layer**.
+
+For example, planning and timeline surfaces may show Areas as optional accountability context for plans and tasks, while the underlying domain behavior remains rooted in the Responsibility context.
 
 ---
 

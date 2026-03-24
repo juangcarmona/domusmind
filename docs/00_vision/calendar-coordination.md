@@ -49,6 +49,8 @@ Creating a plan should be extremely simple.
 
 Minimal information is required.
 
+An Area may optionally be attached to a plan to clarify household accountability, but it must not be required for everyday planning.
+
 Example:
 
 ```
@@ -70,6 +72,8 @@ Because of this, participant visibility is essential. The system must clearly sh
 * who may be affected
 
 This allows the system to reason about availability and detect coordination conflicts.
+
+When present, an Area helps explain who owns the surrounding household concern. It does not change the fact that plans coordinate time, not responsibility execution.
 
 ---
 
@@ -189,6 +193,8 @@ They exist only to improve coordination visibility.
 
 They do **not represent aggregates or persisted domain concepts**.
 
+The same principle applies to Areas in calendar surfaces: they are supporting context for coordination and planning, not a reporting module.
+
 ---
 
 # Relationship to the Household Timeline
@@ -202,6 +208,8 @@ Plans simply appear in the **Household Timeline** alongside:
 * reminders
 
 This ensures the household sees everything in one place.
+
+The timeline remains the primary operational surface, while planning views remain the write-heavy surface for managing future plans.
 
 ---
 
