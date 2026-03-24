@@ -10,5 +10,6 @@ public sealed record CreateTaskCommand(
     string? DueDate,
     string? DueTime,
     string? Color,
+    Guid? AreaId,
     Guid RequestedByUserId)
     : ICommand<CreateTaskResponse>;

@@ -1,5 +1,6 @@
 using DomusMind.Domain.Abstractions;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Shared;
 using DomusMind.Domain.Tasks.Enums;
 using DomusMind.Domain.Tasks.Events;
@@ -18,6 +19,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
     public HexColor Color { get; private set; }
     public RoutineSchedule Schedule { get; private set; }
     public RoutineStatus Status { get; private set; }
+    public ResponsibilityDomainId? AreaId { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
 
     public IReadOnlyCollection<MemberId> TargetMemberIds =>
@@ -31,6 +33,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
         RoutineKind kind,
         HexColor color,
         RoutineSchedule schedule,
+        ResponsibilityDomainId? areaId,
         IEnumerable<MemberId> targetMembers,
         DateTime createdAtUtc)
         : base(id)
@@ -41,6 +44,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
         Kind = kind;
         Color = color;
         Schedule = schedule;
+        AreaId = areaId;
         Status = RoutineStatus.Active;
         CreatedAtUtc = createdAtUtc;
 
@@ -55,6 +59,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
         RoutineKind kind,
         HexColor color,
         RoutineSchedule schedule,
+        ResponsibilityDomainId? areaId,
         IEnumerable<MemberId>? targetMembers,
         DateTime createdAtUtc)
     {
@@ -70,6 +75,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
             kind,
             color,
             schedule,
+            areaId,
             members,
             createdAtUtc);
 
@@ -92,6 +98,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
         RoutineKind newKind,
         HexColor newColor,
         RoutineSchedule newSchedule,
+        ResponsibilityDomainId? newAreaId,
         IEnumerable<MemberId>? targetMembers)
     {
         var members = targetMembers?.Distinct().ToList() ?? [];
@@ -103,6 +110,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
         Kind = newKind;
         Color = newColor;
         Schedule = newSchedule;
+        AreaId = newAreaId;
 
         ReplaceTargetMembers(members);
 

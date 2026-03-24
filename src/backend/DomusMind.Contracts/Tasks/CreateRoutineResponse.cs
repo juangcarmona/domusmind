@@ -14,4 +14,5 @@ public sealed record CreateRoutineResponse(
     TimeOnly? Time,
     IReadOnlyCollection<Guid> TargetMemberIds,
     string Status,
+    Guid? AreaId,
     DateTime CreatedAtUtc);

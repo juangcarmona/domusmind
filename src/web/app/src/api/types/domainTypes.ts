@@ -34,6 +34,15 @@ export interface TransferResponsibilityRequest {
   newPrimaryOwnerId: string;
 }
 
+export interface RenameResponsibilityDomainRequest {
+  name: string;
+}
+
+export interface RenameResponsibilityDomainResponse {
+  responsibilityDomainId: string;
+  name: string;
+}
+
 export interface CreateTaskRequest {
   title: string;
   familyId: string;
@@ -41,6 +50,7 @@ export interface CreateTaskRequest {
   dueDate?: string | null;
   dueTime?: string | null;
   color?: string;
+  areaId?: string | null;
 }
 
 export interface CreateTaskResponse {
@@ -51,6 +61,7 @@ export interface CreateTaskResponse {
   dueDate: string | null;
   status: string;
   color: string;
+  areaId: string | null;
   createdAtUtc: string;
 }
 

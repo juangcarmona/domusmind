@@ -24,6 +24,7 @@ export const createTask = createAsyncThunk(
         dueDate,
         dueTime,
         color,
+        areaId,
       }: {
         familyId: string;
         title: string;
@@ -31,6 +32,7 @@ export const createTask = createAsyncThunk(
         dueDate?: string | null;
         dueTime?: string | null;
         color?: string;
+        areaId?: string | null;
       },
       { rejectWithValue },
     ) => {
@@ -42,6 +44,7 @@ export const createTask = createAsyncThunk(
           dueDate,
           dueTime,
           color,
+          areaId,
         });
     } catch (err: unknown) {
       return rejectWithValue(

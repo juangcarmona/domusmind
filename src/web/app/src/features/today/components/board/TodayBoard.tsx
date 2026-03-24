@@ -112,15 +112,6 @@ export function TodayBoard({
         (ROLE_SORT_ORDER[b.member.role] ?? 9),
     );
 
-  const hasAnyContent =
-    hasSharedItems ||
-    actorDays.some(
-      ({ cell }) =>
-        (cell.events?.length ?? 0) > 0 ||
-        (cell.tasks?.length ?? 0) > 0 ||
-        (cell.routines?.length ?? 0) > 0,
-    );
-
   return (
     <div className="today-summary coord-day-panel">
       <div className="today-summary-header coord-day-header">
@@ -163,11 +154,7 @@ export function TodayBoard({
         <p className="today-summary-empty">{t("day.noMembers")}</p>
       )}
 
-      {members.length > 0 && !hasAnyContent && (
-        <p className="today-summary-empty">{t("day.empty")}</p>
-      )}
-
-      {members.length > 0 && hasAnyContent && (
+      {members.length > 0 && (
         <>
           <div className="today-summary-body">
             {actorDays.map(({ member, cell }) => (
@@ -179,28 +166,30 @@ export function TodayBoard({
               />
             ))}
           </div>
-          {hasSharedItems && sharedCell && (
-            <div className="today-household">
-              <div className="today-household-label">{t("day.household")}</div>
-              <div className="today-summary-items">
+          <div className="today-household">
+            <div className="today-household-label">{t("day.household")}</div>
+            {hasSharedItems && sharedCell ? (
+              <div className="today-household-chips">
                 {sharedCell.events?.map((e) =>
                   weeklyGridItemMappers.eventToItem(e, () =>
                     onItemClick("event", e.eventId),
-                  ),
+                  true),
                 )}
                 {sharedCell.tasks?.map((task) =>
                   weeklyGridItemMappers.taskToItem(task, () =>
                     onItemClick("task", task.taskId),
-                  ),
+                  true),
                 )}
                 {sharedCell.routines?.map((r) =>
                   weeklyGridItemMappers.routineToItem(r, () =>
                     onItemClick("routine", r.routineId),
-                  ),
+                  true),
                 )}
               </div>
-            </div>
-          )}
+            ) : (
+              <span className="today-summary-empty">{t("day.todayEmpty")}</span>
+            )}
+          </div>
         </>
       )}
     </div>

@@ -1,9 +1,10 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { domusmindApi } from "../../../api/domusmindApi";
 import { createTask } from "../../../store/tasksSlice";
-import { useAppDispatch } from "../../../store/hooks";
-import { toLocalDateInput, toLocalTimeInput } from "../utils";
+import { fetchAreas } from "../../../store/areasSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { toLocalDateInput, toLocalTimeInput, areaColor } from "../utils";
 import { DateInput } from "../../../components/DateInput";
 
 interface TaskCrudFormProps {
@@ -13,6 +14,10 @@ interface TaskCrudFormProps {
   initialTitle?: string;
   initialDueDate?: string | null;
   initialColor?: string | null;
+  /** Pre-selects the area picker (create mode only). */
+  initialAreaId?: string;
+  /** Pre-selects the assignee dropdown (create mode only). */
+  initialAssigneeId?: string;
   members?: { memberId: string; name: string }[];
   onCancel: () => void;
   onSuccess: () => void | Promise<void>;
@@ -25,6 +30,8 @@ export function TaskCrudForm({
   initialTitle,
   initialDueDate,
   initialColor,
+  initialAreaId,
+  initialAssigneeId,
   members,
   onCancel,
   onSuccess,
@@ -32,12 +39,24 @@ export function TaskCrudForm({
   const dispatch = useAppDispatch();
   const { t: tTasks } = useTranslation("tasks");
   const { t: tCommon } = useTranslation("common");
+  const { t: tAreas } = useTranslation("areas");
+
+  const areas = useAppSelector((s) => s.areas.items);
+  const areasStatus = useAppSelector((s) => s.areas.status);
+
+  useEffect(() => {
+    if (areasStatus === "idle") dispatch(fetchAreas(familyId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [areasStatus, familyId]);
 
   const [title, setTitle] = useState(initialTitle ?? "");
   const [dueDate, setDueDate] = useState(toLocalDateInput(initialDueDate));
   const [dueTime, setDueTime] = useState(toLocalTimeInput(initialDueDate));
-  const [color, setColor] = useState(initialColor ?? "#3B82F6");
-  const [assigneeId, setAssigneeId] = useState<string>("");
+  const [color, setColor] = useState(
+    initialColor ?? (initialAreaId ? areaColor(initialAreaId) : "#3B82F6"),
+  );
+  const [selectedAreaId, setSelectedAreaId] = useState(initialAreaId ?? "");
+  const [assigneeId, setAssigneeId] = useState<string>(initialAssigneeId ?? "");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,6 +78,7 @@ export function TaskCrudForm({
           dueDate: dueDate || null,
           dueTime: dueTime || null,
           color,
+          areaId: selectedAreaId || null,
         }),
       );
       setSubmitting(false);
@@ -134,6 +154,26 @@ export function TaskCrudForm({
             onChange={(e) => setDueTime(e.target.value)}
           />
         </div>
+        {areas.length > 0 && (
+          <div className="form-group">
+            <label htmlFor="task-form-area">{tAreas("areaLabel")}</label>
+            <select
+              id="task-form-area"
+              className="form-control"
+              value={selectedAreaId}
+              onChange={(e) => {
+                const id = e.target.value;
+                setSelectedAreaId(id);
+                if (id) setColor(areaColor(id));
+              }}
+            >
+              <option value="">{tAreas("noArea")}</option>
+              {areas.map((a) => (
+                <option key={a.areaId} value={a.areaId}>{a.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className="form-group">
           <label htmlFor="task-form-color">{tTasks("colorLabel")}</label>
           <input

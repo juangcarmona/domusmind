@@ -15,5 +15,6 @@ public sealed record UpdateRoutineCommand(
     int? MonthOfYear,
     TimeOnly? Time,
     IReadOnlyCollection<Guid> TargetMemberIds,
+    Guid? AreaId,
     Guid RequestedByUserId)
     : ICommand<UpdateRoutineResponse>;

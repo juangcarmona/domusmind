@@ -65,6 +65,11 @@ public sealed class ResponsibilityDomain : AggregateRoot<ResponsibilityDomainId>
             Guid.NewGuid(), Id.Value, previousOwnerId?.Value, newOwnerId.Value, DateTime.UtcNow));
     }
 
+    public void Rename(ResponsibilityAreaName newName)
+    {
+        Name = newName;
+    }
+
 #pragma warning disable CS8618
     // EF Core parameterless constructor
     private ResponsibilityDomain() : base(default) { }

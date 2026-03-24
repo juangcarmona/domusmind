@@ -1,15 +1,18 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { createRoutine, updateRoutine } from "../../../store/routinesSlice";
-import { useAppDispatch } from "../../../store/hooks";
+import { fetchAreas } from "../../../store/areasSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import type { RoutineListItem } from "../../../api/domusmindApi";
-import { toLocalTimeInput } from "../utils";
+import { toLocalTimeInput, areaColor } from "../utils";
 
 interface RoutineCrudFormProps {
   mode: "create" | "edit";
   familyId: string;
   members: { memberId: string; name: string }[];
   initialRoutine?: RoutineListItem;
+  /** Pre-selects the area picker when creating a new routine. */
+  initialAreaId?: string;
   onCancel: () => void;
   onSuccess: () => void | Promise<void>;
 }
@@ -30,16 +33,29 @@ export function RoutineCrudForm({
   familyId,
   members,
   initialRoutine,
+  initialAreaId,
   onCancel,
   onSuccess,
 }: RoutineCrudFormProps) {
   const dispatch = useAppDispatch();
   const { t: tRoutines } = useTranslation("routines");
   const { t: tCommon } = useTranslation("common");
+  const { t: tAreas } = useTranslation("areas");
+
+  const areas = useAppSelector((s) => s.areas.items);
+  const areasStatus = useAppSelector((s) => s.areas.status);
+
+  useEffect(() => {
+    if (areasStatus === "idle") dispatch(fetchAreas(familyId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [areasStatus, familyId]);
 
   const [routineName, setRoutineName] = useState(initialRoutine?.name ?? "");
   const [routineScope, setRoutineScope] = useState(initialRoutine?.scope ?? "Household");
-  const [routineColor, setRoutineColor] = useState(initialRoutine?.color ?? "#3B82F6");
+  const [routineColor, setRoutineColor] = useState(
+    initialRoutine?.color ?? (initialAreaId ? areaColor(initialAreaId) : "#3B82F6"),
+  );
+  const [selectedAreaId, setSelectedAreaId] = useState(initialAreaId ?? initialRoutine?.areaId ?? "");
   const [routineFrequency, setRoutineFrequency] = useState(initialRoutine?.frequency ?? "Weekly");
   const [routineDaysOfWeek, setRoutineDaysOfWeek] = useState<number[]>(initialRoutine?.daysOfWeek ?? []);
   const [routineDaysOfMonth, setRoutineDaysOfMonth] = useState(toRoutineDaysOfMonthValue(initialRoutine?.daysOfMonth ?? []));
@@ -70,6 +86,7 @@ export function RoutineCrudForm({
           : null,
       time: routineTime || null,
       targetMemberIds: routineScope === "Members" ? routineTargetMemberIds : [],
+      areaId: selectedAreaId || null,
     };
 
     if (mode === "create") {
@@ -119,6 +136,26 @@ export function RoutineCrudForm({
             placeholder={tRoutines("namePlaceholder")}
           />
         </div>
+        {areas.length > 0 && (
+          <div className="form-group">
+            <label htmlFor="routine-form-area">{tAreas("areaLabel")}</label>
+            <select
+              id="routine-form-area"
+              className="form-control"
+              value={selectedAreaId}
+              onChange={(e) => {
+                const id = e.target.value;
+                setSelectedAreaId(id);
+                if (id) setRoutineColor(areaColor(id));
+              }}
+            >
+              <option value="">{tAreas("noArea")}</option>
+              {areas.map((a) => (
+                <option key={a.areaId} value={a.areaId}>{a.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className="form-group">
           <label htmlFor="routine-form-scope">{tRoutines("scopeLabel")}</label>
           <select

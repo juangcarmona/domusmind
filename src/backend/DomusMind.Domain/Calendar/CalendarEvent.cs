@@ -2,6 +2,7 @@ using DomusMind.Domain.Abstractions;
 using DomusMind.Domain.Calendar.Events;
 using DomusMind.Domain.Calendar.ValueObjects;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Shared;
 
 namespace DomusMind.Domain.Calendar;
@@ -17,6 +18,7 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
     public EventTime Time { get; private set; }
     public HexColor Color { get; private set; }
     public EventStatus Status { get; private set; }
+    public ResponsibilityDomainId? AreaId { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
 
     public IReadOnlyCollection<MemberId> ParticipantIds => _participantIds.AsReadOnly();
@@ -29,6 +31,7 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
         string? description,
         EventTime time,
         HexColor color,
+        ResponsibilityDomainId? areaId,
         DateTime createdAtUtc)
         : base(id)
     {
@@ -37,6 +40,7 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
         Description = description;
         Time = time;
         Color = color;
+        AreaId = areaId;
         Status = EventStatus.Scheduled;
         CreatedAtUtc = createdAtUtc;
     }
@@ -48,9 +52,10 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
         string? description,
         EventTime time,
         HexColor color,
+        ResponsibilityDomainId? areaId,
         DateTime createdAtUtc)
     {
-        var calendarEvent = new CalendarEvent(id, familyId, title, description, time, color, createdAtUtc);
+        var calendarEvent = new CalendarEvent(id, familyId, title, description, time, color, areaId, createdAtUtc);
         calendarEvent.RaiseDomainEvent(new EventScheduled(
             Guid.NewGuid(), id.Value, familyId.Value, title.Value, time, createdAtUtc));
         return calendarEvent;

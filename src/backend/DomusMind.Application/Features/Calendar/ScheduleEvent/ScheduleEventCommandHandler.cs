@@ -7,6 +7,7 @@ using DomusMind.Contracts.Calendar;
 using DomusMind.Domain.Calendar;
 using DomusMind.Domain.Calendar.ValueObjects;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Shared;
 
 namespace DomusMind.Application.Features.Calendar.ScheduleEvent;
@@ -68,12 +69,15 @@ public sealed class ScheduleEventCommandHandler
         var familyId = FamilyId.From(command.FamilyId);
         var title = EventTitle.Create(command.Title);
         var now = DateTime.UtcNow;
+        var areaId = command.AreaId.HasValue
+            ? ResponsibilityDomainId.From(command.AreaId.Value)
+            : (ResponsibilityDomainId?)null;
 
         Domain.Calendar.CalendarEvent calendarEvent;
         try
         {
             calendarEvent = Domain.Calendar.CalendarEvent.Create(
-                id, familyId, title, command.Description, eventTime, color, now);
+                id, familyId, title, command.Description, eventTime, color, areaId, now);
         }
         catch (InvalidOperationException ex)
         {
@@ -105,6 +109,7 @@ public sealed class ScheduleEventCommandHandler
             endTime,
             calendarEvent.Status.ToString(),
             color.Value,
+            areaId?.Value,
             now);
     }
 }

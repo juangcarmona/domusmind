@@ -14,6 +14,7 @@ interface WeeklyGridItemProps {
   status?: string;
   subtitle?: string;
   color?: string | null;
+  compact?: boolean;
   onClick?: () => void;
 }
 
@@ -24,11 +25,12 @@ export function WeeklyGridItem({
   status,
   subtitle,
   color,
+  compact,
   onClick,
 }: WeeklyGridItemProps) {
   const isCompleted = status?.toLowerCase() === "completed";
 
-  const tooltipText = [title, time, subtitle, status ? `(${status})` : ""]
+  const tooltipText = [title, time, subtitle]
     .filter(Boolean)
     .join(" · ");
 
@@ -40,6 +42,7 @@ export function WeeklyGridItem({
     "wg-item",
     `wg-item--${type}`,
     isCompleted ? "wg-item--completed" : "",
+    compact ? "wg-item--compact" : "",
   ]
     .filter(Boolean)
     .join(" ");

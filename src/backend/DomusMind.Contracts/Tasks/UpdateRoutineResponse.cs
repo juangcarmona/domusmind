@@ -12,4 +12,5 @@ public sealed record UpdateRoutineResponse(
     int? MonthOfYear,
     TimeOnly? Time,
     IReadOnlyCollection<Guid> TargetMemberIds,
-    string Status);
+    string Status,
+    Guid? AreaId);

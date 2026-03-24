@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useDateFormatter } from "../../../hooks/useDateFormatter";
+import { EntityCard } from "../../../components/EntityCard";
 import type { EnrichedTimelineEntry } from "../../../api/domusmindApi";
 
 interface Props {
@@ -45,23 +46,11 @@ export function TasksTab({
       ) : (
         <div className="item-list" style={{ marginBottom: "1rem" }}>
           {activeTasks.map((task) => (
-            <div
+            <EntityCard
               key={task.entryId}
-              className={`item-card ${task.isOverdue ? "overdue" : ""}`}
-              style={{ borderLeft: `3px solid ${task.color}` }}
-              onClick={() => onEdit(task.entryId)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  onEdit(task.entryId);
-                }
-              }}
-            >
-              <div className="item-card-body">
-                <div className="item-card-title">{task.title}</div>
-                <div className="item-card-subtitle">
+              title={task.title}
+              subtitle={
+                <>
                   {task.effectiveDate ? formatDate(task.effectiveDate) : t("noDueDate")}
                   {task.assigneeId && memberMap[task.assigneeId]
                     ? ` · ${memberMap[task.assigneeId]}`
@@ -71,32 +60,19 @@ export function TasksTab({
                   {task.isOverdue && (
                     <span style={{ color: "var(--danger)" }}> · {t("overdue")}</span>
                   )}
-                </div>
-              </div>
-              <div className="item-card-actions">
-                <button
-                  className="btn btn-ghost btn-sm"
-                  onClick={(e) => { e.stopPropagation(); onAssign(task); }}
-                  title={t("assignTitle")}
-                >
-                  {t("assign")}
-                </button>
-                <button
-                  className="btn btn-sm"
-                  onClick={(e) => { e.stopPropagation(); onComplete(task.entryId); }}
-                  title={t("markDoneTitle")}
-                >
-                  ✓ {t("done")}
-                </button>
-                <button
-                  className="btn btn-ghost btn-sm"
-                  onClick={(e) => { e.stopPropagation(); onCancel(task.entryId); }}
-                  title={tCommon("cancel")}
-                >
-                  ✕
-                </button>
-              </div>
-            </div>
+                </>
+              }
+              accentColor={task.color}
+              isOverdue={task.isOverdue}
+              onClick={() => onEdit(task.entryId)}
+              actions={
+                <>
+                  <button className="btn btn-ghost btn-sm" onClick={(e) => { e.stopPropagation(); onAssign(task); }} title={t("assignTitle")}>{t("assign")}</button>
+                  <button className="btn btn-sm" onClick={(e) => { e.stopPropagation(); onComplete(task.entryId); }} title={t("markDoneTitle")}>✓ {t("done")}</button>
+                  <button className="btn btn-ghost btn-sm" onClick={(e) => { e.stopPropagation(); onCancel(task.entryId); }} title={tCommon("cancel")}>✕</button>
+                </>
+              }
+            />
           ))}
         </div>
       )}
@@ -123,30 +99,15 @@ export function TasksTab({
           ) : (
             <div className="item-list">
               {taskHistory.map((task) => (
-                <div
+                <EntityCard
                   key={task.entryId}
-                  className="item-card"
-                  style={{ opacity: 0.6, borderLeft: `3px solid ${task.color}` }}
+                  title={task.title}
+                  titleStrike={task.status === "Completed"}
+                  subtitle={task.status.toLowerCase()}
+                  accentColor={task.color}
+                  dimmed
                   onClick={() => onEdit(task.entryId)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      onEdit(task.entryId);
-                    }
-                  }}
-                >
-                  <div className="item-card-body">
-                    <div
-                      className="item-card-title"
-                      style={{ textDecoration: task.status === "Completed" ? "line-through" : undefined }}
-                    >
-                      {task.title}
-                    </div>
-                    <div className="item-card-subtitle">{task.status.toLowerCase()}</div>
-                  </div>
-                </div>
+                />
               ))}
             </div>
           )}

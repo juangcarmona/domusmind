@@ -8,6 +8,7 @@ using DomusMind.Application.Features.Responsibilities.DetectResponsibilityOverlo
 using DomusMind.Application.Features.Responsibilities.GetHouseholdAreas;
 using DomusMind.Application.Features.Responsibilities.GetResponsibilityBalance;
 using DomusMind.Application.Features.Responsibilities.GetResponsibilityVisibility;
+using DomusMind.Application.Features.Responsibilities.RenameResponsibilityDomain;
 using DomusMind.Application.Features.Responsibilities.SuggestResponsibilityOwner;
 using DomusMind.Application.Features.Responsibilities.TransferResponsibility;
 using DomusMind.Contracts.Responsibilities;
@@ -225,6 +226,32 @@ public sealed class ResponsibilityDomainsController : ControllerBase
                 new GetResponsibilityVisibilityQuery(familyId, _currentUser.UserId!.Value),
                 cancellationToken);
 
+            return Ok(response);
+        }
+        catch (ResponsibilitiesException ex)
+        {
+            return MapResponsibilitiesException(ex);
+        }
+    }
+
+    /// <summary>Renames a responsibility domain (area).</summary>
+    [HttpPatch("{id:guid}/rename")]
+    [ProducesResponseType(typeof(RenameResponsibilityDomainResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RenameResponsibilityDomain(
+        Guid id,
+        [FromBody] RenameResponsibilityDomainRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new RenameResponsibilityDomainCommand(id, request.Name, _currentUser.UserId!.Value),
+                cancellationToken);
             return Ok(response);
         }
         catch (ResponsibilitiesException ex)

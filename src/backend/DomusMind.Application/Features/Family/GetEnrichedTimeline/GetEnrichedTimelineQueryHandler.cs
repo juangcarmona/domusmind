@@ -87,7 +87,8 @@ public sealed class GetEnrichedTimelineQueryHandler
                 false,
                 null,
                 participants.Count > 0 ? participants : null,
-                e.Color.Value);
+                e.Color.Value,
+                e.AreaId?.Value);
         });
 
         var taskEntries = tasks.Select(t =>
@@ -105,7 +106,8 @@ public sealed class GetEnrichedTimelineQueryHandler
                 !t.AssigneeId.HasValue,
                 t.AssigneeId?.Value,
                 null,
-                t.Color.Value);
+                t.Color.Value,
+                t.AreaId?.Value);
         });
 
         var routineEntries = routines.Select(r => new EnrichedTimelineEntry(
@@ -120,7 +122,8 @@ public sealed class GetEnrichedTimelineQueryHandler
             false,
             null,
             null,
-            r.Color.Value));
+            r.Color.Value,
+            r.AreaId?.Value));
 
         var allEntries = calendarEntries.Concat(taskEntries).Concat(routineEntries).ToList();
 

@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useDateFormatter } from "../../../hooks/useDateFormatter";
+import { EntityCard } from "../../../components/EntityCard";
 import type { FamilyTimelineEventItem } from "../../../api/domusmindApi";
 
 interface Props {
@@ -27,58 +28,32 @@ function PlanCard({
   const { t } = useTranslation("plans");
   const { formatDateTime } = useDateFormatter();
   return (
-    <div
-      className="item-card"
-      style={{
-        borderLeft: `3px solid ${plan.color}`,
-        opacity: dimmed ? 0.6 : undefined,
-      }}
-      onClick={() => onEdit(plan.calendarEventId)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onEdit(plan.calendarEventId);
-        }
-      }}
-    >
-      <div className="item-card-body">
-        <div
-          className="item-card-title"
-          style={{
-            textDecoration: plan.status === "Cancelled" ? "line-through" : undefined,
-          }}
-        >
-          {plan.title}
-        </div>
-        <div className="item-card-subtitle">
+    <EntityCard
+      title={plan.title}
+      titleStrike={plan.status === "Cancelled"}
+      subtitle={
+        <>
           {formatDateTime(plan.startTime)}
           {plan.endTime && ` → ${formatDateTime(plan.endTime)}`}
           {plan.participants?.length > 0 && (
             <span> · {plan.participants.map((p) => p.displayName).join(", ")}</span>
           )}
-        </div>
-        <div className="item-card-subtitle" style={{ marginTop: "0.2rem" }}>
-          <span className={`entry-status-badge ${plan.status.toLowerCase()}`}>
-            {plan.status.toLowerCase()}
-          </span>
-        </div>
-      </div>
-      {onCancel && plan.status !== "Cancelled" && (
-        <div className="item-card-actions">
+        </>
+      }
+      accentColor={plan.color}
+      dimmed={dimmed}
+      onClick={() => onEdit(plan.calendarEventId)}
+      actions={
+        onCancel && plan.status !== "Cancelled" ? (
           <button
             className="btn btn-ghost btn-sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              onCancel(plan);
-            }}
+            onClick={(e) => { e.stopPropagation(); onCancel(plan); }}
           >
             {t("cancelEvent")}
           </button>
-        </div>
-      )}
-    </div>
+        ) : undefined
+      }
+    />
   );
 }
 

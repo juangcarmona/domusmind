@@ -3,6 +3,7 @@ using DomusMind.Application.Abstractions.Persistence;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Contracts.Tasks;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Shared;
 using DomusMind.Domain.Tasks;
 using DomusMind.Domain.Tasks.Enums;
@@ -69,6 +70,9 @@ public sealed class CreateRoutineCommandHandler
                 .Distinct()
                 .Select(MemberId.From)
                 .ToArray();
+            var areaId = command.AreaId.HasValue
+                ? ResponsibilityDomainId.From(command.AreaId.Value)
+                : (ResponsibilityDomainId?)null;
 
             var routine = Routine.Create(
                 id,
@@ -78,6 +82,7 @@ public sealed class CreateRoutineCommandHandler
                 kind,
                 color,
                 schedule,
+                areaId,
                 targetMembers,
                 now);
 
@@ -100,6 +105,7 @@ public sealed class CreateRoutineCommandHandler
                 schedule.Time,
                 routine.TargetMemberIds.Select(x => x.Value).ToArray(),
                 routine.Status.ToString(),
+                routine.AreaId?.Value,
                 routine.CreatedAtUtc);
         }
         catch (InvalidOperationException ex)

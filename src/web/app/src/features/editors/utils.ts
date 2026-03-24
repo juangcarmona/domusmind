@@ -25,3 +25,14 @@ export function toLocalTimeInput(value?: string | null): string {
   }
   return value.slice(0, 5);
 }
+
+import { getAreaColor } from "../areas/utils/areaColors";
+
+/**
+ * Maps an area ID to its user-chosen color (stored in localStorage).
+ * Falls back to the first palette entry if no color has been assigned yet.
+ * Delegates to getAreaColor so that explicit user choices are respected.
+ */
+export function areaColor(areaId: string): string {
+  return getAreaColor(areaId);
+}

@@ -3,6 +3,7 @@ using DomusMind.Application.Abstractions.Persistence;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Contracts.Tasks;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Shared;
 using DomusMind.Domain.Tasks;
 using DomusMind.Domain.Tasks.Enums;
@@ -60,6 +61,9 @@ public sealed class UpdateRoutineCommandHandler
                 .Distinct()
                 .Select(MemberId.From)
                 .ToArray();
+            var newAreaId = command.AreaId.HasValue
+                ? ResponsibilityDomainId.From(command.AreaId.Value)
+                : (ResponsibilityDomainId?)null;
 
             routine.Update(
                 newName,
@@ -67,6 +71,7 @@ public sealed class UpdateRoutineCommandHandler
                 newKind,
                 newColor,
                 newSchedule,
+                newAreaId,
                 targetMembers);
 
             await _eventLogWriter.WriteAsync(routine.DomainEvents, cancellationToken);
@@ -84,7 +89,8 @@ public sealed class UpdateRoutineCommandHandler
                 routine.Schedule.MonthOfYear,
                 routine.Schedule.Time,
                 routine.TargetMemberIds.Select(x => x.Value).ToArray(),
-                routine.Status.ToString());
+                routine.Status.ToString(),
+                routine.AreaId?.Value);
         }
         catch (ArgumentException ex)
         {

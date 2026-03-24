@@ -6,4 +6,5 @@ public sealed record CreateTaskRequest(
     string? Description,
     string? DueDate,
     string? DueTime,
-    string? Color);
+    string? Color,
+    Guid? AreaId);

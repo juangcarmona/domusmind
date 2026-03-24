@@ -93,6 +93,23 @@ export const transferArea = createAsyncThunk(
   },
 );
 
+export const renameArea = createAsyncThunk(
+  "areas/rename",
+  async (
+    { areaId, name }: { areaId: string; name: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await domusmindApi.renameArea(areaId, { name });
+      return { areaId: res.responsibilityDomainId, name: res.name };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to rename area",
+      );
+    }
+  },
+);
+
 const areasSlice = createSlice({
   name: "areas",
   initialState,
@@ -113,6 +130,11 @@ const areasSlice = createSlice({
       })
       .addCase(createArea.fulfilled, (state, action) => {
         state.items.push(action.payload);
+      })
+      .addCase(renameArea.fulfilled, (state, action) => {
+        const { areaId, name } = action.payload;
+        const item = state.items.find((a) => a.areaId === areaId);
+        if (item) item.name = name;
       });
   },
 });

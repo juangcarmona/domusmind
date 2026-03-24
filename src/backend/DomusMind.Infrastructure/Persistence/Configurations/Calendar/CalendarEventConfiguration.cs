@@ -2,6 +2,7 @@ using System.Text.Json;
 using DomusMind.Domain.Calendar;
 using DomusMind.Domain.Calendar.ValueObjects;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -124,6 +125,12 @@ public sealed class CalendarEventConfiguration : IEntityTypeConfiguration<Domain
             .IsRequired();
 
         builder.Ignore(e => e.ReminderOffsets);
+
+        builder.Property(e => e.AreaId)
+            .HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? ResponsibilityDomainId.From(value.Value) : (ResponsibilityDomainId?)null)
+            .HasColumnName("area_id");
 
         builder.Ignore(e => e.DomainEvents);
     }

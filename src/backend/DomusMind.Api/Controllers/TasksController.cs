@@ -33,7 +33,7 @@ public sealed class TasksController : ControllerBase
             var response = await dispatcher.Dispatch(
                 new CreateTaskCommand(
                     request.Title, request.FamilyId, request.Description,
-                    request.DueDate, request.DueTime, request.Color, _currentUser.UserId!.Value),
+                    request.DueDate, request.DueTime, request.Color, request.AreaId, _currentUser.UserId!.Value),
                 cancellationToken);
             return Created($"/api/tasks/{response.TaskId}", response);
         }

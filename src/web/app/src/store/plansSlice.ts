@@ -55,6 +55,7 @@ export const scheduleEvent = createAsyncThunk(
       endTime,
       description,
       color,
+      areaId,
       participantMemberIds,
     }: {
       familyId: string;
@@ -65,6 +66,7 @@ export const scheduleEvent = createAsyncThunk(
       endTime?: string;
       description?: string;
       color?: string;
+      areaId?: string | null;
       participantMemberIds?: string[];
     },
     { rejectWithValue },
@@ -79,6 +81,7 @@ export const scheduleEvent = createAsyncThunk(
         endTime,
         description,
         color,
+        areaId,
         participantMemberIds,
       });
       return {
@@ -92,6 +95,7 @@ export const scheduleEvent = createAsyncThunk(
         endTimeValue: res.endTime,
         status: res.status,
         color: res.color,
+        areaId: res.areaId ?? null,
         participantMemberIds: participantMemberIds ?? [],
         participants: [],
       } as FamilyTimelineEventItem;

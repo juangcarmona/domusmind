@@ -6,6 +6,8 @@ import type {
   AssignPrimaryOwnerRequest,
   AssignSecondaryOwnerRequest,
   TransferResponsibilityRequest,
+  RenameResponsibilityDomainRequest,
+  RenameResponsibilityDomainResponse,
   CreateTaskRequest,
   CreateTaskResponse,
   AssignTaskRequest,
@@ -33,6 +35,9 @@ export const domainApi = {
 
   transferArea: (areaId: string, body: TransferResponsibilityRequest) =>
     request<unknown>(`/api/responsibility-domains/${areaId}/transfer`, { method: "POST", body: JSON.stringify(body) }),
+
+  renameArea: (areaId: string, body: RenameResponsibilityDomainRequest) =>
+    request<RenameResponsibilityDomainResponse>(`/api/responsibility-domains/${areaId}/rename`, { method: "PATCH", body: JSON.stringify(body) }),
 
   /* Tasks */
   createTask: (body: CreateTaskRequest) =>
