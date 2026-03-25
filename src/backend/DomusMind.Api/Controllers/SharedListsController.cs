@@ -6,6 +6,8 @@ using DomusMind.Application.Features.SharedLists.CreateSharedList;
 using DomusMind.Application.Features.SharedLists.GetFamilySharedLists;
 using DomusMind.Application.Features.SharedLists.GetSharedListDetail;
 using DomusMind.Application.Features.SharedLists.ToggleSharedListItem;
+using DomusMind.Application.Features.SharedLists.UpdateSharedListItem;
+using DomusMind.Application.Features.SharedLists.RemoveSharedListItem;
 using DomusMind.Contracts.SharedLists;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -125,6 +127,49 @@ public sealed class SharedListsController : ControllerBase
                     listId, itemId, request.UpdatedByMemberId, _currentUser.UserId!.Value),
                 cancellationToken);
             return Ok(response);
+        }
+        catch (SharedListException ex) { return MapException(ex); }
+    }
+
+    /// <summary>Updates fields of an item in a shared list.</summary>
+    [HttpPatch("{listId:guid}/items/{itemId:guid}")]
+    [ProducesResponseType(typeof(UpdateSharedListItemResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateItem(
+        Guid listId,
+        Guid itemId,
+        [FromBody] UpdateSharedListItemRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new UpdateSharedListItemCommand(
+                    listId, itemId, request.Name, request.Quantity, request.Note, _currentUser.UserId!.Value),
+                cancellationToken);
+            return Ok(response);
+        }
+        catch (SharedListException ex) { return MapException(ex); }
+    }
+
+    /// <summary>Removes an item from a shared list.</summary>
+    [HttpDelete("{listId:guid}/items/{itemId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RemoveItem(
+        Guid listId,
+        Guid itemId,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await dispatcher.Dispatch(
+                new RemoveSharedListItemCommand(listId, itemId, _currentUser.UserId!.Value),
+                cancellationToken);
+            return NoContent();
         }
         catch (SharedListException ex) { return MapException(ex); }
     }

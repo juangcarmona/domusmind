@@ -56,4 +56,12 @@ public sealed class SharedListItem : Entity<SharedListItemId>
         UpdatedByMemberId = updatedByMemberId;
         UpdatedAtUtc = updatedAtUtc;
     }
+
+    internal void Update(SharedListItemName name, string? quantity, string? note, DateTime updatedAtUtc)
+    {
+        Name = name;
+        Quantity = quantity;
+        Note = note;
+        UpdatedAtUtc = updatedAtUtc;
+    }
 }

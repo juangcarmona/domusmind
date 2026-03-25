@@ -100,6 +100,35 @@ public sealed class SharedList : AggregateRoot<SharedListId>
         return item;
     }
 
+    public SharedListItem UpdateItem(
+        SharedListItemId itemId,
+        SharedListItemName name,
+        string? quantity,
+        string? note,
+        DateTime now)
+    {
+        var item = _items.FirstOrDefault(i => i.Id == itemId)
+            ?? throw new InvalidOperationException($"Item '{itemId.Value}' does not exist in this list.");
+
+        item.Update(name, quantity, note, now);
+
+        RaiseDomainEvent(new SharedListItemUpdated(
+            Guid.NewGuid(), Id.Value, itemId.Value, name.Value, now));
+
+        return item;
+    }
+
+    public void RemoveItem(SharedListItemId itemId, DateTime now)
+    {
+        var item = _items.FirstOrDefault(i => i.Id == itemId)
+            ?? throw new InvalidOperationException($"Item '{itemId.Value}' does not exist in this list.");
+
+        _items.Remove(item);
+
+        RaiseDomainEvent(new SharedListItemRemoved(
+            Guid.NewGuid(), Id.Value, itemId.Value, now));
+    }
+
     /// <summary>Count of items that are not yet checked.</summary>
     public int UncheckedCount => _items.Count(i => !i.Checked);
 }

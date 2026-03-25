@@ -321,4 +321,141 @@ public sealed class SharedListTests
 
         list.UncheckedCount.Should().Be(0);
     }
+
+    // ── UpdateItem ──────────────────────────────────────────────────────────
+
+    [Fact]
+    public void UpdateItem_ChangesName()
+    {
+        var list = BuildList();
+        var (id, name) = NewItem("Old Name");
+        list.AddItem(id, name, null, null, DateTime.UtcNow);
+        list.ClearDomainEvents();
+
+        list.UpdateItem(id, SharedListItemName.Create("New Name"), null, null, DateTime.UtcNow);
+
+        list.Items.Single().Name.Value.Should().Be("New Name");
+    }
+
+    [Fact]
+    public void UpdateItem_ChangesQuantityAndNote()
+    {
+        var list = BuildList();
+        var (id, name) = NewItem("Milk");
+        list.AddItem(id, name, null, null, DateTime.UtcNow);
+
+        list.UpdateItem(id, name, "2L", "skimmed", DateTime.UtcNow);
+
+        var item = list.Items.Single();
+        item.Quantity.Should().Be("2L");
+        item.Note.Should().Be("skimmed");
+    }
+
+    [Fact]
+    public void UpdateItem_EmitsSharedListItemUpdatedEvent()
+    {
+        var list = BuildList();
+        var (id, name) = NewItem("Eggs");
+        list.AddItem(id, name, null, null, DateTime.UtcNow);
+        list.ClearDomainEvents();
+
+        list.UpdateItem(id, SharedListItemName.Create("Organic Eggs"), null, null, DateTime.UtcNow);
+
+        list.DomainEvents.Should().HaveCount(1);
+        list.DomainEvents.Single().Should().BeOfType<SharedListItemUpdated>();
+    }
+
+    [Fact]
+    public void UpdateItem_Event_HasCorrectNewName()
+    {
+        var list = BuildList();
+        var (id, name) = NewItem("Bread");
+        list.AddItem(id, name, null, null, DateTime.UtcNow);
+        list.ClearDomainEvents();
+
+        list.UpdateItem(id, SharedListItemName.Create("Sourdough Bread"), null, null, DateTime.UtcNow);
+
+        var evt = (SharedListItemUpdated)list.DomainEvents.Single();
+        evt.NewName.Should().Be("Sourdough Bread");
+    }
+
+    [Fact]
+    public void UpdateItem_MissingItem_Throws()
+    {
+        var list = BuildList();
+        var missingId = SharedListItemId.New();
+
+        var act = () => list.UpdateItem(missingId, SharedListItemName.Create("X"), null, null, DateTime.UtcNow);
+
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    // ── RemoveItem ──────────────────────────────────────────────────────────
+
+    [Fact]
+    public void RemoveItem_RemovesItemFromList()
+    {
+        var list = BuildList();
+        var (id, name) = NewItem("Butter");
+        list.AddItem(id, name, null, null, DateTime.UtcNow);
+        list.ClearDomainEvents();
+
+        list.RemoveItem(id, DateTime.UtcNow);
+
+        list.Items.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void RemoveItem_EmitsSharedListItemRemovedEvent()
+    {
+        var list = BuildList();
+        var (id, name) = NewItem("Sugar");
+        list.AddItem(id, name, null, null, DateTime.UtcNow);
+        list.ClearDomainEvents();
+
+        list.RemoveItem(id, DateTime.UtcNow);
+
+        list.DomainEvents.Should().HaveCount(1);
+        list.DomainEvents.Single().Should().BeOfType<SharedListItemRemoved>();
+    }
+
+    [Fact]
+    public void RemoveItem_Event_HasCorrectItemId()
+    {
+        var list = BuildList();
+        var (id, name) = NewItem("Salt");
+        list.AddItem(id, name, null, null, DateTime.UtcNow);
+        list.ClearDomainEvents();
+
+        list.RemoveItem(id, DateTime.UtcNow);
+
+        var evt = (SharedListItemRemoved)list.DomainEvents.Single();
+        evt.ItemId.Should().Be(id.Value);
+    }
+
+    [Fact]
+    public void RemoveItem_MissingItem_Throws()
+    {
+        var list = BuildList();
+        var missingId = SharedListItemId.New();
+
+        var act = () => list.RemoveItem(missingId, DateTime.UtcNow);
+
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void RemoveItem_DecreasesItemCount()
+    {
+        var list = BuildList();
+        var id1 = SharedListItemId.New();
+        var id2 = SharedListItemId.New();
+        list.AddItem(id1, SharedListItemName.Create("A"), null, null, DateTime.UtcNow);
+        list.AddItem(id2, SharedListItemName.Create("B"), null, null, DateTime.UtcNow);
+
+        list.RemoveItem(id1, DateTime.UtcNow);
+
+        list.Items.Should().HaveCount(1);
+        list.Items.Single().Name.Value.Should().Be("B");
+    }
 }

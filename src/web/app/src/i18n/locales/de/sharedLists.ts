@@ -21,4 +21,7 @@ export default {
   addError: "Artikel konnte nicht hinzugefügt werden",
   backToLists: "Listen",
   noItems: "Diese Liste ist leer. Füge oben den ersten Artikel hinzu.",
+  removeItem: "Entfernen",
+  renameItem: "Artikel umbenennen",
+  checkedSection: "Erledigt",
 } as const;

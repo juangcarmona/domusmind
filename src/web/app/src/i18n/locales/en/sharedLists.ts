@@ -21,4 +21,7 @@ export default {
   addError: "Failed to add item",
   backToLists: "Lists",
   noItems: "This list is empty. Add the first item above.",
+  removeItem: "Remove",
+  renameItem: "Rename item",
+  checkedSection: "Done",
 } as const;

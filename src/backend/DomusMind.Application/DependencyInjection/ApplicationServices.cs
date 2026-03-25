@@ -68,6 +68,8 @@ using DomusMind.Application.Features.SharedLists.AddItemToSharedList;
 using DomusMind.Application.Features.SharedLists.ToggleSharedListItem;
 using DomusMind.Application.Features.SharedLists.GetFamilySharedLists;
 using DomusMind.Application.Features.SharedLists.GetSharedListDetail;
+using DomusMind.Application.Features.SharedLists.UpdateSharedListItem;
+using DomusMind.Application.Features.SharedLists.RemoveSharedListItem;
 using DomusMind.Contracts.Auth;
 using DomusMind.Contracts.Calendar;
 using DomusMind.Contracts.Family;
@@ -177,6 +179,8 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<ToggleSharedListItemCommand, ToggleSharedListItemResponse>, ToggleSharedListItemCommandHandler>();
         services.AddScoped<IQueryHandler<GetFamilySharedListsQuery, GetFamilySharedListsResponse>, GetFamilySharedListsQueryHandler>();
         services.AddScoped<IQueryHandler<GetSharedListDetailQuery, GetSharedListDetailResponse>, GetSharedListDetailQueryHandler>();
+        services.AddScoped<ICommandHandler<UpdateSharedListItemCommand, UpdateSharedListItemResponse>, UpdateSharedListItemCommandHandler>();
+        services.AddScoped<ICommandHandler<RemoveSharedListItemCommand, bool>, RemoveSharedListItemCommandHandler>();
 
         return services;
     }

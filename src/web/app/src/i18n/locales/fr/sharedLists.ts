@@ -21,4 +21,7 @@ export default {
   addError: "Impossible d'ajouter l'élément",
   backToLists: "Listes",
   noItems: "Cette liste est vide. Ajoutez le premier élément ci-dessus.",
+  removeItem: "Supprimer",
+  renameItem: "Renommer l'élément",
+  checkedSection: "Fait",
 } as const;

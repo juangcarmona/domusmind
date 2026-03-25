@@ -81,3 +81,17 @@ export interface ToggleSharedListItemResponse {
   updatedByMemberId: string | null;
   uncheckedCount: number;
 }
+
+export interface UpdateSharedListItemRequest {
+  name: string;
+  quantity?: string | null;
+  note?: string | null;
+}
+
+export interface UpdateSharedListItemResponse {
+  itemId: string;
+  name: string;
+  quantity: string | null;
+  note: string | null;
+  updatedAtUtc: string;
+}

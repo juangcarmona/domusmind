@@ -114,6 +114,39 @@ export const toggleSharedListItem = createAsyncThunk(
   },
 );
 
+export const updateSharedListItem = createAsyncThunk(
+  "sharedLists/updateItem",
+  async (
+    { listId, itemId, name }: { listId: string; itemId: string; name: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      return await sharedListsApi.updateSharedListItem(listId, itemId, { name });
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to update item",
+      );
+    }
+  },
+);
+
+export const removeSharedListItem = createAsyncThunk(
+  "sharedLists/removeItem",
+  async (
+    { listId, itemId }: { listId: string; itemId: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      await sharedListsApi.removeSharedListItem(listId, itemId);
+      return { listId, itemId };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to remove item",
+      );
+    }
+  },
+);
+
 // ── Slice ────────────────────────────────────────────────────────────────────
 
 const sharedListsSlice = createSlice({
@@ -125,6 +158,19 @@ const sharedListsSlice = createSlice({
       if (!state.detail) return;
       const item = state.detail.items.find((i) => i.itemId === action.payload.itemId);
       if (item) item.checked = !item.checked;
+    },
+    // Optimistic rename: update item name in detail immediately
+    optimisticRenameItem(state, action: PayloadAction<{ itemId: string; name: string }>) {
+      if (!state.detail) return;
+      const item = state.detail.items.find((i) => i.itemId === action.payload.itemId);
+      if (item) item.name = action.payload.name;
+    },
+    // Optimistic remove: remove item from detail immediately
+    optimisticRemoveItem(state, action: PayloadAction<{ itemId: string }>) {
+      if (!state.detail) return;
+      state.detail.items = state.detail.items.filter(
+        (i) => i.itemId !== action.payload.itemId,
+      );
     },
     clearDetail(state) {
       state.detail = null;
@@ -234,8 +280,28 @@ const sharedListsSlice = createSlice({
         summary.uncheckedCount = action.payload.uncheckedCount;
       }
     });
+
+    // updateSharedListItem — sync confirmed name from server
+    builder.addCase(updateSharedListItem.fulfilled, (state, action) => {
+      if (!state.detail) return;
+      const item = state.detail.items.find((i) => i.itemId === action.payload.itemId);
+      if (item) {
+        item.name = action.payload.name;
+        item.quantity = action.payload.quantity;
+        item.note = action.payload.note;
+        item.updatedAtUtc = action.payload.updatedAtUtc;
+      }
+    });
+
+    // removeSharedListItem — confirm removal (optimistic already applied)
+    // On rejection, we'd need to restore the item — for now we refetch detail on error
+    builder.addCase(removeSharedListItem.fulfilled, (state, action) => {
+      // Optimistic remove already applied, update index summary
+      const summary = state.lists.find((l) => l.id === action.payload.listId);
+      if (summary && summary.itemCount > 0) summary.itemCount -= 1;
+    });
   },
 });
 
-export const { optimisticToggleItem, clearDetail } = sharedListsSlice.actions;
+export const { optimisticToggleItem, optimisticRenameItem, optimisticRemoveItem, clearDetail } = sharedListsSlice.actions;
 export default sharedListsSlice.reducer;

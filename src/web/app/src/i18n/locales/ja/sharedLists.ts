@@ -21,4 +21,7 @@ export default {
   addError: "項目の追加に失敗しました",
   backToLists: "リスト",
   noItems: "このリストは空です。上に最初の項目を追加してください。",
+  removeItem: "削除",
+  renameItem: "項目の名前変更",
+  checkedSection: "完了",
 } as const;

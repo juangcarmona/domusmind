@@ -8,6 +8,8 @@ import type {
   AddItemToSharedListResponse,
   ToggleSharedListItemRequest,
   ToggleSharedListItemResponse,
+  UpdateSharedListItemRequest,
+  UpdateSharedListItemResponse,
 } from "./types/sharedListTypes";
 
 export const sharedListsApi = {
@@ -38,4 +40,13 @@ export const sharedListsApi = {
       `/api/shared-lists/${listId}/items/${itemId}/toggle`,
       { method: "POST", body: JSON.stringify(body) },
     ),
+
+  updateSharedListItem: (listId: string, itemId: string, body: UpdateSharedListItemRequest) =>
+    request<UpdateSharedListItemResponse>(
+      `/api/shared-lists/${listId}/items/${itemId}`,
+      { method: "PATCH", body: JSON.stringify(body) },
+    ),
+
+  removeSharedListItem: (listId: string, itemId: string) =>
+    request<void>(`/api/shared-lists/${listId}/items/${itemId}`, { method: "DELETE" }),
 };

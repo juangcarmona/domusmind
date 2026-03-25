@@ -21,4 +21,7 @@ export default {
   addError: "添加项目失败",
   backToLists: "清单",
   noItems: "此清单为空。在上方添加第一个项目。",
+  removeItem: "删除",
+  renameItem: "重命名项目",
+  checkedSection: "已完成",
 } as const;
