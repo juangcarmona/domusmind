@@ -29,6 +29,7 @@ export default {
   supportersLabel: "Unterstützende",
   addSupporter: "Unterstützung hinzufügen…",
   noSupporters: "Noch keine Unterstützenden.",
+  removeSupporter: "Entfernen",
   relatedWork: "Zugehörige Aufgaben",
   relatedWorkEmpty: "Noch keine Elemente mit diesem Bereich verknüpft.",
   relatedWorkHint: "Erstelle Aufgaben, Pläne oder Routinen und wähle diesen Bereich aus, um sie hier zu verknüpfen.",

@@ -194,12 +194,37 @@
   margin: 0 0 0.6rem;
 }
 .area-supporter-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
   font-size: 0.8rem;
-  padding: 0.2rem 0.65rem;
+  padding: 0.2rem 0.4rem 0.2rem 0.65rem;
   border-radius: 1rem;
   background: color-mix(in srgb, var(--accent) 12%, var(--surface));
   color: var(--text);
   border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+}
+.area-supporter-remove {
+  background: none;
+  border: none;
+  padding: 0 0.15rem;
+  line-height: 1;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--muted);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.1s, background 0.1s;
+}
+.area-supporter-remove:hover:not(:disabled) {
+  color: var(--danger, #e74c3c);
+  background: color-mix(in srgb, var(--danger, #e74c3c) 10%, transparent);
+}
+.area-supporter-remove:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 .area-related-group-label {
   font-size: 0.7rem;

@@ -32,6 +32,11 @@ export interface AssignSecondaryOwnerRequest {
   memberId: string;
 }
 
+export interface RemoveSecondaryOwnerResponse {
+  responsibilityDomainId: string;
+  memberId: string;
+}
+
 export interface TransferResponsibilityRequest {
   newPrimaryOwnerId: string;
 }

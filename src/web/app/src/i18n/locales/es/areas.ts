@@ -29,6 +29,7 @@ export default {
   supportersLabel: "Colaboradores",
   addSupporter: "Añadir colaborador…",
   noSupporters: "Sin colaboradores aún.",
+  removeSupporter: "Quitar",
   relatedWork: "Trabajo relacionado",
   relatedWorkEmpty: "Todavía no hay elementos vinculados a esta área.",
   relatedWorkHint: "Crea tareas, planes o rutinas y selecciona esta área para vincularlos aquí.",

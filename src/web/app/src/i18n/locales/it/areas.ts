@@ -29,6 +29,7 @@ export default {
   supportersLabel: "Supportanti",
   addSupporter: "Aggiungi supportante…",
   noSupporters: "Nessun supportante ancora.",
+  removeSupporter: "Rimuovi",
   relatedWork: "Lavoro correlato",
   relatedWorkEmpty: "Nessun elemento collegato a quest'area ancora.",
   relatedWorkHint: "Crea attività, piani o routine e seleziona questa area per collegarli qui.",

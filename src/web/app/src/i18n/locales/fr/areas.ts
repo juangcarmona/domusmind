@@ -29,6 +29,7 @@ export default {
   supportersLabel: "Soutiens",
   addSupporter: "Ajouter un soutien…",
   noSupporters: "Aucun soutien pour l'instant.",
+  removeSupporter: "Retirer",
   relatedWork: "Travaux liés",
   relatedWorkEmpty: "Aucun élément lié à cet espace pour l'instant.",
   relatedWorkHint: "Créez des tâches, plans ou routines et sélectionnez cet espace pour les lier ici.",

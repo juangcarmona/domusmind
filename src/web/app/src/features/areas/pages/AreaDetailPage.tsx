@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-  import { fetchAreas, assignPrimaryOwner, assignSecondaryOwner, transferArea, renameArea, updateAreaColor } from "../../../store/areasSlice";
+  import { fetchAreas, assignPrimaryOwner, assignSecondaryOwner, removeSecondaryOwner, transferArea, renameArea, updateAreaColor } from "../../../store/areasSlice";
 import { fetchPlans } from "../../../store/plansSlice";
 import { fetchRoutines, pauseRoutine, resumeRoutine } from "../../../store/routinesSlice";
 import { fetchTimeline } from "../../../store/timelineSlice";
@@ -192,6 +192,17 @@ export function AreaDetailPage() {
     }
   }
 
+  async function handleRemoveSupporter(memberId: string) {
+    if (!area || !familyId) return;
+    setSupporterError(null);
+    setSaving(true);
+    const result = await dispatch(removeSecondaryOwner({ areaId: area.areaId, memberId, familyId }));
+    setSaving(false);
+    if (!removeSecondaryOwner.fulfilled.match(result)) {
+      setSupporterError((result.payload as string) ?? tCommon("failed"));
+    }
+  }
+
   async function handleOwnerChange(e: React.ChangeEvent<HTMLSelectElement>) {
     if (!area || !familyId) return;
     const newId = e.target.value;
@@ -275,6 +286,7 @@ export function AreaDetailPage() {
         onOwnerChange={handleOwnerChange}
         supporterError={supporterError}
         onAddSupporter={(id) => { void handleAddSupporter(id); }}
+        onRemoveSupporter={(id) => { void handleRemoveSupporter(id); }}
       />
 
       <AreaRelatedWorkSection

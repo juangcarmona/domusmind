@@ -29,6 +29,7 @@ export default {
   supportersLabel: "协助人员",
   addSupporter: "添加协助人员…",
   noSupporters: "暂无协助人员。",
+  removeSupporter: "移除",
   relatedWork: "相关工作",
   relatedWorkEmpty: "此区域尚无关联项目。",
   relatedWorkHint: "创建任务、计划或例行程序并选择此区域，将其关联到此处。",

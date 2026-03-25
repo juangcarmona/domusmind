@@ -29,6 +29,7 @@ export default {
   supportersLabel: "サポーター",
   addSupporter: "サポーターを追加…",
   noSupporters: "まだサポーターがいません。",
+  removeSupporter: "削除",
   relatedWork: "関連する作業",
   relatedWorkEmpty: "このエリアに関連するアイテムはまだありません。",
   relatedWorkHint: "タスク、プラン、またはルーティンを作成し、このエリアを選択することでここに連り付けられます。",

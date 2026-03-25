@@ -8,6 +8,7 @@ using DomusMind.Application.Features.Responsibilities.DetectResponsibilityOverlo
 using DomusMind.Application.Features.Responsibilities.GetHouseholdAreas;
 using DomusMind.Application.Features.Responsibilities.GetResponsibilityBalance;
 using DomusMind.Application.Features.Responsibilities.GetResponsibilityVisibility;
+using DomusMind.Application.Features.Responsibilities.RemoveSecondaryOwner;
 using DomusMind.Application.Features.Responsibilities.RenameResponsibilityDomain;
 using DomusMind.Application.Features.Responsibilities.SuggestResponsibilityOwner;
 using DomusMind.Application.Features.Responsibilities.TransferResponsibility;
@@ -100,6 +101,32 @@ public sealed class ResponsibilityDomainsController : ControllerBase
         {
             var response = await dispatcher.Dispatch(
                 new AssignSecondaryOwnerCommand(id, request.MemberId, _currentUser.UserId!.Value),
+                cancellationToken);
+
+            return Ok(response);
+        }
+        catch (ResponsibilitiesException ex)
+        {
+            return MapResponsibilitiesException(ex);
+        }
+    }
+
+    /// <summary>Removes a secondary owner from a responsibility domain.</summary>
+    [HttpDelete("{id:guid}/secondary-owners/{memberId:guid}")]
+    [ProducesResponseType(typeof(RemoveSecondaryOwnerResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> RemoveSecondaryOwner(
+        Guid id,
+        Guid memberId,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new RemoveSecondaryOwnerCommand(id, memberId, _currentUser.UserId!.Value),
                 cancellationToken);
 
             return Ok(response);

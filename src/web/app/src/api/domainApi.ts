@@ -5,6 +5,7 @@ import type {
   CreateResponsibilityDomainResponse,
   AssignPrimaryOwnerRequest,
   AssignSecondaryOwnerRequest,
+  RemoveSecondaryOwnerResponse,
   TransferResponsibilityRequest,
   RenameResponsibilityDomainRequest,
   RenameResponsibilityDomainResponse,
@@ -34,6 +35,9 @@ export const domainApi = {
 
   assignSecondaryOwner: (areaId: string, body: AssignSecondaryOwnerRequest) =>
     request<unknown>(`/api/responsibility-domains/${areaId}/secondary-owners`, { method: "POST", body: JSON.stringify(body) }),
+
+  removeSecondaryOwner: (areaId: string, memberId: string) =>
+    request<RemoveSecondaryOwnerResponse>(`/api/responsibility-domains/${areaId}/secondary-owners/${memberId}`, { method: "DELETE" }),
 
   transferArea: (areaId: string, body: TransferResponsibilityRequest) =>
     request<unknown>(`/api/responsibility-domains/${areaId}/transfer`, { method: "POST", body: JSON.stringify(body) }),

@@ -47,6 +47,7 @@ using DomusMind.Application.Features.Responsibilities.DetectResponsibilityOverlo
 using DomusMind.Application.Features.Responsibilities.GetHouseholdAreas;
 using DomusMind.Application.Features.Responsibilities.GetResponsibilityBalance;
 using DomusMind.Application.Features.Responsibilities.GetResponsibilityVisibility;
+using DomusMind.Application.Features.Responsibilities.RemoveSecondaryOwner;
 using DomusMind.Application.Features.Responsibilities.RenameResponsibilityDomain;
 using DomusMind.Application.Features.Responsibilities.SuggestResponsibilityOwner;
 using DomusMind.Application.Features.Responsibilities.TransferResponsibility;
@@ -109,6 +110,7 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<CreateResponsibilityDomainCommand, CreateResponsibilityDomainResponse>, CreateResponsibilityDomainCommandHandler>();
         services.AddScoped<ICommandHandler<AssignPrimaryOwnerCommand, AssignPrimaryOwnerResponse>, AssignPrimaryOwnerCommandHandler>();
         services.AddScoped<ICommandHandler<AssignSecondaryOwnerCommand, AssignSecondaryOwnerResponse>, AssignSecondaryOwnerCommandHandler>();
+        services.AddScoped<ICommandHandler<RemoveSecondaryOwnerCommand, RemoveSecondaryOwnerResponse>, RemoveSecondaryOwnerCommandHandler>();
         services.AddScoped<ICommandHandler<TransferResponsibilityCommand, TransferResponsibilityResponse>, TransferResponsibilityCommandHandler>();
         services.AddScoped<ICommandHandler<RenameResponsibilityDomainCommand, RenameResponsibilityDomainResponse>, RenameResponsibilityDomainCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateResponsibilityDomainColorCommand, UpdateResponsibilityDomainColorResponse>, UpdateResponsibilityDomainColorCommandHandler>();

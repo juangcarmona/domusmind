@@ -46,6 +46,7 @@ public sealed class ResponsibilityDomain : AggregateRoot<ResponsibilityDomainId>
 
     public void AssignPrimaryOwner(MemberId memberId)
     {
+        _secondaryOwnerIds.Remove(memberId);
         PrimaryOwnerId = memberId;
         RaiseDomainEvent(new PrimaryOwnerAssigned(
             Guid.NewGuid(), Id.Value, memberId.Value, DateTime.UtcNow));
@@ -62,8 +63,14 @@ public sealed class ResponsibilityDomain : AggregateRoot<ResponsibilityDomainId>
             Guid.NewGuid(), Id.Value, memberId.Value, DateTime.UtcNow));
     }
 
+    public void RemoveSecondaryOwner(MemberId memberId)
+    {
+        _secondaryOwnerIds.Remove(memberId);
+    }
+
     public void TransferPrimaryOwner(MemberId newOwnerId)
     {
+        _secondaryOwnerIds.Remove(newOwnerId);
         var previousOwnerId = PrimaryOwnerId;
         PrimaryOwnerId = newOwnerId;
         RaiseDomainEvent(new ResponsibilityTransferred(

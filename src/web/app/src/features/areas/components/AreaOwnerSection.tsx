@@ -9,6 +9,7 @@ interface AreaOwnerSectionProps {
   onOwnerChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   supporterError: string | null;
   onAddSupporter: (memberId: string) => void;
+  onRemoveSupporter: (memberId: string) => void;
 }
 
 export function AreaOwnerSection({
@@ -19,6 +20,7 @@ export function AreaOwnerSection({
   onOwnerChange,
   supporterError,
   onAddSupporter,
+  onRemoveSupporter,
 }: AreaOwnerSectionProps) {
   const { t } = useTranslation("areas");
   const hasOwner = !!area.primaryOwnerId;
@@ -68,11 +70,31 @@ export function AreaOwnerSection({
           <ul className="area-supporters-list">
             {existingSupporters.map((m) => (
               <li key={m.memberId} className="area-supporter-tag">
-                {m.preferredName || m.name}
+                <span>{m.preferredName || m.name}</span>
+                <button
+                  type="button"
+                  className="area-supporter-remove"
+                  disabled={saving}
+                  onClick={() => onRemoveSupporter(m.memberId)}
+                  aria-label={t("removeSupporter")}
+                >
+                  ×
+                </button>
               </li>
             ))}
             {orphanSupporterIds.map((id) => (
-              <li key={id} className="area-supporter-tag">{id}</li>
+              <li key={id} className="area-supporter-tag">
+                <span>{id}</span>
+                <button
+                  type="button"
+                  className="area-supporter-remove"
+                  disabled={saving}
+                  onClick={() => onRemoveSupporter(id)}
+                  aria-label={t("removeSupporter")}
+                >
+                  ×
+                </button>
+              </li>
             ))}
           </ul>
         )}

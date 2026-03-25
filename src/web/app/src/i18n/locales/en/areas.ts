@@ -29,6 +29,7 @@ export default {
   supportersLabel: "Supporters",
   addSupporter: "Add supporter…",
   noSupporters: "No supporters yet.",
+  removeSupporter: "Remove",
   relatedWork: "Related work",
   relatedWorkEmpty: "No items linked to this area yet.",
   relatedWorkHint: "Create tasks, plans, or routines and select this area to link them here.",

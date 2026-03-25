@@ -106,6 +106,24 @@ export const assignSecondaryOwner = createAsyncThunk(
   },
 );
 
+export const removeSecondaryOwner = createAsyncThunk(
+  "areas/removeSecondary",
+  async (
+    { areaId, memberId, familyId }: { areaId: string; memberId: string; familyId: string },
+    { rejectWithValue, dispatch },
+  ) => {
+    try {
+      await domusmindApi.removeSecondaryOwner(areaId, memberId);
+      dispatch(fetchAreas(familyId));
+      return { areaId, memberId };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to remove supporter",
+      );
+    }
+  },
+);
+
 export const transferArea = createAsyncThunk(
   "areas/transfer",
   async (
