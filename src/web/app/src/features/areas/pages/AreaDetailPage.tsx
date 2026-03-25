@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { fetchAreas, assignPrimaryOwner, transferArea, renameArea } from "../../../store/areasSlice";
+  import { fetchAreas, assignPrimaryOwner, assignSecondaryOwner, transferArea, renameArea, updateAreaColor } from "../../../store/areasSlice";
 import { fetchPlans } from "../../../store/plansSlice";
 import { fetchRoutines, pauseRoutine, resumeRoutine } from "../../../store/routinesSlice";
 import { fetchTimeline } from "../../../store/timelineSlice";
@@ -10,7 +10,7 @@ import { completeTask, cancelTask } from "../../../store/tasksSlice";
 import { EditEntityModal } from "../../editors/components/EditEntityModal";
 import { PlanningAddModal } from "../../planning/components/modals/PlanningAddModal";
 import type { PlanningAddModalDefaults } from "../../planning/components/modals/PlanningAddModal";
-import { AREA_PALETTE, getAreaColor, setAreaColor } from "../utils/areaColors";
+import { AREA_PALETTE } from "../utils/areaColors";
 import { AreaDetailHeader } from "../components/AreaDetailHeader";
 import { AreaOwnerSection } from "../components/AreaOwnerSection";
 import { AreaRelatedWorkSection } from "../components/AreaRelatedWorkSection";
@@ -22,9 +22,6 @@ function todayIso(): string {
 
 // ── Area Detail Page ──────────────────────────────────────────────────────────
 //
-// Remaining backend gap:
-//   HouseholdAreaItem has no `color` field → color lives in localStorage.
-
 export function AreaDetailPage() {
   const { areaId } = useParams<{ areaId: string }>();
   const navigate = useNavigate();
@@ -40,16 +37,14 @@ export function AreaDetailPage() {
 
   const area = areas.find((a) => a.areaId === areaId);
 
-  // Color is stored in localStorage; initialized from there on mount.
-  const [color, setColor] = useState<string>(() =>
-    areaId ? getAreaColor(areaId) : AREA_PALETTE[0],
-  );
+  const [color, setColor] = useState<string>(area?.color ?? AREA_PALETTE[0]);
   const [saving, setSaving] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const [renaming, setRenaming] = useState(false);
   const [ownerError, setOwnerError] = useState<string | null>(null);
   const [renameError, setRenameError] = useState<string | null>(null);
+  const [supporterError, setSupporterError] = useState<string | null>(null);
   const [editTarget, setEditTarget] = useState<{ type: "task" | "routine" | "event"; id: string } | null>(null);
   const [addModal, setAddModal] = useState(false);
 
@@ -89,14 +84,21 @@ export function AreaDetailPage() {
   }, [familyId]);
 
   useEffect(() => {
-    setColor(areaId ? getAreaColor(areaId) : AREA_PALETTE[0]);
+    setColor(area?.color ?? AREA_PALETTE[0]);
     setSaving(false);
     setIsEditingName(false);
     setNameInput("");
     setRenaming(false);
     setOwnerError(null);
     setRenameError(null);
+    setSupporterError(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [areaId]);
+
+  // Sync color when server data loads or is updated externally
+  useEffect(() => {
+    if (area?.color) setColor(area.color);
+  }, [area?.color]);
 
   // Member display map (id → display name), used by task + routine cards.
   const memberMap = useMemo<Record<string, string>>(
@@ -132,14 +134,16 @@ export function AreaDetailPage() {
   }
 
   function handleColorChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const c = e.target.value;
-    setColor(c);
-    if (areaId) setAreaColor(areaId, c);
+    setColor(e.target.value);
+  }
+
+  function handleColorBlur() {
+    if (areaId) void dispatch(updateAreaColor({ areaId, color }));
   }
 
   function handleSwatchClick(c: string) {
     setColor(c);
-    if (areaId) setAreaColor(areaId, c);
+    if (areaId) void dispatch(updateAreaColor({ areaId, color: c }));
   }
 
   function handleNameClick() {
@@ -174,6 +178,17 @@ export function AreaDetailPage() {
     if (e.key === "Escape") {
       setRenameError(null);
       setIsEditingName(false);
+    }
+  }
+
+  async function handleAddSupporter(memberId: string) {
+    if (!area || !familyId) return;
+    setSupporterError(null);
+    setSaving(true);
+    const result = await dispatch(assignSecondaryOwner({ areaId: area.areaId, memberId, familyId }));
+    setSaving(false);
+    if (!assignSecondaryOwner.fulfilled.match(result)) {
+      setSupporterError((result.payload as string) ?? tCommon("failed"));
     }
   }
 
@@ -245,6 +260,7 @@ export function AreaDetailPage() {
         renameError={renameError}
         onSwatchClick={handleSwatchClick}
         onColorChange={handleColorChange}
+        onColorBlur={handleColorBlur}
         onNameClick={handleNameClick}
         onNameInputChange={setNameInput}
         onNameSave={() => { void handleNameSave(); }}
@@ -257,6 +273,8 @@ export function AreaDetailPage() {
         saving={saving}
         ownerError={ownerError}
         onOwnerChange={handleOwnerChange}
+        supporterError={supporterError}
+        onAddSupporter={(id) => { void handleAddSupporter(id); }}
       />
 
       <AreaRelatedWorkSection

@@ -39,6 +39,14 @@ public sealed class ResponsibilityDomainConfiguration : IEntityTypeConfiguration
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.OwnsOne(d => d.Color, color =>
+        {
+            color.Property(c => c.Value)
+                .HasColumnName("color")
+                .HasMaxLength(7)
+                .IsRequired();
+        });
+
         builder.Property(d => d.PrimaryOwnerId)
             .HasConversion(
                 id => id.HasValue ? id.Value.Value : (Guid?)null,

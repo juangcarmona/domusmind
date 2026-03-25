@@ -4,4 +4,5 @@ public sealed record CreateResponsibilityDomainResponse(
     Guid ResponsibilityDomainId,
     Guid FamilyId,
     string Name,
+    string Color,
     DateTime CreatedAtUtc);

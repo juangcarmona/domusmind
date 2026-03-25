@@ -53,7 +53,7 @@ export function AreaRelatedWorkSection({
       </div>
 
       {tasksLoading ? (
-        <p className="area-related-loading">{tCommon("loading")}</p>
+        <div className="loading-wrap area-related-loading">{tCommon("loading")}</div>
       ) : linkedTasks.length > 0 ? (
         <div style={{ marginBottom: "1.25rem" }}>
           <p className="area-related-group-label">{tTasks("title")}</p>

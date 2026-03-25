@@ -53,6 +53,7 @@ public sealed class GetHouseholdAreasQueryHandler
             .Select(d => new HouseholdAreaItem(
                 d.Id.Value,
                 d.Name.Value,
+                d.Color.Value,
                 d.PrimaryOwnerId?.Value,
                 d.PrimaryOwnerId.HasValue && memberNameById.TryGetValue(d.PrimaryOwnerId.Value.Value, out var name)
                     ? name

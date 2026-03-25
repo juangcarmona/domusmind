@@ -4,7 +4,7 @@ import { domusmindApi } from "../../../api/domusmindApi";
 import { createTask } from "../../../store/tasksSlice";
 import { fetchAreas } from "../../../store/areasSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { toLocalDateInput, toLocalTimeInput, areaColor } from "../utils";
+import { toLocalDateInput, toLocalTimeInput } from "../utils";
 import { DateInput } from "../../../components/DateInput";
 
 interface TaskCrudFormProps {
@@ -53,12 +53,18 @@ export function TaskCrudForm({
   const [dueDate, setDueDate] = useState(toLocalDateInput(initialDueDate));
   const [dueTime, setDueTime] = useState(toLocalTimeInput(initialDueDate));
   const [color, setColor] = useState(
-    initialColor ?? (initialAreaId ? areaColor(initialAreaId) : "#3B82F6"),
+    initialColor ?? "#3B82F6",
   );
   const [selectedAreaId, setSelectedAreaId] = useState(initialAreaId ?? "");
   const [assigneeId, setAssigneeId] = useState<string>(initialAssigneeId ?? "");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialColor || !selectedAreaId) return;
+    const selected = areas.find((a) => a.areaId === selectedAreaId);
+    if (selected?.color) setColor(selected.color);
+  }, [areas, selectedAreaId, initialColor]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -164,7 +170,9 @@ export function TaskCrudForm({
               onChange={(e) => {
                 const id = e.target.value;
                 setSelectedAreaId(id);
-                if (id) setColor(areaColor(id));
+                if (!id) return;
+                const selected = areas.find((a) => a.areaId === id);
+                if (selected?.color) setColor(selected.color);
               }}
             >
               <option value="">{tAreas("noArea")}</option>

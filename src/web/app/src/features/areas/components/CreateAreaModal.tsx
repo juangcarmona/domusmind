@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../store/hooks";
-import { createArea } from "../../../store/areasSlice";
-import { AREA_PALETTE, setAreaColor } from "../utils/areaColors";
+import { createArea, updateAreaColor } from "../../../store/areasSlice";
+import { AREA_PALETTE } from "../utils/areaColors";
 
 interface CreateAreaModalProps {
   familyId: string;
@@ -29,7 +29,9 @@ export function CreateAreaModal({ familyId, onClose }: CreateAreaModalProps) {
     const result = await dispatch(createArea({ familyId, name: name.trim() }));
     setSubmitting(false);
     if (createArea.fulfilled.match(result)) {
-      setAreaColor(result.payload.areaId, color);
+      if (color !== result.payload.color) {
+        await dispatch(updateAreaColor({ areaId: result.payload.areaId, color }));
+      }
       onClose();
     } else {
       setError((result.payload as string) ?? t("createError"));

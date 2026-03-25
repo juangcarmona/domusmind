@@ -30,6 +30,22 @@ export const fetchAreas = createAsyncThunk(
   },
 );
 
+export const updateAreaColor = createAsyncThunk(
+  "areas/updateColor",
+  async (
+    { areaId, color }: { areaId: string; color: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await domusmindApi.updateAreaColor(areaId, { color });
+      return { areaId: res.responsibilityDomainId, color: res.color };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to update area color",
+      );
+    }
+  },
+);
 export const createArea = createAsyncThunk(
   "areas/create",
   async (
@@ -41,6 +57,7 @@ export const createArea = createAsyncThunk(
       return {
         areaId: res.responsibilityDomainId,
         name: res.name,
+        color: res.color,
         primaryOwnerId: null,
         primaryOwnerName: null,
         secondaryOwnerIds: [],
@@ -66,6 +83,24 @@ export const assignPrimaryOwner = createAsyncThunk(
     } catch (err: unknown) {
       return rejectWithValue(
         (err as { message?: string }).message ?? "Failed to assign owner",
+      );
+    }
+  },
+);
+
+export const assignSecondaryOwner = createAsyncThunk(
+  "areas/assignSecondary",
+  async (
+    { areaId, memberId, familyId }: { areaId: string; memberId: string; familyId: string },
+    { rejectWithValue, dispatch },
+  ) => {
+    try {
+      await domusmindApi.assignSecondaryOwner(areaId, { memberId });
+      dispatch(fetchAreas(familyId));
+      return { areaId, memberId };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to assign supporter",
       );
     }
   },
@@ -135,6 +170,11 @@ const areasSlice = createSlice({
         const { areaId, name } = action.payload;
         const item = state.items.find((a) => a.areaId === areaId);
         if (item) item.name = name;
+      })
+      .addCase(updateAreaColor.fulfilled, (state, action) => {
+        const { areaId, color } = action.payload;
+        const item = state.items.find((a) => a.areaId === areaId);
+        if (item) item.color = color;
       });
   },
 });

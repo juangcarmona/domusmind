@@ -4,7 +4,7 @@ import { domusmindApi } from "../../../api/domusmindApi";
 import { scheduleEvent } from "../../../store/plansSlice";
 import { fetchAreas } from "../../../store/areasSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { toLocalDateInput, toLocalTimeInput, areaColor } from "../utils";
+import { toLocalDateInput, toLocalTimeInput } from "../utils";
 import { DateInput } from "../../../components/DateInput";
 
 interface PlanCrudFormProps {
@@ -79,7 +79,7 @@ export function PlanCrudForm({
   );
   const [description, setDescription] = useState(initialDescription ?? "");
   const [color, setColor] = useState(
-    initialColor ?? (initialAreaId ? areaColor(initialAreaId) : "#3B82F6"),
+    initialColor ?? "#3B82F6",
   );
   const [selectedAreaId, setSelectedAreaId] = useState(initialAreaId ?? "");
   const [scope, setScope] = useState<"Household" | "Members">(
@@ -90,6 +90,12 @@ export function PlanCrudForm({
   );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialColor || !selectedAreaId) return;
+    const selected = areas.find((a) => a.areaId === selectedAreaId);
+    if (selected?.color) setColor(selected.color);
+  }, [areas, selectedAreaId, initialColor]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -240,7 +246,9 @@ export function PlanCrudForm({
               onChange={(e) => {
                 const id = e.target.value;
                 setSelectedAreaId(id);
-                if (id) setColor(areaColor(id));
+                if (!id) return;
+                const selected = areas.find((a) => a.areaId === id);
+                if (selected?.color) setColor(selected.color);
               }}
             >
               <option value="">{tAreas("noArea")}</option>

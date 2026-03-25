@@ -10,6 +10,7 @@ interface AreaDetailHeaderProps {
   renameError: string | null;
   onSwatchClick: (color: string) => void;
   onColorChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onColorBlur: () => void;
   onNameClick: () => void;
   onNameInputChange: (value: string) => void;
   onNameSave: () => void;
@@ -25,6 +26,7 @@ export function AreaDetailHeader({
   renameError,
   onSwatchClick,
   onColorChange,
+  onColorBlur,
   onNameClick,
   onNameInputChange,
   onNameSave,
@@ -57,6 +59,7 @@ export function AreaDetailHeader({
               type="color"
               value={color}
               onChange={onColorChange}
+              onBlur={onColorBlur}
               aria-label={t("customColor")}
             />
           </div>

@@ -8,6 +8,8 @@ import type {
   TransferResponsibilityRequest,
   RenameResponsibilityDomainRequest,
   RenameResponsibilityDomainResponse,
+  UpdateResponsibilityDomainColorRequest,
+  UpdateResponsibilityDomainColorResponse,
   CreateTaskRequest,
   CreateTaskResponse,
   AssignTaskRequest,
@@ -38,6 +40,9 @@ export const domainApi = {
 
   renameArea: (areaId: string, body: RenameResponsibilityDomainRequest) =>
     request<RenameResponsibilityDomainResponse>(`/api/responsibility-domains/${areaId}/rename`, { method: "PATCH", body: JSON.stringify(body) }),
+
+  updateAreaColor: (areaId: string, body: UpdateResponsibilityDomainColorRequest) =>
+    request<UpdateResponsibilityDomainColorResponse>(`/api/responsibility-domains/${areaId}/color`, { method: "PATCH", body: JSON.stringify(body) }),
 
   /* Tasks */
   createTask: (body: CreateTaskRequest) =>

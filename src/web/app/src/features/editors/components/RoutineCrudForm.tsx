@@ -4,7 +4,7 @@ import { createRoutine, updateRoutine } from "../../../store/routinesSlice";
 import { fetchAreas } from "../../../store/areasSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import type { RoutineListItem } from "../../../api/domusmindApi";
-import { toLocalTimeInput, areaColor } from "../utils";
+import { toLocalTimeInput } from "../utils";
 
 interface RoutineCrudFormProps {
   mode: "create" | "edit";
@@ -53,7 +53,7 @@ export function RoutineCrudForm({
   const [routineName, setRoutineName] = useState(initialRoutine?.name ?? "");
   const [routineScope, setRoutineScope] = useState(initialRoutine?.scope ?? "Household");
   const [routineColor, setRoutineColor] = useState(
-    initialRoutine?.color ?? (initialAreaId ? areaColor(initialAreaId) : "#3B82F6"),
+    initialRoutine?.color ?? "#3B82F6",
   );
   const [selectedAreaId, setSelectedAreaId] = useState(initialAreaId ?? initialRoutine?.areaId ?? "");
   const [routineFrequency, setRoutineFrequency] = useState(initialRoutine?.frequency ?? "Weekly");
@@ -64,6 +64,12 @@ export function RoutineCrudForm({
   const [routineTargetMemberIds, setRoutineTargetMemberIds] = useState<string[]>(initialRoutine?.targetMemberIds ?? []);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialRoutine?.color || !selectedAreaId) return;
+    const selected = areas.find((a) => a.areaId === selectedAreaId);
+    if (selected?.color) setRoutineColor(selected.color);
+  }, [areas, selectedAreaId, initialRoutine?.color]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -146,7 +152,9 @@ export function RoutineCrudForm({
               onChange={(e) => {
                 const id = e.target.value;
                 setSelectedAreaId(id);
-                if (id) setRoutineColor(areaColor(id));
+                if (!id) return;
+                const selected = areas.find((a) => a.areaId === id);
+                if (selected?.color) setRoutineColor(selected.color);
               }}
             >
               <option value="">{tAreas("noArea")}</option>

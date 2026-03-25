@@ -4,18 +4,18 @@ using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Features.Responsibilities;
 using DomusMind.Contracts.Responsibilities;
 using DomusMind.Domain.Responsibilities;
-using DomusMind.Domain.Responsibilities.ValueObjects;
+using DomusMind.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace DomusMind.Application.Features.Responsibilities.RenameResponsibilityDomain;
+namespace DomusMind.Application.Features.Responsibilities.UpdateResponsibilityDomainColor;
 
-public sealed class RenameResponsibilityDomainCommandHandler
-    : ICommandHandler<RenameResponsibilityDomainCommand, RenameResponsibilityDomainResponse>
+public sealed class UpdateResponsibilityDomainColorCommandHandler
+    : ICommandHandler<UpdateResponsibilityDomainColorCommand, UpdateResponsibilityDomainColorResponse>
 {
     private readonly IDomusMindDbContext _dbContext;
     private readonly IFamilyAuthorizationService _authorizationService;
 
-    public RenameResponsibilityDomainCommandHandler(
+    public UpdateResponsibilityDomainColorCommandHandler(
         IDomusMindDbContext dbContext,
         IFamilyAuthorizationService authorizationService)
     {
@@ -23,16 +23,12 @@ public sealed class RenameResponsibilityDomainCommandHandler
         _authorizationService = authorizationService;
     }
 
-    public async Task<RenameResponsibilityDomainResponse> Handle(
-        RenameResponsibilityDomainCommand command,
+    public async Task<UpdateResponsibilityDomainColorResponse> Handle(
+        UpdateResponsibilityDomainColorCommand command,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(command.Name))
-            throw new ResponsibilitiesException(
-                ResponsibilitiesErrorCode.InvalidInput, "Area name is required.");
-
         var domain = await _dbContext
-            .Set<Domain.Responsibilities.ResponsibilityDomain>()
+            .Set<ResponsibilityDomain>()
             .SingleOrDefaultAsync(
                 d => d.Id == ResponsibilityDomainId.From(command.ResponsibilityDomainId),
                 cancellationToken);
@@ -49,20 +45,20 @@ public sealed class RenameResponsibilityDomainCommandHandler
             throw new ResponsibilitiesException(
                 ResponsibilitiesErrorCode.AccessDenied, "Access to this family is denied.");
 
-        ResponsibilityAreaName newName;
+        HexColor newColor;
         try
         {
-            newName = ResponsibilityAreaName.Create(command.Name);
+            newColor = HexColor.From(command.Color);
         }
         catch (ArgumentException ex)
         {
             throw new ResponsibilitiesException(ResponsibilitiesErrorCode.InvalidInput, ex.Message);
         }
 
-        domain.Rename(newName);
+        domain.Repaint(newColor);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return new RenameResponsibilityDomainResponse(domain.Id.Value, domain.Name.Value);
+        return new UpdateResponsibilityDomainColorResponse(domain.Id.Value, domain.Color.Value);
     }
 }

@@ -6,6 +6,7 @@ using DomusMind.Contracts.Responsibilities;
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Responsibilities.ValueObjects;
+using DomusMind.Domain.Shared;
 
 namespace DomusMind.Application.Features.Responsibilities.CreateResponsibilityDomain;
 
@@ -42,15 +43,16 @@ public sealed class CreateResponsibilityDomainCommandHandler
         var id = ResponsibilityDomainId.New();
         var familyId = FamilyId.From(command.FamilyId);
         var name = ResponsibilityAreaName.Create(command.Name);
+        var color = HexColor.From("#6A4C93");
         var now = DateTime.UtcNow;
 
-        var domain = Domain.Responsibilities.ResponsibilityDomain.Create(id, familyId, name, now);
+        var domain = Domain.Responsibilities.ResponsibilityDomain.Create(id, familyId, name, color, now);
 
         _dbContext.Set<Domain.Responsibilities.ResponsibilityDomain>().Add(domain);
 
         await _eventLogWriter.WriteAsync(domain.DomainEvents, cancellationToken);
         domain.ClearDomainEvents();
 
-        return new CreateResponsibilityDomainResponse(id.Value, familyId.Value, name.Value, now);
+        return new CreateResponsibilityDomainResponse(id.Value, familyId.Value, name.Value, color.Value, now);
     }
 }

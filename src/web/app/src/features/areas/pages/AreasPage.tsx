@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { fetchAreas, assignPrimaryOwner, transferArea } from "../../../store/areasSlice";
 import type { HouseholdAreaItem, FamilyMemberResponse } from "../../../api/domusmindApi";
-import { getAreaColor } from "../utils/areaColors";
 import { CreateAreaModal } from "../components/CreateAreaModal";
 
 // ── Area row ──────────────────────────────────────────────────────────────────
@@ -51,7 +50,7 @@ function AreaRow({
   return (
     <div
       className={`item-card area-row${hasOwner ? "" : " area-row--unowned"}`}
-      style={{ borderLeft: `4px solid ${getAreaColor(area.areaId)}`, cursor: "pointer" }}
+      style={{ borderLeft: `4px solid ${area.color}`, cursor: "pointer" }}
       role="button"
       tabIndex={0}
       onClick={() => navigate(`/areas/${area.areaId}`)}

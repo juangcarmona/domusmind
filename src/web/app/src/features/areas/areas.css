@@ -185,6 +185,22 @@
   font-size: 0.8rem;
   color: var(--muted);
 }
+.area-supporters-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0;
+  list-style: none;
+  margin: 0 0 0.6rem;
+}
+.area-supporter-tag {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
+  color: var(--text);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
+}
 .area-related-group-label {
   font-size: 0.7rem;
   font-weight: 700;
@@ -194,8 +210,7 @@
   margin: 0 0 0.4rem;
 }
 .area-related-loading {
-  font-size: 0.85rem;
-  color: var(--muted);
+  justify-content: flex-start;
   padding: 0.25rem 0;
 }
 .area-related-empty {

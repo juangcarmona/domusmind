@@ -1,6 +1,7 @@
 export interface HouseholdAreaItem {
   areaId: string;
   name: string;
+  color: string;
   primaryOwnerId: string | null;
   primaryOwnerName: string | null;
   secondaryOwnerIds: string[];
@@ -19,6 +20,7 @@ export interface CreateResponsibilityDomainResponse {
   responsibilityDomainId: string;
   familyId: string;
   name: string;
+  color: string;
   createdAtUtc: string;
 }
 
@@ -41,6 +43,15 @@ export interface RenameResponsibilityDomainRequest {
 export interface RenameResponsibilityDomainResponse {
   responsibilityDomainId: string;
   name: string;
+}
+
+export interface UpdateResponsibilityDomainColorRequest {
+  color: string;
+}
+
+export interface UpdateResponsibilityDomainColorResponse {
+  responsibilityDomainId: string;
+  color: string;
 }
 
 export interface CreateTaskRequest {

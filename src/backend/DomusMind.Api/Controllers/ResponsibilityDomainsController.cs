@@ -11,6 +11,7 @@ using DomusMind.Application.Features.Responsibilities.GetResponsibilityVisibilit
 using DomusMind.Application.Features.Responsibilities.RenameResponsibilityDomain;
 using DomusMind.Application.Features.Responsibilities.SuggestResponsibilityOwner;
 using DomusMind.Application.Features.Responsibilities.TransferResponsibility;
+using DomusMind.Application.Features.Responsibilities.UpdateResponsibilityDomainColor;
 using DomusMind.Contracts.Responsibilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -251,6 +252,32 @@ public sealed class ResponsibilityDomainsController : ControllerBase
         {
             var response = await dispatcher.Dispatch(
                 new RenameResponsibilityDomainCommand(id, request.Name, _currentUser.UserId!.Value),
+                cancellationToken);
+            return Ok(response);
+        }
+        catch (ResponsibilitiesException ex)
+        {
+            return MapResponsibilitiesException(ex);
+        }
+    }
+
+    /// <summary>Updates a responsibility domain (area) color.</summary>
+    [HttpPatch("{id:guid}/color")]
+    [ProducesResponseType(typeof(UpdateResponsibilityDomainColorResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UpdateResponsibilityDomainColor(
+        Guid id,
+        [FromBody] UpdateResponsibilityDomainColorRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new UpdateResponsibilityDomainColorCommand(id, request.Color, _currentUser.UserId!.Value),
                 cancellationToken);
             return Ok(response);
         }
