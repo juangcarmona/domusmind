@@ -16,5 +16,5 @@ public sealed record CreateRoutineCommand(
     TimeOnly? Time,
     IReadOnlyCollection<Guid> TargetMemberIds,
     Guid? AreaId,
-    Guid RequestedByUserId)
+    Guid RequestedByUserId = default)
     : ICommand<CreateRoutineResponse>;

@@ -53,13 +53,24 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
         EventTime time,
         HexColor color,
         ResponsibilityDomainId? areaId,
-        DateTime createdAtUtc)
+        DateTime? createdAtUtc = null)
     {
-        var calendarEvent = new CalendarEvent(id, familyId, title, description, time, color, areaId, createdAtUtc);
+        var effectiveCreatedAtUtc = createdAtUtc ?? DateTime.UtcNow;
+        var calendarEvent = new CalendarEvent(id, familyId, title, description, time, color, areaId, effectiveCreatedAtUtc);
         calendarEvent.RaiseDomainEvent(new EventScheduled(
-            Guid.NewGuid(), id.Value, familyId.Value, title.Value, time, createdAtUtc));
+            Guid.NewGuid(), id.Value, familyId.Value, title.Value, time, effectiveCreatedAtUtc));
         return calendarEvent;
     }
+
+    public static CalendarEvent Create(
+        CalendarEventId id,
+        FamilyId familyId,
+        EventTitle title,
+        string? description,
+        EventTime time,
+        HexColor color,
+        DateTime? createdAtUtc = null)
+        => Create(id, familyId, title, description, time, color, null, createdAtUtc);
 
     public void Reschedule(EventTime newTime)
     {

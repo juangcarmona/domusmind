@@ -61,8 +61,9 @@ public sealed class Routine : AggregateRoot<RoutineId>
         RoutineSchedule schedule,
         ResponsibilityDomainId? areaId,
         IEnumerable<MemberId>? targetMembers,
-        DateTime createdAtUtc)
+        DateTime? createdAtUtc = null)
     {
+        var effectiveCreatedAtUtc = createdAtUtc ?? DateTime.UtcNow;
         var members = targetMembers?.Distinct().ToList() ?? [];
 
         ValidateScope(scope, members);
@@ -77,7 +78,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
             schedule,
             areaId,
             members,
-            createdAtUtc);
+            effectiveCreatedAtUtc);
 
         routine.RaiseDomainEvent(new RoutineCreated(
             Guid.NewGuid(),
@@ -87,10 +88,22 @@ public sealed class Routine : AggregateRoot<RoutineId>
             scope.ToString(),
             kind.ToString(),
             color.Value,
-            createdAtUtc));
+            effectiveCreatedAtUtc));
 
         return routine;
     }
+
+    public static Routine Create(
+        RoutineId id,
+        FamilyId familyId,
+        RoutineName name,
+        RoutineScope scope,
+        RoutineKind kind,
+        HexColor color,
+        RoutineSchedule schedule,
+        IEnumerable<MemberId>? targetMembers,
+        DateTime? createdAtUtc = null)
+        => Create(id, familyId, name, scope, kind, color, schedule, null, targetMembers, createdAtUtc);
 
     public void Update(
         RoutineName newName,
@@ -99,7 +112,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
         HexColor newColor,
         RoutineSchedule newSchedule,
         ResponsibilityDomainId? newAreaId,
-        IEnumerable<MemberId>? targetMembers)
+        IEnumerable<MemberId>? targetMembers = null)
     {
         var members = targetMembers?.Distinct().ToList() ?? [];
 
@@ -123,6 +136,15 @@ public sealed class Routine : AggregateRoot<RoutineId>
             newColor.Value,
             DateTime.UtcNow));
     }
+
+    public void Update(
+        RoutineName newName,
+        RoutineScope newScope,
+        RoutineKind newKind,
+        HexColor newColor,
+        RoutineSchedule newSchedule,
+        IEnumerable<MemberId>? targetMembers)
+        => Update(newName, newScope, newKind, newColor, newSchedule, null, targetMembers);
 
     public void Pause()
     {

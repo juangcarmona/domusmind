@@ -14,5 +14,5 @@ public sealed record ScheduleEventCommand(
     string? Color,
     IReadOnlyCollection<Guid>? ParticipantMemberIds,
     Guid? AreaId,
-    Guid RequestedByUserId)
+    Guid RequestedByUserId = default)
     : ICommand<ScheduleEventResponse>;

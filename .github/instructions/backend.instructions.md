@@ -36,3 +36,15 @@ Split code when it mixes responsibilities.
 - prefer modifying existing slices over creating new ones
 - follow existing naming and folder conventions
 - add or update tests when behavior changes
+
+## Testing
+
+- use xUnit for tests
+- use NSubstitute for mocking
+- mock only external dependencies (repositories, services, infrastructure)
+- do not mock domain logic or value objects
+- prefer testing real handlers and domain behavior over over-mocking
+- keep tests small, focused, and readable
+- name tests by behavior, not implementation, e.g. `Handle_WhenCondition_ShouldResult`
+- add or update tests when behavior changes
+- use AAA (Arrange-Act-Assert) structure in tests

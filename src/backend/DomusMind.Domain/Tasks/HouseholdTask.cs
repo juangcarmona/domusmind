@@ -49,13 +49,24 @@ public sealed class HouseholdTask : AggregateRoot<TaskId>
         TaskSchedule schedule,
         HexColor color,
         ResponsibilityDomainId? areaId,
-        DateTime createdAtUtc)
+        DateTime? createdAtUtc = null)
     {
-        var task = new HouseholdTask(id, familyId, title, description, schedule, color, areaId, createdAtUtc);
+        var effectiveCreatedAtUtc = createdAtUtc ?? DateTime.UtcNow;
+        var task = new HouseholdTask(id, familyId, title, description, schedule, color, areaId, effectiveCreatedAtUtc);
         task.RaiseDomainEvent(new TaskCreated(
-            Guid.NewGuid(), id.Value, familyId.Value, title.Value, schedule, createdAtUtc));
+            Guid.NewGuid(), id.Value, familyId.Value, title.Value, schedule, effectiveCreatedAtUtc));
         return task;
     }
+
+    public static HouseholdTask Create(
+        TaskId id,
+        FamilyId familyId,
+        TaskTitle title,
+        string? description,
+        TaskSchedule schedule,
+        HexColor color,
+        DateTime? createdAtUtc = null)
+        => Create(id, familyId, title, description, schedule, color, null, createdAtUtc);
 
     public void Repaint(HexColor newColor)
     {
