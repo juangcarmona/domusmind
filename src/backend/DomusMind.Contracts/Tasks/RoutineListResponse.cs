@@ -14,6 +14,7 @@ public sealed record RoutineListItem(
     TimeOnly? Time,
     IReadOnlyCollection<Guid> TargetMemberIds,
     string Status,
+    Guid? AreaId,
     DateTime CreatedAtUtc);
     
 public sealed record RoutineListResponse(

@@ -14,7 +14,8 @@ public sealed record EnrichedTimelineEntry(
     bool IsUnassigned,
     Guid? AssigneeId,
     IReadOnlyCollection<ParticipantProjection>? Participants,
-    string Color);
+    string Color,
+    Guid? AreaId);
 
 public sealed record TimelineGroup(
     string GroupKey,

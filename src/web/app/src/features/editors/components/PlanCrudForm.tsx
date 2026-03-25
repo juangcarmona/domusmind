@@ -1,8 +1,9 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { domusmindApi } from "../../../api/domusmindApi";
 import { scheduleEvent } from "../../../store/plansSlice";
-import { useAppDispatch } from "../../../store/hooks";
+import { fetchAreas } from "../../../store/areasSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { toLocalDateInput, toLocalTimeInput } from "../utils";
 import { DateInput } from "../../../components/DateInput";
 
@@ -19,6 +20,8 @@ interface PlanCrudFormProps {
   initialEndTime?: string | null;
   initialDescription?: string | null;
   initialColor?: string | null;
+  /** Pre-selects the area picker (create mode only). */
+  initialAreaId?: string;
   initialParticipantMemberIds?: string[];
   members?: { memberId: string; name: string }[];
   onCancel: () => void;
@@ -38,6 +41,7 @@ export function PlanCrudForm({
   initialEndTime,
   initialDescription,
   initialColor,
+  initialAreaId,
   initialParticipantMemberIds,
   members,
   onCancel,
@@ -46,6 +50,15 @@ export function PlanCrudForm({
   const dispatch = useAppDispatch();
   const { t: tPlans } = useTranslation("plans");
   const { t: tCommon } = useTranslation("common");
+  const { t: tAreas } = useTranslation("areas");
+
+  const areas = useAppSelector((s) => s.areas.items);
+  const areasStatus = useAppSelector((s) => s.areas.status);
+
+  useEffect(() => {
+    if (areasStatus === "idle") dispatch(fetchAreas(familyId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [areasStatus, familyId]);
 
   const [title, setTitle] = useState(initialTitle ?? "");
   const [startDate, setStartDate] = useState(
@@ -65,7 +78,10 @@ export function PlanCrudForm({
       : toLocalTimeInput(initialEndTime),
   );
   const [description, setDescription] = useState(initialDescription ?? "");
-  const [color, setColor] = useState(initialColor ?? "#3B82F6");
+  const [color, setColor] = useState(
+    initialColor ?? "#3B82F6",
+  );
+  const [selectedAreaId, setSelectedAreaId] = useState(initialAreaId ?? "");
   const [scope, setScope] = useState<"Household" | "Members">(
     (initialParticipantMemberIds?.length ?? 0) > 0 ? "Members" : "Household",
   );
@@ -74,6 +90,12 @@ export function PlanCrudForm({
   );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialColor || !selectedAreaId) return;
+    const selected = areas.find((a) => a.areaId === selectedAreaId);
+    if (selected?.color) setColor(selected.color);
+  }, [areas, selectedAreaId, initialColor]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -108,6 +130,7 @@ export function PlanCrudForm({
           endTime: endTime || undefined,
           description: description.trim() || undefined,
           color,
+          areaId: selectedAreaId || null,
           participantMemberIds: participantMemberIds.length > 0 ? participantMemberIds : undefined,
         }),
       );
@@ -213,6 +236,28 @@ export function PlanCrudForm({
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
+        {areas.length > 0 && (
+          <div className="form-group">
+            <label htmlFor="plan-form-area">{tAreas("areaLabel")}</label>
+            <select
+              id="plan-form-area"
+              className="form-control"
+              value={selectedAreaId}
+              onChange={(e) => {
+                const id = e.target.value;
+                setSelectedAreaId(id);
+                if (!id) return;
+                const selected = areas.find((a) => a.areaId === id);
+                if (selected?.color) setColor(selected.color);
+              }}
+            >
+              <option value="">{tAreas("noArea")}</option>
+              {areas.map((a) => (
+                <option key={a.areaId} value={a.areaId}>{a.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className="form-group">
           <label htmlFor="plan-form-color">{tPlans("form.colorLabel")}</label>
           <input

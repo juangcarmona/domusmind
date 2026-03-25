@@ -69,6 +69,7 @@ public sealed class RoutinesController : ControllerBase
                     request.MonthOfYear,
                     request.Time,
                     request.TargetMemberIds,
+                    request.AreaId,
                     _currentUser.UserId!.Value),
                 cancellationToken);
 
@@ -107,6 +108,7 @@ public sealed class RoutinesController : ControllerBase
                     request.MonthOfYear,
                     request.Time,
                     request.TargetMemberIds,
+                    request.AreaId,
                     _currentUser.UserId!.Value),
                 cancellationToken);
 

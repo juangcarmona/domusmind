@@ -1,4 +1,5 @@
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Tasks;
 using DomusMind.Domain.Tasks.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -73,6 +74,12 @@ public sealed class HouseholdTaskConfiguration : IEntityTypeConfiguration<Househ
         builder.Property(t => t.CreatedAtUtc)
             .HasColumnName("created_at_utc")
             .IsRequired();
+
+        builder.Property(t => t.AreaId)
+            .HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? ResponsibilityDomainId.From(value.Value) : (ResponsibilityDomainId?)null)
+            .HasColumnName("area_id");
 
         builder.Ignore(t => t.DomainEvents);
     }

@@ -4,6 +4,8 @@
 
 The Responsibility context defines how household responsibilities are explicitly distributed across family members.
 
+In product surfaces, responsibility domains may be presented as Areas. This is a UI and product-language mapping only; the domain model remains centered on `ResponsibilityDomain`, `PrimaryOwner`, `SecondaryOwner`, and `TransferResponsibility`.
+
 It is responsible for representing:
 
 - responsibility domains
@@ -13,6 +15,8 @@ It is responsible for representing:
 - participation in a domain
 
 This context makes cognitive ownership visible, structured, and traceable.
+
+It models accountability, not execution. The context determines who owns a household area of management; it does not execute plans or tasks on behalf of that member.
 
 ---
 
@@ -46,6 +50,8 @@ It owns:
 
 A responsibility domain represents a bounded area of household management.
 
+In the product experience, this is the concept exposed to households as an Area.
+
 Examples:
 
 - school
@@ -70,6 +76,8 @@ Possible assignment roles:
 - primary owner
 - secondary owner
 - participant
+
+Product surfaces may label these roles as Owner and Support, while preserving the domain semantics of `PrimaryOwner` and `SecondaryOwner`.
 
 ---
 
@@ -205,6 +213,8 @@ Possible uses:
 - validate or reconcile assignments when membership changes
 - mark domains needing reassignment after member removal
 
+Bootstrapping default responsibility domains for a new family supports a low-friction product experience where households begin with useful Areas without admin-heavy setup.
+
 Default rule:
 
 **Responsibility depends on Family identity, but owns all responsibility semantics.**
@@ -236,6 +246,8 @@ Contains:
 - number of participants
 - status
 
+This read model may be rendered in product surfaces as an Area summary.
+
 ## Family Responsibility Matrix
 
 Contains:
@@ -245,7 +257,7 @@ Contains:
 - secondary owners
 - participants
 
-This read model is ideal for dashboards and “mental load visibility” views.
+This read model supports household clarity and mental-load visibility. It is supporting structure for planning and accountability, not a standalone dashboard or reporting module.
 
 ## Member Responsibility Overview
 
@@ -257,6 +269,8 @@ Contains:
 - domains where member participates
 
 Useful for balancing responsibility across the household.
+
+Plans and tasks may optionally reference a responsibility domain for categorization and accountability context. Sparse usage is acceptable in V1; the household should still function well even when only a few Areas are actively used.
 
 ## Responsibility Coverage View
 

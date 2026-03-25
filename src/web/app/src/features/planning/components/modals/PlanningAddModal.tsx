@@ -6,15 +6,26 @@ import { TaskCrudForm } from "../../../editors/components/TaskCrudForm";
 
 type ConceptStep = "choose" | "plan" | "task" | "routine";
 
+export interface PlanningAddModalDefaults {
+  /** Area to pre-select in the form picker. */
+  areaId?: string;
+  /** Member to pre-select as task assignee. */
+  assigneeId?: string;
+  /** Members to pre-select as plan participants. */
+  participantMemberIds?: string[];
+}
+
 interface Props {
   familyId: string;
   members: { memberId: string; name: string }[];
   onClose: () => void;
   onSuccess: () => void;
   initialStep?: ConceptStep;
+  /** Optional context defaults pre-populated in create forms. */
+  defaults?: PlanningAddModalDefaults;
 }
 
-export function PlanningAddModal({ familyId, members, onClose, onSuccess, initialStep }: Props) {
+export function PlanningAddModal({ familyId, members, onClose, onSuccess, initialStep, defaults }: Props) {
   const { t } = useTranslation("plans");
   const { t: tCommon } = useTranslation("common");
 
@@ -65,6 +76,8 @@ export function PlanningAddModal({ familyId, members, onClose, onSuccess, initia
             mode="create"
             familyId={familyId}
             members={members}
+            initialAreaId={defaults?.areaId}
+            initialAssigneeId={defaults?.assigneeId}
             onCancel={onClose}
             onSuccess={onSuccess}
           />
@@ -75,6 +88,8 @@ export function PlanningAddModal({ familyId, members, onClose, onSuccess, initia
             mode="create"
             familyId={familyId}
             members={members}
+            initialAreaId={defaults?.areaId}
+            initialParticipantMemberIds={defaults?.participantMemberIds}
             onCancel={onClose}
             onSuccess={onSuccess}
           />
@@ -85,6 +100,7 @@ export function PlanningAddModal({ familyId, members, onClose, onSuccess, initia
             mode="create"
             familyId={familyId}
             members={members}
+            initialAreaId={defaults?.areaId}
             onCancel={onClose}
             onSuccess={onSuccess}
           />

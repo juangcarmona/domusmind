@@ -4,6 +4,7 @@ import { weeklyGridItemMappers } from "./weeklyGridItemMappers";
 interface WeeklyGridCellProps {
   cell: WeeklyGridCellType;
   isToday?: boolean;
+  compact?: boolean;
   onItemClick?: (type: "event" | "task" | "routine", id: string) => void;
 }
 
@@ -31,7 +32,7 @@ export function WeeklyGridCell({ cell, isToday, onItemClick }: WeeklyGridCellPro
       )}
       {(cell.routines ?? []).map((r) =>
         weeklyGridItemMappers.routineToItem(r, () =>
-          onItemClick?.("routine", r.routineId),
+          onItemClick?.("routine", r.routineId)
         ),
       )}
     </div>

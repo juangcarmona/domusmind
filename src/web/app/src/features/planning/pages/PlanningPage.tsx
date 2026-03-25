@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { fetchPlans, cancelEvent } from "../../../store/plansSlice";
 import { fetchRoutines, pauseRoutine, resumeRoutine } from "../../../store/routinesSlice";
+import { fetchAreas } from "../../../store/areasSlice";
 import { completeTask, cancelTask, assignTask } from "../../../store/tasksSlice";
 import { domusmindApi } from "../../../api/domusmindApi";
 import { ConfirmDialog } from "../../../components/ConfirmDialog";
@@ -29,6 +30,7 @@ export function PlanningPage() {
   const { family, members } = useAppSelector((s) => s.household);
   const { items: planItems, status: plansStatus } = useAppSelector((s) => s.plans);
   const { items: routineItems, status: routinesStatus } = useAppSelector((s) => s.routines);
+  const { status: areasStatus } = useAppSelector((s) => s.areas);
   const familyId = family?.familyId;
 
   const { t: tRoutines } = useTranslation("routines");
@@ -113,6 +115,11 @@ export function PlanningPage() {
     loadActiveTasks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [familyId]);
+
+  useEffect(() => {
+    if (familyId && areasStatus === "idle") dispatch(fetchAreas(familyId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [familyId, areasStatus]);
 
   useEffect(() => {
     // Reset local task history when family changes so stale data isn't shown

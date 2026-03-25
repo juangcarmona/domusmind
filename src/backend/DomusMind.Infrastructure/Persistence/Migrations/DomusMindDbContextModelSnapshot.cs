@@ -17,7 +17,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("ProductVersion", "10.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -27,6 +27,10 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<Guid?>("AreaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("area_id");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
@@ -211,6 +215,10 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid?>("AreaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("area_id");
+
                     b.Property<Guid?>("AssigneeId")
                         .HasColumnType("uuid")
                         .HasColumnName("assignee_id");
@@ -250,6 +258,10 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<Guid?>("AreaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("area_id");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
@@ -572,6 +584,31 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .WithMany("Members")
                         .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.Responsibilities.ResponsibilityDomain", b =>
+                {
+                    b.OwnsOne("DomusMind.Domain.Shared.HexColor", "Color", b1 =>
+                        {
+                            b1.Property<Guid>("ResponsibilityDomainId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(7)
+                                .HasColumnType("character varying(7)")
+                                .HasColumnName("color");
+
+                            b1.HasKey("ResponsibilityDomainId");
+
+                            b1.ToTable("responsibility_domains");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ResponsibilityDomainId");
+                        });
+
+                    b.Navigation("Color")
                         .IsRequired();
                 });
 

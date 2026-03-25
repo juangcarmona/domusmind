@@ -9,4 +9,5 @@ public sealed record CreateTaskResponse(
     string? DueTime,
     string Status,
     string Color,
+    Guid? AreaId,
     DateTime CreatedAtUtc);

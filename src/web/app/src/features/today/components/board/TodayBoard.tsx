@@ -30,7 +30,8 @@ function DayMemberSection({
   const events = cell.events ?? [];
   const tasks = cell.tasks ?? [];
   const routines = cell.routines ?? [];
-  const isEmpty = events.length === 0 && tasks.length === 0 && routines.length === 0;
+  const isEmpty =
+    events.length === 0 && tasks.length === 0 && routines.length === 0;
 
   return (
     <div className="today-summary-member">
@@ -40,10 +41,14 @@ function DayMemberSection({
       ) : (
         <div className="today-summary-items">
           {events.map((e) =>
-            weeklyGridItemMappers.eventToItem(e, () => onItemClick("event", e.eventId)),
+            weeklyGridItemMappers.eventToItem(e, () =>
+              onItemClick("event", e.eventId),
+            ),
           )}
           {tasks.map((t) =>
-            weeklyGridItemMappers.taskToItem(t, () => onItemClick("task", t.taskId)),
+            weeklyGridItemMappers.taskToItem(t, () =>
+              onItemClick("task", t.taskId),
+            ),
           )}
           {routines.map((r) =>
             weeklyGridItemMappers.routineToItem(r, () =>
@@ -88,7 +93,9 @@ export function TodayBoard({
   const members = grid.members ?? [];
   const sharedCells = grid.sharedCells ?? [];
 
-  const sharedCell = sharedCells.find((c) => c.date.slice(0, 10) === selectedDate);
+  const sharedCell = sharedCells.find(
+    (c) => c.date.slice(0, 10) === selectedDate,
+  );
   const hasSharedItems =
     (sharedCell?.events?.length ?? 0) > 0 ||
     (sharedCell?.tasks?.length ?? 0) > 0 ||
@@ -110,15 +117,6 @@ export function TodayBoard({
       (a, b) =>
         (ROLE_SORT_ORDER[a.member.role] ?? 9) -
         (ROLE_SORT_ORDER[b.member.role] ?? 9),
-    );
-
-  const hasAnyContent =
-    hasSharedItems ||
-    actorDays.some(
-      ({ cell }) =>
-        (cell.events?.length ?? 0) > 0 ||
-        (cell.tasks?.length ?? 0) > 0 ||
-        (cell.routines?.length ?? 0) > 0,
     );
 
   return (
@@ -163,11 +161,7 @@ export function TodayBoard({
         <p className="today-summary-empty">{t("day.noMembers")}</p>
       )}
 
-      {members.length > 0 && !hasAnyContent && (
-        <p className="today-summary-empty">{t("day.empty")}</p>
-      )}
-
-      {members.length > 0 && hasAnyContent && (
+      {members.length > 0 && (
         <>
           <div className="today-summary-body">
             {actorDays.map(({ member, cell }) => (
@@ -179,10 +173,10 @@ export function TodayBoard({
               />
             ))}
           </div>
-          {hasSharedItems && sharedCell && (
-            <div className="today-household">
-              <div className="today-household-label">{t("day.household")}</div>
-              <div className="today-summary-items">
+          <div className="today-household">
+            <div className="today-household-label">{t("day.household")}</div>
+            {hasSharedItems && sharedCell ? (
+              <div className="today-household-chips">
                 {sharedCell.events?.map((e) =>
                   weeklyGridItemMappers.eventToItem(e, () =>
                     onItemClick("event", e.eventId),
@@ -199,8 +193,10 @@ export function TodayBoard({
                   ),
                 )}
               </div>
-            </div>
-          )}
+            ) : (
+              <span className="today-summary-empty">{t("day.todayEmpty")}</span>
+            )}
+          </div>
         </>
       )}
     </div>

@@ -10,4 +10,5 @@ public sealed record ScheduleEventResponse(
     string? EndTime,
     string Status,
     string Color,
+    Guid? AreaId,
     DateTime CreatedAtUtc);

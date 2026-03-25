@@ -1,3 +1,5 @@
+import { getAreaColor } from "../areas/utils/areaColors";
+
 /**
  * Normalizes any ISO date/datetime string to the YYYY-MM-DD format expected
  * by <input type="date">. Returns "" if the value is empty or time-only.
@@ -24,4 +26,13 @@ export function toLocalTimeInput(value?: string | null): string {
     return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
   }
   return value.slice(0, 5);
+}
+
+/**
+ * Maps an area ID to its user-chosen color (stored in localStorage).
+ * Falls back to the first palette entry if no color has been assigned yet.
+ * Delegates to getAreaColor so that explicit user choices are respected.
+ */
+export function areaColor(areaId: string): string {
+  return getAreaColor(areaId);
 }

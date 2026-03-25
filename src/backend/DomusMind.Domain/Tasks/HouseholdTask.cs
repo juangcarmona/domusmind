@@ -1,5 +1,6 @@
 using DomusMind.Domain.Abstractions;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Shared;
 using DomusMind.Domain.Tasks.Enums;
 using DomusMind.Domain.Tasks.Events;
@@ -16,6 +17,7 @@ public sealed class HouseholdTask : AggregateRoot<TaskId>
     public HexColor Color { get; private set; }
     public HouseholdTaskStatus Status { get; private set; }
     public MemberId? AssigneeId { get; private set; }
+    public ResponsibilityDomainId? AreaId { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
 
     private HouseholdTask(
@@ -25,6 +27,7 @@ public sealed class HouseholdTask : AggregateRoot<TaskId>
         string? description,
         TaskSchedule schedule,
         HexColor color,
+        ResponsibilityDomainId? areaId,
         DateTime createdAtUtc)
         : base(id)
     {
@@ -33,6 +36,7 @@ public sealed class HouseholdTask : AggregateRoot<TaskId>
         Description = description;
         Schedule = schedule;
         Color = color;
+        AreaId = areaId;
         Status = HouseholdTaskStatus.Pending;
         CreatedAtUtc = createdAtUtc;
     }
@@ -44,13 +48,25 @@ public sealed class HouseholdTask : AggregateRoot<TaskId>
         string? description,
         TaskSchedule schedule,
         HexColor color,
-        DateTime createdAtUtc)
+        ResponsibilityDomainId? areaId,
+        DateTime? createdAtUtc = null)
     {
-        var task = new HouseholdTask(id, familyId, title, description, schedule, color, createdAtUtc);
+        var effectiveCreatedAtUtc = createdAtUtc ?? DateTime.UtcNow;
+        var task = new HouseholdTask(id, familyId, title, description, schedule, color, areaId, effectiveCreatedAtUtc);
         task.RaiseDomainEvent(new TaskCreated(
-            Guid.NewGuid(), id.Value, familyId.Value, title.Value, schedule, createdAtUtc));
+            Guid.NewGuid(), id.Value, familyId.Value, title.Value, schedule, effectiveCreatedAtUtc));
         return task;
     }
+
+    public static HouseholdTask Create(
+        TaskId id,
+        FamilyId familyId,
+        TaskTitle title,
+        string? description,
+        TaskSchedule schedule,
+        HexColor color,
+        DateTime? createdAtUtc = null)
+        => Create(id, familyId, title, description, schedule, color, null, createdAtUtc);
 
     public void Repaint(HexColor newColor)
     {

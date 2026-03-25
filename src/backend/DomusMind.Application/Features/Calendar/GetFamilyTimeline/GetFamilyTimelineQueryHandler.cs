@@ -80,6 +80,7 @@ public sealed class GetFamilyTimelineQueryHandler
                     endTime,
                     e.Status.ToString(),
                     e.Color.Value,
+                    e.AreaId?.Value,
                     e.ParticipantIds.Select(p => p.Value).ToList(),
                     participants);
             })

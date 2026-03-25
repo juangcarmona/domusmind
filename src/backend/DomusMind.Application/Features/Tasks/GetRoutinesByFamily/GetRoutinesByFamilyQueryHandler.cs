@@ -57,6 +57,7 @@ public sealed class GetRoutinesByFamilyQueryHandler
                 r.Schedule.Time,
                 r.TargetMemberIds.Select(x => x.Value).ToArray(),
                 r.Status.ToString(),
+                r.AreaId?.Value,
                 r.CreatedAtUtc))
             .ToList();
 

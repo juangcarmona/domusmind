@@ -3,6 +3,7 @@ using DomusMind.Application.Features.Responsibilities.TransferResponsibility;
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Responsibilities.ValueObjects;
+using DomusMind.Domain.Shared;
 using DomusMind.Infrastructure.Events;
 using DomusMind.Infrastructure.Persistence;
 using FluentAssertions;
@@ -29,6 +30,7 @@ public sealed class TransferResponsibilityCommandHandlerTests
             ResponsibilityDomainId.New(),
             FamilyId.New(),
             ResponsibilityAreaName.Create("Education"),
+            HexColor.From("#6A4C93"),
             DateTime.UtcNow);
         db.Set<ResponsibilityDomain>().Add(domain);
         await db.SaveChangesAsync();

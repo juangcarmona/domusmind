@@ -11,4 +11,5 @@ public sealed record CreateRoutineRequest(
     IReadOnlyCollection<int> DaysOfMonth,
     int? MonthOfYear,
     TimeOnly? Time,
-    IReadOnlyCollection<Guid> TargetMemberIds);
+    IReadOnlyCollection<Guid> TargetMemberIds,
+    Guid? AreaId);

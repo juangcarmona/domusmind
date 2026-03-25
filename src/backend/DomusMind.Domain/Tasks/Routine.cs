@@ -1,5 +1,6 @@
 using DomusMind.Domain.Abstractions;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Shared;
 using DomusMind.Domain.Tasks.Enums;
 using DomusMind.Domain.Tasks.Events;
@@ -18,6 +19,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
     public HexColor Color { get; private set; }
     public RoutineSchedule Schedule { get; private set; }
     public RoutineStatus Status { get; private set; }
+    public ResponsibilityDomainId? AreaId { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
 
     public IReadOnlyCollection<MemberId> TargetMemberIds =>
@@ -31,6 +33,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
         RoutineKind kind,
         HexColor color,
         RoutineSchedule schedule,
+        ResponsibilityDomainId? areaId,
         IEnumerable<MemberId> targetMembers,
         DateTime createdAtUtc)
         : base(id)
@@ -41,6 +44,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
         Kind = kind;
         Color = color;
         Schedule = schedule;
+        AreaId = areaId;
         Status = RoutineStatus.Active;
         CreatedAtUtc = createdAtUtc;
 
@@ -55,9 +59,11 @@ public sealed class Routine : AggregateRoot<RoutineId>
         RoutineKind kind,
         HexColor color,
         RoutineSchedule schedule,
+        ResponsibilityDomainId? areaId,
         IEnumerable<MemberId>? targetMembers,
-        DateTime createdAtUtc)
+        DateTime? createdAtUtc = null)
     {
+        var effectiveCreatedAtUtc = createdAtUtc ?? DateTime.UtcNow;
         var members = targetMembers?.Distinct().ToList() ?? [];
 
         ValidateScope(scope, members);
@@ -70,8 +76,9 @@ public sealed class Routine : AggregateRoot<RoutineId>
             kind,
             color,
             schedule,
+            areaId,
             members,
-            createdAtUtc);
+            effectiveCreatedAtUtc);
 
         routine.RaiseDomainEvent(new RoutineCreated(
             Guid.NewGuid(),
@@ -81,10 +88,22 @@ public sealed class Routine : AggregateRoot<RoutineId>
             scope.ToString(),
             kind.ToString(),
             color.Value,
-            createdAtUtc));
+            effectiveCreatedAtUtc));
 
         return routine;
     }
+
+    public static Routine Create(
+        RoutineId id,
+        FamilyId familyId,
+        RoutineName name,
+        RoutineScope scope,
+        RoutineKind kind,
+        HexColor color,
+        RoutineSchedule schedule,
+        IEnumerable<MemberId>? targetMembers,
+        DateTime? createdAtUtc = null)
+        => Create(id, familyId, name, scope, kind, color, schedule, null, targetMembers, createdAtUtc);
 
     public void Update(
         RoutineName newName,
@@ -92,7 +111,8 @@ public sealed class Routine : AggregateRoot<RoutineId>
         RoutineKind newKind,
         HexColor newColor,
         RoutineSchedule newSchedule,
-        IEnumerable<MemberId>? targetMembers)
+        ResponsibilityDomainId? newAreaId,
+        IEnumerable<MemberId>? targetMembers = null)
     {
         var members = targetMembers?.Distinct().ToList() ?? [];
 
@@ -103,6 +123,7 @@ public sealed class Routine : AggregateRoot<RoutineId>
         Kind = newKind;
         Color = newColor;
         Schedule = newSchedule;
+        AreaId = newAreaId;
 
         ReplaceTargetMembers(members);
 
@@ -115,6 +136,15 @@ public sealed class Routine : AggregateRoot<RoutineId>
             newColor.Value,
             DateTime.UtcNow));
     }
+
+    public void Update(
+        RoutineName newName,
+        RoutineScope newScope,
+        RoutineKind newKind,
+        HexColor newColor,
+        RoutineSchedule newSchedule,
+        IEnumerable<MemberId>? targetMembers)
+        => Update(newName, newScope, newKind, newColor, newSchedule, null, targetMembers);
 
     public void Pause()
     {

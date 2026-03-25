@@ -4,6 +4,8 @@ The Household Timeline is the primary interface of DomusMind.
 
 It represents the **current operational state of the household across time**.
 
+It is the primary operational surface for the product, including the Today and Home experience.
+
 Instead of separate systems for calendars, tasks, reminders, and responsibilities, DomusMind converges household activity into one continuous timeline. 
 
 The timeline answers one question:
@@ -35,6 +37,8 @@ Examples include:
 * reminders
 
 Users should never need to open separate tools to understand what is happening.
+
+Planning remains the write-heavy management surface where households organize future work, but the timeline remains the place where the current household state becomes immediately legible.
 
 ---
 
@@ -133,6 +137,8 @@ The system should immediately answer:
 * who is responsible
 * what needs attention
 
+If a plan or task is associated with an Area, that accountability context may be shown here. Area assignment remains optional.
+
 ---
 
 # Upcoming Days
@@ -164,6 +170,8 @@ Anyone can quickly see:
 * who is responsible for what
 * what requires attention
 * what is coming soon
+
+Areas support this shared awareness, but they are not the primary screen. They provide lightweight household structure rather than a separate dashboard or reporting module.
 
 This replaces informal coordination mechanisms such as:
 
@@ -210,6 +218,8 @@ Responsibility trackers
 Each system requires separate attention.
 
 The timeline unifies them into **one continuous household flow**.
+
+Even when Areas are used sparsely, the timeline should still provide a complete operational picture in V1.
 
 ---
 

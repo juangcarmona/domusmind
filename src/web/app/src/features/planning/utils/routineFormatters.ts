@@ -1,0 +1,43 @@
+import type { RoutineListItem } from "../../../api/domusmindApi";
+import type { TFunction } from "i18next";
+
+const DAY_KEYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
+
+/**
+ * Returns a human-readable day-of-week / day-of-month string for a routine.
+ * Requires a `t` function from the `routines` i18n namespace.
+ */
+export function formatRoutineDays(
+  routine: RoutineListItem,
+  t: TFunction<"routines">,
+): string {
+  if (routine.frequency === "Weekly" && routine.daysOfWeek.length > 0) {
+    return routine.daysOfWeek
+      .slice()
+      .sort((a, b) => a - b)
+      .map((d) => t(DAY_KEYS[d]))
+      .join(", ");
+  }
+  if (
+    (routine.frequency === "Monthly" || routine.frequency === "Yearly") &&
+    routine.daysOfMonth.length > 0
+  ) {
+    return routine.daysOfMonth.join(", ");
+  }
+  return "";
+}
+
+/**
+ * Returns a display label for who the routine targets.
+ * Requires a `t` function from the `routines` i18n namespace.
+ */
+export function formatRoutineAssigned(
+  routine: RoutineListItem,
+  memberMap: Record<string, string>,
+  t: TFunction<"routines">,
+): string {
+  if (routine.scope === "Members" && routine.targetMemberIds.length > 0) {
+    return routine.targetMemberIds.map((id) => memberMap[id] ?? id).join(", ");
+  }
+  return t("scopeHousehold");
+}

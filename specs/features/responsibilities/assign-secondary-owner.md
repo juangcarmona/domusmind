@@ -4,7 +4,9 @@
 
 Assign a secondary owner to a responsibility domain.
 
-A secondary owner provides backup or shared accountability for the domain. :contentReference[oaicite:0]{index=0}
+A secondary owner provides backup or shared accountability for the domain.
+
+In product surfaces, this role may be labeled Support for the corresponding Area.
 
 ## Context
 
@@ -37,6 +39,8 @@ On success, the member is added to the secondary owner set.
 
 The primary owner remains unchanged.
 
+This assignment extends accountability coverage. It does not imply execution responsibility for every related plan or task.
+
 ## Invariants
 
 - secondary owners must be unique within the domain
@@ -66,3 +70,5 @@ Return:
 ## Notes
 
 Secondary owners support redundancy and reduce concentration of mental load.
+
+UI wording should preserve the domain distinction: Support is a product label for `SecondaryOwner`.

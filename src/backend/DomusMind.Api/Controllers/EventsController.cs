@@ -55,6 +55,7 @@ public sealed class EventsController : ControllerBase
                     request.Description,
                     request.Color,
                     request.ParticipantMemberIds,
+                    request.AreaId,
                     _currentUser.UserId!.Value),
                 cancellationToken);
 

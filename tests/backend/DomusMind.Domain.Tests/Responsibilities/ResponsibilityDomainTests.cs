@@ -2,18 +2,21 @@ using DomusMind.Domain.Family;
 using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Responsibilities.Events;
 using DomusMind.Domain.Responsibilities.ValueObjects;
+using DomusMind.Domain.Shared;
 using FluentAssertions;
 
 namespace DomusMind.Domain.Tests.Responsibilities;
 
 public sealed class ResponsibilityDomainTests
 {
+    private static readonly HexColor DefaultColor = HexColor.From("#6A4C93");
+
     private static ResponsibilityDomain BuildDomain(string name = "Finances")
     {
         var id = ResponsibilityDomainId.New();
         var familyId = FamilyId.New();
         var areaName = ResponsibilityAreaName.Create(name);
-        return Domain.Responsibilities.ResponsibilityDomain.Create(id, familyId, areaName, DateTime.UtcNow);
+        return Domain.Responsibilities.ResponsibilityDomain.Create(id, familyId, areaName, DefaultColor, DateTime.UtcNow);
     }
 
     // ── ResponsibilityDomain.Create ────────────────────────────────────────────
@@ -67,7 +70,7 @@ public sealed class ResponsibilityDomainTests
         var id = ResponsibilityDomainId.New();
         var familyId = FamilyId.New();
         var domain = Domain.Responsibilities.ResponsibilityDomain.Create(
-            id, familyId, ResponsibilityAreaName.Create("Pets"), DateTime.UtcNow);
+            id, familyId, ResponsibilityAreaName.Create("Pets"), DefaultColor, DateTime.UtcNow);
 
         var evt = domain.DomainEvents.OfType<ResponsibilityDomainCreated>().Single();
         evt.ResponsibilityDomainId.Should().Be(id.Value);
@@ -252,5 +255,74 @@ public sealed class ResponsibilityDomainTests
 
         var evt = domain.DomainEvents.OfType<ResponsibilityTransferred>().Single();
         evt.PreviousPrimaryOwnerId.Should().BeNull();
+    }
+
+    // ── RemoveSecondaryOwner ───────────────────────────────────────────────────
+
+    [Fact]
+    public void RemoveSecondaryOwner_RemovesMemberFromSecondaryOwners()
+    {
+        var domain = BuildDomain();
+        var supporter = MemberId.New();
+        domain.AssignSecondaryOwner(supporter);
+
+        domain.RemoveSecondaryOwner(supporter);
+
+        domain.SecondaryOwnerIds.Should().NotContain(supporter);
+    }
+
+    [Fact]
+    public void RemoveSecondaryOwner_MemberNotPresent_DoesNotThrow()
+    {
+        var domain = BuildDomain();
+        var unknownMember = MemberId.New();
+
+        var act = () => domain.RemoveSecondaryOwner(unknownMember);
+
+        act.Should().NotThrow();
+    }
+
+    [Fact]
+    public void RemoveSecondaryOwner_LeavesOtherSupportersIntact()
+    {
+        var domain = BuildDomain();
+        var supporter1 = MemberId.New();
+        var supporter2 = MemberId.New();
+        domain.AssignSecondaryOwner(supporter1);
+        domain.AssignSecondaryOwner(supporter2);
+
+        domain.RemoveSecondaryOwner(supporter1);
+
+        domain.SecondaryOwnerIds.Should().ContainSingle().Which.Should().Be(supporter2);
+    }
+
+    // ── Auto-remove from secondary when becoming primary ───────────────────────
+
+    [Fact]
+    public void AssignPrimaryOwner_WhenMemberIsAlsoSecondaryOwner_RemovesFromSecondaryOwners()
+    {
+        var domain = BuildDomain();
+        var member = MemberId.New();
+        domain.AssignSecondaryOwner(member);
+
+        domain.AssignPrimaryOwner(member);
+
+        domain.SecondaryOwnerIds.Should().NotContain(member);
+        domain.PrimaryOwnerId.Should().Be(member);
+    }
+
+    [Fact]
+    public void TransferPrimaryOwner_WhenNewOwnerIsAlsoSecondaryOwner_RemovesFromSecondaryOwners()
+    {
+        var domain = BuildDomain();
+        var existingOwner = MemberId.New();
+        var promotedSupporter = MemberId.New();
+        domain.AssignPrimaryOwner(existingOwner);
+        domain.AssignSecondaryOwner(promotedSupporter);
+
+        domain.TransferPrimaryOwner(promotedSupporter);
+
+        domain.SecondaryOwnerIds.Should().NotContain(promotedSupporter);
+        domain.PrimaryOwnerId.Should().Be(promotedSupporter);
     }
 }

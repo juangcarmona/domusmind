@@ -16,6 +16,7 @@ export interface EnrichedTimelineEntry {
   assigneeId: string | null;
   participants: ParticipantProjection[] | null;
   color: string;
+  areaId?: string | null;
 }
 
 export interface TimelineGroup {
@@ -38,6 +39,7 @@ export interface ScheduleEventRequest {
   description?: string;
   color?: string;
   participantMemberIds?: string[];
+  areaId?: string | null;
 }
 
 export interface ScheduleEventResponse {
@@ -50,6 +52,7 @@ export interface ScheduleEventResponse {
   endTime: string | null;
   status: string;
   color: string;
+  areaId: string | null;
   createdAtUtc: string;
 }
 
@@ -60,6 +63,7 @@ export interface FamilyTimelineEventItem {
   endTime: string | null;
   status: string;
   color: string;
+  areaId: string | null;
   participantMemberIds: string[];
   participants: ParticipantProjection[];
   date?: string;
@@ -96,6 +100,7 @@ export interface RoutineListItem {
   time: string | null;
   targetMemberIds: string[];
   status: string;
+  areaId: string | null;
   createdAtUtc: string;
 }
 
@@ -115,6 +120,7 @@ export interface CreateRoutineRequest {
   monthOfYear?: number | null;
   time?: string | null;
   targetMemberIds: string[];
+  areaId?: string | null;
 }
 
 export interface UpdateRoutineRequest {
@@ -128,4 +134,5 @@ export interface UpdateRoutineRequest {
   monthOfYear?: number | null;
   time?: string | null;
   targetMemberIds: string[];
+  areaId?: string | null;
 }

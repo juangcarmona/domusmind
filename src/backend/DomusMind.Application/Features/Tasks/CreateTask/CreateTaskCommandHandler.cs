@@ -4,6 +4,7 @@ using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Temporal;
 using DomusMind.Contracts.Tasks;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Shared;
 using DomusMind.Domain.Tasks;
 using DomusMind.Domain.Tasks.ValueObjects;
@@ -64,8 +65,11 @@ public sealed class CreateTaskCommandHandler
         var familyId = FamilyId.From(command.FamilyId);
         var title = TaskTitle.Create(command.Title);
         var now = DateTime.UtcNow;
+        var areaId = command.AreaId.HasValue
+            ? ResponsibilityDomainId.From(command.AreaId.Value)
+            : (ResponsibilityDomainId?)null;
 
-        var task = HouseholdTask.Create(id, familyId, title, command.Description, schedule, taskColor, now);
+        var task = HouseholdTask.Create(id, familyId, title, command.Description, schedule, taskColor, areaId, now);
         _dbContext.Set<HouseholdTask>().Add(task);
 
         await _eventLogWriter.WriteAsync(task.DomainEvents, cancellationToken);
@@ -76,6 +80,6 @@ public sealed class CreateTaskCommandHandler
         return new CreateTaskResponse(
             id.Value, familyId.Value, title.Value,
             command.Description, dueDate, dueTime,
-            task.Status.ToString(), taskColor.Value, now);
+            task.Status.ToString(), taskColor.Value, areaId?.Value, now);
     }
 }

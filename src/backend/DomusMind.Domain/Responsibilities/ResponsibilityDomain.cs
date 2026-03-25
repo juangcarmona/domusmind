@@ -1,5 +1,6 @@
 using DomusMind.Domain.Abstractions;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Shared;
 using DomusMind.Domain.Responsibilities.Events;
 using DomusMind.Domain.Responsibilities.ValueObjects;
 
@@ -11,6 +12,7 @@ public sealed class ResponsibilityDomain : AggregateRoot<ResponsibilityDomainId>
 
     public FamilyId FamilyId { get; private set; }
     public ResponsibilityAreaName Name { get; private set; }
+    public HexColor Color { get; private set; }
     public MemberId? PrimaryOwnerId { get; private set; }
     public IReadOnlyCollection<MemberId> SecondaryOwnerIds => _secondaryOwnerIds.AsReadOnly();
     public DateTime CreatedAtUtc { get; private set; }
@@ -19,11 +21,13 @@ public sealed class ResponsibilityDomain : AggregateRoot<ResponsibilityDomainId>
         ResponsibilityDomainId id,
         FamilyId familyId,
         ResponsibilityAreaName name,
+        HexColor color,
         DateTime createdAtUtc)
         : base(id)
     {
         FamilyId = familyId;
         Name = name;
+        Color = color;
         CreatedAtUtc = createdAtUtc;
     }
 
@@ -31,9 +35,10 @@ public sealed class ResponsibilityDomain : AggregateRoot<ResponsibilityDomainId>
         ResponsibilityDomainId id,
         FamilyId familyId,
         ResponsibilityAreaName name,
+        HexColor color,
         DateTime createdAtUtc)
     {
-        var domain = new ResponsibilityDomain(id, familyId, name, createdAtUtc);
+        var domain = new ResponsibilityDomain(id, familyId, name, color, createdAtUtc);
         domain.RaiseDomainEvent(new ResponsibilityDomainCreated(
             Guid.NewGuid(), id.Value, familyId.Value, createdAtUtc));
         return domain;
@@ -41,6 +46,7 @@ public sealed class ResponsibilityDomain : AggregateRoot<ResponsibilityDomainId>
 
     public void AssignPrimaryOwner(MemberId memberId)
     {
+        _secondaryOwnerIds.Remove(memberId);
         PrimaryOwnerId = memberId;
         RaiseDomainEvent(new PrimaryOwnerAssigned(
             Guid.NewGuid(), Id.Value, memberId.Value, DateTime.UtcNow));
@@ -57,12 +63,28 @@ public sealed class ResponsibilityDomain : AggregateRoot<ResponsibilityDomainId>
             Guid.NewGuid(), Id.Value, memberId.Value, DateTime.UtcNow));
     }
 
+    public void RemoveSecondaryOwner(MemberId memberId)
+    {
+        _secondaryOwnerIds.Remove(memberId);
+    }
+
     public void TransferPrimaryOwner(MemberId newOwnerId)
     {
+        _secondaryOwnerIds.Remove(newOwnerId);
         var previousOwnerId = PrimaryOwnerId;
         PrimaryOwnerId = newOwnerId;
         RaiseDomainEvent(new ResponsibilityTransferred(
             Guid.NewGuid(), Id.Value, previousOwnerId?.Value, newOwnerId.Value, DateTime.UtcNow));
+    }
+
+    public void Rename(ResponsibilityAreaName newName)
+    {
+        Name = newName;
+    }
+
+    public void Repaint(HexColor newColor)
+    {
+        Color = newColor;
     }
 
 #pragma warning disable CS8618

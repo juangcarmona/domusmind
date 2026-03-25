@@ -4,7 +4,9 @@
 
 Transfer primary ownership of a responsibility domain to another member.
 
-This operation makes accountability changes explicit and traceable. :contentReference[oaicite:1]{index=1}
+This operation makes accountability changes explicit and traceable.
+
+In product surfaces, this may appear as transferring Area ownership, while the domain command remains `TransferResponsibility`.
 
 ## Context
 
@@ -37,6 +39,8 @@ On success, the previous primary owner is replaced by the new one.
 
 The domain remains active and owned.
 
+The transfer updates accountability for the domain. It does not directly reassign execution of existing plans or tasks.
+
 ## Invariants
 
 - a domain may have only one primary owner
@@ -66,3 +70,5 @@ Return:
 ## Notes
 
 Transfer is explicit domain behavior, not an implicit overwrite.
+
+This keeps accountability changes auditable while allowing product surfaces to use simpler household language around Areas and Owners.

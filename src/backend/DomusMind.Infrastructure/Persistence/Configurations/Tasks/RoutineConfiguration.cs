@@ -1,4 +1,5 @@
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -121,6 +122,12 @@ public sealed class RoutineConfiguration : IEntityTypeConfiguration<Routine>
 
         builder.Ignore(r => r.TargetMemberIds);
         builder.Ignore(r => r.DomainEvents);
+
+        builder.Property(r => r.AreaId)
+            .HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? ResponsibilityDomainId.From(value.Value) : (ResponsibilityDomainId?)null)
+            .HasColumnName("area_id");
 
         builder.HasIndex(r => r.FamilyId);
         builder.HasIndex(r => new { r.FamilyId, r.Status });

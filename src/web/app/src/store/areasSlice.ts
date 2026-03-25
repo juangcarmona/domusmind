@@ -30,6 +30,22 @@ export const fetchAreas = createAsyncThunk(
   },
 );
 
+export const updateAreaColor = createAsyncThunk(
+  "areas/updateColor",
+  async (
+    { areaId, color }: { areaId: string; color: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await domusmindApi.updateAreaColor(areaId, { color });
+      return { areaId: res.responsibilityDomainId, color: res.color };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to update area color",
+      );
+    }
+  },
+);
 export const createArea = createAsyncThunk(
   "areas/create",
   async (
@@ -41,6 +57,7 @@ export const createArea = createAsyncThunk(
       return {
         areaId: res.responsibilityDomainId,
         name: res.name,
+        color: res.color,
         primaryOwnerId: null,
         primaryOwnerName: null,
         secondaryOwnerIds: [],
@@ -71,6 +88,42 @@ export const assignPrimaryOwner = createAsyncThunk(
   },
 );
 
+export const assignSecondaryOwner = createAsyncThunk(
+  "areas/assignSecondary",
+  async (
+    { areaId, memberId, familyId }: { areaId: string; memberId: string; familyId: string },
+    { rejectWithValue, dispatch },
+  ) => {
+    try {
+      await domusmindApi.assignSecondaryOwner(areaId, { memberId });
+      dispatch(fetchAreas(familyId));
+      return { areaId, memberId };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to assign supporter",
+      );
+    }
+  },
+);
+
+export const removeSecondaryOwner = createAsyncThunk(
+  "areas/removeSecondary",
+  async (
+    { areaId, memberId, familyId }: { areaId: string; memberId: string; familyId: string },
+    { rejectWithValue, dispatch },
+  ) => {
+    try {
+      await domusmindApi.removeSecondaryOwner(areaId, memberId);
+      dispatch(fetchAreas(familyId));
+      return { areaId, memberId };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to remove supporter",
+      );
+    }
+  },
+);
+
 export const transferArea = createAsyncThunk(
   "areas/transfer",
   async (
@@ -88,6 +141,23 @@ export const transferArea = createAsyncThunk(
     } catch (err: unknown) {
       return rejectWithValue(
         (err as { message?: string }).message ?? "Failed to transfer area",
+      );
+    }
+  },
+);
+
+export const renameArea = createAsyncThunk(
+  "areas/rename",
+  async (
+    { areaId, name }: { areaId: string; name: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await domusmindApi.renameArea(areaId, { name });
+      return { areaId: res.responsibilityDomainId, name: res.name };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to rename area",
       );
     }
   },
@@ -113,6 +183,16 @@ const areasSlice = createSlice({
       })
       .addCase(createArea.fulfilled, (state, action) => {
         state.items.push(action.payload);
+      })
+      .addCase(renameArea.fulfilled, (state, action) => {
+        const { areaId, name } = action.payload;
+        const item = state.items.find((a) => a.areaId === areaId);
+        if (item) item.name = name;
+      })
+      .addCase(updateAreaColor.fulfilled, (state, action) => {
+        const { areaId, color } = action.payload;
+        const item = state.items.find((a) => a.areaId === areaId);
+        if (item) item.color = color;
       });
   },
 });

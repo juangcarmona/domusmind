@@ -123,7 +123,22 @@ public sealed class GetWeeklyGridQueryHandler
                     })
                     .ToList();
 
-                return new WeeklyGridCell(day.ToString("yyyy-MM-dd"), sharedEvents, [], dayRoutines);
+                var unassignedTasks = tasks
+                    .Where(t => t.AssigneeId == null && t.Schedule.Date == day)
+                    .Select(t =>
+                    {
+                        var (dueDate, dueTime) = TemporalParser.FormatTaskSchedule(t.Schedule);
+                        return new WeeklyGridTaskItem(
+                            t.Id.Value,
+                            t.Title.Value,
+                            dueDate,
+                            dueTime,
+                            t.Status.ToString(),
+                            t.Color.Value);
+                    })
+                    .ToList();
+
+                return new WeeklyGridCell(day.ToString("yyyy-MM-dd"), sharedEvents, unassignedTasks, dayRoutines);
             })
             .ToList();
 

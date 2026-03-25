@@ -32,6 +32,7 @@ function SharedRow({
           key={cell.date}
           cell={cell}
           isToday={cell.date.slice(0, 10) === today}
+          compact
           onItemClick={onItemClick}
         />
       ))}
@@ -75,14 +76,14 @@ export function WeeklyGrid({
     let count = 0;
     if (shared) {
       count += (shared.events?.length ?? 0)
-        + (shared.tasks?.filter((t) => t.status === "Active").length ?? 0)
+        + (shared.tasks?.length ?? 0)
         + (shared.routines?.length ?? 0);
     }
     for (const member of members) {
       const cell = (member.cells ?? []).find((c) => c.date.slice(0, 10) === day);
       if (cell) {
         count += (cell.events?.length ?? 0)
-          + (cell.tasks?.filter((t) => t.status === "Active").length ?? 0)
+          + (cell.tasks?.length ?? 0)
           + (cell.routines?.length ?? 0);
       }
     }
