@@ -143,6 +143,17 @@ public sealed class SharedList : AggregateRoot<SharedListId>
         RaiseDomainEvent(new SharedListUnlinked(Guid.NewGuid(), Id.Value, now));
     }
 
+    public void Rename(SharedListName newName, DateTime now)
+    {
+        Name = newName;
+        RaiseDomainEvent(new SharedListRenamed(Guid.NewGuid(), Id.Value, newName.Value, now));
+    }
+
+    public void Delete(DateTime now)
+    {
+        RaiseDomainEvent(new SharedListDeleted(Guid.NewGuid(), Id.Value, now));
+    }
+
     /// <summary>Count of items that are not yet checked.</summary>
     public int UncheckedCount => _items.Count(i => !i.Checked);
 }

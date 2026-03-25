@@ -12,6 +12,8 @@ using DomusMind.Application.Features.SharedLists.LinkSharedList;
 using DomusMind.Application.Features.SharedLists.UnlinkSharedList;
 using DomusMind.Application.Features.SharedLists.CreateLinkedSharedListForEvent;
 using DomusMind.Application.Features.SharedLists.GetSharedListByLinkedEntity;
+using DomusMind.Application.Features.SharedLists.RenameSharedList;
+using DomusMind.Application.Features.SharedLists.DeleteSharedList;
 using DomusMind.Contracts.SharedLists;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -267,6 +269,48 @@ public sealed class SharedListsController : ControllerBase
                 new GetSharedListByLinkedEntityQuery(entityType, entityId, _currentUser.UserId!.Value),
                 cancellationToken);
             return Ok(response);
+        }
+        catch (SharedListException ex) { return MapException(ex); }
+    }
+
+    /// <summary>Renames a shared list.</summary>
+    [HttpPatch("{listId:guid}/name")]
+    [ProducesResponseType(typeof(RenameSharedListResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> RenameSharedList(
+        Guid listId,
+        [FromBody] RenameSharedListRequest request,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new RenameSharedListCommand(listId, request.Name, _currentUser.UserId!.Value),
+                cancellationToken);
+            return Ok(response);
+        }
+        catch (SharedListException ex) { return MapException(ex); }
+    }
+
+    /// <summary>Deletes a shared list and all its items.</summary>
+    [HttpDelete("{listId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> DeleteSharedList(
+        Guid listId,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await dispatcher.Dispatch(
+                new DeleteSharedListCommand(listId, _currentUser.UserId!.Value),
+                cancellationToken);
+            return NoContent();
         }
         catch (SharedListException ex) { return MapException(ex); }
     }

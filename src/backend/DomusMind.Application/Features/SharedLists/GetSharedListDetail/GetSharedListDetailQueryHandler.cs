@@ -2,6 +2,7 @@ using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Persistence;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Contracts.SharedLists;
+using DomusMind.Domain.Calendar;
 using DomusMind.Domain.SharedLists;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,6 +55,16 @@ public sealed class GetSharedListDetailQueryHandler
                 i.UpdatedByMemberId?.Value))
             .ToList();
 
+        string? linkedEntityDisplayName = null;
+        if (list.LinkedEntityType == "CalendarEvent" && list.LinkedEntityId.HasValue)
+        {
+            var eventId = CalendarEventId.From(list.LinkedEntityId.Value);
+            var calendarEvent = await _dbContext.Set<CalendarEvent>()
+                .AsNoTracking()
+                .SingleOrDefaultAsync(e => e.Id == eventId, cancellationToken);
+            linkedEntityDisplayName = calendarEvent?.Title.Value;
+        }
+
         return new GetSharedListDetailResponse(
             list.Id.Value,
             list.Name.Value,
@@ -61,6 +72,7 @@ public sealed class GetSharedListDetailQueryHandler
             list.AreaId?.Value,
             list.LinkedEntityType,
             list.LinkedEntityId,
+            linkedEntityDisplayName,
             items);
     }
 }

@@ -12,8 +12,11 @@ import {
   optimisticRenameItem,
   optimisticRemoveItem,
   clearDetail,
+  renameSharedList,
+  deleteSharedList,
 } from "../../../store/sharedListsSlice";
 import type { SharedListItemDetail } from "../../../api/types/sharedListTypes";
+import { EditEntityModal } from "../../editors/components/EditEntityModal";
 
 // ── Item row ──────────────────────────────────────────────────────────────────
 
@@ -131,6 +134,10 @@ export function SharedListDetailPage() {
   const addInputRef = useRef<HTMLInputElement>(null);
   const [addItemName, setAddItemName] = useState("");
   const [addError, setAddError] = useState<string | null>(null);
+  const [renameDraft, setRenameDraft] = useState<string | null>(null);
+  const [renameError, setRenameError] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [showLinkedEvent, setShowLinkedEvent] = useState(false);
 
   useEffect(() => {
     if (listId) {
@@ -147,6 +154,34 @@ export function SharedListDetailPage() {
       addInputRef.current?.focus();
     }
   }, [detailStatus]);
+
+  async function handleRenameCommit() {
+    const trimmed = (renameDraft ?? "").trim();
+    if (!trimmed || !listId || trimmed === detail?.name) {
+      setRenameDraft(null);
+      return;
+    }
+    setRenameError(null);
+    const result = await dispatch(renameSharedList({ listId, name: trimmed }));
+    if (renameSharedList.fulfilled.match(result)) {
+      setRenameDraft(null);
+    } else {
+      setRenameError((result.payload as string) ?? t("renameError"));
+    }
+  }
+
+  async function handleDelete() {
+    if (!detail || !listId) return;
+    const confirmed = window.confirm(t("deleteConfirm", { name: detail.name }));
+    if (!confirmed) return;
+    setDeleting(true);
+    const result = await dispatch(deleteSharedList(listId));
+    if (deleteSharedList.fulfilled.match(result)) {
+      navigate("/lists");
+    } else {
+      setDeleting(false);
+    }
+  }
 
   async function handleAddKey(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key !== "Enter") return;
@@ -194,8 +229,55 @@ export function SharedListDetailPage() {
           >
             ← {t("backToLists")}
           </button>
-          <h1 style={{ marginTop: "0.5rem" }}>{detail.name}</h1>
+
+          {renameDraft !== null ? (
+            <input
+              className="shared-list-rename-input"
+              value={renameDraft}
+              onChange={(e) => setRenameDraft(e.target.value)}
+              onBlur={handleRenameCommit}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") { e.preventDefault(); handleRenameCommit(); }
+                else if (e.key === "Escape") { e.preventDefault(); setRenameDraft(null); }
+              }}
+              autoFocus
+              aria-label={t("renameList")}
+              style={{ marginTop: "0.5rem" }}
+            />
+          ) : (
+            <h1
+              style={{ marginTop: "0.5rem", cursor: "text" }}
+              title={t("renameList")}
+              onClick={() => setRenameDraft(detail.name)}
+            >
+              {detail.name}
+            </h1>
+          )}
+
+          {renameError && <p className="error-msg">{renameError}</p>}
+
+          {detail.linkedEntityDisplayName && (
+            <div className="shared-list-linked-info">
+              {t("linkedTo", { name: detail.linkedEntityDisplayName })}
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => setShowLinkedEvent(true)}
+              >
+                {t("goToLinkedEvent")}
+              </button>
+            </div>
+          )}
         </div>
+
+        <button
+          type="button"
+          className="btn btn-sm btn-danger"
+          onClick={handleDelete}
+          disabled={deleting}
+        >
+          {deleting ? t("deletingList") : t("deleteList")}
+        </button>
       </div>
 
       <div className="shared-list-items-wrap">
@@ -231,6 +313,14 @@ export function SharedListDetailPage() {
       </div>
 
       {addError && <p className="error-msg" style={{ marginTop: "0.5rem" }}>{addError}</p>}
+
+      {showLinkedEvent && detail.linkedEntityId && (
+        <EditEntityModal
+          type="event"
+          id={detail.linkedEntityId}
+          onClose={() => setShowLinkedEvent(false)}
+        />
+      )}
     </div>
   );
 }

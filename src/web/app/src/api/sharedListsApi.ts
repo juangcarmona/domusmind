@@ -14,6 +14,8 @@ import type {
   LinkSharedListResponse,
   CreateLinkedSharedListForEventRequest,
   GetSharedListByLinkedEntityResponse,
+  RenameSharedListRequest,
+  RenameSharedListResponse,
 } from "./types/sharedListTypes";
 
 export const sharedListsApi = {
@@ -73,4 +75,13 @@ export const sharedListsApi = {
     request<GetSharedListByLinkedEntityResponse>(
       `/api/shared-lists/by-entity/${entityType}/${entityId}`,
     ),
+
+  renameSharedList: (listId: string, body: RenameSharedListRequest) =>
+    request<RenameSharedListResponse>(`/api/shared-lists/${listId}/name`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }),
+
+  deleteSharedList: (listId: string) =>
+    request<void>(`/api/shared-lists/${listId}`, { method: "DELETE" }),
 };

@@ -528,4 +528,58 @@ public sealed class SharedListTests
             .Which.Should().BeOfType<SharedListUnlinked>()
             .Which.SharedListId.Should().Be(list.Id.Value);
     }
+
+    // ── Rename ──────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Rename_UpdatesName()
+    {
+        var list = BuildList("Old Name");
+        var newName = SharedListName.Create("New Name");
+
+        list.Rename(newName, DateTime.UtcNow);
+
+        list.Name.Value.Should().Be("New Name");
+    }
+
+    [Fact]
+    public void Rename_EmitsSharedListRenamedEvent()
+    {
+        var list = BuildList("Old Name");
+        list.ClearDomainEvents();
+        var newName = SharedListName.Create("New Name");
+
+        list.Rename(newName, DateTime.UtcNow);
+
+        list.DomainEvents.Should().ContainSingle()
+            .Which.Should().BeOfType<SharedListRenamed>()
+            .Which.NewName.Should().Be("New Name");
+    }
+
+    [Fact]
+    public void Rename_SharedListRenamedEvent_HasCorrectListId()
+    {
+        var list = BuildList("Old Name");
+        list.ClearDomainEvents();
+
+        list.Rename(SharedListName.Create("Updated"), DateTime.UtcNow);
+
+        var evt = list.DomainEvents.OfType<SharedListRenamed>().Single();
+        evt.SharedListId.Should().Be(list.Id.Value);
+    }
+
+    // ── Delete ──────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Delete_EmitsSharedListDeletedEvent()
+    {
+        var list = BuildList();
+        list.ClearDomainEvents();
+
+        list.Delete(DateTime.UtcNow);
+
+        list.DomainEvents.Should().ContainSingle()
+            .Which.Should().BeOfType<SharedListDeleted>()
+            .Which.SharedListId.Should().Be(list.Id.Value);
+    }
 }

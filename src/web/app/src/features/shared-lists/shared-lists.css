@@ -12,6 +12,37 @@
   font-weight: 600;
 }
 
+.shared-list-linked-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  color: var(--muted);
+  background: var(--surface-alt, #f3f4f6);
+  border-radius: 999px;
+  padding: 0.1em 0.55em;
+  margin-top: 0.25rem;
+}
+
+.shared-list-linked-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.25rem;
+}
+
+.shared-list-rename-input {
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: none;
+  border-bottom: 2px solid var(--primary);
+  background: transparent;
+  outline: none;
+  width: 100%;
+  padding: 0;
+  color: inherit;
+}
+
 /* ---- Shared List detail page ---- */
 .shared-list-item {
   display: flex;

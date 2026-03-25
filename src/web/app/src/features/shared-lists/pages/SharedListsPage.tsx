@@ -63,6 +63,9 @@ export function SharedListsPage() {
               <div className="item-card-body">
                 <div className="item-card-title">{list.name}</div>
                 <div className="item-card-subtitle">{list.kind}</div>
+                {list.linkedEntityId && (
+                  <span className="shared-list-linked-badge">{t("linkedBadge")}</span>
+                )}
               </div>
               <div className="item-card-actions">
                 <span

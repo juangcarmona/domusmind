@@ -17,4 +17,5 @@ public sealed record GetSharedListDetailResponse(
     Guid? AreaId,
     string? LinkedEntityType,
     Guid? LinkedEntityId,
+    string? LinkedEntityDisplayName,
     IReadOnlyList<SharedListItemDetail> Items);

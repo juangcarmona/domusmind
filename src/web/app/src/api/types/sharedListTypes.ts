@@ -31,6 +31,7 @@ export interface GetSharedListDetailResponse {
   areaId: string | null;
   linkedEntityType: string | null;
   linkedEntityId: string | null;
+  linkedEntityDisplayName: string | null;
   items: SharedListItemDetail[];
 }
 
@@ -118,4 +119,13 @@ export interface GetSharedListByLinkedEntityResponse {
   kind: string;
   itemCount: number;
   uncheckedCount: number;
+}
+
+export interface RenameSharedListRequest {
+  name: string;
+}
+
+export interface RenameSharedListResponse {
+  listId: string;
+  name: string;
 }

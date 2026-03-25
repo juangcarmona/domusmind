@@ -147,6 +147,69 @@ export const removeSharedListItem = createAsyncThunk(
   },
 );
 
+export const renameSharedList = createAsyncThunk(
+  "sharedLists/rename",
+  async (
+    { listId, name }: { listId: string; name: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      return await sharedListsApi.renameSharedList(listId, { name });
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to rename list",
+      );
+    }
+  },
+);
+
+export const deleteSharedList = createAsyncThunk(
+  "sharedLists/delete",
+  async (listId: string, { rejectWithValue }) => {
+    try {
+      await sharedListsApi.deleteSharedList(listId);
+      return listId;
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to delete list",
+      );
+    }
+  },
+);
+
+export const linkSharedListToEvent = createAsyncThunk(
+  "sharedLists/linkToEvent",
+  async (
+    { listId, eventId }: { listId: string; eventId: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      return await sharedListsApi.linkSharedList(listId, {
+        linkedEntityType: "CalendarEvent",
+        linkedEntityId: eventId,
+      });
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to link list",
+      );
+    }
+  },
+);
+
+export const unlinkSharedList = createAsyncThunk(
+  "sharedLists/unlink",
+  async (listId: string, { rejectWithValue }) => {
+    try {
+      await sharedListsApi.unlinkSharedList(listId);
+      return listId;
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to unlink list",
+      );
+    }
+  },
+);
+
 // ── Slice ────────────────────────────────────────────────────────────────────
 
 const sharedListsSlice = createSlice({
@@ -299,6 +362,42 @@ const sharedListsSlice = createSlice({
       // Optimistic remove already applied, update index summary
       const summary = state.lists.find((l) => l.id === action.payload.listId);
       if (summary && summary.itemCount > 0) summary.itemCount -= 1;
+    });
+
+    // renameSharedList — update name in detail and index
+    builder.addCase(renameSharedList.fulfilled, (state, action) => {
+      if (state.detail?.listId === action.payload.listId) {
+        state.detail.name = action.payload.name;
+      }
+      const summary = state.lists.find((l) => l.id === action.payload.listId);
+      if (summary) summary.name = action.payload.name;
+    });
+
+    // deleteSharedList — remove from index, clear detail if open
+    builder.addCase(deleteSharedList.fulfilled, (state, action) => {
+      state.lists = state.lists.filter((l) => l.id !== action.payload);
+      if (state.detail?.listId === action.payload) {
+        state.detail = null;
+        state.detailStatus = "idle";
+      }
+    });
+
+    // linkSharedListToEvent — refresh detail linkage fields in index
+    builder.addCase(linkSharedListToEvent.fulfilled, (state, action) => {
+      const summary = state.lists.find((l) => l.id === action.payload.listId);
+      if (summary) {
+        summary.linkedEntityType = action.payload.linkedEntityType;
+        summary.linkedEntityId = action.payload.linkedEntityId;
+      }
+    });
+
+    // unlinkSharedList — clear linkage in index
+    builder.addCase(unlinkSharedList.fulfilled, (state, action) => {
+      const summary = state.lists.find((l) => l.id === action.payload);
+      if (summary) {
+        summary.linkedEntityType = null;
+        summary.linkedEntityId = null;
+      }
     });
   },
 });
