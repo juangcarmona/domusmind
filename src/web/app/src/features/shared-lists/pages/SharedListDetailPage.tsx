@@ -12,7 +12,18 @@ import {
   deleteSharedList,
 } from "../../../store/sharedListsSlice";
 import { EditEntityModal } from "../../editors/components/EditEntityModal";
+import { SortableItemRow } from "../components/SortableItemRow";
 import { ItemRow } from "../components/ItemRow";
+import {
+  DndContext,
+  closestCenter,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
 
 // ── Page ───────────────────────────────────────────────────────────────────────
 
@@ -91,22 +102,16 @@ export function SharedListDetailPage() {
     addInputRef.current?.focus();
   }
 
-  function handleMoveUp(unchecked: { itemId: string }[], index: number) {
-    if (index === 0 || !listId) return;
-    const newOrder = [...unchecked];
-    [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-    const itemIds = newOrder.map((i) => i.itemId);
-    dispatch(optimisticReorderItems({ itemIds }));
-    dispatch(reorderSharedListItems({ listId, itemIds }));
-  }
-
-  function handleMoveDown(unchecked: { itemId: string }[], index: number) {
-    if (index === unchecked.length - 1 || !listId) return;
-    const newOrder = [...unchecked];
-    [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
-    const itemIds = newOrder.map((i) => i.itemId);
-    dispatch(optimisticReorderItems({ itemIds }));
-    dispatch(reorderSharedListItems({ listId, itemIds }));
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id || !listId) return;
+    const ids = unchecked.map((i) => i.itemId);
+    const oldIndex = ids.indexOf(String(active.id));
+    const newIndex = ids.indexOf(String(over.id));
+    if (oldIndex === -1 || newIndex === -1) return;
+    const reordered = arrayMove(ids, oldIndex, newIndex);
+    dispatch(optimisticReorderItems({ itemIds: reordered }));
+    dispatch(reorderSharedListItems({ listId, itemIds: reordered }));
   }
 
   if (detailStatus === "loading" && !detail) {
@@ -198,17 +203,20 @@ export function SharedListDetailPage() {
       </div>
 
       <div className="shared-list-items-wrap">
-        {unchecked.map((item, index) => (
-          <ItemRow
-            key={item.itemId}
-            item={item}
-            listId={detail.listId}
-            isFirst={index === 0}
-            isLast={index === unchecked.length - 1}
-            onMoveUp={() => handleMoveUp(unchecked, index)}
-            onMoveDown={() => handleMoveDown(unchecked, index)}
-          />
-        ))}
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext
+            items={unchecked.map((i) => i.itemId)}
+            strategy={verticalListSortingStrategy}
+          >
+            {unchecked.map((item) => (
+              <SortableItemRow
+                key={item.itemId}
+                item={item}
+                listId={detail.listId}
+              />
+            ))}
+          </SortableContext>
+        </DndContext>
 
         {sorted.length === 0 && (
           <p className="shared-list-empty-hint">{t("noItems")}</p>

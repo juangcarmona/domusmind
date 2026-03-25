@@ -184,35 +184,33 @@
 /* ---- Item main row: layout wrapper for new ItemRow component ---- */
 /* (styles already defined above in the item block) */
 
-/* Reorder buttons (up/down arrows) */
-.shared-list-item__reorder {
+/* Drag handle for sortable items */
+.shared-list-item__drag-handle {
+  flex-shrink: 0;
   display: none;
-  flex-direction: column;
-  gap: 0;
-}
-
-.shared-list-item:hover .shared-list-item__reorder {
-  display: flex;
-}
-
-.shared-list-item__reorder-btn {
   background: none;
   border: none;
-  cursor: pointer;
+  cursor: grab;
   color: var(--muted);
-  font-size: 0.7rem;
-  padding: 0 0.1rem;
-  line-height: 1;
+  padding: 0.2rem 0.15rem;
   border-radius: var(--radius-sm);
+  line-height: 1;
+  touch-action: none;
+  align-items: center;
 }
 
-.shared-list-item__reorder-btn:hover:not(:disabled) {
-  color: var(--primary);
+.shared-list-item:hover .shared-list-item__drag-handle,
+.shared-list-item--expanded .shared-list-item__drag-handle {
+  display: inline-flex;
 }
 
-.shared-list-item__reorder-btn:disabled {
-  opacity: 0.25;
-  cursor: default;
+.shared-list-item__drag-handle:active {
+  cursor: grabbing;
+}
+
+.shared-list-item__drag-icon {
+  font-size: 0.9rem;
+  opacity: 0.5;
 }
 
 /* Expand/details toggle button */

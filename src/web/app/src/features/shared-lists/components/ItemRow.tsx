@@ -14,13 +14,10 @@ import type { SharedListItemDetail } from "../../../api/types/sharedListTypes";
 interface ItemRowProps {
   item: SharedListItemDetail;
   listId: string;
-  isFirst?: boolean;
-  isLast?: boolean;
-  onMoveUp?: () => void;
-  onMoveDown?: () => void;
+  dragHandleProps?: Record<string, unknown>;
 }
 
-export function ItemRow({ item, listId, isFirst, isLast, onMoveUp, onMoveDown }: ItemRowProps) {
+export function ItemRow({ item, listId, dragHandleProps }: ItemRowProps) {
   const { t } = useTranslation("sharedLists");
   const dispatch = useAppDispatch();
   const [editing, setEditing] = useState(false);
@@ -103,29 +100,17 @@ export function ItemRow({ item, listId, isFirst, isLast, onMoveUp, onMoveDown }:
     >
       {/* Main row */}
       <div className="shared-list-item__main" onClick={handleRowClick}>
-        {!item.checked && (onMoveUp || onMoveDown) && (
-          <div className="shared-list-item__reorder" onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className="shared-list-item__reorder-btn"
-              onClick={onMoveUp}
-              disabled={isFirst}
-              aria-label={t("moveUp")}
-              tabIndex={-1}
-            >
-              ↑
-            </button>
-            <button
-              type="button"
-              className="shared-list-item__reorder-btn"
-              onClick={onMoveDown}
-              disabled={isLast}
-              aria-label={t("moveDown")}
-              tabIndex={-1}
-            >
-              ↓
-            </button>
-          </div>
+        {!item.checked && dragHandleProps && (
+          <button
+            type="button"
+            className="shared-list-item__drag-handle"
+            aria-label={t("dragToReorder")}
+            tabIndex={-1}
+            onClick={(e) => e.stopPropagation()}
+            {...dragHandleProps}
+          >
+            <span className="shared-list-item__drag-icon" aria-hidden="true">⠿</span>
+          </button>
         )}
 
         <input
