@@ -132,7 +132,7 @@ public sealed class GetMemberActivityQueryHandlerTests
 
         var domain = ResponsibilityDomain.Create(
             ResponsibilityDomainId.New(), familyId,
-            ResponsibilityAreaName.Create("Finance"), DateTime.UtcNow);
+            ResponsibilityAreaName.Create("Finance"), HexColor.From("#6A4C93"), DateTime.UtcNow);
         domain.AssignPrimaryOwner(memberId);
         domain.ClearDomainEvents();
         db.Set<ResponsibilityDomain>().Add(domain);

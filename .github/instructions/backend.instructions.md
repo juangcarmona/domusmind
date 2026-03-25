@@ -48,3 +48,11 @@ Split code when it mixes responsibilities.
 - name tests by behavior, not implementation, e.g. `Handle_WhenCondition_ShouldResult`
 - add or update tests when behavior changes
 - use AAA (Arrange-Act-Assert) structure in tests
+
+## Completion gate
+
+Never report a backend task as done without:
+1. Running `dotnet build` and confirming it succeeds (0 errors)
+2. Running `dotnet test` and confirming all tests pass
+3. If existing tests fail due to the change, fix them before proceeding
+4. If new behavior was added, add a test for it

@@ -4,6 +4,7 @@ using DomusMind.Domain.Family;
 using DomusMind.Domain.Family.ValueObjects;
 using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Responsibilities.ValueObjects;
+using DomusMind.Domain.Shared;
 using DomusMind.Infrastructure.Persistence;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +35,7 @@ public sealed class GetHouseholdAreasQueryHandlerTests
     {
         var d = ResponsibilityDomain.Create(
             ResponsibilityDomainId.New(), familyId,
-            ResponsibilityAreaName.Create(name), DateTime.UtcNow);
+            ResponsibilityAreaName.Create(name), HexColor.From("#6A4C93"), DateTime.UtcNow);
         if (owner.HasValue) d.AssignPrimaryOwner(owner.Value);
         d.ClearDomainEvents();
         return d;

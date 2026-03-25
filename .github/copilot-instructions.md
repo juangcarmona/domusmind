@@ -47,7 +47,12 @@ Do not reorganize structure unless explicitly required.
 
 ## Validation
 
-Before finishing:
-- build affected projects
-- run relevant tests
-- check for obvious regressions
+Before reporting any backend task as done:
+- build the affected project(s) — `dotnet build` must succeed
+- run `dotnet test` and confirm all tests pass
+- fix any failing tests before declaring completion
+- do NOT say a task is finished if tests have not been run and confirmed passing
+
+For frontend tasks:
+- `npm run build` must succeed before calling the task done
+- run relevant tests if they exist
