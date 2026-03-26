@@ -14,9 +14,12 @@ const { locale, title, isFallback = false } = Astro.props;
   {isFallback && <FallbackNotice locale={locale} />}
   <h1>{title}</h1>
   <p class="lead">API-first, domain-centric, event-driven.</p>
-  <section aria-label="System diagram" class="diagram-section">
-    <pre class="diagram" aria-label="High level architecture diagram">Clients &rarr; API &rarr; Application Slices &rarr; Domain Model &rarr; Infrastructure</pre>
-  </section>
+  <div class="diagram-placeholder" aria-label="System architecture diagram">
+    <div>
+      <div>Clients &rarr; API &rarr; Application Slices &rarr; Domain Model &rarr; Infrastructure</div>
+      <div style="font-size:0.75rem;margin-top:0.5rem;opacity:0.7">System diagram</div>
+    </div>
+  </div>
   <slot />
   <nav class="page-next" aria-label="Continue">
     <a href={withLocale(locale, '/docs')}>View full documentation &rarr;</a>

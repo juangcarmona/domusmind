@@ -1,12 +1,12 @@
 ---
 title: "DomusMind"
-description: "A shared system for the household — visible state, clear responsibilities, coordinated by everyone."
-heroTitle: "The house stops depending on one person's memory."
-heroBody: "DomusMind is a shared system for your household. What is happening, who handles what, and what comes next — visible to everyone."
-primaryCtaLabel: "Read the Manifesto"
-primaryCtaHref: "/manifesto"
-secondaryCtaLabel: "Join the Project"
-secondaryCtaHref: "/community"
+description: "A shared system for the household — so one person stops carrying it alone."
+heroTitle: "If you stop thinking about the house, things break."
+heroBody: "Someone is always carrying everything. The house stops depending on one person's memory."
+primaryCtaLabel: "Try it"
+primaryCtaHref: "/community"
+secondaryCtaLabel: "See how your house looks"
+secondaryCtaHref: "/concept"
 developerCtaTitle: "For developers"
 developerCtaBody: "The API is open and documented. Explore the architecture and contribute."
 developerCtaLabel: "Explore Architecture"
@@ -19,56 +19,52 @@ familyCtaHref: "/community"
 
 ## The reality
 
-Sarah knows what time Liam's football practice ends.
-She remembers the school meeting on Thursday.
-She tracks who needs to buy milk.
-She knows the vet appointment for Max is next week.
+Sarah knows when Liam's practice ends.
+She remembers Thursday's school meeting.
+She knows what is missing at home.
+She knows Max's vet appointment is next week.
 
-If Sarah stops thinking about the house, things break.
+If Sarah stops thinking, the house stops working.
 
-The problem is not that Sarah is busy. The problem is that the house depends on one person's memory.
+Not because she is the most capable person.
+Because she is the only one holding the system.
 
-## Why tools don't help
+## The unfairness
 
-Task apps track items. Calendars track time.
-Neither tracks responsibility.
-Neither shows who is aware of what.
-Neither models the household as a system.
+This is not about tasks.
+This is not about being busy.
 
-The state of the house still lives in one person's head.
+One person carries the mental control of the house.
+Others only react when they are told.
+
+That is the structural problem.
+
+## Why tools don't fix it
+
+Task apps track items.
+Calendars track time.
+
+Neither tracks who is aware of what.
+Neither shows that one person knows everything and others know nothing.
+Neither changes where the system lives.
+
+The state of the house stays in one person's head.
 
 ## The shift
 
-DomusMind makes household state shared.
+DomusMind does not help you organize.
 
-- Who is responsible for each area of the house
-- What is happening this week
-- What tasks exist and who owns them
-- What routines keep things running
+It moves the system out of one person's head.
 
-No one person carries everything alone.
+The house becomes visible.
+The state becomes shared.
+Others can act without being told.
 
-## What you see
+## What changes
 
-```
-Today — The Smith Family
-
-Liam → Football practice 17:30
-Sarah → School meeting 09:00
-
-Buy milk
-Check school bag
-```
-
-Every family member sees the same view.
-Plans, tasks, and responsibilities — in one place.
-
-## How it works
-
-1. Something gets added — an event, a task, a routine
-2. It becomes part of the household record
-3. It appears on the family timeline
-4. It connects to the right person and responsibility
+One person stops carrying everything.
+Others see what is happening.
+The house stops depending on one brain.
 
 ## What exists today
 

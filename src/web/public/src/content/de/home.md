@@ -1,12 +1,12 @@
 ---
 title: "DomusMind"
-description: "Ein gemeinsames System für den Haushalt — sichtbarer Status, klare Verantwortung, gemeinsam koordiniert."
-heroTitle: "Das Haus hört auf, von Annas Gedächtnis abhängig zu sein."
-heroBody: "DomusMind ist das gemeinsame System für Ihren Haushalt. Was passiert, wer wofür zuständig ist und was als nächstes kommt — für alle sichtbar."
-primaryCtaLabel: "Manifest lesen"
-primaryCtaHref: "/manifesto"
-secondaryCtaLabel: "Projekt beitreten"
-secondaryCtaHref: "/community"
+description: "Ein gemeinsames System für den Haushalt — damit eine Person aufhört, alles alleine zu tragen."
+heroTitle: "Wenn du aufhörst, ans Haus zu denken, geht es schief."
+heroBody: "Jemand hat immer alles im Blick. Das Haus hört auf, vom Gedächtnis einer Person abzuhängen."
+primaryCtaLabel: "Ausprobieren"
+primaryCtaHref: "/community"
+secondaryCtaLabel: "Wie dein Haus aussieht"
+secondaryCtaHref: "/concept"
 developerCtaTitle: "Für Entwickler"
 developerCtaBody: "Die API ist offen und dokumentiert. Architektur erkunden und beitragen."
 developerCtaLabel: "Architektur erkunden"
@@ -19,56 +19,52 @@ familyCtaHref: "/community"
 
 ## Die Realität
 
-Anna weiß, wann Leons Fußballtraining endet.
+Anna weiß, wann Leons Training endet.
 Sie erinnert sich an das Elterngespräch am Donnerstag.
-Sie weiß, dass Milch gekauft werden muss.
+Sie weiß, was zu Hause fehlt.
 Sie weiß, dass Bella nächste Woche zum Tierarzt muss.
 
-Wenn Anna aufhört, an den Haushalt zu denken, geht etwas schief.
+Wenn Anna aufhört zu denken, hört der Haushalt auf zu funktionieren.
 
-Das Problem ist nicht, dass Anna beschäftigt ist. Das Problem ist, dass der Haushalt von ihrem Gedächtnis abhängt.
+Nicht weil sie die kompetenteste Person ist.
+Weil sie die einzige ist, die das System trägt.
 
-## Warum Tools nicht helfen
+## Die Ungerechtigkeit
 
-Task-Apps speichern Aufgaben. Kalender speichern Termine.
-Keiner erfasst, wer wofür zuständig ist.
-Keiner zeigt, wer was weiß.
-Keiner modelliert den Haushalt als System.
+Das ist keine Frage von Aufgaben.
+Das ist keine Frage von Beschäftigtsein.
 
-Der Zustand des Haushalts lebt noch immer im Kopf einer Person.
+Eine Person trägt die mentale Kontrolle über den Haushalt.
+Die anderen reagieren nur, wenn man es ihnen sagt.
+
+Das ist das strukturelle Problem.
+
+## Warum Tools das nicht lösen
+
+Task-Apps erfassen Aufgaben.
+Kalender erfassen Zeit.
+
+Keines erfasst, wer was weiß.
+Keines zeigt, dass eine Person alles weiß und die anderen nichts.
+Keines ändert, wo das System lebt.
+
+Der Haushaltsstatus bleibt im Kopf einer Person.
 
 ## Die Veränderung
 
-DomusMind macht den Haushaltsstatus für alle sichtbar.
+DomusMind hilft dir nicht beim Organisieren.
 
-- Wer für welchen Bereich des Haushalts verantwortlich ist
-- Was diese Woche passiert
-- Welche Aufgaben existieren und wem sie gehören
-- Welche Routinen den Haushalt am Laufen halten
+Es bewegt das System aus dem Kopf einer Person heraus.
 
-Niemand muss alles alleine tragen.
+Der Haushalt wird sichtbar.
+Der Status wird geteilt.
+Andere können handeln, ohne gefragt zu werden.
 
-## Was du siehst
+## Was sich ändert
 
-```
-Heute — Familie Müller
-
-Leon → Fußballtraining 17:30
-Anna → Elterngespräch 09:00
-
-Milch kaufen
-Schultasche prüfen
-```
-
-Alle Familienmitglieder sehen dasselbe.
-Pläne, Aufgaben und Verantwortlichkeiten — an einem Ort.
-
-## Wie es funktioniert
-
-1. Etwas wird hinzugefügt — ein Termin, eine Aufgabe, eine Routine
-2. Es wird Teil des Haushaltsprotokolls
-3. Es erscheint im Familien-Timeline
-4. Es ist mit der richtigen Person und Zuständigkeit verknüpft
+Eine Person hört auf, alles zu tragen.
+Die anderen sehen, was passiert.
+Der Haushalt hört auf, von einem einzigen Gehirn abzuhängen.
 
 ## Was heute existiert
 

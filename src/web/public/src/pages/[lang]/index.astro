@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HeroSection from '@/components/HeroSection.astro';
-import CtaBlock from '@/components/CtaBlock.astro';
+import HomeSections from '@/components/HomeSections.astro';
 import FallbackNotice from '@/components/FallbackNotice.astro';
 import { locales, defaultLocale, normalizeLocale } from '@/lib/i18n';
 import { getPageContent } from '@/lib/content';
@@ -15,7 +15,6 @@ const locale = normalizeLocale(Astro.params.lang);
 const { content, sourceLocale } = getPageContent<HomeFrontmatter>(locale, 'home');
 const isFallback = sourceLocale !== locale;
 const { frontmatter } = content;
-const Content = content.Content as unknown as () => unknown;
 ---
 <BaseLayout locale={locale} title={frontmatter.title} description={frontmatter.description} currentPath="/">
   <HeroSection
@@ -26,23 +25,9 @@ const Content = content.Content as unknown as () => unknown;
     locale={locale}
   />
   {isFallback && <FallbackNotice locale={locale} />}
-  <div class="home-content">
-    <Content />
-  </div>
-  <section class="cta-grid" aria-label="Call to action">
-    <CtaBlock
-      title={frontmatter.familyCtaTitle}
-      body={frontmatter.familyCtaBody}
-      label={frontmatter.familyCtaLabel}
-      href={frontmatter.familyCtaHref}
-      locale={locale}
-    />
-    <CtaBlock
-      title={frontmatter.developerCtaTitle}
-      body={frontmatter.developerCtaBody}
-      label={frontmatter.developerCtaLabel}
-      href={frontmatter.developerCtaHref}
-      locale={locale}
-    />
-  </section>
+  <HomeSections
+    locale={locale}
+    primaryCta={{ label: frontmatter.primaryCtaLabel, href: frontmatter.primaryCtaHref }}
+    secondaryCta={{ label: frontmatter.secondaryCtaLabel, href: frontmatter.secondaryCtaHref }}
+  />
 </BaseLayout>

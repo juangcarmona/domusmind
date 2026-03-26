@@ -1,5 +1,6 @@
 ---
 import FallbackNotice from './FallbackNotice.astro';
+import ResponsibilityMap from './ResponsibilityMap.astro';
 import { withLocale, type Locale } from '@/lib/i18n';
 
 interface Props {
@@ -14,6 +15,7 @@ const { locale, title, isFallback = false } = Astro.props;
   {isFallback && <FallbackNotice locale={locale} />}
   <h1>{title}</h1>
   <slot />
+  <ResponsibilityMap locale={locale} />
   <nav class="page-next" aria-label="Continue">
     <a href={withLocale(locale, '/community')}>Follow the project &rarr;</a>
     <a href={withLocale(locale, '/architecture')}>Read the architecture &rarr;</a>

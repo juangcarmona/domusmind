@@ -1,0 +1,117 @@
+---
+import type { Locale } from '@/lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+type Domain = { name: string; primary: string; support?: string };
+type MapData = { label: string; primaryLabel: string; supportLabel: string; domains: Domain[] };
+
+const maps: Record<string, MapData> = {
+  en: {
+    label: 'Responsibilities',
+    primaryLabel: 'primary',
+    supportLabel: 'support',
+    domains: [
+      { name: 'Home',     primary: 'Sarah', support: 'Mark'  },
+      { name: 'School',   primary: 'Sarah'                   },
+      { name: 'Health',   primary: 'Mark'                    },
+      { name: 'Finances', primary: 'Mark',  support: 'Sarah' },
+    ],
+  },
+  es: {
+    label: 'Responsabilidades',
+    primaryLabel: 'principal',
+    supportLabel: 'apoyo',
+    domains: [
+      { name: 'Casa',     primary: 'Marta',  support: 'Javier' },
+      { name: 'Colegio',  primary: 'Marta'                     },
+      { name: 'Salud',    primary: 'Javier'                    },
+      { name: 'Finanzas', primary: 'Javier', support: 'Marta'  },
+    ],
+  },
+  de: {
+    label: 'Verantwortlichkeiten',
+    primaryLabel: 'hauptverantw.',
+    supportLabel: 'unterstützend',
+    domains: [
+      { name: 'Haushalt', primary: 'Anna',  support: 'Klaus' },
+      { name: 'Schule',   primary: 'Anna'                    },
+      { name: 'Gesundheit', primary: 'Klaus'                 },
+      { name: 'Finanzen', primary: 'Klaus', support: 'Anna'  },
+    ],
+  },
+  fr: {
+    label: 'Responsabilités',
+    primaryLabel: 'principal',
+    supportLabel: 'soutien',
+    domains: [
+      { name: 'Maison',   primary: 'Julie',  support: 'Pierre' },
+      { name: 'École',    primary: 'Julie'                     },
+      { name: 'Santé',    primary: 'Pierre'                    },
+      { name: 'Finances', primary: 'Pierre', support: 'Julie'  },
+    ],
+  },
+  it: {
+    label: 'Responsabilità',
+    primaryLabel: 'principale',
+    supportLabel: 'supporto',
+    domains: [
+      { name: 'Casa',     primary: 'Francesca', support: 'Marco'      },
+      { name: 'Scuola',   primary: 'Francesca'                        },
+      { name: 'Salute',   primary: 'Marco'                            },
+      { name: 'Finanze',  primary: 'Marco',     support: 'Francesca'  },
+    ],
+  },
+  ja: {
+    label: '責任分担',
+    primaryLabel: '主担当',
+    supportLabel: 'サポート',
+    domains: [
+      { name: '家庭', primary: 'ユキ', support: 'ケン' },
+      { name: '学校', primary: 'ユキ'                  },
+      { name: '健康', primary: 'ケン'                  },
+      { name: '家計', primary: 'ケン', support: 'ユキ' },
+    ],
+  },
+  zh: {
+    label: '责任划分',
+    primaryLabel: '主要负责',
+    supportLabel: '协助',
+    domains: [
+      { name: '家务', primary: '李', support: '王' },
+      { name: '学校', primary: '李'                },
+      { name: '健康', primary: '王'                },
+      { name: '财务', primary: '王', support: '李' },
+    ],
+  },
+};
+
+const map = maps[locale] ?? maps['en'];
+---
+
+<section class="resp-map" aria-label={map.label}>
+  <h2 class="resp-map__title">{map.label}</h2>
+  <div class="resp-map__grid">
+    {map.domains.map(domain => (
+      <div class="resp-map__domain">
+        <h3 class="resp-map__domain-name">{domain.name}</h3>
+        <div class="resp-map__owners">
+          <span class="resp-map__owner resp-map__owner--primary">
+            {domain.primary}
+            <em>{map.primaryLabel}</em>
+          </span>
+          {domain.support && (
+            <span class="resp-map__owner resp-map__owner--support">
+              {domain.support}
+              <em>{map.supportLabel}</em>
+            </span>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

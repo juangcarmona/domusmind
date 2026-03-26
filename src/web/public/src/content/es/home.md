@@ -1,12 +1,12 @@
 ---
 title: "DomusMind"
-description: "Un sistema compartido para el hogar: lo que pasa, quién se encarga, todo visible."
-heroTitle: "La casa deja de depender de que Marta se acuerde de todo."
-heroBody: "DomusMind es el sistema compartido del hogar. Lo que pasa, quién se encarga de qué y qué viene después — visible para todos."
-primaryCtaLabel: "Leer el Manifiesto"
-primaryCtaHref: "/manifesto"
-secondaryCtaLabel: "Unirse al Proyecto"
-secondaryCtaHref: "/community"
+description: "Un sistema compartido para el hogar — para que una persona deje de cargarlo sola."
+heroTitle: "Deja de tener que estar pendiente de todo."
+heroBody: "Alguien siempre lleva la casa en la cabeza. La casa deja de depender de la memoria de una persona."
+primaryCtaLabel: "Probarlo"
+primaryCtaHref: "/community"
+secondaryCtaLabel: "Ver cómo queda tu casa"
+secondaryCtaHref: "/concept"
 developerCtaTitle: "Para desarrolladores"
 developerCtaBody: "El API está abierto y documentado. Explora la arquitectura y contribuye."
 developerCtaLabel: "Explorar arquitectura"
@@ -19,56 +19,52 @@ familyCtaHref: "/community"
 
 ## La realidad
 
-Marta sabe a qué hora acaba el entreno de Mateo.
-Se acuerda de la reunión del colegio el jueves.
-Sabe que hay que comprar leche.
+Marta sabe cuándo acaba el entrenamiento de Mateo.
+Se acuerda de la reunión del colegio del jueves.
+Sabe qué falta en casa.
 Sabe que Luna tiene cita en el veterinario la semana que viene.
 
-Si Marta deja de pensar en la casa, algo falla.
+Si Marta deja de pensar, la casa deja de funcionar.
 
-El problema no es que Marta esté ocupada. El problema es que la casa depende de que ella se acuerde de todo.
+No porque sea la persona más capaz.
+Porque es la única que sostiene el sistema.
 
-## Por qué las herramientas no ayudan
+## La injusticia
 
-Las apps de tareas guardan cosas. Los calendarios guardan fechas.
-Ninguna registra quién se encarga de qué.
-Ninguna muestra quién está al tanto de qué.
-Ninguna modela el hogar como un sistema.
+Esto no es una cuestión de tareas.
+Esto no es una cuestión de estar ocupada.
+
+Una persona carga con el control mental del hogar.
+Los demás solo reaccionan cuando se les dice.
+
+Ese es el problema estructural.
+
+## Por qué las herramientas no lo resuelven
+
+Las apps de tareas registran elementos.
+Los calendarios registran tiempo.
+
+Ninguna registra quién sabe qué.
+Ninguna muestra que una persona lo controla todo y los demás no saben nada.
+Ninguna cambia dónde vive el sistema.
 
 El estado de la casa sigue viviendo en la cabeza de una persona.
 
 ## El cambio
 
-DomusMind hace visible el estado del hogar para todos.
+DomusMind no te ayuda a organizarte.
 
-- Quién se encarga de cada área de la casa
-- Qué pasa esta semana
-- Qué tareas existen y de quién son
-- Qué rutinas mantienen el hogar en marcha
+Saca el sistema de la cabeza de una persona.
 
-Ya no lo lleva una sola persona.
+La casa se vuelve visible.
+El estado se comparte.
+Los demás pueden actuar sin que se les diga.
 
-## Lo que ves
+## Qué cambia
 
-```
-Hoy — Familia García
-
-Mateo → Natación 18:00
-Marta → Reunión colegio 09:00
-
-Comprar leche
-Revisar mochila
-```
-
-Todos los miembros de la familia ven lo mismo.
-Planes, tareas y responsabilidades — en un solo lugar.
-
-## Cómo funciona
-
-1. Se añade algo — un evento, una tarea, una rutina
-2. Pasa a formar parte del registro del hogar
-3. Aparece en el timeline de la familia
-4. Se conecta con la persona y el área correspondiente
+Una persona deja de cargar con todo.
+Los demás ven lo que está pasando.
+La casa deja de depender de un solo cerebro.
 
 ## Qué existe hoy
 

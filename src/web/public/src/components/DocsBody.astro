@@ -14,10 +14,22 @@ const { locale, title, isFallback = false } = Astro.props;
   {isFallback && <FallbackNotice locale={locale} />}
   <h1>{title}</h1>
   <slot />
-  <nav class="page-hub-nav" aria-label="Documentation sections">
-    <a href={withLocale(locale, '/architecture')}>Architecture</a>
-    <a href={withLocale(locale, '/domain')}>Domain</a>
-    <a href={withLocale(locale, '/open-source')}>Open Source</a>
-    <a href={withLocale(locale, '/community')}>Community</a>
+  <nav class="docs-card-grid" aria-label="Documentation sections">
+    <a class="doc-card" href={withLocale(locale, '/architecture')}>
+      <strong>Architecture</strong>
+      <span>System design, layers, and patterns</span>
+    </a>
+    <a class="doc-card" href={withLocale(locale, '/domain')}>
+      <strong>Domain</strong>
+      <span>Bounded contexts and domain model</span>
+    </a>
+    <a class="doc-card" href={withLocale(locale, '/open-source')}>
+      <strong>Open Source</strong>
+      <span>Why families should own their system</span>
+    </a>
+    <a class="doc-card" href={withLocale(locale, '/community')}>
+      <strong>Community</strong>
+      <span>How families and developers participate</span>
+    </a>
   </nav>
 </article>

@@ -1,12 +1,12 @@
 ---
 title: "DomusMind"
-description: "Un sistema condiviso per la famiglia — stato visibile, responsabilità chiare, coordinamento condiviso."
-heroTitle: "La casa smette di dipendere dalla memoria di Francesca."
-heroBody: "DomusMind è il sistema condiviso della tua famiglia. Cosa succede, chi si occupa di cosa e cosa viene dopo — visibile a tutti."
-primaryCtaLabel: "Leggi il Manifesto"
-primaryCtaHref: "/manifesto"
-secondaryCtaLabel: "Unisciti al progetto"
-secondaryCtaHref: "/community"
+description: "Un sistema condiviso per la famiglia — perché una persona smetta di portarlo da sola."
+heroTitle: "Se smetti di pensare alla casa, le cose vanno storte."
+heroBody: "Qualcuno pensa sempre a tutto. La casa smette di dipendere dalla memoria di una sola persona."
+primaryCtaLabel: "Provalo"
+primaryCtaHref: "/community"
+secondaryCtaLabel: "Come appare la tua casa"
+secondaryCtaHref: "/concept"
 developerCtaTitle: "Per sviluppatori"
 developerCtaBody: "L'API è aperta e documentata. Esplora l'architettura e contribuisci."
 developerCtaLabel: "Esplora architettura"
@@ -19,56 +19,52 @@ familyCtaHref: "/community"
 
 ## La realtà
 
-Francesca sa a che ora finisce il nuoto di Sofia.
+Francesca sa quando finisce il nuoto di Sofia.
 Ricorda la riunione scolastica di giovedì.
-Sa che bisogna comprare il latte.
+Sa cosa manca in casa.
 Sa che Luna ha la visita dal veterinario la settimana prossima.
 
-Se Francesca smette di pensare alla casa, qualcosa si perde.
+Se Francesca smette di pensare, la casa smette di funzionare.
 
-Il problema non è che Francesca sia occupata. Il problema è che la casa dipende dalla sua memoria.
+Non perché sia la persona più capace.
+Perché è l'unica che sostiene il sistema.
 
-## Perché gli strumenti non bastano
+## L'ingiustizia
 
-Le app di task registrano elementi. I calendari registrano orari.
-Nessuno tiene traccia delle responsabilità.
-Nessuno mostra chi sa cosa.
-Nessuno modella la famiglia come un sistema.
+Non si tratta di task.
+Non si tratta di essere occupata.
 
-Lo stato della casa vive ancora nella testa di una sola persona.
+Una persona porta il controllo mentale della casa.
+Gli altri reagiscono solo quando vengono avvisati.
+
+Questo è il problema strutturale.
+
+## Perché gli strumenti non risolvono
+
+Le app di task registrano elementi.
+I calendari registrano il tempo.
+
+Nessuno tiene traccia di chi sa cosa.
+Nessuno mostra che una persona sa tutto e gli altri niente.
+Nessuno cambia dove vive il sistema.
+
+Lo stato della casa resta nella testa di una sola persona.
 
 ## Il cambiamento
 
-DomusMind rende visibile lo stato della famiglia per tutti.
+DomusMind non ti aiuta a organizzarti.
 
-- Chi è responsabile di ogni area della casa
-- Cosa succede questa settimana
-- Quali task esistono e di chi sono
-- Quali routine tengono in funzione la casa
+Sposta il sistema fuori dalla testa di una persona.
 
-Nessuno porta tutto da solo.
+La casa diventa visibile.
+Lo stato diventa condiviso.
+Gli altri possono agire senza essere avvisati.
 
-## Cosa vedi
+## Cosa cambia
 
-```
-Oggi — Famiglia Rossi
-
-Sofia → Nuoto 18:00
-Francesca → Riunione scuola 09:00
-
-Comprare il latte
-Controllare lo zaino
-```
-
-Tutti i membri della famiglia vedono la stessa cosa.
-Piani, task e responsabilità — in un unico posto.
-
-## Come funziona
-
-1. Qualcosa viene aggiunto — un evento, un task, una routine
-2. Diventa parte del registro familiare
-3. Appare nella timeline di famiglia
-4. È collegato alla persona giusta e alla responsabilità corrispondente
+Una persona smette di portare tutto.
+Gli altri vedono cosa sta succedendo.
+La casa smette di dipendere da un solo cervello.
 
 ## Cosa esiste oggi
 

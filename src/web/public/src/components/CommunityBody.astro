@@ -14,7 +14,9 @@ const { locale, title, isFallback = false } = Astro.props;
 <article class="page-action" data-page-type="community">
   {isFallback && <FallbackNotice locale={locale} />}
   <h1>{title}</h1>
-  <slot />
+  <div class="community-content">
+    <slot />
+  </div>
   <section class="community-cta" aria-label="GitHub">
     <a class="button github-button" href="https://github.com/juangcarmona/domusmind" target="_blank" rel="noopener noreferrer">
       <GitHubIcon size={16} />
