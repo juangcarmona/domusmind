@@ -24,258 +24,85 @@ DomusMind maintains a continuously evolving model of:
 - assets
 - properties
 - obligations
-- logistics
+DomusMind is a household coordination system.
 
-This model is the foundation for all system capabilities.
+At system level, DomusMind is organized around a small set of core bounded contexts that together define the shared household model.
 
-All features derive from this shared state.
+The current core system shape includes:
 
----
+- Family
+- Responsibilities
+- Calendar
+- Tasks
+- Shared Lists
 
 # Core Capabilities
 
 ## Family Modeling
 
-Represents the structure of the household.
+These five contexts provide the current household coordination model:
 
-Includes:
+- Family provides household identity and member structure.
+- Responsibilities provides explicit accountability for household domains.
+- Calendar provides time, schedules, participants, reminders, and the family timeline.
+- Tasks provides execution through tasks, routines, assignment, and completion.
+- Shared Lists provides reusable household lists, checklist state, and lightweight shared capture.
 
-- members
-- dependents
-- pets
-- relationships
-- roles
+Together they make household structure, ownership, time, execution, and list-based coordination visible in one system.
 
 ---
 
-## Responsibility Management
+# Context Collaboration
 
-Defines domains of responsibility inside the household.
-
-Examples:
-
-- school
+The collaboration model is intentionally simple:
 - finances
-- food
+- Family is the upstream identity provider.
+- Responsibilities, Calendar, Tasks, and Shared Lists all depend on Family identifiers.
+- Tasks may react to Calendar and Responsibilities events.
+- Shared Lists may reference Responsibilities domains and may optionally link to Calendar entities.
+- Shared Lists remains independent from task execution and scheduling semantics.
 - maintenance
-- administration
+Contexts collaborate through identifiers and domain events.
 - logistics
-
+No context modifies another context's aggregates directly.
 Each domain may include:
-
-- primary owner
-- secondary owners
-- participants
-
+---
 Responsibilities distribute cognitive ownership across the family.
-
+# Core Capabilities
 ---
-
+At system level, the core capabilities are:
 ## Unified Timeline
-
+- family structure management
+- responsibility ownership
+- event scheduling and timeline visibility
+- task and routine execution
+- persistent shared checklist management
 DomusMind maintains a **family timeline**.
-
+These capabilities are defined in more detail in [docs/02_system/core-capabilities.md](core-capabilities.md).
 The timeline aggregates:
-
-- events
-- routines
-- appointments
-- deadlines
-- obligations
-
-This timeline represents the operational flow of the household.
-
----
-
-## Tasks and Routines
-
-Tasks represent actions required by the system state.
-
-Types:
-
-- one-time tasks
-- recurring routines
-- tasks generated from events
-- tasks generated from responsibilities
-
-Examples:
-
-- preparing school materials
-- grocery shopping
-- property maintenance
-- document renewals
-
----
-
-## Household Resources
-
-Tracks relevant household resources.
-
-Examples:
-
-- food inventory
-- consumables
-- shared equipment
-- household assets
-
-This enables:
-
-- shopping lists
-- maintenance reminders
-- preparation planning
-
----
-
-## Properties and Assets
-
-Models assets owned or managed by the family.
-
-Examples:
-
-- primary residence
-- second home
-- rental property
-- vehicles
-
-Properties may contain:
-
-- expenses
-- maintenance obligations
-- documents
-- contracts
-- recurring tasks
-
----
-
-## Administration and Documentation
-
-Manages administrative elements of household life.
-
-Examples:
-
-- contracts
-- insurance policies
-- subscriptions
-- identification documents
-- warranties
-
-The system anticipates renewals and expiration dates.
-
----
-
-## Food and Meal Planning
-
-Supports recurring food logistics.
-
-Includes:
-
-- recipes
-- meal planning
-- pantry inventory
-- shopping lists
-
-This reduces repetitive decision making.
-
----
-
-## Pets
-
-Pets are modeled as dependent household members.
-
-The system manages:
-
-- veterinary appointments
-- vaccinations
-- feeding routines
-- care responsibilities
-- pet-related inventory
-
----
-
-# AI-Assisted Interpretation
-
-DomusMind accepts natural input through:
-
-- text
-- voice
-- images
-- messaging platforms
-- API integrations
-
-An interpretation layer converts unstructured input into structured domain events.
-
-Example:
-
-Input:
-
-```
-
-Lucas has a school trip on Thursday
-
-```
-
-Possible results:
-
-- calendar event
-- preparation tasks
-- notifications
-
-AI assists interpretation but does not replace the domain model.
-
----
-
-# Interaction Surfaces
-
-DomusMind is a **core platform with multiple interaction surfaces**.
-
-Possible interfaces:
-
-- mobile applications
-- web applications
-- messaging platforms
-- automation systems
-- external APIs
-
-All interfaces interact with the same core system.
-
----
-
-# Deployment Model
-
-DomusMind supports multiple deployment models:
-
-- hosted cloud service
-- self-hosted deployment
-- containerized family instance
-
-Self-hosting allows families to retain full control of their data.
-
 ---
 
 # System Boundaries
 
-DomusMind coordinates household operations.
+The current system scope is limited to the documented core contexts.
 
-It does **not attempt to replace specialized systems** such as:
+It does not expand V1 system documentation into separate contexts for properties, documents, finance, AI automation, or external integrations.
 
-- accounting software
-- medical record systems
-- school management platforms
-- professional property management tools
-
-Instead, DomusMind acts as the **coordination layer of family life**.
-
----
+Types:
 
 # Outcome
+- recurring routines
+DomusMind turns household coordination into a structured shared system.
+- tasks generated from responsibilities
+In the current documented system shape, that means:
+Examples:
+- household identity is explicit
+- responsibility is explicit
+- time is explicit
+- execution is explicit
+- shared household list state is explicit
 
-DomusMind transforms household coordination from an informal mental process into a structured system.
+The result is a clearer and more coherent system description for the current product scope.
+- document renewals
 
-Results:
-
-- clearer responsibilities
-- fewer forgotten obligations
-- improved coordination
-- reduced cognitive load
-- operational stability in family life
 

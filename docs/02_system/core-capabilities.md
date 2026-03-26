@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines the **minimal set of capabilities** required for the first functional version of DomusMind.
+This document defines the minimal set of capabilities required for the current core version of DomusMind.
 
 These capabilities establish the core household operating model.
 
@@ -32,14 +32,8 @@ Create and manage the household structure.
 Capabilities:
 
 ```
-
 Create Family
 Add Member
-Remove Member
-Define Relationships
-Add Dependent
-Add Pet
-
 ```
 
 ---
@@ -68,102 +62,57 @@ Manage the family timeline.
 Capabilities:
 
 ```
-
 Schedule Event
 Reschedule Event
 Cancel Event
 Add Event Participants
-Create Reminder
-
+Remove Event Participants
+Add Reminder
+Remove Reminder
+View Family Timeline
 ```
 
 ---
 
-## Tasks
+## Task and Routine Management
 
 Track actions required by household state.
 
 Capabilities:
 
 ```
-
 Create Task
 Assign Task
+Reassign Task
 Complete Task
-Generate Task From Event
-
-```
-
----
-
-## Routines
-
-Define recurring operational patterns.
-
-Capabilities:
-
-```
-
+Cancel Task
+Reschedule Task
 Create Routine
 Update Routine
-Trigger Routine
-Generate Tasks From Routine
-
+Pause Routine
+Resume Routine
 ```
 
 ---
 
-## Timeline
+## Shared Lists
 
-Provide visibility into household activity.
+Provide persistent household list-based coordination.
 
 Capabilities:
 
 ```
-
-View Family Timeline
-View Member Timeline
-View Upcoming Events
-
+Create Shared List
+Rename Shared List
+Delete Shared List
+Add Item To Shared List
+Update Shared List Item
+Remove Shared List Item
+Toggle Shared List Item
+Reorder Shared List Items
+Get Family Shared Lists
+Get Shared List Detail
 ```
-
----
-
-# Supporting Capabilities
-
-These capabilities enable core functionality but may evolve later.
-
-Examples:
-
-```
-
-Register Property
-Store Document
-Track Inventory Item
-Create Meal Plan
-Generate Shopping List
-
-```
-
----
-
-# Capability Evolution
-
-DomusMind capabilities evolve in layers:
-
-```
-
-Structure
-→ Coordination
-→ Anticipation
-→ Automation
-→ Intelligent Assistance
-
-```
-
-Initial capabilities focus on **structure and coordination**.
-
-Future capabilities may introduce automation and AI-driven suggestions.
 
 ---
 
@@ -180,12 +129,10 @@ Each capability should map to:
 Example:
 
 ```
-
 Schedule Event
 → command
 → schedule-event slice
-→ specs/features/schedule-event.md
-
+→ specs/features/calendar/schedule-event.md
 ```
 
 This structure ensures traceability between:

@@ -2,10 +2,10 @@
 
 This document describes how bounded contexts collaborate inside DomusMind.
 
-Core contexts in V1.1:
+Core contexts in V1:
 
 * Family
-* Responsibility
+* Responsibilities
 * Calendar
 * Tasks
 * Shared Lists
@@ -16,11 +16,13 @@ Core contexts in V1.1:
 
 Family is the upstream identity provider.
 
-Responsibility defines accountability using Family members.
+Responsibilities defines accountability using Family members.
 
 Calendar defines time structure using Family participants.
 
-Tasks defines operational work referencing members, responsibilities, and events.
+Tasks defines execution using Family members and references to responsibilities and events.
+
+Shared Lists defines household list-based coordination, shared capture, and lightweight shared state.
 
 ---
 
@@ -28,30 +30,26 @@ Tasks defines operational work referencing members, responsibilities, and events
 
 The dependency structure is **not a linear chain**.
 
-Responsibility and Calendar both depend on Family, while Tasks depends on Family and may react to both Calendar and Responsibility.
+Responsibilities, Calendar, Tasks, and Shared Lists all depend on Family. Tasks may react to Calendar and Responsibilities. Shared Lists may reference Responsibilities and may optionally link to Calendar entities, but remains behaviorally independent.
 
 ```
-              Family
-         /      |       \
-        ↓       ↓        ↓
-Responsibility Calendar  Shared Lists
-        \       /          /
-         ↓     ↓          /
-              Tasks      /
+                 Family
+          /         |         |         \
+         ↓          ↓         ↓          ↓
+Responsibilities Calendar    Tasks   Shared Lists
+         \          /
+          ↓        ↓
+             event reactions
 ```
 
 Dependency interpretation:
 
 * **Family** provides identity and relationship structure
-* **Responsibility** depends on Family for ownership assignments
+* **Responsibilities** depends on Family for ownership assignments
 * **Calendar** depends on Family for participant identity
-* **Tasks** depends on Family for assignees and may react to Calendar and Responsibility events
-
-
-Additional dependency rules for Shared Lists:
-
+* **Tasks** depends on Family for assignees and may react to Calendar and Responsibilities events
 * **Shared Lists** depends on Family for ownership and identity
-* Shared Lists may reference Responsibility domains for grouping and soft ownership
+* Shared Lists may reference Responsibilities domains for grouping and soft ownership
 * Shared Lists may optionally link to Calendar entities for contextual use
 * Shared Lists does not depend on Tasks
 * Tasks does not depend on Shared Lists
@@ -59,10 +57,10 @@ Additional dependency rules for Shared Lists:
 Interpretation:
 
 * Family → identity
-* Responsibility → accountability
+* Responsibilities → accountability
 * Calendar → time
 * Tasks → execution
-* Shared Lists → persistent shared state
+* Shared Lists → shared capture and lightweight shared state
 ---
 
 ## Collaboration Model
@@ -74,9 +72,10 @@ No context may directly modify another context's aggregates.
 Communication rules:
 
 * identity flows from Family
-* accountability flows from Responsibility
+* accountability flows from Responsibilities
 * time flows from Calendar
 * execution happens in Tasks
+* shared capture happens in Shared Lists
 
 Contexts react to events rather than forming direct structural dependencies.
 
@@ -86,6 +85,7 @@ Contexts react to events rather than forming direct structural dependencies.
 Shared Lists introduces a new coordination pattern:
 
 * persistent shared state
+* shared capture
 * reusable checklists
 * toggle-based semantics
 
@@ -123,9 +123,9 @@ No domain events required across contexts.
 
 ---
 
-### Responsibility Context Interaction
+### Responsibilities Context Interaction
 
-Responsibility may provide:
+Responsibilities may provide:
 
 * area categorization
 * soft ownership
@@ -145,9 +145,10 @@ MemberAdded
 
 Other contexts may react:
 
-* Responsibility may update assignment validity
+* Responsibilities may update assignment validity
 * Calendar may validate participants
 * Tasks may validate task assignments
+* Shared Lists may validate family-scoped sharing rules
 
 ---
 
@@ -178,17 +179,15 @@ Generated tasks:
 
 ## Responsibility Assigned
 
-Responsibility emits:
+Responsibilities emits:
 
 ```
 PrimaryOwnerAssigned
 ```
 
-Tasks may react:
+Other contexts may react by updating references that depend on explicit household ownership.
 
-```
-suggest or auto-assign tasks
-```
+Shared Lists may continue to reference the same area without taking over responsibility logic.
 
 ---
 
@@ -203,7 +202,7 @@ Family owns:
 * dependents
 * pets
 
-Responsibility owns:
+Responsibilities owns:
 
 * responsibility domains
 * ownership assignments
@@ -241,13 +240,13 @@ Dependencies represent **identity and information flow**, not permission to modi
 The DomusMind core model is built around five cooperating contexts:
 
 * **Family** → identity
-* **Responsibility** → accountability
+* **Responsibilities** → accountability
 * **Calendar** → time
 * **Tasks** → execution
-* **Shared Lists** → persistent shared state
+* **Shared Lists** → shared capture and lightweight shared state
 
-Responsibility and Calendar both depend on Family.
+Responsibilities, Calendar, Tasks, and Shared Lists all depend on Family.
 
-Tasks integrates signals from Family, Calendar, and Responsibility to coordinate execution.
+Tasks integrates signals from Family, Calendar, and Responsibilities to coordinate execution.
 
 Shared Lists provides a parallel coordination layer focused on reusable, persistent checklist state, independent from execution and time semantics.

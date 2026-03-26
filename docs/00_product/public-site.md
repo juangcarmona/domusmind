@@ -1,3 +1,10 @@
+Status: Canonical
+Audience: Product / Design / Engineering / Marketing
+Scope: V1 with future-direction notes
+Owns: Public-site messaging, homepage structure, CTA hierarchy, proof blocks, SEO themes, and copy guardrails
+Depends on: docs/00_product/strategy.md, docs/00_product/experience.md
+Replaces: docs/01_principles/homepage-content-contract.md, website and copy sections from docs/00_vision/domusmind-public-marketing-foundation.md
+
 # DomusMind - Public Site
 
 This document is the canonical public-site file for DomusMind.
@@ -21,7 +28,7 @@ The homepage should follow a fixed narrative order:
 5. What You See
 6. How It Works
 7. What Exists Today
-8. Audience Split
+8. Early Access / Support the Project
 
 Each section must reinforce one invariant:
 
@@ -36,7 +43,37 @@ Section intent:
 - What You See: make the product visible through the Today view.
 - How It Works: explain the operating flow without technical language.
 - What Exists Today: stay inside real V1 scope.
-- Audience Split: support developer interest without taking over the page.
+- Early Access / Support the Project: support testers, followers, and early supporters without breaking the main household conversion path.
+
+---
+
+# Homepage Content Blocks
+
+The homepage should be composable from a small set of concrete blocks:
+
+- Headline: pain-first and household-specific.
+- Support line: describe the shared-system shift in plain language.
+- 3 proof bullets: show what the household gets immediately.
+- CTA pair: one primary action and one secondary action.
+- Screenshot caption rules: each image proves one household outcome only.
+
+Recommended proof bullets:
+
+- See what matters today in one shared view.
+- Make responsibility visible without repeated reminders.
+- Understand busy days before they become friction.
+
+Recommended CTA pair:
+
+- Primary: Start your household
+- Secondary: See how it works
+
+Screenshot caption rules:
+
+- one caption, one idea
+- describe the household outcome, not the UI widget
+- prefer Today, Week, chores, and shared visibility examples
+- avoid feature inventory language
 
 ---
 

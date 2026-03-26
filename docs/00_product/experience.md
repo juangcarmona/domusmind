@@ -1,3 +1,10 @@
+Status: Canonical
+Audience: Product / Design / Engineering / Marketing
+Scope: V1 with future-direction notes
+Owns: Product experience, household language, Today and Week behavior, onboarding shape, and scope guardrails
+Depends on: docs/00_product/strategy.md, specs/system/system-spec.md
+Replaces: docs/00_vision/household-experience.md, docs/00_vision/household-timeline.md, docs/00_vision/household-onboarding.md, docs/00_vision/calendar-coordination.md, docs/00_vision/chore-assignment.md
+
 # DomusMind - Product Experience
 
 This document is the canonical product-experience file for DomusMind.
@@ -8,7 +15,7 @@ It defines how the product should feel and behave in real household use.
 
 # Core UX Principles
 
-DomusMind should feel like quiet household coordination infrastructure.
+DomusMind should feel like a quiet shared household system.
 
 The experience is guided by these principles:
 
@@ -142,6 +149,20 @@ The timeline replaces the need to check multiple disconnected tools to understan
 
 ---
 
+# Scope Guardrails
+
+The V1 experience must stay inside the current system scope.
+
+- no separate chore manager
+- no personal-productivity framing
+- no setup-heavy first run
+- no calendar-first experience
+- no hidden responsibility
+
+The V1 product surface should stay grounded in Family, Responsibilities, Calendar, Tasks, and the unified household timeline.
+
+---
+
 # Onboarding
 
 Onboarding must create a functional household system in minutes.
@@ -158,16 +179,15 @@ The first-run sequence is:
 1. Start household.
 2. Name the household.
 3. Add people.
-4. Connect devices or invite others when relevant.
-5. Choose the first area of help.
-6. Activate immediate automation for the chosen starting use case.
+4. Add the first plans, chores, or routines.
+5. Show Today and Week immediately.
 
-Example for chores:
+Example starting flow:
 
-- propose common recurring responsibilities
-- let the household choose what applies
-- ask whether rotation should happen automatically
-- immediately show the result in the timeline
+- create the household
+- add the people the household coordinates
+- add a few first plans or chores
+- show those items in Today and Week immediately
 
 At the end of onboarding, the household should already have a working shared system rather than an empty app shell.
 

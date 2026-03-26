@@ -1,3 +1,10 @@
+Status: Canonical
+Audience: Product / Design / Engineering / Marketing
+Scope: V1 with future-direction notes
+Owns: Product definition, positioning, value proposition, differentiators, and language rules
+Depends on: specs/system/system-spec.md
+Replaces: docs/00_vision/mission.md, docs/00_vision/value-proposition.md, docs/00_vision/domusmind-public-marketing-foundation.md, docs/01_principles/product-principles.md
+
 # DomusMind - Product Strategy
 
 This document is the canonical product-definition file for DomusMind.
@@ -62,7 +69,7 @@ Unlike fragmented tools, DomusMind is built around the real operating reality of
 
 DomusMind helps a household stop depending on one person's memory.
 
-It brings plans, chores, tasks, reminders, and responsibility into one shared operational picture so everyone can understand:
+It brings plans, chores, tasks, reminders, and responsibility into one shared household picture so everyone can understand:
 
 - what is happening
 - what needs attention
@@ -110,7 +117,7 @@ Common pains include:
 
 The core problem is not lack of effort.
 
-The core problem is lack of shared visibility and shared operational memory.
+The core problem is lack of shared visibility and shared household memory.
 
 ---
 
@@ -134,15 +141,11 @@ DomusMind is differentiated by a small set of product truths:
 
 - The household is treated as a system, not a pile of disconnected tasks.
 - State matters more than task lists. The product stores household facts that make work and coordination legible.
-- DomusMind acts as shared operational memory, so information does not live in one person's head.
 - Responsibility must be explicit. Ownership should be visible, not assumed.
 - Time and work are visible together. Plans and tasks converge into one household picture.
 - The product is timeline-first and today-first. The main question is what matters now, not what features exist.
-- Anticipation matters more than reaction. The system should help the household see pressure before it turns into friction.
-- Complexity belongs in the model, not in the interface. The experience stays simple even when the household is not.
 - Capture must stay easier than remembering, or adoption fails.
-- DomusMind is long-lived household infrastructure, not a disposable productivity experiment.
-- Household data is private household infrastructure and must remain protected and controlled by the household.
+- Anticipation matters more than reaction. The system should help the household see pressure before it turns into friction.
 
 ---
 
