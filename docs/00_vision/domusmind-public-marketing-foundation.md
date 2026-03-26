@@ -101,7 +101,7 @@ It brings plans, chores, tasks, and responsibilities into one shared place, so e
 
 The result is less stress, fewer reminders, and a home that runs more smoothly.
 
-This is consistent with the Household Timeline being the primary operational surface that answers “What matters today for this household?” fileciteturn1file4
+This is consistent with the Household Timeline being the primary operational surface that answers “What matters today for this household?”
 
 ---
 
@@ -232,7 +232,7 @@ DomusMind is designed for the household as a shared system, not for one person�
 
 ### 2. Timeline-First
 
-The home screen is not a dashboard. It is a living view of what matters today. fileciteturn1file4
+The home screen is not a dashboard. It is a living view of what matters today. 
 
 ### 3. Responsibility Is Visible
 
@@ -528,7 +528,7 @@ With DomusMind:
 - upcoming obligations are visible
 - the situation is understandable in seconds
 
-This is aligned with the timeline as the primary interface for what matters today. fileciteturn1file4
+This is aligned with the timeline as the primary interface for what matters today. 
 
 ---
 
