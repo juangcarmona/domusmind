@@ -63,6 +63,20 @@ using DomusMind.Application.Features.Tasks.ReassignTask;
 using DomusMind.Application.Features.Tasks.RescheduleTask;
 using DomusMind.Application.Features.Tasks.ResumeRoutine;
 using DomusMind.Application.Features.Tasks.UpdateRoutine;
+using DomusMind.Application.Features.SharedLists.CreateSharedList;
+using DomusMind.Application.Features.SharedLists.AddItemToSharedList;
+using DomusMind.Application.Features.SharedLists.ToggleSharedListItem;
+using DomusMind.Application.Features.SharedLists.GetFamilySharedLists;
+using DomusMind.Application.Features.SharedLists.GetSharedListDetail;
+using DomusMind.Application.Features.SharedLists.UpdateSharedListItem;
+using DomusMind.Application.Features.SharedLists.RemoveSharedListItem;
+using DomusMind.Application.Features.SharedLists.LinkSharedList;
+using DomusMind.Application.Features.SharedLists.UnlinkSharedList;
+using DomusMind.Application.Features.SharedLists.CreateLinkedSharedListForEvent;
+using DomusMind.Application.Features.SharedLists.GetSharedListByLinkedEntity;
+using DomusMind.Application.Features.SharedLists.RenameSharedList;
+using DomusMind.Application.Features.SharedLists.DeleteSharedList;
+using DomusMind.Application.Features.SharedLists.ReorderSharedListItems;
 using DomusMind.Contracts.Auth;
 using DomusMind.Contracts.Calendar;
 using DomusMind.Contracts.Family;
@@ -70,6 +84,7 @@ using DomusMind.Contracts.Languages;
 using DomusMind.Contracts.Responsibilities;
 using DomusMind.Contracts.Setup;
 using DomusMind.Contracts.Tasks;
+using DomusMind.Contracts.SharedLists;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DomusMind.Application.DependencyInjection;
@@ -164,6 +179,22 @@ public static class ApplicationServices
         // Setup slices
         services.AddScoped<IQueryHandler<GetSetupStatusQuery, SetupStatusResponse>, GetSetupStatusQueryHandler>();
         services.AddScoped<ICommandHandler<InitializeSystemCommand, InitializeSystemResponse>, InitializeSystemCommandHandler>();
+
+        // Shared Lists slices (V1.1)
+        services.AddScoped<ICommandHandler<CreateSharedListCommand, CreateSharedListResponse>, CreateSharedListCommandHandler>();
+        services.AddScoped<ICommandHandler<AddItemToSharedListCommand, AddItemToSharedListResponse>, AddItemToSharedListCommandHandler>();
+        services.AddScoped<ICommandHandler<ToggleSharedListItemCommand, ToggleSharedListItemResponse>, ToggleSharedListItemCommandHandler>();
+        services.AddScoped<IQueryHandler<GetFamilySharedListsQuery, GetFamilySharedListsResponse>, GetFamilySharedListsQueryHandler>();
+        services.AddScoped<IQueryHandler<GetSharedListDetailQuery, GetSharedListDetailResponse>, GetSharedListDetailQueryHandler>();
+        services.AddScoped<ICommandHandler<UpdateSharedListItemCommand, UpdateSharedListItemResponse>, UpdateSharedListItemCommandHandler>();
+        services.AddScoped<ICommandHandler<RemoveSharedListItemCommand, bool>, RemoveSharedListItemCommandHandler>();
+        services.AddScoped<ICommandHandler<LinkSharedListCommand, LinkSharedListResponse>, LinkSharedListCommandHandler>();
+        services.AddScoped<ICommandHandler<UnlinkSharedListCommand, bool>, UnlinkSharedListCommandHandler>();
+        services.AddScoped<ICommandHandler<CreateLinkedSharedListForEventCommand, CreateSharedListResponse>, CreateLinkedSharedListForEventCommandHandler>();
+        services.AddScoped<IQueryHandler<GetSharedListByLinkedEntityQuery, GetSharedListByLinkedEntityResponse>, GetSharedListByLinkedEntityQueryHandler>();
+        services.AddScoped<ICommandHandler<RenameSharedListCommand, RenameSharedListResponse>, RenameSharedListCommandHandler>();
+        services.AddScoped<ICommandHandler<DeleteSharedListCommand, bool>, DeleteSharedListCommandHandler>();
+        services.AddScoped<ICommandHandler<ReorderSharedListItemsCommand, bool>, ReorderSharedListItemsCommandHandler>();
 
         return services;
     }

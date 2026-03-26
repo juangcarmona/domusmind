@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import type { EnrichedTimelineResponse } from "../../../../api/domusmindApi";
 
@@ -44,6 +44,41 @@ export function TimelineRuler({
   const { i18n, t } = useTranslation("today");
   const trackRef = useRef<HTMLDivElement>(null);
   const selectedRef = useRef<HTMLButtonElement>(null);
+  const dragState = useRef<{ startX: number; scrollLeft: number; dragged: boolean } | null>(null);
+
+  // Drag-to-scroll on the ruler track
+  const onPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    const track = trackRef.current;
+    if (!track) return;
+    dragState.current = { startX: e.clientX, scrollLeft: track.scrollLeft, dragged: false };
+    track.setPointerCapture(e.pointerId);
+    track.style.cursor = "grabbing";
+    track.style.userSelect = "none";
+  }, []);
+
+  const onPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragState.current || !trackRef.current) return;
+    const dx = e.clientX - dragState.current.startX;
+    if (Math.abs(dx) > 4) dragState.current.dragged = true;
+    trackRef.current.scrollLeft = dragState.current.scrollLeft - dx;
+  }, []);
+
+  const onPointerUpOrCancel = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragState.current || !trackRef.current) return;
+    trackRef.current.style.cursor = "";
+    trackRef.current.style.userSelect = "";
+    trackRef.current.releasePointerCapture(e.pointerId);
+    dragState.current = null;
+  }, []);
+
+  // Suppress day-button click when the pointer was used to drag
+  const onClickCapture = useCallback((e: React.MouseEvent) => {
+    if (dragState.current?.dragged) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  }, []);
 
   const startIso = addDaysToIso(today, -90);
   const endIso = addDaysToIso(today, 365);
@@ -74,7 +109,14 @@ export function TimelineRuler({
   return (
     <div className="coord-ruler-wrap">
       <div className="coord-ruler-hint">{t("timeline.scrollHint")}</div>
-      <div className="coord-ruler-track" ref={trackRef}>
+      <div className="coord-ruler-track" ref={trackRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUpOrCancel}
+        onPointerCancel={onPointerUpOrCancel}
+        onClickCapture={onClickCapture}
+        style={{ cursor: "grab" }}
+      >
         {days.map((iso) => {
           const d = new Date(iso + "T00:00:00");
           const isToday = iso === today;
