@@ -25,26 +25,26 @@ hero:
 reality:
   title: "The reality"
   items:
-    - "TODO_REALITY_CARD_1"
-    - "TODO_REALITY_CARD_2"
-    - "TODO_REALITY_CARD_3"
-  summary: "TODO_REALITY_SUMMARY"
+    - "One person knows when school ends."
+    - "One person remembers the appointment."
+    - "One person notices what is missing at home."
+  summary: "When one person stops thinking, the house stops working."
 breakdown:
-  title: "TODO_BREAKDOWN_SECTION_TITLE"
+  title: "Why tools don't fix it"
   items:
-    - title: "TODO_BREAKDOWN_CARD_1_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_1_DETAIL"
-    - title: "TODO_BREAKDOWN_CARD_2_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_2_DETAIL"
-    - title: "TODO_BREAKDOWN_CARD_3_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_3_DETAIL"
+    - title: "Calendars track time."
+      detail: "They do not show what the household needs around it."
+    - title: "Task apps track items."
+      detail: "They do not show who already knows what matters."
+    - title: "The system still lives in one person's head."
+      detail: "Memory, chats, and reminders do not create shared household clarity."
 shift:
   title: "The shift"
-  statement: "TODO_SHIFT_STATEMENT"
+  statement: "DomusMind turns that invisible work into one shared household system."
   outcomes:
-    - "TODO_SHIFT_OUTCOME_1"
-    - "TODO_SHIFT_OUTCOME_2"
-    - "TODO_SHIFT_OUTCOME_3"
+    - "The household becomes visible."
+    - "Responsibility becomes clear."
+    - "People can act without being told."
 proof:
   title: "What You See"
   primary:
@@ -59,10 +59,10 @@ proof:
         - ["18:00 — Football practice — Mateo"]
         - ["Trash → Juan", "Laundry → Sarah"]
   secondary:
-    title: "TODO_SECONDARY_PROOF_TITLE"
-    caption: "TODO_SECONDARY_PROOF_CAPTION"
-    placeholder: "TODO_SECONDARY_PROOF_SCREENSHOT"
-    alt: "Secondary proof screenshot placeholder"
+    title: "Week"
+    caption: "See the whole week clearly before busy days become friction."
+    placeholder: "WEEK_VIEW_SCREENSHOT"
+    alt: "Week view showing the household's plans for the coming days"
 howItWorks:
   title: "How It Works"
   steps:
@@ -84,17 +84,17 @@ currentState:
         - "Shared Lists — shopping lists, checklists, and ongoing household items"
     - title: "In progress"
       items:
-        - "TODO_IN_PROGRESS_1"
-        - "TODO_IN_PROGRESS_2"
-        - "TODO_IN_PROGRESS_3"
+        - "Week view — clearer weekly coordination"
+        - "Household relationships — who is connected to whom"
+        - "Safer member changes — remove people without breaking household state"
     - title: "Early access / next"
       items:
-        - "TODO_EARLY_ACCESS_1"
-        - "TODO_EARLY_ACCESS_2"
-        - "TODO_EARLY_ACCESS_3"
+        - "Early household testing"
+        - "Feedback-driven product refinement"
+        - "Faster first-run setup"
 earlyAccess:
   title: "Early Access / Support the Project"
-  body: "TODO_EARLY_ACCESS_BODY"
+  body: "Follow the project, try early builds, and help shape how DomusMind works in real households."
   primaryCta:
     label: "Follow the Project"
     href: "/community"

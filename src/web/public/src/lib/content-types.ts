@@ -119,3 +119,79 @@ export interface PageFrontmatter {
   title: string;
   description: string;
 }
+
+// ── Shared page primitives ───────────────────────────────────────────────────
+
+export interface SimpleHeroContent {
+  headline: string;
+  supportLine: string;
+}
+
+export interface GroupedListContent {
+  title: string;
+  items: string[];
+}
+
+export interface ScreenshotSlot {
+  placeholder: string;
+  alt: string;
+  caption: string;
+  imageSrc?: string;
+}
+
+// ── Manifesto page ────────────────────────────────────────────────────────────
+
+export interface ManifestoBlockContent {
+  title: string;
+  body: string;
+}
+
+export interface ManifestoFrontmatter {
+  title: string;
+  description: string;
+  hero: SimpleHeroContent;
+  blocks: ManifestoBlockContent[];
+  closing: string;
+  cta: EarlyAccessContent;
+}
+
+// ── How It Works page ─────────────────────────────────────────────────────────
+
+export interface HowItWorksPageFrontmatter {
+  title: string;
+  description: string;
+  hero: SimpleHeroContent;
+  steps: StepContent[];
+  visible: GroupedListContent;
+  screenshots: ScreenshotSlot[];
+  cta: EarlyAccessContent;
+}
+
+// ── Mental Load page ──────────────────────────────────────────────────────────
+
+export interface MentalLoadSectionContent {
+  title: string;
+  body: string;
+  items?: string[];
+}
+
+export interface MentalLoadFrontmatter {
+  title: string;
+  description: string;
+  hero: SimpleHeroContent;
+  sections: MentalLoadSectionContent[];
+  cta: EarlyAccessContent;
+}
+
+// ── Early Access page ─────────────────────────────────────────────────────────
+
+export interface EarlyAccessPageFrontmatter {
+  title: string;
+  description: string;
+  hero: SimpleHeroContent;
+  meaning: GroupedListContent;
+  audience: GroupedListContent;
+  currentState: CurrentStateContent;
+  refining: GroupedListContent;
+  cta: EarlyAccessContent;
+}

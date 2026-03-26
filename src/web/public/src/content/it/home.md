@@ -24,26 +24,26 @@ hero:
 reality:
   title: "La realtà"
   items:
-    - "TODO_REALITY_CARD_1"
-    - "TODO_REALITY_CARD_2"
-    - "TODO_REALITY_CARD_3"
-  summary: "TODO_REALITY_SUMMARY"
+    - "Una persona sa quando finisce la scuola."
+    - "Una persona ricorda l'appuntamento."
+    - "Una persona si accorge di cosa manca in casa."
+  summary: "Quando quella persona smette di pensarci, la casa smette di funzionare."
 breakdown:
-  title: "TODO_BREAKDOWN_SECTION_TITLE"
+  title: "Perché gli strumenti non bastano"
   items:
-    - title: "TODO_BREAKDOWN_CARD_1_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_1_DETAIL"
-    - title: "TODO_BREAKDOWN_CARD_2_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_2_DETAIL"
-    - title: "TODO_BREAKDOWN_CARD_3_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_3_DETAIL"
+    - title: "I calendari tracciano il tempo."
+      detail: "Non mostrano quello che la casa ha bisogno di fare intorno a quegli eventi."
+    - title: "Le app di task tracciano elementi."
+      detail: "Non mostrano chi sa già cosa è importante."
+    - title: "Il sistema vive ancora nella testa di una persona."
+      detail: "Memoria, messaggi e promemoria non creano chiarezza condivisa in casa."
 shift:
   title: "Il cambiamento"
-  statement: "TODO_SHIFT_STATEMENT"
+  statement: "DomusMind trasforma quel lavoro invisibile in un sistema condiviso per la casa."
   outcomes:
-    - "TODO_SHIFT_OUTCOME_1"
-    - "TODO_SHIFT_OUTCOME_2"
-    - "TODO_SHIFT_OUTCOME_3"
+    - "La casa diventa visibile."
+    - "Le responsabilità diventano chiare."
+    - "Le persone possono agire senza aspettare istruzioni."
 proof:
   title: "What You See"
   primary:
@@ -57,10 +57,10 @@ proof:
         - ["Giardino → Juan", "Carbone per il barbecue"]
         - ["Mateo calcio alle 18:00"]
   secondary:
-    title: "TODO_SECONDARY_PROOF_TITLE"
-    caption: "TODO_SECONDARY_PROOF_CAPTION"
-    placeholder: "TODO_SECONDARY_PROOF_SCREENSHOT"
-    alt: "Secondary proof screenshot placeholder"
+    title: "Settimana"
+    caption: "Vedi tutta la settimana chiaramente prima che i giorni intensi diventino fonte di stress."
+    placeholder: "WEEK_VIEW_SCREENSHOT"
+    alt: "Vista settimanale con i piani della casa per i prossimi giorni"
 howItWorks:
   title: "How It Works"
   steps:
@@ -82,17 +82,17 @@ currentState:
         - "Liste condivise — liste della spesa, checklist e articoli ricorrenti della casa"
     - title: "In progress"
       items:
-        - "TODO_IN_PROGRESS_1"
-        - "TODO_IN_PROGRESS_2"
-        - "TODO_IN_PROGRESS_3"
+        - "Vista settimanale — coordinamento settimanale più chiaro"
+        - "Relazioni nel nucleo familiare — chi è collegato a chi"
+        - "Rimozione sicura dei membri — togliere persone senza compromettere lo stato della casa"
     - title: "Early access / next"
       items:
-        - "TODO_EARLY_ACCESS_1"
-        - "TODO_EARLY_ACCESS_2"
-        - "TODO_EARLY_ACCESS_3"
+        - "Test nelle case reali"
+        - "Miglioramento del prodotto basato sui feedback"
+        - "Primo avvio più veloce"
 earlyAccess:
   title: "Early Access / Support the Project"
-  body: "TODO_EARLY_ACCESS_BODY"
+  body: "Segui il progetto, prova le prime versioni e aiuta a definire come funzionerà DomusMind nelle case reali."
   primaryCta:
     label: "Segui il progetto"
     href: "/community"

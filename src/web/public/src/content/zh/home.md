@@ -24,26 +24,26 @@ hero:
 reality:
   title: "现实"
   items:
-    - "TODO_REALITY_CARD_1"
-    - "TODO_REALITY_CARD_2"
-    - "TODO_REALITY_CARD_3"
-  summary: "TODO_REALITY_SUMMARY"
+    - "一个人知道学校几点放学。"
+    - "一个人记得那个预约。"
+    - "一个人发现家里缺什么。"
+  summary: "当那个人停下来，家就运转不下去了。"
 breakdown:
-  title: "TODO_BREAKDOWN_SECTION_TITLE"
+  title: "为什么工具解决不了这个问题"
   items:
-    - title: "TODO_BREAKDOWN_CARD_1_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_1_DETAIL"
-    - title: "TODO_BREAKDOWN_CARD_2_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_2_DETAIL"
-    - title: "TODO_BREAKDOWN_CARD_3_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_3_DETAIL"
+    - title: "日历记录的是时间。"
+      detail: "它们看不到家庭围绕这些时刻需要做什么。"
+    - title: "任务应用记录的是事项。"
+      detail: "它们看不到谁已经知道什么是重要的。"
+    - title: "这个系统依然住在一个人的脑子里。"
+      detail: "记忆、跨群消息和提醒，都没法让家庭有真正共同的认知。"
 shift:
   title: "转变"
-  statement: "TODO_SHIFT_STATEMENT"
+  statement: "DomusMind 将那些看不见的付出，变成全家共享的家庭系统。"
   outcomes:
-    - "TODO_SHIFT_OUTCOME_1"
-    - "TODO_SHIFT_OUTCOME_2"
-    - "TODO_SHIFT_OUTCOME_3"
+    - "家庭的状况变得可见。"
+    - "责任归属变得清晰。"
+    - "每个人都能主动行动，而不是等人吟咀。"
 proof:
   title: "What You See"
   primary:
@@ -57,10 +57,10 @@ proof:
         - ["花园 → Juan", "烧烤用品"]
         - ["马特奥足球 18:00"]
   secondary:
-    title: "TODO_SECONDARY_PROOF_TITLE"
-    caption: "TODO_SECONDARY_PROOF_CAPTION"
-    placeholder: "TODO_SECONDARY_PROOF_SCREENSHOT"
-    alt: "Secondary proof screenshot placeholder"
+    title: "本周"
+    caption: "在忙碌的日子变成压力之前，先看清整个星期。"
+    placeholder: "WEEK_VIEW_SCREENSHOT"
+    alt: "展示家庭未来几天计划的本周视图"
 howItWorks:
   title: "How It Works"
   steps:
@@ -82,17 +82,17 @@ currentState:
         - "共享列表 — 购物清单、清单和定期家庭物品"
     - title: "In progress"
       items:
-        - "TODO_IN_PROGRESS_1"
-        - "TODO_IN_PROGRESS_2"
-        - "TODO_IN_PROGRESS_3"
+        - "本周视图 — 更清晰的周计划协调"
+        - "家庭关系 — 成员之间的关联方式"
+        - "安全移除成员 — 在不破坏家庭状态的情况下移除人员"
     - title: "Early access / next"
       items:
-        - "TODO_EARLY_ACCESS_1"
-        - "TODO_EARLY_ACCESS_2"
-        - "TODO_EARLY_ACCESS_3"
+        - "家庭环境中的早期测试"
+        - "根据使用反馈持续改进产品"
+        - "更快的首次配置流程"
 earlyAccess:
   title: "Early Access / Support the Project"
-  body: "TODO_EARLY_ACCESS_BODY"
+  body: "关注项目、体验早期版本，帮助我们与真实家庭共同塑造 DomusMind。"
   primaryCta:
     label: "关注项目"
     href: "/community"

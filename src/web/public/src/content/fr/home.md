@@ -24,26 +24,26 @@ hero:
 reality:
   title: "La réalité"
   items:
-    - "TODO_REALITY_CARD_1"
-    - "TODO_REALITY_CARD_2"
-    - "TODO_REALITY_CARD_3"
-  summary: "TODO_REALITY_SUMMARY"
+    - "Une personne sait quand l'école se termine."
+    - "Une personne se souvient du rendez-vous."
+    - "Une personne remarque ce qui manque à la maison."
+  summary: "Quand cette personne s'arrête de penser, la maison s'arrête de fonctionner."
 breakdown:
-  title: "TODO_BREAKDOWN_SECTION_TITLE"
+  title: "Pourquoi les outils ne règlent pas ça"
   items:
-    - title: "TODO_BREAKDOWN_CARD_1_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_1_DETAIL"
-    - title: "TODO_BREAKDOWN_CARD_2_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_2_DETAIL"
-    - title: "TODO_BREAKDOWN_CARD_3_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_3_DETAIL"
+    - title: "Les agendas enregistrent du temps."
+      detail: "Ils ne montrent pas ce dont le foyer a besoin autour de ces moments."
+    - title: "Les apps de tâches enregistrent des éléments."
+      detail: "Elles ne montrent pas qui sait déjà ce qui compte."
+    - title: "Le système vit toujours dans la tête d'une seule personne."
+      detail: "La mémoire, les messages et les rappels ne créent pas une vision partagée du foyer."
 shift:
   title: "Le changement"
-  statement: "TODO_SHIFT_STATEMENT"
+  statement: "DomusMind transforme ce travail invisible en un système partagé pour le foyer."
   outcomes:
-    - "TODO_SHIFT_OUTCOME_1"
-    - "TODO_SHIFT_OUTCOME_2"
-    - "TODO_SHIFT_OUTCOME_3"
+    - "Le foyer devient visible."
+    - "Les responsabilités deviennent claires."
+    - "Chacun peut agir sans attendre qu'on lui dise."
 proof:
   title: "What You See"
   primary:
@@ -57,10 +57,10 @@ proof:
         - ["Jardin → Juan", "Charbon pour le barbecue"]
         - ["Mateo football à 18h00"]
   secondary:
-    title: "TODO_SECONDARY_PROOF_TITLE"
-    caption: "TODO_SECONDARY_PROOF_CAPTION"
-    placeholder: "TODO_SECONDARY_PROOF_SCREENSHOT"
-    alt: "Secondary proof screenshot placeholder"
+    title: "Semaine"
+    caption: "Voyez toute la semaine clairement avant que les jours chargés ne deviennent source de tension."
+    placeholder: "WEEK_VIEW_SCREENSHOT"
+    alt: "Vue de la semaine avec les plans du foyer pour les prochains jours"
 howItWorks:
   title: "How It Works"
   steps:
@@ -82,17 +82,17 @@ currentState:
         - "Listes partagées — listes de courses, listes de contrôle et articles récurrents du foyer"
     - title: "In progress"
       items:
-        - "TODO_IN_PROGRESS_1"
-        - "TODO_IN_PROGRESS_2"
-        - "TODO_IN_PROGRESS_3"
+        - "Vue de la semaine — une coordination hebdomadaire plus lisible"
+        - "Relations dans le foyer — qui est lié à qui"
+        - "Changements de membres sécurisés — retirer des personnes sans perturber l'état du foyer"
     - title: "Early access / next"
       items:
-        - "TODO_EARLY_ACCESS_1"
-        - "TODO_EARLY_ACCESS_2"
-        - "TODO_EARLY_ACCESS_3"
+        - "Tests en foyer réel"
+        - "Amélioration du produit basée sur les retours utilisateurs"
+        - "Première prise en main plus rapide"
 earlyAccess:
   title: "Early Access / Support the Project"
-  body: "TODO_EARLY_ACCESS_BODY"
+  body: "Suivez le projet, testez les premières versions et aidez à façonner DomusMind pour de vraies maisons."
   primaryCta:
     label: "Suivre le projet"
     href: "/community"

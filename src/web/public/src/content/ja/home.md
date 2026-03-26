@@ -24,26 +24,26 @@ hero:
 reality:
   title: "現実"
   items:
-    - "TODO_REALITY_CARD_1"
-    - "TODO_REALITY_CARD_2"
-    - "TODO_REALITY_CARD_3"
-  summary: "TODO_REALITY_SUMMARY"
+    - "一人が、学校が何時に終わるか知っている。"
+    - "一人が、予約や約束を覚えている。"
+    - "一人が、家に何が足りないか気づいている。"
+  summary: "その人が考えるのをやめると、家全体が止まる。"
 breakdown:
-  title: "TODO_BREAKDOWN_SECTION_TITLE"
+  title: "なぜツールでは解決できないのか"
   items:
-    - title: "TODO_BREAKDOWN_CARD_1_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_1_DETAIL"
-    - title: "TODO_BREAKDOWN_CARD_2_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_2_DETAIL"
-    - title: "TODO_BREAKDOWN_CARD_3_TITLE"
-      detail: "TODO_BREAKDOWN_CARD_3_DETAIL"
+    - title: "カレンダーは時間を記録する。"
+      detail: "その時間の周りで家庭が何を必要としているかは分からない。"
+    - title: "タスクアプリは項目を記録する。"
+      detail: "誰がすでに大切なことを知っているかは見えない。"
+    - title: "システムはまだ一人の頭の中に存在している。"
+      detail: "記憶、チャット、リマインダーだけでは、家庭全体の共有された理解は生まれない。"
 shift:
   title: "変化"
-  statement: "TODO_SHIFT_STATEMENT"
+  statement: "DomusMindはその見えない労力を、家庭全体で共有できるシステムに変える。"
   outcomes:
-    - "TODO_SHIFT_OUTCOME_1"
-    - "TODO_SHIFT_OUTCOME_2"
-    - "TODO_SHIFT_OUTCOME_3"
+    - "家庭の全体像が見えるようになる。"
+    - "何が誰の貣任かが明確になる。"
+    - "言われなくても、それぞれが動けるようになる。"
 proof:
   title: "What You See"
   primary:
@@ -57,10 +57,10 @@ proof:
         - ["庭 → Juan", "バーベキュー用品"]
         - ["マテオのサッカー 18:00"]
   secondary:
-    title: "TODO_SECONDARY_PROOF_TITLE"
-    caption: "TODO_SECONDARY_PROOF_CAPTION"
-    placeholder: "TODO_SECONDARY_PROOF_SCREENSHOT"
-    alt: "Secondary proof screenshot placeholder"
+    title: "週間"
+    caption: "濃い日がストレスになる前に、一週間全体を見渡す。"
+    placeholder: "WEEK_VIEW_SCREENSHOT"
+    alt: "家庭の予定を数日分表示する週間ビュー"
 howItWorks:
   title: "How It Works"
   steps:
@@ -82,17 +82,17 @@ currentState:
         - "共有リスト — 買い物リスト、チェックリスト、定期的な家庭用品"
     - title: "In progress"
       items:
-        - "TODO_IN_PROGRESS_1"
-        - "TODO_IN_PROGRESS_2"
-        - "TODO_IN_PROGRESS_3"
+        - "週間ビュー — 週単位の共有をより分かりやすく"
+        - "家庭内の関係 — 誰と誰がつながっているか"
+        - "安全なメンバー変更 — 家庭の状態を壊さずにメンバーを削除できる"
     - title: "Early access / next"
       items:
-        - "TODO_EARLY_ACCESS_1"
-        - "TODO_EARLY_ACCESS_2"
-        - "TODO_EARLY_ACCESS_3"
+        - "実際の家庭での早期テスト"
+        - "フィードバックをかたちにした改善"
+        - "初回起動の整備をもっとすほやかに"
 earlyAccess:
   title: "Early Access / Support the Project"
-  body: "TODO_EARLY_ACCESS_BODY"
+  body: "プロジェクトをフォローし、早期ビルドを試し、実際の全家庭でDomusMindがどう機能するかを決めるのを手伝ってください。"
   primaryCta:
     label: "プロジェクトをフォロー"
     href: "/community"

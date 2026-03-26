@@ -89,6 +89,10 @@ main {
   max-width: 1120px;
 }
 
+.page-main {
+  max-width: 960px;
+}
+
 .sr-only {
   border: 0;
   clip: rect(0 0 0 0);
