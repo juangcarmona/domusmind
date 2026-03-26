@@ -18,7 +18,9 @@ const Content = content.Content as unknown as () => unknown;
 <BaseLayout locale={locale} title={frontmatter.title} description={frontmatter.description} currentPath="/architecture">
   {isFallback && <FallbackNotice locale={locale} />}
   <h1>{frontmatter.title}</h1>
-  <p class="lead">API-first, domain-centric, event-driven infrastructure.</p>
-  <pre class="diagram" aria-label="High level architecture diagram">Clients → API → Application Slices → Domain Model → Infrastructure</pre>
+  <p class="lead">API-first, domain-centric, event-driven.</p>
+  <section aria-label="Current core contexts" class="contexts-section">
+    <pre class="diagram" aria-label="High level architecture diagram">Clients → API → Application Slices → Domain Model → Infrastructure</pre>
+  </section>
   <Content />
 </BaseLayout>

@@ -1,26 +1,88 @@
 ---
 title: "DomusMind"
-description: "\u9762\u5411\u5bb6\u5ead\u8fd0\u8425\u7684\u5f00\u653e\u57fa\u7840\u8bbe\u65bd\u3002"
-heroTitle: "\u5bb6\u5ead\u751f\u6d3b\u64cd\u4f5c\u7cfb\u7edf"
-heroBody: "DomusMind \u5c06\u770b\u4e0d\u89c1\u7684\u5bb6\u5ead\u8ba4\u77e5\u8d1f\u62c5\u8f6c\u5316\u4e3a\u5171\u4eab\u7684\u8fd0\u8425\u57fa\u7840\u8bbe\u65bd\u3002"
-primaryCtaLabel: "\u9605\u8bfb\u5ba3\u8a00"
+description: "面向家庭的共享系统 — 状态可见，责任明确，协调共担。"
+heroTitle: "家庭的运转，不再依赖一个人的记忆。"
+heroBody: "DomusMind 是您家庭的共享系统。发生了什么、谁负责什么、接下来是什么 — 对所有人可见。"
+primaryCtaLabel: "阅读宣言"
 primaryCtaHref: "/manifesto"
-secondaryCtaLabel: "\u52a0\u5165\u9879\u76ee"
+secondaryCtaLabel: "加入项目"
 secondaryCtaHref: "/community"
-developerCtaTitle: "\u9762\u5411\u5f00\u53d1\u8005"
-developerCtaBody: "\u63a2\u7d22\u67b6\u6784\u5e76\u53c2\u4e0e\u534f\u4f5c\u3002"
-developerCtaLabel: "\u67e5\u770b\u67b6\u6784"
+developerCtaTitle: "面向开发者"
+developerCtaBody: "API 开放且有文档。探索架构并参与贡献。"
+developerCtaLabel: "查看架构"
 developerCtaHref: "/architecture"
-familyCtaTitle: "\u9762\u5411\u5bb6\u5ead"
-familyCtaBody: "\u5173\u6ce8\u9879\u76ee\u5e76\u6210\u4e3a\u65e9\u671f\u91c7\u7528\u8005\u3002"
-familyCtaLabel: "\u5173\u6ce8\u9879\u76ee"
+familyCtaTitle: "面向家庭"
+familyCtaBody: "关注项目并成为早期采用者。"
+familyCtaLabel: "关注项目"
 familyCtaHref: "/community"
 ---
 
-## 问题
+## 现实
 
-现代家庭运行复杂系统，但协调信息常常只存在于一个人的脑中。
+李知道一辰的游泳课几点结束。
+她记得周四有家长会。
+她知道要买牛奶。
+她知道 BaoBao 下周有兽医预约。
 
-## DomusMind 是什么
+如果李停止思考家里的事，就会出问题。
 
-它不是任务应用或日历应用，而是家庭系统模型。
+问题不是李很忙。问题是家庭的运转依赖她一个人的记忆。
+
+## 为什么工具帮不上忙
+
+任务应用记录待办事项。日历记录时间。
+两者都不追踪责任。
+两者都不显示谁知道什么。
+两者都不把家庭建模为一个系统。
+
+家的状态仍然存在于一个人的脑子里。
+
+## 转变
+
+DomusMind 让所有人都能看见家庭的状态。
+
+- 谁负责家里的哪个区域
+- 这周发生了什么
+- 有哪些任务，属于谁
+- 哪些常规维持着家庭的运转
+
+不再由一个人独自承担。
+
+## 你看到的
+
+```
+今天 — 王家
+
+一辰 → 游泳课 18:00
+李 → 家长会 09:00
+
+买牛奶
+检查书包
+```
+
+家庭中的每个成员看到相同的界面。
+计划、任务和责任 — 在同一个地方。
+
+## 如何运作
+
+1. 添加某件事 — 一个活动、一项任务、一个常规
+2. 它成为家庭记录的一部分
+3. 它出现在家庭时间线上
+4. 它与对应的人和责任区域关联
+
+## 今天已有什么
+
+DomusMind V1 包括：
+
+- **家庭** — 家庭身份和成员
+- **责任** — 谁负责哪个区域
+- **事件** — 家庭日历上的计划和约定
+- **任务** — 需要做什么、由谁来做
+- **常规** — 家庭的定期操作
+- **时间线** — 所有事件的统一视图
+
+## 面向谁
+
+DomusMind 是为那些想要停止依赖一个人撑起一切的**家庭**而建的。
+
+对于**开发者**：DomusMind 是一个开放系统。API 有文档，架构是公开的，欢迎贡献。

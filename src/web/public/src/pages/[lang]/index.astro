@@ -31,17 +31,17 @@ const Content = content.Content as unknown as () => unknown;
   </div>
   <section class="cta-grid" aria-label="Call to action">
     <CtaBlock
-      title={frontmatter.developerCtaTitle}
-      body={frontmatter.developerCtaBody}
-      label={frontmatter.developerCtaLabel}
-      href={frontmatter.developerCtaHref}
-      locale={locale}
-    />
-    <CtaBlock
       title={frontmatter.familyCtaTitle}
       body={frontmatter.familyCtaBody}
       label={frontmatter.familyCtaLabel}
       href={frontmatter.familyCtaHref}
+      locale={locale}
+    />
+    <CtaBlock
+      title={frontmatter.developerCtaTitle}
+      body={frontmatter.developerCtaBody}
+      label={frontmatter.developerCtaLabel}
+      href={frontmatter.developerCtaHref}
       locale={locale}
     />
   </section>
