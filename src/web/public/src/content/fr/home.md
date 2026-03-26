@@ -1,84 +1,102 @@
 ---
 title: "DomusMind"
 description: "Un système partagé pour le foyer — pour qu'une personne arrête de tout porter seule."
-heroTitle: "Si tu arrêtes de penser à la maison, tout s'arrête."
-heroBody: "Quelqu'un est toujours en train de tout gérer. La maison cesse de dépendre de la mémoire d'une seule personne."
-primaryCtaLabel: "L'essayer"
-primaryCtaHref: "/community"
-secondaryCtaLabel: "Voir à quoi ressemble ta maison"
-secondaryCtaHref: "/concept"
-developerCtaTitle: "Pour les développeurs"
-developerCtaBody: "L'API est ouverte et documentée. Explorez l'architecture et contribuez."
-developerCtaLabel: "Explorer l'architecture"
-developerCtaHref: "/architecture"
-familyCtaTitle: "Pour les familles"
-familyCtaBody: "Suivez le projet et devenez early adopter."
-familyCtaLabel: "Suivre le projet"
-familyCtaHref: "/community"
+hero:
+  headline: "Si tu arrêtes de penser à la maison, tout s'arrête."
+  supportLine: "Quelqu'un est toujours en train de tout gérer. La maison cesse de dépendre de la mémoire d'une seule personne."
+  proofBullets:
+    - "Une personne arrête de tout porter."
+    - "Les autres voient ce qui se passe."
+    - "La maison cesse de dépendre d'un seul cerveau."
+  primaryCta:
+    label: "L'essayer"
+    href: "/community"
+  secondaryCta:
+    label: "Voir à quoi ressemble ta maison"
+    href: "#how-it-works"
+  proofPanel:
+    eyebrow: "Aujourd'hui"
+    title: "Aujourd'hui"
+    groups:
+      - ["Jardin → Juan", "Charbon pour le barbecue"]
+      - ["Mateo football à 18h00"]
+    caption: "Tout le monde voit ce qui compte. Plus personne n'a besoin de tout retenir."
+reality:
+  title: "La réalité"
+  items:
+    - "TODO_REALITY_CARD_1"
+    - "TODO_REALITY_CARD_2"
+    - "TODO_REALITY_CARD_3"
+  summary: "TODO_REALITY_SUMMARY"
+breakdown:
+  title: "TODO_BREAKDOWN_SECTION_TITLE"
+  items:
+    - title: "TODO_BREAKDOWN_CARD_1_TITLE"
+      detail: "TODO_BREAKDOWN_CARD_1_DETAIL"
+    - title: "TODO_BREAKDOWN_CARD_2_TITLE"
+      detail: "TODO_BREAKDOWN_CARD_2_DETAIL"
+    - title: "TODO_BREAKDOWN_CARD_3_TITLE"
+      detail: "TODO_BREAKDOWN_CARD_3_DETAIL"
+shift:
+  title: "Le changement"
+  statement: "TODO_SHIFT_STATEMENT"
+  outcomes:
+    - "TODO_SHIFT_OUTCOME_1"
+    - "TODO_SHIFT_OUTCOME_2"
+    - "TODO_SHIFT_OUTCOME_3"
+proof:
+  title: "What You See"
+  primary:
+    title: "Aujourd'hui"
+    caption: "Tout le monde voit ce qui compte. Plus personne n'a besoin de tout retenir."
+    placeholder: "today-view"
+    alt: "Vue d'aujourd'hui avec les plans, tâches et responsabilités du foyer"
+    preview:
+      eyebrow: "Aujourd'hui"
+      groups:
+        - ["Jardin → Juan", "Charbon pour le barbecue"]
+        - ["Mateo football à 18h00"]
+  secondary:
+    title: "TODO_SECONDARY_PROOF_TITLE"
+    caption: "TODO_SECONDARY_PROOF_CAPTION"
+    placeholder: "TODO_SECONDARY_PROOF_SCREENSHOT"
+    alt: "Secondary proof screenshot placeholder"
+howItWorks:
+  title: "How It Works"
+  steps:
+    - title: "TODO_STEP_1_TITLE"
+      body: "TODO_STEP_1_BODY"
+    - title: "TODO_STEP_2_TITLE"
+      body: "TODO_STEP_2_BODY"
+    - title: "TODO_STEP_3_TITLE"
+      body: "TODO_STEP_3_BODY"
+currentState:
+  title: "Ce qui existe aujourd'hui"
+  groups:
+    - title: "Available now"
+      items:
+        - "Famille — identité du foyer et personnes"
+        - "Responsabilités — qui est responsable de chaque domaine"
+        - "Calendrier — plans, rendez-vous et horaires partagés"
+        - "Tâches — ce qui doit être fait et par qui"
+        - "Listes partagées — listes de courses, listes de contrôle et articles récurrents du foyer"
+    - title: "In progress"
+      items:
+        - "TODO_IN_PROGRESS_1"
+        - "TODO_IN_PROGRESS_2"
+        - "TODO_IN_PROGRESS_3"
+    - title: "Early access / next"
+      items:
+        - "TODO_EARLY_ACCESS_1"
+        - "TODO_EARLY_ACCESS_2"
+        - "TODO_EARLY_ACCESS_3"
+earlyAccess:
+  title: "Early Access / Support the Project"
+  body: "TODO_EARLY_ACCESS_BODY"
+  primaryCta:
+    label: "Suivre le projet"
+    href: "/community"
+  secondaryCta:
+    label: "TODO_SECONDARY_CTA_LABEL"
+    href: "/concept"
 ---
-
-## La réalité
-
-Julie sait quand se termine l'entraînement de Gabriel.
-Elle se souvient de la réunion scolaire de jeudi.
-Elle sait ce qui manque à la maison.
-Elle sait que Nala a un rendez-vous chez le vétérinaire la semaine prochaine.
-
-Si Julie arrête de penser, la maison cesse de fonctionner.
-
-Pas parce qu'elle est la plus compétente.
-Parce qu'elle est la seule à tenir le système.
-
-## L'injustice
-
-Ce n'est pas une question de tâches.
-Ce n'est pas une question d'être occupée.
-
-Une personne porte le contrôle mental du foyer.
-Les autres réagissent seulement quand on leur dit.
-
-C'est le problème structurel.
-
-## Pourquoi les outils ne règlent pas ça
-
-Les apps de tâches enregistrent des éléments.
-Les agendas enregistrent du temps.
-
-Aucun ne suit qui sait quoi.
-Aucun ne montre qu'une personne contrôle tout et que les autres ne savent rien.
-Aucun ne change l'endroit où vit le système.
-
-L'état du foyer reste dans la tête d'une seule personne.
-
-## Le changement
-
-DomusMind ne vous aide pas à vous organiser.
-
-Il déplace le système hors de la tête d'une seule personne.
-
-La maison devient visible.
-L'état devient partagé.
-Les autres peuvent agir sans qu'on leur dise.
-
-## Ce qui change
-
-Une personne arrête de tout porter.
-Les autres voient ce qui se passe.
-La maison cesse de dépendre d'un seul cerveau.
-
-## Ce qui existe aujourd'hui
-
-DomusMind V1 comprend :
-
-- **Famille** — identité du foyer et membres
-- **Responsabilités** — qui s'occupe de quel domaine
-- **Événements** — plans et rendez-vous dans le calendrier familial
-- **Tâches** — ce qui doit être fait et par qui
-- **Routines** — opérations récurrentes du foyer
-- **Timeline** — vue unifiée de tout ce qui se passe
-
-## Pour qui
-
-DomusMind est conçu pour les **familles** qui veulent arrêter de dépendre d'une seule personne pour tout gérer.
-
-Pour les **développeurs** : DomusMind est un système ouvert. L'API est documentée, l'architecture est publique et les contributions sont les bienvenues.

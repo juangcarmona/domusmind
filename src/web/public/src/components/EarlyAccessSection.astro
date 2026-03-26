@@ -1,0 +1,20 @@
+---
+import { withLocale, type Locale } from '@/lib/i18n';
+import type { EarlyAccessContent } from '@/lib/content-types';
+
+const { section, locale } = Astro.props as { section: EarlyAccessContent; locale: Locale };
+---
+<section class="homepage-section" id="early-access">
+  <div class="early-access-panel">
+    <div class="early-access-copy">
+      <h2>{section.title}</h2>
+      <p>{section.body}</p>
+    </div>
+    <div class="early-access-actions">
+      <a class="button" href={withLocale(locale, section.primaryCta.href)}>{section.primaryCta.label}</a>
+      {section.secondaryCta && (
+        <a class="button ghost" href={withLocale(locale, section.secondaryCta.href)}>{section.secondaryCta.label}</a>
+      )}
+    </div>
+  </div>
+</section>

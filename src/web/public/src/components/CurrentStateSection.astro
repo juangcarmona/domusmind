@@ -1,0 +1,20 @@
+---
+import type { CurrentStateContent } from '@/lib/content-types';
+
+const { section } = Astro.props as { section: CurrentStateContent };
+---
+<section class="homepage-section" id="what-exists-today">
+  <div class="section-intro">
+    <h2>{section.title}</h2>
+  </div>
+  <div class="current-state-grid">
+    {section.groups.map((group) => (
+      <article class="current-state-group">
+        <p class="state-group-title">{group.title}</p>
+        <ul>
+          {group.items.map((item) => <li>{item}</li>)}
+        </ul>
+      </article>
+    ))}
+  </div>
+</section>

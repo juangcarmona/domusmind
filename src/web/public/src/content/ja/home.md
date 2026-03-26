@@ -1,84 +1,102 @@
 ---
 title: "DomusMind"
 description: "家族のための共有システム — 一人が全部を抱えるのをやめるために。"
-heroTitle: "家のことを考えるのをやめると、物事がうまくいかなくなる。"
-heroBody: "誰かが常にすべてに気を配っている。家は一人の記憶に依存するのをやめる。"
-primaryCtaLabel: "試してみる"
-primaryCtaHref: "/community"
-secondaryCtaLabel: "家がどう見えるか"
-secondaryCtaHref: "/concept"
-developerCtaTitle: "開発者向け"
-developerCtaBody: "APIはオープンでドキュメント化されています。アーキテクチャを確認し、貢献する。"
-developerCtaLabel: "アーキテクチャを見る"
-developerCtaHref: "/architecture"
-familyCtaTitle: "家庭向け"
-familyCtaBody: "プロジェクトをフォローして早期参加する。"
-familyCtaLabel: "プロジェクトをフォロー"
-familyCtaHref: "/community"
+hero:
+  headline: "家のことを考えるのをやめると、物事がうまくいかなくなる。"
+  supportLine: "誰かが常にすべてに気を配っている。家は一人の記憶に依存するのをやめる。"
+  proofBullets:
+    - "一人が全てを抱えるのをやめる。"
+    - "他の人が何が起きているかを見る。"
+    - "家が一つの脳に依存しなくなる。"
+  primaryCta:
+    label: "試してみる"
+    href: "/community"
+  secondaryCta:
+    label: "家がどう見えるか"
+    href: "#how-it-works"
+  proofPanel:
+    eyebrow: "今日"
+    title: "今日"
+    groups:
+      - ["庭 → Juan", "バーベキュー用品"]
+      - ["マテオのサッカー 18:00"]
+    caption: "みんなが大切なことを見えている。誰も全部覚えなくていい。"
+reality:
+  title: "現実"
+  items:
+    - "TODO_REALITY_CARD_1"
+    - "TODO_REALITY_CARD_2"
+    - "TODO_REALITY_CARD_3"
+  summary: "TODO_REALITY_SUMMARY"
+breakdown:
+  title: "TODO_BREAKDOWN_SECTION_TITLE"
+  items:
+    - title: "TODO_BREAKDOWN_CARD_1_TITLE"
+      detail: "TODO_BREAKDOWN_CARD_1_DETAIL"
+    - title: "TODO_BREAKDOWN_CARD_2_TITLE"
+      detail: "TODO_BREAKDOWN_CARD_2_DETAIL"
+    - title: "TODO_BREAKDOWN_CARD_3_TITLE"
+      detail: "TODO_BREAKDOWN_CARD_3_DETAIL"
+shift:
+  title: "変化"
+  statement: "TODO_SHIFT_STATEMENT"
+  outcomes:
+    - "TODO_SHIFT_OUTCOME_1"
+    - "TODO_SHIFT_OUTCOME_2"
+    - "TODO_SHIFT_OUTCOME_3"
+proof:
+  title: "What You See"
+  primary:
+    title: "今日"
+    caption: "みんなが大切なことを見えている。誰も全部覚えなくていい。"
+    placeholder: "today-view"
+    alt: "今日の予定、タスク、責任を表示する今日ビュー"
+    preview:
+      eyebrow: "今日"
+      groups:
+        - ["庭 → Juan", "バーベキュー用品"]
+        - ["マテオのサッカー 18:00"]
+  secondary:
+    title: "TODO_SECONDARY_PROOF_TITLE"
+    caption: "TODO_SECONDARY_PROOF_CAPTION"
+    placeholder: "TODO_SECONDARY_PROOF_SCREENSHOT"
+    alt: "Secondary proof screenshot placeholder"
+howItWorks:
+  title: "How It Works"
+  steps:
+    - title: "TODO_STEP_1_TITLE"
+      body: "TODO_STEP_1_BODY"
+    - title: "TODO_STEP_2_TITLE"
+      body: "TODO_STEP_2_BODY"
+    - title: "TODO_STEP_3_TITLE"
+      body: "TODO_STEP_3_BODY"
+currentState:
+  title: "今あるもの"
+  groups:
+    - title: "Available now"
+      items:
+        - "家族 — 世帯のアイデンティティとメンバー"
+        - "責任 — 誰がどのエリアを担当するか"
+        - "カレンダー — 予定、約束、共有スケジュール"
+        - "タスク — 何をすべきか、誰がするか"
+        - "共有リスト — 買い物リスト、チェックリスト、定期的な家庭用品"
+    - title: "In progress"
+      items:
+        - "TODO_IN_PROGRESS_1"
+        - "TODO_IN_PROGRESS_2"
+        - "TODO_IN_PROGRESS_3"
+    - title: "Early access / next"
+      items:
+        - "TODO_EARLY_ACCESS_1"
+        - "TODO_EARLY_ACCESS_2"
+        - "TODO_EARLY_ACCESS_3"
+earlyAccess:
+  title: "Early Access / Support the Project"
+  body: "TODO_EARLY_ACCESS_BODY"
+  primaryCta:
+    label: "プロジェクトをフォロー"
+    href: "/community"
+  secondaryCta:
+    label: "TODO_SECONDARY_CTA_LABEL"
+    href: "/concept"
 ---
-
-## 現実
-
-ユキは晴人のサッカー練習が何時に終わるか知っている。
-木曜日の家庭訪問を覚えている。
-何が家に足りないか把握している。
-モモの獣医の予約が来週あることも知っている。
-
-ユキが考えるのをやめると、家が動かなくなる。
-
-彼女が一番有能だからではない。
-彼女だけがシステムを支えているからだ。
-
-## 不公平さ
-
-これはタスクの問題ではない。
-これは忙しさの問題ではない。
-
-一人が家の精神的な管理を担っている。
-他の人は言われて初めて動く。
-
-これが構造的な問題だ。
-
-## なぜツールが解決しないか
-
-タスクアプリはアイテムを記録する。
-カレンダーは時間を記録する。
-
-誰が何を知っているかを追跡しない。
-一人がすべてを知り、他の人が何も知らないことを示さない。
-システムがどこに存在するかを変えない。
-
-家の状態は、一人の頭の中に留まり続ける。
-
-## 変化
-
-DomusMindは整理を助けるツールではない。
-
-システムを一人の頭から移す。
-
-家が見えるようになる。
-状態が共有される。
-他の人は言われなくても動ける。
-
-## 何が変わるか
-
-一人が全てを抱えるのをやめる。
-他の人が何が起きているかを見る。
-家が一つの脳に依存しなくなる。
-
-## 今あるもの
-
-DomusMind V1には以下が含まれます：
-
-- **家族** — 世帯のアイデンティティとメンバー
-- **責任** — 誰がどのエリアを担当するか
-- **イベント** — 家族カレンダーの予定と約束
-- **タスク** — 何をすべきか、誰がするか
-- **ルーティン** — 家を動かす定期的な作業
-- **タイムライン** — 起きていることすべての統合ビュー
-
-## 誰のためか
-
-DomusMindは、一人が全てを記憶することに依存するのをやめたい**家族**のために作られています。
-
-**開発者**向け：DomusMindはオープンシステムです。APIはドキュメント化され、アーキテクチャは公開されており、貢献を歓迎します。

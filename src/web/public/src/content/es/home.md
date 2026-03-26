@@ -1,84 +1,102 @@
 ---
 title: "DomusMind"
 description: "Un sistema compartido para el hogar — para que una persona deje de cargarlo sola."
-heroTitle: "Deja de tener que estar pendiente de todo."
-heroBody: "Alguien siempre lleva la casa en la cabeza. La casa deja de depender de la memoria de una persona."
-primaryCtaLabel: "Probarlo"
-primaryCtaHref: "/community"
-secondaryCtaLabel: "Ver cómo queda tu casa"
-secondaryCtaHref: "/concept"
-developerCtaTitle: "Para desarrolladores"
-developerCtaBody: "El API está abierto y documentado. Explora la arquitectura y contribuye."
-developerCtaLabel: "Explorar arquitectura"
-developerCtaHref: "/architecture"
-familyCtaTitle: "Para familias"
-familyCtaBody: "Sigue el proyecto y participa como early adopter."
-familyCtaLabel: "Seguir el proyecto"
-familyCtaHref: "/community"
+hero:
+  headline: "Deja de tener que estar pendiente de todo."
+  supportLine: "Alguien siempre lleva la casa en la cabeza. La casa deja de depender de la memoria de una persona."
+  proofBullets:
+    - "Una persona deja de cargar con todo."
+    - "Los demás ven lo que está pasando."
+    - "La casa deja de depender de un solo cerebro."
+  primaryCta:
+    label: "Probarlo"
+    href: "/community"
+  secondaryCta:
+    label: "Ver cómo queda tu casa"
+    href: "#how-it-works"
+  proofPanel:
+    eyebrow: "Hoy"
+    title: "Hoy"
+    groups:
+      - ["Jardín → Juan", "Carbón para la barbacoa"]
+      - ["Mateo fútbol a las 18:00"]
+    caption: "Todos ven lo que importa. Nadie tiene que recordar todo."
+reality:
+  title: "La realidad"
+  items:
+    - "TODO_REALITY_CARD_1"
+    - "TODO_REALITY_CARD_2"
+    - "TODO_REALITY_CARD_3"
+  summary: "TODO_REALITY_SUMMARY"
+breakdown:
+  title: "TODO_BREAKDOWN_SECTION_TITLE"
+  items:
+    - title: "TODO_BREAKDOWN_CARD_1_TITLE"
+      detail: "TODO_BREAKDOWN_CARD_1_DETAIL"
+    - title: "TODO_BREAKDOWN_CARD_2_TITLE"
+      detail: "TODO_BREAKDOWN_CARD_2_DETAIL"
+    - title: "TODO_BREAKDOWN_CARD_3_TITLE"
+      detail: "TODO_BREAKDOWN_CARD_3_DETAIL"
+shift:
+  title: "El cambio"
+  statement: "TODO_SHIFT_STATEMENT"
+  outcomes:
+    - "TODO_SHIFT_OUTCOME_1"
+    - "TODO_SHIFT_OUTCOME_2"
+    - "TODO_SHIFT_OUTCOME_3"
+proof:
+  title: "What You See"
+  primary:
+    title: "Hoy"
+    caption: "Todos ven lo que importa. Nadie tiene que recordar todo."
+    placeholder: "today-view"
+    alt: "Vista de hoy con planes, tareas y responsabilidades del hogar"
+    preview:
+      eyebrow: "Hoy"
+      groups:
+        - ["Jardín → Juan", "Carbón para la barbacoa"]
+        - ["Mateo fútbol a las 18:00"]
+  secondary:
+    title: "TODO_SECONDARY_PROOF_TITLE"
+    caption: "TODO_SECONDARY_PROOF_CAPTION"
+    placeholder: "TODO_SECONDARY_PROOF_SCREENSHOT"
+    alt: "Secondary proof screenshot placeholder"
+howItWorks:
+  title: "How It Works"
+  steps:
+    - title: "TODO_STEP_1_TITLE"
+      body: "TODO_STEP_1_BODY"
+    - title: "TODO_STEP_2_TITLE"
+      body: "TODO_STEP_2_BODY"
+    - title: "TODO_STEP_3_TITLE"
+      body: "TODO_STEP_3_BODY"
+currentState:
+  title: "Qué existe hoy"
+  groups:
+    - title: "Available now"
+      items:
+        - "Familia — identidad del hogar y personas"
+        - "Responsabilidades — quién es responsable de cada área"
+        - "Calendario — planes, citas y horarios compartidos"
+        - "Tareas — qué hay que hacer y de quién es"
+        - "Listas compartidas — listas de la compra, checklists y elementos recurrentes del hogar"
+    - title: "In progress"
+      items:
+        - "TODO_IN_PROGRESS_1"
+        - "TODO_IN_PROGRESS_2"
+        - "TODO_IN_PROGRESS_3"
+    - title: "Early access / next"
+      items:
+        - "TODO_EARLY_ACCESS_1"
+        - "TODO_EARLY_ACCESS_2"
+        - "TODO_EARLY_ACCESS_3"
+earlyAccess:
+  title: "Early Access / Support the Project"
+  body: "TODO_EARLY_ACCESS_BODY"
+  primaryCta:
+    label: "Seguir el proyecto"
+    href: "/community"
+  secondaryCta:
+    label: "TODO_SECONDARY_CTA_LABEL"
+    href: "/concept"
 ---
-
-## La realidad
-
-Marta sabe cuándo acaba el entrenamiento de Mateo.
-Se acuerda de la reunión del colegio del jueves.
-Sabe qué falta en casa.
-Sabe que Luna tiene cita en el veterinario la semana que viene.
-
-Si Marta deja de pensar, la casa deja de funcionar.
-
-No porque sea la persona más capaz.
-Porque es la única que sostiene el sistema.
-
-## La injusticia
-
-Esto no es una cuestión de tareas.
-Esto no es una cuestión de estar ocupada.
-
-Una persona carga con el control mental del hogar.
-Los demás solo reaccionan cuando se les dice.
-
-Ese es el problema estructural.
-
-## Por qué las herramientas no lo resuelven
-
-Las apps de tareas registran elementos.
-Los calendarios registran tiempo.
-
-Ninguna registra quién sabe qué.
-Ninguna muestra que una persona lo controla todo y los demás no saben nada.
-Ninguna cambia dónde vive el sistema.
-
-El estado de la casa sigue viviendo en la cabeza de una persona.
-
-## El cambio
-
-DomusMind no te ayuda a organizarte.
-
-Saca el sistema de la cabeza de una persona.
-
-La casa se vuelve visible.
-El estado se comparte.
-Los demás pueden actuar sin que se les diga.
-
-## Qué cambia
-
-Una persona deja de cargar con todo.
-Los demás ven lo que está pasando.
-La casa deja de depender de un solo cerebro.
-
-## Qué existe hoy
-
-DomusMind V1 incluye:
-
-- **Familia** — identidad del hogar y miembros
-- **Responsabilidades** — quién se encarga de cada área
-- **Eventos** — planes y citas en el calendario familiar
-- **Tareas** — qué hay que hacer y de quién es
-- **Rutinas** — operaciones recurrentes del hogar
-- **Timeline** — vista unificada de todo lo que pasa
-
-## Para quién es
-
-DomusMind está pensado para **familias** que quieren dejar de depender de que una sola persona lo lleve todo.
-
-Para **desarrolladores**: DomusMind es un sistema abierto. El API está documentado, la arquitectura es pública y las contribuciones son bienvenidas.

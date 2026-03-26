@@ -1,20 +1,16 @@
 ---
 import type { Locale } from '@/lib/i18n';
 import { withLocale } from '@/lib/i18n';
-import type { UiContent } from '@/lib/content-types';
+import type { LinkContent, UiContent } from '@/lib/content-types';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import GitHubIcon from './GitHubIcon.astro';
 
-const { locale, ui, currentPath = '/' } = Astro.props as {
+const { locale, ui, currentPath = '/', primaryCta } = Astro.props as {
   locale: Locale;
   ui: UiContent;
   currentPath?: string;
+  primaryCta?: LinkContent;
 };
-
-const links = [
-  { key: 'home', href: '/' },
-];
 ---
 <header class="site-header">
   <a class="brand" href={withLocale(locale, '/')}>
@@ -25,78 +21,13 @@ const links = [
     </svg>
     {ui.siteName}
   </a>
-  <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-  <nav aria-label="Primary" class="primary-nav">
-    <ul>
-      {links.map((link) => (
-        <li>
-          <a href={withLocale(locale, link.href)} aria-current={currentPath === link.href ? 'page' : undefined}>
-            {ui.nav[link.key]}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </nav>
   <div class="header-controls">
-    <a
-      class="icon-link"
-      href="https://github.com/juangcarmona/domusmind"
-      aria-label="GitHub repository"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <GitHubIcon size={18} />
-    </a>
+    {primaryCta && (
+      <a class="button button--compact" href={withLocale(locale, primaryCta.href)}>
+        {primaryCta.label}
+      </a>
+    )}
     <LanguageSwitcher locale={locale} path={currentPath} label={ui.languageLabel} />
     <ThemeToggle label={ui.themeLabel} />
   </div>
 </header>
-
-<script is:inline>
-  const siteHeader = document.querySelector('.site-header');
-  const navToggle = siteHeader?.querySelector('.nav-toggle');
-  const navMenu = siteHeader?.querySelector('.primary-nav');
-  const mobileMediaQuery = window.matchMedia('(max-width: 768px)');
-
-  const closeNavMenu = () => {
-    navToggle?.setAttribute('aria-expanded', 'false');
-    navMenu?.classList.remove('is-open');
-  };
-
-  const toggleNavMenu = () => {
-    const isExpanded = navToggle?.getAttribute('aria-expanded') === 'true';
-    navToggle?.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
-    navMenu?.classList.toggle('is-open', !isExpanded);
-  };
-
-  navToggle?.addEventListener('click', () => {
-    if (!mobileMediaQuery.matches) return;
-    toggleNavMenu();
-  });
-
-  navMenu?.addEventListener('click', (event) => {
-    if (!mobileMediaQuery.matches) return;
-    const target = event.target;
-    if (target instanceof Element && target.closest('a')) {
-      closeNavMenu();
-    }
-  });
-
-  document.addEventListener('click', (event) => {
-    if (!mobileMediaQuery.matches) return;
-    const target = event.target;
-    if (target instanceof Node && !siteHeader?.contains(target)) {
-      closeNavMenu();
-    }
-  });
-
-  mobileMediaQuery.addEventListener('change', () => {
-    if (!mobileMediaQuery.matches) {
-      closeNavMenu();
-    }
-  });
-</script>
