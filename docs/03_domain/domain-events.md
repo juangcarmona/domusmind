@@ -1,129 +1,108 @@
 # DomusMind — Domain Events
 
+Status: Canonical
+Audience: Product / Engineering / Architecture
+Scope: V1
+Owns: Cross-context event principles and stable event contracts
+Depends on: context-map.md, system-spec.md, context documents
+Replaces: previous broad/future-facing event catalog
+
 ## Purpose
 
-Domain events represent **facts that have occurred in the household system**.
+Domain events represent facts that have already occurred inside DomusMind.
 
-They enable:
+They exist to support:
 
 - decoupled bounded contexts
-- extensible behavior
-- automation
-- integrations
+- cross-context reactions
 - auditability
-- AI interpretation
+- stable system behavior after state change
 
-Events are part of the **core domain language**.
+This document defines only the current event model for the active V1 domain shape.
+
+It does not define future domains, speculative automation, or out-of-scope integrations.
 
 ---
 
-# Event Principles
+## Core Principles
 
-## Events Represent Facts
+### Events represent facts
 
-Events describe something that **has already happened**.
+A domain event describes something that has already happened.
 
 Examples:
 
-```
-
+```text
 FamilyCreated
 MemberAdded
 EventScheduled
-PetAdded
-PropertyRegistered
+TaskCompleted
+````
 
-```
+Events are immutable.
 
-Events are **immutable**.
-
----
-
-## Past Tense Naming
-
-Events must use **past tense**.
+### Events use past-tense names
 
 Correct:
 
-```
-
+```text
 EventScheduled
-TaskCompleted
-MealPlanGenerated
-
+TaskAssigned
+SharedListCreated
 ```
 
 Incorrect:
 
-```
-
+```text
 ScheduleEvent
-CreateTask
-GenerateMealPlan
-
+AssignTask
+CreateSharedList
 ```
 
-Commands trigger behavior.  
-Events describe outcomes.
+Commands express intent.
+Events express outcomes.
 
----
+### Events are emitted after successful state change
 
-## Events Belong to the Domain
+An event is published only after the owning aggregate has changed state successfully.
 
-Event names must reflect the **ubiquitous language**.
+Events are never speculative.
 
-They must be understandable without technical knowledge.
+### Events belong to one bounded context
 
----
-
-## Events Are Emitted After State Change
-
-An event is published **only after the domain state has successfully changed**.
-
-Events must never be speculative.
-
----
-
-# Event Ownership
-
-Each domain event has a **single owning bounded context**.
+Each event has exactly one owning bounded context.
 
 Rules:
 
-- Only the owning context may emit the event.
-- Other contexts may subscribe.
-- Other contexts must never publish the same event.
+* only the owning context may emit the event
+* other contexts may subscribe
+* other contexts must not emit the same event as if they owned it
 
-Example:
+### Events are long-lived contracts
 
-```
+Domain events are system contracts.
 
-FamilyCreated
+Avoid casual renaming or semantic drift.
 
-```
+When semantics change materially:
 
-Owned by:
-
-```
-
-Family Context
-
-```
+* introduce a new event, or
+* version the contract explicitly
 
 ---
 
-# Event Structure
+## Event Structure
 
-Each event contains:
+Every domain event must carry enough metadata to support traceability and processing.
 
-```
+Minimum shape:
 
+```text
 EventId
 EventType
 OccurredAt
 AggregateId
 Payload
-
 ```
 
 Example:
@@ -136,270 +115,292 @@ Example:
   "aggregateId": "family_123",
   "payload": {
     "memberId": "member_456",
-    "name": "Lucas",
-    "role": "Child"
+    "displayName": "Lucas"
   }
 }
 ```
 
+The exact transport envelope may vary by implementation, but the semantic contract must remain clear.
+
 ---
 
-# Event Categories
+## Current Event Categories
+
+DomusMind V1 currently recognizes five core bounded contexts:
+
+* Family
+* Responsibilities
+* Calendar
+* Tasks
+* Shared Lists
+
+Only events belonging to these active contexts belong in this document.
+
+---
 
 ## Family Events
 
-Household structure changes.
+Family owns household identity.
 
-```
+Stable events:
+
+```text
 FamilyCreated
 MemberAdded
 MemberRemoved
-PetAdded
-PetRemoved
-RelationshipAssigned
 ```
+
+Typical downstream uses:
+
+* validate assignments
+* validate participants
+* validate task assignees
+* validate list collaborators if needed by the model
 
 ---
 
 ## Responsibility Events
 
-Ownership of household domains.
+Responsibilities owns accountability structure.
 
-```
+Stable events:
+
+```text
 ResponsibilityDomainCreated
-ResponsibilityAssigned
-ResponsibilityTransferred
+ResponsibilityDomainRenamed
+PrimaryOwnerAssigned
 SecondaryOwnerAssigned
+SecondaryOwnerRemoved
+ResponsibilityParticipantAdded
+ResponsibilityParticipantRemoved
+ResponsibilityTransferred
+ResponsibilityDomainArchived
 ```
+
+Typical downstream uses:
+
+* update read models
+* inform task suggestion or assignment rules
+* support responsibility visibility in household views
 
 ---
 
 ## Calendar Events
 
-Timeline operations.
+Calendar owns time-bound commitments.
 
-```
+Stable events:
+
+```text
 EventScheduled
 EventRescheduled
 EventCancelled
-ReminderCreated
-ReminderTriggered
+EventCompleted
+EventParticipantAdded
+EventParticipantRemoved
+ReminderAdded
+ReminderRemoved
 ```
+
+Typical downstream uses:
+
+* update household timeline
+* update coordination views
+* enable downstream preparation work in Tasks
 
 ---
 
 ## Task Events
 
-Operational actions.
+Tasks owns execution state and recurring operational definitions.
 
-```
+Stable task events:
+
+```text
 TaskCreated
 TaskAssigned
 TaskReassigned
 TaskCompleted
 TaskCancelled
 TaskRescheduled
+```
+
+Stable routine events:
+
+```text
 RoutineCreated
 RoutineUpdated
 RoutinePaused
 RoutineResumed
+RoutineDeleted
 ```
+
+Typical downstream uses:
+
+* update household timeline
+* update week coordination views
+* update personal and household task projections
 
 ---
 
-## Property Events
+## Shared List Events
 
-Property lifecycle changes.
+Shared Lists owns collaborative list-based capture and shared list state.
 
+Current stable events should map only to implemented list behavior.
+
+Recommended V1 event set:
+
+```text
+SharedListCreated
+SharedListRenamed
+SharedListArchived
+SharedListItemAdded
+SharedListItemToggled
+SharedListItemRemoved
 ```
-PropertyRegistered
-PropertyExpenseRecorded
-PropertyIncomeRecorded
-MaintenanceScheduled
-MaintenanceCompleted
-```
+
+Typical downstream uses:
+
+* update list read models
+* surface household shopping / supply / checklist state
+* support timeline or coordination projections only where explicitly designed
+
+If the implementation does not yet support one of these transitions, do not emit the event until the behavior exists in the domain.
 
 ---
 
-## Administration Events
+## Cross-Context Consumption
 
-Documents and contracts.
+Contexts may consume events from other contexts, but must not reach across boundaries to mutate foreign aggregates directly.
 
-```
-DocumentStored
-DocumentExpirationApproaching
-ContractRegistered
-ContractRenewalApproaching
-InsurancePolicyAdded
-```
+Examples:
 
----
+### Family → Responsibilities
 
-## Inventory Events
-
-Household resource state.
-
-```
-InventoryItemAdded
-InventoryItemUpdated
-InventoryItemDepleted
-ShoppingListGenerated
-```
-
----
-
-## Food Events
-
-Food planning operations.
-
-```
-RecipeAdded
-MealPlanned
-MealPlanCreated
-ShoppingListGeneratedFromMealPlan
-```
-
----
-
-## Pet Events
-
-Pet care activities.
-
-```
-PetAdded
-VetAppointmentScheduled
-VaccinationDue
-MedicationReminderCreated
-```
-
----
-
-## Finance Events
-
-Financial operations.
-
-```
-ExpenseRecorded
-IncomeRecorded
-RecurringExpenseCreated
-SubscriptionRenewalApproaching
-```
-
----
-
-# Event Consumption
-
-Events may be consumed by:
-
-* other bounded contexts
-* automation services
-* notification systems
-* integration adapters
-* AI processing pipelines
-
-Example:
-
-```
-EventScheduled
+```text
+MemberAdded
+MemberRemoved
 ```
 
 Possible reactions:
 
-* reminder generation
-* preparation tasks
-* responsibility notifications
+* validate assignments
+* reconcile invalid owners or participants
 
----
+### Family → Calendar
 
-# Event Storage
-
-Events may optionally be stored for:
-
-* audit trails
-* historical analysis
-* automation
-* AI learning
-
-Possible implementations:
-
-* event logging
-* event streaming
-* event sourcing (future option)
-
-Full event sourcing is **not required initially**.
-
----
-
-# Event Versioning
-
-Events must support evolution.
-
-Possible strategies:
-
-* version field
-* backward compatible payloads
-* transformation layers
-
-Example:
-
-```
-EventScheduled v1
-EventScheduled v2
+```text
+MemberAdded
+MemberRemoved
 ```
 
-Consumers must tolerate older versions.
+Possible reactions:
+
+* validate participants
+* reconcile invalid participant references
+
+### Family → Tasks
+
+```text
+MemberAdded
+MemberRemoved
+```
+
+Possible reactions:
+
+* validate assignees
+* remove or flag invalid assignments
+
+### Calendar → Tasks
+
+```text
+EventScheduled
+EventRescheduled
+```
+
+Possible reactions:
+
+* support preparation-work flows where explicitly modeled
+
+### Responsibilities → Tasks
+
+```text
+PrimaryOwnerAssigned
+ResponsibilityTransferred
+```
+
+Possible reactions:
+
+* update suggestion logic
+* update responsibility-aware projections
+
+Cross-context reactions happen after commit.
 
 ---
 
-# Event Processing Model
+## Processing Model
 
 Typical flow:
 
-```
+```text
 Command
-   ↓
-Domain Logic
-   ↓
-State Change
-   ↓
-Domain Event Emitted
-   ↓
-Event Bus
-   ↓
-Subscribers
+→ Aggregate
+→ State Change
+→ Domain Event Emitted
+→ Persisted / Logged
+→ Subscribers React
 ```
 
-Asynchronous processing is preferred when possible.
+Event handling should preserve these rules:
+
+* emit only after successful state change
+* avoid synchronous cross-context mutation
+* keep handlers focused and deterministic
+* prefer additive downstream reactions over hidden coupling
 
 ---
 
-# Event Stability
+## Storage and Logging
 
-Domain events form part of the **long-term system contract**.
+Domain events may be stored for:
 
-Avoid changing event semantics.
+* audit trails
+* debugging
+* projections
+* integration with internal processing
 
-Instead:
+Full event sourcing is not required.
 
-* introduce new events
-* version existing events
+Event logging does not change event ownership rules.
 
 ---
 
-# Example Event Flow
+## Versioning
 
-Scheduling a school excursion:
+When event contracts evolve:
 
-```
-EventScheduled
-TaskGeneratedFromEvent
-ReminderCreated
-```
+* prefer backward-compatible payload changes where feasible
+* introduce a new version only when semantics materially change
+* keep consumers tolerant to older payloads when possible
 
-Subscribers may:
+Avoid unnecessary version churn.
 
-* notify responsible members
-* generate preparation tasks
-* suggest packing lists
+---
 
-```
+## Scope Guardrail
+
+This document does not define events for domains that are not part of the active V1 model.
+
+Out of scope here:
+
+* property
+* administration
+* inventory
+* food
+* finance
+* pets as a separate operational context
+* AI automation
+* external integrations
+
+Those concepts must not appear here unless they become part of the active system scope.

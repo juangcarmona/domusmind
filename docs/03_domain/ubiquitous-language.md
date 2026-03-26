@@ -1,494 +1,450 @@
 # DomusMind — Ubiquitous Language
 
+Status: Canonical
+Audience: Product / Engineering / Architecture / API Design
+Scope: V1
+Owns: Shared domain vocabulary for active system concepts
+Depends on: system-spec.md, context-map.md, context documents
+Replaces: previous broad/future-facing vocabulary document
+
 ## Purpose
 
-This document defines the **shared vocabulary of the DomusMind domain**.
+This document defines the shared vocabulary of the active DomusMind domain.
 
-All code, documentation, APIs, and discussions about the system must use these terms consistently.
+All code, documentation, APIs, and design discussions must use these terms consistently.
 
-The goal is to maintain **conceptual clarity across the system**.
+The goal is simple:
 
-The vocabulary distinguishes between:
+- one concept
+- one meaning
+- one preferred term
 
-* **internal domain model terms**
-* **household-facing language**
-* **read-model concepts**
+This document covers only current V1 concepts.
 
-This separation ensures the system can evolve internally while remaining intuitive for household users. 
-
----
-
-# Core Concepts
-
-## Family
-
-A **Family** is the primary organizational unit of the system.
-
-A family represents a group of people managing a shared household and its associated responsibilities, resources, and logistics.
-
-A family acts as the root boundary for most system operations.
+It does not define vocabulary for speculative or out-of-scope domains.
 
 ---
 
-## Member
+## Language Layers
+
+DomusMind uses three language layers.
+
+### 1. Internal domain language
+
+The precise terms used by bounded contexts and code.
+
+Examples:
+
+- Event
+- Task
+- Routine
+- Responsibility Domain
+- Shared List
+
+### 2. Household-facing language
+
+The terms users should see in product surfaces.
+
+Examples:
+
+- Plan
+- Task
+- Routine
+- List
+
+### 3. Read-model language
+
+Projection-only terms used to explain derived views.
+
+Examples:
+
+- Timeline
+- Today view
+- Week view
+- Marker
+
+Read-model terms are not aggregates unless explicitly modeled as such.
+
+---
+
+## Core System Concepts
+
+### Family
+
+A **Family** is the primary household boundary of the system.
+
+It is the root organizational unit for identity and most operations.
+
+A family defines:
+
+- who belongs to the household
+- the boundary for permissions and visibility
+- the boundary for most context-owned data
+
+### Member
 
 A **Member** is a person belonging to a family.
 
-Members may represent:
+Members may participate in:
 
-* adults
-* children
-* dependents
-* caregivers
+- responsibilities
+- plans
+- tasks
+- routines
+- shared lists
 
-Members participate in responsibilities, plans, tasks, and routines.
+A member is part of the Family context.
 
----
+### Responsibility Domain
 
-## Dependent
-
-A **Dependent** is an entity requiring care or responsibility from family members.
-
-Examples:
-
-```
-children
-elderly relatives
-pets
-```
-
-Dependents generate plans, tasks, and responsibilities.
-
----
-
-## Responsibility Domain
-
-A **Responsibility Domain** represents an area of household management.
+A **Responsibility Domain** is an area of household accountability.
 
 Examples:
 
-```
-food
+```text
 school
-finances
+food
 maintenance
-travel
-pets
 administration
-```
+````
 
-Responsibility domains distribute cognitive ownership across the family.
+A responsibility domain answers:
 
----
+> Who owns this area of household life?
 
-## Responsibility Assignment
+### Responsibility Assignment
 
-A **Responsibility Assignment** defines which members manage a responsibility domain.
+A **Responsibility Assignment** defines how a member participates in a responsibility domain.
 
-Assignments may include:
+Roles may include:
 
 * primary owner
-* secondary owners
-* participants
+* secondary owner
+* participant
+
+Responsibility structure belongs to the Responsibilities context.
 
 ---
 
-# Time and Coordination
+## Time and Coordination
 
-## Plan (Household Term)
+### Plan
 
-A **Plan** is a household-facing concept representing something scheduled in time that affects the family.
-
-Examples:
-
-```
-Mateo football practice
-Lucía dentist appointment
-School excursion
-Family trip
-```
-
-Plans appear in the **Household Timeline** and communicate what the household is doing.
-
-Plans are the **household language representation** of calendar activities.
-
-Plans are **primarily one-time scheduled commitments** with a specific date, time, and optional participants. Recurring time-bound commitments (such as football practice every Tuesday) may be modeled as Calendar Events with a recurrence rule — they still appear in the household experience as **Plans**.
-
-A **Routine** is fundamentally different from a recurring Plan. A Routine represents repeating *operational household work* (trash, cleaning, bill review). A Plan represents a *scheduled commitment* that places participants at a specific time and place. The distinction is intentional and must be preserved.
-
----
-
-## Event (Internal Model)
-
-An **Event** is the internal calendar-domain model representing a scheduled activity at a specific point in time.
+A **Plan** is the household-facing term for something scheduled in time that affects the household.
 
 Examples:
 
+```text
+football practice
+dentist appointment
+school trip
+family dinner
 ```
-school excursion
-medical appointment
-meeting
-exam
-trip
-maintenance visit
-```
+
+Users should see **Plan** in household-facing experiences where natural language matters.
+
+A plan answers:
+
+* what is happening
+* when it happens
+* who is involved
+
+### Event
+
+An **Event** is the internal Calendar-context model for a time-bound commitment.
 
 Events:
 
-* belong to the **Calendar bounded context**
-* are stored and processed by the system
-* may generate reminders or tasks
+* belong to the Calendar context
+* have schedule semantics
+* may have participants
+* may have reminders
+* may recur
 
-Events are **not a user-facing concept**.
+Users do not need to think in terms of Events.
+In household language, they experience them as Plans.
 
-In the household experience, users interact with **Plans**, not Events.
+### Timeline
 
----
+The **Household Timeline** is the chronological read model of things affecting the household.
 
-## Timeline
-
-The **Household Timeline** represents the chronological sequence of things affecting the household.
-
-The timeline aggregates entries originating from multiple contexts, including:
+It may include:
 
 * plans
 * tasks
 * routines
 * reminders
+* other explicitly supported household entries
 
-The timeline answers the question:
+The timeline answers:
 
 > What matters today for this household?
 
----
+The Timeline is a read model, not a bounded context.
 
-# Household Work
+### Reminder
 
-## Task
+A **Reminder** is a scheduled prompt associated with a time-bound commitment.
 
-A **Task** is the household concept representing a concrete action that must be completed.
+In V1, reminders belong to Calendar semantics around Events.
 
-Examples:
-
-```
-Buy groceries
-Prepare school bag
-Pay electricity bill
-Take dog to the vet
-Bring documents
-```
-
-**Task** is both the household-facing term and the internal domain model term. There is no translation between them — a task is a task.
-
-Tasks:
-
-* belong to the **Tasks bounded context**
-* are created explicitly through user action
-* may be assigned to a member
-* carry a due date and a status lifecycle
-* originate from manual creation
-
-Tasks appear in the **Household Timeline** and in coordination views (Today board, Week grid).
-
-> **Historical note:** An earlier version of this document used the term "Chore" as the household-facing equivalent of Task. That distinction has been removed. "Task" is the single term used at all layers.
+A reminder is not a task.
 
 ---
 
-## Routine
+## Household Work
 
-A **Routine** represents **recurring operational behavior in the household**.
+### Task
+
+A **Task** is a concrete action that must be completed.
 
 Examples:
 
+```text
+buy groceries
+prepare school bag
+pay electricity bill
+bring documents
 ```
-weekly grocery shopping
-school preparation
-house cleaning
-pet feeding
+
+Task is both:
+
+* the internal domain term
+* the household-facing term
+
+There is no translation layer here.
+
+A task:
+
+* belongs to the Tasks context
+* may be assigned
+* may have a due date
+* has a lifecycle state
+
+### Routine
+
+A **Routine** is a recurring definition of operational household work.
+
+Examples:
+
+```text
 weekly trash
+daily pet feeding
 monthly bill review
+weekly grocery shopping
 ```
 
-A routine defines **how operational work repeats over time**. Routines have a frequency (daily, weekly, monthly, yearly) and an optional time and scope (household or specific members).
+A routine defines repeating work.
+It is not itself a task instance.
 
-Important clarifications:
+A routine:
 
-* routines define **recurring operational patterns** — they are not tasks
-* routines belong to the **Tasks context**
-* routines appear in read models (timeline, weekly grid) by being projected on-the-fly against their recurrence schedule
-* routines do **not generate Task aggregates** — tasks arise only from explicit user action
+* belongs to the Tasks context
+* expresses recurrence for operational work
+* appears in read models through projection
+* must not be confused with a recurring plan
 
-**Routines are not recurring Plans.** The boundary is:
+### Shared List
 
-| Concept | Example | Where it lives |
-|---------|---------|----------------|
-| Routine | Trash every Tuesday | Tasks context |
-| Recurring Plan | Football practice every Tuesday | Calendar context (Event with recurrence rule) |
-
-The key question: *Is this operational household work, or a scheduled attendance commitment?*
-
-* Operational household work → **Routine**
-* Scheduled commitment with participants and a time slot → **Plan** (recurring Calendar Event)
-
----
-
-# Read Model Concepts
-
-## Marker / Weekly Cue
-
-A **Marker** (or **Weekly Cue**) is a **read-model-only concept** used by coordination views.
-
-Markers are **not domain entities** and do not exist as aggregates.
-
-Markers exist purely in projections such as:
-
-```
-WeeklyHouseholdGrid
-Timeline coordination views
-```
-
-Markers help visualize patterns such as:
-
-```
-Trash day
-School day
-Busy week indicator
-```
-
-Markers:
-
-* do not store domain state
-* do not emit events
-* are generated dynamically from domain data
-
-They exist purely to support **household coordination views**.
-
----
-
-# Assets and Records
-
-## Property
-
-A **Property** represents a real estate asset managed by the family.
+A **Shared List** is a collaborative household list owned by the Shared Lists context.
 
 Examples:
 
+```text
+groceries
+home supplies
+packing checklist
+school materials
 ```
-primary residence
-secondary home
-rental property
-```
 
-Properties may generate expenses, maintenance events, and administrative obligations.
+A shared list is used for lightweight shared capture and shared state.
 
----
+A shared list is not:
 
-## Asset
+* a task board
+* a calendar
+* a responsibility domain
 
-An **Asset** represents a durable resource owned or managed by the household.
+It is a list.
+
+### Shared List Item
+
+A **Shared List Item** is an entry inside a shared list.
 
 Examples:
 
-```
-vehicles
-appliances
-tools
-equipment
+```text
+milk
+trash bags
+passport
+notebook
 ```
 
-Assets may require maintenance and generate plans or tasks.
+A shared list item supports simple shared coordination such as:
+
+* capture
+* visibility
+* checked / unchecked state
+
+Do not call a shared list item a task unless it truly belongs to the Tasks context.
 
 ---
 
-## Document
+## Read-Model Concepts
 
-A **Document** represents an important record that must be stored or tracked.
+### Marker
+
+A **Marker** is a projection-only coordination cue.
 
 Examples:
 
-```
-identity documents
-insurance policies
-contracts
-certificates
+```text
+busy day
+school morning
+trash day
 ```
 
-Documents may include expiration or renewal dates.
+A marker:
+
+* is not a domain entity
+* is not persisted as an aggregate
+* exists only to improve visibility in read models
+
+### Today View
+
+The **Today View** is a product surface showing what matters today.
+
+It is not a bounded context.
+It is a projection over data owned by multiple contexts.
+
+### Week View
+
+The **Week View** is a coordination surface showing the upcoming household week.
+
+It may combine information from:
+
+* Calendar
+* Tasks
+* Shared Lists
+* derived coordination cues where explicitly supported
+
+It is a read-model surface, not a domain model.
 
 ---
 
-## Contract
+## Architectural Concepts
 
-A **Contract** represents a formal agreement associated with the household.
+### Domain Event
+
+A **Domain Event** is a fact that has already occurred in the domain.
 
 Examples:
 
-```
-insurance policies
-service subscriptions
-property agreements
-```
-
-Contracts may generate renewals and financial obligations.
-
----
-
-## Inventory
-
-**Inventory** represents consumable resources used by the household.
-
-Examples:
-
-```
-food
-cleaning products
-supplies
-```
-
-Inventory levels may trigger replenishment or shopping lists.
-
----
-
-## Recipe
-
-A **Recipe** represents a structured description of how to prepare a meal.
-
-Recipes define ingredients and preparation steps.
-
----
-
-## Meal Plan
-
-A **Meal Plan** represents a scheduled set of meals across a time period.
-
-Meal plans may generate shopping lists and cooking tasks.
-
----
-
-## Pet
-
-A **Pet** is a dependent animal belonging to the household.
-
-Pets generate responsibilities such as:
-
-* feeding
-* veterinary care
-* medication
-* exercise
-
-Pets may generate plans, tasks, and reminders.
-
----
-
-## Reminder
-
-A **Reminder** is a time-triggered notification.
-
-Reminders typically originate from:
-
-* events
-* documents
-* contracts
-* maintenance schedules
-
----
-
-# Domain Events
-
-## Domain Event
-
-A **Domain Event** represents a meaningful state change within the system.
-
-Examples:
-
-```
+```text
 FamilyCreated
-MemberAdded
 EventScheduled
-ResponsibilityAssigned
 TaskCompleted
+SharedListItemAdded
 ```
 
-Domain events allow different parts of the system to react without tight coupling.
+Domain events are emitted by the owning bounded context after successful state change.
 
----
+### Aggregate
 
-# Architectural Concepts
+An **Aggregate** is a consistency boundary in the domain model.
 
-These concepts appear in system design and code.
+It enforces invariants and owns state transitions.
 
----
+Examples in the active domain include:
 
-## Aggregate
-
-An **Aggregate** is a cluster of domain objects treated as a single consistency boundary.
-
-Aggregates enforce domain invariants and emit domain events.
-
-Examples:
-
-```
+```text
 Family
 Event
 Task
 Routine
-Property
-MealPlan
+ResponsibilityDomain
+SharedList
 ```
 
----
+### Aggregate Root
 
-## Aggregate Root
+An **Aggregate Root** is the entry point through which an aggregate is modified.
 
-The **Aggregate Root** is the entry point to an aggregate.
+All state-changing behavior must pass through the root.
 
-All modifications must occur through the root.
+### Bounded Context
 
-Examples:
+A **Bounded Context** is a model boundary with its own language and rules.
 
-```
-Family
-Event
-Task
-Routine
-Property
-```
+DomusMind V1 has five core bounded contexts:
 
----
-
-## Bounded Context
-
-A **Bounded Context** defines a boundary where a specific domain model applies.
-
-Examples of DomusMind contexts:
-
-```
+```text
 Family
 Responsibilities
 Calendar
 Tasks
-Food
-Properties
-Administration
-Pets
-Finance
+Shared Lists
 ```
 
-Each context owns its internal model and rules.
+Nothing else should be treated as a current bounded context unless system scope changes.
 
 ---
 
-# Language Consistency Rules
+## Consistency Rules
 
-To maintain clarity:
+To maintain conceptual clarity:
 
-* Household-facing terminology must prioritize **Plan** and **Chore** over Event and Task.
-* **Event** and **Task** remain internal domain concepts.
-* **Routine** refers strictly to recurring operational behavior in the Tasks context.
-* **Markers / Weekly Cues** exist only in read models and must not appear in the domain layer.
-* Domain terms must be used consistently in code and documentation.
-* API endpoints should reflect domain language.
-* Database models must map clearly to domain concepts.
-* Synonyms for domain entities should be avoided.
+* use **Plan** as the household-facing term for calendar events
+* use **Event** as the Calendar-context internal term
+* use **Task** as both household-facing and internal term
+* do not reintroduce **Chore** as a separate core term
+* use **Routine** only for recurring operational work
+* use **Shared List** and **Shared List Item** for list-based coordination
+* do not call list items tasks unless they truly belong to the Tasks context
+* do not use read-model terms as if they were aggregates
+* avoid synonyms when a canonical term already exists
 
-The ubiquitous language ensures that the **domain model remains coherent as the system evolves**.
+---
+
+## Terms to Avoid
+
+Avoid these unless a future scope change explicitly introduces them:
+
+* Property
+* Asset
+* Inventory
+* Meal Plan
+* Recipe
+* Contract
+* Document as a standalone bounded-context concept
+* Pet as a separate bounded context
+* Chore as a distinct modeled entity
+
+These may exist in future discussions, but they are not part of the current active ubiquitous language.
+
+---
+
+## Summary
+
+DomusMind’s active ubiquitous language is intentionally narrow.
+
+Current core vocabulary centers on:
+
+* Family
+* Member
+* Responsibility Domain
+* Plan / Event
+* Task
+* Routine
+* Shared List
+* Shared List Item
+* Timeline
+* Domain Event
+
+This document must stay aligned with the active system scope.
+When scope changes, update this file deliberately.
+
+```
+
+Use these as direct replacements.
+
