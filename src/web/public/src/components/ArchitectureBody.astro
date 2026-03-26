@@ -1,0 +1,24 @@
+---
+import FallbackNotice from './FallbackNotice.astro';
+import { withLocale, type Locale } from '@/lib/i18n';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  isFallback?: boolean;
+}
+
+const { locale, title, isFallback = false } = Astro.props;
+---
+<article class="page-technical" data-page-type="architecture">
+  {isFallback && <FallbackNotice locale={locale} />}
+  <h1>{title}</h1>
+  <p class="lead">API-first, domain-centric, event-driven.</p>
+  <section aria-label="System diagram" class="diagram-section">
+    <pre class="diagram" aria-label="High level architecture diagram">Clients &rarr; API &rarr; Application Slices &rarr; Domain Model &rarr; Infrastructure</pre>
+  </section>
+  <slot />
+  <nav class="page-next" aria-label="Continue">
+    <a href={withLocale(locale, '/docs')}>View full documentation &rarr;</a>
+  </nav>
+</article>

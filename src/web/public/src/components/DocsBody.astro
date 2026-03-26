@@ -1,0 +1,23 @@
+---
+import FallbackNotice from './FallbackNotice.astro';
+import { withLocale, type Locale } from '@/lib/i18n';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  isFallback?: boolean;
+}
+
+const { locale, title, isFallback = false } = Astro.props;
+---
+<article class="page-hub" data-page-type="docs">
+  {isFallback && <FallbackNotice locale={locale} />}
+  <h1>{title}</h1>
+  <slot />
+  <nav class="page-hub-nav" aria-label="Documentation sections">
+    <a href={withLocale(locale, '/architecture')}>Architecture</a>
+    <a href={withLocale(locale, '/domain')}>Domain</a>
+    <a href={withLocale(locale, '/open-source')}>Open Source</a>
+    <a href={withLocale(locale, '/community')}>Community</a>
+  </nav>
+</article>

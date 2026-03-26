@@ -1,0 +1,20 @@
+---
+import FallbackNotice from './FallbackNotice.astro';
+import { withLocale, type Locale } from '@/lib/i18n';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  isFallback?: boolean;
+}
+
+const { locale, title, isFallback = false } = Astro.props;
+---
+<article class="page-editorial" data-page-type="manifesto">
+  {isFallback && <FallbackNotice locale={locale} />}
+  <h1>{title}</h1>
+  <slot />
+  <nav class="page-next" aria-label="Continue">
+    <a href={withLocale(locale, '/concept')}>What is DomusMind? &rarr;</a>
+  </nav>
+</article>

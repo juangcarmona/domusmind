@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import ConceptBody from '@/components/ConceptBody.astro';
 import { defaultLocale } from '@/lib/i18n';
 import { getPageContent } from '@/lib/content';
 import type { PageFrontmatter } from '@/lib/content-types';
@@ -10,6 +11,7 @@ const { frontmatter } = content;
 const Content = content.Content as unknown as () => unknown;
 ---
 <BaseLayout locale={locale} title={frontmatter.title} description={frontmatter.description} currentPath="/concept">
-  <h1>{frontmatter.title}</h1>
-  <Content />
+  <ConceptBody locale={locale} title={frontmatter.title}>
+    <Content />
+  </ConceptBody>
 </BaseLayout>

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import FallbackNotice from '@/components/FallbackNotice.astro';
+import ManifestoBody from '@/components/ManifestoBody.astro';
 import { locales, defaultLocale, normalizeLocale } from '@/lib/i18n';
 import { getPageContent } from '@/lib/content';
 import type { PageFrontmatter } from '@/lib/content-types';
@@ -16,7 +16,7 @@ const { frontmatter } = content;
 const Content = content.Content as unknown as () => unknown;
 ---
 <BaseLayout locale={locale} title={frontmatter.title} description={frontmatter.description} currentPath="/manifesto">
-  {isFallback && <FallbackNotice locale={locale} />}
-  <h1>{frontmatter.title}</h1>
-  <Content />
+  <ManifestoBody locale={locale} title={frontmatter.title} isFallback={isFallback}>
+    <Content />
+  </ManifestoBody>
 </BaseLayout>
