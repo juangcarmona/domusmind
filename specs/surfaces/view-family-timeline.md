@@ -1,4 +1,4 @@
-# Spec — View Family Timeline
+# Spec - View Family Timeline
 
 ## Purpose
 

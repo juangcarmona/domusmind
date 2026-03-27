@@ -1,4 +1,4 @@
-# DomusMind — Identifier Strategy
+# DomusMind - Identifier Strategy
 
 ## Purpose
 

@@ -1,4 +1,4 @@
-# DomusMind — Tasks Context
+# DomusMind - Tasks Context
 
 ## Purpose
 

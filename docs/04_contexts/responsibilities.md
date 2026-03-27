@@ -1,4 +1,4 @@
-# DomusMind — Responsibility Context
+# DomusMind - Responsibility Context
 
 ## Purpose
 

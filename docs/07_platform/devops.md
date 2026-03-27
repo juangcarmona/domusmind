@@ -1,10 +1,10 @@
-# DomusMind — DevOps & Application Lifecycle Management
+# DomusMind - DevOps & Application Lifecycle Management
 
 ## Purpose
 
 This document defines how DomusMind is built, versioned, distributed, updated, and operated in self-hosted environments.
 
-DomusMind is designed to run at home — on a mini PC, a NAS, a home server, or any machine capable of running Docker. It must be trivial to install, safe to update, and straightforward to maintain with no DevOps expertise.
+DomusMind is designed to run at home - on a mini PC, a NAS, a home server, or any machine capable of running Docker. It must be trivial to install, safe to update, and straightforward to maintain with no DevOps expertise.
 
 This document defines the application lifecycle for that model: from code commit to a running household installation.
 
@@ -21,7 +21,7 @@ The production stack includes two services:
 | `postgres` | `postgres:16-alpine` | Relational database (family state, events, auth) |
 | `domusmind` | `ghcr.io/<owner>/domusmind` | ASP.NET Core app serving API and static web |
 
-The DomusMind app is the ingress surface. PostgreSQL is internal to the Docker network — it is never exposed to the host unless explicitly configured.
+The DomusMind app is the ingress surface. PostgreSQL is internal to the Docker network - it is never exposed to the host unless explicitly configured.
 
 ---
 
@@ -30,7 +30,7 @@ The DomusMind app is the ingress surface. PostgreSQL is internal to the Docker n
 .NET Aspire **orchestrates local development only**. It is not used in production.
 
 In local development (current state):
-- Aspire starts all services — API, web, PostgreSQL, pgAdmin
+- Aspire starts all services - API, web, PostgreSQL, pgAdmin
 - Aspire injects connection strings and service references automatically
 - Aspire provides the developer dashboard, health checks, and structured telemetry
 - The AppHost definition is the source of truth for the service topology
@@ -126,7 +126,7 @@ The API runs `dbContext.Database.Migrate()` during the startup sequence, before 
 
 Migration rules for V1:
 
-- All schema changes are **additive only** — no column drops, no renames, no destructive changes
+- All schema changes are **additive only** - no column drops, no renames, no destructive changes
 - Every release that includes a migration must document it in the release notes
 - Breaking schema changes (if ever required) will be explicitly versioned as a MAJOR release with a documented migration note and an upgrade path
 
@@ -146,9 +146,9 @@ DomusMind uses semantic versioning: `MAJOR.MINOR.PATCH`
 
 Docker images are tagged with:
 
-- `1.2.3` — pinned to an exact release
-- `1.2` — latest patch on that minor version
-- `latest` — current stable release
+- `1.2.3` - pinned to an exact release
+- `1.2` - latest patch on that minor version
+- `latest` - current stable release
 
 Users who want to control their own update schedule pin to a specific version in `.env`.
 

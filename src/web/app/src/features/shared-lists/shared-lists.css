@@ -106,7 +106,7 @@
   cursor: text;
 }
 
-/* Remove button — only visible on hover */
+/* Remove button - only visible on hover */
 .shared-list-item__remove {
   flex-shrink: 0;
   display: none;

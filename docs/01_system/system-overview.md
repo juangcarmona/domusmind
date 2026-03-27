@@ -1,4 +1,4 @@
-# DomusMind — System Overview
+# DomusMind - System Overview
 
 ## Definition
 

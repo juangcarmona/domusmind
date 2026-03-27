@@ -59,8 +59,8 @@ Les outils ont rendu les tâches visibles. Ils ont laissé le système invisible
 Un foyer est un système.
 
 Il a des personnes, des rôles, et des responsabilités.
-Il a des patterns récurrents — routines, événements, obligations saisonnières.
-Il a un état — ce qui se passe, ce qui vient, ce qui nécessite de l'attention.
+Il a des patterns récurrents - routines, événements, obligations saisonnières.
+Il a un état - ce qui se passe, ce qui vient, ce qui nécessite de l'attention.
 
 En ce moment, cet état vit dans la tête d'une personne.
 

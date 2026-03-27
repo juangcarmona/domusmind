@@ -16,7 +16,7 @@ Eso es un sistema.
 ## Por qué las tareas no son el problema
 
 Si Marta se olvida de comprar leche, eso es una tarea.
-Pero la razón por la que Marta es quien se da cuenta de que falta leche — eso no es una tarea.
+Pero la razón por la que Marta es quien se da cuenta de que falta leche - eso no es una tarea.
 Eso es un patrón. Una responsabilidad. Un papel estructural que ha asumido.
 
 Ninguna app de tareas captura eso.
@@ -37,9 +37,9 @@ Ahora mismo, existe solo en la cabeza de una persona.
 
 Cuando una persona lleva el cuadro completo, la casa depende de ella.
 
-Si se olvida — algo falla.
-Si se pone enferma — nada avanza.
-Si se va — el conocimiento desaparece.
+Si se olvida - algo falla.
+Si se pone enferma - nada avanza.
+Si se va - el conocimiento desaparece.
 
 Esta es fragilidad por diseño. El sistema tiene un único punto de fallo.
 
@@ -50,9 +50,9 @@ Esta es fragilidad por diseño. El sistema tiene un único punto de fallo.
 Marta lleva en la cabeza:
 
 - Mateo tiene natación el martes a las 18:00
-- Reunión del colegio el jueves por la mañana — tiene que salir a las 08:45
+- Reunión del colegio el jueves por la mañana - tiene que salir a las 08:45
 - Falta leche y pan para el miércoles
-- Javier dijo que se encargaría del coche — pero ella sigue comprobándolo
+- Javier dijo que se encargaría del coche - pero ella sigue comprobándolo
 - Luna (la perra) necesita el tratamiento antipulgas esta semana
 
 El resto de la familia pasa por la semana.
@@ -61,7 +61,7 @@ Marta se ajusta alrededor de todos.
 Con DomusMind, ese cuadro es compartido.
 
 ```
-Hoy — Familia García
+Hoy - Familia García
 
 Mateo → Natación 18:00
 Marta → Reunión colegio 09:00

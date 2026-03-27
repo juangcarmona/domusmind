@@ -1,4 +1,4 @@
-# DomusMind — Ubiquitous Language
+# DomusMind - Ubiquitous Language
 
 Status: Canonical
 Audience: Product / Engineering / Architecture / API Design

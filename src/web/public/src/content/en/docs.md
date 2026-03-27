@@ -1,6 +1,6 @@
 ---
 title: "Docs"
-description: "Entry point to the DomusMind documentation — vision, architecture, domain, and roadmap."
+description: "Entry point to the DomusMind documentation - vision, architecture, domain, and roadmap."
 ---
 
 DomusMind is documented in the open. Everything about how it is designed, why decisions were made, and where it is going is available in the repository.

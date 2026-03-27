@@ -23,7 +23,7 @@ The experience is guided by these principles:
 - Action first. The product should answer what matters today before it asks for setup or interpretation.
 - No configuration barrier. A household should reach useful operation in minutes.
 - Household-first. The main view reflects the household's shared reality, not one person's productivity space.
-- Timeline-first. Plans, chores, tasks, and reminders should become legible together.
+- Timeline-first. Plans, routines, tasks, lists, and reminders should become legible together.
 - Simplicity at the surface. Product complexity belongs in the model, not in the interface.
 
 The experience should feel:
@@ -46,12 +46,14 @@ The interface should use:
 - household
 - people
 - plans
-- chores
+- routines
 - tasks
+- lists
+- areas
 - today
-- who is responsible
 - what matters
 - what needs attention
+- who owns what
 
 Internal model terms stay out of the experience whenever household language can express the same idea more naturally.
 
@@ -63,6 +65,8 @@ Core translations:
 | Member | Person |
 | Event | Plan |
 | Responsibility | Area |
+| Routine | Routine |
+| Shared List | List |
 
 Task stays Task by design.
 
@@ -83,8 +87,9 @@ The screen should make the household state understandable in seconds.
 Typical Today information includes:
 
 - plans happening today
-- chores assigned today
+- routines affecting today
 - tasks needing completion
+- lists that matter today when relevant
 - reminders needing attention
 
 Example:
@@ -118,7 +123,7 @@ The week view helps the household understand:
 
 - where people need to be
 - when commitments occur
-- what work exists around those commitments
+- what routine and task work exists around those commitments
 - which days are overloaded
 - what needs preparation
 
@@ -139,9 +144,10 @@ The timeline is the read-first operational surface where the current household s
 Anything that affects the household should appear in the timeline, including:
 
 - plans
-- chores
+- routines
 - tasks
 - reminders
+- list state where explicitly relevant
 
 These are different kinds of entries inside one household flow, not separate applications.
 
@@ -153,11 +159,11 @@ The timeline replaces the need to check multiple disconnected tools to understan
 
 The V1 experience must stay inside the current system scope.
 
-- no separate chore manager
+- no separate routine manager
 - no personal-productivity framing
 - no setup-heavy first run
 - no calendar-first experience
-- no hidden responsibility
+- no hidden ownership
 
 The V1 product surface should stay grounded in Family, Responsibilities, Calendar, Tasks, and the unified household timeline.
 
@@ -179,37 +185,37 @@ The first-run sequence is:
 1. Start household.
 2. Name the household.
 3. Add people.
-4. Add the first plans, chores, or routines.
+4. Add the first plans, routines, or lists.
 5. Show Today and Week immediately.
 
 Example starting flow:
 
 - create the household
 - add the people the household coordinates
-- add a few first plans or chores
+- add a few first plans or routines
 - show those items in Today and Week immediately
 
 At the end of onboarding, the household should already have a working shared system rather than an empty app shell.
 
 ---
 
-# Chores
+# Routines
 
-Chores are recurring household responsibilities.
+Routines are recurring household work.
 
-DomusMind should reduce chore negotiation rather than create a chore-management hobby.
+DomusMind should reduce routine negotiation rather than create a routine-management hobby.
 
 Core expectations:
 
-- the system can rotate chores when appropriate
-- some chores may have a default owner
+- the system can rotate routines when appropriate
+- some routines may have a default owner
 - some work may stay open to anyone in the household
 - completion should be simple
-- missed chores should surface quietly with useful correction suggestions
+- missed routines should surface quietly with useful correction suggestions
 
-Chores should appear in the timeline as part of household reality.
+Routines should appear in the timeline as part of household reality.
 
-Users should not feel that they are opening a separate chore manager.
+Users should not feel that they are opening a separate routine manager.
 
 The household should simply know what is their responsibility today.
 

@@ -1,4 +1,4 @@
-# DomusMind — C4 Component Diagram (Domain)
+# DomusMind - C4 Component Diagram (Domain)
 
 ## Purpose
 

@@ -1,4 +1,4 @@
-# DomusMind — Calendar Context
+# DomusMind - Calendar Context
 
 ## Purpose
 

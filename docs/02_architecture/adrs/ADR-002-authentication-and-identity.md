@@ -1,4 +1,4 @@
-# ADR-002 — Authentication and Identity Strategy
+# ADR-002 - Authentication and Identity Strategy
 
 ## Status
 
@@ -48,7 +48,7 @@ The identity/authentication module will remain logically isolated, with its own 
 
 ## Options Considered
 
-### Option 1 — Built-in Local Authentication inside the main API
+### Option 1 - Built-in Local Authentication inside the main API
 
 Description:
 
@@ -76,7 +76,7 @@ Assessment:
 
 ---
 
-### Option 2 — Separate Identity Microservice
+### Option 2 - Separate Identity Microservice
 
 Description:
 
@@ -103,7 +103,7 @@ Rejected for V1 due to accidental complexity.
 
 ---
 
-### Option 3 — External Self-Hosted Identity Provider
+### Option 3 - External Self-Hosted Identity Provider
 
 Examples:
 

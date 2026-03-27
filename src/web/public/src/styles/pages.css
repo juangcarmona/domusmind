@@ -13,7 +13,7 @@
   border-bottom: 1px solid var(--border);
   display: grid;
   gap: 0.85rem;
-  max-width: 44rem;
+  max-width: 56rem;
 }
 
 .page-hero__headline {
@@ -25,7 +25,7 @@
   line-height: 1.7;
   color: var(--muted);
   margin: 0;
-  max-width: 38rem;
+  max-width: 48rem;
 }
 
 /* ── Page section ─────────────────────────────────────────────────────────── */
@@ -51,7 +51,7 @@
   gap: 0.6rem;
   padding-left: 1rem;
   border-left: 2px solid var(--border);
-  max-width: 42rem;
+  max-width: 56rem;
 }
 
 .manifesto-block__title {
@@ -75,7 +75,7 @@
   font-size: 1.05rem;
   font-weight: 600;
   color: var(--text);
-  max-width: 44rem;
+  max-width: 56rem;
   margin: 0;
 }
 
@@ -143,7 +143,6 @@
 .page-step-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
   padding: 1.15rem;
   display: grid;
   gap: 0.75rem;
@@ -183,7 +182,6 @@
 .page-screenshot-slot {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
   padding: 1.15rem;
   display: grid;
   gap: 0.75rem;
@@ -200,14 +198,12 @@
   font-weight: 600;
   text-align: center;
   padding: 1rem;
-  border-radius: var(--radius);
 }
 
 .page-screenshot-slot__image {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: var(--radius);
 }
 
 .page-screenshot-slot__caption {
@@ -226,18 +222,20 @@
 .mental-load-section {
   display: grid;
   gap: 0.75rem;
-  max-width: 42rem;
+  max-width: 56rem;
 }
 
 .mental-load-section h2 {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   margin: 0;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .mental-load-section p {
   color: var(--muted);
   margin: 0;
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
 /* ── Group cards (early access) ───────────────────────────────────────────── */
@@ -251,7 +249,6 @@
 .page-group-card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
   padding: 1.15rem;
   display: grid;
   gap: 0.85rem;
@@ -306,7 +303,6 @@
 .page-state-group {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
   padding: 1.15rem;
   display: grid;
   gap: 0.85rem;
@@ -344,7 +340,7 @@
   padding: 1.25rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-top: 2px solid var(--primary);
 }
 
 .page-cta__copy {

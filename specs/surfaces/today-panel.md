@@ -1,4 +1,4 @@
-## Feature Spec 1 — Today Panel (Household Operational View)
+## Feature Spec 1 - Today Panel (Household Operational View)
 
 ### Purpose
 

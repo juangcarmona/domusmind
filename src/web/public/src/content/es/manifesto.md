@@ -60,7 +60,7 @@ Un hogar es un sistema.
 
 Tiene personas, roles y responsabilidades.
 Tiene patrones recurrentes: rutinas, eventos, obligaciones estacionales.
-Tiene un estado — lo que está pasando, lo que viene, lo que necesita atención.
+Tiene un estado - lo que está pasando, lo que viene, lo que necesita atención.
 
 Ahora mismo, ese estado vive en la cabeza de una persona.
 

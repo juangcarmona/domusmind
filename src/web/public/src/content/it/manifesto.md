@@ -59,8 +59,8 @@ Gli strumenti hanno reso visibili i task. Hanno lasciato invisibile il sistema.
 Una famiglia è un sistema.
 
 Ha persone, ruoli e responsabilità.
-Ha pattern ricorrenti — routine, eventi, obblighi stagionali.
-Ha uno stato — cosa sta succedendo, cosa viene, cosa ha bisogno di attenzione.
+Ha pattern ricorrenti - routine, eventi, obblighi stagionali.
+Ha uno stato - cosa sta succedendo, cosa viene, cosa ha bisogno di attenzione.
 
 In questo momento, quello stato vive nella testa di una persona.
 

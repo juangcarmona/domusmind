@@ -1,6 +1,6 @@
 ---
 title: "DomusMind"
-description: "Ein gemeinsames System für den Haushalt — damit eine Person aufhört, alles alleine zu tragen."
+description: "Ein gemeinsames System für den Haushalt - damit eine Person aufhört, alles alleine zu tragen."
 hero:
   headline: "Wenn du aufhörst, ans Haus zu denken, geht es schief."
   supportLine: "Jemand hat immer alles im Blick. Das Haus hört auf, vom Gedächtnis einer Person abzuhängen."
@@ -58,7 +58,7 @@ proof:
         - ["Mateo Fußball um 18:00"]
   secondary:
     title: "Woche"
-    caption: "Die ganze Woche im Blick — bevor volle Tage zu Stress werden."
+    caption: "Die ganze Woche im Blick - bevor volle Tage zu Stress werden."
     placeholder: "WEEK_VIEW_SCREENSHOT"
     alt: "Wochenansicht mit den Plänen des Haushalts für die nächsten Tage"
 howItWorks:
@@ -75,16 +75,16 @@ currentState:
   groups:
     - title: "Available now"
       items:
-        - "Familie — Haushaltsidentität und Personen"
-        - "Verantwortlichkeiten — wer für welchen Bereich verantwortlich ist"
-        - "Kalender — Pläne, Termine und gemeinsame Zeitpläne"
-        - "Aufgaben — was erledigt werden muss und von wem"
-        - "Gemeinsame Listen — Einkaufslisten, Checklisten und wiederkehrende Haushaltsgegenstände"
+        - "Familie - Haushaltsidentität und Personen"
+        - "Verantwortlichkeiten - wer für welchen Bereich verantwortlich ist"
+        - "Kalender - Pläne, Termine und gemeinsame Zeitpläne"
+        - "Aufgaben - was erledigt werden muss und von wem"
+        - "Gemeinsame Listen - Einkaufslisten, Checklisten und wiederkehrende Haushaltsgegenstände"
     - title: "In progress"
       items:
-        - "Wochenansicht — übersichtlichere Wochenplanung"
-        - "Haushaltsbeziehungen — wer mit wem verbunden ist"
-        - "Sichere Mitgliederänderungen — Personen entfernen, ohne den Haushaltsstatus zu beschädigen"
+        - "Wochenansicht - übersichtlichere Wochenplanung"
+        - "Haushaltsbeziehungen - wer mit wem verbunden ist"
+        - "Sichere Mitgliederänderungen - Personen entfernen, ohne den Haushaltsstatus zu beschädigen"
     - title: "Early access / next"
       items:
         - "Frühe Haushaltstests"

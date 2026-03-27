@@ -1,4 +1,4 @@
-# DomusMind — System Architecture
+# DomusMind - System Architecture
 
 ## Overview
 

@@ -59,8 +59,8 @@ The tools made the tasks visible. They left the system invisible.
 A household is a system.
 
 It has people, roles, and responsibilities.
-It has recurring patterns — routines, events, seasonal obligations.
-It has a state — what is happening, what is coming, what needs attention.
+It has recurring patterns - routines, events, seasonal obligations.
+It has a state - what is happening, what is coming, what needs attention.
 
 Right now, that state lives in one person's head.
 

@@ -1,4 +1,4 @@
-# ADR-001 — Internal Application Mediator
+# ADR-001 - Internal Application Mediator
 
 ## Status
 

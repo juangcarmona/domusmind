@@ -1,4 +1,4 @@
-# DomusMind — Family Context
+# DomusMind - Family Context
 
 ## Purpose
 

@@ -1,4 +1,4 @@
-# DomusMind — Event Processing
+# DomusMind - Event Processing
 
 ## Purpose
 
@@ -72,7 +72,7 @@ EventDispatcher --> Subscribers
 
 Events are dispatched in two stages.
 
-## Stage 1 — In-Memory Dispatch
+## Stage 1 - In-Memory Dispatch
 
 Used for internal module reactions inside the same request.
 
@@ -85,7 +85,7 @@ EventScheduled
 
 ---
 
-## Stage 2 — Event Log Persistence
+## Stage 2 - Event Log Persistence
 
 All committed domain events are stored in an **event log**.
 

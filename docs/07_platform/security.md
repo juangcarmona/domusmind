@@ -1,4 +1,4 @@
-# DomusMind — Security
+# DomusMind - Security
 
 ## Purpose
 
@@ -195,7 +195,7 @@ DomusMind uses a **two-path first-run model** backed by a server-enforced initia
 
 ---
 
-### Primary path — UI-driven setup
+### Primary path - UI-driven setup
 
 The default path for all installations is the setup endpoint, which enables a guided first-run wizard.
 
@@ -234,14 +234,14 @@ API-->>Client: 409 Conflict { code: "setup.already_initialized" }
 
 ---
 
-### Fallback path — headless / recovery bootstrap
+### Fallback path - headless / recovery bootstrap
 
 For headless deployments (containers, CI, scripted recovery), a configuration-driven fallback bootstrap is available.
 
 Rules:
 
 * **disabled by default** in production (`BootstrapAdmin:Enabled = false`)
-* **no-op if the system is already initialized** — the flag has no effect on initialized systems
+* **no-op if the system is already initialized** - the flag has no effect on initialized systems
 * must never log plaintext passwords
 * intended only for recovery scenarios or environments where UI-driven setup is not possible
 * disable in configuration once initialization is complete

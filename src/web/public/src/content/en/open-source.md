@@ -22,9 +22,9 @@ When one person already carries the house in their head, the last thing a family
 
 A closed tool creates a new single point of failure.
 
-If the service goes down — coordination breaks.
-If the app changes — the family has to adapt.
-If the company disappears — the data is gone.
+If the service goes down - coordination breaks.
+If the app changes - the family has to adapt.
+If the company disappears - the data is gone.
 
 Families deserve a system they can own, inspect, and keep.
 
@@ -54,7 +54,7 @@ There is meaningful work here:
 - Improving the UI and accessibility
 - Translating and localizing
 
-If you believe that household coordination should be fair, shared, and transparent — you can help build the system that makes it possible.
+If you believe that household coordination should be fair, shared, and transparent - you can help build the system that makes it possible.
 
 ## Connection to fairness
 

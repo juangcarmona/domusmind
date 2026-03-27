@@ -1,4 +1,4 @@
-# DomusMind — Domain Events
+# DomusMind - Domain Events
 
 Status: Canonical
 Audience: Product / Engineering / Architecture

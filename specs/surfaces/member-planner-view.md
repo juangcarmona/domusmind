@@ -1,4 +1,4 @@
-## Feature Spec 2 — Member Planner View (Personal Temporal Surface)
+## Feature Spec 2 - Member Planner View (Personal Temporal Surface)
 
 ### Purpose
 

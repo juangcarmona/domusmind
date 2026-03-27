@@ -9,7 +9,7 @@ Non. DomusMind montre ce qui se passe dans le foyer et qui est responsable de qu
 
 ## Est-ce une application calendrier ?
 
-Non. Les événements sont dans la timeline familiale, mais le calendrier est une partie d'un tableau plus large — routines, responsabilités et personnes, tout est connecté.
+Non. Les événements sont dans la timeline familiale, mais le calendrier est une partie d'un tableau plus large - routines, responsabilités et personnes, tout est connecté.
 
 ## Est-ce seulement pour les familles ?
 

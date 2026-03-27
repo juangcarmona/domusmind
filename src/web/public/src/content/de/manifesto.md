@@ -59,8 +59,8 @@ Die Tools haben Aufgaben sichtbar gemacht. Das System blieb unsichtbar.
 Ein Haushalt ist ein System.
 
 Er hat Menschen, Rollen und Verantwortlichkeiten.
-Er hat wiederkehrende Muster — Routinen, Ereignisse, saisonale Verpflichtungen.
-Er hat einen Zustand — was passiert, was kommt, was Aufmerksamkeit braucht.
+Er hat wiederkehrende Muster - Routinen, Ereignisse, saisonale Verpflichtungen.
+Er hat einen Zustand - was passiert, was kommt, was Aufmerksamkeit braucht.
 
 Im Moment lebt dieser Zustand im Kopf einer Person.
 

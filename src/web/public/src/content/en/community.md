@@ -9,7 +9,7 @@ DomusMind is built in the open because household coordination should be transpar
 
 You do not need to write code to help.
 
-If you recognize the problem — one person keeping everything in their head — your experience matters.
+If you recognize the problem - one person keeping everything in their head - your experience matters.
 
 - Share what coordination in your house actually looks like
 - Tell us where your current tools fall short
@@ -32,18 +32,18 @@ If you want to contribute to a problem that is structural, not cosmetic, there i
 
 ## Contribution paths
 
-- **GitHub issues** — bug reports, questions, proposals
-- **GitHub discussions** — architecture ideas, domain feedback, roadmap input
-- **Pull requests** — code, docs, translations
+- **GitHub issues** - bug reports, questions, proposals
+- **GitHub discussions** - architecture ideas, domain feedback, roadmap input
+- **Pull requests** - code, docs, translations
 
 All contribution happens at [github.com/juangcarmona/domusmind](https://github.com/juangcarmona/domusmind).
 
 ## Roadmap
 
-**V1 — Core system** _(in progress)_
+**V1 - Core system** _(in progress)_
 Family structure, responsibilities, events, tasks, routines, timeline.
 
-**V1.1 — Shared lists**
+**V1.1 - Shared lists**
 Persistent shared checklists for household coordination.
 
 **Extended model** _(future)_

@@ -9,7 +9,7 @@ Nein. DomusMind zeigt, was im Haushalt passiert und wer wofür verantwortlich is
 
 ## Ist das eine Kalender-App?
 
-Nein. Ereignisse sind im Familien-Timeline, aber der Kalender ist nur ein Teil eines größeren Bildes — Routinen, Verantwortlichkeiten und Menschen sind alle damit verbunden.
+Nein. Ereignisse sind im Familien-Timeline, aber der Kalender ist nur ein Teil eines größeren Bildes - Routinen, Verantwortlichkeiten und Menschen sind alle damit verbunden.
 
 ## Ist das nur für Familien?
 

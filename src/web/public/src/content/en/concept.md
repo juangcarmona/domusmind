@@ -16,7 +16,7 @@ That is a system.
 ## Why tasks are not the problem
 
 If Sarah forgets to buy milk, that is a task.
-But the reason Sarah is the one who noticed the milk was running out — that is not a task.
+But the reason Sarah is the one who noticed the milk was running out - that is not a task.
 That is a pattern. A responsibility. A structural role she has taken on.
 
 No task app captures that.
@@ -37,9 +37,9 @@ Right now, it exists only in one person's head.
 
 When one person holds the full picture, the house depends on them.
 
-If they forget — something fails.
-If they are sick — nothing moves.
-If they leave — knowledge disappears.
+If they forget - something fails.
+If they are sick - nothing moves.
+If they leave - knowledge disappears.
 
 This is fragility by design. The system has a single point of failure.
 
@@ -50,9 +50,9 @@ This is fragility by design. The system has a single point of failure.
 Sarah holds in her head:
 
 - Liam has football practice Tuesday at 17:30
-- School meeting Thursday morning — she needs to leave by 08:45
+- School meeting Thursday morning - she needs to leave by 08:45
 - Milk and bread needed by Wednesday
-- Michael said he would handle the car service — but she still checks
+- Michael said he would handle the car service - but she still checks
 - Max (dog) needs his flea treatment this week
 
 The rest of the family moves through the week.
@@ -61,7 +61,7 @@ Sarah adjusts around everyone.
 With DomusMind, that picture is shared.
 
 ```
-Today — The Smith Family
+Today - The Smith Family
 
 Liam → Football practice 17:30
 Sarah → School meeting 09:00

@@ -1,4 +1,4 @@
-# DomusMind — Aggregate Design
+# DomusMind - Aggregate Design
 
 ## Purpose
 

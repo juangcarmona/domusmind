@@ -16,7 +16,7 @@ C'est un système.
 ## Pourquoi les tâches ne sont pas le problème
 
 Si Julie oublie d'acheter du lait, c'est une tâche.
-Mais la raison pour laquelle Julie est celle qui remarque que le lait manque — ce n'est pas une tâche.
+Mais la raison pour laquelle Julie est celle qui remarque que le lait manque - ce n'est pas une tâche.
 C'est un schéma. Une responsabilité. Un rôle structurel qu'elle a pris.
 
 Aucune app de tâches ne capture ça.
@@ -37,9 +37,9 @@ En ce moment, il existe seulement dans la tête d'une personne.
 
 Quand une personne porte l'image complète, la maison dépend d'elle.
 
-Si elle oublie — quelque chose échoue.
-Si elle est malade — rien n'avance.
-Si elle part — la connaissance disparaît.
+Si elle oublie - quelque chose échoue.
+Si elle est malade - rien n'avance.
+Si elle part - la connaissance disparaît.
 
 C'est de la fragilité par design. Le système a un seul point de défaillance.
 
@@ -50,9 +50,9 @@ C'est de la fragilité par design. Le système a un seul point de défaillance.
 Julie porte dans sa tête :
 
 - Gabriel a entraînement de foot mardi à 17h30
-- Réunion de parents jeudi matin — elle doit partir à 08h45
+- Réunion de parents jeudi matin - elle doit partir à 08h45
 - Lait et pain nécessaires d'ici mercredi
-- Nicolas a dit qu'il s'occuperait du contrôle technique de la voiture — mais elle vérifie quand même
+- Nicolas a dit qu'il s'occuperait du contrôle technique de la voiture - mais elle vérifie quand même
 - Nala (chien) a besoin de son traitement contre les puces cette semaine
 
 Le reste de la famille traverse la semaine.
@@ -61,7 +61,7 @@ Julie s'adapte autour de tout le monde.
 Avec DomusMind, cette image est partagée.
 
 ```
-Aujourd'hui — Famille Martin
+Aujourd'hui - Famille Martin
 
 Gabriel → Entraînement foot 17:30
 Julie → Réunion école 09:00

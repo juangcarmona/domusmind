@@ -1,4 +1,4 @@
-# DomusMind — C4 Component Diagram (Infrastructure)
+# DomusMind - C4 Component Diagram (Infrastructure)
 
 ## Purpose
 

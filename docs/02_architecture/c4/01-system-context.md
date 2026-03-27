@@ -1,4 +1,4 @@
-# DomusMind — C4 System Context
+# DomusMind - C4 System Context
 
 ## Purpose
 

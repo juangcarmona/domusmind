@@ -1,4 +1,4 @@
-# DomusMind — Context Map
+# DomusMind - Context Map
 
 This document describes how bounded contexts collaborate inside DomusMind.
 

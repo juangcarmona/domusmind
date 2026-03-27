@@ -1,4 +1,4 @@
-# DomusMind — Vertical Slice Conventions
+# DomusMind - Vertical Slice Conventions
 
 ## Purpose
 

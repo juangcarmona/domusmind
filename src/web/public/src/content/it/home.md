@@ -1,6 +1,6 @@
 ---
 title: "DomusMind"
-description: "Un sistema condiviso per la famiglia — perché una persona smetta di portarlo da sola."
+description: "Un sistema condiviso per la famiglia - perché una persona smetta di portarlo da sola."
 hero:
   headline: "Se smetti di pensare alla casa, le cose vanno storte."
   supportLine: "Qualcuno pensa sempre a tutto. La casa smette di dipendere dalla memoria di una sola persona."
@@ -75,16 +75,16 @@ currentState:
   groups:
     - title: "Available now"
       items:
-        - "Famiglia — identità del nucleo familiare e persone"
-        - "Responsabilità — chi è responsabile di ogni area"
-        - "Calendario — piani, appuntamenti e orari condivisi"
-        - "Task — cosa deve essere fatto e da chi"
-        - "Liste condivise — liste della spesa, checklist e articoli ricorrenti della casa"
+        - "Famiglia - identità del nucleo familiare e persone"
+        - "Responsabilità - chi è responsabile di ogni area"
+        - "Calendario - piani, appuntamenti e orari condivisi"
+        - "Task - cosa deve essere fatto e da chi"
+        - "Liste condivise - liste della spesa, checklist e articoli ricorrenti della casa"
     - title: "In progress"
       items:
-        - "Vista settimanale — coordinamento settimanale più chiaro"
-        - "Relazioni nel nucleo familiare — chi è collegato a chi"
-        - "Rimozione sicura dei membri — togliere persone senza compromettere lo stato della casa"
+        - "Vista settimanale - coordinamento settimanale più chiaro"
+        - "Relazioni nel nucleo familiare - chi è collegato a chi"
+        - "Rimozione sicura dei membri - togliere persone senza compromettere lo stato della casa"
     - title: "Early access / next"
       items:
         - "Test nelle case reali"

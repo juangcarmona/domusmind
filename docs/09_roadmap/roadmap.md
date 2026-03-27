@@ -1,4 +1,4 @@
-# DomusMind — Roadmap
+# DomusMind - Roadmap
 
 Status: Canonical
 Audience: Product / Engineering / Architecture
@@ -25,7 +25,7 @@ Each phase must extend the product without weakening:
 
 ---
 
-## V1 — Household Operating Core
+## V1 - Household Operating Core
 
 ### Goal
 
@@ -78,7 +78,7 @@ V1 is successful when a household can:
 
 ---
 
-## V1.1 — Operational Hardening
+## V1.1 - Operational Hardening
 
 ### Goal
 
@@ -120,7 +120,7 @@ The main result is confidence in the existing system, not expansion into new hou
 
 ---
 
-## V2 — Household Domain Expansion
+## V2 - Household Domain Expansion
 
 ### Goal
 
@@ -164,7 +164,7 @@ V2 broadens household coverage while preserving the clarity of the V1 operating 
 
 ---
 
-## V3 — Intelligence and Integrations
+## V3 - Intelligence and Integrations
 
 ### Goal
 

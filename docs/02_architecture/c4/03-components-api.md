@@ -1,4 +1,4 @@
-# DomusMind — C4 Component Diagram (API)
+# DomusMind - C4 Component Diagram (API)
 
 ## Purpose
 

@@ -1,4 +1,4 @@
-# DomusMind — Data Model
+# DomusMind - Data Model
 
 ## Purpose
 

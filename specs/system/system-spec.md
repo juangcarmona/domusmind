@@ -1,4 +1,4 @@
-# DomusMind — System Spec
+# DomusMind - System Spec
 
 ## Purpose
 
@@ -151,8 +151,8 @@ The following were considered for V1 but are deferred to V1.1.
 They have no blocking dependency on V1 completion.
 
 ### Family
-- assign-relationship — relationship semantics between members are modeled in the domain but the capability is not exposed via API or UI in V1
-- remove-member — member removal requires validating open task assignments and participant references; deferred to avoid cascading complexity in V1
+- assign-relationship - relationship semantics between members are modeled in the domain but the capability is not exposed via API or UI in V1
+- remove-member - member removal requires validating open task assignments and participant references; deferred to avoid cascading complexity in V1
 
 ---
 

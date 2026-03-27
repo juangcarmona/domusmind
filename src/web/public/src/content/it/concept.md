@@ -16,7 +16,7 @@ Questo è un sistema.
 ## Perché i task non sono il problema
 
 Se Francesca dimentica di comprare il latte, quello è un task.
-Ma la ragione per cui Francesca è quella che si accorge che manca il latte — quello non è un task.
+Ma la ragione per cui Francesca è quella che si accorge che manca il latte - quello non è un task.
 È un pattern. Una responsabilità. Un ruolo strutturale che ha assunto.
 
 Nessuna app di task cattura questo.
@@ -37,9 +37,9 @@ In questo momento, esiste solo nella testa di una persona.
 
 Quando una persona porta l'immagine completa, la casa dipende da lei.
 
-Se dimentica — qualcosa fallisce.
-Se si ammala — niente si muove.
-Se va via — la conoscenza scompare.
+Se dimentica - qualcosa fallisce.
+Se si ammala - niente si muove.
+Se va via - la conoscenza scompare.
 
 Questa è fragilità per design. Il sistema ha un unico punto di fallimento.
 
@@ -50,9 +50,9 @@ Questa è fragilità per design. Il sistema ha un unico punto di fallimento.
 Francesca porta in testa:
 
 - Sofia ha nuoto martedì alle 18:00
-- Riunione scolastica giovedì mattina — deve uscire alle 08:45
+- Riunione scolastica giovedì mattina - deve uscire alle 08:45
 - Latte e pane necessari entro mercoledì
-- Marco ha detto che si occupa del tagliando della macchina — ma lei controlla lo stesso
+- Marco ha detto che si occupa del tagliando della macchina - ma lei controlla lo stesso
 - Luna (cane) ha bisogno del trattamento antipulci questa settimana
 
 Il resto della famiglia attraversa la settimana.
@@ -61,7 +61,7 @@ Francesca si adatta attorno a tutti.
 Con DomusMind, quell'immagine è condivisa.
 
 ```
-Oggi — Famiglia Rossi
+Oggi - Famiglia Rossi
 
 Sofia → Nuoto 18:00
 Francesca → Riunione scuola 09:00

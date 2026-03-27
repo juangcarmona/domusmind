@@ -8,7 +8,7 @@
   --secondary: #8464ab;
   --accent: #d9cbe9;
   --border: #ddd4e7;
-  --radius: 0.35rem;
+  --radius: 2px;
   --header-height: 4.25rem;
 }
 
@@ -116,6 +116,55 @@ main {
   position: sticky;
   top: 0;
   z-index: 10;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.header-nav__link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+}
+
+.header-nav__link:hover {
+  color: var(--text);
+}
+
+.header-nav__link[aria-current="page"] {
+  color: var(--text);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+
+.nav-menu-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.nav-menu-toggle svg {
+  width: 1.1rem;
+  height: 1.1rem;
 }
 
 .brand {
@@ -281,12 +330,48 @@ main {
 @media (max-width: 768px) {
   .site-header {
     height: auto;
-    padding: 0.8rem 1rem;
-    align-items: flex-start;
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .site-header > .brand {
+    flex: 1;
+  }
+
+  .nav-menu-toggle {
+    display: flex;
+  }
+
+  .header-nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+    padding: 0.5rem 0 0.25rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.5rem;
+  }
+
+  .header-nav.is-open {
+    display: flex;
+  }
+
+  .header-nav__link {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    width: 100%;
+  }
+
+  .header-nav__link[aria-current="page"] {
+    border-bottom-color: var(--border);
+    border-left: 2px solid var(--primary);
+    padding-left: 0.5rem;
   }
 
   .header-controls {
-    width: 100%;
+    width: auto;
     justify-content: flex-end;
     flex-wrap: wrap;
   }

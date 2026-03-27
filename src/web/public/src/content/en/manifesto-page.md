@@ -24,35 +24,35 @@ blocks:
       When this person stops keeping track, things fall through.
       Not because the others are careless.
       But because the others do not carry the full picture.
-      Remembering everything for everyone falls to one person. That is the problem.
+      Carrying everything for everyone falls to one person. That is the problem.
       It is not a personal failing. It is a structural gap.
   - title: "Why tools fail"
     body: >-
       A task app shows a list. A calendar shows time.
-      Neither shows who is responsible.
+      Neither shows who owns what.
       Neither shows what the household needs to know to keep running.
       Neither models the home as a system.
       So the coordination still falls to one person.
       The tools made the tasks visible. They left the system invisible.
   - title: "The missing piece"
     body: >-
-      A household is a system. It has people, responsibilities, recurring patterns,
+      A household is a system. It has people, areas of ownership, recurring routines,
       and a state that needs to be shared.
       Right now, that state lives in one person's head. It should live somewhere shared.
       When the state is shared, the load can be shared too.
   - title: "The shift"
     body: >-
       DomusMind makes household state visible to everyone.
-      Who is responsible for each area. What is happening this week.
-      What tasks exist and who owns them.
+      Who owns each area. What is happening this week.
+      What tasks exist and who is responsible for them.
       Each person sees what the home needs. No one person carries it all alone.
 closing: "DomusMind is built on the belief that the house should not depend on one person's memory."
 cta:
   title: "A shared household starts here."
-  body: "Start with your people, your plans, and your responsibilities."
+  body: "Start with your people, your plans, and your areas."
   primaryCta:
     label: "Start your household"
-    href: "/community"
+    href: "https://github.com/juangcarmona/domusmind"
   secondaryCta:
     label: "See how it works"
     href: "/how-it-works"

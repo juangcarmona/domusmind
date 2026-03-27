@@ -50,7 +50,7 @@
 .area-color-custom-input::-webkit-color-swatch-wrapper { padding: 0; }
 .area-color-custom-input::-webkit-color-swatch { border: none; border-radius: 50%; }
 
-/* Custom color trigger — replaces the raw native input in the palette row */
+/* Custom color trigger - replaces the raw native input in the palette row */
 .area-color-custom-trigger {
   position: relative;
   width: 1.6rem;

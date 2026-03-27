@@ -17,7 +17,7 @@ It defines the product truth that strategy, experience, and public messaging mus
 
 DomusMind exists to remove the invisible mental load of running a household.
 
-It turns scattered plans, chores, tasks, responsibilities, and reminders into one shared household system so the home no longer depends on one person remembering everything.
+It turns scattered plans, routines, tasks, areas, lists, and reminders into one shared household system so the home no longer depends on one person remembering everything.
 
 The product goal is not better personal productivity.
 
@@ -53,13 +53,13 @@ It models the household as a living system made of people, time, responsibilitie
 
 # Positioning
 
-For couples and families who are tired of carrying household coordination in their heads, DomusMind provides one shared system that makes plans, chores, tasks, and responsibility visible together.
+For couples and families who are tired of carrying household coordination in their heads, DomusMind provides one shared system that makes plans, routines, tasks, lists, and areas visible together.
 
 Unlike fragmented tools, DomusMind is built around the real operating reality of home life:
 
-- shared responsibility
-- recurring chores
-- family schedules
+- visible ownership by area
+- recurring routines
+- household schedules
 - daily and weekly coordination
 - the constant question of what matters today
 
@@ -69,7 +69,7 @@ Unlike fragmented tools, DomusMind is built around the real operating reality of
 
 DomusMind helps a household stop depending on one person's memory.
 
-It brings plans, chores, tasks, reminders, and responsibility into one shared household picture so everyone can understand:
+It brings plans, routines, tasks, lists, reminders, and areas into one shared household picture so everyone can understand:
 
 - what is happening
 - what needs attention
@@ -110,8 +110,8 @@ Common pains include:
 - one person keeps track of everything
 - others depend on being told what matters
 - plans are split across calendars, chats, and memory
-- chores are renegotiated repeatedly
-- responsibility is assumed instead of visible
+- recurring work keeps being renegotiated
+- ownership is assumed instead of visible
 - busy days become obvious too late
 - things are forgotten until they become stress or conflict
 
@@ -127,8 +127,8 @@ DomusMind should create gains the household can feel quickly:
 
 - nothing important depends on one person's memory
 - everyone can see what matters today
-- responsibility becomes visible instead of implied
-- chores stop becoming repeated negotiation
+- ownership becomes visible instead of implied
+- routine work stops becoming repeated negotiation
 - weekly coordination becomes easier to understand
 - the household reacts less and anticipates more
 - the home runs with less friction and less tension
@@ -155,7 +155,7 @@ DomusMind is not:
 
 - a generic task manager
 - a traditional calendar application
-- a chore tracker in isolation
+- a simple household-work tracker in isolation
 - a budget tool
 - a grocery app by itself
 - a family chat replacement
@@ -176,12 +176,14 @@ Prefer:
 - household
 - people
 - plans
-- chores
+- routines
 - tasks
+- lists
+- areas
 - today
 - what matters
 - what needs attention
-- who is responsible
+- who owns what
 
 Avoid in user-facing product definition and public copy:
 

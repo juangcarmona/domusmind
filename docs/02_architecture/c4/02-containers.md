@@ -1,4 +1,4 @@
-# DomusMind — C4 Container Diagram
+# DomusMind - C4 Container Diagram
 
 ## Purpose
 

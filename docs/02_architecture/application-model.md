@@ -1,4 +1,4 @@
-# DomusMind — Application Model
+# DomusMind - Application Model
 
 ## Purpose
 

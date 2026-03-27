@@ -72,7 +72,7 @@ Screenshot caption rules:
 
 - one caption, one idea
 - describe the household outcome, not the UI widget
-- prefer Today, Week, chores, and shared visibility examples
+- prefer Today, Week, routines, and shared visibility examples
 - avoid feature inventory language
 
 ---
@@ -93,7 +93,7 @@ Headline:
 
 Support line:
 
-DomusMind brings plans, chores, tasks, and responsibilities into one shared place, so everyone can see what matters, what needs doing, and who is responsible.
+DomusMind brings plans, routines, tasks, lists, and areas into one shared place, so everyone can see what matters, what needs doing, and who owns what.
 
 Hero rules:
 
@@ -157,14 +157,14 @@ Recommended screenshot narrative:
 
 - Today view: what matters today
 - Week view: see the whole week clearly
-- Chore visibility: know what is yours today
+- Routine visibility: know what repeats and who owns it
 - Shared household view: one place, shared clarity
 
 Useful scenario blocks:
 
 - family week coordination
 - one person carries the mental load
-- chores keep becoming friction
+- routine work keeps becoming friction
 - today needs to make sense fast
 
 ---
@@ -199,7 +199,7 @@ Angle:
 
 DomusMind as a shared household timeline, not just a calendar.
 
-## Chore Coordination
+## Routine Coordination
 
 Search intent:
 
@@ -210,7 +210,7 @@ Search intent:
 
 Angle:
 
-DomusMind as a way to reduce repeated negotiation and make responsibility visible.
+DomusMind as a way to make recurring household work visible, reusable, and shared.
 
 ## Household Organization
 
@@ -236,7 +236,7 @@ Search intent:
 
 Angle:
 
-DomusMind as one shared reality for plans, chores, and responsibilities.
+DomusMind as one shared reality for plans, routines, tasks, lists, and areas.
 
 ---
 
@@ -267,10 +267,12 @@ Approved public-language anchors include:
 - household
 - people
 - plans
-- chores
+- routines
 - tasks
+- lists
+- areas
 - today
-- who is responsible
+- who owns what
 - what matters
 - what needs attention
 
