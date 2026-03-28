@@ -1,99 +1,117 @@
+import React from "react";
 import type { CalendarEntry } from "../../today/utils/calendarEntry";
 import { ENTRY_GLYPH } from "../../today/utils/calendarEntry";
 
-// Visible hour range (inclusive). Entries outside this range clamp to a boundary slot.
-const HOUR_START = 6;
-const HOUR_END = 22;
+// ----------------------------------------------------------------
+// 24-hour, 30-minute slot grid
+// ----------------------------------------------------------------
+
+/** Total slots = 48 (0:00 through 23:30). Slot index = hour * 2 + (half ? 1 : 0). */
+const SLOT_COUNT = 48;
+
+/** Day-phase boundary: slots 12 (06:00) through 43 (21:30) inclusive are "day". */
+const DAY_SLOT_START = 6 * 2;   // 12
+const DAY_SLOT_END   = 21 * 2 + 1; // 43
+
+function slotIndex(hour: number, minute: number): number {
+  return hour * 2 + (minute >= 30 ? 1 : 0);
+}
+
+function slotLabel(slotIdx: number): string {
+  const hour = Math.floor(slotIdx / 2);
+  const half = slotIdx % 2 === 1;
+  return half
+    ? `${String(hour).padStart(2, "0")}:30`
+    : `${String(hour).padStart(2, "0")}:00`;
+}
+
+function isNightSlot(slotIdx: number): boolean {
+  return slotIdx < DAY_SLOT_START || slotIdx > DAY_SLOT_END;
+}
+
+// ----------------------------------------------------------------
 
 interface HourTimelineProps {
   /** All timed entries for the day (entry.time is non-null). */
   timedEntries: CalendarEntry[];
   onItemClick: (type: "event" | "task" | "routine", id: string) => void;
   /**
-   * Called when an empty hour slot background is clicked.
-   * Plumbed for future "create at time" flow (hour is 0–23).
-   * No-ops if not provided.
+   * Called when an empty slot background is clicked.
+   * Receives "HH:MM" (the nearest :00 or :30 slot start).
    */
-  onHourClick?: (hour: number) => void;
+  onSlotClick?: (time: string) => void;
 }
 
 /**
- * Vertical hourly time grid for timed calendar entries.
+ * Vertical 24-hour, 30-minute-slot time grid.
  *
- * Renders a fixed set of hour rows (HOUR_START–HOUR_END).
- * - Empty rows stay visible so the day always looks like a calendar.
- * - Items with the same hour are stacked in the slot body.
- * - Each empty slot is clickable (onHourClick) for future create-at-time flow.
- * - Drag-and-drop is explicitly out of scope for V1.
- *
- * Items are rendered inline (not minute-positioned) in V1.
- * The slot structure is ready for minute-offset positioning later:
- * add a --ht-minute-offset CSS custom prop on the item element.
+ * - 48 slots total: 00:00, 00:30, 01:00 … 23:30
+ * - Day phase (06:00–21:59): normal background
+ * - Night phase (22:00–05:59): subtle dimmed background
+ * - Hour labels shown on :00 slots; :30 slots show a subdued tick label
+ * - Entries bucket to nearest :00 or :30 slot by flooring minutes
+ * - Entries with times like 20:15 render in the 20:00 slot (not forced to :30)
+ * - Empty slots are optionally clickable for "create at time" action
  */
-export function HourTimeline({ timedEntries, onItemClick, onHourClick }: HourTimelineProps) {
-  // Bucket entries by hour.
-  const byHour = new Map<number, CalendarEntry[]>();
-  for (let h = HOUR_START; h <= HOUR_END; h++) {
-    byHour.set(h, []);
-  }
+export function HourTimeline({ timedEntries, onItemClick, onSlotClick }: HourTimelineProps) {
+  // Bucket entries by slot index.
+  const bySlot = new Map<number, CalendarEntry[]>();
+  for (let i = 0; i < SLOT_COUNT; i++) bySlot.set(i, []);
+
   for (const entry of timedEntries) {
     if (!entry.time) continue;
-    const [hStr] = entry.time.split(":");
-    const hour = Math.max(HOUR_START, Math.min(HOUR_END, parseInt(hStr, 10)));
-    byHour.get(hour)!.push(entry);
+    const [hStr, mStr] = entry.time.split(":");
+    const h = Math.min(23, Math.max(0, parseInt(hStr, 10)));
+    const m = parseInt(mStr ?? "0", 10);
+    const idx = slotIndex(h, m);
+    bySlot.get(idx)!.push(entry);
   }
-
-  const hasAnyItems = timedEntries.length > 0;
 
   return (
     <div className="hour-timeline" aria-label="Hourly schedule">
-      {/* Subtle empty-state banner inside the grid when no timed entries exist */}
-      {!hasAnyItems && (
-        <div className="ht-empty-banner" aria-hidden="true">
-          {/* Shown as a centered note overlaid on the empty grid */}
-        </div>
-      )}
-
-      {Array.from({ length: HOUR_END - HOUR_START + 1 }, (_, i) => {
-        const hour = HOUR_START + i;
-        const entries = byHour.get(hour) ?? [];
+      {Array.from({ length: SLOT_COUNT }, (_, idx) => {
+        const isHalf = idx % 2 === 1;
+        const entries = bySlot.get(idx) ?? [];
         const hasItems = entries.length > 0;
-        const label = `${String(hour).padStart(2, "0")}:00`;
+        const night = isNightSlot(idx);
+        const label = slotLabel(idx);
+        const clickable = !hasItems && !!onSlotClick;
 
         return (
           <div
-            key={hour}
-            className={`ht-slot${hasItems ? " ht-slot--has-items" : " ht-slot--empty"}`}
-            data-hour={hour}
+            key={idx}
+            className={[
+              "ht-slot",
+              isHalf ? "ht-slot--half" : "ht-slot--hour",
+              night ? "ht-slot--night" : "ht-slot--day",
+              hasItems ? "ht-slot--has-items" : "ht-slot--empty",
+            ].join(" ")}
+            data-slot={label}
           >
             {/* Time label column */}
-            <div className="ht-label" aria-hidden="true">
-              {label}
+            <div className={`ht-label${isHalf ? " ht-label--half" : ""}`} aria-hidden="true">
+              {!isHalf ? label : <span className="ht-label-tick" />}
             </div>
 
-            {/* Slot content — clickable background for future create-at-time */}
+            {/* Slot body */}
             <div
-              className={`ht-body${onHourClick && !hasItems ? " ht-body--clickable" : ""}`}
-              onClick={!hasItems && onHourClick ? () => onHourClick(hour) : undefined}
-              role={!hasItems && onHourClick ? "button" : undefined}
-              tabIndex={!hasItems && onHourClick ? 0 : undefined}
+              className={`ht-body${clickable ? " ht-body--clickable" : ""}`}
+              onClick={clickable ? () => onSlotClick!(label) : undefined}
+              role={clickable ? "button" : undefined}
+              tabIndex={clickable ? 0 : undefined}
               onKeyDown={
-                !hasItems && onHourClick
+                clickable
                   ? (e) => {
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
-                        onHourClick(hour);
+                        onSlotClick!(label);
                       }
                     }
                   : undefined
               }
             >
               {entries.map((entry) => (
-                <TimelineItem
-                  key={entry.id}
-                  entry={entry}
-                  onItemClick={onItemClick}
-                />
+                <TimelineItem key={entry.id} entry={entry} onItemClick={onItemClick} />
               ))}
             </div>
           </div>
@@ -104,9 +122,7 @@ export function HourTimeline({ timedEntries, onItemClick, onHourClick }: HourTim
 }
 
 // ----------------------------------------------------------------
-// TimelineItem — entry rendered inside a timeline slot.
-// Slightly wider layout than the compact wg-item pill used in Today.
-// Preserves glyph + time + title grammar and user-defined color.
+// TimelineItem
 // ----------------------------------------------------------------
 
 interface TimelineItemProps {
@@ -116,7 +132,7 @@ interface TimelineItemProps {
 
 function TimelineItem({ entry, onItemClick }: TimelineItemProps) {
   const glyph = ENTRY_GLYPH[entry.displayType];
-  const timeStr = entry.time ? entry.time : null;
+  const timeStr = entry.time ?? null;
 
   const style = entry.color
     ? ({ ["--wg-item-accent" as string]: entry.color } as React.CSSProperties)
@@ -157,4 +173,3 @@ function TimelineItem({ entry, onItemClick }: TimelineItemProps) {
     </div>
   );
 }
-

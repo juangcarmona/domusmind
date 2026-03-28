@@ -10,11 +10,11 @@ interface MemberDayViewProps {
   selectedDate: string; // ISO YYYY-MM-DD
   onItemClick: (type: "event" | "task" | "routine", id: string) => void;
   /**
-   * Called when an empty hour slot is clicked.
-   * Plumbed for future "create at time" flow. Hour is 0–23.
-   * If not provided the slot is still visually clickable (cursor change) but no-ops.
+   * Called when an empty timeline slot is clicked.
+   * Receives "HH:MM" (the :00 or :30 slot start time).
+   * If not provided, empty slot clicks are no-ops.
    */
-  onHourClick?: (hour: number) => void;
+  onSlotClick?: (time: string) => void;
 }
 
 // ----------------------------------------------------------------
@@ -58,7 +58,7 @@ function groupBacklog(entries: CalendarEntry[]): BacklogGroups {
  * Backlog is always rendered; timeline always shows the hourly grid even
  * when empty. This ensures the surface reads as a credible calendar.
  */
-export function MemberDayView({ member, selectedDate, onItemClick, onHourClick }: MemberDayViewProps) {
+export function MemberDayView({ member, selectedDate, onItemClick, onSlotClick }: MemberDayViewProps) {
   const { t } = useTranslation("agenda");
 
   // Full sorted entry list for the selected date (includes within-week overdue).
@@ -154,7 +154,7 @@ export function MemberDayView({ member, selectedDate, onItemClick, onHourClick }
           <HourTimeline
             timedEntries={timedEntries}
             onItemClick={onItemClick}
-            onHourClick={onHourClick}
+            onSlotClick={onSlotClick}
           />
         </section>
 

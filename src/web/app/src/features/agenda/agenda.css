@@ -252,38 +252,71 @@
   position: relative;
 }
 
-/* Each hour row */
+/* Each 30-min slot row */
 .ht-slot {
   display: grid;
   grid-template-columns: 2.6rem 1fr;
-  border-top: 1px solid var(--border);
   position: relative;
+}
+
+/* :00 slots get a border-top; :30 slots have a lighter separator */
+.ht-slot--hour {
+  border-top: 1px solid var(--border);
+}
+
+.ht-slot--half {
+  border-top: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
 }
 
 .ht-slot:first-child {
   border-top: none;
 }
 
-/* Empty rows — short but always visible */
+/* Night slots — canonical night hours (22:00-05:59) */
+.ht-slot--night {
+  background: color-mix(in srgb, var(--bg, #000) 4%, transparent);
+}
+
+/* Day slots — no background override needed (inherit surface) */
+.ht-slot--day {
+  background: transparent;
+}
+
+/* Empty rows — short but visible */
 .ht-slot--empty {
-  min-height: 1.8rem;
+  min-height: 1.4rem;
 }
 
 /* Occupied rows — grow to fit content */
 .ht-slot--has-items {
-  min-height: 2.25rem;
+  min-height: 2rem;
 }
 
-/* Hour label */
+/* Hour label column */
 .ht-label {
   font-size: 0.65rem;
   color: var(--muted);
   text-align: right;
-  padding: 0.22rem 0.4rem 0 0;
+  padding: 0.18rem 0.4rem 0 0;
   line-height: 1;
   flex-shrink: 0;
   user-select: none;
   align-self: start;
+}
+
+/* :30 label — just a small tick/dash, no text */
+.ht-label--half {
+  opacity: 0;  /* hide label text; border shows separation */
+}
+
+.ht-label-tick {
+  display: inline-block;
+  width: 0.4rem;
+  height: 1px;
+  background: var(--muted);
+  opacity: 0.4;
+  vertical-align: middle;
+  margin-right: 0.15rem;
 }
 
 /* Slot content */
@@ -291,7 +324,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.08rem;
-  padding: 0.14rem 0.4rem 0.14rem 0.25rem;
+  padding: 0.1rem 0.4rem 0.1rem 0.25rem;
 }
 
 .ht-body--clickable {
@@ -325,6 +358,22 @@
   font-size: 0.65rem;
   color: var(--muted);
   font-weight: 400;
+}
+
+/* ================================================================
+   Agenda add-entry button row
+   ================================================================ */
+
+.agenda-add-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.3rem 0.6rem 0;
+  flex-shrink: 0;
+}
+
+.agenda-add-btn {
+  font-size: 0.78rem;
+  padding: 0.22rem 0.65rem;
 }
 
 /* ================================================================
