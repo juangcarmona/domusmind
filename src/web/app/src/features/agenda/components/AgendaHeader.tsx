@@ -17,11 +17,10 @@ interface AgendaHeaderProps {
 /**
  * Compact, responsive header for the member agenda surface.
  *
- * Row 1: back ‹ · member name
- * Row 2: ‹ · date (centered) · today? · ›
- * Row 3: day / week / month underline tabs
- *
- * On wide screens rows 1 and 2 collapse into one flex row.
+ * Three distinct rows (never collapse on narrow widths):
+ *   Row 1 — back button + member name
+ *   Row 2 — ‹  date  today?  ›
+ *   Row 3 — Day / Week / Month tab strip
  */
 export function AgendaHeader({
   memberName,
@@ -45,31 +44,30 @@ export function AgendaHeader({
 
   return (
     <div className="agenda-header">
-      {/* ---- Row 1+2: identity + date navigation ---- */}
-      <div className="agenda-header-main">
-        {/* Back + member name */}
-        <div className="agenda-identity">
-          <button
-            className="btn btn-ghost btn-sm agenda-back-btn"
-            onClick={() => navigate(-1)}
-            type="button"
-            aria-label={t("nav.back")}
-          >
-            ‹ {t("nav.back")}
-          </button>
-          <span className="agenda-member-name">{memberName}</span>
-        </div>
+      {/* Row 1: back + member name */}
+      <div className="agenda-identity">
+        <button
+          className="btn btn-ghost btn-sm agenda-back-btn"
+          onClick={() => navigate(-1)}
+          type="button"
+          aria-label={t("nav.back")}
+        >
+          ‹ {t("nav.back")}
+        </button>
+        <span className="agenda-member-name">{memberName}</span>
+      </div>
 
-        {/* Date nav: prev · date · today · next */}
-        <div className="agenda-date-nav">
-          <button
-            className="btn btn-ghost btn-sm agenda-nav-btn"
-            onClick={onPrev}
-            type="button"
-            aria-label={t(`nav.prev${view.charAt(0).toUpperCase() + view.slice(1)}`)}
-          >
-            ‹
-          </button>
+      {/* Row 2: date navigation */}
+      <div className="agenda-date-nav">
+        <button
+          className="btn btn-ghost btn-sm agenda-nav-btn"
+          onClick={onPrev}
+          type="button"
+          aria-label={t(`nav.prev${view.charAt(0).toUpperCase() + view.slice(1)}`)}
+        >
+          ‹
+        </button>
+        <div className="agenda-date-center">
           <span className="agenda-date-text">{dateLabel}</span>
           {!isToday && (
             <button
@@ -80,18 +78,18 @@ export function AgendaHeader({
               {t("nav.today")}
             </button>
           )}
-          <button
-            className="btn btn-ghost btn-sm agenda-nav-btn"
-            onClick={onNext}
-            type="button"
-            aria-label={t(`nav.next${view.charAt(0).toUpperCase() + view.slice(1)}`)}
-          >
-            ›
-          </button>
         </div>
+        <button
+          className="btn btn-ghost btn-sm agenda-nav-btn"
+          onClick={onNext}
+          type="button"
+          aria-label={t(`nav.next${view.charAt(0).toUpperCase() + view.slice(1)}`)}
+        >
+          ›
+        </button>
       </div>
 
-      {/* ---- Row 3: view tabs ---- */}
+      {/* Row 3: view tabs */}
       <div className="agenda-view-tabs" role="tablist">
         {(["day", "week", "month"] as AgendaView[]).map((v) => (
           <button

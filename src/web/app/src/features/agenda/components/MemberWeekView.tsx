@@ -9,16 +9,17 @@ interface MemberWeekViewProps {
   /** ISO YYYY-MM-DD — any day in the target week. */
   selectedDate: string;
   onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  /** Called when the user taps a day header to drill into the Day view. */
+  onDayClick?: (date: string) => void;
 }
 
 /**
  * Week-level member agenda view.
  *
- * V1: renders a simple day-by-day list of entries for the week window
- * that is already present in the member's grid cells.
- * Full week grid layout is deferred.
+ * Renders a compact day-per-row list. Each day header is clickable (onDayClick)
+ * to navigate into the Day view for that day.
  */
-export function MemberWeekView({ member, selectedDate, onItemClick }: MemberWeekViewProps) {
+export function MemberWeekView({ member, selectedDate, onItemClick, onDayClick }: MemberWeekViewProps) {
   const { t, i18n } = useTranslation("agenda");
 
   // The member cells already cover the full week from the loaded grid.
@@ -42,17 +43,27 @@ export function MemberWeekView({ member, selectedDate, onItemClick }: MemberWeek
           month: "short",
         });
         const isSelected = day === selectedDate;
+        const hasItems = entries.length > 0;
 
         return (
           <div
             key={day}
-            className={`mweek-day${isSelected ? " mweek-day--selected" : ""}`}
+            className={`mweek-day${isSelected ? " mweek-day--selected" : ""}${!hasItems ? " mweek-day--empty" : ""}`}
           >
-            <div className="mweek-day-label">{label}</div>
-            {entries.length === 0 ? (
-              <span className="mday-empty">{t("day.nothingScheduled")}</span>
-            ) : (
-              <div className="mday-entry-list">
+            <button
+              className="mweek-day-header"
+              type="button"
+              onClick={() => onDayClick?.(day)}
+              aria-label={label}
+              aria-pressed={isSelected}
+            >
+              <span className="mweek-day-label">{label}</span>
+              {hasItems && (
+                <span className="mweek-day-count">{entries.length}</span>
+              )}
+            </button>
+            {hasItems ? (
+              <div className="mday-entry-list mweek-entry-list">
                 {entries.map((entry) => (
                   <CalendarEntryItem
                     key={entry.id}
@@ -61,6 +72,8 @@ export function MemberWeekView({ member, selectedDate, onItemClick }: MemberWeek
                   />
                 ))}
               </div>
+            ) : (
+              <span className="mday-empty mweek-empty">{t("day.nothingScheduled")}</span>
             )}
           </div>
         );
@@ -68,3 +81,4 @@ export function MemberWeekView({ member, selectedDate, onItemClick }: MemberWeek
     </div>
   );
 }
+

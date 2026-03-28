@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useAppSelector, useAppDispatch } from "../../../store/hooks";
+import { useAppSelector } from "../../../store/hooks";
 import { weekApi } from "../../today/api/weekApi";
 import type { WeeklyGridResponse } from "../../today/types";
 import type { ApiError } from "../../../api/domusmindApi";
@@ -21,7 +21,6 @@ export function MemberAgendaPage() {
   const { memberId } = useParams<{ memberId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const { t } = useTranslation("agenda");
-  const dispatch = useAppDispatch();
 
   const family = useAppSelector((s) => s.household.family);
   const familyId = family?.familyId ?? "";
@@ -78,11 +77,11 @@ export function MemberAgendaPage() {
     setSearchParams({ date: selectedDate }, { replace: true });
   }, [selectedDate, setSearchParams]);
 
-  // Suppress unused dispatch warning — will be used once action is dispatched after save.
-  void dispatch;
-
   // Find this member's row in the loaded grid.
   const memberGrid = grid?.members.find((m) => m.memberId === memberId) ?? null;
+
+  // Empty member fallback (no data for the loaded week).
+  const emptyMember = { memberId: memberId ?? "", name: householdMember?.name ?? "", role: "", cells: [] };
 
   // ---- Navigation handlers ----
 
@@ -104,6 +103,12 @@ export function MemberAgendaPage() {
 
   function handleItemClick(type: "event" | "task" | "routine", id: string) {
     setEditTarget({ type, id });
+  }
+
+  /** Called from Week or Month views: select the date and switch to Day view. */
+  function handleDayDrill(date: string) {
+    setSelectedDate(date);
+    setView("day");
   }
 
   // ---- Render ----
@@ -144,33 +149,27 @@ export function MemberAgendaPage() {
 
         {!gridLoading && !gridError && (
           <>
-            {view === "day" && memberGrid && (
+            {view === "day" && (
               <MemberDayView
-                member={memberGrid}
+                member={memberGrid ?? emptyMember}
                 selectedDate={selectedDate}
                 onItemClick={handleItemClick}
               />
             )}
-            {view === "day" && !memberGrid && grid && (
-              // Member's grid row absent means no data for the loaded week.
-              <MemberDayView
-                member={{ memberId: memberId ?? "", name: memberName, role: "", cells: [] }}
-                selectedDate={selectedDate}
-                onItemClick={handleItemClick}
-              />
-            )}
-            {view === "week" && memberGrid && (
+            {view === "week" && (
               <MemberWeekView
-                member={memberGrid}
+                member={memberGrid ?? emptyMember}
                 selectedDate={selectedDate}
                 onItemClick={handleItemClick}
+                onDayClick={handleDayDrill}
               />
             )}
             {view === "month" && (
               <MemberMonthView
-                member={memberGrid ?? { memberId: memberId ?? "", name: memberName, role: "", cells: [] }}
+                memberId={memberId ?? ""}
                 selectedDate={selectedDate}
-                onItemClick={handleItemClick}
+                firstDayOfWeek={firstDayOfWeek}
+                onSelectDay={handleDayDrill}
               />
             )}
           </>
@@ -191,3 +190,5 @@ export function MemberAgendaPage() {
     </div>
   );
 }
+
+

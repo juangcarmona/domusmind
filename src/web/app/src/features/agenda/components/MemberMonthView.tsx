@@ -1,34 +1,63 @@
-import { useTranslation } from "react-i18next";
-import type { WeeklyGridMember } from "../../today/types";
+import { useState, useEffect } from "react";
+import { MonthView } from "../../today/components/MonthView";
+import { useAgendaMonthCache } from "../hooks/useAgendaMonthCache";
+import { toIsoDate, addMonths } from "../../today/utils/dateUtils";
+import { useAppSelector } from "../../../store/hooks";
 
 interface MemberMonthViewProps {
-  member: WeeklyGridMember;
-  /** ISO YYYY-MM-DD — anchor month. */
-  selectedDate: string;
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  memberId: string;
+  selectedDate: string; // ISO YYYY-MM-DD
+  firstDayOfWeek: string | null;
+  onSelectDay: (date: string) => void;
 }
 
 /**
- * Month-level member agenda view.
+ * Month calendar for a single member's agenda.
  *
- * V1: placeholder that shows a coming-soon message.
- * The component is wired into the page view switcher so the
- * tab is always accessible; full calendar grid is deferred.
+ * Reuses the existing MonthView calendar grid from the Today feature.
+ * Per-day density pips are scoped to this member only via useAgendaMonthCache.
  *
- * TODO: implement full month calendar grid using the month grid
- *       cache pattern already established in TodayPage.
+ * Month navigation is local; selecting a day calls onSelectDay on the parent
+ * which may switch the view back to Day.
  */
-export function MemberMonthView({ member, selectedDate, onItemClick }: MemberMonthViewProps) {
-  const { t } = useTranslation("agenda");
+export function MemberMonthView({
+  memberId,
+  selectedDate,
+  firstDayOfWeek,
+  onSelectDay,
+}: MemberMonthViewProps) {
+  const family = useAppSelector((s) => s.household.family);
+  const familyId = family?.familyId ?? "";
 
-  // Suppress unused-variable warnings until implementation.
-  void member;
-  void selectedDate;
-  void onItemClick;
+  const todayIso = toIsoDate(new Date());
+
+  // Month anchor navigated independently of selectedDate.
+  const [monthAnchor, setMonthAnchor] = useState<string>(selectedDate);
+  useEffect(() => {
+    setMonthAnchor(selectedDate);
+  }, [selectedDate]);
+
+  const { daySummary } = useAgendaMonthCache(
+    familyId,
+    memberId,
+    monthAnchor,
+    firstDayOfWeek,
+    /* active */ true,
+  );
 
   return (
     <div className="member-month-view">
-      <span className="mday-empty">{t("month.empty")}</span>
+      <MonthView
+        selectedDate={selectedDate}
+        today={todayIso}
+        firstDayOfWeek={firstDayOfWeek}
+        displayAnchor={monthAnchor}
+        daySummary={daySummary}
+        onSelectDay={onSelectDay}
+        onPrevMonth={() => setMonthAnchor(addMonths(monthAnchor, -1))}
+        onNextMonth={() => setMonthAnchor(addMonths(monthAnchor, 1))}
+      />
     </div>
   );
 }
+
