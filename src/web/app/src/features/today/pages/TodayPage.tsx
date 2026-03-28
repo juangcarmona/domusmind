@@ -126,6 +126,13 @@ export function TodayPage() {
     setEditTarget({ type, id });
   }
 
+  // TODO: Navigate to the dedicated member agenda page when it is implemented.
+  // Replace this stub with e.g. navigate(`/household/members/${memberId}`)
+  // once the MemberAgendaPage route is wired up.
+  function handleMemberClick(_memberId: string) {
+    // Intentionally a no-op for now - wired through so TodayBoard compiles correctly.
+  }
+
   function handlePrevWeek() {
     dispatch(setSelectedDate(addDays(selectedDate, -7)));
   }
@@ -159,6 +166,7 @@ export function TodayPage() {
         onNextDay={handleNextDay}
         onToday={handleToday}
         onItemClick={handleItemClick}
+        onMemberClick={handleMemberClick}
       />
 
       {/* ── Section 2: Mid-term navigation (Week / Month) ── */}

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { WeeklyGridResponse } from "../../types";
 import {
@@ -7,7 +6,7 @@ import {
   splitForDisplay,
 } from "../../utils/todayPanelHelpers";
 import { CalendarEntryItem } from "../shared/CalendarEntryItem";
-import { TodayMemberCard } from "./TodayMemberCard";
+import { TodayMemberCell } from "./TodayMemberCell";
 
 // Only show People roles in the Today Panel. Pets are excluded (V1 scope).
 const ACTOR_ROLES = new Set(["Adult", "Child", "Caregiver"]);
@@ -23,6 +22,7 @@ interface TodayBoardProps {
   onNextDay: () => void;
   onToday: () => void;
   onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onMemberClick: (memberId: string) => void;
 }
 
 export function TodayBoard({
@@ -35,12 +35,10 @@ export function TodayBoard({
   onNextDay,
   onToday,
   onItemClick,
+  onMemberClick,
 }: TodayBoardProps) {
   const { t, i18n } = useTranslation("today");
   const { t: tCommon } = useTranslation("common");
-
-  // Only one card may be expanded at a time. null = all collapsed.
-  const [expandedMemberId, setExpandedMemberId] = useState<string | null>(null);
 
   const dateLabel = new Date(selectedDate + "T00:00:00").toLocaleDateString(
     i18n.language,
@@ -76,10 +74,6 @@ export function TodayBoard({
 
   const sharedEntries = buildSharedEntries(sharedCells, selectedDate);
   const sharedDisplayState = splitForDisplay(sharedEntries);
-
-  function handleCardToggle(memberId: string) {
-    setExpandedMemberId((prev) => (prev === memberId ? null : memberId));
-  }
 
   return (
     <div className="today-summary coord-day-panel">
@@ -125,16 +119,16 @@ export function TodayBoard({
         <p className="today-summary-empty">{t("day.noMembers")}</p>
       )}
 
-      {/* ---- Member cards (one per person) ---- */}
+      {/* ---- Compact member snapshot grid (one cell per person) ---- */}
       {actorMembers.length > 0 && (
-        <div className="tp-member-list">
+        <div className="tp-member-grid">
           {memberEntries.map(({ member, entries }) => (
-            <TodayMemberCard
+            <TodayMemberCell
               key={member.memberId}
+              memberId={member.memberId}
               name={member.name}
               entries={entries}
-              isExpanded={expandedMemberId === member.memberId}
-              onToggle={() => handleCardToggle(member.memberId)}
+              onMemberClick={onMemberClick}
               onItemClick={onItemClick}
             />
           ))}
@@ -145,7 +139,7 @@ export function TodayBoard({
       <div className="today-household tp-household-row">
         <div className="today-household-label">{t("day.household")}</div>
         {sharedDisplayState.isEmpty ? (
-          <span className="today-summary-empty tp-card-empty">
+          <span className="today-summary-empty tp-cell-empty">
             {t("day.nothingToday")}
           </span>
         ) : (
