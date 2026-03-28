@@ -32,9 +32,16 @@ export function MemberMonthView({
   const todayIso = toIsoDate(new Date());
 
   // Month anchor navigated independently of selectedDate.
+  // Only snap to selectedDate when it crosses into a different month;
+  // same-month date navigation leaves the displayed grid stable.
   const [monthAnchor, setMonthAnchor] = useState<string>(selectedDate);
   useEffect(() => {
-    setMonthAnchor(selectedDate);
+    if (selectedDate.slice(0, 7) !== monthAnchor.slice(0, 7)) {
+      setMonthAnchor(selectedDate);
+    }
+    // Intentionally excludes monthAnchor: we react only to selectedDate changes
+    // and avoid re-running when the user navigates the month header manually.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
 
   const { daySummary, dayTopEntry } = useAgendaMonthCache(

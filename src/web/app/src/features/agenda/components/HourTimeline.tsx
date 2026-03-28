@@ -59,6 +59,10 @@ interface HourTimelineProps {
    * Receives "HH:MM" (the nearest :00 or :30 slot start).
    */
   onSlotClick?: (time: string) => void;
+  /** When true, renders a current-time indicator line. */
+  isToday?: boolean;
+  /** Current time as total minutes from midnight. Used only when isToday is true. */
+  nowMinutes?: number;
 }
 
 /**
@@ -71,7 +75,7 @@ interface HourTimelineProps {
  * - All other timed entries are bucketed to nearest :00/:30 slot
  * - Empty slots are optionally clickable for "create at time" action
  */
-export function HourTimeline({ timedEntries, onItemClick, onSlotClick }: HourTimelineProps) {
+export function HourTimeline({ timedEntries, onItemClick, onSlotClick, isToday, nowMinutes }: HourTimelineProps) {
   // Separate duration events (absolute blocks) from point-in-time items (slot-bucketed).
   const durationEvents: CalendarEntry[] = [];
   const pointItems: CalendarEntry[] = [];
@@ -153,6 +157,17 @@ export function HourTimeline({ timedEntries, onItemClick, onSlotClick }: HourTim
       {durationEvents.map((entry) => (
         <DurationBlock key={entry.id} entry={entry} onItemClick={onItemClick} />
       ))}
+
+      {/* Current-time indicator — only shown when viewing today */}
+      {isToday && nowMinutes !== undefined && (
+        <div
+          className="ht-now-line"
+          style={{ top: `${(nowMinutes / 30) * SLOT_H_REM}rem` }}
+          aria-hidden="true"
+        >
+          <div className="ht-now-dot" />
+        </div>
+      )}
     </div>
   );
 }

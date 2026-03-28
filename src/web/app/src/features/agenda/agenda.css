@@ -184,7 +184,14 @@
    ================================================================ */
 
 .mday-timeline-panel {
-  /* no extra padding; the grid fills it edge-to-edge */
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  /* Scroll the timeline internally so the sidebar stays fixed while the
+     day grid can be long. Max-height is viewport-relative with room for
+     header, tab bar, and the add-row button above the body. */
+  overflow-y: auto;
+  max-height: calc(100dvh - 11rem);
 }
 
 .hour-timeline {
@@ -217,12 +224,13 @@
   border-top: none;
 }
 
-/* Night slots — canonical night hours (22:00-05:59) */
+/* Night slots — canonical night hours (22:00-05:59).
+   Slightly dimmed vs day slots; uses border color so it works in light + dark mode. */
 .ht-slot--night {
-  background: color-mix(in srgb, var(--bg, #000) 4%, transparent);
+  background: color-mix(in srgb, var(--border) 18%, transparent);
 }
 
-/* Day slots — no background override needed (inherit surface) */
+/* Day slots — no background tint (inherit surface) */
 .ht-slot--day {
   background: transparent;
 }
@@ -336,6 +344,28 @@
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+/* Current-time indicator — horizontal line + dot, shown only on today */
+.ht-now-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--error, #d03044);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.ht-now-dot {
+  position: absolute;
+  left: 2.3rem;     /* sits at the edge of the label column */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--error, #d03044);
 }
 
 /* ================================================================

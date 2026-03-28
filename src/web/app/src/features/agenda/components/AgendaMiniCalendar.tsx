@@ -45,10 +45,16 @@ export function AgendaMiniCalendar({
   // Mini calendar has its own displayed month (can drift from selectedDate).
   const [displayMonth, setDisplayMonth] = useState<string>(selectedDate);
 
-  // When the parent changes selectedDate, snap the displayed month to match
-  // so the selected day is always visible.
+  // When the parent changes selectedDate, snap the displayed month only if
+  // selectedDate has moved into a different month. This keeps the mini calendar
+  // stable during same-month day navigation and during manual month browsing.
   useEffect(() => {
-    setDisplayMonth(selectedDate);
+    if (selectedDate.slice(0, 7) !== displayMonth.slice(0, 7)) {
+      setDisplayMonth(selectedDate);
+    }
+    // Intentionally excludes displayMonth to avoid re-triggering when the
+    // user navigates the mini calendar's own chevrons.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
 
   const anchorDate = new Date(displayMonth + "T00:00:00");
