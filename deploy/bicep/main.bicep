@@ -102,7 +102,7 @@ resource kvSecretConnectionString 'Microsoft.KeyVault/vaults/secrets@2023-07-01'
 
 // ---------- PostgreSQL ----------
 
-resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01-preview' = {
+resource postgresServer 'Microsoft.DBforPostgreSQL/flexibleServers@2023-12-01' = {
   name: dbServerName
   location: location
   sku: {
