@@ -6,6 +6,8 @@ This folder contains the operator-facing deployment artifacts for DomusMind.
 |---|---|
 | `docker-compose.yml` | Production stack definition |
 | `.env.example` | Configuration contract template |
+| `manual-release.md` | Manual release and rollback runbook (CloudHosted) |
+| `bicep/main.bicep` | Azure infra baseline (CloudHosted) |
 
 DomusMind is one product with two deployment modes: `SingleInstance` and `CloudHosted`. Both modes use the same image, the same schema, and the same API. Mode selection and policy are configuration-only.
 
