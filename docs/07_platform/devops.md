@@ -81,6 +81,31 @@ The DomusMind app is the ingress surface. PostgreSQL is internal to the Docker n
 
 .NET Aspire **orchestrates the local development environment only**. It is not used in production.
 
+### Local CloudHosted mode
+
+To validate CloudHosted-specific behavior locally (invite-only signup, admin surface, no self-service household creation) without deploying to Azure, use the **`API only: DomusMind.Api (CloudHosted local)`** VS Code launch configuration.
+
+This profile sets the following environment variables on top of the standard `Development` baseline:
+
+| Variable | Value |
+|---|---|
+| `Deployment__Mode` | `CloudHosted` |
+| `Deployment__AllowHouseholdCreation` | `false` |
+| `Deployment__InvitationsEnabled` | `true` |
+| `Deployment__RequireInvitationForSignup` | `true` |
+| `Deployment__AdminToolsEnabled` | `true` |
+| `BootstrapAdmin__Enabled` | `true` |
+| `BootstrapAdmin__Email` | `admin@domusmind.local` |
+| `BootstrapAdmin__Password` | `ChangeMeNow123!` |
+
+The JWT signing key and database connection string are inherited from the standard `Development` configuration (`appsettings.Development.json` / user secrets). No separate config file or Azure dependency is required.
+
+The bootstrap admin credentials above are local development defaults. On first run against a fresh database the seed service creates the operator account automatically. Change the password after first login or override the env vars with your own values.
+
+**You still need to supply a local connection string** via user secrets or `appsettings.Development.json` if one is not already configured (same requirement as the standard API-only profile).
+
+
+
 - Aspire starts the API, web app, PostgreSQL, and pgAdmin
 - Aspire injects connection strings and service references automatically
 - Aspire provides the developer dashboard, health checks, and structured telemetry

@@ -37,6 +37,9 @@ internal sealed class StubUserFamilyAccessReader : IUserFamilyAccessReader
 
     public Task<Guid?> GetFamilyIdForUserAsync(Guid userId, CancellationToken cancellationToken = default)
         => Task.FromResult(_familyId);
+
+    public Task<IReadOnlyDictionary<Guid, Guid>> GetAllFamilyIdsByUserAsync(CancellationToken cancellationToken = default)
+        => Task.FromResult<IReadOnlyDictionary<Guid, Guid>>(new Dictionary<Guid, Guid>());
 }
 
 internal sealed class StubEventLogWriter : IEventLogWriter

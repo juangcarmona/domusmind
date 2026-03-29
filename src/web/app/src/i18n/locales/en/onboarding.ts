@@ -55,4 +55,10 @@ export default {
       pet: "Pet",
     },
   },
+  noAccess: {
+    title: "Access Required",
+    subtitle: "This deployment does not allow self-service household creation. Access is invite-only and managed by the operator.",
+    instruction: "If you have been given access, sign in with your credentials. Otherwise, contact the operator to request an invitation.",
+    signOut: "Sign out",
+  },
 } as const;

@@ -19,6 +19,8 @@ public sealed class DomusMindDbContext : DbContext, IDomusMindDbContext
 
     public DbSet<RefreshTokenRecord> RefreshTokens => Set<RefreshTokenRecord>();
 
+    public DbSet<OperatorInvitation> OperatorInvitations => Set<OperatorInvitation>();
+
     public DbSet<Domain.Family.Family> Families => Set<Domain.Family.Family>();
 
     public DbSet<UserFamilyAccess> UserFamilyAccesses => Set<UserFamilyAccess>();

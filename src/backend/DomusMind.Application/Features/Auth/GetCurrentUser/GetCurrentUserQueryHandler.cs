@@ -67,7 +67,8 @@ public sealed class GetCurrentUserQueryHandler : IQueryHandler<GetCurrentUserQue
             memberId,
             memberName,
             isManager,
-            user.MustChangePassword);
+            user.MustChangePassword,
+            user.IsOperator);
     }
 }
 

@@ -11,4 +11,5 @@ public sealed record AuthUserRecord(
     bool MustChangePassword = false,
     string? DisplayName = null,
     bool IsDisabled = false,
-    Guid? MemberId = null);
+    Guid? MemberId = null,
+    bool IsOperator = false);

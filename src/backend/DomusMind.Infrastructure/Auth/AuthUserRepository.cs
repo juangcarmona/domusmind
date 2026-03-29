@@ -59,6 +59,7 @@ public sealed class AuthUserRepository : IAuthUserRepository
             DisplayName = user.DisplayName,
             IsDisabled = user.IsDisabled,
             MemberId = user.MemberId,
+            IsOperator = user.IsOperator,
         };
 
         await _db.Set<AuthUser>().AddAsync(entity, cancellationToken);
@@ -123,6 +124,38 @@ public sealed class AuthUserRepository : IAuthUserRepository
         return await _db.Set<AuthUser>().AnyAsync(cancellationToken);
     }
 
+    public async Task<int> CountAsync(CancellationToken cancellationToken)
+    {
+        return await _db.Set<AuthUser>().CountAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<AdminAuthUserProjection>> GetAdminProjectionsAsync(
+        string? search,
+        CancellationToken cancellationToken)
+    {
+        var q = _db.Set<AuthUser>().AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var term = search.Trim().ToLower();
+            q = q.Where(u =>
+                u.Email.ToLower().Contains(term) ||
+                (u.DisplayName != null && u.DisplayName.ToLower().Contains(term)));
+        }
+
+        return await q
+            .OrderBy(u => u.Email)
+            .Select(u => new AdminAuthUserProjection(
+                u.UserId,
+                u.Email,
+                u.DisplayName,
+                u.IsDisabled,
+                u.IsOperator,
+                u.CreatedAtUtc,
+                u.LastLoginAtUtc))
+            .ToListAsync(cancellationToken);
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken)
         => _db.SaveChangesAsync(cancellationToken);
 
@@ -134,5 +167,6 @@ public sealed class AuthUserRepository : IAuthUserRepository
             entity.MustChangePassword,
             entity.DisplayName,
             entity.IsDisabled,
-            entity.MemberId);
+            entity.MemberId,
+            entity.IsOperator);
 }

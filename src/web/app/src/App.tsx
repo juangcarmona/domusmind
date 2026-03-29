@@ -15,6 +15,7 @@ import { AppShell } from "./components/AppShell";
 import { LoginPage } from "./features/auth/pages/LoginPage";
 import { RegisterPage } from "./features/auth/pages/RegisterPage";
 import { ForceChangePasswordPage } from "./features/auth/pages/ForceChangePasswordPage";
+import { CloudHostedNoAccessPage } from "./features/auth/pages/CloudHostedNoAccessPage";
 import { SetupPage } from "./features/setup/pages/SetupPage";
 import { OnboardingPage } from "./features/onboarding/pages/OnboardingPage";
 import { AreasPage } from "./features/areas/pages/AreasPage";
@@ -27,7 +28,14 @@ import { MemberDetailPage } from "./features/members/pages/MemberDetailPage";
 import { SharedListsPage } from "./features/shared-lists/pages/SharedListsPage";
 import { SharedListDetailPage } from "./features/shared-lists/pages/SharedListDetailPage";
 import { MemberAgendaPage } from "./features/agenda/pages/MemberAgendaPage";
+import { AdminShell } from "./features/admin/components/AdminShell";
+import { AdminOverviewPage } from "./features/admin/pages/AdminOverviewPage";
+import { AdminHouseholdsPage } from "./features/admin/pages/AdminHouseholdsPage";
+import { AdminUsersPage } from "./features/admin/pages/AdminUsersPage";
+import { AdminInvitationsPage } from "./features/admin/pages/AdminInvitationsPage";
 import { setupApi } from "./api/setupApi";
+import { platformApi } from "./api/platformApi";
+import type { DeploymentModeResponse } from "./api/platformApi";
 import { SplashScreen } from "./components/SplashScreen";
 
 /** Keeps document.documentElement[data-theme] in sync with Redux ui.theme. */
@@ -46,7 +54,7 @@ function ThemeApplier() {
   return null;
 }
 
-function AuthedApp() {
+function AuthedApp({ deploymentMode }: { deploymentMode: DeploymentModeResponse["deploymentMode"] }) {
   const dispatch = useAppDispatch();
   const { bootstrapStatus } = useAppSelector((s) => s.household);
   const uiLanguage = useAppSelector((s) => s.ui.language);
@@ -73,6 +81,13 @@ function AuthedApp() {
   }
 
   if (bootstrapStatus === "needsOnboarding") {
+    if (deploymentMode === "CloudHosted") {
+      return (
+        <Routes>
+          <Route path="*" element={<CloudHostedNoAccessPage />} />
+        </Routes>
+      );
+    }
     return (
       <Routes>
         <Route path="*" element={<OnboardingPage />} />
@@ -134,11 +149,14 @@ function UnauthApp() {
 function AppRoutes() {
   const { user, isLoading } = useAuth();
   const [setupStatus, setSetupStatus] = useState<"loading" | "needed" | "done">("loading");
+  const [deploymentMode, setDeploymentMode] = useState<DeploymentModeResponse["deploymentMode"]>("SingleInstance");
 
   useEffect(() => {
-    setupApi
-      .getStatus()
-      .then(({ isInitialized }) => setSetupStatus(isInitialized ? "done" : "needed"))
+    Promise.all([setupApi.getStatus(), platformApi.getDeploymentMode()])
+      .then(([{ isInitialized }, { deploymentMode: mode }]) => {
+        setDeploymentMode(mode);
+        setSetupStatus(isInitialized ? "done" : "needed");
+      })
       .catch(() => setSetupStatus("done")); // on API error, fall through to normal auth flow
   }, []);
 
@@ -146,7 +164,8 @@ function AppRoutes() {
     return <SplashScreen />;
   }
 
-  if (setupStatus === "needed") {
+  // In CloudHosted the system is operator-initialized; skip self-service admin setup.
+  if (setupStatus === "needed" && deploymentMode !== "CloudHosted") {
     return (
       <Routes>
         <Route
@@ -173,7 +192,7 @@ function AppRoutes() {
     );
   }
 
-  return <AuthedApp />;
+  return <AuthedApp deploymentMode={deploymentMode} />;
 }
 
 export default function App() {
@@ -181,8 +200,30 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <ThemeApplier />
-        <AppRoutes />
+        <Routes>
+          <Route path="/admin/*" element={<AdminRoutes />} />
+          <Route path="*" element={<AppRoutes />} />
+        </Routes>
       </BrowserRouter>
     </AuthProvider>
+  );
+}
+
+function AdminRoutes() {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) return <SplashScreen />;
+  if (!user) return <Navigate to="/" replace />;
+  if (!user.isOperator) return <Navigate to="/" replace />;
+
+  return (
+    <Routes>
+      <Route element={<AdminShell />}>
+        <Route index element={<AdminOverviewPage />} />
+        <Route path="households" element={<AdminHouseholdsPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
+        <Route path="invitations" element={<AdminInvitationsPage />} />
+      </Route>
+    </Routes>
   );
 }
