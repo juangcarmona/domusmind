@@ -1,107 +1,157 @@
-# DomusMind - Self-hosted Installation
+# DomusMind - Deployment
 
-DomusMind runs as a Docker Compose stack: **postgres** and **domusmind**.
+This folder contains the operator-facing deployment artifacts for DomusMind.
 
-## Prerequisites
+| File | Purpose |
+|---|---|
+| `docker-compose.yml` | Production stack definition |
+| `.env.example` | Configuration contract template |
 
-- Docker Engine 24+ with the Compose plugin (`docker compose version`)
-- A GitHub Container Registry token or access to the GHCR namespace where images are published
+DomusMind is one product with two deployment modes: `SingleInstance` and `CloudHosted`. Both modes use the same image, the same schema, and the same API. Mode selection and policy are configuration-only.
 
-## Quick start
+See [`docs/07_platform/devops.md`](../docs/07_platform/devops.md) for the canonical DevOps reference.
+
+---
+
+## SingleInstance
+
+For self-hosted installations: home servers, NAS devices, mini PCs.
+
+- one household per installation — enforced by policy
+- two services: `postgres` and `domusmind`
+- HTTPS handled by an external reverse proxy
+- state lives in the `postgres_data` Docker volume
+
+### First install
 
 ```bash
-# 1. Download the release assets
-#    (or unzip the release archive - docker-compose.yml and .env.example are included)
-
-# 2. Create your .env file
+# 1. Copy the template and fill in required values
 cp .env.example .env
 
-# 3. Edit .env and fill in at minimum:
-#    IMAGE_OWNER  - GitHub username or org that published the release
-#    DB_PASSWORD  - a strong random password for the database
-#    JWT_SECRET   - at least 32 random characters (openssl rand -hex 32)
-#    VERSION      - the release tag without the leading v, e.g. 1.0.0
+# Required: DB_PASSWORD, JWT_SECRET, VERSION, APP_PORT
+# Set: DEPLOYMENT_MODE=SingleInstance
 
-# 4. Start the stack
+# 2. Start the stack
 docker compose up -d
 
-# 5. Open the web UI and complete the first-run setup wizard
-#    http://localhost:${APP_PORT}
-#
-#    The wizard is served at the root URL on first visit.
-#    Create the initial administrator account through the UI.
-#    The setup endpoint is permanently server-gated: it cannot be called twice.
-````
-
-## Headless / recovery bootstrap (optional)
-
-If you cannot use the UI-driven setup wizard (scripted provisioning, CI, disaster recovery),
-you can seed the initial admin via environment variables.
-
-This path is **disabled by default** and becomes a **permanent no-op once the system is
-initialized** (whether by the UI wizard or a previous bootstrap run). It does not override
-or re-initialize an already-initialized system.
-
-To enable for a single run:
-
-```bash
-# Uncomment BootstrapAdmin__ lines in docker-compose.yml:
-#   BootstrapAdmin__Enabled:  true
-#   BootstrapAdmin__Email:    ${BOOTSTRAP_ADMIN_EMAIL}
-#   BootstrapAdmin__Password: ${BOOTSTRAP_ADMIN_PASSWORD}
-
-# Set credentials in .env:
-#   BOOTSTRAP_ADMIN_EMAIL=admin@example.com
-#   BOOTSTRAP_ADMIN_PASSWORD=<strong-password>
-
-docker compose up -d
-
-# Disable the bootstrap block in docker-compose.yml when done.
-# On all subsequent restarts the setting is ignored because the system
-# is already marked as initialized.
+# 3. Open the web UI and complete the setup wizard
+#    http://localhost:<APP_PORT>
 ```
 
-## Image tags
-
-| Tag             | Source                                   |
-| --------------- | ---------------------------------------- |
-| `edge`          | Latest successful `main` build           |
-| `1.0.0` (exact) | Stable release                           |
-| `1.0` (minor)   | Latest patch in the 1.0 line             |
-| `latest`        | Latest stable release                    |
-| `1.1.0-alpha.1` | Prerelease - not suitable for production |
-
-## Updates
+### Update
 
 ```bash
+# 1. Read the release notes — check for new .env variables or migration notes
+# 2. Update VERSION in .env; add any new required variables
 docker compose pull
 docker compose up -d
+# Migrations run automatically at startup.
 ```
 
-Migrations run automatically on app startup. Back up your `postgres_data`
-volume before upgrading.
+---
 
-## Volumes
+## CloudHosted
 
-| Volume          | Contents             |
-| --------------- | -------------------- |
-| `postgres_data` | All application data |
+For managed cloud deployments supporting multiple households.
 
-Back up with:
+Differences from SingleInstance:
+- `DEPLOYMENT_MODE=CloudHosted`
+- external managed database recommended (Azure Database for PostgreSQL, Amazon RDS, etc.)
+- policy variables enabled: `ALLOW_HOUSEHOLD_CREATION`, `INVITATIONS_ENABLED`, `RATE_LIMITING_ENABLED`
+- observability variables enabled: `METRICS_ENABLED`, `TRACING_ENABLED`
+
+The same `docker-compose.yml` applies as a baseline. Cloud deployments may adapt it for their container platform (Kubernetes, Azure Container Apps, etc.) while using the same image.
 
 ```bash
-docker run --rm \
-  -v domusmind_postgres_data:/data \
-  -v $(pwd):/backup \
-  alpine tar czf /backup/postgres_data_$(date +%Y%m%d).tar.gz -C /data .
+# 1. Configure external database; update DB_USER, DB_PASSWORD, connection string
+# 2. Set DEPLOYMENT_MODE=CloudHosted and policy/observability variables
+# 3. Deploy via docker-compose.yml or container platform tooling
+# 4. Complete setup via the API (UI wizard or headless bootstrap)
 ```
+
+---
+
+## Required Configuration
+
+Copy `.env.example` to `.env` and fill in every required value.
+
+| Variable | Required | Notes |
+|---|---|---|
+| `DB_USER` | Yes | PostgreSQL username |
+| `DB_PASSWORD` | Yes | Strong random password |
+| `JWT_SECRET` | Yes | Minimum 32 characters — `openssl rand -hex 32` |
+| `JWT_ISSUER` | No | Defaults to `domusmind` |
+| `VERSION` | Yes | Image tag — use a semver tag for production |
+| `APP_PORT` | No | Defaults to `24365` |
+| `DEPLOYMENT_MODE` | Yes | `SingleInstance` or `CloudHosted` |
+
+Invalid combinations (e.g. `SingleInstance` with `MaxHouseholdsPerDeployment > 1`) fail at startup.
+
+---
+
+## Startup Order
+
+1. `postgres` starts and passes its health check
+2. `domusmind` starts after postgres is healthy
+3. `domusmind` runs EF Core migrations at startup
+4. API begins accepting traffic
+
+No manual migration step is required.
+
+---
+
+## Migrations
+
+- migrations run automatically at API startup (`dbContext.Database.Migrate()`)
+- all schema changes in V1 are additive only — no drops, renames, or destructive changes
+- every release with a migration documents it in the changelog
+- back up the `postgres_data` volume before upgrading
+
+---
+
+## Bootstrap
+
+**Default path:** open `http://localhost:<APP_PORT>` after first start. The setup wizard is served at the root URL and is available once.
+
+**Headless path:** for scripted or CI environments without UI access. Disabled by default. Enable by uncommenting `BootstrapAdmin__` lines in `docker-compose.yml` and setting credentials in `.env`. Once the system is initialized this path becomes a permanent no-op.
+
+---
+
+## Backup
+
+All state lives in the `postgres_data` volume.
+
+```bash
+docker exec domusmind-postgres-1 \
+  pg_dump -U $DB_USER domusmind \
+  > backups/domusmind_$(date +%Y%m%d_%H%M%S).sql
+```
+
+Back up before every upgrade.
+
+---
+
+## Reverse Proxy
+
+DomusMind serves plain HTTP on `APP_PORT`. Terminate TLS upstream.
+
+```
+https://domusmind.example.com → http://<host>:<APP_PORT>
+```
+
+Compatible proxies: Caddy, Nginx Proxy Manager, Traefik, HAProxy.
+
+---
 
 ## Troubleshooting
 
 ```bash
-# View logs
+# View application logs
 docker compose logs -f domusmind
 
-# Check configuration before starting
+# Check stack status
+docker compose ps
+
+# Validate config before starting
 docker compose config
 ```
