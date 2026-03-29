@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { CalendarEntry } from "../../today/utils/calendarEntry";
 import { CalendarEntryItem } from "../../today/components/shared/CalendarEntryItem";
 
@@ -17,6 +18,7 @@ interface SelectedDateCardProps {
  *  - Everything else: unscheduled / no-time items (no group label when overdue is absent)
  */
 export function SelectedDateCard({ entries, dateLabel, onItemClick }: SelectedDateCardProps) {
+  const { t } = useTranslation("agenda");
   const overdue: CalendarEntry[] = [];
   const rest: CalendarEntry[] = [];
 
@@ -40,7 +42,7 @@ export function SelectedDateCard({ entries, dateLabel, onItemClick }: SelectedDa
       {overdue.length > 0 && (
         <div className="agenda-date-card__group">
           <div className="agenda-date-card__group-label agenda-date-card__group-label--overdue">
-            Overdue
+            {t("day.overdue")}
           </div>
           <div className="agenda-date-card__entry-list">
             {overdue.map((entry) => (
@@ -57,7 +59,7 @@ export function SelectedDateCard({ entries, dateLabel, onItemClick }: SelectedDa
       {rest.length > 0 && (
         <div className="agenda-date-card__group">
           {overdue.length > 0 && (
-            <div className="agenda-date-card__group-label">Unscheduled</div>
+            <div className="agenda-date-card__group-label">{t("day.unscheduled")}</div>
           )}
           <div className="agenda-date-card__entry-list">
             {rest.map((entry) => (
