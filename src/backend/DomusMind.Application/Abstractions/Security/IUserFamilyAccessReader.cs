@@ -10,4 +10,10 @@ public interface IUserFamilyAccessReader
     /// user has not been granted access to any family yet.
     /// </summary>
     Task<Guid?> GetFamilyIdForUserAsync(Guid userId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns a dictionary mapping userId → familyId for all users that have family access.
+    /// Used by operator admin views.
+    /// </summary>
+    Task<IReadOnlyDictionary<Guid, Guid>> GetAllFamilyIdsByUserAsync(CancellationToken cancellationToken = default);
 }

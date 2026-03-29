@@ -40,7 +40,7 @@ public sealed class AuthSeedService
         var hasher = sp.GetRequiredService<IPasswordHasher>();
 
         var email = options.Email.Trim().ToLowerInvariant();
-        var user = new AuthUserRecord(Guid.NewGuid(), email, hasher.Hash(options.Password));
+        var user = new AuthUserRecord(Guid.NewGuid(), email, hasher.Hash(options.Password), IsOperator: true);
 
         await repository.AddAsync(user, cancellationToken);
         await repository.SaveChangesAsync(cancellationToken);

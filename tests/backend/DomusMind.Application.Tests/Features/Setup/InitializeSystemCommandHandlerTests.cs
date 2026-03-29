@@ -182,6 +182,9 @@ public sealed class InitializeSystemCommandHandlerTests
         public Task<IReadOnlyDictionary<Guid, AuthUserStatusProjection>> GetStatusByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken ct)
             => Task.FromResult<IReadOnlyDictionary<Guid, AuthUserStatusProjection>>(new Dictionary<Guid, AuthUserStatusProjection>());
         public Task<bool> AnyUsersAsync(CancellationToken ct) => Task.FromResult(Users.Count > 0);
+        public Task<int> CountAsync(CancellationToken ct) => Task.FromResult(Users.Count);
+        public Task<IReadOnlyList<AdminAuthUserProjection>> GetAdminProjectionsAsync(string? search, CancellationToken ct)
+            => Task.FromResult<IReadOnlyList<AdminAuthUserProjection>>([]);
         public Task SaveChangesAsync(CancellationToken ct) => Task.CompletedTask;
     }
 

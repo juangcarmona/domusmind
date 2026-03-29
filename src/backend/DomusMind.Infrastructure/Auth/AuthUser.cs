@@ -43,4 +43,10 @@ public sealed class AuthUser
 
     /// <summary>UserId of the admin who provisioned this account, if applicable.</summary>
     public Guid? CreatedByUserId { get; set; }
+
+    /// <summary>
+    /// When true the account has operator/admin access to the deployment management surface.
+    /// Set on the system initializer and bootstrap admin accounts.
+    /// </summary>
+    public bool IsOperator { get; set; }
 }

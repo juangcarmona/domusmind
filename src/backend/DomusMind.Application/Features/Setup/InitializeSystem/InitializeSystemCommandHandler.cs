@@ -38,7 +38,7 @@ public sealed class InitializeSystemCommandHandler
         if (existing is not null)
             throw new SetupException(SetupErrorCode.EmailAlreadyTaken, "Email address is already registered.");
 
-        var user = new AuthUserRecord(Guid.NewGuid(), email, _hasher.Hash(command.Password));
+        var user = new AuthUserRecord(Guid.NewGuid(), email, _hasher.Hash(command.Password), IsOperator: true);
 
         await _users.AddAsync(user, cancellationToken);
         await _users.SaveChangesAsync(cancellationToken);

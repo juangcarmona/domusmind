@@ -21,4 +21,12 @@ public sealed class UserFamilyAccessReader : IUserFamilyAccessReader
 
         return access?.FamilyId;
     }
+
+    public async Task<IReadOnlyDictionary<Guid, Guid>> GetAllFamilyIdsByUserAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return await _dbContext.UserFamilyAccesses
+            .AsNoTracking()
+            .ToDictionaryAsync(a => a.UserId, a => a.FamilyId, cancellationToken);
+    }
 }
