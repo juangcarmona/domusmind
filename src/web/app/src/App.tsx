@@ -22,8 +22,6 @@ import { AreaDetailPage } from "./features/areas/pages/AreaDetailPage";
 import { PlanningPage } from "./features/planning/pages/PlanningPage";
 import { SettingsPage } from "./features/settings/pages/SettingsPage";
 import { TodayPage } from "./features/today/pages/TodayPage";
-import { MembersPage } from "./features/members/pages/MembersPage";
-import { MemberDetailPage } from "./features/members/pages/MemberDetailPage";
 import { SharedListsPage } from "./features/shared-lists/pages/SharedListsPage";
 import { SharedListDetailPage } from "./features/shared-lists/pages/SharedListDetailPage";
 import { MemberAgendaPage } from "./features/agenda/pages/MemberAgendaPage";
@@ -90,8 +88,8 @@ function AuthedApp() {
         <Route path="/areas" element={<AreasPage />} />
         <Route path="/areas/:areaId" element={<AreaDetailPage />} />
         <Route path="/planning" element={<PlanningPage />} />
-        <Route path="/members" element={<MembersPage />} />
-        <Route path="/members/:memberId" element={<MemberDetailPage />} />
+        <Route path="/members" element={<Navigate to="/settings" replace />} />
+        <Route path="/members/:memberId" element={<Navigate to="/settings" replace />} />
         <Route path="/agenda/members/:memberId" element={<MemberAgendaPage />} />
         <Route path="/lists" element={<SharedListsPage />} />
         <Route path="/lists/:listId" element={<SharedListDetailPage />} />

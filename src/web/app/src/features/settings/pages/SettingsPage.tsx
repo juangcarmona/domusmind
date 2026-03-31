@@ -5,6 +5,7 @@ import { fetchSupportedLanguages } from "../../../store/languagesSlice";
 import { SettingsTabs, type SettingsTab } from "../components/SettingsTabs";
 import { AccountSettingsSection } from "../components/AccountSettingsSection";
 import { HouseholdSettingsSection } from "../components/HouseholdSettingsSection";
+import { MembersSettingsSection } from "../components/MembersSettingsSection";
 import { AboutSection } from "../components/AboutSection";
 
 export function SettingsPage() {
@@ -24,7 +25,12 @@ export function SettingsPage() {
       <h1 className="page-title">{t("title")}</h1>
       <SettingsTabs active={activeTab} onChange={setActiveTab} />
       <div role="tabpanel">
-        {activeTab === "household" && <HouseholdSettingsSection />}
+        {activeTab === "household" && (
+          <>
+            <HouseholdSettingsSection />
+            <MembersSettingsSection />
+          </>
+        )}
         {activeTab === "account" && <AccountSettingsSection />}
         {activeTab === "about" && <AboutSection />}
       </div>

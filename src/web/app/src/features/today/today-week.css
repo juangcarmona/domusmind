@@ -51,7 +51,6 @@
   text-transform: capitalize;
 }
 .wg-cell {
-  padding: 0.3rem 0.4rem;
   border-left: 1px solid var(--border);
   min-height: 3rem;
   display: flex;
@@ -129,7 +128,6 @@
 
 /* Type glyph - tiny, inherits item color, aria-hidden in markup */
 .wg-item-glyph {
-  font-size: 1rem;
   flex-shrink: 0;
   opacity: 0.8;
   line-height: 1;

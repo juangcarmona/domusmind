@@ -12,7 +12,6 @@ const NAV_ITEMS = [
   { to: "/planning", labelKey: "planning" },
   { to: "/areas", labelKey: "areas" },
   { to: "/lists", labelKey: "lists" },
-  { to: "/members", labelKey: "members" },
 ] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {

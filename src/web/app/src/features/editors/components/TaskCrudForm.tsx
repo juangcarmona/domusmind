@@ -116,6 +116,13 @@ export function TaskCrudForm({
         title.trim() || null,
         color,
       );
+      if (assigneeId && assigneeId !== initialAssigneeId) {
+        try {
+          await domusmindApi.assignTask(taskId, { assigneeId });
+        } catch (assignErr) {
+          console.error("Failed to assign task", assignErr);
+        }
+      }
       setSubmitting(false);
       await Promise.resolve(onSuccess());
     } catch (err) {
@@ -192,7 +199,7 @@ export function TaskCrudForm({
             onChange={(e) => setColor(e.target.value.toUpperCase())}
           />
         </div>
-        {mode === "create" && members && members.length > 0 && (
+        {members && members.length > 0 && (
           <div className="form-group">
             <label htmlFor="task-form-assignee">{tTasks("assignTo")}</label>
             <select
