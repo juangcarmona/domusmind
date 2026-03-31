@@ -34,11 +34,5 @@ public interface IAuthUserRepository
 
     Task<bool> AnyUsersAsync(CancellationToken cancellationToken);
 
-    Task<int> CountAsync(CancellationToken cancellationToken);
-
-    Task<IReadOnlyList<AdminAuthUserProjection>> GetAdminProjectionsAsync(
-        string? search,
-        CancellationToken cancellationToken);
-
     Task SaveChangesAsync(CancellationToken cancellationToken);
 }

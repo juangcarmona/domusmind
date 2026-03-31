@@ -126,42 +126,6 @@ public sealed class AuthSeedServiceTests
         repo.Users.Should().HaveCount(1);
     }
 
-    [Fact]
-    public async Task SeedAdminAsync_WhenEnabledAndNotInitialized_CreatedUserHasOperatorFlag()
-    {
-        var repo = new InMemoryAuthUserRepository();
-        var options = new BootstrapAdminOptions
-        {
-            Enabled = true,
-            Email = "admin@domusmind.local",
-            Password = "SecureAdmin1!",
-        };
-
-        await AuthSeedService.SeedAdminAsync(BuildServices(options, repo), CancellationToken.None);
-
-        repo.Users.Should().HaveCount(1);
-        repo.Users[0].IsOperator.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task SeedAdminAsync_WhenUserAlreadyExistsButNotInitialized_MarksInitializedWithoutDuplicate()
-    {
-        var existingUser = new AuthUserRecord(Guid.NewGuid(), "admin@domusmind.local", "HASHED:pass", IsOperator: true);
-        var repo = new InMemoryAuthUserRepository([existingUser]);
-        var initState = new InMemorySystemInitializationState(alreadyInitialized: false);
-        var options = new BootstrapAdminOptions
-        {
-            Enabled = true,
-            Email = "admin@domusmind.local",
-            Password = "SecureAdmin1!",
-        };
-
-        await AuthSeedService.SeedAdminAsync(BuildServices(options, repo, initState), CancellationToken.None);
-
-        repo.Users.Should().HaveCount(1, "no duplicate should be created");
-        initState.IsInitialized.Should().BeTrue("state should be reconciled");
-    }
-
     // ── Test helpers ──────────────────────────────────────────────────────────
 
     private sealed class InMemorySystemInitializationState : ISystemInitializationState
@@ -227,12 +191,6 @@ public sealed class AuthSeedServiceTests
 
         public Task<bool> AnyUsersAsync(CancellationToken ct)
             => Task.FromResult(Users.Count > 0);
-
-        public Task<int> CountAsync(CancellationToken ct)
-            => Task.FromResult(Users.Count);
-
-        public Task<IReadOnlyList<AdminAuthUserProjection>> GetAdminProjectionsAsync(string? search, CancellationToken ct)
-            => Task.FromResult<IReadOnlyList<AdminAuthUserProjection>>([]);
 
         public Task SaveChangesAsync(CancellationToken ct)
             => Task.CompletedTask;

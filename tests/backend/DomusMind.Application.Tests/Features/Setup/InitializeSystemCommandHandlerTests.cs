@@ -1,4 +1,3 @@
-using DomusMind.Application.Abstractions.Platform;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Abstractions.System;
 using DomusMind.Application.Features.Setup;
@@ -10,13 +9,11 @@ namespace DomusMind.Application.Tests.Features.Setup;
 public sealed class InitializeSystemCommandHandlerTests
 {
     private static InitializeSystemCommandHandler BuildHandler(
-        IDeploymentModeContext? deployment = null,
         InMemorySystemInitializationState? state = null,
         InMemoryAuthUserRepository? users = null,
         IPasswordHasher? hasher = null)
     {
         return new InitializeSystemCommandHandler(
-            deployment ?? new StubDeploymentModeContext(DeploymentMode.CloudHosted),
             state ?? new InMemorySystemInitializationState(),
             users ?? new InMemoryAuthUserRepository(),
             hasher ?? new StubPasswordHasher());
@@ -145,32 +142,7 @@ public sealed class InitializeSystemCommandHandlerTests
         result.UserId.Should().NotBe(Guid.Empty);
     }
 
-    [Fact]
-    public async Task Handle_WhenSingleInstance_ThrowsNotApplicableException()
-    {
-        var handler = BuildHandler(deployment: new StubDeploymentModeContext(DeploymentMode.SingleInstance));
-
-        var act = () => handler.Handle(
-            new InitializeSystemCommand("admin@example.com", "SecurePass1!", null),
-            CancellationToken.None);
-
-        await act.Should().ThrowAsync<SetupException>()
-            .Where(e => e.Code == SetupErrorCode.NotApplicable);
-    }
-
-    // ── Stubs ───────────────────────────────────────────────────────────────────────────────
-
-    private sealed class StubDeploymentModeContext : IDeploymentModeContext
-    {
-        public StubDeploymentModeContext(DeploymentMode mode) => Mode = mode;
-        public DeploymentMode Mode { get; }
-        public bool CanCreateHousehold => true;
-        public bool InvitationsEnabled => false;
-        public bool RequireInvitationForSignup => false;
-        public bool EmailEnabled => false;
-        public bool SupportsAdminTools => false;
-        public int MaxHouseholdsPerDeployment => 0;
-    }
+    // ── Stubs ─────────────────────────────────────────────────────────────────
 
     private sealed class InMemorySystemInitializationState : ISystemInitializationState
     {
@@ -210,9 +182,6 @@ public sealed class InitializeSystemCommandHandlerTests
         public Task<IReadOnlyDictionary<Guid, AuthUserStatusProjection>> GetStatusByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken ct)
             => Task.FromResult<IReadOnlyDictionary<Guid, AuthUserStatusProjection>>(new Dictionary<Guid, AuthUserStatusProjection>());
         public Task<bool> AnyUsersAsync(CancellationToken ct) => Task.FromResult(Users.Count > 0);
-        public Task<int> CountAsync(CancellationToken ct) => Task.FromResult(Users.Count);
-        public Task<IReadOnlyList<AdminAuthUserProjection>> GetAdminProjectionsAsync(string? search, CancellationToken ct)
-            => Task.FromResult<IReadOnlyList<AdminAuthUserProjection>>([]);
         public Task SaveChangesAsync(CancellationToken ct) => Task.CompletedTask;
     }
 

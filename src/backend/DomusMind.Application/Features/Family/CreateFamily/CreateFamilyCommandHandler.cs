@@ -1,7 +1,6 @@
 using DomusMind.Application.Abstractions.Languages;
 using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Persistence;
-using DomusMind.Application.Abstractions.Platform;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Features.Family;
 using DomusMind.Contracts.Family;
@@ -17,25 +16,19 @@ public sealed class CreateFamilyCommandHandler : ICommandHandler<CreateFamilyCom
     private readonly IFamilyAccessGranter _familyAccessGranter;
     private readonly ISupportedLanguageReader _languageReader;
     private readonly IUserFamilyAccessReader _familyAccessReader;
-    private readonly IHouseholdProvisioningPolicy _provisioningPolicy;
-    private readonly IDeploymentModeContext _deploymentContext;
 
     public CreateFamilyCommandHandler(
         IDomusMindDbContext dbContext,
         IEventLogWriter eventLogWriter,
         IFamilyAccessGranter familyAccessGranter,
         ISupportedLanguageReader languageReader,
-        IUserFamilyAccessReader familyAccessReader,
-        IHouseholdProvisioningPolicy provisioningPolicy,
-        IDeploymentModeContext deploymentContext)
+        IUserFamilyAccessReader familyAccessReader)
     {
         _dbContext = dbContext;
         _eventLogWriter = eventLogWriter;
         _familyAccessGranter = familyAccessGranter;
         _languageReader = languageReader;
         _familyAccessReader = familyAccessReader;
-        _provisioningPolicy = provisioningPolicy;
-        _deploymentContext = deploymentContext;
     }
 
     public async Task<CreateFamilyResponse> Handle(
@@ -47,10 +40,6 @@ public sealed class CreateFamilyCommandHandler : ICommandHandler<CreateFamilyCom
 
         if (command.Name.Trim().Length > 100)
             throw new FamilyException(FamilyErrorCode.InvalidInput, "Family name cannot exceed 100 characters.");
-
-        var policyResult = await _provisioningPolicy.EvaluateAsync(cancellationToken);
-        if (!policyResult.Allowed)
-            throw new FamilyException(FamilyErrorCode.HouseholdCreationNotAllowed, policyResult.Message, policyResult.ReasonCode);
 
         var existingFamilyId = await _familyAccessReader.GetFamilyIdForUserAsync(
             command.RequestedByUserId, cancellationToken);
@@ -78,11 +67,6 @@ public sealed class CreateFamilyCommandHandler : ICommandHandler<CreateFamilyCom
         var family = Domain.Family.Family.Create(familyId, name, languageCode, now);
 
         _dbContext.Set<Domain.Family.Family>().Add(family);
-
-        // For SingleInstance, mark this family as the singleton. The DB unique index on
-        // singleton_key closes the TOCTOU race between the policy pre-check and the INSERT.
-        if (_deploymentContext.Mode == DeploymentMode.SingleInstance)
-            _dbContext.SetProperty(family, "singleton_key", "singleton");
 
         await _familyAccessGranter.GrantAccessAsync(command.RequestedByUserId, familyId.Value, cancellationToken);
 

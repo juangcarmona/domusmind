@@ -1,5 +1,4 @@
 using DomusMind.Application.Abstractions.Languages;
-using DomusMind.Application.Abstractions.Platform;
 using DomusMind.Application.Features.Family;
 using DomusMind.Application.Features.Family.CreateFamily;
 using DomusMind.Infrastructure.Events;
@@ -20,9 +19,7 @@ public sealed class CreateFamilyCommandHandlerTests
         DomusMindDbContext? db = null,
         StubFamilyAccessGranter? granter = null,
         StubSupportedLanguageReader? languageReader = null,
-        StubUserFamilyAccessReader? accessReader = null,
-        StubHouseholdProvisioningPolicy? provisioningPolicy = null,
-        IDeploymentModeContext? deploymentContext = null)
+        StubUserFamilyAccessReader? accessReader = null)
     {
         var context = db ?? CreateDb();
         return new CreateFamilyCommandHandler(
@@ -30,9 +27,7 @@ public sealed class CreateFamilyCommandHandlerTests
             new EventLogWriter(context),
             granter ?? new StubFamilyAccessGranter(),
             languageReader ?? new StubSupportedLanguageReader(),
-            accessReader ?? new StubUserFamilyAccessReader(),
-            provisioningPolicy ?? new StubHouseholdProvisioningPolicy(allowed: true),
-            deploymentContext ?? new StubDeploymentModeContext());
+            accessReader ?? new StubUserFamilyAccessReader());
     }
 
     [Fact]
@@ -165,34 +160,5 @@ public sealed class CreateFamilyCommandHandlerTests
 
         await act.Should().ThrowAsync<FamilyException>()
             .Where(e => e.Code == FamilyErrorCode.InvalidInput);
-    }
-
-    [Fact]
-    public async Task Handle_WhenProvisioningPolicyDenies_ThrowsHouseholdCreationNotAllowed()
-    {
-        var policy = new StubHouseholdProvisioningPolicy(allowed: false);
-        var handler = BuildHandler(provisioningPolicy: policy);
-
-        var act = () => handler.Handle(
-            new CreateFamilyCommand("Smith Family", null, Guid.NewGuid()),
-            CancellationToken.None);
-
-        await act.Should().ThrowAsync<FamilyException>()
-            .Where(e => e.Code == FamilyErrorCode.HouseholdCreationNotAllowed);
-    }
-
-    [Fact]
-    public async Task Handle_WhenProvisioningPolicyDenies_ExceptionCarriesPolicyReasonCode()
-    {
-        var denyResult = ProvisioningPolicyResult.DenySingleInstanceBound();
-        var policy = new StubHouseholdProvisioningPolicy(denyResult);
-        var handler = BuildHandler(provisioningPolicy: policy);
-
-        var act = () => handler.Handle(
-            new CreateFamilyCommand("Smith Family", null, Guid.NewGuid()),
-            CancellationToken.None);
-
-        var ex = await act.Should().ThrowAsync<FamilyException>();
-        ex.Which.PolicyReasonCode.Should().Be("single_instance_already_bound");
     }
 }

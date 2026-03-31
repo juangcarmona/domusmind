@@ -1,12 +1,4 @@
 using DomusMind.Application.Abstractions.Messaging;
-using DomusMind.Application.Features.Admin.CreateOperatorInvitation;
-using DomusMind.Application.Features.Admin.DisableUser;
-using DomusMind.Application.Features.Admin.EnableUser;
-using DomusMind.Application.Features.Admin.GetAdminHouseholds;
-using DomusMind.Application.Features.Admin.GetAdminSummary;
-using DomusMind.Application.Features.Admin.GetAdminUsers;
-using DomusMind.Application.Features.Admin.ListOperatorInvitations;
-using DomusMind.Application.Features.Admin.RevokeOperatorInvitation;
 using DomusMind.Application.Features.Auth.ChangePassword;
 using DomusMind.Application.Features.Auth.GetCurrentUser;
 using DomusMind.Application.Features.Auth.Login;
@@ -16,9 +8,6 @@ using DomusMind.Application.Features.Auth.RegisterUser;
 using DomusMind.Application.Features.Calendar.AddEventParticipant;
 using DomusMind.Application.Features.Calendar.AddReminder;
 using DomusMind.Application.Features.Calendar.CancelEvent;
-using DomusMind.Application.Features.Platform.GetCurrentDeploymentMode;
-using DomusMind.Contracts.Admin;
-using DomusMind.Contracts.Platform;
 using DomusMind.Application.Features.Calendar.DetectCalendarConflicts;
 using DomusMind.Application.Features.Calendar.GetFamilyPlans;
 using DomusMind.Application.Features.Calendar.GetFamilyTimeline;
@@ -190,19 +179,6 @@ public static class ApplicationServices
         // Setup slices
         services.AddScoped<IQueryHandler<GetSetupStatusQuery, SetupStatusResponse>, GetSetupStatusQueryHandler>();
         services.AddScoped<ICommandHandler<InitializeSystemCommand, InitializeSystemResponse>, InitializeSystemCommandHandler>();
-
-        // Platform slices
-        services.AddScoped<IQueryHandler<GetCurrentDeploymentModeQuery, DeploymentModeResponse>, GetCurrentDeploymentModeQueryHandler>();
-
-        // Admin slices
-        services.AddScoped<IQueryHandler<GetAdminSummaryQuery, AdminSummaryResponse>, GetAdminSummaryQueryHandler>();
-        services.AddScoped<IQueryHandler<GetAdminHouseholdsQuery, AdminHouseholdListResponse>, GetAdminHouseholdsQueryHandler>();
-        services.AddScoped<IQueryHandler<GetAdminUsersQuery, AdminUserListResponse>, GetAdminUsersQueryHandler>();
-        services.AddScoped<IQueryHandler<ListOperatorInvitationsQuery, OperatorInvitationListResponse>, ListOperatorInvitationsQueryHandler>();
-        services.AddScoped<ICommandHandler<CreateOperatorInvitationCommand, CreateOperatorInvitationResponse>, CreateOperatorInvitationCommandHandler>();
-        services.AddScoped<ICommandHandler<RevokeOperatorInvitationCommand, bool>, RevokeOperatorInvitationCommandHandler>();
-        services.AddScoped<ICommandHandler<DisableUserCommand, DisableUserResponse>, DisableUserCommandHandler>();
-        services.AddScoped<ICommandHandler<EnableUserCommand, EnableUserResponse>, EnableUserCommandHandler>();
 
         // Shared Lists slices (V1.1)
         services.AddScoped<ICommandHandler<CreateSharedListCommand, CreateSharedListResponse>, CreateSharedListCommandHandler>();

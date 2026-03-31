@@ -11,5 +11,4 @@ public sealed record MeResponse(
     Guid? MemberId,
     string? MemberName,
     bool IsManager,
-    bool MustChangePassword,
-    bool IsOperator);
+    bool MustChangePassword);
