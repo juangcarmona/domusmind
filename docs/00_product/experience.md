@@ -155,6 +155,30 @@ The timeline replaces the need to check multiple disconnected tools to understan
 
 ---
 
+# Navigation
+
+The primary navigation surfaces the household's operational tools:
+
+- Today
+- Planning
+- Areas
+- Lists
+
+People management is not a primary navigation destination.
+
+Managing people in the household is a configuration task. It belongs under **Settings → Household**, not in the main navigation rail.
+
+Within Settings → Household, people can:
+
+- view all household members
+- add a new person
+- edit a person's full name, role, and optional birth date
+- manage access (for managers)
+
+User-facing language uses **People** and **Person**, not Members or Member.
+
+---
+
 # Scope Guardrails
 
 The V1 experience must stay inside the current system scope.

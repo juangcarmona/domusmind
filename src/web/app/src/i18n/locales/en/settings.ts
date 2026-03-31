@@ -118,7 +118,7 @@ export default {
     youBadge: "You",
     editProfile: "Edit profile",
     changePassword: "Change password",
-    householdMembers: "Household members",
+    householdMembers: "People",
   },
   about: {
     title: "About",

@@ -17,7 +17,7 @@ export default {
   day: {
     backlog: "Backlog",
     timeline: "Timeline",
-    nothingScheduled: "Nothing scheduled",
+    nothingScheduled: "--- Nothing scheduled ---",
     noBacklogItems: "No unscheduled items",
     completedSection: "Completed",
     allDay: "All day",

@@ -242,11 +242,13 @@ Core commands owned by this context:
 * `RemovePet`
 * `AssignRelationship`
 * `RemoveRelationship`
+* `UpdateMember` — edits a person's full name, role, and optional birth date (managers only; birth date must be in the past)
+* `UpdateMemberProfile` — edits optional contact details: preferred name, phone, email, household note
+* `UpdateFamilySettings`
 
 Suggested future commands:
 
 * `RenameFamily`
-* `UpdateMemberProfile`
 * `ArchiveFamily`
 
 ---
@@ -454,6 +456,8 @@ Initial slices mapped to this context:
 * `add-dependent`
 * `add-pet`
 * `assign-relationship`
+* `update-member` (name, role, birth date)
+* `update-member-profile` (preferred name, contact details, household note)
 
 These slices operate only on the `Family` aggregate.
 

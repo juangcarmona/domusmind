@@ -51,7 +51,6 @@
   text-transform: capitalize;
 }
 .wg-cell {
-  padding: 0.3rem 0.4rem;
   border-left: 1px solid var(--border);
   min-height: 3rem;
   display: flex;

@@ -32,6 +32,9 @@ public sealed class UpdateMemberCommandHandler : ICommandHandler<UpdateMemberCom
         if (string.IsNullOrWhiteSpace(command.Role))
             throw new FamilyException(FamilyErrorCode.InvalidInput, "Member role is required.");
 
+        if (command.BirthDate.HasValue && command.BirthDate.Value >= DateOnly.FromDateTime(DateTime.UtcNow))
+            throw new FamilyException(FamilyErrorCode.InvalidInput, "Birth date must be in the past.");
+
         var canAccess = await _authorizationService.CanAccessFamilyAsync(
             command.RequestedByUserId, command.FamilyId, cancellationToken);
 
