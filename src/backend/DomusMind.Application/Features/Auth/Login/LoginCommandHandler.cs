@@ -35,8 +35,7 @@ public sealed class LoginCommandHandler : ICommandHandler<LoginCommand, LoginRes
         if (user.IsDisabled)
             throw new AuthException(AuthErrorCode.AccountDisabled, "This account has been disabled.");
 
-        var roles = user.IsOperator ? new[] { "operator" } : null;
-        var accessToken = _tokenGenerator.Generate(user.UserId, user.Email, roles);
+        var accessToken = _tokenGenerator.Generate(user.UserId, user.Email);
         var refreshToken = await _refreshTokens.CreateAsync(user.UserId, cancellationToken);
         await _users.UpdateLastLoginAtAsync(user.UserId, DateTime.UtcNow, cancellationToken);
 

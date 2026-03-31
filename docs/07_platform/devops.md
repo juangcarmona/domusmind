@@ -1,64 +1,12 @@
-# DomusMind - DevOps & Operations
+# DomusMind - DevOps & Application Lifecycle Management
 
 ## Purpose
 
-This document is the canonical reference for how DomusMind is built, packaged, distributed, deployed, and operated.
+This document defines how DomusMind is built, versioned, distributed, updated, and operated in self-hosted environments.
 
-DomusMind is one product with two deployment modes: `SingleInstance` and `CloudHosted`. Both modes use the same artifacts, the same database schema, the same migrations, the same API surface, and the same domain model. Deployment mode changes only operational policy and infrastructure behavior.
+DomusMind is designed to run at home - on a mini PC, a NAS, a home server, or any machine capable of running Docker. It must be trivial to install, safe to update, and straightforward to maintain with no DevOps expertise.
 
-CloudHosted operator policy is detailed in `docs/07_platform/cloud-hosted/`:
-
-- [deployment-flow.md](cloud-hosted/deployment-flow.md) — Azure runtime topology and deployment order
-- [invitation-policy.md](cloud-hosted/invitation-policy.md) — invite-only access model
-- [signup-policy.md](cloud-hosted/signup-policy.md) — no open signup; manual provisioning
-- [operator-tooling.md](cloud-hosted/operator-tooling.md) — minimum operator capabilities
-- [abuse-protection.md](cloud-hosted/abuse-protection.md) — closed-cohort baseline and rate limiting
-- [backup-restore-policy.md](cloud-hosted/backup-restore-policy.md) — managed PostgreSQL backup posture
-
-SingleInstance operator guide: [single-instance-operator-guide.md](single-instance-operator-guide.md) — fresh install, upgrade, backup, restore, and troubleshooting.
-
----
-
-## Deployment Principles
-
-- one product, one codebase, one set of artifacts
-- deployment mode is a runtime configuration choice, not a code fork
-- all schema changes and migrations apply equally to both modes
-- no endpoint, handler, aggregate, or read model differs by deployment mode
-- configuration drives policy; policy never enters domain or application logic
-
----
-
-## Runtime Topology
-
-### SingleInstance
-
-For self-hosted installations: home servers, NAS devices, mini PCs.
-
-Services:
-
-| Service | Image | Role |
-|---|---|---|
-| `postgres` | `postgres:17-alpine` | Database |
-| `domusmind` | `ghcr.io/<owner>/domusmind:<version>` | API + static web |
-
-- one household only — enforced by household provisioning policy
-- ingress is the `domusmind` container on a configurable host port
-- postgres is not exposed to the host network
-- HTTPS is handled by an external reverse proxy
-
-### CloudHosted
-
-For managed cloud deployments supporting multiple households.
-
-The same two services run on cloud infrastructure. Additional operational concerns:
-
-- external managed database (e.g. Azure Database for PostgreSQL, Amazon RDS)
-- TLS terminated at load balancer or ingress controller
-- email and notification providers enabled and configured
-- abuse protection and rate limiting enabled
-
-Both modes share the same `docker-compose.yml` structure as a baseline. Cloud deployments may adapt the compose file or deploy via container orchestration (Kubernetes, Azure Container Apps, etc.) using the same image.
+This document defines the application lifecycle for that model: from code commit to a running household installation.
 
 ---
 
@@ -70,309 +18,248 @@ The production stack includes two services:
 
 | Service | Image | Purpose |
 |---|---|---|
-| `postgres` | `postgres:17-alpine` | Relational database (family state, events, auth) |
+| `postgres` | `postgres:16-alpine` | Relational database (family state, events, auth) |
 | `domusmind` | `ghcr.io/<owner>/domusmind` | ASP.NET Core app serving API and static web |
 
 The DomusMind app is the ingress surface. PostgreSQL is internal to the Docker network - it is never exposed to the host unless explicitly configured.
 
 ---
 
-## Inner Loop (Development)
+## .NET Aspire Role: Inner Loop Only
 
-.NET Aspire **orchestrates the local development environment only**. It is not used in production.
+.NET Aspire **orchestrates local development only**. It is not used in production.
 
-- Aspire starts the API, web app, PostgreSQL, and pgAdmin
+In local development (current state):
+- Aspire starts all services - API, web, PostgreSQL, pgAdmin
 - Aspire injects connection strings and service references automatically
 - Aspire provides the developer dashboard, health checks, and structured telemetry
-- `AppHost.cs` is the source of truth for local service topology
+- The AppHost definition is the source of truth for the service topology
 
-Aspire is not used in production or staging. Docker Compose replaces it.
-
-### Local CloudHosted mode (full stack)
-
-To validate CloudHosted-specific behavior locally — invite-only access, admin surface, no self-service household creation — without deploying to Azure, use the **`Aspire: DomusMind AppHost (CloudHosted local)`** VS Code launch configuration.
-
-This starts the same Aspire-orchestrated stack (Postgres + pgAdmin + API + web app) with CloudHosted policy flags injected into the API process. A dedicated Postgres data volume (`domusmind-cloudhosted-local`) is used so it stays isolated from the standard local database.
-
-**What it launches:**
-
-| Component | Details |
-|---|---|
-| PostgreSQL | Isolated volume `domusmind-cloudhosted-local` |
-| pgAdmin | `http://localhost:5051` |
-| API | Local with CloudHosted policy flags |
-| Web app | Vite dev server, proxying `/api` to local API |
-
-**CloudHosted policy flags applied to the API:**
-
-| Variable | Value |
-|---|---|
-| `Deployment__Mode` | `CloudHosted` |
-| `Deployment__AllowHouseholdCreation` | `false` |
-| `Deployment__InvitationsEnabled` | `true` |
-| `Deployment__RequireInvitationForSignup` | `true` |
-| `Deployment__AdminToolsEnabled` | `true` |
-| `BootstrapAdmin__Enabled` | `true` |
-| `BootstrapAdmin__Email` | `admin@domusmind.local` |
-| `BootstrapAdmin__Password` | `ChangeMeNow123!` |
-
-The operator account is seeded automatically on first run. Use `admin@domusmind.local` / `ChangeMeNow123!` to log in and reach `/admin`.
-
-**How it works:** the launch config sets `ASPNETCORE_ENVIRONMENT=CloudHostedLocal` on the AppHost process. The AppHost loads `appsettings.CloudHostedLocal.json` which sets `DomusMind:LocalMode=CloudHosted`. `AppHost.cs` reads that flag and injects the deployment policy env vars into the API child resource via `.WithEnvironment()`. No code fork, no second product.
-
-**CLI alternative** (if the `aspire` VS Code launch type does not pass `env` in your extension version):
-```
-cd src/backend/DomusMind.AppHost
-dotnet run --launch-profile cloudhostedlocal
-```
-
-**What is intentionally not emulated:**
-- Azure Key Vault (secrets come from Aspire / local config)
-- Azure App Service hosting
-- Azure Monitor / Application Insights
-- Email delivery
-- OIDC / federated identity
-
-### API-only CloudHosted mode
-
-If you need only the API (no Aspire orchestration), use **`API only: DomusMind.Api (CloudHosted local)`**. This requires a manually configured connection string via user secrets or `appsettings.Development.json`.
+In production:
+- Aspire does not run
+- Docker Compose replaces Aspire's orchestration role
+- Service dependencies, health checks, environment wiring, and volumes are defined in `docker-compose.yml`
 
 ### Keeping Compose Aligned with AppHost
 
-`dotnet aspire publish --publisher docker-compose` generates a Docker Compose baseline from the AppHost definition. Run this whenever a new service is added to `AppHost.cs`. Manual adjustments (image tags, environment variable names, health check tuning) are applied on top of the generated baseline.
+`dotnet aspire publish --publisher docker-compose` generates a Docker Compose baseline from the AppHost definition. This command should be run whenever a new service is added to `AppHost.cs`, to regenerate a canonical starting point. Manual adjustments (image tags, environment variable names, health check tuning) are applied on top of the generated baseline.
+
+The flow is:
 
 ```
 AppHost.cs → aspire publish → docker-compose.yml (baseline) → manual overlay → release artifact
 ```
 
----
-
-## Artifact Strategy
-
-### Image
-
-One Docker image: `ghcr.io/<owner>/domusmind`
-
-The image contains the compiled ASP.NET Core API and the built web application served as static files from the API. No separate web container is needed in production.
-
-### Tags
-
-| Tag | Meaning |
-|---|---|
-| `1.2.3` | Exact release — recommended for production |
-| `1.2` | Latest patch on that minor version |
-| `latest` | Latest stable release |
-| `edge` | Latest successful `main` build — not for production |
-| `1.1.0-alpha.1` | Prereleases — not for production |
-
-### Release Assets
-
-Each GitHub Release publishes:
-- `docker-compose.yml`
-- `.env.example`
-- `CHANGELOG.md` entry
+This ensures the production Compose file is never drafted from scratch and always reflects the actual topology.
 
 ---
 
-## Versioning
+## Docker Compose Definition
+
+The canonical `docker-compose.yml` released with each version:
+
+```yaml
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: domusmind
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d domusmind"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  domusmind:
+    image: ghcr.io/${IMAGE_OWNER}/domusmind:${VERSION:-latest}
+    environment:
+      ConnectionStrings__domusmind: Host=postgres;Database=domusmind;Username=${DB_USER};Password=${DB_PASSWORD}
+      Jwt__SigningKey: ${JWT_SECRET}
+      Jwt__Issuer: ${JWT_ISSUER:-domusmind}
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-24365}:8080"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+```
+
+The `docker-compose.yml` and a `.env.example` file are published as release assets on every GitHub Release.
+
+---
+
+## Configuration
+
+All sensitive and environment-specific values live in a `.env` file on the host machine. This file is never committed to source control.
+
+Users copy `.env.example` to `.env` and fill in their values.
+
+Required variables:
+
+| Variable | Description | Example |
+|---|---|---|
+| `DB_USER` | PostgreSQL username | `domusmind` |
+| `DB_PASSWORD` | PostgreSQL password | *(generate a strong password)* |
+| `JWT_SECRET` | JWT signing secret, minimum 32 characters | *(generate randomly)* |
+| `JWT_ISSUER` | Token issuer identifier | `domusmind` |
+| `VERSION` | Image version to run | `1.0.0` or `latest` |
+| `APP_PORT` | Host port for the DomusMind app | `24365` |
+
+The `JWT_SECRET` must be generated per installation. DomusMind may provide a setup helper command in a future release (see Open Decisions).
+
+---
+
+## Database Migrations
+
+EF Core migrations are applied automatically at API startup.
+
+The API runs `dbContext.Database.Migrate()` during the startup sequence, before accepting traffic. This is safe for single-instance deployments.
+
+Migration rules for V1:
+
+- All schema changes are **additive only** - no column drops, no renames, no destructive changes
+- Every release that includes a migration must document it in the release notes
+- Breaking schema changes (if ever required) will be explicitly versioned as a MAJOR release with a documented migration note and an upgrade path
+
+If horizontal scaling is introduced in a future version, the startup migration will be replaced with a dedicated `migrate` Compose target that runs as a one-shot init container before the API starts.
+
+---
+
+## Versioning Strategy
 
 DomusMind uses semantic versioning: `MAJOR.MINOR.PATCH`
 
 | Segment | When it changes |
 |---|---|
-| MAJOR | Breaking change requiring manual user action (schema rename, `.env` restructure) |
-| MINOR | New capabilities; migrations run automatically; safe update |
-| PATCH | Bug fixes; no schema changes |
+| MAJOR | Breaking changes requiring manual user action (schema rename, .env restructure) |
+| MINOR | New capabilities added; migrations run automatically; safe update |
+| PATCH | Bug fixes, no schema changes |
+
+Docker images are tagged with:
+
+- `1.2.3` - pinned to an exact release
+- `1.2` - latest patch on that minor version
+- `latest` - current stable release
+
+Users who want to control their own update schedule pin to a specific version in `.env`.
 
 ---
 
-## Configuration Contract
+## Release Pipeline
 
-All environment-specific and sensitive values live in a `.env` file on the host. This file is never committed to source control. See `deploy/.env.example` for the full configuration surface.
+**Trigger:** push of a tag matching `v*.*.*` (e.g. `v1.0.0`)
 
-Required for all modes:
+**Steps:**
 
-| Variable | Description |
-|---|---|
-| `DB_USER` | PostgreSQL username |
-| `DB_PASSWORD` | PostgreSQL password — strong, generated per installation |
-| `JWT_SECRET` | JWT signing key — minimum 32 characters, generated per installation |
-| `JWT_ISSUER` | Token issuer claim |
-| `VERSION` | Image tag to run |
-| `APP_PORT` | Host port for the DomusMind container |
+1. Restore and build the .NET solution
+2. Run backend unit and integration tests
+3. Run frontend build validation as part of the unified container build
+4. Build the `domusmind` Docker image and push to `ghcr.io/<owner>/domusmind` with version tags
+5. Generate release notes from the commit log since the previous tag
+6. Publish a GitHub Release with:
+   - `docker-compose.yml`
+   - `.env.example`
+   - `CHANGELOG.md` entry for this version
 
-Deployment mode:
+**CI tool:** GitHub Actions
 
-| Variable | Values |
-|---|---|
-| `DEPLOYMENT_MODE` | `SingleInstance` \| `CloudHosted` |
-
-Policy variables (e.g. `ALLOW_HOUSEHOLD_CREATION`, `INVITATIONS_ENABLED`) are resolved at startup. Invalid combinations fail fast.
-
-Secrets must never be committed to source control. In CI, use GitHub Actions secrets. In production, use environment variables or a secrets manager appropriate to the hosting environment.
+Main branch builds (non-tagged) produce images tagged `edge` for integration testing only.
 
 ---
 
-## Bootstrap Rules
+## User Update Flow
 
-DomusMind uses a two-path first-run model. Both paths are single-use. Once the system is initialized, all bootstrap paths become permanent no-ops.
+A home user updating from one release to the next:
 
-### Primary path — UI setup wizard
+```bash
+# 1. Download the new docker-compose.yml from the GitHub Release
+#    (or replace in place if using a fixed path)
 
-The default path for all installations.
+# 2. Read the release notes
+#    Check for new required .env variables or migration notes
 
+# 3. Update .env if new variables were introduced
+
+# 4. Pull the new images
+docker compose pull
+
+# 5. Restart the stack
+docker compose up -d
+
+# Migrations run automatically on app startup.
+# The stack is live within seconds.
 ```
-GET  /api/setup/status       → { isInitialized: false }  (unauthenticated)
-POST /api/setup/initialize   → 201 Created                (unauthenticated, one-time only)
-```
 
-- no configuration required
-- the endpoint is permanently routeable but server-gated
-- calling `POST /api/setup/initialize` a second time returns `409 Conflict`
-- initialization is atomic: admin user created and system marked initialized in one request
-
-### Fallback path — headless bootstrap
-
-For scripted or CI environments where the UI is not available.
-
-- disabled by default (`BootstrapAdmin__Enabled = false`)
-- no-op if the system is already initialized
-- activated via environment variables in `docker-compose.yml`
-- must be disabled after first use
+No CLI tooling, no package manager, no cloud account.
 
 ---
 
-## Data and Persistence
+## Reverse Proxy Integration
 
-- EF Core is the primary persistence technology
-- PostgreSQL is the only supported database in V1
-- state lives in the `postgres_data` Docker volume
-- all schema changes are additive only in V1 — no drops, renames, or destructive changes
-- migrations run automatically at API startup via `dbContext.Database.Migrate()`
-- breaking schema changes are versioned as MAJOR releases and documented explicitly
+DomusMind is designed to sit behind a reverse proxy for HTTPS termination and external access. The stack itself serves plain HTTP from a single app container.
 
-### Backup
+Recommended pattern:
+- `https://domusmind.home.example.com` → `http://[host]:24365` (or your configured `APP_PORT`)
+- API remains available under `/api` on the same origin
 
-All data lives in the `postgres_data` volume.
+Compatible reverse proxies: Nginx Proxy Manager, Caddy, Traefik, HAProxy, Home Assistant Nginx Add-on.
+
+HTTPS termination at the reverse proxy is strongly recommended, especially when exposing DomusMind outside the LAN.
+
+---
+
+## Backup Strategy
+
+All persistent state lives in the `postgres_data` Docker volume.
 
 Minimum recommended backup:
 
 ```bash
 docker exec domusmind-postgres-1 \
   pg_dump -U $DB_USER domusmind \
-  > backups/domusmind_$(date +%Y%m%d_%H%M%S).sql
+  > ~/backups/domusmind_$(date +%Y%m%d_%H%M%S).sql
 ```
+
+This can be automated with a cron job on the host. A built-in backup mechanism is out of scope for V1 and delegated to the host OS or a dedicated backup container.
 
 Restore:
 
 ```bash
 docker exec -i domusmind-postgres-1 \
   psql -U $DB_USER -d domusmind \
-  < backups/domusmind_20260321_120000.sql
-```
-
-Automated backup scheduling is delegated to the host OS or a dedicated backup container.
-
----
-
-## Security Baseline
-
-- passwords are hashed; plaintext passwords are never stored or logged
-- JWT signing key is validated at startup; invalid or weak keys fail fast
-- token claims contain user identity only, not domain state
-- refresh tokens are stored server-side and rotated on renewal
-- HTTPS must be provided by an external reverse proxy in production
-- the postgres container is not exposed outside the Docker network
-- Swagger is available in development; access may be restricted in production by environment
-
----
-
-## Observability Baseline
-
-Structured logging, metrics, and tracing are controlled by configuration.
-
-`SingleInstance` typically runs with structured logging only. `CloudHosted` should enable metrics and tracing.
-
-No observability framework is bundled in V1. The application emits structured logs to stdout; operators route these to their preferred sink.
-
----
-
-## Release Pipeline
-
-**Trigger:** tag push matching `v*.*.*`
-
-**Steps:**
-
-1. Restore and build the .NET solution
-2. Run backend tests
-3. Build the `domusmind` Docker image (includes frontend build)
-4. Push image to `ghcr.io/<owner>/domusmind` with version tags
-5. Generate release notes from commit log since previous tag
-6. Publish GitHub Release with `docker-compose.yml`, `.env.example`, and changelog entry
-
-**CI tool:** GitHub Actions
-
-`main` branch builds (non-tagged) produce the `edge` image.
-
----
-
-## Deployment Flows
-
-### SingleInstance — first install
-
-```bash
-# 1. Download docker-compose.yml and .env.example from the GitHub Release
-# 2. cp .env.example .env  →  fill in DB_PASSWORD, JWT_SECRET, VERSION, APP_PORT
-#    Set DEPLOYMENT_MODE=SingleInstance
-# 3. docker compose up -d
-# 4. Open http://localhost:<APP_PORT> and complete the setup wizard
-```
-
-### SingleInstance — update
-
-```bash
-# 1. Read the release notes (check for new .env variables or migration notes)
-# 2. Update VERSION in .env; add any new required variables
-# 3. docker compose pull
-# 4. docker compose up -d
-# Migrations run automatically at startup.
-```
-
-### CloudHosted — first deploy
-
-```bash
-# 1. Configure managed database; update DB_USER, DB_PASSWORD, and connection string
-# 2. Set DEPLOYMENT_MODE=CloudHosted and policy variables
-# 3. Deploy using docker-compose.yml or equivalent container orchestration
-# 4. Complete setup via the API (UI or headless bootstrap)
-```
-
-### CloudHosted — update
-
-```bash
-# 1. Pull the new image tag
-# 2. Apply any new environment variables from .env.example
-# 3. Restart the service; migrations run automatically at startup
+  < ~/backups/domusmind_20260321_120000.sql
 ```
 
 ---
 
-## Reverse Proxy
+## Release Cadence
 
-DomusMind serves plain HTTP. HTTPS is terminated upstream.
+| Phase | Cadence | Focus |
+|---|---|---|
+| V1 | On-demand | Feature completeness, first installations |
+| V1.1 | Monthly | Stability, operational hardening, no new contexts |
+| V2+ | Quarterly | Capability expansion |
 
-- `https://domusmind.example.com` → `http://<host>:<APP_PORT>`
-- API and web are on the same origin (`/api` prefix for API routes)
-
-Compatible proxies: Caddy, Nginx Proxy Manager, Traefik, HAProxy.
+Patch releases are unscheduled and released as needed.
 
 ---
 
-## Non-Goals
+## Open Decisions
 
-- DomusMind does not implement its own backup strategy in V1
-- DomusMind does not provide a CLI setup tool in V1
-- DomusMind does not support databases other than PostgreSQL in V1
-- DomusMind does not run multiple API containers in V1 (startup migration assumes single writer)
-- DomusMind does not provide built-in auto-update integration
-- Deployment mode does not alter domain behavior, aggregates, handlers, slices, migrations, or API contracts
+| # | Question | Notes |
+|---|---|---|
+| OD-1 | Should the API run migrations on startup or as a separate `migrate` Compose service? | Startup is simpler for V1; init container is safer at scale |
+| OD-2 | Should images be on Docker Hub (public, no auth to pull) or ghcr.io (GitHub-linked)? | ghcr.io is free for public repos; Docker Hub has wider tooling support |
+| OD-3 | Should DomusMind provide a `domusmind-setup` CLI to generate `.env` and validate the config? | Reduces friction for non-technical users |
+| OD-4 | First-run bootstrap: is there an admin registration page, or does the first `CreateFamily` call auto-promote the user? | Relevant to the initial onboarding UX |
+| OD-5 | Should the web app be served from its own nginx container or should the API serve the built SPA? | Resolved: API serves the built SPA in self-hosted packaging |
+| OD-6 | Should DomusMind publish a Watchtower-compatible label scheme for automatic update notifications? | Optional convenience for technically-minded home users |

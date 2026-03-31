@@ -83,12 +83,6 @@ internal sealed class InMemoryAuthUserRepository : IAuthUserRepository
     public Task<bool> AnyUsersAsync(CancellationToken ct)
         => Task.FromResult(Users.Count > 0);
 
-    public Task<int> CountAsync(CancellationToken ct)
-        => Task.FromResult(Users.Count);
-
-    public Task<IReadOnlyList<AdminAuthUserProjection>> GetAdminProjectionsAsync(string? search, CancellationToken ct)
-        => Task.FromResult<IReadOnlyList<AdminAuthUserProjection>>([]);
-
     public Task SaveChangesAsync(CancellationToken ct)
         => Task.CompletedTask;
 }

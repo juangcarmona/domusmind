@@ -1,6 +1,5 @@
 using DomusMind.Application.Abstractions.Languages;
 using DomusMind.Application.Abstractions.Persistence;
-using DomusMind.Application.Abstractions.Platform;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Domain.Abstractions;
 
@@ -37,9 +36,6 @@ internal sealed class StubUserFamilyAccessReader : IUserFamilyAccessReader
 
     public Task<Guid?> GetFamilyIdForUserAsync(Guid userId, CancellationToken cancellationToken = default)
         => Task.FromResult(_familyId);
-
-    public Task<IReadOnlyDictionary<Guid, Guid>> GetAllFamilyIdsByUserAsync(CancellationToken cancellationToken = default)
-        => Task.FromResult<IReadOnlyDictionary<Guid, Guid>>(new Dictionary<Guid, Guid>());
 }
 
 internal sealed class StubEventLogWriter : IEventLogWriter
@@ -74,40 +70,4 @@ internal sealed class StubSupportedLanguageReader : ISupportedLanguageReader
 
     public Task<bool> IsActiveAsync(string code, CancellationToken cancellationToken = default)
         => Task.FromResult(_supportedCodes.Contains(code));
-}
-
-internal sealed class StubHouseholdProvisioningPolicy : IHouseholdProvisioningPolicy
-{
-    private readonly ProvisioningPolicyResult _result;
-
-    public StubHouseholdProvisioningPolicy(bool allowed = true)
-    {
-        _result = allowed
-            ? ProvisioningPolicyResult.Permit()
-            : ProvisioningPolicyResult.DenySingleInstanceBound();
-    }
-
-    public StubHouseholdProvisioningPolicy(ProvisioningPolicyResult result)
-    {
-        _result = result;
-    }
-
-    public Task<ProvisioningPolicyResult> EvaluateAsync(CancellationToken cancellationToken)
-        => Task.FromResult(_result);
-}
-
-internal sealed class StubDeploymentModeContext : IDeploymentModeContext
-{
-    public StubDeploymentModeContext(DeploymentMode mode = DeploymentMode.SingleInstance)
-    {
-        Mode = mode;
-    }
-
-    public DeploymentMode Mode { get; }
-    public bool CanCreateHousehold => true;
-    public bool InvitationsEnabled => false;
-    public bool RequireInvitationForSignup => false;
-    public bool EmailEnabled => false;
-    public bool SupportsAdminTools => false;
-    public int MaxHouseholdsPerDeployment => 0;
 }

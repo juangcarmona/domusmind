@@ -71,7 +71,6 @@ export interface MeResponse {
   memberName: string | null;
   isManager: boolean;
   mustChangePassword: boolean;
-  isOperator: boolean;
 }
 
 export interface ChangePasswordRequest {

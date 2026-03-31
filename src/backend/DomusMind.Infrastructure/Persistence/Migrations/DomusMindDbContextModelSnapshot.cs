@@ -103,16 +103,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(10)")
                         .HasColumnName("primary_language_code");
 
-                    b.Property<string>("singleton_key")
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)")
-                        .HasColumnName("singleton_key");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("singleton_key")
-                        .IsUnique()
-                        .HasFilter("singleton_key IS NOT NULL");
 
                     b.ToTable("families", (string)null);
                 });
@@ -424,11 +415,6 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("IsOperator")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
                     b.Property<DateTime?>("LastLoginAtUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -453,50 +439,6 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("auth_users", (string)null);
-                });
-
-            modelBuilder.Entity("DomusMind.Infrastructure.Auth.OperatorInvitation", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<DateTime>("ExpiresAtUtc")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Note")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email");
-
-                    b.HasIndex("Token")
-                        .IsUnique();
-
-                    b.ToTable("operator_invitations", (string)null);
                 });
 
             modelBuilder.Entity("DomusMind.Infrastructure.Auth.RefreshTokenRecord", b =>

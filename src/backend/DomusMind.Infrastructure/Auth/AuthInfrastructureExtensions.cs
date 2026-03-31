@@ -1,5 +1,4 @@
 using System.Text;
-using DomusMind.Application.Abstractions.Admin;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Abstractions.System;
 using DomusMind.Infrastructure.Initialization;
@@ -80,19 +79,13 @@ public static class AuthInfrastructureExtensions
         services.AddScoped<IFamilyAccessGranter, FamilyAccessGranter>();
         services.AddScoped<IUserFamilyAccessReader, UserFamilyAccessReader>();
         services.AddScoped<ISystemInitializationState, SystemInitializationRepository>();
-        services.AddScoped<IOperatorInvitationRepository, OperatorInvitationRepository>();
 
         return services;
     }
 
     public static IServiceCollection AddDomusMindAuthorization(this IServiceCollection services)
     {
-        services.AddAuthorization(options =>
-        {
-            options.AddPolicy("Operator", policy =>
-                policy.RequireAuthenticatedUser()
-                      .RequireRole("operator"));
-        });
+        services.AddAuthorization();
         return services;
     }
 }

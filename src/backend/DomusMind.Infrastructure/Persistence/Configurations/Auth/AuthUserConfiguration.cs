@@ -43,9 +43,5 @@ public sealed class AuthUserConfiguration : IEntityTypeConfiguration<AuthUser>
         builder.Property(x => x.CreatedByUserId);
 
         builder.Property(x => x.LastLoginAtUtc);
-
-        builder.Property(x => x.IsOperator)
-            .IsRequired()
-            .HasDefaultValue(false);
     }
 }

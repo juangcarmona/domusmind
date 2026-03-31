@@ -34,7 +34,7 @@ public sealed class AuthControllerTests
     {
         var userId = Guid.NewGuid();
         var email = "user@example.com";
-        var dispatcher = new StubQueryDispatcher(new MeResponse(userId, email, null, null, null, false, false, false));
+        var dispatcher = new StubQueryDispatcher(new MeResponse(userId, email, null, null, null, false, false));
         var sut = new AuthController(new StubCurrentUser(userId, email));
 
         var result = await sut.Me(dispatcher, CancellationToken.None);
@@ -49,7 +49,7 @@ public sealed class AuthControllerTests
     public async Task Me_WhenEmailIsNull_ReturnsOkWithNullEmail()
     {
         var userId = Guid.NewGuid();
-        var dispatcher = new StubQueryDispatcher(new MeResponse(userId, null, null, null, null, false, false, false));
+        var dispatcher = new StubQueryDispatcher(new MeResponse(userId, null, null, null, null, false, false));
         var sut = new AuthController(new StubCurrentUser(userId, null));
 
         var result = await sut.Me(dispatcher, CancellationToken.None);

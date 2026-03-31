@@ -5,7 +5,6 @@ public enum SetupErrorCode
     AlreadyInitialized,
     WeakPassword,
     EmailAlreadyTaken,
-    NotApplicable,
 }
 
 public sealed class SetupException : Exception
