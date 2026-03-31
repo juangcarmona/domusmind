@@ -112,6 +112,8 @@ export function EditEntityModal({ type, id, onClose, onEntitySaved }: EditEntity
             initialTitle={task.title}
             initialDueDate={task.effectiveDate}
             initialColor={task.color}
+            initialAssigneeId={task.assigneeId ?? undefined}
+            members={members}
             onCancel={onClose}
             onSuccess={handleSuccess}
           />

@@ -128,7 +128,6 @@
 
 /* Type glyph - tiny, inherits item color, aria-hidden in markup */
 .wg-item-glyph {
-  font-size: 1rem;
   flex-shrink: 0;
   opacity: 0.8;
   line-height: 1;
