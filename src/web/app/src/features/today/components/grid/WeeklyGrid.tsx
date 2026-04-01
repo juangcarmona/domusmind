@@ -14,7 +14,6 @@ interface WeeklyGridProps {
 
 function SharedRow({
   cells,
-  label,
   today,
   onItemClick,
 }: {
