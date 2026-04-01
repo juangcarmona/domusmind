@@ -17,7 +17,6 @@ import { RegisterPage } from "./features/auth/pages/RegisterPage";
 import { ForceChangePasswordPage } from "./features/auth/pages/ForceChangePasswordPage";
 import { SetupPage } from "./features/setup/pages/SetupPage";
 import { OnboardingPage } from "./features/onboarding/pages/OnboardingPage";
-import { AreasPage } from "./features/areas/pages/AreasPage";
 import { AreaDetailPage } from "./features/areas/pages/AreaDetailPage";
 import { PlanningPage } from "./features/planning/pages/PlanningPage";
 import { SettingsPage } from "./features/settings/pages/SettingsPage";
@@ -85,7 +84,7 @@ function AuthedApp() {
   return (
     <AppShell>
       <Routes>
-        <Route path="/areas" element={<AreasPage />} />
+        <Route path="/areas" element={<Navigate to="/settings" replace />} />
         <Route path="/areas/:areaId" element={<AreaDetailPage />} />
         <Route path="/planning" element={<PlanningPage />} />
         <Route path="/members" element={<Navigate to="/settings" replace />} />

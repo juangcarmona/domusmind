@@ -110,6 +110,12 @@ export default {
       },
     },
   },
+  people: {
+    title: "Personen",
+  },
+  areas: {
+    title: "Bereiche",
+  },
   membersTab: {
     title: "Mitglieder",
     myProfile: "Mein Profil",

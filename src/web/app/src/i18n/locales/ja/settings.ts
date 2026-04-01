@@ -110,6 +110,12 @@ export default {
       },
     },
   },
+  people: {
+    title: "メンバー",
+  },
+  areas: {
+    title: "エリア",
+  },
   membersTab: {
     title: "メンバー",
     myProfile: "マイプロフィール",

@@ -110,6 +110,12 @@ export default {
       },
     },
   },
+  people: {
+    title: "人员",
+  },
+  areas: {
+    title: "区域",
+  },
   membersTab: {
     title: "成员",
     myProfile: "我的资料",

@@ -112,6 +112,12 @@ export default {
       },
     },
   },
+  people: {
+    title: "People",
+  },
+  areas: {
+    title: "Areas",
+  },
   membersTab: {
     title: "Members",
     myProfile: "My profile",

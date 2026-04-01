@@ -7,6 +7,7 @@ import { AccountSettingsSection } from "../components/AccountSettingsSection";
 import { HouseholdSettingsSection } from "../components/HouseholdSettingsSection";
 import { MembersSettingsSection } from "../components/MembersSettingsSection";
 import { AboutSection } from "../components/AboutSection";
+import { AreasPage } from "../../areas/pages/AreasPage";
 
 export function SettingsPage() {
   const { t } = useTranslation("settings");
@@ -25,12 +26,9 @@ export function SettingsPage() {
       <h1 className="page-title">{t("title")}</h1>
       <SettingsTabs active={activeTab} onChange={setActiveTab} />
       <div role="tabpanel">
-        {activeTab === "household" && (
-          <>
-            <HouseholdSettingsSection />
-            <MembersSettingsSection />
-          </>
-        )}
+        {activeTab === "household" && <HouseholdSettingsSection />}
+        {activeTab === "people" && <MembersSettingsSection />}
+        {activeTab === "areas" && <AreasPage />}
         {activeTab === "account" && <AccountSettingsSection />}
         {activeTab === "about" && <AboutSection />}
       </div>
