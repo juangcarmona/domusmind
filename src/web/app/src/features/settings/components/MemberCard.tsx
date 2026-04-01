@@ -1,13 +1,12 @@
 import { useTranslation } from "react-i18next";
 import type { FamilyMemberResponse } from "../../../api/domusmindApi";
-import { Avatar } from "./Avatar";
+import { MemberAvatar } from "./avatar/MemberAvatar";
 import { AccessStatusBadge } from "./AccessStatusBadge";
 
 export interface MemberCardProps {
   m: FamilyMemberResponse;
   isCurrentUserManager: boolean;
   onSelect: (m: FamilyMemberResponse) => void;
-  onEdit: (id: string) => void;
   onGrantAccess: (id: string) => void;
   onRegenPassword: (id: string) => void;
   onDisable: (id: string) => void;
@@ -26,7 +25,6 @@ export function MemberCard({
   m,
   isCurrentUserManager,
   onSelect,
-  onEdit,
   onGrantAccess,
   onRegenPassword,
   onDisable,
@@ -64,7 +62,7 @@ export function MemberCard({
         onClick={() => onSelect(m)}
         aria-label={displayName + " details"}
       >
-        <Avatar initial={m.avatarInitial} />
+        <MemberAvatar initial={m.avatarInitial} avatarIconId={m.avatarIconId} avatarColorId={m.avatarColorId} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontWeight: 600, display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap" }}>
             <span>{displayName}</span>
@@ -83,11 +81,6 @@ export function MemberCard({
       </button>
 
       <div style={{ display: "flex", gap: "0.35rem", flexShrink: 0, flexWrap: "wrap", justifyContent: "flex-end" }}>
-        {m.canEdit && (
-          <button type="button" className="btn btn-ghost" style={{ fontSize: "0.78rem", padding: "0.2rem 0.55rem" }} onClick={() => onEdit(m.memberId)}>
-            {tM("edit")}
-          </button>
-        )}
         {m.canGrantAccess && (
           <button type="button" className="btn btn-ghost" style={{ fontSize: "0.78rem", padding: "0.2rem 0.55rem" }} onClick={() => onGrantAccess(m.memberId)}>
             {tM("provisionAccess")}

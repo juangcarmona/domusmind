@@ -10,6 +10,24 @@ export interface ProfileFormValues {
   primaryPhone: string;
   primaryEmail: string;
   householdNote: string;
+  avatarIconId: number | null;
+  avatarColorId: number | null;
+}
+
+/** Combined form values for the unified person edit modal. */
+export interface UnifiedPersonFormValues {
+  // core identity
+  name: string;
+  role: string;
+  birthDate: string;
+  isManager: boolean;
+  // profile / avatar
+  preferredName: string;
+  primaryPhone: string;
+  primaryEmail: string;
+  householdNote: string;
+  avatarIconId: number | null;
+  avatarColorId: number | null;
 }
 
 export const MEMBER_ROLES = ["Adult", "Child", "Pet"] as const;

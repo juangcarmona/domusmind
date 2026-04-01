@@ -6,4 +6,6 @@ public sealed record UpdateMemberProfileResponse(
     string? PreferredName,
     string? PrimaryPhone,
     string? PrimaryEmail,
-    string? HouseholdNote);
+    string? HouseholdNote,
+    int? AvatarIconId,
+    int? AvatarColorId);

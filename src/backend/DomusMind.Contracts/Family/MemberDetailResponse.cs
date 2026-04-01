@@ -23,6 +23,9 @@ public sealed record MemberDetailResponse(
     bool CanGrantAccess,
     bool CanEdit,
     string AvatarInitial,
+    // ── Avatar customization ─────────────────────────────────────────────────
+    int? AvatarIconId,
+    int? AvatarColorId,
     // ── Phase 2 profile seam ─────────────────────────────────────────────────
     string? PrimaryPhone,
     string? PrimaryEmail,

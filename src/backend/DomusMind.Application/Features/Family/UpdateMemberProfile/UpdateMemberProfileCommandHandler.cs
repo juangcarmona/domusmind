@@ -57,6 +57,8 @@ public sealed class UpdateMemberProfileCommandHandler : ICommandHandler<UpdateMe
                 command.PrimaryPhone,
                 command.PrimaryEmail,
                 command.HouseholdNote,
+                command.AvatarIconId,
+                command.AvatarColorId,
                 DateTime.UtcNow);
         }
         catch (InvalidOperationException ex)
@@ -73,6 +75,8 @@ public sealed class UpdateMemberProfileCommandHandler : ICommandHandler<UpdateMe
             updatedMember.PreferredName,
             updatedMember.PrimaryPhone,
             updatedMember.PrimaryEmail,
-            updatedMember.HouseholdNote);
+            updatedMember.HouseholdNote,
+            updatedMember.AvatarIconId,
+            updatedMember.AvatarColorId);
     }
 }

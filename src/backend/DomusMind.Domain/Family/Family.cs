@@ -95,14 +95,14 @@ public sealed class Family : AggregateRoot<FamilyId>
         return member;
     }
 
-    /// <summary>Updates the lightweight profile fields (preferred name, contacts, note) for an existing member.</summary>
-    public FamilyMember UpdateMemberProfile(MemberId memberId, string? preferredName, string? primaryPhone, string? primaryEmail, string? householdNote, DateTime updatedAtUtc)
+    /// <summary>Updates the lightweight profile fields (preferred name, contacts, note, avatar) for an existing member.</summary>
+    public FamilyMember UpdateMemberProfile(MemberId memberId, string? preferredName, string? primaryPhone, string? primaryEmail, string? householdNote, int? avatarIconId, int? avatarColorId, DateTime updatedAtUtc)
     {
         var member = _members.SingleOrDefault(m => m.Id == memberId)
             ?? throw new InvalidOperationException(
                 $"A member with id '{memberId.Value}' does not exist in this family.");
 
-        member.UpdateProfile(preferredName, primaryPhone, primaryEmail, householdNote);
+        member.UpdateProfile(preferredName, primaryPhone, primaryEmail, householdNote, avatarIconId, avatarColorId);
 
         RaiseDomainEvent(new Events.MemberUpdated(Guid.NewGuid(), Id.Value, memberId.Value, updatedAtUtc));
 

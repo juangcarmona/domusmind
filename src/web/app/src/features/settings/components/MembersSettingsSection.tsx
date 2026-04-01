@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../../auth/AuthProvider";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { updateMember } from "../../../store/householdSlice";
-import { EditMemberModal, type MemberFormValues } from "./MemberModals";
+import { updateMember, updateMemberProfile } from "../../../store/householdSlice";
+import { domusmindApi, type MemberDetailResponse } from "../../../api/domusmindApi";
+import { EditPersonModal, type UnifiedPersonFormValues } from "./MemberModals";
 import { MembersManagementSection } from "./MembersManagementSection";
+import { MemberAvatar } from "./avatar/MemberAvatar";
 
 export function MembersSettingsSection() {
   const { t } = useTranslation("settings");
@@ -15,28 +17,54 @@ export function MembersSettingsSection() {
   const tM = (key: string) => t(`household.members.${key}` as never);
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editSaving, setEditSaving] = useState(false);
-  const [editError, setEditError] = useState<string | null>(null);
+  const [editDetail, setEditDetail] = useState<MemberDetailResponse | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function handleProfileSave(values: MemberFormValues) {
+  async function handleOpenEdit() {
     if (!me || !family) return;
-    setEditSaving(true);
-    setEditError(null);
-    const result = await dispatch(
-      updateMember({
+    setError(null);
+    // Load detail so phone/email/note are pre-populated.
+    try {
+      const detail = await domusmindApi.getMemberDetails(family.familyId, me.memberId);
+      setEditDetail(detail);
+    } catch {
+      setEditDetail(null);
+    }
+    setIsEditing(true);
+  }
+
+  async function handleSave(values: UnifiedPersonFormValues) {
+    if (!me || !family) return;
+    setSaving(true);
+    setError(null);
+    const [r1, r2] = await Promise.all([
+      dispatch(updateMember({
         familyId: family.familyId,
         memberId: me.memberId,
         name: values.name,
         role: values.role,
         birthDate: values.birthDate || null,
         isManager: values.isManager,
-      }),
-    );
-    setEditSaving(false);
-    if (updateMember.fulfilled.match(result)) {
+      })),
+      dispatch(updateMemberProfile({
+        familyId: family.familyId,
+        memberId: me.memberId,
+        preferredName: values.preferredName || null,
+        primaryPhone: values.primaryPhone || null,
+        primaryEmail: values.primaryEmail || null,
+        householdNote: values.householdNote || null,
+        avatarIconId: values.avatarIconId,
+        avatarColorId: values.avatarColorId,
+      })),
+    ]);
+    setSaving(false);
+    if (updateMember.fulfilled.match(r1) && updateMemberProfile.fulfilled.match(r2)) {
       setIsEditing(false);
+      setEditDetail(null);
     } else {
-      setEditError((result.payload as string) ?? tM("updateError"));
+      const payload = !updateMember.fulfilled.match(r1) ? r1.payload : r2.payload;
+      setError((payload as string) ?? tM("updateError"));
     }
   }
 
@@ -60,23 +88,12 @@ export function MembersSettingsSection() {
               border: "2px solid var(--primary)",
             }}
           >
-            <div
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: "50%",
-                background: "color-mix(in srgb, var(--primary) 25%, transparent)",
-                color: "var(--primary)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 700,
-                fontSize: "1.2rem",
-                flexShrink: 0,
-              }}
-            >
-              {avatarInitial}
-            </div>
+            <MemberAvatar
+              initial={avatarInitial}
+              avatarIconId={me.avatarIconId}
+              avatarColorId={me.avatarColorId}
+              size={48}
+            />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontWeight: 700, fontSize: "1.05rem", display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
                 <span>{displayName}</span>
@@ -123,11 +140,11 @@ export function MembersSettingsSection() {
                 {me.linkedEmail ?? user?.email ?? ""}
               </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", flexShrink: 0, alignItems: "flex-end" }}>
+            <div style={{ flexShrink: 0 }}>
               <button
                 type="button"
                 className="btn btn-ghost btn-sm"
-                onClick={() => { setIsEditing(true); setEditError(null); }}
+                onClick={handleOpenEdit}
               >
                 {t("membersTab.editProfile")}
               </button>
@@ -135,12 +152,17 @@ export function MembersSettingsSection() {
           </div>
 
           {isEditing && (
-            <EditMemberModal
-              member={me}
-              saving={editSaving}
-              error={editError}
-              onSave={handleProfileSave}
-              onClose={() => { setIsEditing(false); setEditError(null); }}
+            <EditPersonModal
+              member={{
+                ...me,
+                primaryPhone: editDetail?.primaryPhone ?? null,
+                primaryEmail: editDetail?.primaryEmail ?? null,
+                householdNote: editDetail?.householdNote ?? null,
+              }}
+              saving={saving}
+              error={error}
+              onSave={handleSave}
+              onClose={() => { setIsEditing(false); setEditDetail(null); setError(null); }}
             />
           )}
         </section>

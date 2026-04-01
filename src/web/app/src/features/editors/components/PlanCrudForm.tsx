@@ -8,6 +8,7 @@ import { toLocalDateInput, toLocalTimeInput } from "../utils";
 import { DateInput } from "../../../components/DateInput";
 import { EventChecklistSection } from "../../shared-lists/components/EventChecklistSection";
 import { calendarApi } from "../../../api/calendarApi";
+import { MemberAvatar } from "../../settings/components/avatar/MemberAvatar";
 
 interface PlanCrudFormProps {
   mode: "create" | "edit";
@@ -25,7 +26,14 @@ interface PlanCrudFormProps {
   /** Pre-selects the area picker (create mode only). */
   initialAreaId?: string;
   initialParticipantMemberIds?: string[];
-  members?: { memberId: string; name: string }[];
+  members?: {
+    memberId: string;
+    name: string;
+    preferredName?: string | null;
+    avatarIconId?: number | null;
+    avatarColorId?: number | null;
+    avatarInitial?: string;
+  }[];
   onCancel: () => void;
   onSuccess: () => void | Promise<void>;
 }
@@ -307,25 +315,34 @@ export function PlanCrudForm({
               <div className="form-group">
                 <label>{tPlans("form.targetMembersLabel")}</label>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                  {members.map((m) => (
-                    <label
-                      key={m.memberId}
-                      style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={participantMemberIds.includes(m.memberId)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setParticipantMemberIds((prev) => [...prev, m.memberId]);
-                          } else {
-                            setParticipantMemberIds((prev) => prev.filter((id) => id !== m.memberId));
-                          }
-                        }}
-                      />
-                      {m.name}
-                    </label>
-                  ))}
+                  {members.map((m) => {
+                    const displayName = m.preferredName || m.name;
+                    return (
+                      <label
+                        key={m.memberId}
+                        style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={participantMemberIds.includes(m.memberId)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setParticipantMemberIds((prev) => [...prev, m.memberId]);
+                            } else {
+                              setParticipantMemberIds((prev) => prev.filter((id) => id !== m.memberId));
+                            }
+                          }}
+                        />
+                        <MemberAvatar
+                          initial={m.avatarInitial ?? displayName[0]?.toUpperCase() ?? "?"}
+                          avatarIconId={m.avatarIconId}
+                          avatarColorId={m.avatarColorId}
+                          size={22}
+                        />
+                        {displayName}
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
             )}

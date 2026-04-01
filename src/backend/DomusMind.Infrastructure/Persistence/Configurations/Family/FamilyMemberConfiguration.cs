@@ -73,6 +73,14 @@ public sealed class FamilyMemberConfiguration : IEntityTypeConfiguration<FamilyM
             .HasMaxLength(500)
             .IsRequired(false);
 
+        builder.Property(m => m.AvatarIconId)
+            .HasColumnName("avatar_icon_id")
+            .IsRequired(false);
+
+        builder.Property(m => m.AvatarColorId)
+            .HasColumnName("avatar_color_id")
+            .IsRequired(false);
+
         // Shadow FK to parent family
         builder.Property<FamilyId>("FamilyId")
             .HasConversion(

@@ -53,7 +53,7 @@ public sealed class UpdateMemberProfileCommandHandlerTests
         var result = await handler.Handle(
             new UpdateMemberProfileCommand(
                 family.Id.Value, targetMemberId.Value, managerUserId,
-                "Ali", "+1-555-0100", "ali@example.com", "Friendly"),
+                "Ali", "+1-555-0100", "ali@example.com", "Friendly", null, null),
             CancellationToken.None);
 
         result.PreferredName.Should().Be("Ali");
@@ -80,7 +80,7 @@ public sealed class UpdateMemberProfileCommandHandlerTests
         var result = await handler.Handle(
             new UpdateMemberProfileCommand(
                 family.Id.Value, selfMemberId.Value, selfUserId,
-                "Bobby", null, null, null),
+                "Bobby", null, null, null, null, null),
             CancellationToken.None);
 
         result.PreferredName.Should().Be("Bobby");
@@ -105,7 +105,7 @@ public sealed class UpdateMemberProfileCommandHandlerTests
         var act = () => handler.Handle(
             new UpdateMemberProfileCommand(
                 family.Id.Value, targetMemberId.Value, nonManagerUserId,
-                "T", null, null, null),
+                "T", null, null, null, null, null),
             CancellationToken.None);
 
         await act.Should().ThrowAsync<FamilyException>()
@@ -129,7 +129,7 @@ public sealed class UpdateMemberProfileCommandHandlerTests
         var act = () => handler.Handle(
             new UpdateMemberProfileCommand(
                 family.Id.Value, Guid.NewGuid(), managerUserId,
-                null, null, null, null),
+                null, null, null, null, null, null),
             CancellationToken.None);
 
         await act.Should().ThrowAsync<FamilyException>()
@@ -145,7 +145,7 @@ public sealed class UpdateMemberProfileCommandHandlerTests
         var act = () => handler.Handle(
             new UpdateMemberProfileCommand(
                 Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(),
-                null, null, null, null),
+                null, null, null, null, null, null),
             CancellationToken.None);
 
         await act.Should().ThrowAsync<FamilyException>()

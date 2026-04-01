@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
@@ -12,10 +12,8 @@ import {
 } from "../../../store/householdSlice";
 import {
   AddMemberModal,
-  EditMemberModal,
   GrantAccessModal,
-  type MemberFormValues,
-  type ProfileFormValues,
+  type UnifiedPersonFormValues,
 } from "./MemberModals";
 import { MemberGroup } from "./MemberGroup";
 import { MemberDetailPanel } from "./MemberDetailPanel";
@@ -39,10 +37,6 @@ export function MembersManagementSection() {
   const [addSaving, setAddSaving] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
 
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editSaving, setEditSaving] = useState(false);
-  const [editError, setEditError] = useState<string | null>(null);
-
   const [grantingAccessId, setGrantingAccessId] = useState<string | null>(null);
   const [provisionSaving, setProvisionSaving] = useState(false);
   const [provisionError, setProvisionError] = useState<string | null>(null);
@@ -64,6 +58,13 @@ export function MembersManagementSection() {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileError, setProfileError] = useState<string | null>(null);
+
+  // Keep the detail panel header in sync after profile saves update the Redux members list.
+  useEffect(() => {
+    if (!selectedMember) return;
+    const updated = members.find((m) => m.memberId === selectedMember.memberId);
+    if (updated) setSelectedMember(updated);
+  }, [members]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!family) return null;
 
@@ -96,43 +97,39 @@ export function MembersManagementSection() {
     }
   }
 
-  async function handleProfileSave(values: ProfileFormValues) {
+  async function handleUnifiedSave(values: UnifiedPersonFormValues) {
     if (!selectedMember) return;
     setProfileSaving(true);
     setProfileError(null);
-    const result = await dispatch(
-      updateMemberProfile({
+    const [r1, r2] = await Promise.all([
+      dispatch(updateMember({
+        familyId: family!.familyId,
+        memberId: selectedMember.memberId,
+        name: values.name,
+        role: values.role,
+        birthDate: values.birthDate || null,
+        isManager: values.isManager,
+      })),
+      dispatch(updateMemberProfile({
         familyId: family!.familyId,
         memberId: selectedMember.memberId,
         preferredName: values.preferredName || null,
         primaryPhone: values.primaryPhone || null,
         primaryEmail: values.primaryEmail || null,
         householdNote: values.householdNote || null,
-      }),
-    );
+        avatarIconId: values.avatarIconId,
+        avatarColorId: values.avatarColorId,
+      })),
+    ]);
     setProfileSaving(false);
-    if (updateMemberProfile.fulfilled.match(result)) {
+    if (updateMember.fulfilled.match(r1) && updateMemberProfile.fulfilled.match(r2)) {
       try {
         const detail = await domusmindApi.getMemberDetails(family!.familyId, selectedMember.memberId);
         setMemberDetail(detail);
       } catch { /* ignore */ }
     } else {
-      setProfileError((result.payload as string) ?? tM("updateError"));
-    }
-  }
-
-  async function handleEditCoreSave(values: MemberFormValues) {
-    if (!editingId) return;
-    setEditSaving(true);
-    setEditError(null);
-    const result = await dispatch(
-      updateMember({ familyId: family!.familyId, memberId: editingId, name: values.name, role: values.role, birthDate: values.birthDate || null, isManager: values.isManager }),
-    );
-    setEditSaving(false);
-    if (updateMember.fulfilled.match(result)) {
-      setEditingId(null);
-    } else {
-      setEditError((result.payload as string) ?? tM("updateError"));
+      const payload = !updateMember.fulfilled.match(r1) ? r1.payload : r2.payload;
+      setProfileError((payload as string) ?? tM("updateError"));
     }
   }
 
@@ -204,7 +201,6 @@ export function MembersManagementSection() {
   const cardProps = {
     isCurrentUserManager,
     onSelect: handleSelectMember,
-    onEdit: (id: string) => { setEditingId(id); setEditError(null); },
     onGrantAccess: (id: string) => { setGrantingAccessId(id); setProvisionError(null); setProvisioned(null); },
     onRegenPassword: handleRegenPassword,
     onDisable: handleDisable,
@@ -248,14 +244,13 @@ export function MembersManagementSection() {
           loadingDetail={loadingDetail}
           isCurrentUserManager={isCurrentUserManager}
           onClose={() => { setSelectedMember(null); setMemberDetail(null); }}
-          onEditCore={(id) => { setEditingId(id); setEditError(null); }}
           onGrantAccess={(id) => { setGrantingAccessId(id); setProvisionError(null); setProvisioned(null); }}
           onRegenPassword={handleRegenPassword}
           onDisable={handleDisable}
           onEnable={handleEnable}
-          onProfileSave={handleProfileSave}
-          profileSaving={profileSaving}
-          profileError={profileError}
+          onSave={handleUnifiedSave}
+          saving={profileSaving}
+          error={profileError}
         />
       )}
 
@@ -267,18 +262,6 @@ export function MembersManagementSection() {
           onClose={() => { setShowAddMember(false); setAddError(null); }}
         />
       )}
-      {editingId !== null && (() => {
-        const em = members.find((m) => m.memberId === editingId);
-        return em ? (
-          <EditMemberModal
-            member={em}
-            saving={editSaving}
-            error={editError}
-            onSave={handleEditCoreSave}
-            onClose={() => { setEditingId(null); setEditError(null); }}
-          />
-        ) : null;
-      })()}
       {grantingAccessId !== null && (() => {
         const gm = members.find((m) => m.memberId === grantingAccessId);
         return gm ? (

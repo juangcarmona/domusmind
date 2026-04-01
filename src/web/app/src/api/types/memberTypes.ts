@@ -57,6 +57,10 @@ export interface FamilyMemberResponse {
   canEdit: boolean;
   /** First letter of the effective display name, upper-cased, for the avatar placeholder. */
   avatarInitial: string;
+  /** Chosen avatar icon id (1–20). Null means use initials. */
+  avatarIconId: number | null;
+  /** Chosen avatar color id (1–20). Null means use default primary color. */
+  avatarColorId: number | null;
 }
 
 export interface AddMemberRequest {
@@ -167,6 +171,8 @@ export interface UpdateMemberProfileRequest {
   primaryPhone?: string | null;
   primaryEmail?: string | null;
   householdNote?: string | null;
+  avatarIconId?: number | null;
+  avatarColorId?: number | null;
 }
 
 export interface UpdateMemberProfileResponse {
@@ -176,6 +182,8 @@ export interface UpdateMemberProfileResponse {
   primaryPhone: string | null;
   primaryEmail: string | null;
   householdNote: string | null;
+  avatarIconId: number | null;
+  avatarColorId: number | null;
 }
 
 export interface UpdateFamilySettingsRequest {

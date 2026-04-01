@@ -140,7 +140,7 @@ public sealed class GetMemberDetailsQueryHandlerTests
             .Include(f => f.Members)
             .SingleAsync(f => f.Id == family.Id);
         var m = loaded.AddMember(memberId, MemberName.Create("Alice"), MemberRole.Adult, DateTime.UtcNow);
-        loaded.UpdateMemberProfile(memberId, "Ali", "+1-555-0100", "ali@home.local", "Night owl", DateTime.UtcNow);
+        loaded.UpdateMemberProfile(memberId, "Ali", "+1-555-0100", "ali@home.local", "Night owl", null, null, DateTime.UtcNow);
         await db.SaveChangesAsync();
 
         var handler = BuildHandler(db);

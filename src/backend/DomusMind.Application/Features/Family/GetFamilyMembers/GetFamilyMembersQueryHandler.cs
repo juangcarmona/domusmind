@@ -129,7 +129,9 @@ public sealed class GetFamilyMembersQueryHandler
             hasAccount,
             canGrantAccess,
             canEdit,
-            m.DisplayName.Length > 0 ? m.DisplayName[0].ToString().ToUpperInvariant() : "?");
+            m.DisplayName.Length > 0 ? m.DisplayName[0].ToString().ToUpperInvariant() : "?",
+            m.AvatarIconId,
+            m.AvatarColorId);
     }
 }
 

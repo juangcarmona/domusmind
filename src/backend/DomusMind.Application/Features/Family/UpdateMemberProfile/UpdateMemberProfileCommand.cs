@@ -10,4 +10,6 @@ public sealed record UpdateMemberProfileCommand(
     string? PreferredName,
     string? PrimaryPhone,
     string? PrimaryEmail,
-    string? HouseholdNote) : ICommand<UpdateMemberProfileResponse>;
+    string? HouseholdNote,
+    int? AvatarIconId,
+    int? AvatarColorId) : ICommand<UpdateMemberProfileResponse>;

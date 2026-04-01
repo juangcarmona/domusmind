@@ -5,11 +5,19 @@ import { fetchAreas } from "../../../store/areasSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import type { RoutineListItem } from "../../../api/domusmindApi";
 import { toLocalTimeInput } from "../utils";
+import { MemberAvatar } from "../../settings/components/avatar/MemberAvatar";
 
 interface RoutineCrudFormProps {
   mode: "create" | "edit";
   familyId: string;
-  members: { memberId: string; name: string }[];
+  members: {
+    memberId: string;
+    name: string;
+    preferredName?: string | null;
+    avatarIconId?: number | null;
+    avatarColorId?: number | null;
+    avatarInitial?: string;
+  }[];
   initialRoutine?: RoutineListItem;
   /** Pre-selects the area picker when creating a new routine. */
   initialAreaId?: string;
@@ -182,25 +190,34 @@ export function RoutineCrudForm({
           <div className="form-group">
             <label>{tRoutines("targetMembersLabel")}</label>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-              {members.map((m) => (
-                <label
-                  key={m.memberId}
-                  style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={routineTargetMemberIds.includes(m.memberId)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setRoutineTargetMemberIds((prev) => [...prev, m.memberId]);
-                      } else {
-                        setRoutineTargetMemberIds((prev) => prev.filter((id) => id !== m.memberId));
-                      }
-                    }}
-                  />
-                  {m.name}
-                </label>
-              ))}
+              {members.map((m) => {
+                const displayName = m.preferredName || m.name;
+                return (
+                  <label
+                    key={m.memberId}
+                    style={{ display: "flex", alignItems: "center", gap: "0.4rem", cursor: "pointer" }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={routineTargetMemberIds.includes(m.memberId)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setRoutineTargetMemberIds((prev) => [...prev, m.memberId]);
+                        } else {
+                          setRoutineTargetMemberIds((prev) => prev.filter((id) => id !== m.memberId));
+                        }
+                      }}
+                    />
+                    <MemberAvatar
+                      initial={m.avatarInitial ?? displayName[0]?.toUpperCase() ?? "?"}
+                      avatarIconId={m.avatarIconId}
+                      avatarColorId={m.avatarColorId}
+                      size={22}
+                    />
+                    {displayName}
+                  </label>
+                );
+              })}
             </div>
           </div>
         )}

@@ -27,6 +27,12 @@ public sealed class FamilyMember : Entity<MemberId>
     /// <summary>Short household note for this member (non-sensitive). Optional.</summary>
     public string? HouseholdNote { get; private set; }
 
+    /// <summary>Chosen avatar icon id (1–20). Null means use initials.</summary>
+    public int? AvatarIconId { get; private set; }
+
+    /// <summary>Chosen avatar color id (1–20). Null means use the default primary color.</summary>
+    public int? AvatarColorId { get; private set; }
+
     /// <summary>
     /// Links this member to an authenticated user. Only set for members who have a
     /// DomusMind account (typically adults who registered). Children and pets have no
@@ -61,13 +67,15 @@ public sealed class FamilyMember : Entity<MemberId>
         BirthDate = birthDate;
     }
 
-    /// <summary>Updates the lightweight profile fields: preferred name, contact phone/email, household note.</summary>
-    internal void UpdateProfile(string? preferredName, string? primaryPhone, string? primaryEmail, string? householdNote)
+    /// <summary>Updates the lightweight profile fields: preferred name, contact phone/email, household note, and avatar.</summary>
+    internal void UpdateProfile(string? preferredName, string? primaryPhone, string? primaryEmail, string? householdNote, int? avatarIconId, int? avatarColorId)
     {
         PreferredName = string.IsNullOrWhiteSpace(preferredName) ? null : preferredName.Trim();
         PrimaryPhone = string.IsNullOrWhiteSpace(primaryPhone) ? null : primaryPhone.Trim();
         PrimaryEmail = string.IsNullOrWhiteSpace(primaryEmail) ? null : primaryEmail.Trim();
         HouseholdNote = string.IsNullOrWhiteSpace(householdNote) ? null : householdNote.Trim();
+        AvatarIconId = avatarIconId is >= 1 and <= 20 ? avatarIconId : null;
+        AvatarColorId = avatarColorId is >= 1 and <= 20 ? avatarColorId : null;
     }
 
     /// <summary>

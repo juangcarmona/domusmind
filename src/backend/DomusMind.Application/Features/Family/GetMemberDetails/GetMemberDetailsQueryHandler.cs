@@ -79,6 +79,8 @@ public sealed class GetMemberDetailsQueryHandler : IQueryHandler<GetMemberDetail
             item.CanGrantAccess,
             item.CanEdit,
             item.AvatarInitial,
+            item.AvatarIconId,
+            item.AvatarColorId,
             targetMember.PrimaryPhone,
             targetMember.PrimaryEmail,
             targetMember.HouseholdNote);

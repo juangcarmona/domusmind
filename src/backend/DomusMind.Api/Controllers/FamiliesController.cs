@@ -539,7 +539,9 @@ public sealed class FamiliesController : ControllerBase
                     request.PreferredName,
                     request.PrimaryPhone,
                     request.PrimaryEmail,
-                    request.HouseholdNote),
+                    request.HouseholdNote,
+                    request.AvatarIconId,
+                    request.AvatarColorId),
                 cancellationToken);
 
             return Ok(response);

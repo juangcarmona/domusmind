@@ -32,4 +32,10 @@ public sealed record MemberDirectoryItemResponse(
     bool CanEdit,
 
     /// <summary>First letter of the effective display name, upper-cased, for use as an avatar placeholder.</summary>
-    string AvatarInitial);
+    string AvatarInitial,
+
+    /// <summary>Chosen avatar icon id (1–20). Null means display initials.</summary>
+    int? AvatarIconId,
+
+    /// <summary>Chosen avatar color id (1–20). Null means use default primary color.</summary>
+    int? AvatarColorId);

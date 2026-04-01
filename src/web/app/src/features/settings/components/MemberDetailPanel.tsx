@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import type { FamilyMemberResponse } from "../../../api/domusmindApi";
 import type { MemberDetailResponse } from "../../../api/domusmindApi";
-import { Avatar } from "./Avatar";
+import { MemberAvatar } from "./avatar/MemberAvatar";
 import { AccessStatusBadge } from "./AccessStatusBadge";
-import { EditProfileModal, type ProfileFormValues } from "./MemberModals";
+import { EditPersonModal, type UnifiedPersonFormValues } from "./MemberModals";
 import { TabBtn } from "./TabBtn";
 
 type DetailTab = "core" | "access" | "contacts" | "notes";
@@ -15,14 +15,13 @@ export interface MemberDetailPanelProps {
   loadingDetail: boolean;
   isCurrentUserManager: boolean;
   onClose: () => void;
-  onEditCore: (id: string) => void;
   onGrantAccess: (id: string) => void;
   onRegenPassword: (id: string) => void;
   onDisable: (id: string) => void;
   onEnable: (id: string) => void;
-  onProfileSave: (values: ProfileFormValues) => void;
-  profileSaving: boolean;
-  profileError: string | null;
+  onSave: (values: UnifiedPersonFormValues) => void;
+  saving: boolean;
+  error: string | null;
 }
 
 export function MemberDetailPanel({
@@ -31,21 +30,29 @@ export function MemberDetailPanel({
   loadingDetail,
   isCurrentUserManager,
   onClose,
-  onEditCore,
   onGrantAccess,
   onRegenPassword,
   onDisable,
   onEnable,
-  onProfileSave,
-  profileSaving,
-  profileError,
+  onSave,
+  saving,
+  error,
 }: MemberDetailPanelProps) {
   const { t } = useTranslation("settings");
   const tM = (key: string) => t(`household.members.${key}` as never);
 
   const [activeTab, setActiveTab] = useState<DetailTab>("core");
-  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [pendingSave, setPendingSave] = useState(false);
   const displayName = member.preferredName || member.name;
+
+  // Close the edit modal once the async save resolves without error.
+  useEffect(() => {
+    if (pendingSave && !saving && !error) {
+      setIsEditing(false);
+      setPendingSave(false);
+    }
+  }, [saving, error, pendingSave]);
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 200, display: "flex", justifyContent: "flex-end" }}>
@@ -65,7 +72,7 @@ export function MemberDetailPanel({
       >
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "1rem 1rem 0.75rem", borderBottom: "1px solid var(--border, #eee)" }}>
-          <Avatar initial={member.avatarInitial} size={44} />
+          <MemberAvatar initial={member.avatarInitial} avatarIconId={member.avatarIconId} avatarColorId={member.avatarColorId} size={44} />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontWeight: 700, fontSize: "1rem", display: "flex", alignItems: "center", gap: "0.4rem", flexWrap: "wrap" }}>
               <span>{displayName}</span>
@@ -119,24 +126,14 @@ export function MemberDetailPanel({
                 )}
               </div>
               {member.canEdit && (
-                <>
-                  <button
-                    type="button"
-                    className="btn btn-ghost"
-                    style={{ fontSize: "0.82rem", padding: "0.3rem 0.75rem", marginRight: "0.4rem" }}
-                    onClick={() => onEditCore(member.memberId)}
-                  >
-                    {tM("edit")}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-ghost"
-                    style={{ fontSize: "0.82rem", padding: "0.3rem 0.75rem" }}
-                    onClick={() => setIsEditingProfile(true)}
-                  >
-                    {tM("editProfile")}
-                  </button>
-                </>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  style={{ fontSize: "0.82rem", padding: "0.3rem 0.75rem" }}
+                  onClick={() => setIsEditing(true)}
+                >
+                  {tM("editProfile")}
+                </button>
               )}
             </div>
           )}
@@ -229,7 +226,7 @@ export function MemberDetailPanel({
                   type="button"
                   className="btn btn-ghost"
                   style={{ fontSize: "0.82rem", padding: "0.3rem 0.75rem" }}
-                  onClick={() => setIsEditingProfile(true)}
+                  onClick={() => setIsEditing(true)}
                 >
                   {tM("editProfile")}
                 </button>
@@ -257,7 +254,7 @@ export function MemberDetailPanel({
                   type="button"
                   className="btn btn-ghost"
                   style={{ fontSize: "0.82rem", padding: "0.3rem 0.75rem" }}
-                  onClick={() => setIsEditingProfile(true)}
+                  onClick={() => setIsEditing(true)}
                 >
                   {tM("editProfile")}
                 </button>
@@ -267,16 +264,21 @@ export function MemberDetailPanel({
         </div>
       </div>
 
-      {isEditingProfile && (
-        <EditProfileModal
-          member={detail ?? member}
-          saving={profileSaving}
-          error={profileError}
-          onSave={(values) => {
-            onProfileSave(values);
-            setIsEditingProfile(false);
+      {isEditing && (
+        <EditPersonModal
+          member={{
+            ...member,
+            primaryPhone: detail?.primaryPhone ?? null,
+            primaryEmail: detail?.primaryEmail ?? null,
+            householdNote: detail?.householdNote ?? null,
           }}
-          onClose={() => setIsEditingProfile(false)}
+          saving={saving}
+          error={error}
+          onSave={(values) => {
+            setPendingSave(true);
+            onSave(values);
+          }}
+          onClose={() => setIsEditing(false)}
         />
       )}
     </div>

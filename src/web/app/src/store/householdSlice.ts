@@ -107,6 +107,8 @@ const householdSlice = createSlice({
           canGrantAccess: false,
           canEdit: false,
           avatarInitial: m.name?.[0]?.toUpperCase() ?? "?",
+          avatarIconId: null,
+          avatarColorId: null,
         }));
         state.bootstrapStatus = "ready";
         state.error = null;
@@ -129,6 +131,8 @@ const householdSlice = createSlice({
           state.members[idx] = {
             ...state.members[idx],
             preferredName: action.payload.preferredName,
+            avatarIconId: action.payload.avatarIconId,
+            avatarColorId: action.payload.avatarColorId,
           };
         }
       })
