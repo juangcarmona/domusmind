@@ -12,6 +12,18 @@ Depends on:
 - specs/surfaces/member-agenda.md
 - specs/surfaces/areas.md
 
+## Phase status
+
+| Phase | Status | Output |
+|-------|--------|--------|
+| Phase 0 — Audit and Mapping | **Complete** | `specs/system/surface-system-reboot-plan-phase-0.md` |
+| Phase 1 — Shell Foundation | **Complete** | `specs/system/surface-system-reboot-plan-phase-1.md` |
+| Phase 2 — Planning | Not started | — |
+| Phase 3 — Shared Lists | Not started | — |
+| Phase 4 — Today | Not started | — |
+| Phase 5 — Member Agenda | Not started | — |
+| Phase 6 — Areas | Not started | — |
+
 # DomusMind - Surface System Reboot Plan
 
 This document translates the new product and UX documentation into an execution plan.
