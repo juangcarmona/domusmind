@@ -338,7 +338,7 @@
 
 /* ---- Surface shell ---- */
 .lists-surface {
-  /* Cancel app-main padding — same technique as planning-surface */
+  /* Cancel app-main padding on desktop so the surface goes edge-to-edge */
   margin: -1.5rem -1.25rem;
   display: flex;
   flex-direction: column;
@@ -346,9 +346,11 @@
   overflow: hidden;
 }
 
+/* On mobile: no negative margin. app-main padding (0.75rem top) acts as breathing room
+   below the site-header. height: 100% fills the viewport correctly without clipping. */
 @media (max-width: 640px) {
   .lists-surface {
-    margin: -0.75rem 0;
+    margin: 0;
   }
 }
 
@@ -560,6 +562,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  position: relative; /* anchor for sticky add-composer */
 }
 
 /* Remove outer card boxing when items sit inside the split-view surface */
@@ -674,6 +677,13 @@
   border-radius: 999px;
 }
 
+.lists-switcher-sheet-loading {
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+  text-align: center;
+}
+
 /* ---- Inspector content (item selected) ---- */
 .lists-inspector-content {
   display: flex;
@@ -733,17 +743,12 @@
    Phase 3 Refinement — FAB, add composer, reorder mode, mobile
    ================================================================ */
 
-/* ---- Content pane: relative positioning anchor for composer ---- */
-.lists-content-pane {
-  position: relative;
-}
-
 /* ---- FAB ---- */
 .lists-fab {
   position: fixed;
   right: 1.25rem;
   bottom: calc(var(--bottom-nav-height, 56px) + 1rem);
-  z-index: 50;
+  z-index: 45; /* below backdrop (50) so the backdrop can cover the FAB when a sheet is open */
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
@@ -771,8 +776,6 @@
     bottom: 1.5rem;
   }
 }
-
-/* ---- Inline add composer (revealed by FAB) ---- */
 .lists-add-composer {
   position: sticky;
   bottom: 0;

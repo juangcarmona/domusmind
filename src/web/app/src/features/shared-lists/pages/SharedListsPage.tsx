@@ -259,7 +259,7 @@ export function SharedListsPage() {
           <button
             type="button"
             className="lists-switcher-trigger"
-            onClick={() => setShowSwitcherSheet(true)}
+            onClick={(e) => { e.stopPropagation(); setShowSwitcherSheet(true); }}
           >
             <span className="lists-switcher-trigger-name">
               {activeListSummary ? activeListSummary.name : t("title")}
@@ -489,19 +489,23 @@ export function SharedListsPage() {
           title={t("title")}
         >
           <div className="lists-switcher-sheet-body">
-            {lists.map((list) => (
-              <button
-                key={list.id}
-                type="button"
-                className={`lists-switcher-sheet-row${list.id === activeListId ? " lists-switcher-sheet-row--active" : ""}`}
-                onClick={() => handleSelectList(list.id)}
-              >
-                <span className="lists-switcher-sheet-name">{list.name}</span>
-                {list.uncheckedCount > 0 && (
-                  <span className="lists-switcher-sheet-count">{list.uncheckedCount}</span>
-                )}
-              </button>
-            ))}
+            {listsStatus === "loading" && lists.length === 0 ? (
+              <p className="lists-switcher-sheet-loading">{t("loading")}</p>
+            ) : (
+              lists.map((list) => (
+                <button
+                  key={list.id}
+                  type="button"
+                  className={`lists-switcher-sheet-row${list.id === activeListId ? " lists-switcher-sheet-row--active" : ""}`}
+                  onClick={() => handleSelectList(list.id)}
+                >
+                  <span className="lists-switcher-sheet-name">{list.name}</span>
+                  {list.uncheckedCount > 0 && (
+                    <span className="lists-switcher-sheet-count">{list.uncheckedCount}</span>
+                  )}
+                </button>
+              ))
+            )}
             <button
               type="button"
               className="btn btn-ghost btn-sm"
@@ -511,17 +515,6 @@ export function SharedListsPage() {
               + {t("newList")}
             </button>
           </div>
-        </BottomSheetDetail>
-      )}
-
-      {/* Mobile: selected item detail sheet */}
-      {isMobile && selectedItem && (
-        <BottomSheetDetail
-          open
-          onClose={() => setSelectedItem(null)}
-          title={selectedItem.item.name}
-        >
-          {inspectorContent}
         </BottomSheetDetail>
       )}
 

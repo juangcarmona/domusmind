@@ -249,7 +249,7 @@
   position: fixed;
   right: 1.25rem;
   bottom: calc(var(--bottom-nav-height, 56px) + 1rem);
-  z-index: 50;
+  z-index: 45;
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
