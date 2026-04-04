@@ -12,7 +12,6 @@ interface PlanningHeaderProps {
   onPrev: () => void;
   onNext: () => void;
   onToday: () => void;
-  onAddPlan: () => void;
 }
 
 /**
@@ -31,7 +30,6 @@ export function PlanningHeader({
   onPrev,
   onNext,
   onToday,
-  onAddPlan,
 }: PlanningHeaderProps) {
   const { t, i18n } = useTranslation("agenda");
   const { t: tPlans } = useTranslation("plans");
@@ -84,16 +82,9 @@ export function PlanningHeader({
 
   return (
     <header className="planning-header">
-      {/* Row 1: title + add action */}
+      {/* Row 1: title */}
       <div className="planning-identity">
         <span className="planning-title">{tNav("planning")}</span>
-        <button
-          type="button"
-          className="btn btn-primary btn-sm planning-add-btn"
-          onClick={onAddPlan}
-        >
-          + {tPlans("add")}
-        </button>
       </div>
 
       {/* Row 2: date navigation */}

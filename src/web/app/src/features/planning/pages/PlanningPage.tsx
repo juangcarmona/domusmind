@@ -24,6 +24,7 @@ import { MonthView } from "../../today/components/MonthView";
 import { PlanningHeader, type PlanningView } from "../components/PlanningHeader";
 import { PlanningDayCanvas } from "../components/PlanningDayCanvas";
 import { PlanningInspectorContent, type SelectedPlanItem } from "../components/PlanningInspectorContent";
+import { PlanningMobileWeekStrip } from "../components/PlanningMobileWeekStrip";
 import "../planning.css";
 
 /**
@@ -242,7 +243,17 @@ export function PlanningPage() {
       <div className="planning-body l-surface-body">
         {/* Calendar canvas — fills all available space */}
         <div className="planning-canvas l-surface-content">
-          {view === "week" && (
+          {view === "week" && isMobile && (
+            <PlanningMobileWeekStrip
+              grid={grid}
+              loading={gridLoading}
+              error={gridError}
+              selectedDate={selectedDate}
+              onDaySelect={setSelectedDate}
+              onItemClick={handleItemClick}
+            />
+          )}
+          {view === "week" && !isMobile && (
             <WeeklyHouseholdGrid
               grid={grid}
               loading={gridLoading}
@@ -320,6 +331,16 @@ export function PlanningPage() {
           }}
         />
       )}
+
+      {/* Floating add button */}
+      <button
+        type="button"
+        className="planning-fab"
+        aria-label="Add"
+        onClick={() => handleAddPlan({ initialStartDate: selectedDate })}
+      >
+        +
+      </button>
     </div>
   );
 }
