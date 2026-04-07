@@ -5,6 +5,7 @@ import { buildMemberEntries } from "../../today/utils/todayPanelHelpers";
 import type { CalendarEntry } from "../../today/utils/calendarEntry";
 import { toIsoDate } from "../../today/utils/dateUtils";
 import { HourTimeline } from "./HourTimeline";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 
 /**
  * Pixel height of one 30-minute slot.
@@ -29,6 +30,7 @@ interface MemberDayViewProps {
  */
 export function MemberDayView({ member, selectedDate, onItemClick, onSlotClick }: MemberDayViewProps) {
   const { t } = useTranslation("agenda");
+  const isMobile = useIsMobile();
 
   const todayIso = toIsoDate(new Date());
   const isToday = selectedDate === todayIso;
@@ -70,6 +72,7 @@ export function MemberDayView({ member, selectedDate, onItemClick, onSlotClick }
           nowMinutes={nowMinutes}
           onItemClick={onItemClick}
           onSlotClick={onSlotClick}
+          compact={isMobile}
         />
       </section>
     </div>

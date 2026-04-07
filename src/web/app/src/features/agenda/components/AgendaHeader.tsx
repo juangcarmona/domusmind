@@ -105,12 +105,13 @@ export function AgendaHeader({
       <div className="agenda-scope-row" role="group" aria-label="Scope">
         <button
           type="button"
-          className={`agenda-scope-pill${scope === "household" ? " agenda-scope-pill--active" : ""}`}
+          className={`agenda-scope-pill agenda-scope-pill--icon-only${scope === "household" ? " agenda-scope-pill--active" : ""}`}
           aria-pressed={scope === "household"}
+          aria-label={householdLabel}
+          title={householdLabel}
           onClick={() => onScopeChange("household")}
         >
           <HouseholdLogo className="agenda-scope-pill-icon" />
-          <span>{householdLabel}</span>
         </button>
         {members.map((m) => (
           <button

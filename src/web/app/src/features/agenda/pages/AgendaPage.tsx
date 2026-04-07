@@ -14,6 +14,7 @@ import { AgendaHeader, type AgendaView } from "../components/AgendaHeader";
 import { MemberDayView } from "../components/MemberDayView";
 import { MemberWeekView } from "../components/MemberWeekView";
 import { MemberMonthView } from "../components/MemberMonthView";
+import { AgendaSelectedDayDetail } from "../components/AgendaSelectedDayDetail";
 import { TodayBoard } from "../../today/components/board/TodayBoard";
 import { WeeklyHouseholdGrid } from "../../today/components/grid/WeeklyHouseholdGrid";
 import { PlanningMobileWeekStrip } from "../../planning/components/PlanningMobileWeekStrip";
@@ -213,8 +214,12 @@ export function AgendaPage() {
   }
 
   function handleScopeChange(newScope: "household" | string) {
+    // When switching to a member on mobile, default to week — more useful than the hourly timeline.
+    const targetView = (!isHousehold || newScope !== "household") && newScope !== "household" && isMobile
+      ? "week"
+      : view;
     const params = new URLSearchParams();
-    if (view !== "day") params.set("mode", view);
+    if (targetView !== "day") params.set("mode", targetView);
     params.set("date", selectedDate);
     const qs = params.toString() ? `?${params.toString()}` : "";
     if (newScope === "household") {
@@ -396,16 +401,24 @@ export function AgendaPage() {
                 />
               )}
               {isHousehold && view === "month" && (
-                <MonthView
-                  selectedDate={selectedDate}
-                  today={todayIso}
-                  firstDayOfWeek={firstDayOfWeek}
-                  displayAnchor={monthAnchor}
-                  daySummary={monthDaySummary}
-                  onSelectDay={handleDayDrill}
-                  onPrevMonth={() => setMonthAnchor(addMonths(monthAnchor, -1))}
-                  onNextMonth={() => setMonthAnchor(addMonths(monthAnchor, 1))}
-                />
+                <>
+                  <MonthView
+                    selectedDate={selectedDate}
+                    today={todayIso}
+                    firstDayOfWeek={firstDayOfWeek}
+                    displayAnchor={monthAnchor}
+                    daySummary={monthDaySummary}
+                    onSelectDay={handleMonthSelectDate}
+                    onPrevMonth={() => setMonthAnchor(addMonths(monthAnchor, -1))}
+                    onNextMonth={() => setMonthAnchor(addMonths(monthAnchor, 1))}
+                  />
+                  <AgendaSelectedDayDetail
+                    grid={grid}
+                    selectedDate={selectedDate}
+                    loading={gridLoading}
+                    onItemClick={handleItemClick}
+                  />
+                </>
               )}
 
               {/* ── Member views ── */}
@@ -422,6 +435,7 @@ export function AgendaPage() {
                   member={memberRow ?? emptyMemberRow}
                   selectedDate={selectedDate}
                   onItemClick={handleItemClick}
+                  onDaySelect={setSelectedDate}
                   onDayClick={handleDayDrill}
                 />
               )}
@@ -430,7 +444,10 @@ export function AgendaPage() {
                   memberId={memberId ?? null}
                   selectedDate={selectedDate}
                   firstDayOfWeek={firstDayOfWeek}
+                  memberRow={memberRow}
+                  gridLoading={gridLoading}
                   onSelectDay={handleMonthSelectDate}
+                  onItemClick={handleItemClick}
                 />
               )}
             </>
