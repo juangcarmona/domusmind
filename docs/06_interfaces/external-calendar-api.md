@@ -347,13 +347,13 @@ Failure cases:
 - `404 Not Found` connection not found
 - `409 Conflict` connection is in a non-interruptible sync section
 
-## 8. View member agenda
+## 8. View Agenda in member scope
 
 `GET /api/families/{familyId}/members/{memberId}/agenda?mode=day&windowStartUtc=2026-04-07T00:00:00Z&windowEndUtc=2026-04-07T23:59:59Z`
 
 Purpose:
 
-- return the Member Agenda read model including imported external entries when relevant
+- return the member-scoped Agenda read model including imported external entries when relevant
 
 Response: `200 OK`
 
@@ -450,4 +450,4 @@ Swagger / OpenAPI must document:
 The contract should make the separation explicit:
 
 - native household events are writable through Event APIs
-- imported Outlook entries are read-only and surfaced only through member agenda and connection queries
+- imported Outlook entries are read-only and surfaced only through Agenda member-scope and connection queries

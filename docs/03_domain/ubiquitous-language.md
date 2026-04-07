@@ -59,8 +59,8 @@ Projection-only terms used to explain derived views.
 Examples:
 
 - Timeline
-- Today view
-- Week view
+- Agenda day view
+- Agenda week view
 - Marker
 
 Read-model terms are not aggregates unless explicitly modeled as such.

@@ -230,7 +230,7 @@ The flow should:
 2. Name the household.
 3. Add people.
 4. Add first useful state such as plans, routines, or lists.
-5. Show Today and Planning immediately.
+5. Show Agenda immediately in its default household day state.
 
 The result should be a working system, not an empty shell.
 
@@ -262,8 +262,8 @@ Guardrails:
 
 The experience direction is successful when:
 
-- the household can understand Today in seconds
-- planning the week feels calm and fast
+- the household can understand Agenda's default day state in seconds
+- Agenda week planning feels calm and fast
 - lists feel efficient and obvious
 - ownership is visible without admin overhead
 - desktop and mobile feel like the same product

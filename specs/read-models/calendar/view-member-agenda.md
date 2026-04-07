@@ -1,4 +1,4 @@
-# Spec - View Member Agenda
+# Spec - View Agenda in Member Scope
 
 ## Purpose
 
@@ -32,7 +32,7 @@ Optional:
 
 ## Data Sources
 
-The Member Agenda read model may include:
+The member-scoped Agenda read model may include:
 
 - native calendar events involving the member
 - tasks assigned to the member or relevant to the selected member scope
@@ -102,6 +102,6 @@ Return:
 
 ## Notes
 
-Phase 1 imported external calendar entries appear only in Member Agenda.
+Phase 1 imported external calendar entries appear only in Agenda member scope.
 
 They do not appear in Household Agenda or in the `FamilyTimeline` read model.
