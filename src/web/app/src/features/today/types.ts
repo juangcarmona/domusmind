@@ -10,6 +10,10 @@ export interface WeeklyGridEventItem {
   status: string;
   color: string;
   participants: ParticipantProjection[];
+  isReadOnly?: boolean;
+  source?: string | null;
+  providerLabel?: string | null;
+  openInProviderUrl?: string | null;
 }
 
 export interface WeeklyGridTaskItem {

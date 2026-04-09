@@ -49,6 +49,9 @@ export interface CalendarEntry {
   color: string | null;
   isCompleted: boolean;
   isOverdue: boolean;
+  isReadOnly?: boolean;
+  sourceLabel?: string | null;
+  openInProviderUrl?: string | null;
 }
 
 // ----------------------------------------------------------------
@@ -118,6 +121,9 @@ export function normalizeEventItem(
     color: e.color ?? null,
     isCompleted: isCancelled,
     isOverdue: false,
+    isReadOnly: e.isReadOnly ?? false,
+    sourceLabel: e.providerLabel ?? null,
+    openInProviderUrl: e.openInProviderUrl ?? null,
   };
 }
 

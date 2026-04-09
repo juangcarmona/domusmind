@@ -11,7 +11,11 @@ public sealed record WeeklyGridEventItem(
     string? EndTime,
     string Status,
     string Color,
-    IReadOnlyCollection<ParticipantProjection> Participants);
+    IReadOnlyCollection<ParticipantProjection> Participants,
+    bool IsReadOnly = false,
+    string? Source = null,
+    string? ProviderLabel = null,
+    string? OpenInProviderUrl = null);
 
 public sealed record WeeklyGridTaskItem(
     Guid TaskId,

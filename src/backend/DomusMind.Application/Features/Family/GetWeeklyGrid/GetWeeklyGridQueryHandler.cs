@@ -5,6 +5,7 @@ using DomusMind.Application.Temporal;
 using DomusMind.Contracts.Calendar;
 using DomusMind.Contracts.Family;
 using DomusMind.Domain.Calendar;
+using DomusMind.Domain.Calendar.ExternalConnections;
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Tasks;
 using DomusMind.Domain.Tasks.Enums;
@@ -79,6 +80,43 @@ public sealed class GetWeeklyGridQueryHandler
                      && r.Status == RoutineStatus.Active)
             .ToListAsync(cancellationToken);
 
+        // Query by FamilyId (EF-translatable) and filter to active connections.
+        // memberIds.Contains(c.MemberId.Value) is non-translatable because the
+        // .Value accessor on the MemberId value object cannot be rendered to SQL
+        // by EF Core when the source collection is a local List<Guid>.
+        var activeConnections = await _dbContext
+            .Set<ExternalCalendarConnection>()
+            .AsNoTracking()
+            .Include(c => c.Feeds)
+            .Where(c => c.FamilyId == familyId &&
+                        c.Status != ExternalCalendarConnectionStatus.Disconnected)
+            .ToListAsync(cancellationToken);
+
+        var selectedFeedIds = activeConnections
+            .SelectMany(c => c.Feeds.Where(f => f.IsSelected).Select(f => f.Id))
+            .ToHashSet();
+
+        var connectionById = activeConnections.ToDictionary(c => c.Id.Value);
+
+        var weekStartUtc = weekStart.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var weekEndExclusiveUtc = weekEnd.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+
+        var externalEntries = selectedFeedIds.Count == 0
+            ? []
+            : await _dbContext
+                .Set<ExternalCalendarEntry>()
+                .AsNoTracking()
+                .Where(e => selectedFeedIds.Contains(e.FeedId) &&
+                            !e.IsDeleted &&
+                            e.StartsAtUtc < weekEndExclusiveUtc &&
+                            (e.EndsAtUtc == null || e.EndsAtUtc >= weekStartUtc))
+                .ToListAsync(cancellationToken);
+
+        var externalEntriesByMember = externalEntries
+            .Where(e => connectionById.ContainsKey(e.ConnectionId))
+            .GroupBy(e => connectionById[e.ConnectionId].MemberId.Value)
+            .ToDictionary(g => g.Key, g => g.ToList());
+
         var days = Enumerable.Range(0, 7)
             .Select(i => weekStart.AddDays(i))
             .ToList();
@@ -149,6 +187,9 @@ public sealed class GetWeeklyGridQueryHandler
             .ThenBy(m => m.Name.Value)
             .Select(member =>
             {
+                var memberExternalEntries = externalEntriesByMember
+                    .GetValueOrDefault(member.Id.Value, []);
+
                 var cells = days
                     .Select(day =>
                     {
@@ -176,6 +217,51 @@ public sealed class GetWeeklyGridQueryHandler
                                     e.Color.Value,
                                     participants);
                             })
+                            .ToList();
+
+                        var memberExternalEvents = memberExternalEntries
+                            .Where(entry =>
+                            {
+                                var startDate = DateOnly.FromDateTime(entry.StartsAtUtc);
+                                var endDate = DateOnly.FromDateTime(entry.EndsAtUtc ?? entry.StartsAtUtc);
+                                return startDate <= day && endDate >= day;
+                            })
+                            .OrderBy(entry => entry.StartsAtUtc)
+                            .Select(entry =>
+                            {
+                                connectionById.TryGetValue(entry.ConnectionId, out var conn);
+
+                                var date = day.ToString("yyyy-MM-dd");
+                                var time = entry.IsAllDay ? null : entry.StartsAtUtc.ToString("HH:mm");
+                                var endDate = entry.EndsAtUtc.HasValue
+                                    ? DateOnly.FromDateTime(entry.EndsAtUtc.Value).ToString("yyyy-MM-dd")
+                                    : null;
+                                var endTime = entry.IsAllDay || !entry.EndsAtUtc.HasValue
+                                    ? null
+                                    : entry.EndsAtUtc.Value.ToString("HH:mm");
+
+                                return new WeeklyGridEventItem(
+                                    entry.Id,
+                                    entry.Title,
+                                    date,
+                                    time,
+                                    endDate,
+                                    endTime,
+                                    entry.Status,
+                                    "#64748B",
+                                    [],
+                                    true,
+                                    "external_calendar",
+                                    conn is null ? null : ExternalCalendarProviderNames.ToProviderLabel(conn.Provider),
+                                    entry.OpenInProviderUrl);
+                            })
+                            .ToList();
+
+                        memberEvents.AddRange(memberExternalEvents);
+                        memberEvents = memberEvents
+                            .OrderBy(e => e.Time is null ? 1 : 0)
+                            .ThenBy(e => e.Time)
+                            .ThenBy(e => e.Title)
                             .ToList();
 
                         var memberTasks = tasks

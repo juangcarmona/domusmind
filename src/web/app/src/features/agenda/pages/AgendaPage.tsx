@@ -46,9 +46,17 @@ function AgendaItemDetail({
   onClose: () => void;
 }) {
   const { t } = useTranslation("agenda");
+  const canEdit = !entry.isReadOnly;
+
   return (
     <div className="agenda-inspector-item">
       <p className="agenda-inspector-item-title">{entry.title}</p>
+      {entry.isReadOnly && (
+        <p className="agenda-inspector-item-meta">
+          {t("item.readOnly", "Read-only")}
+          {entry.sourceLabel ? ` · ${entry.sourceLabel}` : ""}
+        </p>
+      )}
       {entry.time && (
         <p className="agenda-inspector-item-meta">
           {entry.time}
@@ -61,17 +69,26 @@ function AgendaItemDetail({
       {entry.status && (
         <p className="agenda-inspector-item-status">{entry.status}</p>
       )}
+      {entry.isReadOnly && entry.openInProviderUrl && (
+        <p className="agenda-inspector-item-meta">
+          <a href={entry.openInProviderUrl} target="_blank" rel="noreferrer">
+            {t("item.openInProvider", "Open in Outlook")}
+          </a>
+        </p>
+      )}
       <div className="agenda-inspector-item-actions">
-        <button
-          type="button"
-          className="btn btn-ghost btn-sm"
-          onClick={() => {
-            onEdit(entry.sourceType, entry.id);
-            onClose();
-          }}
-        >
-          {t("item.edit", "Edit")}
-        </button>
+        {canEdit && (
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={() => {
+              onEdit(entry.sourceType, entry.id);
+              onClose();
+            }}
+          >
+            {t("item.edit", "Edit")}
+          </button>
+        )}
         <button type="button" className="btn btn-ghost btn-sm" onClick={onClose}>
           ✕
         </button>

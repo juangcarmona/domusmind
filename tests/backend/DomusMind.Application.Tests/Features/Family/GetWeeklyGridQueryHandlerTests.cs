@@ -1,6 +1,7 @@
 using DomusMind.Application.Features.Family;
 using DomusMind.Application.Features.Family.GetWeeklyGrid;
 using DomusMind.Domain.Calendar;
+using DomusMind.Domain.Calendar.ExternalConnections;
 using DomusMind.Domain.Calendar.ValueObjects;
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Family.ValueObjects;
@@ -204,6 +205,75 @@ public sealed class GetWeeklyGridQueryHandlerTests
 
         var wednesdayCell = result.Members.First().Cells.Single(c => c.Date == eventDate.ToString("yyyy-MM-dd"));
         wednesdayCell.Events.Should().ContainSingle(e => e.Title == "School Run");
+    }
+
+    [Fact]
+    public async Task Handle_ImportedExternalEvent_AppearsInCorrectMemberCellAsReadOnly()
+    {
+        var db = CreateDb();
+        var familyId = FamilyId.New();
+        var memberId = MemberId.New();
+        db.Set<Domain.Family.Family>().Add(MakeFamily(familyId, (memberId, "Bob")));
+
+        var now = DateTime.UtcNow;
+        var connectionId = ExternalCalendarConnectionId.New();
+        var connection = ExternalCalendarConnection.Connect(
+            connectionId,
+            familyId,
+            memberId,
+            ExternalCalendarProvider.Microsoft,
+            "provider-account",
+            "bob@outlook.com",
+            "Bob Outlook",
+            "common",
+            now);
+
+        var feed = ExternalCalendarFeed.Create(
+            connectionId,
+            "cal-1",
+            "Calendar",
+            true,
+            true,
+            now);
+
+        db.Set<ExternalCalendarConnection>().Add(connection);
+        db.Set<ExternalCalendarFeed>().Add(feed);
+
+        var weekStart = new DateOnly(2026, 3, 16);
+        var externalDate = weekStart.AddDays(2);
+        db.Set<ExternalCalendarEntry>().Add(new ExternalCalendarEntry
+        {
+            Id = Guid.NewGuid(),
+            ConnectionId = connectionId.Value,
+            FeedId = feed.Id,
+            Provider = "microsoft",
+            ExternalEventId = "evt-1",
+            Title = "Math Class",
+            StartsAtUtc = externalDate.ToDateTime(new TimeOnly(14, 0), DateTimeKind.Utc),
+            EndsAtUtc = externalDate.ToDateTime(new TimeOnly(15, 0), DateTimeKind.Utc),
+            IsAllDay = false,
+            Status = "confirmed",
+            OpenInProviderUrl = "https://outlook.office.com/calendar/item/1",
+            IsDeleted = false,
+            LastSeenAtUtc = now,
+            CreatedAtUtc = now,
+            UpdatedAtUtc = now,
+        });
+
+        await db.SaveChangesAsync();
+        var handler = BuildHandler(db);
+
+        var result = await handler.Handle(
+            new GetWeeklyGridQuery(familyId.Value, weekStart, Guid.NewGuid()),
+            CancellationToken.None);
+
+        var wednesdayCell = result.Members.First().Cells.Single(c => c.Date == externalDate.ToString("yyyy-MM-dd"));
+        var external = wednesdayCell.Events.Should().ContainSingle(e => e.Title == "Math Class").Which;
+
+        external.IsReadOnly.Should().BeTrue();
+        external.Source.Should().Be("external_calendar");
+        external.ProviderLabel.Should().Be("Outlook");
+        external.OpenInProviderUrl.Should().Be("https://outlook.office.com/calendar/item/1");
     }
 
     [Fact]
