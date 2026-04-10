@@ -38,6 +38,7 @@ The member-scoped Agenda read model may include:
 - tasks assigned to the member or relevant to the selected member scope
 - projected routine occurrences relevant to the member
 - imported external calendar entries from the member's selected external calendar feeds
+- projected list items: SharedList items with temporal fields (dueDate or reminder) falling within the requested window
 
 ## Query Behavior
 
@@ -61,7 +62,7 @@ They remain distinguishable in the read model.
 
 Each agenda item includes:
 
-- `type` where allowed values include `event | task | routine | external-calendar-entry`
+- `type` where allowed values include `event | task | routine | external-calendar-entry | list-item`
 - `title`
 - `startsAtUtc`
 - `endsAtUtc`
@@ -74,6 +75,24 @@ Native item fields may include:
 - `eventId`
 - `taskId`
 - `routineId`
+
+Projected list item fields include:
+
+- `itemId`
+- `listId`
+- `listName`
+- `checked`
+- `importance`
+- `dueDate`
+- `reminder`
+- `isReadOnly = true` (items are not editable from Agenda)
+
+Projected list item rules:
+
+- appear only when `dueDate` or `reminder` falls within the requested window
+- checked items appear de-emphasized but are not excluded from the result
+- the `type` field is always `list-item` — never `task` or `event`
+- scoped to the household; no per-member scoping unless the list has explicit member association
 
 Imported external entry fields include:
 

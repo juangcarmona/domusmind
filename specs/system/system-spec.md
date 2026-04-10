@@ -155,8 +155,12 @@ Shared Lists does not overlap with:
 - remove-shared-list-item
 - toggle-shared-list-item
 - reorder-shared-list-items
+- set-item-importance
+- set-item-temporal
+- clear-item-temporal
 - get-family-shared-lists
 - get-shared-list-detail
+- get-temporal-items-for-agenda (projection query)
 
 ---
 

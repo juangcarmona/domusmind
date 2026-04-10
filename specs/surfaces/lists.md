@@ -532,3 +532,58 @@ The following behaviors are explicitly rejected for the Lists surface.
 - forcing context linkage as a required step
 - importing full assignment and status lifecycle from Tasks
 - exposing steps, comments, or attachments (deferred)
+
+---
+
+## UX Grammar — Lists Surface (Locked)
+
+This section locks the visual grammar for list item states. All implementations must conform.
+
+### Row states
+
+| State                             | Visual treatment                          |
+| --------------------------------- | ----------------------------------------- |
+| Base (name only)                  | title, toggle circle                      |
+| Importance = true                 | star icon on trailing edge, filled        |
+| Importance = false                | star icon on trailing edge, unfilled      |
+| Has due date (not overdue)        | small date cue below title                |
+| Has due date (overdue)            | date cue in accent warning color          |
+| Has reminder                      | small bell icon alongside date cue        |
+| Checked                           | title struck through, row de-emphasized   |
+
+Row height must remain compact in all states.
+No state causes a row to expand without user selection.
+
+### Icon for temporal state in row
+
+Use a minimal inline cue below the title for temporal fields.
+Do not use large badge or chip layout.
+Use secondary text style.
+
+Example cue: `Apr 12 · 09:00 ⏰`
+
+### Inspector icons
+
+| Section    | Icon                        |
+| ---------- | --------------------------- |
+| Importance | ☆ / ★ (star, toggle)        |
+| Due date   | calendar                    |
+| Reminder   | bell                        |
+| Repeat     | refresh/cycle               |
+| Quantity   | hash / number               |
+| Note       | text block                  |
+| Remove     | trash                       |
+
+### Edit path
+
+**The only way to edit a list item is through the Lists surface.**
+
+A projected list item appearing in Agenda:
+
+- opens a read-only inspector or bottom sheet when selected
+- shows title, due date, checked state, list name
+- provides a single action: `Open in Lists`
+- does NOT provide an edit affordance in Agenda
+- does NOT expand into the full inspector
+
+This path is non-negotiable. Violating it breaks the ownership model.

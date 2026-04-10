@@ -469,3 +469,65 @@ Do not:
 - apply different visual grammar between household and member scope unless the time mode genuinely requires it
 - make Month the default view — it is navigation, not operational
 - hide the scope selector on mobile behind an extra tap
+- allow editing of a projected list item from Agenda (edit path is always via Lists)
+- render a projected list item using task visual grammar (they must be visually distinguishable)
+- omit the `Open in Lists` action from a projected list item inspector
+
+---
+
+## UX Grammar — List Items in Agenda (Locked)
+
+This section locks the visual treatment for projected list items in all Agenda views.
+
+### Identity markers
+
+Projected list items must be distinguishable from tasks and plans in all views.
+
+| Entry type        | Glyph | Distinguishing visual                   |
+| ----------------- | ----- | --------------------------------------- |
+| Task              | □     | checkbox affordance                     |
+| Plan              | ●     | filled dot + time label                 |
+| Routine           | ⟳     | cycle icon                              |
+| List item (⭐)    | ☆     | star + list cue (importance = true)     |
+| List item (plain) | ◇     | diamond + list cue (importance = false) |
+
+### List-origin cue
+
+Every projected list item must show a secondary list-origin cue:
+
+- list name in secondary text style, OR
+- small list icon
+
+This cue must be visible even in collapsed row states.
+Users must always know a projected item comes from a list, not a task.
+
+### Inspector content for projected list items
+
+The inspector for a selected projected list item shows:
+
+1. Type label: `List Item`
+2. List-origin cue: `From: [List Name]`
+3. Title (read-only)
+4. Due date or reminder (read-only)
+5. Checked state (read-only indicator)
+6. Importance (read-only star)
+7. Note if present (read-only)
+8. Single CTA: `Open in Lists` — navigates to the item in the Lists surface
+
+The inspector must NOT include:
+
+- edit controls
+- status change controls
+- date pickers
+- delete action
+
+All modifications go through Lists. This is non-negotiable.
+
+### Checked state in Agenda
+
+A projected list item that is checked (done) but still falls within the active date window:
+
+- remains visible in the de-emphasized section (same as completed tasks)
+- title is struck through
+- glyph changes to `✓`
+- does not disappear from the projection until its temporal fields are cleared or removed

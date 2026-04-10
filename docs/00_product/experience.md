@@ -123,22 +123,23 @@ Agenda must be:
 
 ## Lists
 
-Lists are reusable household memory containers.
+Lists are reusable household execution containers.
 
 They answer:
 
-> What should be remembered, bought, checked, or prepared next time?
+> What should be remembered, bought, checked, prepared, or done next time?
 
-Lists own grouped memory.
-They are not a task manager, not a calendar, and not a scheduling system.
+Lists own household capture and flexible execution.
+They are not a full task management system and do not replace Calendar.
 
-A list item is not a task by default.
-A list linked to a plan does not become part of Agenda.
-A plan may reference a list — but that reference does not convert list items into scheduled work or execution units.
+A list item is not a task.
+A list item may carry importance and temporal fields (due date, reminder, repeat).
+Items with temporal fields project into the Agenda surface as a distinct entry type.
+A list linked to a plan remains a list. Linking does not cause all items to project.
 
 Lists must be:
 
-- grouped by context, not by time
+- grouped by context or purpose
 - independent objects — able to exist without links to plans or areas
 - persistent across uses
 - reusable by design
@@ -149,16 +150,17 @@ Lists exist for:
 - packing
 - preparation
 - restocking
+- school preparation with due dates
 - any recurring household collection
 
 The four axes of DomusMind must remain strictly separate:
 
 | Surface | Owns |
 | ------- | ---- |
-| Agenda | Time |
-| Tasks | Execution |
+| Agenda | Time (source of truth) |
+| Tasks | Structured execution lifecycle |
 | Areas | Ownership |
-| Lists | Grouped memory |
+| Lists | Household execution container (capture → action → time reference) |
 
 They should feel:
 

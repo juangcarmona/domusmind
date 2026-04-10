@@ -56,15 +56,17 @@ It captures actionable work and recurring operational activity.
 
 ### Shared Lists
 
-Shared Lists provides persistent grouped household memory through reusable lists and checklist state.
+Shared Lists provides the household execution container: reusable, flexible lists whose items range from simple memory to actionable, time-aware entries.
 
-It captures what the household needs to remember, buy, check, or prepare — grouped by context or purpose, not by time.
+It captures what the household needs to remember, buy, check, prepare, or act on — grouped by context or purpose.
 
-Shared Lists is independent from task execution and from scheduling.
-List items are not tasks.
-A list linked to a calendar event retains list semantics — it does not inherit scheduling or execution behavior from that link.
+List items support a progressive capability model: base state (name, checked, quantity, note), importance, and temporal fields (due date, reminder, repeat).
+List items with temporal fields project into the Agenda surface as a distinct entry type.
 
-Shared Lists is the household's reusable memory layer.
+List items are not tasks. A task carries structured execution semantics (assignment, lifecycle state) that list items do not require.
+A list linked to a calendar event retains list semantics — linking does not cause items to inherit scheduling behavior.
+
+Shared Lists is the household's primary capture and flexible execution layer.
 
 ---
 
@@ -76,7 +78,7 @@ The collaboration model is intentionally simple.
 - Responsibilities, Calendar, Tasks, and Shared Lists depend on Family identifiers.
 - Tasks may react to Calendar and Responsibilities events.
 - Shared Lists may reference responsibilities or calendar entities when contextually useful.
-- Shared Lists remains strictly independent from task execution and scheduling semantics. A link to a calendar entity does not change the nature of a list or its items.
+- Shared Lists does not own time. Items may carry temporal references (due date, reminder) which project into Agenda. Modifying temporal fields on an item does not create Calendar or Task records.
 
 Contexts collaborate through identifiers and domain events.
 
@@ -110,6 +112,6 @@ In the current documented system shape, that means:
 - responsibility is explicit
 - time is explicit
 - execution is explicit
-- shared household grouped memory is explicit and independent from scheduling and execution
+- shared household execution containers (lists) are explicit, with progressive item capabilities including temporal projection into Agenda
 
 The result is a clearer and more coherent operational model for the household.

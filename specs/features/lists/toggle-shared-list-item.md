@@ -60,5 +60,6 @@ Required:
 
 - Toggle is binary. There are no intermediate states, workflows, or transitions.
 - Checking an item does not remove it. Items remain in the list after being checked.
-- Toggle has no side effects outside the list. It does not create tasks, trigger Agenda entries, or emit cross-context events.
-- Items must not acquire due dates, assignment, or priority through this operation.
+- Toggle has no side effects outside the list. It does not create tasks or emit cross-context events.
+- A checked item with temporal fields remains valid and continues to project into Agenda in a de-emphasized state. Toggle does not clear temporal fields.
+- Toggle does not add or remove importance or temporal data. Use dedicated commands for those.

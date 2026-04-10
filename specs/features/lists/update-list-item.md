@@ -66,8 +66,9 @@ At least one of the following must be provided:
 
 ## Constraints
 
-- Only name, quantity, and note are editable through this command. These are the full item model.
+- This command handles base field updates only: name, quantity, note.
 - Checked state is not modified by this command. Use `ToggleSharedListItem` for state changes.
 - Order is not modified by this command.
-- No new fields may be introduced here. Due dates, reminders, assignees, priority, and recurrence must not be added.
-- This command does not affect the list's relationship with Agenda or Areas.
+- Importance is not modified by this command. Use `SetSharedListItemImportance`.
+- Temporal fields (due date, reminder, repeat) are not modified by this command. Use `SetSharedListItemTemporal` or `ClearSharedListItemTemporal`.
+- Assignment is not a list item field and must never be introduced here.

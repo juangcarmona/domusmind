@@ -4,7 +4,7 @@
 
 Provide a unified chronological view of household activity.
 
-The timeline aggregates **events** and **tasks** for a family.
+The timeline aggregates events, tasks, and projected list items for a family.
 
 ## Context
 
@@ -38,6 +38,7 @@ The timeline read model may include:
 * upcoming tasks
 * recently completed tasks
 * routine-generated tasks
+* projected list items: SharedList items with temporal fields (dueDate or reminder) falling within the requested window
 
 The phase 1 timeline does **not** include imported external calendar entries.
 Those entries are projected only into the member-scoped Agenda read model.
@@ -54,11 +55,14 @@ Participant filtering may match any participant associated with an event or task
 
 Each timeline item includes:
 
-* `type` (`event | task`)
+* `type` (`event | task | list-item`)
 * `title`
 * `time`
 * `participants`
 * `status`
+* `importance` (for list-item type only)
+* `listId` (for list-item type only)
+* `listName` (for list-item type only)
 
 Participant display data should be richer than raw IDs.
 
