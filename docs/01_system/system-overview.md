@@ -56,9 +56,15 @@ It captures actionable work and recurring operational activity.
 
 ### Shared Lists
 
-Shared Lists provides reusable household lists, checklist state, and lightweight shared capture.
+Shared Lists provides persistent grouped household memory through reusable lists and checklist state.
 
-It supports persistent shared coordination without becoming a scheduling or execution model by itself.
+It captures what the household needs to remember, buy, check, or prepare — grouped by context or purpose, not by time.
+
+Shared Lists is independent from task execution and from scheduling.
+List items are not tasks.
+A list linked to a calendar event retains list semantics — it does not inherit scheduling or execution behavior from that link.
+
+Shared Lists is the household's reusable memory layer.
 
 ---
 
@@ -69,8 +75,8 @@ The collaboration model is intentionally simple.
 - Family is the upstream identity provider.
 - Responsibilities, Calendar, Tasks, and Shared Lists depend on Family identifiers.
 - Tasks may react to Calendar and Responsibilities events.
-- Shared Lists may reference responsibilities or calendar entities when useful.
-- Shared Lists remains independent from task execution and scheduling semantics.
+- Shared Lists may reference responsibilities or calendar entities when contextually useful.
+- Shared Lists remains strictly independent from task execution and scheduling semantics. A link to a calendar entity does not change the nature of a list or its items.
 
 Contexts collaborate through identifiers and domain events.
 
@@ -104,6 +110,6 @@ In the current documented system shape, that means:
 - responsibility is explicit
 - time is explicit
 - execution is explicit
-- shared household list state is explicit
+- shared household grouped memory is explicit and independent from scheduling and execution
 
 The result is a clearer and more coherent operational model for the household.

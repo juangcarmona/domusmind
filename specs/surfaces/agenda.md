@@ -275,6 +275,22 @@ Month is a navigation and awareness surface, not a primary editing surface.
 - external entries should be omitted when they fall outside the selected date or mode window, even if stored locally
 - stale connections may trigger a lightweight catch-up sync when Agenda opens
 
+### Lists in Agenda
+
+A plan may have a related list.
+
+When it does, Agenda may surface a compact reference cue on the plan — showing the list name and unchecked item count.
+
+Rules:
+
+- Agenda shows the list as a reference only, never as expanded content
+- Agenda does not render list items in the timeline or board
+- Agenda does not convert list items to tasks
+- selecting the list cue navigates to the Lists surface
+- the list retains list semantics regardless of the link
+
+A list linked to a plan is still a list. Agenda does not own it and does not alter it.
+
 ### What Agenda does not own
 
 - list items (belongs to Lists)

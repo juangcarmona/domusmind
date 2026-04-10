@@ -146,6 +146,7 @@ DomusMind is differentiated by a small set of product truths:
 - The product is timeline-first and today-first. The main question is what matters now, not what features exist.
 - Capture must stay easier than remembering, or adoption fails.
 - Anticipation matters more than reaction. The system should help the household see pressure before it turns into friction.
+- Lists are reusable grouped memory, not task tracking. They reduce mental load by persisting what the household needs to remember — without collapsing into a task manager or a calendar.
 
 ---
 

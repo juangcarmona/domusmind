@@ -167,6 +167,10 @@ Areas may show:
 - linked counts for plans, tasks, or lists
 - ownership-gap status
 
+Lists linked to an area represent contextual memory for that area.
+They are not a workload view and not an execution surface.
+Their presence as a count cue signals what the household is tracking in that area's context.
+
 Participant detail is secondary.
 Show it in the inspector or secondary metadata only when it materially helps understanding.
 

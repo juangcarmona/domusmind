@@ -123,11 +123,42 @@ Agenda must be:
 
 ## Lists
 
-Lists are the reusable shared-state surface.
+Lists are reusable household memory containers.
 
 They answer:
 
 > What should be remembered, bought, checked, or prepared next time?
+
+Lists own grouped memory.
+They are not a task manager, not a calendar, and not a scheduling system.
+
+A list item is not a task by default.
+A list linked to a plan does not become part of Agenda.
+A plan may reference a list — but that reference does not convert list items into scheduled work or execution units.
+
+Lists must be:
+
+- grouped by context, not by time
+- independent objects — able to exist without links to plans or areas
+- persistent across uses
+- reusable by design
+
+Lists exist for:
+
+- groceries
+- packing
+- preparation
+- restocking
+- any recurring household collection
+
+The four axes of DomusMind must remain strictly separate:
+
+| Surface | Owns |
+| ------- | ---- |
+| Agenda | Time |
+| Tasks | Execution |
+| Areas | Ownership |
+| Lists | Grouped memory |
 
 They should feel:
 
@@ -136,8 +167,6 @@ They should feel:
 - row-based
 - low-ceremony
 - shared
-
-Lists are not a task manager and not a calendar.
 
 ## Areas
 
