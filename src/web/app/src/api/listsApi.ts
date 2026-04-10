@@ -17,10 +17,10 @@ import type {
   RenameSharedListRequest,
   RenameSharedListResponse,
   ReorderSharedListItemsRequest,
-} from "./types/sharedListTypes";
+} from "./types/listTypes";
 
-export const sharedListsApi = {
-  getFamilySharedLists: (familyId: string) =>
+export const listsApi = {
+  getFamilyLists: (familyId: string) =>
     request<GetFamilySharedListsResponse>(`/api/shared-lists/family/${familyId}`),
 
   getSharedListDetail: (listId: string) =>

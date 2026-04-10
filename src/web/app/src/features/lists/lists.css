@@ -902,3 +902,133 @@
   color: var(--muted);
   flex-shrink: 0;
 }
+
+/* ---- Item selected state ---- */
+.shared-list-item--selected {
+  background: color-mix(in srgb, var(--primary) 8%, var(--surface));
+}
+
+.shared-list-item--selected .shared-list-item__name {
+  color: var(--primary);
+}
+
+/* ---- Checkbox button wrapper ---- */
+.shared-list-item__checkbox-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.shared-list-item__checkbox-btn .shared-list-item__checkbox {
+  pointer-events: none;
+}
+
+/* ---- Inline metadata hint inside the row (compact) ---- */
+.shared-list-item__meta-hint {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  margin-left: 0.35rem;
+}
+
+/* ---- Desktop: always-visible quick add bar ---- */
+.lists-quick-add-bar {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+}
+
+.lists-quick-add-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.95rem;
+  color: var(--text);
+  padding: 0.2rem 0;
+  font-family: inherit;
+}
+
+.lists-quick-add-input::placeholder {
+  color: var(--muted);
+}
+
+.lists-quick-add-input:focus {
+  border-bottom: 1px solid var(--primary);
+}
+
+/* ---- Inspector editable fields ---- */
+.lists-inspector-name-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  outline: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  padding: 0.25rem 0;
+  width: 100%;
+  font-family: inherit;
+}
+
+.lists-inspector-name-input:focus {
+  border-bottom-color: var(--primary);
+}
+
+.lists-inspector-field-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.lists-inspector-field-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  outline: none;
+  font-size: 0.875rem;
+  color: var(--text);
+  padding: 0.2rem 0;
+  width: 100%;
+  font-family: inherit;
+}
+
+.lists-inspector-field-input:focus {
+  border-bottom-color: var(--primary);
+}
+
+.lists-inspector-field-textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  outline: none;
+  font-size: 0.875rem;
+  color: var(--text);
+  padding: 0.2rem 0;
+  width: 100%;
+  font-family: inherit;
+  resize: none;
+}
+
+.lists-inspector-field-textarea:focus {
+  border-bottom-color: var(--primary);
+}
+
+.lists-inspector-saving {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+}

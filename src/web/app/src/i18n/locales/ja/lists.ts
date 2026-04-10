@@ -59,4 +59,11 @@ export default {
   reorderMode: "並び替え",
   exitReorder: "完了",
   reorderHint: "ドラッグして順序を変更",
+  itemName: "アイテム名",
+  checkItem: "チェック",
+  uncheckItem: "チェック解除",
+  markChecked: "完了としてマーク",
+  markUnchecked: "未完了としてマーク",
+  selectItemHint: "アイテムを選択して詳細を表示",
+  noListSelected: "リストが選択されていません",
 } as const;

@@ -7,7 +7,7 @@ import tasksReducer from "./tasksSlice";
 import routinesReducer from "./routinesSlice";
 import languagesReducer from "./languagesSlice";
 import uiReducer from "./uiSlice";
-import sharedListsReducer from "./sharedListsSlice";
+import listsReducer from "./listsSlice";
 import externalCalendarReducer from "./externalCalendarSlice";
 
 export const store = configureStore({
@@ -20,7 +20,7 @@ export const store = configureStore({
     routines: routinesReducer,
     languages: languagesReducer,
     ui: uiReducer,
-    sharedLists: sharedListsReducer,
+    lists: listsReducer,
     externalCalendar: externalCalendarReducer,
   },
 });

@@ -59,4 +59,11 @@ export default {
   reorderMode: "Neu anordnen",
   exitReorder: "Fertig",
   reorderHint: "Elemente ziehen, um die Reihenfolge zu ändern",
+  itemName: "Elementname",
+  checkItem: "Abhaken",
+  uncheckItem: "Abhaken rückgängig",
+  markChecked: "Als erledigt markieren",
+  markUnchecked: "Als nicht erledigt markieren",
+  selectItemHint: "Element auswählen, um Details anzuzeigen",
+  noListSelected: "Keine Liste ausgewählt",
 } as const;

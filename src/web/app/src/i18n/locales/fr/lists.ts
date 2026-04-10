@@ -57,4 +57,11 @@ export default {
   createChecklistName: "Nom de la nouvelle liste",
   reorderMode: "Réorganiser",
   exitReorder: "Terminé",
-  reorderHint: "Faites glisser pour changer l'ordre",} as const;
+  reorderHint: "Faites glisser pour changer l'ordre",  itemName: "Nom de l'élément",
+  checkItem: "Cocher",
+  uncheckItem: "Décocher",
+  markChecked: "Marquer comme fait",
+  markUnchecked: "Marquer comme non fait",
+  selectItemHint: "Sélectionner un élément pour voir les détails",
+  noListSelected: "Aucune liste sélectionnée",
+} as const;

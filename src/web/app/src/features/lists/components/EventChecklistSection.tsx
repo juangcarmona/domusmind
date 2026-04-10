@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback, type KeyboardEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../store/hooks";
-import { unlinkSharedList } from "../../../store/sharedListsSlice";
-import { sharedListsApi } from "../../../api/sharedListsApi";
-import type { GetSharedListByLinkedEntityResponse } from "../../../api/types/sharedListTypes";
+import { unlinkSharedList } from "../../../store/listsSlice";
+import { listsApi } from "../../../api/listsApi";
+import type { GetSharedListByLinkedEntityResponse } from "../../../api/types/listTypes";
 import { AttachChecklistSelector } from "./AttachChecklistSelector";
 
 interface EventChecklistSectionProps {
@@ -13,7 +13,7 @@ interface EventChecklistSectionProps {
 }
 
 export function EventChecklistSection({ eventId, familyId }: EventChecklistSectionProps) {
-  const { t } = useTranslation("sharedLists");
+  const { t } = useTranslation("lists");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -29,7 +29,7 @@ export function EventChecklistSection({ eventId, familyId }: EventChecklistSecti
   const loadLinked = useCallback(async () => {
     setLoadingLinked(true);
     try {
-      const result = await sharedListsApi.getSharedListByLinkedEntity("CalendarEvent", eventId);
+      const result = await listsApi.getSharedListByLinkedEntity("CalendarEvent", eventId);
       setLinked(result);
     } catch (err) {
       // 404 = no list linked — this is a normal empty state, not an error.
@@ -49,7 +49,7 @@ export function EventChecklistSection({ eventId, familyId }: EventChecklistSecti
     setCreating(true);
     setError(null);
     try {
-      const result = await sharedListsApi.createLinkedSharedListForEvent(eventId, {
+      const result = await listsApi.createLinkedSharedListForEvent(eventId, {
         familyId,
         name: name?.trim() || undefined,
       });

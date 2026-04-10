@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import type { SharedListSummary } from "../../../api/types/sharedListTypes";
+import type { SharedListSummary } from "../../../api/types/listTypes";
 
 interface ListSwitcherPaneProps {
   lists: SharedListSummary[];
@@ -23,7 +23,7 @@ export function ListSwitcherPane({
   onSelect,
   onNewList,
 }: ListSwitcherPaneProps) {
-  const { t } = useTranslation("sharedLists");
+  const { t } = useTranslation("lists");
 
   return (
     <aside className="list-switcher-pane">

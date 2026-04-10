@@ -57,4 +57,11 @@ export default {
   createChecklistName: "Nome della nuova lista",
   reorderMode: "Riorganizza",
   exitReorder: "Fatto",
-  reorderHint: "Trascina per cambiare l'ordine",} as const;
+  reorderHint: "Trascina per cambiare l'ordine",  itemName: "Nome elemento",
+  checkItem: "Spunta",
+  uncheckItem: "Rimuovi spunta",
+  markChecked: "Segna come fatto",
+  markUnchecked: "Segna come non fatto",
+  selectItemHint: "Seleziona un elemento per vedere i dettagli",
+  noListSelected: "Nessuna lista selezionata",
+} as const;

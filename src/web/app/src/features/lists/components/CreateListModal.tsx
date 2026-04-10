@@ -1,20 +1,19 @@
 import { useState, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { createSharedList } from "../../../store/sharedListsSlice";
+import { createSharedList } from "../../../store/listsSlice";
 
-interface CreateSharedListModalProps {
+interface CreateListModalProps {
   onClose: () => void;
 }
 
-export function CreateSharedListModal({ onClose }: CreateSharedListModalProps) {
-  const { t } = useTranslation("sharedLists");
+export function CreateListModal({ onClose }: CreateListModalProps) {
+  const { t } = useTranslation("lists");
   const { t: tCommon } = useTranslation("common");
   const dispatch = useAppDispatch();
   const familyId = useAppSelector((s) => s.household.family?.familyId);
 
   const [name, setName] = useState("");
-  const [kind, setKind] = useState("General");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,7 +22,7 @@ export function CreateSharedListModal({ onClose }: CreateSharedListModalProps) {
     if (!name.trim() || !familyId) return;
     setSubmitting(true);
     setError(null);
-    const result = await dispatch(createSharedList({ familyId, name: name.trim(), kind }));
+    const result = await dispatch(createSharedList({ familyId, name: name.trim(), kind: "General" }));
     setSubmitting(false);
     if (createSharedList.fulfilled.match(result)) {
       onClose();
@@ -49,19 +48,6 @@ export function CreateSharedListModal({ onClose }: CreateSharedListModalProps) {
               autoFocus
               placeholder={t("namePlaceholder")}
             />
-          </div>
-          <div className="form-group">
-            <label htmlFor="list-kind-select">{t("kindLabel")}</label>
-            <select
-              id="list-kind-select"
-              className="form-control"
-              value={kind}
-              onChange={(e) => setKind(e.target.value)}
-            >
-              <option value="General">{t("kindGeneral")}</option>
-              <option value="Groceries">{t("kindGroceries")}</option>
-              <option value="Packing">{t("kindPacking")}</option>
-            </select>
           </div>
           {error && <p className="error-msg">{error}</p>}
           <div className="modal-footer">

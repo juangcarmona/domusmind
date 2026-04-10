@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import { linkSharedListToEvent } from "../../../store/sharedListsSlice";
+import { linkSharedListToEvent } from "../../../store/listsSlice";
 
 interface AttachChecklistSelectorProps {
   eventId: string;
@@ -18,9 +18,9 @@ export function AttachChecklistSelector({
   onAttached,
   onCancel,
 }: AttachChecklistSelectorProps) {
-  const { t } = useTranslation("sharedLists");
+  const { t } = useTranslation("lists");
   const dispatch = useAppDispatch();
-  const lists = useAppSelector((s) => s.sharedLists.lists);
+  const lists = useAppSelector((s) => s.lists.lists);
 
   const [selectedId, setSelectedId] = useState("");
   const [attaching, setAttaching] = useState(false);

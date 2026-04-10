@@ -1,15 +1,25 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { ItemRow } from "./ItemRow";
-import type { SharedListItemDetail } from "../../../api/types/sharedListTypes";
+import type { SharedListItemDetail } from "../../../api/types/listTypes";
 
 interface SortableItemRowProps {
   item: SharedListItemDetail;
   listId: string;
   reorderMode?: boolean;
+  selectedItemId?: string | null;
+  onSelect?: (item: SharedListItemDetail, listId: string) => void;
+  onToggle?: (item: SharedListItemDetail) => void;
 }
 
-export function SortableItemRow({ item, listId, reorderMode = false }: SortableItemRowProps) {
+export function SortableItemRow({
+  item,
+  listId,
+  reorderMode = false,
+  selectedItemId,
+  onSelect,
+  onToggle,
+}: SortableItemRowProps) {
   const {
     attributes,
     listeners,
@@ -34,6 +44,9 @@ export function SortableItemRow({ item, listId, reorderMode = false }: SortableI
         item={item}
         listId={listId}
         reorderMode={reorderMode}
+        selectedItemId={selectedItemId}
+        onSelect={onSelect}
+        onToggle={onToggle}
         dragHandleProps={reorderMode ? { ...listeners, ...attributes } : undefined}
       />
     </div>

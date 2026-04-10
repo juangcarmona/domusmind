@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
-import { sharedListsApi } from "../api/sharedListsApi";
+import { listsApi } from "../api/listsApi";
 import type {
   SharedListSummary,
   SharedListItemDetail,
   GetSharedListDetailResponse,
-} from "../api/types/sharedListTypes";
+} from "../api/types/listTypes";
 
 // ── State ────────────────────────────────────────────────────────────────────
 
@@ -43,7 +43,7 @@ export const fetchFamilySharedLists = createAsyncThunk(
   "sharedLists/fetchAll",
   async (familyId: string, { rejectWithValue }) => {
     try {
-      const res = await sharedListsApi.getFamilySharedLists(familyId);
+      const res = await listsApi.getFamilyLists(familyId);
       return res.lists;
     } catch (err: unknown) {
       return rejectWithValue(
@@ -57,7 +57,7 @@ export const fetchSharedListDetail = createAsyncThunk(
   "sharedLists/fetchDetail",
   async (listId: string, { rejectWithValue }) => {
     try {
-      return await sharedListsApi.getSharedListDetail(listId);
+      return await listsApi.getSharedListDetail(listId);
     } catch (err: unknown) {
       return rejectWithValue(
         (err as { message?: string }).message ?? "Failed to load list detail",
@@ -73,7 +73,7 @@ export const createSharedList = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      return await sharedListsApi.createSharedList({ familyId, name, kind });
+      return await listsApi.createSharedList({ familyId, name, kind });
     } catch (err: unknown) {
       return rejectWithValue(
         (err as { message?: string }).message ?? "Failed to create list",
@@ -89,7 +89,7 @@ export const addItemToSharedList = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      return await sharedListsApi.addItemToSharedList(listId, { name });
+      return await listsApi.addItemToSharedList(listId, { name });
     } catch (err: unknown) {
       return rejectWithValue(
         (err as { message?: string }).message ?? "Failed to add item",
@@ -105,7 +105,7 @@ export const toggleSharedListItem = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      return await sharedListsApi.toggleSharedListItem(listId, itemId, {});
+      return await listsApi.toggleSharedListItem(listId, itemId, {});
     } catch (err: unknown) {
       return rejectWithValue(
         (err as { message?: string }).message ?? "Failed to toggle item",
@@ -121,7 +121,7 @@ export const updateSharedListItem = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      return await sharedListsApi.updateSharedListItem(listId, itemId, { name, quantity, note });
+      return await listsApi.updateSharedListItem(listId, itemId, { name, quantity, note });
     } catch (err: unknown) {
       return rejectWithValue(
         (err as { message?: string }).message ?? "Failed to update item",
@@ -137,7 +137,7 @@ export const removeSharedListItem = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      await sharedListsApi.removeSharedListItem(listId, itemId);
+      await listsApi.removeSharedListItem(listId, itemId);
       return { listId, itemId };
     } catch (err: unknown) {
       return rejectWithValue(
@@ -154,7 +154,7 @@ export const renameSharedList = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      return await sharedListsApi.renameSharedList(listId, { name });
+      return await listsApi.renameSharedList(listId, { name });
     } catch (err: unknown) {
       return rejectWithValue(
         (err as { message?: string }).message ?? "Failed to rename list",
@@ -167,7 +167,7 @@ export const deleteSharedList = createAsyncThunk(
   "sharedLists/delete",
   async (listId: string, { rejectWithValue }) => {
     try {
-      await sharedListsApi.deleteSharedList(listId);
+      await listsApi.deleteSharedList(listId);
       return listId;
     } catch (err: unknown) {
       return rejectWithValue(
@@ -184,7 +184,7 @@ export const linkSharedListToEvent = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      return await sharedListsApi.linkSharedList(listId, {
+      return await listsApi.linkSharedList(listId, {
         linkedEntityType: "CalendarEvent",
         linkedEntityId: eventId,
       });
@@ -200,7 +200,7 @@ export const unlinkSharedList = createAsyncThunk(
   "sharedLists/unlink",
   async (listId: string, { rejectWithValue }) => {
     try {
-      await sharedListsApi.unlinkSharedList(listId);
+      await listsApi.unlinkSharedList(listId);
       return listId;
     } catch (err: unknown) {
       return rejectWithValue(
@@ -217,7 +217,7 @@ export const reorderSharedListItems = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      await sharedListsApi.reorderSharedListItems(listId, { itemIds });
+      await listsApi.reorderSharedListItems(listId, { itemIds });
       return { itemIds };
     } catch (err: unknown) {
       return rejectWithValue(
@@ -229,8 +229,8 @@ export const reorderSharedListItems = createAsyncThunk(
 
 // ── Slice ────────────────────────────────────────────────────────────────────
 
-const sharedListsSlice = createSlice({
-  name: "sharedLists",
+const listsSlice = createSlice({
+  name: "lists",
   initialState,
   reducers: {
     // Optimistic toggle: flip item checked state immediately in detail
@@ -427,5 +427,5 @@ const sharedListsSlice = createSlice({
   },
 });
 
-export const { optimisticToggleItem, optimisticRenameItem, optimisticRemoveItem, optimisticReorderItems, clearDetail } = sharedListsSlice.actions;
-export default sharedListsSlice.reducer;
+export const { optimisticToggleItem, optimisticRenameItem, optimisticRemoveItem, optimisticReorderItems, clearDetail } = listsSlice.actions;
+export default listsSlice.reducer;

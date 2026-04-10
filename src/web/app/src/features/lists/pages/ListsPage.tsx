@@ -1,6 +1,5 @@
-// Phase 3: SharedListsPage is the canonical split-view Shared Lists surface.
-// It replaces the old index-only page and absorbs the detail view from SharedListDetailPage.
-// /lists       — enters surface, auto-selects first list
+// Lists surface — canonical split-view surface for household lists.
+// /lists         — enters surface, auto-selects first list
 // /lists/:listId — deep-link entry, pre-selects the specified list
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
@@ -18,16 +17,18 @@ import {
   deleteSharedList,
   optimisticToggleItem,
   toggleSharedListItem,
-} from "../../../store/sharedListsSlice";
+  optimisticRenameItem,
+  updateSharedListItem,
+} from "../../../store/listsSlice";
 import { useIsMobile } from "../../../hooks/useIsMobile";
 import { InspectorPanel } from "../../../components/InspectorPanel";
 import { BottomSheetDetail } from "../../../components/BottomSheetDetail";
 import { ListSwitcherPane } from "../components/ListSwitcherPane";
-import { CreateSharedListModal } from "../components/CreateSharedListModal";
+import { CreateListModal } from "../components/CreateListModal";
 import { SortableItemRow } from "../components/SortableItemRow";
 import { ItemRow } from "../components/ItemRow";
 import { EditEntityModal } from "../../editors/components/EditEntityModal";
-import type { SharedListItemDetail } from "../../../api/types/sharedListTypes";
+import type { SharedListItemDetail } from "../../../api/types/listTypes";
 import {
   DndContext,
   closestCenter,
@@ -38,7 +39,7 @@ import {
   verticalListSortingStrategy,
   arrayMove,
 } from "@dnd-kit/sortable";
-import "../shared-lists.css";
+import "../lists.css";
 
 /** Item selected for inspector / bottom-sheet detail */
 interface SelectedItem {
@@ -46,25 +47,23 @@ interface SelectedItem {
   listId: string;
 }
 
-export function SharedListsPage() {
-  // Route param: may be undefined for /lists, or a listId for /lists/:listId
+export function ListsPage() {
   const { listId: routeListId } = useParams<{ listId?: string }>();
 
-  const { t } = useTranslation("sharedLists");
+  const { t } = useTranslation("lists");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
   const familyId = useAppSelector((s) => s.household.family?.familyId);
-  const lists = useAppSelector((s) => s.sharedLists.lists);
-  const listsStatus = useAppSelector((s) => s.sharedLists.listsStatus);
-  const detail = useAppSelector((s) => s.sharedLists.detail);
-  const detailStatus = useAppSelector((s) => s.sharedLists.detailStatus);
+  const lists = useAppSelector((s) => s.lists.lists);
+  const listsStatus = useAppSelector((s) => s.lists.listsStatus);
+  const detail = useAppSelector((s) => s.lists.detail);
+  const detailStatus = useAppSelector((s) => s.lists.detailStatus);
 
   // Active list id: prefer route param on first mount, then switcher selection
   const [activeListId, setActiveListId] = useState<string | null>(routeListId ?? null);
 
-  // Surface-level UI state
   const [showCreate, setShowCreate] = useState(false);
   const [showSwitcherSheet, setShowSwitcherSheet] = useState(false);
   const [checkedCollapsed, setCheckedCollapsed] = useState(false);
@@ -76,9 +75,16 @@ export function SharedListsPage() {
   const [showLinkedEvent, setShowLinkedEvent] = useState(false);
   const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null);
   const [reorderMode, setReorderMode] = useState(false);
-  const [showAddComposer, setShowAddComposer] = useState(false);
+  const [showMobileAdd, setShowMobileAdd] = useState(false);
+
+  // Inspector editing drafts — synced when selected item changes
+  const [inspectorNameDraft, setInspectorNameDraft] = useState("");
+  const [inspectorQtyDraft, setInspectorQtyDraft] = useState("");
+  const [inspectorNoteDraft, setInspectorNoteDraft] = useState("");
+  const [inspectorSaving, setInspectorSaving] = useState(false);
 
   const addInputRef = useRef<HTMLInputElement>(null);
+  const desktopAddRef = useRef<HTMLInputElement>(null);
 
   // ---- Load list index ----
   useEffect(() => {
@@ -94,7 +100,7 @@ export function SharedListsPage() {
     }
   }, [lists, activeListId]);
 
-  // ---- Sync route param if it changes (deep-link navigation) ----
+  // ---- Sync route param (deep-link) ----
   useEffect(() => {
     if (routeListId && routeListId !== activeListId) {
       setActiveListId(routeListId);
@@ -112,29 +118,89 @@ export function SharedListsPage() {
       setRenameError(null);
       setSelectedItem(null);
       setReorderMode(false);
-      setShowAddComposer(false);
     } else {
       dispatch(clearDetail());
     }
   }, [activeListId, dispatch]);
 
+  // ---- Sync inspector drafts when selected item changes ----
+  useEffect(() => {
+    if (selectedItem) {
+      setInspectorNameDraft(selectedItem.item.name);
+      setInspectorQtyDraft(selectedItem.item.quantity ?? "");
+      setInspectorNoteDraft(selectedItem.item.note ?? "");
+    }
+  }, [selectedItem?.item.itemId]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // ---- Switcher selection ----
   function handleSelectList(listId: string) {
     setActiveListId(listId);
     setShowSwitcherSheet(false);
-    setShowAddComposer(false);
     setReorderMode(false);
-    // When a deep-link brought us here, collapse the route back to /lists
     if (routeListId) {
       navigate("/lists", { replace: true });
     }
   }
 
-  // ---- Add item ----
-  async function handleAddKey(e: KeyboardEvent<HTMLInputElement>) {
+  // ---- Item selection ----
+  function handleSelectItem(item: SharedListItemDetail, listId: string) {
+    if (reorderMode) return;
+    setSelectedItem((prev) =>
+      prev?.item.itemId === item.itemId ? null : { item, listId },
+    );
+  }
+
+  // ---- Inspector save ----
+  async function commitInspectorChanges() {
+    if (!selectedItem || !activeListId) return;
+    const newName = inspectorNameDraft.trim();
+    const newQty = inspectorQtyDraft.trim() || null;
+    const newNote = inspectorNoteDraft.trim() || null;
+    const { item } = selectedItem;
+    const nameChanged = newName && newName !== item.name;
+    const metaChanged = newQty !== (item.quantity ?? null) || newNote !== (item.note ?? null);
+    if (!nameChanged && !metaChanged) return;
+    setInspectorSaving(true);
+    if (nameChanged) {
+      dispatch(optimisticRenameItem({ itemId: item.itemId, name: newName }));
+    }
+    await dispatch(
+      updateSharedListItem({
+        listId: activeListId,
+        itemId: item.itemId,
+        name: newName || item.name,
+        quantity: newQty,
+        note: newNote,
+      }),
+    );
+    setInspectorSaving(false);
+  }
+
+  // ---- Add item (desktop always-visible bar) ----
+  async function handleDesktopAddKey(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Escape") {
       e.preventDefault();
-      setShowAddComposer(false);
+      setAddItemName("");
+      setAddError(null);
+      return;
+    }
+    if (e.key !== "Enter") return;
+    const name = addItemName.trim();
+    if (!name || !activeListId) return;
+    setAddError(null);
+    setAddItemName("");
+    const result = await dispatch(addItemToSharedList({ listId: activeListId, name }));
+    if (!addItemToSharedList.fulfilled.match(result)) {
+      setAddError((result.payload as string) ?? t("addError"));
+    }
+    desktopAddRef.current?.focus();
+  }
+
+  // ---- Add item (mobile FAB composer) ----
+  async function handleMobileAddKey(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setShowMobileAdd(false);
       setAddItemName("");
       setAddError(null);
       return;
@@ -194,7 +260,7 @@ export function SharedListsPage() {
     dispatch(reorderSharedListItems({ listId: activeListId, itemIds: reordered }));
   }
 
-  // ---- Item toggle (from inspector/sheet) ----
+  // ---- Item toggle ----
   function handleItemToggle(item: SharedListItemDetail) {
     if (!activeListId) return;
     dispatch(optimisticToggleItem({ itemId: item.itemId }));
@@ -206,30 +272,51 @@ export function SharedListsPage() {
   const unchecked = sorted.filter((i) => !i.checked);
   const checked = sorted.filter((i) => i.checked);
   const activeListSummary = lists.find((l) => l.id === activeListId) ?? null;
+  // Resolve selected item from live store data so optimistic updates are reflected
+  const selectedInStore = selectedItem
+    ? detail?.items.find((i) => i.itemId === selectedItem.item.itemId) ?? selectedItem.item
+    : null;
 
-  // ---- Inspector / sheet content ----
-  const inspectorContent = selectedItem ? (
+  // ---- Inspector content (editable) ----
+  const inspectorContent = selectedInStore ? (
     <div className="lists-inspector-content">
-      <p className="lists-inspector-item-name">{selectedItem.item.name}</p>
-      {selectedItem.item.quantity && (
-        <p className="lists-inspector-meta">
-          <span className="lists-inspector-label">{t("quantityLabel")}</span>{" "}
-          {selectedItem.item.quantity}
-        </p>
-      )}
-      {selectedItem.item.note && (
-        <p className="lists-inspector-meta">
-          <span className="lists-inspector-label">{t("noteLabel")}</span>{" "}
-          {selectedItem.item.note}
-        </p>
-      )}
+      <input
+        className="lists-inspector-name-input"
+        value={inspectorNameDraft}
+        onChange={(e) => setInspectorNameDraft(e.target.value)}
+        onBlur={commitInspectorChanges}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") { e.preventDefault(); commitInspectorChanges(); }
+        }}
+        aria-label={t("itemName")}
+      />
+      <label className="lists-inspector-field-label">{t("quantityLabel")}</label>
+      <input
+        className="lists-inspector-field-input"
+        value={inspectorQtyDraft}
+        onChange={(e) => setInspectorQtyDraft(e.target.value)}
+        onBlur={commitInspectorChanges}
+        placeholder={t("quantityPlaceholder")}
+        aria-label={t("quantityLabel")}
+      />
+      <label className="lists-inspector-field-label">{t("noteLabel")}</label>
+      <textarea
+        className="lists-inspector-field-textarea"
+        value={inspectorNoteDraft}
+        onChange={(e) => setInspectorNoteDraft(e.target.value)}
+        onBlur={commitInspectorChanges}
+        placeholder={t("notePlaceholder")}
+        rows={2}
+        aria-label={t("noteLabel")}
+      />
+      {inspectorSaving && <span className="lists-inspector-saving">…</span>}
       <div className="lists-inspector-actions">
         <button
           type="button"
           className="btn btn-ghost btn-sm"
-          onClick={() => handleItemToggle(selectedItem.item)}
+          onClick={() => handleItemToggle(selectedInStore)}
         >
-          {selectedItem.item.checked ? "☑ Checked" : "☐ Unchecked"}
+          {selectedInStore.checked ? t("markUnchecked") : t("markChecked")}
         </button>
       </div>
     </div>
@@ -243,10 +330,10 @@ export function SharedListsPage() {
           {checked.length > 0 && (
             <span className="lists-inspector-stat">{checked.length} done</span>
           )}
-          <span className="lists-inspector-hint-text">Select an item for details</span>
+          <span className="lists-inspector-hint-text">{t("selectItemHint")}</span>
         </>
       ) : (
-        <span className="lists-inspector-stat">No list selected</span>
+        <span className="lists-inspector-stat">{t("noListSelected")}</span>
       )}
     </div>
   );
@@ -389,6 +476,9 @@ export function SharedListsPage() {
                             item={item}
                             listId={detail.listId}
                             reorderMode={reorderMode}
+                            selectedItemId={selectedItem?.item.itemId ?? null}
+                            onSelect={handleSelectItem}
+                            onToggle={handleItemToggle}
                           />
                         ))}
                       </SortableContext>
@@ -414,6 +504,9 @@ export function SharedListsPage() {
                             key={item.itemId}
                             item={item}
                             listId={detail.listId}
+                            selectedItemId={selectedItem?.item.itemId ?? null}
+                            onSelect={handleSelectItem}
+                            onToggle={handleItemToggle}
                           />
                         ))}
                       </>
@@ -431,54 +524,123 @@ export function SharedListsPage() {
                       {t("linkedTo", { name: detail.linkedEntityDisplayName })}
                     </div>
                   )}
-                  </div>
 
-                  {/* Inline add composer — sticky bottom of content pane */}
-                  {showAddComposer && (
-                    <div className="lists-add-composer">
+                  {/* Desktop: always-visible quick add bar */}
+                  {!isMobile && !reorderMode && (
+                    <div className="lists-quick-add-bar">
                       <input
-                        ref={addInputRef}
+                        ref={desktopAddRef}
                         type="text"
-                        className="lists-add-composer-input"
+                        className="lists-quick-add-input"
                         placeholder={t("addItemPlaceholder")}
                         value={addItemName}
                         onChange={(e) => setAddItemName(e.target.value)}
-                        onKeyDown={handleAddKey}
-                        autoFocus
+                        onKeyDown={handleDesktopAddKey}
                         aria-label={t("addItem")}
                       />
-                      <button
-                        type="button"
-                        className="lists-add-composer-close"
-                        onClick={() => { setShowAddComposer(false); setAddItemName(""); setAddError(null); }}
-                        aria-label={t("cancel")}
-                      >
-                        ✕
-                      </button>
                     </div>
                   )}
+                  </div>
                 </>
               )}
             </>
           )}
         </div>
 
-        {/* Desktop inspector — hidden on mobile via InspectorPanel.css */}
-        <InspectorPanel title={selectedItem?.item.name}>
+        {/* Desktop inspector */}
+        <InspectorPanel title={selectedInStore?.name}>
           {inspectorContent}
         </InspectorPanel>
       </div>
 
-      {/* FAB — add item (hidden in reorder mode or when composer is open) */}
-      {activeListId && !reorderMode && !showAddComposer && (
+      {/* Mobile: FAB for adding items */}
+      {isMobile && activeListId && !reorderMode && !showMobileAdd && (
         <button
           type="button"
           className="lists-fab"
           aria-label={t("addItem")}
-          onClick={() => setShowAddComposer(true)}
+          onClick={() => setShowMobileAdd(true)}
         >
           +
         </button>
+      )}
+
+      {/* Mobile: add item composer */}
+      {isMobile && showMobileAdd && (
+        <div className="lists-add-composer">
+          <input
+            ref={addInputRef}
+            type="text"
+            className="lists-add-composer-input"
+            placeholder={t("addItemPlaceholder")}
+            value={addItemName}
+            onChange={(e) => setAddItemName(e.target.value)}
+            onKeyDown={handleMobileAddKey}
+            autoFocus
+            aria-label={t("addItem")}
+          />
+          <button
+            type="button"
+            className="lists-add-composer-close"
+            onClick={() => { setShowMobileAdd(false); setAddItemName(""); setAddError(null); }}
+            aria-label={t("cancel")}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {/* Mobile: item detail bottom sheet */}
+      {isMobile && selectedItem && (
+        <BottomSheetDetail
+          open={!!selectedItem}
+          onClose={() => setSelectedItem(null)}
+          title={selectedInStore?.name}
+        >
+          <div className="lists-inspector-content">
+            <input
+              className="lists-inspector-name-input"
+              value={inspectorNameDraft}
+              onChange={(e) => setInspectorNameDraft(e.target.value)}
+              onBlur={commitInspectorChanges}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") { e.preventDefault(); commitInspectorChanges(); }
+              }}
+              aria-label={t("itemName")}
+            />
+            <label className="lists-inspector-field-label">{t("quantityLabel")}</label>
+            <input
+              className="lists-inspector-field-input"
+              value={inspectorQtyDraft}
+              onChange={(e) => setInspectorQtyDraft(e.target.value)}
+              onBlur={commitInspectorChanges}
+              placeholder={t("quantityPlaceholder")}
+              aria-label={t("quantityLabel")}
+            />
+            <label className="lists-inspector-field-label">{t("noteLabel")}</label>
+            <textarea
+              className="lists-inspector-field-textarea"
+              value={inspectorNoteDraft}
+              onChange={(e) => setInspectorNoteDraft(e.target.value)}
+              onBlur={commitInspectorChanges}
+              placeholder={t("notePlaceholder")}
+              rows={2}
+              aria-label={t("noteLabel")}
+            />
+            {inspectorSaving && <span className="lists-inspector-saving">…</span>}
+            <div className="lists-inspector-actions">
+              {selectedInStore && (
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm"
+                  onClick={() => handleItemToggle(selectedInStore)}
+                >
+                  {selectedInStore.checked ? t("markUnchecked") : t("markChecked")}
+                </button>
+              )}
+            </div>
+          </div>
+        </BottomSheetDetail>
       )}
 
       {/* Mobile: list switcher sheet */}
@@ -520,7 +682,7 @@ export function SharedListsPage() {
 
       {/* Create list modal */}
       {showCreate && (
-        <CreateSharedListModal onClose={() => setShowCreate(false)} />
+        <CreateListModal onClose={() => setShowCreate(false)} />
       )}
 
       {/* Linked event modal */}

@@ -59,4 +59,11 @@ export default {
   reorderMode: "重新排序",
   exitReorder: "完成",
   reorderHint: "拖动以更改顺序",
+  itemName: "项目名称",
+  checkItem: "勾选",
+  uncheckItem: "取消勾选",
+  markChecked: "标记为已完成",
+  markUnchecked: "标记为未完成",
+  selectItemHint: "选择一个项目查看详情",
+  noListSelected: "未选择列表",
 } as const;

@@ -59,4 +59,11 @@ export default {
   reorderMode: "Reorder",
   exitReorder: "Done",
   reorderHint: "Drag items to change order",
+  itemName: "Item name",
+  checkItem: "Check",
+  uncheckItem: "Uncheck",
+  markChecked: "Mark as done",
+  markUnchecked: "Mark as not done",
+  selectItemHint: "Select an item to view details",
+  noListSelected: "No list selected",
 } as const;
