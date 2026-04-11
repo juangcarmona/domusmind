@@ -2,7 +2,7 @@
 // /lists         — enters surface, auto-selects first list
 // /lists/:listId — deep-link entry, pre-selects the specified list
 
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, useCallback, type KeyboardEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
@@ -19,10 +19,20 @@ import {
   toggleSharedListItem,
   optimisticRenameItem,
   updateSharedListItem,
+  setItemImportance,
+  optimisticSetImportance,
+  setItemTemporal,
+  optimisticSetTemporal,
+  clearItemTemporal,
+  optimisticClearTemporal,
+  removeSharedListItem,
+  optimisticRemoveItem,
 } from "../../../store/listsSlice";
+import { fetchAreas } from "../../../store/areasSlice";
 import { useIsMobile } from "../../../hooks/useIsMobile";
 import { InspectorPanel } from "../../../components/InspectorPanel";
 import { BottomSheetDetail } from "../../../components/BottomSheetDetail";
+import { ContextChip } from "../../../components/ContextChip";
 import { ListSwitcherPane } from "../components/ListSwitcherPane";
 import { CreateListModal } from "../components/CreateListModal";
 import { SortableItemRow } from "../components/SortableItemRow";
@@ -41,15 +51,86 @@ import {
 } from "@dnd-kit/sortable";
 import "../lists.css";
 
-/** Item selected for inspector / bottom-sheet detail */
+// ─── Item selection container ────────────────────────────────────
 interface SelectedItem {
   item: SharedListItemDetail;
   listId: string;
 }
 
+// ─── View mode ───────────────────────────────────────────────────
+type ViewMode = "list" | "grid";
+
+// ─── Temporal helpers ────────────────────────────────────────────
+function toLocalInput(iso: string | null): string {
+  if (!iso) return "";
+  try {
+    const d = new Date(iso);
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  } catch {
+    return "";
+  }
+}
+
+function fromLocalInput(localStr: string): string | null {
+  if (!localStr) return null;
+  try {
+    return new Date(localStr).toISOString();
+  } catch {
+    return null;
+  }
+}
+
+// ─── Recurrence helpers ──────────────────────────────────────────
+// Canonical format: "Daily" | "Weekly:1,3,5" | "Monthly" | "Yearly"
+// Days of week: 0=Sun, 1=Mon … 6=Sat
+const WEEK_DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] as const;
+
+function parseRepeat(val: string | null): { freq: string; days: number[] } {
+  if (!val) return { freq: "", days: [] };
+  const [freq, daysPart] = val.split(":");
+  const days = daysPart
+    ? daysPart.split(",").map(Number).filter((d) => d >= 0 && d <= 6)
+    : [];
+  return { freq, days };
+}
+
+function serializeRepeat(freq: string, days: number[]): string | null {
+  if (!freq) return null;
+  if (freq === "Weekly" && days.length > 0) {
+    return `Weekly:${[...days].sort((a, b) => a - b).join(",")}`;
+  }
+  return freq;
+}
+
+// ─── Icon SVGs (inline, keeps bundle clean) ──────────────────────
+const IconGrid = () => (
+  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/>
+    <rect x="9.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/>
+    <rect x="1" y="9.5" width="5.5" height="5.5" rx="1" fill="currentColor"/>
+    <rect x="9.5" y="9.5" width="5.5" height="5.5" rx="1" fill="currentColor"/>
+  </svg>
+);
+
+const IconList = () => (
+  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="3" width="14" height="1.5" rx="0.75" fill="currentColor"/>
+    <rect x="1" y="7.25" width="14" height="1.5" rx="0.75" fill="currentColor"/>
+    <rect x="1" y="11.5" width="14" height="1.5" rx="0.75" fill="currentColor"/>
+  </svg>
+);
+
+const IconOptions = () => (
+  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="3" cy="8" r="1.3" fill="currentColor"/>
+    <circle cx="8" cy="8" r="1.3" fill="currentColor"/>
+    <circle cx="13" cy="8" r="1.3" fill="currentColor"/>
+  </svg>
+);
+
 export function ListsPage() {
   const { listId: routeListId } = useParams<{ listId?: string }>();
-
   const { t } = useTranslation("lists");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -60,164 +141,217 @@ export function ListsPage() {
   const listsStatus = useAppSelector((s) => s.lists.listsStatus);
   const detail = useAppSelector((s) => s.lists.detail);
   const detailStatus = useAppSelector((s) => s.lists.detailStatus);
+  const areas = useAppSelector((s) => s.areas.items);
+  const members = useAppSelector((s) => s.household.members);
 
-  // Active list id: prefer route param on first mount, then switcher selection
   const [activeListId, setActiveListId] = useState<string | null>(routeListId ?? null);
-
   const [showCreate, setShowCreate] = useState(false);
   const [showSwitcherSheet, setShowSwitcherSheet] = useState(false);
-  const [checkedCollapsed, setCheckedCollapsed] = useState(false);
-  const [addItemName, setAddItemName] = useState("");
-  const [addError, setAddError] = useState<string | null>(null);
+  const [checkedCollapsed, setCheckedCollapsed] = useState(true);
   const [renameDraft, setRenameDraft] = useState<string | null>(null);
   const [renameError, setRenameError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [showLinkedEvent, setShowLinkedEvent] = useState(false);
   const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null);
-  const [reorderMode, setReorderMode] = useState(false);
   const [showMobileAdd, setShowMobileAdd] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
 
-  // Inspector editing drafts — synced when selected item changes
-  const [inspectorNameDraft, setInspectorNameDraft] = useState("");
-  const [inspectorQtyDraft, setInspectorQtyDraft] = useState("");
-  const [inspectorNoteDraft, setInspectorNoteDraft] = useState("");
-  const [inspectorSaving, setInspectorSaving] = useState(false);
+  // Options menu
+  const [showOptions, setShowOptions] = useState(false);
+  const optionsMenuRef = useRef<HTMLDivElement>(null);
 
-  const addInputRef = useRef<HTMLInputElement>(null);
+  // Add-row expansion + quick temporal capture
+  const [addExpanded, setAddExpanded] = useState(false);
+  const [addDueDateDraft, setAddDueDateDraft] = useState("");
+  const [addReminderDraft, setAddReminderDraft] = useState("");
+  const [addRepeatFreqDraft, setAddRepeatFreqDraft] = useState("");
+  const [addRepeatDaysDraft, setAddRepeatDaysDraft] = useState<number[]>([]);
+
+  // Inspector drafts
+  const [iNameDraft, setINameDraft] = useState("");
+  const [iQtyDraft, setIQtyDraft] = useState("");
+  const [iNoteDraft, setINoteDraft] = useState("");
+  const [iDueDateDraft, setIDueDateDraft] = useState("");
+  const [iReminderDraft, setIReminderDraft] = useState("");
+  const [iRepeatFreq, setIRepeatFreq] = useState("");
+  const [iRepeatDays, setIRepeatDays] = useState<number[]>([]);
+  const [iSaving, setISaving] = useState(false);
+
   const desktopAddRef = useRef<HTMLInputElement>(null);
+  const addInputRef = useRef<HTMLInputElement>(null);
 
-  // ---- Load list index ----
+  // ── Data loading ─────────────────────────────────────────────────
   useEffect(() => {
-    if (familyId) {
-      dispatch(fetchFamilySharedLists(familyId));
-    }
+    if (familyId) dispatch(fetchFamilySharedLists(familyId));
   }, [familyId, dispatch]);
 
-  // ---- Auto-select first list if none active and lists are loaded ----
   useEffect(() => {
-    if (activeListId === null && lists.length > 0) {
-      setActiveListId(lists[0].id);
-    }
+    if (familyId) dispatch(fetchAreas(familyId));
+  }, [familyId, dispatch]);
+
+  useEffect(() => {
+    if (activeListId === null && lists.length > 0) setActiveListId(lists[0].id);
   }, [lists, activeListId]);
 
-  // ---- Sync route param (deep-link) ----
   useEffect(() => {
-    if (routeListId && routeListId !== activeListId) {
-      setActiveListId(routeListId);
-    }
+    if (routeListId && routeListId !== activeListId) setActiveListId(routeListId);
   }, [routeListId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ---- Load detail when active list changes ----
   useEffect(() => {
     if (activeListId) {
       dispatch(fetchSharedListDetail(activeListId));
-      setCheckedCollapsed(false);
-      setAddItemName("");
+      setCheckedCollapsed(true);
       setAddError(null);
       setRenameDraft(null);
       setRenameError(null);
       setSelectedItem(null);
-      setReorderMode(false);
     } else {
       dispatch(clearDetail());
     }
   }, [activeListId, dispatch]);
 
-  // ---- Sync inspector drafts when selected item changes ----
+  // ── Sync inspector drafts ────────────────────────────────────────
   useEffect(() => {
     if (selectedItem) {
-      setInspectorNameDraft(selectedItem.item.name);
-      setInspectorQtyDraft(selectedItem.item.quantity ?? "");
-      setInspectorNoteDraft(selectedItem.item.note ?? "");
+      const it = selectedItem.item;
+      setINameDraft(it.name);
+      setIQtyDraft(it.quantity ?? "");
+      setINoteDraft(it.note ?? "");
+      setIDueDateDraft(it.dueDate ?? "");
+      setIReminderDraft(toLocalInput(it.reminder));
+      const { freq, days } = parseRepeat(it.repeat);
+      setIRepeatFreq(freq);
+      setIRepeatDays(days);
     }
   }, [selectedItem?.item.itemId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ---- Switcher selection ----
+  // ── Click-outside to close options ───────────────────────────────
+  useEffect(() => {
+    if (!showOptions) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (optionsMenuRef.current && !optionsMenuRef.current.contains(e.target as Node)) {
+        setShowOptions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showOptions]);
+
+  // ── Switcher ─────────────────────────────────────────────────────
   function handleSelectList(listId: string) {
     setActiveListId(listId);
     setShowSwitcherSheet(false);
-    setReorderMode(false);
-    if (routeListId) {
-      navigate("/lists", { replace: true });
-    }
+    if (routeListId) navigate("/lists", { replace: true });
   }
 
-  // ---- Item selection ----
+  // ── Item selection ───────────────────────────────────────────────
   function handleSelectItem(item: SharedListItemDetail, listId: string) {
-    if (reorderMode) return;
     setSelectedItem((prev) =>
       prev?.item.itemId === item.itemId ? null : { item, listId },
     );
   }
 
-  // ---- Inspector save ----
-  async function commitInspectorChanges() {
+  // ── Inspector: base fields ───────────────────────────────────────
+  async function commitBaseFields() {
     if (!selectedItem || !activeListId) return;
-    const newName = inspectorNameDraft.trim();
-    const newQty = inspectorQtyDraft.trim() || null;
-    const newNote = inspectorNoteDraft.trim() || null;
+    const newName = iNameDraft.trim();
+    const newQty = iQtyDraft.trim() || null;
+    const newNote = iNoteDraft.trim() || null;
     const { item } = selectedItem;
     const nameChanged = newName && newName !== item.name;
-    const metaChanged = newQty !== (item.quantity ?? null) || newNote !== (item.note ?? null);
+    const metaChanged =
+      newQty !== (item.quantity ?? null) || newNote !== (item.note ?? null);
     if (!nameChanged && !metaChanged) return;
-    setInspectorSaving(true);
-    if (nameChanged) {
-      dispatch(optimisticRenameItem({ itemId: item.itemId, name: newName }));
+    setISaving(true);
+    if (nameChanged) dispatch(optimisticRenameItem({ itemId: item.itemId, name: newName }));
+    await dispatch(updateSharedListItem({
+      listId: activeListId,
+      itemId: item.itemId,
+      name: newName || item.name,
+      quantity: newQty,
+      note: newNote,
+    }));
+    setISaving(false);
+  }
+
+  // ── Inspector: importance ────────────────────────────────────────
+  function handleImportanceToggle() {
+    if (!selectedItem || !activeListId) return;
+    const next = !selectedItem.item.importance;
+    dispatch(optimisticSetImportance({ itemId: selectedItem.item.itemId, importance: next }));
+    dispatch(setItemImportance({ listId: activeListId, itemId: selectedItem.item.itemId, importance: next }));
+  }
+
+  // ── Inspector: temporal fields ───────────────────────────────────
+  const commitTemporalFields = useCallback(async (
+    overrides?: { dueDate?: string; reminder?: string; repeat?: string | null },
+  ) => {
+    if (!selectedItem || !activeListId) return;
+    const item = selectedInStoreRef.current ?? selectedItem.item;
+    const dueDate = (overrides?.dueDate !== undefined ? overrides.dueDate : iDueDateDraft) || null;
+    const reminderLocal = overrides?.reminder !== undefined ? overrides.reminder : iReminderDraft;
+    const reminder = fromLocalInput(reminderLocal);
+    // Compute repeat from current freq+days state or override
+    const repeat = overrides?.repeat !== undefined
+      ? overrides.repeat
+      : serializeRepeat(iRepeatFreq, iRepeatDays);
+
+    const dudChanged = dueDate !== (item.dueDate ?? null);
+    const remChanged = reminder !== (item.reminder ?? null);
+    const repChanged = repeat !== (item.repeat ?? null);
+    if (!dudChanged && !remChanged && !repChanged) return;
+
+    dispatch(optimisticSetTemporal({ itemId: item.itemId, dueDate, reminder, repeat }));
+
+    if (!dueDate && !reminder && !repeat) {
+      dispatch(clearItemTemporal({ listId: activeListId, itemId: item.itemId }));
+    } else {
+      const payload: { dueDate?: string | null; reminder?: string | null; repeat?: string | null } = {};
+      if (dudChanged) payload.dueDate = dueDate;
+      if (remChanged) payload.reminder = reminder;
+      if (repChanged) payload.repeat = repeat;
+      dispatch(setItemTemporal({ listId: activeListId, itemId: item.itemId, ...payload }));
     }
-    await dispatch(
-      updateSharedListItem({
-        listId: activeListId,
-        itemId: item.itemId,
-        name: newName || item.name,
-        quantity: newQty,
-        note: newNote,
-      }),
+  }, [selectedItem, activeListId, iDueDateDraft, iReminderDraft, iRepeatFreq, iRepeatDays, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function handleClearTemporal() {
+    if (!selectedItem || !activeListId) return;
+    setIDueDateDraft("");
+    setIReminderDraft("");
+    setIRepeatFreq("");
+    setIRepeatDays([]);
+    dispatch(optimisticClearTemporal({ itemId: selectedItem.item.itemId }));
+    dispatch(clearItemTemporal({ listId: activeListId, itemId: selectedItem.item.itemId }));
+  }
+
+  function handleRepeatFreqChange(freq: string) {
+    setIRepeatFreq(freq);
+    if (freq !== "Weekly") setIRepeatDays([]);
+  }
+
+  function handleRepeatDayToggle(day: number) {
+    setIRepeatDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day],
     );
-    setInspectorSaving(false);
   }
 
-  // ---- Add item (desktop always-visible bar) ----
-  async function handleDesktopAddKey(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      setAddItemName("");
-      setAddError(null);
-      return;
-    }
-    if (e.key !== "Enter") return;
-    const name = addItemName.trim();
-    if (!name || !activeListId) return;
-    setAddError(null);
-    setAddItemName("");
-    const result = await dispatch(addItemToSharedList({ listId: activeListId, name }));
-    if (!addItemToSharedList.fulfilled.match(result)) {
-      setAddError((result.payload as string) ?? t("addError"));
-    }
-    desktopAddRef.current?.focus();
+  // ── Inspector: remove item ───────────────────────────────────────
+  function handleInspectorRemove() {
+    if (!selectedItem || !activeListId) return;
+    dispatch(optimisticRemoveItem({ itemId: selectedItem.item.itemId }));
+    dispatch(removeSharedListItem({ listId: activeListId, itemId: selectedItem.item.itemId }));
+    setSelectedItem(null);
   }
 
-  // ---- Add item (mobile FAB composer) ----
-  async function handleMobileAddKey(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      setShowMobileAdd(false);
-      setAddItemName("");
-      setAddError(null);
-      return;
-    }
-    if (e.key !== "Enter") return;
-    const name = addItemName.trim();
-    if (!name || !activeListId) return;
-    setAddError(null);
-    setAddItemName("");
-    const result = await dispatch(addItemToSharedList({ listId: activeListId, name }));
-    if (!addItemToSharedList.fulfilled.match(result)) {
-      setAddError((result.payload as string) ?? t("addError"));
-    }
-    addInputRef.current?.focus();
+  // ── Item toggle ──────────────────────────────────────────────────
+  function handleItemToggle(item: SharedListItemDetail) {
+    if (!activeListId) return;
+    dispatch(optimisticToggleItem({ itemId: item.itemId }));
+    dispatch(toggleSharedListItem({ listId: activeListId, itemId: item.itemId }));
   }
 
-  // ---- Rename list ----
+  // ── Rename list ──────────────────────────────────────────────────
   async function handleRenameCommit() {
     const trimmed = (renameDraft ?? "").trim();
     if (!trimmed || !activeListId || trimmed === detail?.name) {
@@ -226,28 +360,22 @@ export function ListsPage() {
     }
     setRenameError(null);
     const result = await dispatch(renameSharedList({ listId: activeListId, name: trimmed }));
-    if (renameSharedList.fulfilled.match(result)) {
-      setRenameDraft(null);
-    } else {
-      setRenameError((result.payload as string) ?? t("renameError"));
-    }
+    if (renameSharedList.fulfilled.match(result)) setRenameDraft(null);
+    else setRenameError((result.payload as string) ?? t("renameError"));
   }
 
-  // ---- Delete list ----
+  // ── Delete list ──────────────────────────────────────────────────
   async function handleDelete() {
     if (!detail || !activeListId) return;
     const confirmed = window.confirm(t("deleteConfirm", { name: detail.name }));
     if (!confirmed) return;
     setDeleting(true);
     const result = await dispatch(deleteSharedList(activeListId));
-    if (deleteSharedList.fulfilled.match(result)) {
-      setActiveListId(null); // will auto-select first remaining list
-    } else {
-      setDeleting(false);
-    }
+    if (deleteSharedList.fulfilled.match(result)) setActiveListId(null);
+    else setDeleting(false);
   }
 
-  // ---- Drag-and-drop reorder ----
+  // ── DnD reorder ──────────────────────────────────────────────────
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over || active.id === over.id || !activeListId) return;
@@ -260,121 +388,351 @@ export function ListsPage() {
     dispatch(reorderSharedListItems({ listId: activeListId, itemIds: reordered }));
   }
 
-  // ---- Item toggle ----
-  function handleItemToggle(item: SharedListItemDetail) {
-    if (!activeListId) return;
-    dispatch(optimisticToggleItem({ itemId: item.itemId }));
-    dispatch(toggleSharedListItem({ listId: activeListId, itemId: item.itemId }));
+  // ── Desktop add ──────────────────────────────────────────────────
+  async function handleDesktopAddKey(e: KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      (e.target as HTMLInputElement).value = "";
+      setAddExpanded(false);
+      setAddDueDateDraft(""); setAddReminderDraft(""); setAddRepeatFreqDraft(""); setAddRepeatDaysDraft([]);
+      setAddError(null);
+      return;
+    }
+    if (e.key !== "Enter") return;
+    const input = e.target as HTMLInputElement;
+    const name = input.value.trim();
+    if (!name || !activeListId) return;
+    setAddError(null);
+    input.value = "";
+    const result = await dispatch(addItemToSharedList({ listId: activeListId, name }));
+    if (addItemToSharedList.fulfilled.match(result)) {
+      const newItemId = result.payload.itemId;
+      const repeat = serializeRepeat(addRepeatFreqDraft, addRepeatDaysDraft);
+      const reminder = fromLocalInput(addReminderDraft);
+      if (addDueDateDraft || reminder || repeat) {
+        dispatch(setItemTemporal({
+          listId: activeListId,
+          itemId: newItemId,
+          dueDate: addDueDateDraft || null,
+          reminder,
+          repeat,
+        }));
+      }
+      setAddDueDateDraft(""); setAddReminderDraft(""); setAddRepeatFreqDraft(""); setAddRepeatDaysDraft([]);
+    } else {
+      setAddError((result.payload as string) ?? t("addError"));
+    }
+    desktopAddRef.current?.focus();
   }
 
-  // ---- Derived data ----
+  function handleAddFocusLeave(e: React.FocusEvent<HTMLDivElement>) {
+    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+      setAddExpanded(false);
+    }
+  }
+
+  // ── Mobile add ───────────────────────────────────────────────────
+  async function handleMobileAddSubmit(name: string) {
+    if (!name || !activeListId) return;
+    setAddError(null);
+    const result = await dispatch(addItemToSharedList({ listId: activeListId, name }));
+    if (!addItemToSharedList.fulfilled.match(result)) {
+      setAddError((result.payload as string) ?? t("addError"));
+    }
+  }
+
+  // ── Derived data ─────────────────────────────────────────────────
   const sorted = detail ? [...detail.items].sort((a, b) => a.order - b.order) : [];
   const unchecked = sorted.filter((i) => !i.checked);
   const checked = sorted.filter((i) => i.checked);
   const activeListSummary = lists.find((l) => l.id === activeListId) ?? null;
-  // Resolve selected item from live store data so optimistic updates are reflected
   const selectedInStore = selectedItem
     ? detail?.items.find((i) => i.itemId === selectedItem.item.itemId) ?? selectedItem.item
     : null;
+  const selectedInStoreRef = useRef(selectedInStore);
+  selectedInStoreRef.current = selectedInStore;
 
-  // ---- Inspector content (editable) ----
-  const inspectorContent = selectedInStore ? (
-    <div className="lists-inspector-content">
-      {/* Status toggle — first, prominent */}
+  const hasTemporalDraft = Boolean(iDueDateDraft || iReminderDraft || iRepeatFreq);
+  const itemHasTemporal = Boolean(
+    selectedInStore?.dueDate || selectedInStore?.reminder || selectedInStore?.repeat,
+  );
+
+  // Linked context resolved
+  const linkedArea = detail?.areaId ? areas.find((a) => a.areaId === detail.areaId) : null;
+  const linkedEntityLabel = detail?.linkedEntityDisplayName ?? null;
+
+  function renderLinkedContext(className: string) {
+    if (!linkedArea && !linkedEntityLabel) return null;
+    return (
+      <div className={className}>
+        {linkedArea && (
+          <ContextChip
+            label={linkedArea.name}
+          />
+        )}
+        {linkedEntityLabel && detail?.linkedEntityId && (
+          <ContextChip
+            label={linkedEntityLabel}
+            onClick={() => setShowLinkedEvent(true)}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // ── Inspector body ───────────────────────────────────────────────
+  const inspectorBody = selectedInStore ? (
+    <div className="li-inspector">
+
+      {/* Linked context chips */}
+      {renderLinkedContext("li-inspector__context")}
+
+      {/* Status toggle */}
       <button
         type="button"
-        className={`lists-inspector-status-btn${selectedInStore.checked ? " lists-inspector-status-btn--checked" : ""}`}
+        className={`li-inspector__status${selectedInStore.checked ? " li-inspector__status--done" : ""}`}
         onClick={() => handleItemToggle(selectedInStore)}
       >
-        <span className="lists-inspector-status-icon" aria-hidden="true" />
-        <span className="lists-inspector-status-label">
-          {selectedInStore.checked ? t("markUnchecked") : t("markChecked")}
-        </span>
+        <span className="li-inspector__status-circle" aria-hidden="true" />
+        <span>{selectedInStore.checked ? t("markUnchecked") : t("markChecked")}</span>
       </button>
 
-      {/* Name — styled as a title field */}
+      {/* Title */}
       <input
-        className="lists-inspector-name-input"
-        value={inspectorNameDraft}
-        onChange={(e) => setInspectorNameDraft(e.target.value)}
-        onBlur={commitInspectorChanges}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") { e.preventDefault(); commitInspectorChanges(); }
-        }}
+        className="li-inspector__title"
+        value={iNameDraft}
+        onChange={(e) => setINameDraft(e.target.value)}
+        onBlur={commitBaseFields}
+        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commitBaseFields(); } }}
         aria-label={t("itemName")}
       />
 
-      {/* Quantity */}
-      <div className="lists-inspector-field-group">
-        <label className="lists-inspector-field-label">{t("quantityLabel")}</label>
-        <input
-          className="lists-inspector-field-input"
-          value={inspectorQtyDraft}
-          onChange={(e) => setInspectorQtyDraft(e.target.value)}
-          onBlur={commitInspectorChanges}
-          placeholder={t("quantityPlaceholder")}
-          aria-label={t("quantityLabel")}
-        />
+      {/* Importance */}
+      <button
+        type="button"
+        className={`li-inspector__importance${selectedInStore.importance ? " li-inspector__importance--on" : ""}`}
+        onClick={handleImportanceToggle}
+      >
+        <span className="li-inspector__importance-star" aria-hidden="true">
+          {selectedInStore.importance ? "★" : "☆"}
+        </span>
+        <span>{selectedInStore.importance ? t("removeImportance") : t("setImportance")}</span>
+      </button>
+
+      {/* Time section */}
+      <div className="li-inspector__section">
+        <div className="li-inspector__section-label">{t("timeSection")}</div>
+
+        <div className="li-inspector__field">
+          <label className="li-inspector__field-label" htmlFor="li-due">{t("dueDateLabel")}</label>
+          <input
+            id="li-due"
+            type="date"
+            className="li-inspector__field-input"
+            value={iDueDateDraft}
+            onChange={(e) => setIDueDateDraft(e.target.value)}
+            onBlur={() => commitTemporalFields()}
+          />
+        </div>
+
+        <div className="li-inspector__field">
+          <label className="li-inspector__field-label" htmlFor="li-reminder">{t("reminderLabel")}</label>
+          <input
+            id="li-reminder"
+            type="datetime-local"
+            className="li-inspector__field-input"
+            value={iReminderDraft}
+            onChange={(e) => setIReminderDraft(e.target.value)}
+            onBlur={() => commitTemporalFields()}
+          />
+        </div>
+
+        {/* Recurrence — structured picker reusing Agenda frequency vocabulary */}
+        <div className="li-inspector__field">
+          <label className="li-inspector__field-label" htmlFor="li-repeat">{t("repeatLabel")}</label>
+          <select
+            id="li-repeat"
+            className="li-inspector__repeat-select"
+            value={iRepeatFreq}
+            onChange={(e) => { handleRepeatFreqChange(e.target.value); }}
+            onBlur={() => commitTemporalFields()}
+            aria-label={t("repeatLabel")}
+          >
+            <option value="">{t("repeatNone")}</option>
+            <option value="Daily">{t("repeatDaily")}</option>
+            <option value="Weekly">{t("repeatWeekly")}</option>
+            <option value="Monthly">{t("repeatMonthly")}</option>
+            <option value="Yearly">{t("repeatYearly")}</option>
+          </select>
+
+          {iRepeatFreq === "Weekly" && (
+            <div className="li-inspector__repeat-days">
+              {WEEK_DAYS.map((label, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  className={`li-inspector__day-btn${iRepeatDays.includes(idx) ? " li-inspector__day-btn--on" : ""}`}
+                  onClick={() => handleRepeatDayToggle(idx)}
+                  onBlur={() => commitTemporalFields()}
+                  aria-pressed={iRepeatDays.includes(idx)}
+                  aria-label={label}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {(hasTemporalDraft || itemHasTemporal) && (
+          <button
+            type="button"
+            className="li-inspector__clear-temporal"
+            onClick={handleClearTemporal}
+          >
+            {t("clearTemporal")}
+          </button>
+        )}
+
+        {/* Agenda projection hint */}
+        {itemHasTemporal && (
+          <p className="li-inspector__agenda-hint">{t("agendaProjectionHint")}</p>
+        )}
       </div>
 
-      {/* Note */}
-      <div className="lists-inspector-field-group">
-        <label className="lists-inspector-field-label">{t("noteLabel")}</label>
-        <textarea
-          className="lists-inspector-field-textarea"
-          value={inspectorNoteDraft}
-          onChange={(e) => setInspectorNoteDraft(e.target.value)}
-          onBlur={commitInspectorChanges}
-          placeholder={t("notePlaceholder")}
-          rows={2}
-          aria-label={t("noteLabel")}
-        />
+      {/* Metadata section */}
+      <div className="li-inspector__section">
+        <div className="li-inspector__section-label">{t("detailsSection")}</div>
+
+        <div className="li-inspector__field">
+          <label className="li-inspector__field-label" htmlFor="li-qty">{t("quantityLabel")}</label>
+          <input
+            id="li-qty"
+            className="li-inspector__field-input"
+            value={iQtyDraft}
+            onChange={(e) => setIQtyDraft(e.target.value)}
+            onBlur={commitBaseFields}
+            placeholder={t("quantityPlaceholder")}
+          />
+        </div>
+
+        <div className="li-inspector__field">
+          <label className="li-inspector__field-label" htmlFor="li-note">{t("noteLabel")}</label>
+          <textarea
+            id="li-note"
+            className="li-inspector__field-textarea"
+            value={iNoteDraft}
+            onChange={(e) => setINoteDraft(e.target.value)}
+            onBlur={commitBaseFields}
+            placeholder={t("notePlaceholder")}
+            rows={2}
+          />
+        </div>
       </div>
 
-      {inspectorSaving && <span className="lists-inspector-saving">…</span>}
+      {/* Scope / context section */}
+      <div className="li-inspector__section">
+        <div className="li-inspector__section-label">{t("scopeSection")}</div>
+        {linkedArea ? (
+          <div className="li-inspector__scope-row">
+            <span className="li-inspector__scope-label">{t("areaLabel")}</span>
+            <ContextChip label={linkedArea.name} />
+          </div>
+        ) : (
+          <p className="li-inspector__scope-hint">{t("householdScoped")}</p>
+        )}
+        {linkedEntityLabel && (
+          <div className="li-inspector__scope-row">
+            <span className="li-inspector__scope-label">{t("planLabel")}</span>
+            <ContextChip label={linkedEntityLabel} onClick={() => setShowLinkedEvent(true)} />
+          </div>
+        )}
+        {selectedInStore.updatedByMemberId && (() => {
+          const m = members.find((x) => x.memberId === selectedInStore.updatedByMemberId);
+          return m ? (
+            <div className="li-inspector__scope-row">
+              <span className="li-inspector__scope-label">{t("lastUpdatedBy")}</span>
+              <span className="li-inspector__scope-value">{m.preferredName ?? m.name}</span>
+            </div>
+          ) : null;
+        })()}
+      </div>
+
+      {/* Actions */}
+      <div className="li-inspector__actions">
+        <button
+          type="button"
+          className="li-inspector__remove-btn"
+          onClick={handleInspectorRemove}
+        >
+          {t("removeItem")}
+        </button>
+      </div>
+
+      {iSaving && <span className="li-inspector__saving">…</span>}
     </div>
   ) : (
-    <div className="lists-inspector-hint">
+    <div className="li-inspector-hint">
+      {/* Linked context at list level */}
+      {renderLinkedContext("li-inspector-hint__context")}
+
       {detail && detail.listId === activeListId ? (
         <>
-          <span className="lists-inspector-stat">
-            {unchecked.length} remaining
+          <span className="li-inspector-hint__stat">
+            {unchecked.length} {unchecked.length === 1 ? t("itemSingular") : t("itemPlural")} {t("remaining")}
           </span>
           {checked.length > 0 && (
-            <span className="lists-inspector-stat">{checked.length} done</span>
+            <span className="li-inspector-hint__stat">{checked.length} {t("done")}</span>
           )}
-          <span className="lists-inspector-hint-text">{t("selectItemHint")}</span>
+          {detail.kind !== "General" && (
+            <span className="li-inspector-hint__stat">{detail.kind}</span>
+          )}
+          <span className="li-inspector-hint__text">{t("selectItemHint")}</span>
         </>
       ) : (
-        <span className="lists-inspector-stat">{t("noListSelected")}</span>
+        <span className="li-inspector-hint__stat">{t("noListSelected")}</span>
       )}
     </div>
   );
 
   return (
     <div className="lists-surface l-surface">
-      {/* ── Mobile header: switcher trigger only ── */}
+
+      {/* Mobile header */}
       {isMobile && (
-        <header className="lists-surface-header">
+        <header className="lists-mobile-header">
           <button
             type="button"
-            className="lists-switcher-trigger"
+            className="lists-mobile-header__trigger"
             onClick={(e) => { e.stopPropagation(); setShowSwitcherSheet(true); }}
           >
-            <span className="lists-switcher-trigger-name">
+            <span className="lists-mobile-header__name">
               {activeListSummary ? activeListSummary.name : t("title")}
             </span>
             {activeListSummary && activeListSummary.uncheckedCount > 0 && (
-              <span className="lists-list-count">{activeListSummary.uncheckedCount}</span>
+              <span className="li-count">{activeListSummary.uncheckedCount}</span>
             )}
-            <span className="lists-switcher-trigger-chevron" aria-hidden="true">▾</span>
+            <span aria-hidden="true">▾</span>
           </button>
+
+          {/* Mobile view toggle */}
+          {activeListId && (
+            <button
+              type="button"
+              className={`lists-icon-btn${viewMode === "grid" ? " is-active" : ""}`}
+              onClick={() => setViewMode((m) => m === "list" ? "grid" : "list")}
+              title={viewMode === "grid" ? t("viewAsList") : t("viewAsGrid")}
+            >
+              {viewMode === "grid" ? <IconList /> : <IconGrid />}
+            </button>
+          )}
         </header>
       )}
 
-      {/* ── Surface body: switcher | content | inspector ── */}
+      {/* Surface body */}
       <div className="lists-surface-body l-surface-body">
-        {/* Left switcher pane — desktop only, hidden on mobile */}
+
+        {/* Left switcher — desktop only */}
         {!isMobile && (
           <ListSwitcherPane
             lists={lists}
@@ -391,16 +749,15 @@ export function ListsPage() {
           )}
 
           {listsStatus !== "loading" && lists.length === 0 && (
-            <div className="lists-surface-empty">
-              <p className="empty-state-headline">{t("emptyHeadline")}</p>
-              <p>{t("emptyHint")}</p>
+            <div className="lists-empty-state">
+              <p className="lists-empty-state__headline">{t("emptyHeadline")}</p>
+              <p className="lists-empty-state__hint">{t("emptyHint")}</p>
               <button className="btn" onClick={() => setShowCreate(true)}>
                 {t("newList")}
               </button>
             </div>
           )}
 
-          {/* Active list content */}
           {activeListId && (
             <>
               {detailStatus === "loading" && !detail && (
@@ -409,13 +766,13 @@ export function ListsPage() {
 
               {detail && detail.listId === activeListId && (
                 <>
-                  {/* Desktop: list title header inside content pane */}
+                  {/* Desktop list header */}
                   {!isMobile && (
                     <div className="lists-list-header">
-                      <div className="lists-list-header-main">
+                      <div className="lists-list-header__main">
                         {renameDraft !== null ? (
                           <input
-                            className="lists-list-rename-input"
+                            className="lists-list-header__rename"
                             value={renameDraft}
                             onChange={(e) => setRenameDraft(e.target.value)}
                             onBlur={handleRenameCommit}
@@ -427,98 +784,230 @@ export function ListsPage() {
                             aria-label={t("renameList")}
                           />
                         ) : (
-                          <>
-                            <button
-                              type="button"
-                              className="lists-list-name-btn"
-                              onClick={() => !reorderMode && setRenameDraft(detail.name)}
-                              title={reorderMode ? undefined : t("renameList")}
-                            >
-                              {detail.name}
-                            </button>
-                            {activeListSummary && (
-                              <span className={`lists-list-subtitle${activeListSummary.uncheckedCount === 0 && activeListSummary.itemCount > 0 ? " lists-list-subtitle--done" : ""}`}>
-                                {activeListSummary.itemCount === 0
-                                  ? "No items"
-                                  : activeListSummary.uncheckedCount === 0
-                                  ? "All done"
-                                  : `${activeListSummary.uncheckedCount} remaining`}
-                              </span>
+                          <button
+                            type="button"
+                            className="lists-list-header__name-btn"
+                            onClick={() => setRenameDraft(detail.name)}
+                            title={t("renameList")}
+                          >
+                            {detail.name}
+                            {activeListSummary && activeListSummary.uncheckedCount > 0 && (
+                              <span className="li-count">{activeListSummary.uncheckedCount}</span>
                             )}
-                          </>
+                          </button>
                         )}
-                        {renameError && <p className="error-msg" style={{ margin: 0 }}>{renameError}</p>}
+                        {renameError && (
+                          <p className="error-msg" style={{ margin: 0 }}>{renameError}</p>
+                        )}
                       </div>
-                      <div className="lists-list-header-actions">
-                        {!reorderMode && detail.linkedEntityDisplayName && (
+
+                      <div className="lists-list-header__actions">
+                        {/* Linked event shortcut */}
+                        {detail.linkedEntityDisplayName && (
                           <button
                             type="button"
                             className="btn btn-ghost btn-sm"
                             onClick={() => setShowLinkedEvent(true)}
+                            style={{ fontSize: "0.78rem" }}
                           >
                             {t("goToLinkedEvent")}
                           </button>
                         )}
+
+                        {/* View mode toggle (icon) */}
                         <button
                           type="button"
-                          className={`lists-reorder-btn${reorderMode ? " lists-reorder-btn--active" : ""}`}
-                          onClick={() => setReorderMode((m) => !m)}
-                          title={reorderMode ? t("exitReorder") : t("reorderMode")}
+                          className={`lists-icon-btn${viewMode === "grid" ? " is-active" : ""}`}
+                          onClick={() => setViewMode((m) => m === "list" ? "grid" : "list")}
+                          title={viewMode === "grid" ? t("viewAsList") : t("viewAsGrid")}
                         >
-                          {reorderMode ? t("exitReorder") : "⠿"}
+                          {viewMode === "grid" ? <IconList /> : <IconGrid />}
                         </button>
-                        {!reorderMode && (
+
+                        {/* Options menu */}
+                        <div className="lists-options-menu" ref={optionsMenuRef}>
                           <button
                             type="button"
-                            className="btn btn-ghost btn-sm lists-delete-btn"
-                            onClick={handleDelete}
-                            disabled={deleting}
-                            title={t("deleteList")}
+                            className={`lists-icon-btn${showOptions ? " is-active" : ""}`}
+                            onClick={() => setShowOptions((o) => !o)}
+                            aria-label={t("listOptions")}
+                            title={t("listOptions")}
                           >
-                            {deleting ? "…" : "···"}
+                            <IconOptions />
                           </button>
-                        )}
+                          {showOptions && (
+                            <div className="lists-options-dropdown">
+                              <button
+                                type="button"
+                                className="lists-options-item"
+                                onClick={() => { setRenameDraft(detail.name); setShowOptions(false); }}
+                              >
+                                {t("renameList")}
+                              </button>
+                              <div className="lists-options-divider" />
+                              <button
+                                type="button"
+                                className="lists-options-item lists-options-item--danger"
+                                onClick={() => { setShowOptions(false); handleDelete(); }}
+                                disabled={deleting}
+                              >
+                                {deleting ? t("deletingList") : t("deleteList")}
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   )}
-                  <div className={`lists-active-body${reorderMode ? " lists-reorder-mode" : ""}`}>
-                  <div className="shared-list-items-wrap">
-                    {reorderMode && (
-                      <div className="lists-reorder-banner">{t("reorderHint")}</div>
-                    )}
-                    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                      <SortableContext
-                        items={unchecked.map((i) => i.itemId)}
-                        strategy={verticalListSortingStrategy}
-                      >
+
+                  {/* Quick add — TOP of list, expands on focus */}
+                  <div
+                    className={`lists-quick-add${addExpanded ? " lists-quick-add--expanded" : ""}`}
+                    onFocusCapture={() => setAddExpanded(true)}
+                    onBlur={handleAddFocusLeave}
+                  >
+                    <span className="lists-quick-add__check" aria-hidden="true" />
+                    <div className="lists-quick-add__col">
+                      <input
+                        ref={!isMobile ? desktopAddRef : undefined}
+                        type="text"
+                        className="lists-quick-add__input"
+                        placeholder={t("addItemPlaceholder")}
+                        onKeyDown={handleDesktopAddKey}
+                        aria-label={t("addItem")}
+                      />
+                      {addExpanded && (
+                        <div className="lists-quick-add__temporal">
+                          <div className="lists-quick-add__temporal-row">
+                            <span className="lists-quick-add__temporal-icon" aria-hidden="true">📅</span>
+                            <input
+                              type="date"
+                              className="lists-quick-add__temporal-input"
+                              value={addDueDateDraft}
+                              onChange={(e) => setAddDueDateDraft(e.target.value)}
+                              aria-label={t("dueDateLabel")}
+                            />
+                          </div>
+                          <div className="lists-quick-add__temporal-row">
+                            <span className="lists-quick-add__temporal-icon" aria-hidden="true">⏰</span>
+                            <input
+                              type="datetime-local"
+                              className="lists-quick-add__temporal-input"
+                              value={addReminderDraft}
+                              onChange={(e) => setAddReminderDraft(e.target.value)}
+                              aria-label={t("reminderLabel")}
+                            />
+                          </div>
+                          <div className="lists-quick-add__temporal-row">
+                            <span className="lists-quick-add__temporal-icon" aria-hidden="true">↻</span>
+                            <select
+                              className="lists-quick-add__temporal-input"
+                              value={addRepeatFreqDraft}
+                              onChange={(e) => {
+                                setAddRepeatFreqDraft(e.target.value);
+                                if (e.target.value !== "Weekly") setAddRepeatDaysDraft([]);
+                              }}
+                              aria-label={t("repeatLabel")}
+                            >
+                              <option value="">{t("repeatNone")}</option>
+                              <option value="Daily">{t("repeatDaily")}</option>
+                              <option value="Weekly">{t("repeatWeekly")}</option>
+                              <option value="Monthly">{t("repeatMonthly")}</option>
+                              <option value="Yearly">{t("repeatYearly")}</option>
+                            </select>
+                          </div>
+                          {addRepeatFreqDraft === "Weekly" && (
+                            <div className="lists-quick-add__days">
+                              {WEEK_DAYS.map((label, idx) => (
+                                <button
+                                  key={idx}
+                                  type="button"
+                                  className={`li-inspector__day-btn${addRepeatDaysDraft.includes(idx) ? " li-inspector__day-btn--on" : ""}`}
+                                  onClick={() => setAddRepeatDaysDraft((prev) =>
+                                    prev.includes(idx) ? prev.filter((d) => d !== idx) : [...prev, idx]
+                                  )}
+                                  aria-pressed={addRepeatDaysDraft.includes(idx)}
+                                  aria-label={label}
+                                >
+                                  {label}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                          <p className="lists-quick-add__hint">{t("addRowHint")}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {addError && (
+                    <p className="error-msg" style={{ padding: "0.25rem 1rem" }}>
+                      {addError}
+                    </p>
+                  )}
+
+                  {/* Item list / grid */}
+                  <div
+                    className={[
+                      "lists-items-body",
+                      viewMode === "grid" ? "lists-items-body--grid" : "",
+                    ].filter(Boolean).join(" ")}
+                  >
+                    {viewMode === "list" ? (
+                      <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                        <SortableContext
+                          items={unchecked.map((i) => i.itemId)}
+                          strategy={verticalListSortingStrategy}
+                        >
+                          {unchecked.map((item) => (
+                            <SortableItemRow
+                              key={item.itemId}
+                              item={item}
+                              listId={detail.listId}
+                              selectedItemId={selectedItem?.item.itemId ?? null}
+                              onSelect={handleSelectItem}
+                              onToggle={handleItemToggle}
+                            />
+                          ))}
+                        </SortableContext>
+                      </DndContext>
+                    ) : (
+                      <>
+                        {/* Grid column header */}
+                        <div className="lists-grid-header">
+                          <span></span>
+                          <span>{t("itemName")}</span>
+                          <span>{t("dueDateLabel")}</span>
+                          <span>★</span>
+                        </div>
                         {unchecked.map((item) => (
-                          <SortableItemRow
+                          <ItemRow
                             key={item.itemId}
                             item={item}
                             listId={detail.listId}
-                            reorderMode={reorderMode}
                             selectedItemId={selectedItem?.item.itemId ?? null}
                             onSelect={handleSelectItem}
                             onToggle={handleItemToggle}
+                            gridMode
                           />
                         ))}
-                      </SortableContext>
-                    </DndContext>
+                      </>
+                    )}
 
                     {sorted.length === 0 && (
-                      <p className="shared-list-empty-hint">{t("noItems")}</p>
+                      <p className="lists-items-empty">{t("noItems")}</p>
                     )}
 
                     {checked.length > 0 && (
                       <>
                         <button
                           type="button"
-                          className="shared-list-section-label shared-list-section-toggle"
+                          className="lists-section-toggle"
                           onClick={() => setCheckedCollapsed((c) => !c)}
                         >
                           {checkedCollapsed
-                            ? t("expandChecked", { count: checked.length })
-                            : t("collapseChecked")}
+                            ? `▶ ${t("expandChecked", { count: checked.length })}`
+                            : `▼ ${t("collapseChecked")}`}
                         </button>
                         {!checkedCollapsed && checked.map((item) => (
                           <ItemRow
@@ -528,40 +1017,11 @@ export function ListsPage() {
                             selectedItemId={selectedItem?.item.itemId ?? null}
                             onSelect={handleSelectItem}
                             onToggle={handleItemToggle}
+                            gridMode={viewMode === "grid"}
                           />
                         ))}
                       </>
                     )}
-
-                    {addError && (
-                      <p className="error-msg" style={{ padding: "0 0.75rem 0.5rem" }}>
-                        {addError}
-                      </p>
-                    )}
-                  </div>
-
-                  {detail.linkedEntityDisplayName && (
-                    <div className="shared-list-linked-info">
-                      {t("linkedTo", { name: detail.linkedEntityDisplayName })}
-                    </div>
-                  )}
-
-                  {/* Desktop: always-visible quick add bar */}
-                  {!isMobile && !reorderMode && (
-                    <div className="lists-quick-add-bar">
-                      <span className="lists-quick-add-prefix" aria-hidden="true">+</span>
-                      <input
-                        ref={desktopAddRef}
-                        type="text"
-                        className="lists-quick-add-input"
-                        placeholder={t("addItemPlaceholder")}
-                        value={addItemName}
-                        onChange={(e) => setAddItemName(e.target.value)}
-                        onKeyDown={handleDesktopAddKey}
-                        aria-label={t("addItem")}
-                      />
-                    </div>
-                  )}
                   </div>
                 </>
               )}
@@ -570,13 +1030,16 @@ export function ListsPage() {
         </div>
 
         {/* Desktop inspector */}
-        <InspectorPanel title={selectedInStore?.name}>
-          {inspectorContent}
+        <InspectorPanel
+          title={selectedInStore?.name ?? (detail?.name)}
+          onClose={selectedInStore ? () => setSelectedItem(null) : undefined}
+        >
+          {inspectorBody}
         </InspectorPanel>
       </div>
 
-      {/* Mobile: FAB for adding items */}
-      {isMobile && activeListId && !reorderMode && !showMobileAdd && (
+      {/* Mobile: FAB */}
+      {isMobile && activeListId && !showMobileAdd && (
         <button
           type="button"
           className="lists-fab"
@@ -587,24 +1050,30 @@ export function ListsPage() {
         </button>
       )}
 
-      {/* Mobile: add item composer */}
+      {/* Mobile: add composer */}
       {isMobile && showMobileAdd && (
         <div className="lists-add-composer">
           <input
             ref={addInputRef}
             type="text"
-            className="lists-add-composer-input"
+            className="lists-add-composer__input"
             placeholder={t("addItemPlaceholder")}
-            value={addItemName}
-            onChange={(e) => setAddItemName(e.target.value)}
-            onKeyDown={handleMobileAddKey}
+            onKeyDown={async (e) => {
+              if (e.key === "Escape") { setShowMobileAdd(false); setAddError(null); return; }
+              if (e.key !== "Enter") return;
+              const name = (e.target as HTMLInputElement).value.trim();
+              if (!name) return;
+              (e.target as HTMLInputElement).value = "";
+              await handleMobileAddSubmit(name);
+              addInputRef.current?.focus();
+            }}
             autoFocus
             aria-label={t("addItem")}
           />
           <button
             type="button"
-            className="lists-add-composer-close"
-            onClick={() => { setShowMobileAdd(false); setAddItemName(""); setAddError(null); }}
+            className="lists-add-composer__close"
+            onClick={() => { setShowMobileAdd(false); setAddError(null); }}
             aria-label={t("cancel")}
           >
             ✕
@@ -612,67 +1081,14 @@ export function ListsPage() {
         </div>
       )}
 
-      {/* Mobile: item detail bottom sheet */}
+      {/* Mobile: item detail sheet */}
       {isMobile && selectedItem && (
         <BottomSheetDetail
           open={!!selectedItem}
           onClose={() => setSelectedItem(null)}
           title={selectedInStore?.name}
         >
-      <div className="lists-inspector-content">
-            {/* Status toggle */}
-            <button
-              type="button"
-              className={`lists-inspector-status-btn${selectedInStore?.checked ? " lists-inspector-status-btn--checked" : ""}`}
-              onClick={() => selectedInStore && handleItemToggle(selectedInStore)}
-            >
-              <span className="lists-inspector-status-icon" aria-hidden="true" />
-              <span className="lists-inspector-status-label">
-                {selectedInStore?.checked ? t("markUnchecked") : t("markChecked")}
-              </span>
-            </button>
-
-            {/* Name */}
-            <input
-              className="lists-inspector-name-input"
-              value={inspectorNameDraft}
-              onChange={(e) => setInspectorNameDraft(e.target.value)}
-              onBlur={commitInspectorChanges}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") { e.preventDefault(); commitInspectorChanges(); }
-              }}
-              aria-label={t("itemName")}
-            />
-
-            {/* Quantity */}
-            <div className="lists-inspector-field-group">
-              <label className="lists-inspector-field-label">{t("quantityLabel")}</label>
-              <input
-                className="lists-inspector-field-input"
-                value={inspectorQtyDraft}
-                onChange={(e) => setInspectorQtyDraft(e.target.value)}
-                onBlur={commitInspectorChanges}
-                placeholder={t("quantityPlaceholder")}
-                aria-label={t("quantityLabel")}
-              />
-            </div>
-
-            {/* Note */}
-            <div className="lists-inspector-field-group">
-              <label className="lists-inspector-field-label">{t("noteLabel")}</label>
-              <textarea
-                className="lists-inspector-field-textarea"
-                value={inspectorNoteDraft}
-                onChange={(e) => setInspectorNoteDraft(e.target.value)}
-                onBlur={commitInspectorChanges}
-                placeholder={t("notePlaceholder")}
-                rows={2}
-                aria-label={t("noteLabel")}
-              />
-            </div>
-
-            {inspectorSaving && <span className="lists-inspector-saving">…</span>}
-          </div>
+          {inspectorBody}
         </BottomSheetDetail>
       )}
 
@@ -683,20 +1099,20 @@ export function ListsPage() {
           onClose={() => setShowSwitcherSheet(false)}
           title={t("title")}
         >
-          <div className="lists-switcher-sheet-body">
+          <div className="lists-switcher-sheet">
             {listsStatus === "loading" && lists.length === 0 ? (
-              <p className="lists-switcher-sheet-loading">{t("loading")}</p>
+              <p style={{ padding: "1rem", color: "var(--muted)", textAlign: "center" }}>{t("loading")}</p>
             ) : (
               lists.map((list) => (
                 <button
                   key={list.id}
                   type="button"
-                  className={`lists-switcher-sheet-row${list.id === activeListId ? " lists-switcher-sheet-row--active" : ""}`}
+                  className={`lists-switcher-sheet__row${list.id === activeListId ? " is-active" : ""}`}
                   onClick={() => handleSelectList(list.id)}
                 >
-                  <span className="lists-switcher-sheet-name">{list.name}</span>
+                  <span className="lists-switcher-sheet__name">{list.name}</span>
                   {list.uncheckedCount > 0 && (
-                    <span className="lists-switcher-sheet-count">{list.uncheckedCount}</span>
+                    <span className="li-count">{list.uncheckedCount}</span>
                   )}
                 </button>
               ))
@@ -714,9 +1130,7 @@ export function ListsPage() {
       )}
 
       {/* Create list modal */}
-      {showCreate && (
-        <CreateListModal onClose={() => setShowCreate(false)} />
-      )}
+      {showCreate && <CreateListModal onClose={() => setShowCreate(false)} />}
 
       {/* Linked event modal */}
       {showLinkedEvent && detail?.linkedEntityId && (

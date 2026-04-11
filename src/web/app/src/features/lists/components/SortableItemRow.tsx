@@ -6,7 +6,6 @@ import type { SharedListItemDetail } from "../../../api/types/listTypes";
 interface SortableItemRowProps {
   item: SharedListItemDetail;
   listId: string;
-  reorderMode?: boolean;
   selectedItemId?: string | null;
   onSelect?: (item: SharedListItemDetail, listId: string) => void;
   onToggle?: (item: SharedListItemDetail) => void;
@@ -15,7 +14,6 @@ interface SortableItemRowProps {
 export function SortableItemRow({
   item,
   listId,
-  reorderMode = false,
   selectedItemId,
   onSelect,
   onToggle,
@@ -27,7 +25,7 @@ export function SortableItemRow({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: item.itemId, disabled: !reorderMode });
+  } = useSortable({ id: item.itemId });
 
   return (
     <div
@@ -43,11 +41,10 @@ export function SortableItemRow({
       <ItemRow
         item={item}
         listId={listId}
-        reorderMode={reorderMode}
         selectedItemId={selectedItemId}
         onSelect={onSelect}
         onToggle={onToggle}
-        dragHandleProps={reorderMode ? { ...listeners, ...attributes } : undefined}
+        dragHandleProps={{ ...listeners, ...attributes }}
       />
     </div>
   );

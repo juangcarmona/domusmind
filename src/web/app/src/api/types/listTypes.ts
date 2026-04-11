@@ -20,6 +20,10 @@ export interface SharedListItemDetail {
   quantity: string | null;
   note: string | null;
   order: number;
+  importance: boolean;
+  dueDate: string | null;   // "YYYY-MM-DD"
+  reminder: string | null;  // ISO DateTimeOffset
+  repeat: string | null;
   updatedAtUtc: string;
   updatedByMemberId: string | null;
 }
@@ -69,6 +73,10 @@ export interface AddItemToSharedListResponse {
   quantity: string | null;
   note: string | null;
   order: number;
+  importance: boolean;
+  dueDate: string | null;
+  reminder: string | null;
+  repeat: string | null;
 }
 
 export interface ToggleSharedListItemRequest {
@@ -94,6 +102,39 @@ export interface UpdateSharedListItemResponse {
   name: string;
   quantity: string | null;
   note: string | null;
+  updatedAtUtc: string;
+  importance: boolean;
+  dueDate: string | null;
+  reminder: string | null;
+  repeat: string | null;
+}
+
+export interface SetItemImportanceRequest {
+  importance: boolean;
+}
+
+export interface SetItemImportanceResponse {
+  itemId: string;
+  importance: boolean;
+  updatedAtUtc: string;
+}
+
+export interface SetItemTemporalRequest {
+  dueDate?: string | null;
+  reminder?: string | null;
+  repeat?: string | null;
+}
+
+export interface SetItemTemporalResponse {
+  itemId: string;
+  dueDate: string | null;
+  reminder: string | null;
+  repeat: string | null;
+  updatedAtUtc: string;
+}
+
+export interface ClearItemTemporalResponse {
+  itemId: string;
   updatedAtUtc: string;
 }
 

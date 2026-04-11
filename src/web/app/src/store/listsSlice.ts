@@ -5,7 +5,6 @@ import type {
   SharedListItemDetail,
   GetSharedListDetailResponse,
 } from "../api/types/listTypes";
-
 // ── State ────────────────────────────────────────────────────────────────────
 
 interface SharedListsState {
@@ -227,6 +226,58 @@ export const reorderSharedListItems = createAsyncThunk(
   },
 );
 
+export const setItemImportance = createAsyncThunk(
+  "sharedLists/setItemImportance",
+  async (
+    { listId, itemId, importance }: { listId: string; itemId: string; importance: boolean },
+    { rejectWithValue },
+  ) => {
+    try {
+      return await listsApi.setItemImportance(listId, itemId, { importance });
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to set importance",
+      );
+    }
+  },
+);
+
+export const setItemTemporal = createAsyncThunk(
+  "sharedLists/setItemTemporal",
+  async (
+    { listId, itemId, dueDate, reminder, repeat }: {
+      listId: string; itemId: string;
+      dueDate?: string | null; reminder?: string | null; repeat?: string | null;
+    },
+    { rejectWithValue },
+  ) => {
+    try {
+      return await listsApi.setItemTemporal(listId, itemId, { dueDate, reminder, repeat });
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to set temporal fields",
+      );
+    }
+  },
+);
+
+export const clearItemTemporal = createAsyncThunk(
+  "sharedLists/clearItemTemporal",
+  async (
+    { listId, itemId }: { listId: string; itemId: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await listsApi.clearItemTemporal(listId, itemId);
+      return { ...res, itemId };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to clear temporal fields",
+      );
+    }
+  },
+);
+
 // ── Slice ────────────────────────────────────────────────────────────────────
 
 const listsSlice = createSlice({
@@ -251,6 +302,32 @@ const listsSlice = createSlice({
       state.detail.items = state.detail.items.filter(
         (i) => i.itemId !== action.payload.itemId,
       );
+    },
+    // Optimistic importance: flip importance immediately
+    optimisticSetImportance(state, action: PayloadAction<{ itemId: string; importance: boolean }>) {
+      if (!state.detail) return;
+      const item = state.detail.items.find((i) => i.itemId === action.payload.itemId);
+      if (item) item.importance = action.payload.importance;
+    },
+    // Optimistic temporal: update temporal fields immediately
+    optimisticSetTemporal(state, action: PayloadAction<{
+      itemId: string;
+      dueDate?: string | null;
+      reminder?: string | null;
+      repeat?: string | null;
+    }>) {
+      if (!state.detail) return;
+      const item = state.detail.items.find((i) => i.itemId === action.payload.itemId);
+      if (!item) return;
+      if (action.payload.dueDate !== undefined) item.dueDate = action.payload.dueDate;
+      if (action.payload.reminder !== undefined) item.reminder = action.payload.reminder;
+      if (action.payload.repeat !== undefined) item.repeat = action.payload.repeat;
+    },
+    // Optimistic clear temporal
+    optimisticClearTemporal(state, action: PayloadAction<{ itemId: string }>) {
+      if (!state.detail) return;
+      const item = state.detail.items.find((i) => i.itemId === action.payload.itemId);
+      if (item) { item.dueDate = null; item.reminder = null; item.repeat = null; }
     },
     // Optimistic reorder: update item orders immediately in detail
     optimisticReorderItems(state, action: PayloadAction<{ itemIds: string[] }>) {
@@ -334,6 +411,10 @@ const listsSlice = createSlice({
             quantity: action.payload.quantity,
             note: action.payload.note,
             order: action.payload.order,
+            importance: action.payload.importance,
+            dueDate: action.payload.dueDate,
+            reminder: action.payload.reminder,
+            repeat: action.payload.repeat,
             updatedAtUtc: new Date().toISOString(),
             updatedByMemberId: null,
           };
@@ -377,6 +458,10 @@ const listsSlice = createSlice({
         item.name = action.payload.name;
         item.quantity = action.payload.quantity;
         item.note = action.payload.note;
+        item.importance = action.payload.importance;
+        item.dueDate = action.payload.dueDate;
+        item.reminder = action.payload.reminder;
+        item.repeat = action.payload.repeat;
         item.updatedAtUtc = action.payload.updatedAtUtc;
       }
     });
@@ -424,8 +509,42 @@ const listsSlice = createSlice({
         summary.linkedEntityId = null;
       }
     });
+
+    // setItemImportance - sync confirmed importance from server
+    builder.addCase(setItemImportance.fulfilled, (state, action) => {
+      if (!state.detail) return;
+      const item = state.detail.items.find((i) => i.itemId === action.payload.itemId);
+      if (item) {
+        item.importance = action.payload.importance;
+        item.updatedAtUtc = action.payload.updatedAtUtc;
+      }
+    });
+
+    // setItemTemporal - sync confirmed temporal fields from server
+    builder.addCase(setItemTemporal.fulfilled, (state, action) => {
+      if (!state.detail) return;
+      const item = state.detail.items.find((i) => i.itemId === action.payload.itemId);
+      if (item) {
+        item.dueDate = action.payload.dueDate;
+        item.reminder = action.payload.reminder;
+        item.repeat = action.payload.repeat;
+        item.updatedAtUtc = action.payload.updatedAtUtc;
+      }
+    });
+
+    // clearItemTemporal - clear all temporal fields
+    builder.addCase(clearItemTemporal.fulfilled, (state, action) => {
+      if (!state.detail) return;
+      const item = state.detail.items.find((i) => i.itemId === action.payload.itemId);
+      if (item) {
+        item.dueDate = null;
+        item.reminder = null;
+        item.repeat = null;
+        item.updatedAtUtc = action.payload.updatedAtUtc;
+      }
+    });
   },
 });
 
-export const { optimisticToggleItem, optimisticRenameItem, optimisticRemoveItem, optimisticReorderItems, clearDetail } = listsSlice.actions;
+export const { optimisticToggleItem, optimisticRenameItem, optimisticRemoveItem, optimisticReorderItems, optimisticSetImportance, optimisticSetTemporal, optimisticClearTemporal, clearDetail } = listsSlice.actions;
 export default listsSlice.reducer;

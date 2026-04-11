@@ -10,6 +10,11 @@ import type {
   ToggleSharedListItemResponse,
   UpdateSharedListItemRequest,
   UpdateSharedListItemResponse,
+  SetItemImportanceRequest,
+  SetItemImportanceResponse,
+  SetItemTemporalRequest,
+  SetItemTemporalResponse,
+  ClearItemTemporalResponse,
   LinkSharedListRequest,
   LinkSharedListResponse,
   CreateLinkedSharedListForEventRequest,
@@ -91,4 +96,22 @@ export const listsApi = {
       method: "PATCH",
       body: JSON.stringify(body),
     }),
+
+  setItemImportance: (listId: string, itemId: string, body: SetItemImportanceRequest) =>
+    request<SetItemImportanceResponse>(
+      `/api/shared-lists/${listId}/items/${itemId}/importance`,
+      { method: "PATCH", body: JSON.stringify(body) },
+    ),
+
+  setItemTemporal: (listId: string, itemId: string, body: SetItemTemporalRequest) =>
+    request<SetItemTemporalResponse>(
+      `/api/shared-lists/${listId}/items/${itemId}/temporal`,
+      { method: "PATCH", body: JSON.stringify(body) },
+    ),
+
+  clearItemTemporal: (listId: string, itemId: string) =>
+    request<ClearItemTemporalResponse>(
+      `/api/shared-lists/${listId}/items/${itemId}/temporal`,
+      { method: "DELETE" },
+    ),
 };
