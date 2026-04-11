@@ -66,4 +66,8 @@ export default {
   markUnchecked: "标记为未完成",
   selectItemHint: "选择一个项目查看详情",
   noListSelected: "未选择列表",
+  contextSection: "上下文",
+  listLabel: "清单",
+  scopeLabel: "范围",
+  scopeHousehold: "家庭",
 } as const;

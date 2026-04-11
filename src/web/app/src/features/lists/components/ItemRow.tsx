@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../store/hooks";
 import {
-  optimisticRemoveItem,
-  removeSharedListItem,
   optimisticSetImportance,
   setItemImportance,
 } from "../../../store/listsSlice";
@@ -77,12 +75,6 @@ export function ItemRow({
     const next = !item.importance;
     dispatch(optimisticSetImportance({ itemId: item.itemId, importance: next }));
     dispatch(setItemImportance({ listId, itemId: item.itemId, importance: next }));
-  }
-
-  function handleRemove(e: React.MouseEvent) {
-    e.stopPropagation();
-    dispatch(optimisticRemoveItem({ itemId: item.itemId }));
-    dispatch(removeSharedListItem({ listId, itemId: item.itemId }));
   }
 
   return (
@@ -166,16 +158,6 @@ export function ItemRow({
           {item.importance ? "★" : "☆"}
         </button>
 
-        {/* Remove — hover-only */}
-        <button
-          type="button"
-          className="li-row__remove"
-          onClick={handleRemove}
-          aria-label={t("removeItem")}
-          tabIndex={-1}
-        >
-          ×
-        </button>
       </div>
     </div>
   );

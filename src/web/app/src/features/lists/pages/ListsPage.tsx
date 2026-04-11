@@ -129,6 +129,42 @@ const IconOptions = () => (
   </svg>
 );
 
+const IconCalendar = () => (
+  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1.5" y="3" width="13" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
+    <path d="M1.5 6.5h13" stroke="currentColor" strokeWidth="1.4"/>
+    <path d="M5 1.5v3M11 1.5v3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+  </svg>
+);
+
+const IconBell = () => (
+  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8 2a4.5 4.5 0 0 0-4.5 4.5V9.5L2 11h12l-1.5-1.5V6.5A4.5 4.5 0 0 0 8 2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+    <path d="M6.5 12.5a1.5 1.5 0 0 0 3 0" stroke="currentColor" strokeWidth="1.4"/>
+  </svg>
+);
+
+const IconRepeat = () => (
+  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M3 5h8.5a2 2 0 0 1 2 2v1" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    <path d="M5.5 2.5L3 5l2.5 2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M13 11H4.5a2 2 0 0 1-2-2V8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+    <path d="M10.5 13.5L13 11l-2.5-2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const IconTrash = () => (
+  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2.5 4h11M5.5 4V2.5h5V4M6.5 7v5M9.5 7v5M3.5 4l.8 9.5h7.4L12.5 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const IconChevronDown = () => (
+  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 export function ListsPage() {
   const { listId: routeListId } = useParams<{ listId?: string }>();
   const { t } = useTranslation("lists");
@@ -163,6 +199,7 @@ export function ListsPage() {
 
   // Add-row expansion + quick temporal capture
   const [addExpanded, setAddExpanded] = useState(false);
+  const [addOpenPanel, setAddOpenPanel] = useState<"dueDate" | "reminder" | "repeat" | null>(null);
   const [addDueDateDraft, setAddDueDateDraft] = useState("");
   const [addReminderDraft, setAddReminderDraft] = useState("");
   const [addRepeatFreqDraft, setAddRepeatFreqDraft] = useState("");
@@ -394,6 +431,7 @@ export function ListsPage() {
       e.preventDefault();
       (e.target as HTMLInputElement).value = "";
       setAddExpanded(false);
+      setAddOpenPanel(null);
       setAddDueDateDraft(""); setAddReminderDraft(""); setAddRepeatFreqDraft(""); setAddRepeatDaysDraft([]);
       setAddError(null);
       return;
@@ -419,6 +457,7 @@ export function ListsPage() {
         }));
       }
       setAddDueDateDraft(""); setAddReminderDraft(""); setAddRepeatFreqDraft(""); setAddRepeatDaysDraft([]);
+      setAddOpenPanel(null);
     } else {
       setAddError((result.payload as string) ?? t("addError"));
     }
@@ -483,193 +522,234 @@ export function ListsPage() {
   // ── Inspector body ───────────────────────────────────────────────
   const inspectorBody = selectedInStore ? (
     <div className="li-inspector">
+      <div className="li-inspector__scroll">
 
-      {/* Linked context chips */}
-      {renderLinkedContext("li-inspector__context")}
+        {/* Status toggle */}
+        <button
+          type="button"
+          className={`li-inspector__status${selectedInStore.checked ? " li-inspector__status--done" : ""}`}
+          onClick={() => handleItemToggle(selectedInStore)}
+        >
+          <span className="li-inspector__status-circle" aria-hidden="true" />
+          <span>{selectedInStore.checked ? t("markUnchecked") : t("markChecked")}</span>
+        </button>
 
-      {/* Status toggle */}
-      <button
-        type="button"
-        className={`li-inspector__status${selectedInStore.checked ? " li-inspector__status--done" : ""}`}
-        onClick={() => handleItemToggle(selectedInStore)}
-      >
-        <span className="li-inspector__status-circle" aria-hidden="true" />
-        <span>{selectedInStore.checked ? t("markUnchecked") : t("markChecked")}</span>
-      </button>
+        {/* Title */}
+        <input
+          className="li-inspector__title"
+          value={iNameDraft}
+          onChange={(e) => setINameDraft(e.target.value)}
+          onBlur={commitBaseFields}
+          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commitBaseFields(); } }}
+          aria-label={t("itemName")}
+        />
 
-      {/* Title */}
-      <input
-        className="li-inspector__title"
-        value={iNameDraft}
-        onChange={(e) => setINameDraft(e.target.value)}
-        onBlur={commitBaseFields}
-        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); commitBaseFields(); } }}
-        aria-label={t("itemName")}
-      />
+        {/* Importance */}
+        <button
+          type="button"
+          className={`li-inspector__importance${selectedInStore.importance ? " li-inspector__importance--on" : ""}`}
+          onClick={handleImportanceToggle}
+        >
+          <span className="li-inspector__importance-star" aria-hidden="true">
+            {selectedInStore.importance ? "★" : "☆"}
+          </span>
+          <span>{selectedInStore.importance ? t("removeImportance") : t("setImportance")}</span>
+        </button>
 
-      {/* Importance */}
-      <button
-        type="button"
-        className={`li-inspector__importance${selectedInStore.importance ? " li-inspector__importance--on" : ""}`}
-        onClick={handleImportanceToggle}
-      >
-        <span className="li-inspector__importance-star" aria-hidden="true">
-          {selectedInStore.importance ? "★" : "☆"}
-        </span>
-        <span>{selectedInStore.importance ? t("removeImportance") : t("setImportance")}</span>
-      </button>
+        {/* Time section */}
+        <div className="li-inspector__section">
+          <div className="li-inspector__section-label">{t("timeSection")}</div>
 
-      {/* Time section */}
-      <div className="li-inspector__section">
-        <div className="li-inspector__section-label">{t("timeSection")}</div>
+          <div className="li-inspector__field">
+            <label className="li-inspector__field-label" htmlFor="li-due">{t("dueDateLabel")}</label>
+            <input
+              id="li-due"
+              type="date"
+              className="li-inspector__field-input"
+              value={iDueDateDraft}
+              onChange={(e) => setIDueDateDraft(e.target.value)}
+              onBlur={() => commitTemporalFields()}
+            />
+          </div>
 
-        <div className="li-inspector__field">
-          <label className="li-inspector__field-label" htmlFor="li-due">{t("dueDateLabel")}</label>
-          <input
-            id="li-due"
-            type="date"
-            className="li-inspector__field-input"
-            value={iDueDateDraft}
-            onChange={(e) => setIDueDateDraft(e.target.value)}
-            onBlur={() => commitTemporalFields()}
-          />
-        </div>
+          <div className="li-inspector__field">
+            <label className="li-inspector__field-label" htmlFor="li-reminder">{t("reminderLabel")}</label>
+            <input
+              id="li-reminder"
+              type="datetime-local"
+              className="li-inspector__field-input"
+              value={iReminderDraft}
+              onChange={(e) => setIReminderDraft(e.target.value)}
+              onBlur={() => commitTemporalFields()}
+            />
+          </div>
 
-        <div className="li-inspector__field">
-          <label className="li-inspector__field-label" htmlFor="li-reminder">{t("reminderLabel")}</label>
-          <input
-            id="li-reminder"
-            type="datetime-local"
-            className="li-inspector__field-input"
-            value={iReminderDraft}
-            onChange={(e) => setIReminderDraft(e.target.value)}
-            onBlur={() => commitTemporalFields()}
-          />
-        </div>
+          {/* Recurrence — structured picker reusing Agenda frequency vocabulary */}
+          <div className="li-inspector__field">
+            <label className="li-inspector__field-label" htmlFor="li-repeat">{t("repeatLabel")}</label>
+            <select
+              id="li-repeat"
+              className="li-inspector__repeat-select"
+              value={iRepeatFreq}
+              onChange={(e) => { handleRepeatFreqChange(e.target.value); }}
+              onBlur={() => commitTemporalFields()}
+              aria-label={t("repeatLabel")}
+            >
+              <option value="">{t("repeatNone")}</option>
+              <option value="Daily">{t("repeatDaily")}</option>
+              <option value="Weekly">{t("repeatWeekly")}</option>
+              <option value="Monthly">{t("repeatMonthly")}</option>
+              <option value="Yearly">{t("repeatYearly")}</option>
+            </select>
 
-        {/* Recurrence — structured picker reusing Agenda frequency vocabulary */}
-        <div className="li-inspector__field">
-          <label className="li-inspector__field-label" htmlFor="li-repeat">{t("repeatLabel")}</label>
-          <select
-            id="li-repeat"
-            className="li-inspector__repeat-select"
-            value={iRepeatFreq}
-            onChange={(e) => { handleRepeatFreqChange(e.target.value); }}
-            onBlur={() => commitTemporalFields()}
-            aria-label={t("repeatLabel")}
-          >
-            <option value="">{t("repeatNone")}</option>
-            <option value="Daily">{t("repeatDaily")}</option>
-            <option value="Weekly">{t("repeatWeekly")}</option>
-            <option value="Monthly">{t("repeatMonthly")}</option>
-            <option value="Yearly">{t("repeatYearly")}</option>
-          </select>
+            {iRepeatFreq === "Weekly" && (
+              <div className="li-inspector__repeat-days">
+                {WEEK_DAYS.map((label, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className={`li-inspector__day-btn${iRepeatDays.includes(idx) ? " li-inspector__day-btn--on" : ""}`}
+                    onClick={() => handleRepeatDayToggle(idx)}
+                    onBlur={() => commitTemporalFields()}
+                    aria-pressed={iRepeatDays.includes(idx)}
+                    aria-label={label}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
-          {iRepeatFreq === "Weekly" && (
-            <div className="li-inspector__repeat-days">
-              {WEEK_DAYS.map((label, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  className={`li-inspector__day-btn${iRepeatDays.includes(idx) ? " li-inspector__day-btn--on" : ""}`}
-                  onClick={() => handleRepeatDayToggle(idx)}
-                  onBlur={() => commitTemporalFields()}
-                  aria-pressed={iRepeatDays.includes(idx)}
-                  aria-label={label}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
+          {(hasTemporalDraft || itemHasTemporal) && (
+            <button
+              type="button"
+              className="li-inspector__clear-temporal"
+              onClick={handleClearTemporal}
+            >
+              {t("clearTemporal")}
+            </button>
+          )}
+
+          {/* Agenda projection hint */}
+          {itemHasTemporal && (
+            <p className="li-inspector__agenda-hint">{t("agendaProjectionHint")}</p>
           )}
         </div>
 
-        {(hasTemporalDraft || itemHasTemporal) && (
-          <button
-            type="button"
-            className="li-inspector__clear-temporal"
-            onClick={handleClearTemporal}
-          >
-            {t("clearTemporal")}
-          </button>
-        )}
+        {/* Context section */}
+        <div className="li-inspector__section">
+          <div className="li-inspector__section-label">{t("contextSection")}</div>
 
-        {/* Agenda projection hint */}
-        {itemHasTemporal && (
-          <p className="li-inspector__agenda-hint">{t("agendaProjectionHint")}</p>
-        )}
-      </div>
-
-      {/* Metadata section */}
-      <div className="li-inspector__section">
-        <div className="li-inspector__section-label">{t("detailsSection")}</div>
-
-        <div className="li-inspector__field">
-          <label className="li-inspector__field-label" htmlFor="li-qty">{t("quantityLabel")}</label>
-          <input
-            id="li-qty"
-            className="li-inspector__field-input"
-            value={iQtyDraft}
-            onChange={(e) => setIQtyDraft(e.target.value)}
-            onBlur={commitBaseFields}
-            placeholder={t("quantityPlaceholder")}
-          />
-        </div>
-
-        <div className="li-inspector__field">
-          <label className="li-inspector__field-label" htmlFor="li-note">{t("noteLabel")}</label>
-          <textarea
-            id="li-note"
-            className="li-inspector__field-textarea"
-            value={iNoteDraft}
-            onChange={(e) => setINoteDraft(e.target.value)}
-            onBlur={commitBaseFields}
-            placeholder={t("notePlaceholder")}
-            rows={2}
-          />
-        </div>
-      </div>
-
-      {/* Scope / context section */}
-      <div className="li-inspector__section">
-        <div className="li-inspector__section-label">{t("scopeSection")}</div>
-        {linkedArea ? (
-          <div className="li-inspector__scope-row">
-            <span className="li-inspector__scope-label">{t("areaLabel")}</span>
-            <ContextChip label={linkedArea.name} />
-          </div>
-        ) : (
-          <p className="li-inspector__scope-hint">{t("householdScoped")}</p>
-        )}
-        {linkedEntityLabel && (
-          <div className="li-inspector__scope-row">
-            <span className="li-inspector__scope-label">{t("planLabel")}</span>
-            <ContextChip label={linkedEntityLabel} onClick={() => setShowLinkedEvent(true)} />
-          </div>
-        )}
-        {selectedInStore.updatedByMemberId && (() => {
-          const m = members.find((x) => x.memberId === selectedInStore.updatedByMemberId);
-          return m ? (
+          {/* List name — read-only */}
+          {detail && (
             <div className="li-inspector__scope-row">
-              <span className="li-inspector__scope-label">{t("lastUpdatedBy")}</span>
-              <span className="li-inspector__scope-value">{m.preferredName ?? m.name}</span>
+              <span className="li-inspector__scope-label">{t("listLabel")}</span>
+              <span className="li-inspector__scope-value">{detail.name}</span>
             </div>
-          ) : null;
-        })()}
-      </div>
+          )}
 
-      {/* Actions */}
-      <div className="li-inspector__actions">
+          {/* Scope — disabled selector (V1: Household only) */}
+          <div className="li-inspector__field">
+            <label className="li-inspector__field-label" htmlFor="li-scope">{t("scopeLabel")}</label>
+            <select
+              id="li-scope"
+              className="li-inspector__scope-select"
+              value="Household"
+              disabled
+              aria-label={t("scopeLabel")}
+            >
+              <option value="Household">{t("scopeHousehold")}</option>
+            </select>
+          </div>
+
+          {/* Area */}
+          {linkedArea && (
+            <div className="li-inspector__scope-row">
+              <span className="li-inspector__scope-label">{t("areaLabel")}</span>
+              <ContextChip label={linkedArea.name} />
+            </div>
+          )}
+
+          {/* Linked plan */}
+          {linkedEntityLabel && (
+            <div className="li-inspector__scope-row">
+              <span className="li-inspector__scope-label">{t("planLabel")}</span>
+              <ContextChip label={linkedEntityLabel} onClick={() => setShowLinkedEvent(true)} />
+            </div>
+          )}
+
+          {/* Last updated by */}
+          {selectedInStore.updatedByMemberId && (() => {
+            const m = members.find((x) => x.memberId === selectedInStore.updatedByMemberId);
+            return m ? (
+              <div className="li-inspector__scope-row">
+                <span className="li-inspector__scope-label">{t("lastUpdatedBy")}</span>
+                <span className="li-inspector__scope-value">{m.preferredName ?? m.name}</span>
+              </div>
+            ) : null;
+          })()}
+        </div>
+
+        {/* Details section */}
+        <div className="li-inspector__section">
+          <div className="li-inspector__section-label">{t("detailsSection")}</div>
+
+          <div className="li-inspector__field">
+            <label className="li-inspector__field-label" htmlFor="li-qty">{t("quantityLabel")}</label>
+            <input
+              id="li-qty"
+              className="li-inspector__field-input"
+              value={iQtyDraft}
+              onChange={(e) => setIQtyDraft(e.target.value)}
+              onBlur={commitBaseFields}
+              placeholder={t("quantityPlaceholder")}
+            />
+          </div>
+
+          <div className="li-inspector__field">
+            <label className="li-inspector__field-label" htmlFor="li-note">{t("noteLabel")}</label>
+            <textarea
+              id="li-note"
+              className="li-inspector__field-textarea"
+              value={iNoteDraft}
+              onChange={(e) => setINoteDraft(e.target.value)}
+              onBlur={commitBaseFields}
+              placeholder={t("notePlaceholder")}
+              rows={2}
+            />
+          </div>
+        </div>
+
+        {iSaving && <span className="li-inspector__saving">…</span>}
+
+      </div>{/* /li-inspector__scroll */}
+
+      {/* Bottom bar — sticky, outside scroll */}
+      <div className="li-inspector__bottom-bar">
         <button
           type="button"
-          className="li-inspector__remove-btn"
-          onClick={handleInspectorRemove}
+          className="li-inspector__bottom-close"
+          onClick={() => setSelectedItem(null)}
+          aria-label={t("cancel")}
+          title={t("cancel")}
         >
-          {t("removeItem")}
+          <IconChevronDown />
+        </button>
+        <span className="li-inspector__bottom-meta">
+          {new Date(selectedInStore.updatedAtUtc).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+        </span>
+        <button
+          type="button"
+          className="li-inspector__bottom-delete"
+          onClick={handleInspectorRemove}
+          aria-label={t("removeItem")}
+          title={t("removeItem")}
+        >
+          <IconTrash />
         </button>
       </div>
 
-      {iSaving && <span className="li-inspector__saving">…</span>}
     </div>
   ) : (
     <div className="li-inspector-hint">
@@ -877,65 +957,106 @@ export function ListsPage() {
                         aria-label={t("addItem")}
                       />
                       {addExpanded && (
-                        <div className="lists-quick-add__temporal">
-                          <div className="lists-quick-add__temporal-row">
-                            <span className="lists-quick-add__temporal-icon" aria-hidden="true">📅</span>
-                            <input
-                              type="date"
-                              className="lists-quick-add__temporal-input"
-                              value={addDueDateDraft}
-                              onChange={(e) => setAddDueDateDraft(e.target.value)}
+                        <>
+                          {/* Icon action row — one toggle per temporal field */}
+                          <div className="lists-quick-add__actions">
+                            <button
+                              type="button"
+                              className={`lists-quick-add__action-btn${addOpenPanel === "dueDate" || addDueDateDraft ? " is-active" : ""}`}
+                              onClick={() => setAddOpenPanel((p) => p === "dueDate" ? null : "dueDate")}
                               aria-label={t("dueDateLabel")}
-                            />
-                          </div>
-                          <div className="lists-quick-add__temporal-row">
-                            <span className="lists-quick-add__temporal-icon" aria-hidden="true">⏰</span>
-                            <input
-                              type="datetime-local"
-                              className="lists-quick-add__temporal-input"
-                              value={addReminderDraft}
-                              onChange={(e) => setAddReminderDraft(e.target.value)}
-                              aria-label={t("reminderLabel")}
-                            />
-                          </div>
-                          <div className="lists-quick-add__temporal-row">
-                            <span className="lists-quick-add__temporal-icon" aria-hidden="true">↻</span>
-                            <select
-                              className="lists-quick-add__temporal-input"
-                              value={addRepeatFreqDraft}
-                              onChange={(e) => {
-                                setAddRepeatFreqDraft(e.target.value);
-                                if (e.target.value !== "Weekly") setAddRepeatDaysDraft([]);
-                              }}
-                              aria-label={t("repeatLabel")}
+                              title={t("dueDateLabel")}
                             >
-                              <option value="">{t("repeatNone")}</option>
-                              <option value="Daily">{t("repeatDaily")}</option>
-                              <option value="Weekly">{t("repeatWeekly")}</option>
-                              <option value="Monthly">{t("repeatMonthly")}</option>
-                              <option value="Yearly">{t("repeatYearly")}</option>
-                            </select>
+                              <IconCalendar />
+                            </button>
+                            <button
+                              type="button"
+                              className={`lists-quick-add__action-btn${addOpenPanel === "reminder" || addReminderDraft ? " is-active" : ""}`}
+                              onClick={() => setAddOpenPanel((p) => p === "reminder" ? null : "reminder")}
+                              aria-label={t("reminderLabel")}
+                              title={t("reminderLabel")}
+                            >
+                              <IconBell />
+                            </button>
+                            <button
+                              type="button"
+                              className={`lists-quick-add__action-btn${addOpenPanel === "repeat" || addRepeatFreqDraft ? " is-active" : ""}`}
+                              onClick={() => setAddOpenPanel((p) => p === "repeat" ? null : "repeat")}
+                              aria-label={t("repeatLabel")}
+                              title={t("repeatLabel")}
+                            >
+                              <IconRepeat />
+                            </button>
                           </div>
-                          {addRepeatFreqDraft === "Weekly" && (
-                            <div className="lists-quick-add__days">
-                              {WEEK_DAYS.map((label, idx) => (
-                                <button
-                                  key={idx}
-                                  type="button"
-                                  className={`li-inspector__day-btn${addRepeatDaysDraft.includes(idx) ? " li-inspector__day-btn--on" : ""}`}
-                                  onClick={() => setAddRepeatDaysDraft((prev) =>
-                                    prev.includes(idx) ? prev.filter((d) => d !== idx) : [...prev, idx]
-                                  )}
-                                  aria-pressed={addRepeatDaysDraft.includes(idx)}
-                                  aria-label={label}
-                                >
-                                  {label}
-                                </button>
-                              ))}
+
+                          {/* Contextual panel — one at a time */}
+                          {addOpenPanel === "dueDate" && (
+                            <div className="lists-quick-add__panel">
+                              <label className="lists-quick-add__panel-label" htmlFor="qa-due">{t("dueDateLabel")}</label>
+                              <input
+                                id="qa-due"
+                                type="date"
+                                className="lists-quick-add__panel-input"
+                                value={addDueDateDraft}
+                                onChange={(e) => setAddDueDateDraft(e.target.value)}
+                                aria-label={t("dueDateLabel")}
+                              />
+                            </div>
+                          )}
+                          {addOpenPanel === "reminder" && (
+                            <div className="lists-quick-add__panel">
+                              <label className="lists-quick-add__panel-label" htmlFor="qa-reminder">{t("reminderLabel")}</label>
+                              <input
+                                id="qa-reminder"
+                                type="datetime-local"
+                                className="lists-quick-add__panel-input"
+                                value={addReminderDraft}
+                                onChange={(e) => setAddReminderDraft(e.target.value)}
+                                aria-label={t("reminderLabel")}
+                              />
+                            </div>
+                          )}
+                          {addOpenPanel === "repeat" && (
+                            <div className="lists-quick-add__panel">
+                              <label className="lists-quick-add__panel-label" htmlFor="qa-repeat">{t("repeatLabel")}</label>
+                              <select
+                                id="qa-repeat"
+                                className="lists-quick-add__panel-input"
+                                value={addRepeatFreqDraft}
+                                onChange={(e) => {
+                                  setAddRepeatFreqDraft(e.target.value);
+                                  if (e.target.value !== "Weekly") setAddRepeatDaysDraft([]);
+                                }}
+                                aria-label={t("repeatLabel")}
+                              >
+                                <option value="">{t("repeatNone")}</option>
+                                <option value="Daily">{t("repeatDaily")}</option>
+                                <option value="Weekly">{t("repeatWeekly")}</option>
+                                <option value="Monthly">{t("repeatMonthly")}</option>
+                                <option value="Yearly">{t("repeatYearly")}</option>
+                              </select>
+                              {addRepeatFreqDraft === "Weekly" && (
+                                <div className="li-inspector__repeat-days" style={{ marginTop: "0.5rem" }}>
+                                  {WEEK_DAYS.map((label, idx) => (
+                                    <button
+                                      key={idx}
+                                      type="button"
+                                      className={`li-inspector__day-btn${addRepeatDaysDraft.includes(idx) ? " li-inspector__day-btn--on" : ""}`}
+                                      onClick={() => setAddRepeatDaysDraft((prev) =>
+                                        prev.includes(idx) ? prev.filter((d) => d !== idx) : [...prev, idx]
+                                      )}
+                                      aria-pressed={addRepeatDaysDraft.includes(idx)}
+                                      aria-label={label}
+                                    >
+                                      {label}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
                             </div>
                           )}
                           <p className="lists-quick-add__hint">{t("addRowHint")}</p>
-                        </div>
+                        </>
                       )}
                     </div>
                   </div>

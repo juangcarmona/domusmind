@@ -66,4 +66,8 @@ export default {
   markUnchecked: "未完了としてマーク",
   selectItemHint: "アイテムを選択して詳細を表示",
   noListSelected: "リストが選択されていません",
+  contextSection: "コンテキスト",
+  listLabel: "リスト",
+  scopeLabel: "範囲",
+  scopeHousehold: "世帯",
 } as const;

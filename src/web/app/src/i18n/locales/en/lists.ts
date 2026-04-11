@@ -93,4 +93,9 @@ export default {
   attachSelectPlaceholder: "Select a list…",
   attachAttaching: "Attaching…",
   attachError: "Failed to attach list",
+  // Context section (inspector)
+  contextSection: "Context",
+  listLabel: "List",
+  scopeLabel: "Scope",
+  scopeHousehold: "Household",
 } as const;

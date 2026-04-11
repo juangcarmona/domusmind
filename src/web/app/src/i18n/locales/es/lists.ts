@@ -64,4 +64,8 @@ export default {
   markUnchecked: "Marcar como no hecho",
   selectItemHint: "Selecciona un elemento para ver los detalles",
   noListSelected: "Ninguna lista seleccionada",
+  contextSection: "Contexto",
+  listLabel: "Lista",
+  scopeLabel: "Alcance",
+  scopeHousehold: "Hogar",
 } as const;
