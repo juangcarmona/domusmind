@@ -1,6 +1,7 @@
 import type {
   WeeklyGridCell,
   WeeklyGridEventItem,
+  WeeklyGridListItem,
   WeeklyGridTaskItem,
   WeeklyGridRoutineItem,
 } from "../types";
@@ -13,9 +14,13 @@ import type {
 export type CalendarEntryDisplayType =
   | "overdue"
   | "task"
+  | "list-important"
   | "event"
   | "routine"
+  | "list"
   | "completed";
+
+export type CalendarEntrySourceType = "event" | "task" | "routine" | "list-item";
 
 /**
  * Normalized presentation model for a single calendar entry.
@@ -29,7 +34,7 @@ export type CalendarEntryDisplayType =
  */
 export interface CalendarEntry {
   id: string;
-  sourceType: "event" | "task" | "routine";
+  sourceType: CalendarEntrySourceType;
   /** Drives glyph selection and CSS emphasis class. */
   displayType: CalendarEntryDisplayType;
   title: string;
@@ -58,6 +63,18 @@ export interface CalendarEntry {
   scope?: string | null;
   /** For tasks: ISO due date or null when not set. */
   dueDate?: string | null;
+  /** For projected list items: source list id. */
+  listId?: string | null;
+  /** For projected list items: source list name. */
+  listName?: string | null;
+  /** For projected list items: local note. */
+  note?: string | null;
+  /** For projected list items: recurrence summary token. */
+  repeat?: string | null;
+  /** For projected list items: reminder instant in ISO format. */
+  reminder?: string | null;
+  /** For projected list items: importance marker. */
+  importance?: boolean;
 }
 
 // ----------------------------------------------------------------
@@ -68,9 +85,11 @@ export const ENTRY_DISPLAY_PRIORITY: Record<CalendarEntryDisplayType, number> =
   {
     overdue: 0,
     task: 1,
-    event: 2,
-    routine: 3,
-    completed: 4,
+    "list-important": 2,
+    event: 3,
+    routine: 4,
+    list: 5,
+    completed: 6,
   };
 
 // ----------------------------------------------------------------
@@ -87,8 +106,10 @@ export const ENTRY_DISPLAY_PRIORITY: Record<CalendarEntryDisplayType, number> =
 export const ENTRY_GLYPH: Record<CalendarEntryDisplayType, string> = {
   overdue: "! □", // compound: overdue indicator + task symbol
   task: "□",
+  "list-important": "☆",
   event: "●", // time is shown separately in the glyph span: ● 19:30
   routine: "⟳",
+  list: "◇",
   completed: "✓",
 };
 
@@ -180,6 +201,38 @@ export function normalizeRoutineItem(
   };
 }
 
+/** Normalize a projected shared-list item. */
+export function normalizeListItem(item: WeeklyGridListItem): CalendarEntry {
+  const isCompleted = item.checked;
+  const displayType: CalendarEntryDisplayType = isCompleted
+    ? "completed"
+    : item.importance
+    ? "list-important"
+    : "list";
+
+  return {
+    id: item.itemId,
+    sourceType: "list-item",
+    displayType,
+    title: item.title,
+    time: null,
+    subtitle: item.listName,
+    status: item.checked ? "done" : "pending",
+    color: null,
+    isCompleted,
+    isOverdue: false,
+    isReadOnly: true,
+    sourceLabel: "List",
+    listId: item.listId,
+    listName: item.listName,
+    note: item.note,
+    dueDate: item.dueDate,
+    reminder: item.reminder,
+    repeat: item.repeat,
+    importance: item.importance,
+  };
+}
+
 /**
  * Normalize all items in a cell to CalendarEntry records.
  * Order: events → tasks → routines (source order kept within each type).
@@ -204,6 +257,10 @@ export function normalizeCellItems(cell: WeeklyGridCell): CalendarEntry[] {
 
   for (const r of cell.routines ?? []) {
     entries.push(normalizeRoutineItem(r));
+  }
+
+  for (const li of cell.listItems ?? []) {
+    entries.push(normalizeListItem(li));
   }
 
   return entries;

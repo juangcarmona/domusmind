@@ -7,6 +7,7 @@ using DomusMind.Contracts.Family;
 using DomusMind.Domain.Calendar;
 using DomusMind.Domain.Calendar.ExternalConnections;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Lists;
 using DomusMind.Domain.Tasks;
 using DomusMind.Domain.Tasks.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -71,6 +72,26 @@ public sealed class GetWeeklyGridQueryHandler
                      && t.Schedule.Date >= weekStart
                      && t.Schedule.Date < weekEnd
                      && t.Status == HouseholdTaskStatus.Pending)
+            .ToListAsync(cancellationToken);
+
+        var temporalListItems = await _dbContext
+            .Set<SharedList>()
+            .AsNoTracking()
+            .Where(l => l.FamilyId == familyId)
+            .SelectMany(l => l.Items, (l, i) => new
+            {
+                ListId = l.Id.Value,
+                ListName = l.Name.Value,
+                ItemId = i.Id.Value,
+                Title = i.Name.Value,
+                i.Note,
+                i.Checked,
+                i.Importance,
+                i.DueDate,
+                i.Reminder,
+                i.Repeat,
+            })
+            .Where(i => i.DueDate.HasValue || i.Reminder.HasValue || i.Repeat != null)
             .ToListAsync(cancellationToken);
 
         var routines = await _dbContext.Set<Routine>()
@@ -175,7 +196,33 @@ public sealed class GetWeeklyGridQueryHandler
                     })
                     .ToList();
 
-                return new WeeklyGridCell(day.ToString("yyyy-MM-dd"), sharedEvents, unassignedTasks, dayRoutines);
+                var dayStartUtc = day.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+                var dayEndUtcExclusive = day.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+
+                var dayListItems = temporalListItems
+                    .Where(i =>
+                        (i.DueDate.HasValue && i.DueDate.Value == day)
+                        || (i.Reminder.HasValue
+                            && i.Reminder.Value.UtcDateTime >= dayStartUtc
+                            && i.Reminder.Value.UtcDateTime < dayEndUtcExclusive)
+                        || RepeatExpansion.FiresInWindow(i.Repeat, day, day))
+                    .OrderBy(i => i.Checked)
+                    .ThenByDescending(i => i.Importance)
+                    .ThenBy(i => i.Title)
+                    .Select(i => new WeeklyGridListItem(
+                        i.ListId,
+                        i.ListName,
+                        i.ItemId,
+                        i.Title,
+                        i.Note,
+                        i.Checked,
+                        i.Importance,
+                        i.DueDate?.ToString("yyyy-MM-dd"),
+                        i.Reminder?.ToString("O"),
+                        i.Repeat))
+                    .ToList();
+
+                return new WeeklyGridCell(day.ToString("yyyy-MM-dd"), sharedEvents, unassignedTasks, dayRoutines, dayListItems);
             })
             .ToList();
 
@@ -295,7 +342,8 @@ public sealed class GetWeeklyGridQueryHandler
                             day.ToString("yyyy-MM-dd"),
                             memberEvents,
                             memberTasks,
-                            cellRoutines);
+                            cellRoutines,
+                            []);
                     })
                     .ToList();
 

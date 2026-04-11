@@ -89,6 +89,7 @@ function makeCell(
     events: [],
     tasks: [],
     routines: [],
+    listItems: [],
     ...overrides,
   };
 }

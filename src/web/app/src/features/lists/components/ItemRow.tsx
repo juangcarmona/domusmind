@@ -17,15 +17,15 @@ interface ItemRowProps {
 }
 
 /** Format a YYYY-MM-DD string as a short "Apr 15" label */
-function formatDueDate(iso: string): string {
+function formatDueDate(iso: string, labels: { today: string; tomorrow: string; yesterday: string }): string {
   try {
     const d = new Date(iso + "T00:00:00");
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const diffDays = Math.round((d.getTime() - today.getTime()) / 86400000);
-    if (diffDays === 0) return "Today";
-    if (diffDays === 1) return "Tomorrow";
-    if (diffDays === -1) return "Yesterday";
+    if (diffDays === 0) return labels.today;
+    if (diffDays === 1) return labels.tomorrow;
+    if (diffDays === -1) return labels.yesterday;
     return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
   } catch {
     return iso;
@@ -77,6 +77,12 @@ export function ItemRow({
     dispatch(setItemImportance({ listId, itemId: item.itemId, importance: next }));
   }
 
+  const dueDateLabels = {
+    today: t("dueToday"),
+    tomorrow: t("dueTomorrow"),
+    yesterday: t("dueYesterday"),
+  };
+
   return (
     <div
       className={[
@@ -124,7 +130,7 @@ export function ItemRow({
               )}
               {item.dueDate && (
                 <span className={`li-row__date${isOverdue ? " li-row__date--overdue" : ""}`}>
-                  {formatDueDate(item.dueDate)}
+                  {formatDueDate(item.dueDate, dueDateLabels)}
                 </span>
               )}
               {item.reminder && !item.dueDate && (
@@ -143,7 +149,7 @@ export function ItemRow({
         {/* Grid mode: date column (aligned with grid header) */}
         {gridMode && (
           <span className={`li-row__grid-date${isOverdue ? " li-row__date--overdue" : ""}`}>
-            {item.dueDate ? formatDueDate(item.dueDate) : ""}
+            {item.dueDate ? formatDueDate(item.dueDate, dueDateLabels) : ""}
           </span>
         )}
 

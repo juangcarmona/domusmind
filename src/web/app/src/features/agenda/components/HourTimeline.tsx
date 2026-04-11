@@ -53,7 +53,7 @@ function isDurationEvent(entry: CalendarEntry): boolean {
 interface HourTimelineProps {
   /** All timed entries for the day (entry.time is non-null). */
   timedEntries: CalendarEntry[];
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
   /**
    * Called when an empty slot background is clicked.
    * Receives "HH:MM" (the nearest :00 or :30 slot start).
@@ -187,7 +187,7 @@ export function HourTimeline({ timedEntries, onItemClick, onSlotClick, isToday, 
 
 interface TimelineItemProps {
   entry: CalendarEntry;
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 function TimelineItem({ entry, onItemClick }: TimelineItemProps) {
@@ -240,7 +240,7 @@ function TimelineItem({ entry, onItemClick }: TimelineItemProps) {
 
 interface DurationBlockProps {
   entry: CalendarEntry;
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 function DurationBlock({ entry, onItemClick }: DurationBlockProps) {

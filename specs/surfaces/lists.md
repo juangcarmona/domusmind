@@ -309,7 +309,7 @@ Three sub-fields, each independently optional:
 
 - **Due date** — date picker; clearing removes temporal eligibility from Agenda if no reminder is set
 - **Reminder** — time-aware alert; clearing removes temporal eligibility from Agenda if no due date is set
-- **Repeat** — repeat rule; requires due date to be set
+- **Repeat** — repeat rule; independently optional and Agenda-eligible without due date
 
 Clearing all temporal fields removes the item from Agenda projection.
 

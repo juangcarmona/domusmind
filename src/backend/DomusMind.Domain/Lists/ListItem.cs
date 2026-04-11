@@ -87,7 +87,7 @@ public sealed class ListItem : Entity<ListItemId>
 
     /// <summary>
     /// Sets temporal fields. At least one must be provided.
-    /// Repeat requires DueDate to be present (either provided here or already set on the item).
+    /// All temporal fields are independently optional; repeat does not require due date.
     /// Returns whether this is the first time temporal data is being set (transition event).
     /// </summary>
     internal bool SetTemporal(

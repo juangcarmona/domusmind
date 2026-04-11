@@ -67,10 +67,11 @@ export function useMonthGridCache(
       ];
       for (const cell of allCells) {
         const dayKey = cell.date.slice(0, 10);
-        if (!summary[dayKey]) summary[dayKey] = { events: 0, tasks: 0, routines: 0 };
+        if (!summary[dayKey]) summary[dayKey] = { events: 0, tasks: 0, routines: 0, listItems: 0 };
         summary[dayKey].events += cell.events?.length ?? 0;
         summary[dayKey].tasks += cell.tasks?.length ?? 0;
         summary[dayKey].routines += cell.routines?.length ?? 0;
+        summary[dayKey].listItems += cell.listItems?.length ?? 0;
       }
     }
     return summary;

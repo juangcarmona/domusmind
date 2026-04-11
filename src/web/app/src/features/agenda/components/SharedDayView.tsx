@@ -14,7 +14,7 @@ const SLOT_H_PX = 24;
 interface SharedDayViewProps {
   sharedCells: WeeklyGridCell[];
   selectedDate: string; // ISO YYYY-MM-DD
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
   onSlotClick?: (time: string) => void;
 }
 

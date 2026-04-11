@@ -132,6 +132,21 @@
   margin-top: 0.05rem;
 }
 
+.list-switcher-row-cues {
+  display: flex;
+  gap: 0.25rem;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.list-switcher-row-cue {
+  font-size: 0.64rem;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.05rem 0.35rem;
+}
+
 .list-switcher-empty {
   padding: 1rem 0.75rem;
   font-size: 0.82rem;
@@ -185,6 +200,14 @@
   min-width: 0;
 }
 
+.lists-mobile-header__context {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  padding: 0.3rem 0.9rem 0.35rem;
+  border-bottom: 1px solid var(--border);
+}
+
 /* ── Empty state ────────────────────────────────────────────────── */
 .lists-empty-state {
   display: flex;
@@ -231,6 +254,14 @@
   display: flex;
   align-items: center;
   gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.lists-list-header__context {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .lists-list-header__color-dot {
@@ -1229,26 +1260,15 @@
 .li-inspector__scope-hint {
   font-size: 0.78rem;
   color: var(--muted);
-  margin: 0;
+  margin: 0.1rem 0 0.35rem;
 }
 
-/* Scope selector */
-.li-inspector__scope-select {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--border);
-  outline: none;
-  font-size: 0.875rem;
-  color: var(--text);
-  padding: 0.2rem 0;
-  width: 100%;
-  font-family: inherit;
-  cursor: pointer;
-  appearance: auto;
-  transition: border-bottom-color 0.12s;
+.lists-add-composer__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
 }
-
-.li-inspector__scope-select:focus { border-bottom-color: var(--primary); }
 
 .li-inspector__saving {
   font-size: 0.68rem;
@@ -1317,6 +1337,20 @@
 }
 
 .lists-switcher-sheet__name { flex: 1; }
+
+.lists-switcher-sheet__cues {
+  display: inline-flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.lists-switcher-sheet__cue {
+  font-size: 0.65rem;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.05rem 0.35rem;
+}
 
 .lists-fab {
   position: fixed;

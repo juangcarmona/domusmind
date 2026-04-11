@@ -6,7 +6,7 @@ import { MemberAvatar } from "../../../settings/components/avatar/MemberAvatar";
 interface WeeklyGridRowProps {
   member: WeeklyGridMember;
   today: string; // ISO date string
-  onItemClick?: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick?: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 export function WeeklyGridRow({ member, today, onItemClick }: WeeklyGridRowProps) {

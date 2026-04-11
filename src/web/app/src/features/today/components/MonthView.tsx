@@ -6,7 +6,7 @@ interface MonthViewProps {
   today: string; // ISO YYYY-MM-DD
   firstDayOfWeek?: string | null;
   displayAnchor?: string; // ISO YYYY-MM-DD - which month to show (defaults to selectedDate)
-  /** Per-day item-type summary for density pips (event/task/routine). */
+  /** Per-day item-type summary for density pips (event/task/routine/list-item). */
   daySummary?: Record<string, DayTypeSummary>;
   onSelectDay: (date: string) => void;
   onPrevMonth: () => void;
@@ -181,7 +181,7 @@ export function MonthView({
                   <span className="coord-month-day-num">{dayNum}</span>
                   {(() => {
                     const s = daySummary?.[iso];
-                    if (!s || (s.events === 0 && s.tasks === 0 && s.routines === 0)) return null;
+                    if (!s || (s.events === 0 && s.tasks === 0 && s.routines === 0 && s.listItems === 0)) return null;
                     return (
                       <div className="month-cell-pips">
                         {s.events > 0 && (
@@ -196,6 +196,11 @@ export function MonthView({
                         )}
                         {s.routines > 0 && (
                           <span className="month-cell-pip month-cell-pip--routine" aria-hidden="true" />
+                        )}
+                        {s.listItems > 0 && (
+                          <span className="month-cell-pip month-cell-pip--list-item">
+                            <span className="month-cell-pip-glyph">◇</span>{s.listItems}
+                          </span>
                         )}
                       </div>
                     );

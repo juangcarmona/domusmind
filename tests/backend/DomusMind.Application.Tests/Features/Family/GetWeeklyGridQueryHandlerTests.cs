@@ -5,6 +5,8 @@ using DomusMind.Domain.Calendar.ExternalConnections;
 using DomusMind.Domain.Calendar.ValueObjects;
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Family.ValueObjects;
+using DomusMind.Domain.Lists;
+using DomusMind.Domain.Lists.ValueObjects;
 using DomusMind.Domain.Shared;
 using DomusMind.Domain.Tasks;
 using DomusMind.Domain.Tasks.Enums;
@@ -90,6 +92,17 @@ public sealed class GetWeeklyGridQueryHandlerTests
                          DayOfWeek.Wednesday, DayOfWeek.Thursday, DayOfWeek.Friday, DayOfWeek.Saturday }),
             null,
             DateTime.UtcNow);
+
+    private static SharedList MakeList(FamilyId familyId, string name = "Groceries")
+        => SharedList.Create(
+            ListId.New(),
+            familyId,
+            ListName.Create(name),
+            ListKind.Create("General"),
+            areaId: null,
+            linkedEntityType: null,
+            linkedEntityId: null,
+            createdAtUtc: DateTime.UtcNow);
 
     // ---- Authorization / guarding ----
 
@@ -340,6 +353,107 @@ public sealed class GetWeeklyGridQueryHandlerTests
             CancellationToken.None);
 
         result.Members.First().Cells.SelectMany(c => c.Tasks).Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task Handle_TemporalListItem_WithDueDate_ProjectsIntoSharedDayCell()
+    {
+        var db = CreateDb();
+        var familyId = FamilyId.New();
+        var memberId = MemberId.New();
+        db.Set<Domain.Family.Family>().Add(MakeFamily(familyId, (memberId, "Pat")));
+
+        var weekStart = new DateOnly(2026, 3, 16);
+        var dueDate = weekStart.AddDays(2);
+
+        var list = MakeList(familyId, "School");
+        var itemId = ListItemId.New();
+        list.AddItem(itemId, ListItemName.Create("Permission slip"), null, null, DateTime.UtcNow);
+        list.SetItemTemporal(itemId, dueDate, null, null, DateTime.UtcNow);
+        db.Set<SharedList>().Add(list);
+        await db.SaveChangesAsync();
+
+        var handler = BuildHandler(db);
+        var result = await handler.Handle(
+            new GetWeeklyGridQuery(familyId.Value, weekStart, Guid.NewGuid()),
+            CancellationToken.None);
+
+        var dayCell = result.SharedCells.Single(c => c.Date == dueDate.ToString("yyyy-MM-dd"));
+        var projected = dayCell.ListItems.Should().ContainSingle().Which;
+        projected.Title.Should().Be("Permission slip");
+        projected.ListName.Should().Be("School");
+        projected.DueDate.Should().Be(dueDate.ToString("yyyy-MM-dd"));
+    }
+
+    [Fact]
+    public async Task Handle_TemporalListItem_WithReminderOrRepeatOnly_ProjectsIntoSharedDayCell()
+    {
+        var db = CreateDb();
+        var familyId = FamilyId.New();
+        var memberId = MemberId.New();
+        db.Set<Domain.Family.Family>().Add(MakeFamily(familyId, (memberId, "Pat")));
+
+        var weekStart = new DateOnly(2026, 3, 16); // Monday
+        var reminderDate = weekStart.AddDays(1); // Tuesday
+        var repeatDate = weekStart.AddDays(3); // Thursday
+
+        var reminderList = MakeList(familyId, "Errands");
+        var reminderItemId = ListItemId.New();
+        reminderList.AddItem(reminderItemId, ListItemName.Create("Call clinic"), null, null, DateTime.UtcNow);
+        reminderList.SetItemTemporal(
+            reminderItemId,
+            null,
+            reminderDate.ToDateTime(new TimeOnly(10, 30), DateTimeKind.Utc),
+            null,
+            DateTime.UtcNow);
+
+        var repeatOnlyList = MakeList(familyId, "Chores");
+        var repeatItemId = ListItemId.New();
+        repeatOnlyList.AddItem(repeatItemId, ListItemName.Create("Water plants"), null, null, DateTime.UtcNow);
+        repeatOnlyList.SetItemTemporal(repeatItemId, null, null, "Weekly:4", DateTime.UtcNow);
+
+        db.Set<SharedList>().AddRange(reminderList, repeatOnlyList);
+        await db.SaveChangesAsync();
+
+        var handler = BuildHandler(db);
+        var result = await handler.Handle(
+            new GetWeeklyGridQuery(familyId.Value, weekStart, Guid.NewGuid()),
+            CancellationToken.None);
+
+        var tuesdayCell = result.SharedCells.Single(c => c.Date == reminderDate.ToString("yyyy-MM-dd"));
+        tuesdayCell.ListItems.Should().ContainSingle(i => i.Title == "Call clinic");
+
+        var thursdayCell = result.SharedCells.Single(c => c.Date == repeatDate.ToString("yyyy-MM-dd"));
+        thursdayCell.ListItems.Should().ContainSingle(i => i.Title == "Water plants");
+    }
+
+    [Fact]
+    public async Task Handle_CheckedTemporalListItem_RemainsProjectedInSharedCell()
+    {
+        var db = CreateDb();
+        var familyId = FamilyId.New();
+        var memberId = MemberId.New();
+        db.Set<Domain.Family.Family>().Add(MakeFamily(familyId, (memberId, "Pat")));
+
+        var weekStart = new DateOnly(2026, 3, 16);
+        var dueDate = weekStart.AddDays(4);
+
+        var list = MakeList(familyId, "Party");
+        var itemId = ListItemId.New();
+        list.AddItem(itemId, ListItemName.Create("Buy candles"), null, null, DateTime.UtcNow);
+        list.SetItemTemporal(itemId, dueDate, null, null, DateTime.UtcNow);
+        list.ToggleItem(itemId, null, DateTime.UtcNow);
+
+        db.Set<SharedList>().Add(list);
+        await db.SaveChangesAsync();
+
+        var handler = BuildHandler(db);
+        var result = await handler.Handle(
+            new GetWeeklyGridQuery(familyId.Value, weekStart, Guid.NewGuid()),
+            CancellationToken.None);
+
+        var fridayCell = result.SharedCells.Single(c => c.Date == dueDate.ToString("yyyy-MM-dd"));
+        fridayCell.ListItems.Should().ContainSingle(i => i.Title == "Buy candles" && i.Checked);
     }
 
     // ---- Routines ----

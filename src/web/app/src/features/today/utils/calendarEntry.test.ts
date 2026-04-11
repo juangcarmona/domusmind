@@ -216,6 +216,7 @@ const makeCell = (overrides: Partial<WeeklyGridCell> = {}): WeeklyGridCell => ({
   events: [],
   tasks: [],
   routines: [],
+  listItems: [],
   ...overrides,
 });
 

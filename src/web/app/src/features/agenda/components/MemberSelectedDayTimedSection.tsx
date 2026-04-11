@@ -7,7 +7,7 @@ import { useIsMobile } from "../../../hooks/useIsMobile";
 interface MemberSelectedDayTimedSectionProps {
   timedEntries: CalendarEntry[];
   selectedDate: string; // ISO YYYY-MM-DD
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
   onSlotClick?: (time: string) => void;
   /**
    * When true the timeline panel has no own overflow/max-height — it flows inline

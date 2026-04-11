@@ -106,6 +106,10 @@
   background: color-mix(in srgb, var(--wg-item-accent, var(--muted)) 12%, transparent);
   color: color-mix(in srgb, var(--wg-item-accent, var(--muted)) 70%, var(--text));
 }
+.wg-item--list-item {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  color: color-mix(in srgb, var(--primary) 72%, var(--text));
+}
 .wg-item {
   display: flex;
   align-items: center;

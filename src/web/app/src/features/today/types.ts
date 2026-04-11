@@ -24,6 +24,19 @@ export interface WeeklyGridTaskItem {
   color: string;
 }
 
+export interface WeeklyGridListItem {
+  listId: string;
+  listName: string;
+  itemId: string;
+  title: string;
+  note: string | null;
+  checked: boolean;
+  importance: boolean;
+  dueDate: string | null;
+  reminder: string | null;
+  repeat: string | null;
+}
+
 export interface WeeklyGridRoutineItem {
   routineId: string;
   name: string;
@@ -40,6 +53,7 @@ export interface WeeklyGridCell {
   events: WeeklyGridEventItem[];
   tasks: WeeklyGridTaskItem[];
   routines: WeeklyGridRoutineItem[];
+  listItems: WeeklyGridListItem[];
 }
 
 /** Per-day item-type summary used by the month view density pips. */
@@ -47,6 +61,7 @@ export interface DayTypeSummary {
   events: number;
   tasks: number;
   routines: number;
+  listItems: number;
 }
 
 export interface WeeklyGridMember {

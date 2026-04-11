@@ -19,7 +19,7 @@ interface MemberSectionProps {
   memberId: string;
   name: string;
   entries: CalendarEntry[];
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 function MemberSection({ memberId, name, entries, onItemClick }: MemberSectionProps) {
@@ -65,7 +65,7 @@ interface AgendaSelectedDayDetailProps {
   /** ISO YYYY-MM-DD */
   selectedDate: string;
   loading?: boolean;
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 /**

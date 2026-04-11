@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import type { WeeklyGridMember } from "../../today/types";
+import type { WeeklyGridCell, WeeklyGridMember } from "../../today/types";
 import type { CalendarEntry } from "../../today/utils/calendarEntry";
 import { buildMemberEntries, sortEntries } from "../../today/utils/todayPanelHelpers";
 import { toIsoDate } from "../../today/utils/dateUtils";
@@ -9,9 +9,10 @@ import { MemberSelectedDayTimedSection } from "./MemberSelectedDayTimedSection";
 
 interface MemberWeekViewProps {
   member: WeeklyGridMember;
+  sharedCells?: WeeklyGridCell[];
   /** ISO YYYY-MM-DD — the currently selected day (must be within the loaded week). */
   selectedDate: string;
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
   /** Called when the user taps a day in the strip — stays in week view. */
   onDaySelect?: (date: string) => void;
   /** Called when the user explicitly drills into a day (tapping the detail header). */
@@ -31,6 +32,7 @@ interface MemberWeekViewProps {
  */
 export function MemberWeekView({
   member,
+  sharedCells,
   selectedDate,
   onItemClick,
   onDaySelect,
@@ -53,11 +55,13 @@ export function MemberWeekView({
   // Per-day entry counts for load dots in the strip.
   const countByDay: Record<string, number> = {};
   for (const day of days) {
-    countByDay[day] = buildMemberEntries(member, day).length;
+    const sharedCell = sharedCells?.find((c) => c.date.slice(0, 10) === day) ?? null;
+    countByDay[day] = buildMemberEntries(member, day, sharedCell).length;
   }
 
   const activeDate = days.includes(selectedDate) ? selectedDate : days[0];
-  const allEntries: CalendarEntry[] = sortEntries(buildMemberEntries(member, activeDate));
+  const sharedCellForActiveDate = sharedCells?.find((c) => c.date.slice(0, 10) === activeDate) ?? null;
+  const allEntries: CalendarEntry[] = sortEntries(buildMemberEntries(member, activeDate, sharedCellForActiveDate));
   const untimedEntries = allEntries.filter((e) => e.time === null);
   const timedEntries   = allEntries.filter((e) => e.time !== null);
 

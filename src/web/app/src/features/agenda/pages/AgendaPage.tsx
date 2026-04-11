@@ -51,16 +51,21 @@ const VALID_MODES: AgendaView[] = ["day", "week", "month"];
 function AgendaItemDetail({
   entry,
   onEdit,
+  onOpenInLists,
 }: {
   entry: CalendarEntry;
   onEdit: (type: EditableEntityType, id: string) => void;
+  onOpenInLists: (listId: string, itemId: string) => void;
 }) {
   const { t } = useTranslation("agenda");
-  const canEdit = !entry.isReadOnly;
+  const isProjectedListItem = entry.sourceType === "list-item";
+  const canEdit = !entry.isReadOnly && !isProjectedListItem;
 
   const typeLabel =
     entry.isReadOnly && entry.sourceLabel
       ? entry.sourceLabel
+      : entry.sourceType === "list-item"
+      ? t("item.typeListItem")
       : entry.sourceType === "routine"
       ? t("item.typeRoutine")
       : entry.sourceType === "task"
@@ -88,7 +93,7 @@ function AgendaItemDetail({
       )}
 
       {/* Participants (events / plans) */}
-      {entry.subtitle && (
+      {entry.subtitle && entry.sourceType !== "list-item" && (
         <p className="agenda-inspector-item-meta">
           <span className="agenda-inspector-item-label">{t("item.participants")}</span>
           {" "}{entry.subtitle}
@@ -127,8 +132,48 @@ function AgendaItemDetail({
         </p>
       )}
 
+      {/* Projected list-item detail */}
+      {isProjectedListItem && (
+        <>
+          {entry.listName && (
+            <p className="agenda-inspector-item-meta">
+              <span className="agenda-inspector-item-label">{t("item.listName")}</span>
+              {" "}{entry.listName}
+            </p>
+          )}
+          <p className="agenda-inspector-item-meta">
+            <span className="agenda-inspector-item-label">{t("item.status")}</span>
+            {" "}{entry.isCompleted ? t("item.checked") : t("item.unchecked")}
+          </p>
+          {(entry.dueDate || entry.reminder || entry.repeat) && (
+            <p className="agenda-inspector-item-meta">
+              <span className="agenda-inspector-item-label">{t("item.timeSummary")}</span>
+              {" "}
+              {[entry.dueDate, entry.reminder, entry.repeat].filter(Boolean).join(" · ")}
+            </p>
+          )}
+          {entry.note && (
+            <p className="agenda-inspector-item-meta">
+              <span className="agenda-inspector-item-label">{t("item.note")}</span>
+              {" "}{entry.note}
+            </p>
+          )}
+          {entry.listId && (
+            <div className="agenda-inspector-item-actions">
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={() => onOpenInLists(entry.listId!, entry.id)}
+              >
+                {t("item.openInLists")}
+              </button>
+            </div>
+          )}
+        </>
+      )}
+
       {/* External open link (imported read-only entries) */}
-      {entry.isReadOnly && entry.openInProviderUrl && (
+      {!isProjectedListItem && entry.isReadOnly && entry.openInProviderUrl && (
         <a
           href={entry.openInProviderUrl}
           target="_blank"
@@ -145,7 +190,11 @@ function AgendaItemDetail({
           <button
             type="button"
             className="btn btn-ghost btn-sm"
-            onClick={() => onEdit(entry.sourceType, entry.id)}
+            onClick={() => {
+              if (entry.sourceType === "event" || entry.sourceType === "task" || entry.sourceType === "routine") {
+                onEdit(entry.sourceType, entry.id);
+              }
+            }}
           >
             {t("item.edit")}
           </button>
@@ -330,13 +379,16 @@ export function AgendaPage() {
    * not only the currently selected date. Used by handleItemClick.
    */
   function findEntryAcrossGrid(
-    type: "event" | "task" | "routine",
+    type: "event" | "task" | "routine" | "list-item",
     id: string,
   ): CalendarEntry | null {
     if (!grid) return null;
-    const cells = isHousehold
-      ? grid.sharedCells
+    const memberCells = isHousehold
+      ? []
       : (grid.members.find((m) => m.memberId === memberId)?.cells ?? []);
+    const cells = type === "list-item"
+      ? [...(grid.sharedCells ?? []), ...memberCells]
+      : (isHousehold ? (grid.sharedCells ?? []) : memberCells);
     for (const cell of cells) {
       const entries = normalizeCellItems(cell);
       const found = entries.find((e) => e.id === id && e.sourceType === type);
@@ -345,14 +397,21 @@ export function AgendaPage() {
     return null;
   }
 
-  function handleItemClick(type: "event" | "task" | "routine", id: string) {
+  function handleItemClick(type: "event" | "task" | "routine" | "list-item", id: string) {
     const found = findEntryAcrossGrid(type, id);
     if (found) {
       setSelectedEntry(found);
     } else {
-      // Entry not in the currently loaded grid (e.g., stale data) — fall back to edit.
-      setEditTarget({ type, id });
+      // Entry not in the currently loaded grid (e.g., stale data).
+      // Native editable types can still fall back to editor launch.
+      if (type !== "list-item") {
+        setEditTarget({ type, id });
+      }
     }
+  }
+
+  function handleOpenListItemInLists(listId: string, itemId: string) {
+    navigate(`/lists/${listId}?itemId=${encodeURIComponent(itemId)}`);
   }
 
   function handleDayDrill(date: string) {
@@ -389,6 +448,7 @@ export function AgendaPage() {
       <AgendaItemDetail
         entry={selectedEntry}
         onEdit={(type, id) => setEditTarget({ type, id })}
+        onOpenInLists={handleOpenListItemInLists}
       />
     );
   }
@@ -516,6 +576,7 @@ export function AgendaPage() {
                 <MemberDayView
                   member={memberRow ?? emptyMemberRow}
                   selectedDate={selectedDate}
+                  sharedCell={grid?.sharedCells.find((c) => c.date.slice(0, 10) === selectedDate) ?? null}
                   onItemClick={handleItemClick}
                   onSlotClick={(time) => handleAddEntry(time)}
                 />
@@ -524,6 +585,7 @@ export function AgendaPage() {
                 <MemberWeekView
                   member={memberRow ?? emptyMemberRow}
                   selectedDate={selectedDate}
+                  sharedCells={grid?.sharedCells ?? []}
                   onItemClick={handleItemClick}
                   onDaySelect={setSelectedDate}
                   onDayClick={handleDayDrill}
@@ -536,6 +598,7 @@ export function AgendaPage() {
                   selectedDate={selectedDate}
                   firstDayOfWeek={firstDayOfWeek}
                   memberRow={memberRow}
+                  sharedCells={grid?.sharedCells ?? []}
                   gridLoading={gridLoading}
                   onSelectDay={handleMonthSelectDate}
                   onItemClick={handleItemClick}

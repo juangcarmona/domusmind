@@ -25,11 +25,24 @@ public sealed record WeeklyGridTaskItem(
     string Status,
     string Color);
 
+public sealed record WeeklyGridListItem(
+    Guid ListId,
+    string ListName,
+    Guid ItemId,
+    string Title,
+    string? Note,
+    bool Checked,
+    bool Importance,
+    string? DueDate,
+    string? Reminder,
+    string? Repeat);
+
 public sealed record WeeklyGridCell(
     string Date,
     IReadOnlyCollection<WeeklyGridEventItem> Events,
     IReadOnlyCollection<WeeklyGridTaskItem> Tasks,
-    IReadOnlyCollection<WeeklyGridRoutineItem> Routines);
+    IReadOnlyCollection<WeeklyGridRoutineItem> Routines,
+    IReadOnlyCollection<WeeklyGridListItem> ListItems);
 
 public sealed record WeeklyGridMember(
     Guid MemberId,

@@ -184,6 +184,11 @@
   color: var(--accent);
 }
 
+.month-cell-pip--list-item {
+  color: var(--primary);
+  opacity: 0.9;
+}
+
 .month-cell-pip--routine {
   width: 4px;
   height: 4px;

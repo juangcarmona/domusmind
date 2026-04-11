@@ -3,7 +3,7 @@
 // /lists/:listId — deep-link entry, pre-selects the specified list
 
 import { useEffect, useRef, useState, useCallback, type KeyboardEvent } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import {
@@ -167,6 +167,7 @@ const IconChevronDown = () => (
 
 export function ListsPage() {
   const { listId: routeListId } = useParams<{ listId?: string }>();
+  const [searchParams] = useSearchParams();
   const { t } = useTranslation("lists");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -218,6 +219,14 @@ export function ListsPage() {
   const desktopAddRef = useRef<HTMLInputElement>(null);
   const addInputRef = useRef<HTMLInputElement>(null);
 
+  function resetAddDrafts() {
+    setAddOpenPanel(null);
+    setAddDueDateDraft("");
+    setAddReminderDraft("");
+    setAddRepeatFreqDraft("");
+    setAddRepeatDaysDraft([]);
+  }
+
   // ── Data loading ─────────────────────────────────────────────────
   useEffect(() => {
     if (familyId) dispatch(fetchFamilySharedLists(familyId));
@@ -247,6 +256,15 @@ export function ListsPage() {
       dispatch(clearDetail());
     }
   }, [activeListId, dispatch]);
+
+  useEffect(() => {
+    if (!detail || detail.listId !== activeListId) return;
+    const requestedItemId = searchParams.get("itemId");
+    if (!requestedItemId) return;
+    const requestedItem = detail.items.find((i) => i.itemId === requestedItemId);
+    if (!requestedItem) return;
+    setSelectedItem({ item: requestedItem, listId: detail.listId });
+  }, [detail, activeListId, searchParams]);
 
   // ── Sync inspector drafts ────────────────────────────────────────
   useEffect(() => {
@@ -431,8 +449,7 @@ export function ListsPage() {
       e.preventDefault();
       (e.target as HTMLInputElement).value = "";
       setAddExpanded(false);
-      setAddOpenPanel(null);
-      setAddDueDateDraft(""); setAddReminderDraft(""); setAddRepeatFreqDraft(""); setAddRepeatDaysDraft([]);
+      resetAddDrafts();
       setAddError(null);
       return;
     }
@@ -456,8 +473,7 @@ export function ListsPage() {
           repeat,
         }));
       }
-      setAddDueDateDraft(""); setAddReminderDraft(""); setAddRepeatFreqDraft(""); setAddRepeatDaysDraft([]);
-      setAddOpenPanel(null);
+      resetAddDrafts();
     } else {
       setAddError((result.payload as string) ?? t("addError"));
     }
@@ -475,7 +491,21 @@ export function ListsPage() {
     if (!name || !activeListId) return;
     setAddError(null);
     const result = await dispatch(addItemToSharedList({ listId: activeListId, name }));
-    if (!addItemToSharedList.fulfilled.match(result)) {
+    if (addItemToSharedList.fulfilled.match(result)) {
+      const newItemId = result.payload.itemId;
+      const repeat = serializeRepeat(addRepeatFreqDraft, addRepeatDaysDraft);
+      const reminder = fromLocalInput(addReminderDraft);
+      if (addDueDateDraft || reminder || repeat) {
+        dispatch(setItemTemporal({
+          listId: activeListId,
+          itemId: newItemId,
+          dueDate: addDueDateDraft || null,
+          reminder,
+          repeat,
+        }));
+      }
+      resetAddDrafts();
+    } else {
       setAddError((result.payload as string) ?? t("addError"));
     }
   }
@@ -499,6 +529,7 @@ export function ListsPage() {
   // Linked context resolved
   const linkedArea = detail?.areaId ? areas.find((a) => a.areaId === detail.areaId) : null;
   const linkedEntityLabel = detail?.linkedEntityDisplayName ?? null;
+  const areaNamesById = Object.fromEntries(areas.map((a) => [a.areaId, a.name]));
 
   function renderLinkedContext(className: string) {
     if (!linkedArea && !linkedEntityLabel) return null;
@@ -650,17 +681,11 @@ export function ListsPage() {
           )}
 
           {/* Scope — selector (V1: Household only) */}
-          <div className="li-inspector__field">
-            <label className="li-inspector__field-label" htmlFor="li-scope">{t("scopeLabel")}</label>
-            <select
-              id="li-scope"
-              className="li-inspector__scope-select"
-              value="Household"
-              aria-label={t("scopeLabel")}
-            >
-              <option value="Household">{t("scopeHousehold")}</option>
-            </select>
+          <div className="li-inspector__scope-row">
+            <span className="li-inspector__scope-label">{t("scopeLabel")}</span>
+            <span className="li-inspector__scope-value">{t("scopeHousehold")}</span>
           </div>
+          <p className="li-inspector__scope-hint">{t("householdScoped")}</p>
 
           {/* Area */}
           {linkedArea && (
@@ -736,7 +761,9 @@ export function ListsPage() {
           <IconChevronDown />
         </button>
         <span className="li-inspector__bottom-meta">
-          {new Date(selectedInStore.updatedAtUtc).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+          {t("updatedOn", {
+            date: new Date(selectedInStore.updatedAtUtc).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
+          })}
         </span>
         <button
           type="button"
@@ -779,33 +806,36 @@ export function ListsPage() {
 
       {/* Mobile header */}
       {isMobile && (
-        <header className="lists-mobile-header">
-          <button
-            type="button"
-            className="lists-mobile-header__trigger"
-            onClick={(e) => { e.stopPropagation(); setShowSwitcherSheet(true); }}
-          >
-            <span className="lists-mobile-header__name">
-              {activeListSummary ? activeListSummary.name : t("title")}
-            </span>
-            {activeListSummary && activeListSummary.uncheckedCount > 0 && (
-              <span className="li-count">{activeListSummary.uncheckedCount}</span>
-            )}
-            <span aria-hidden="true">▾</span>
-          </button>
-
-          {/* Mobile view toggle */}
-          {activeListId && (
+        <>
+          <header className="lists-mobile-header">
             <button
               type="button"
-              className={`lists-icon-btn${viewMode === "grid" ? " is-active" : ""}`}
-              onClick={() => setViewMode((m) => m === "list" ? "grid" : "list")}
-              title={viewMode === "grid" ? t("viewAsList") : t("viewAsGrid")}
+              className="lists-mobile-header__trigger"
+              onClick={(e) => { e.stopPropagation(); setShowSwitcherSheet(true); }}
             >
-              {viewMode === "grid" ? <IconList /> : <IconGrid />}
+              <span className="lists-mobile-header__name">
+                {activeListSummary ? activeListSummary.name : t("title")}
+              </span>
+              {activeListSummary && activeListSummary.uncheckedCount > 0 && (
+                <span className="li-count">{activeListSummary.uncheckedCount}</span>
+              )}
+              <span aria-hidden="true">▾</span>
             </button>
-          )}
-        </header>
+
+            {/* Mobile view toggle */}
+            {activeListId && (
+              <button
+                type="button"
+                className={`lists-icon-btn${viewMode === "grid" ? " is-active" : ""}`}
+                onClick={() => setViewMode((m) => m === "list" ? "grid" : "list")}
+                title={viewMode === "grid" ? t("viewAsList") : t("viewAsGrid")}
+              >
+                {viewMode === "grid" ? <IconList /> : <IconGrid />}
+              </button>
+            )}
+          </header>
+          {renderLinkedContext("lists-mobile-header__context")}
+        </>
       )}
 
       {/* Surface body */}
@@ -816,6 +846,7 @@ export function ListsPage() {
           <ListSwitcherPane
             lists={lists}
             activeListId={activeListId}
+            areaNamesById={areaNamesById}
             onSelect={handleSelectList}
             onNewList={() => setShowCreate(true)}
           />
@@ -878,6 +909,7 @@ export function ListsPage() {
                         {renameError && (
                           <p className="error-msg" style={{ margin: 0 }}>{renameError}</p>
                         )}
+                        {renderLinkedContext("lists-list-header__context")}
                       </div>
 
                       <div className="lists-list-header__actions">
@@ -1179,7 +1211,7 @@ export function ListsPage() {
             className="lists-add-composer__input"
             placeholder={t("addItemPlaceholder")}
             onKeyDown={async (e) => {
-              if (e.key === "Escape") { setShowMobileAdd(false); setAddError(null); return; }
+              if (e.key === "Escape") { setShowMobileAdd(false); setAddError(null); resetAddDrafts(); return; }
               if (e.key !== "Enter") return;
               const name = (e.target as HTMLInputElement).value.trim();
               if (!name) return;
@@ -1190,10 +1222,98 @@ export function ListsPage() {
             autoFocus
             aria-label={t("addItem")}
           />
+          <div className="lists-add-composer__actions">
+            <button
+              type="button"
+              className={`lists-quick-add__action-btn${addOpenPanel === "dueDate" || addDueDateDraft ? " is-active" : ""}`}
+              onClick={() => setAddOpenPanel((p) => p === "dueDate" ? null : "dueDate")}
+              aria-label={t("dueDateLabel")}
+            >
+              <IconCalendar />
+            </button>
+            <button
+              type="button"
+              className={`lists-quick-add__action-btn${addOpenPanel === "reminder" || addReminderDraft ? " is-active" : ""}`}
+              onClick={() => setAddOpenPanel((p) => p === "reminder" ? null : "reminder")}
+              aria-label={t("reminderLabel")}
+            >
+              <IconBell />
+            </button>
+            <button
+              type="button"
+              className={`lists-quick-add__action-btn${addOpenPanel === "repeat" || addRepeatFreqDraft ? " is-active" : ""}`}
+              onClick={() => setAddOpenPanel((p) => p === "repeat" ? null : "repeat")}
+              aria-label={t("repeatLabel")}
+            >
+              <IconRepeat />
+            </button>
+          </div>
+          {addOpenPanel === "dueDate" && (
+            <div className="lists-quick-add__panel">
+              <label className="lists-quick-add__panel-label" htmlFor="m-qa-due">{t("dueDateLabel")}</label>
+              <input
+                id="m-qa-due"
+                type="date"
+                className="lists-quick-add__panel-input"
+                value={addDueDateDraft}
+                onChange={(e) => setAddDueDateDraft(e.target.value)}
+              />
+            </div>
+          )}
+          {addOpenPanel === "reminder" && (
+            <div className="lists-quick-add__panel">
+              <label className="lists-quick-add__panel-label" htmlFor="m-qa-rem">{t("reminderLabel")}</label>
+              <input
+                id="m-qa-rem"
+                type="datetime-local"
+                className="lists-quick-add__panel-input"
+                value={addReminderDraft}
+                onChange={(e) => setAddReminderDraft(e.target.value)}
+              />
+            </div>
+          )}
+          {addOpenPanel === "repeat" && (
+            <div className="lists-quick-add__panel">
+              <label className="lists-quick-add__panel-label" htmlFor="m-qa-repeat">{t("repeatLabel")}</label>
+              <select
+                id="m-qa-repeat"
+                className="lists-quick-add__panel-input"
+                value={addRepeatFreqDraft}
+                onChange={(e) => {
+                  setAddRepeatFreqDraft(e.target.value);
+                  if (e.target.value !== "Weekly") setAddRepeatDaysDraft([]);
+                }}
+              >
+                <option value="">{t("repeatNone")}</option>
+                <option value="Daily">{t("repeatDaily")}</option>
+                <option value="Weekly">{t("repeatWeekly")}</option>
+                <option value="Monthly">{t("repeatMonthly")}</option>
+                <option value="Yearly">{t("repeatYearly")}</option>
+              </select>
+              {addRepeatFreqDraft === "Weekly" && (
+                <div className="li-inspector__repeat-days" style={{ marginTop: "0.5rem" }}>
+                  {WEEK_DAYS.map((label, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      className={`li-inspector__day-btn${addRepeatDaysDraft.includes(idx) ? " li-inspector__day-btn--on" : ""}`}
+                      onClick={() => setAddRepeatDaysDraft((prev) =>
+                        prev.includes(idx) ? prev.filter((d) => d !== idx) : [...prev, idx]
+                      )}
+                      aria-pressed={addRepeatDaysDraft.includes(idx)}
+                      aria-label={label}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
           <button
             type="button"
             className="lists-add-composer__close"
-            onClick={() => { setShowMobileAdd(false); setAddError(null); }}
+            onClick={() => { setShowMobileAdd(false); setAddError(null); resetAddDrafts(); }}
             aria-label={t("cancel")}
           >
             ✕
@@ -1233,6 +1353,16 @@ export function ListsPage() {
                   <span className="lists-switcher-sheet__name">{list.name}</span>
                   {list.uncheckedCount > 0 && (
                     <span className="li-count">{list.uncheckedCount}</span>
+                  )}
+                  {(list.areaId || list.linkedEntityType?.toLowerCase() === "event") && (
+                    <span className="lists-switcher-sheet__cues">
+                      {list.areaId && areaNamesById[list.areaId] && (
+                        <span className="lists-switcher-sheet__cue">{areaNamesById[list.areaId]}</span>
+                      )}
+                      {list.linkedEntityType?.toLowerCase() === "event" && (
+                        <span className="lists-switcher-sheet__cue">{t("planLabel")}</span>
+                      )}
+                    </span>
                   )}
                 </button>
               ))
