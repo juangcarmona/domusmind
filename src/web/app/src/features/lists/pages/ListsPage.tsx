@@ -42,6 +42,11 @@ import { CreateListModal } from "../components/CreateListModal";
 import { SortableItemRow } from "../components/SortableItemRow";
 import { ItemRow } from "../components/ItemRow";
 import { EditEntityModal } from "../../editors/components/EditEntityModal";
+import { ListsAddTemporalPanel } from "../components/ListsAddTemporalPanel";
+import { ListItemInspectorContent } from "../components/ListItemInspectorContent";
+import { ListMetaInspectorContent } from "../components/ListMetaInspectorContent";
+import { IconGrid, IconList, IconOptions, IconCalendar, IconBell, IconRepeat, IconTrash, IconChevronDown } from "../components/ListsIcons";
+import { toLocalInput, fromLocalInput, parseRepeat, serializeRepeat, WEEK_DAYS } from "../utils";
 import type { SharedListItemDetail } from "../../../api/types/listTypes";
 import {
   DndContext,
@@ -55,119 +60,18 @@ import {
 } from "@dnd-kit/sortable";
 import "../lists.css";
 
-// ─── Item selection container ────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────────────
 interface SelectedItem {
   item: SharedListItemDetail;
   listId: string;
 }
 
-// ─── View mode ───────────────────────────────────────────────────
 type ViewMode = "list" | "grid";
 
-// ─── Temporal helpers ────────────────────────────────────────────
-function toLocalInput(iso: string | null): string {
-  if (!iso) return "";
-  try {
-    const d = new Date(iso);
-    const pad = (n: number) => String(n).padStart(2, "0");
-    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  } catch {
-    return "";
-  }
+// ─── Helpers ─────────────────────────────────────────────────────
+function isValidHexColor(value: string): boolean {
+  return /^#[0-9A-Fa-f]{6}$/.test(value);
 }
-
-function fromLocalInput(localStr: string): string | null {
-  if (!localStr) return null;
-  try {
-    return new Date(localStr).toISOString();
-  } catch {
-    return null;
-  }
-}
-
-// ─── Recurrence helpers ──────────────────────────────────────────
-// Canonical format: "Daily" | "Weekly:1,3,5" | "Monthly" | "Yearly"
-// Days of week: 0=Sun, 1=Mon … 6=Sat
-const WEEK_DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"] as const;
-
-function parseRepeat(val: string | null): { freq: string; days: number[] } {
-  if (!val) return { freq: "", days: [] };
-  const [freq, daysPart] = val.split(":");
-  const days = daysPart
-    ? daysPart.split(",").map(Number).filter((d) => d >= 0 && d <= 6)
-    : [];
-  return { freq, days };
-}
-
-function serializeRepeat(freq: string, days: number[]): string | null {
-  if (!freq) return null;
-  if (freq === "Weekly" && days.length > 0) {
-    return `Weekly:${[...days].sort((a, b) => a - b).join(",")}`;
-  }
-  return freq;
-}
-
-// ─── Icon SVGs (inline, keeps bundle clean) ──────────────────────
-const IconGrid = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/>
-    <rect x="9.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/>
-    <rect x="1" y="9.5" width="5.5" height="5.5" rx="1" fill="currentColor"/>
-    <rect x="9.5" y="9.5" width="5.5" height="5.5" rx="1" fill="currentColor"/>
-  </svg>
-);
-
-const IconList = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="1" y="3" width="14" height="1.5" rx="0.75" fill="currentColor"/>
-    <rect x="1" y="7.25" width="14" height="1.5" rx="0.75" fill="currentColor"/>
-    <rect x="1" y="11.5" width="14" height="1.5" rx="0.75" fill="currentColor"/>
-  </svg>
-);
-
-const IconOptions = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="3" cy="8" r="1.3" fill="currentColor"/>
-    <circle cx="8" cy="8" r="1.3" fill="currentColor"/>
-    <circle cx="13" cy="8" r="1.3" fill="currentColor"/>
-  </svg>
-);
-
-const IconCalendar = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="1.5" y="3" width="13" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.4"/>
-    <path d="M1.5 6.5h13" stroke="currentColor" strokeWidth="1.4"/>
-    <path d="M5 1.5v3M11 1.5v3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-  </svg>
-);
-
-const IconBell = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8 2a4.5 4.5 0 0 0-4.5 4.5V9.5L2 11h12l-1.5-1.5V6.5A4.5 4.5 0 0 0 8 2z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
-    <path d="M6.5 12.5a1.5 1.5 0 0 0 3 0" stroke="currentColor" strokeWidth="1.4"/>
-  </svg>
-);
-
-const IconRepeat = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M3 5h8.5a2 2 0 0 1 2 2v1" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-    <path d="M5.5 2.5L3 5l2.5 2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M13 11H4.5a2 2 0 0 1-2-2V8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-    <path d="M10.5 13.5L13 11l-2.5-2.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const IconTrash = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M2.5 4h11M5.5 4V2.5h5V4M6.5 7v5M9.5 7v5M3.5 4l.8 9.5h7.4L12.5 4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
-const IconChevronDown = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
 
 export function ListsPage() {
   const { listId: routeListId } = useParams<{ listId?: string }>();
@@ -226,10 +130,6 @@ export function ListsPage() {
 
   const desktopAddRef = useRef<HTMLInputElement>(null);
   const addInputRef = useRef<HTMLInputElement>(null);
-
-  function isValidHexColor(value: string): boolean {
-    return /^#[0-9A-Fa-f]{6}$/.test(value);
-  }
 
   function resetAddDrafts() {
     setAddOpenPanel(null);
@@ -582,31 +482,72 @@ export function ListsPage() {
   );
 
   // Linked context resolved
-  const linkedArea = detail?.areaId ? areas.find((a) => a.areaId === detail.areaId) : null;
+  const linkedArea = detail?.areaId ? areas.find((a) => a.areaId === detail.areaId) ?? null : null;
   const linkedEntityLabel = detail?.linkedEntityDisplayName ?? null;
   const areaNamesById = Object.fromEntries(areas.map((a) => [a.areaId, a.name]));
 
-  function renderLinkedContext(className: string) {
-    if (!linkedArea && !linkedEntityLabel) return null;
-    return (
-      <div className={className}>
-        {linkedArea && (
-          <ContextChip
-            label={linkedArea.name}
-          />
-        )}
-        {linkedEntityLabel && detail?.linkedEntityId && (
-          <ContextChip
-            label={linkedEntityLabel}
-            onClick={() => setShowLinkedEvent(true)}
-          />
-        )}
-      </div>
-    );
-  }
+  // ── Inspector content ────────────────────────────────────────────
+  // Shared between the desktop InspectorPanel and the mobile BottomSheetDetail.
+  const inspectorContent = selectedInStore ? (
+    <ListItemInspectorContent
+      item={selectedInStore}
+      detail={detail}
+      areas={areas}
+      members={members}
+      linkedArea={linkedArea}
+      linkedEntityLabel={linkedEntityLabel}
+      nameDraft={iNameDraft}
+      qtyDraft={iQtyDraft}
+      noteDraft={iNoteDraft}
+      dueDateDraft={iDueDateDraft}
+      reminderDraft={iReminderDraft}
+      repeatFreq={iRepeatFreq}
+      repeatDays={iRepeatDays}
+      itemAreaDraft={iItemAreaDraft}
+      targetMemberDraft={iTargetMemberDraft}
+      saving={iSaving}
+      hasTemporalDraft={hasTemporalDraft}
+      itemHasTemporal={itemHasTemporal}
+      onClose={() => setSelectedItem(null)}
+      onRemove={handleInspectorRemove}
+      onToggle={() => handleItemToggle(selectedInStore)}
+      onImportanceToggle={handleImportanceToggle}
+      onNameChange={setINameDraft}
+      onQtyChange={setIQtyDraft}
+      onNoteChange={setINoteDraft}
+      onBaseFieldsBlur={() => { void commitBaseFields(); }}
+      onDueDateChange={setIDueDateDraft}
+      onReminderChange={setIReminderDraft}
+      onRepeatFreqChange={handleRepeatFreqChange}
+      onRepeatDayToggle={handleRepeatDayToggle}
+      onTemporalBlur={() => { void commitTemporalFields(); }}
+      onClearTemporal={handleClearTemporal}
+      onLinkedEventClick={() => setShowLinkedEvent(true)}
+      onItemAreaChange={(v) => { setIItemAreaDraft(v); handleItemContextChange("itemAreaId", v); }}
+      onTargetMemberChange={(v) => { setITargetMemberDraft(v); handleItemContextChange("targetMemberId", v); }}
+    />
+  ) : (
+    <ListMetaInspectorContent
+      detail={detail}
+      activeListId={activeListId}
+      uncheckedCount={unchecked.length}
+      checkedCount={checked.length}
+      temporalCount={sorted.filter((i) => i.dueDate || i.reminder || i.repeat).length}
+      saving={listMetaSaving}
+      deleting={deleting}
+      error={listMetaError}
+      onColorChange={(color) => { void handleListColorChange(color); }}
+      onClearColor={() => { void handleListColorChange(""); }}
+      onLinkedEventClick={() => setShowLinkedEvent(true)}
+      onUnlinkPlan={() => { void handleUnlinkPlan(); }}
+      onClose={() => setActiveListId(null)}
+      onDeleteList={() => { void handleDelete(); }}
+    />
+  );
 
-  // ── Inspector body ───────────────────────────────────────────────
-  const inspectorBody = selectedInStore ? (
+  // Dead code — replaced by ListItemInspectorContent + ListMetaInspectorContent.
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  void (selectedInStore ? (
     <div className="li-inspector">
       <div className="li-inspector__scroll">
 
@@ -978,7 +919,7 @@ export function ListsPage() {
         <span className="li-inspector-hint__stat">{t("noListSelected")}</span>
       )}
     </div>
-  );
+  ));
 
   return (
     <div className="lists-surface l-surface">
@@ -1013,7 +954,14 @@ export function ListsPage() {
               </button>
             )}
           </header>
-          {renderLinkedContext("lists-mobile-header__context")}
+          {(linkedArea || linkedEntityLabel) && (
+            <div className="lists-mobile-header__context">
+              {linkedArea && <ContextChip label={linkedArea.name} />}
+              {linkedEntityLabel && detail?.linkedEntityId && (
+                <ContextChip label={linkedEntityLabel} onClick={() => setShowLinkedEvent(true)} />
+              )}
+            </div>
+          )}
         </>
       )}
 
@@ -1091,7 +1039,14 @@ export function ListsPage() {
                         {renameError && (
                           <p className="error-msg" style={{ margin: 0 }}>{renameError}</p>
                         )}
-                        {renderLinkedContext("lists-list-header__context")}
+                        {(linkedArea || linkedEntityLabel) && (
+                          <div className="lists-list-header__context">
+                            {linkedArea && <ContextChip label={linkedArea.name} />}
+                            {linkedEntityLabel && detail?.linkedEntityId && (
+                              <ContextChip label={linkedEntityLabel} onClick={() => setShowLinkedEvent(true)} />
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       <div className="lists-list-header__actions">
@@ -1203,71 +1158,27 @@ export function ListsPage() {
                           </div>
 
                           {/* Contextual panel — one at a time */}
-                          {addOpenPanel === "dueDate" && (
-                            <div className="lists-quick-add__panel">
-                              <label className="lists-quick-add__panel-label" htmlFor="qa-due">{t("dueDateLabel")}</label>
-                              <input
-                                id="qa-due"
-                                type="date"
-                                className="lists-quick-add__panel-input"
-                                value={addDueDateDraft}
-                                onChange={(e) => setAddDueDateDraft(e.target.value)}
-                                aria-label={t("dueDateLabel")}
-                              />
-                            </div>
-                          )}
-                          {addOpenPanel === "reminder" && (
-                            <div className="lists-quick-add__panel">
-                              <label className="lists-quick-add__panel-label" htmlFor="qa-reminder">{t("reminderLabel")}</label>
-                              <input
-                                id="qa-reminder"
-                                type="datetime-local"
-                                className="lists-quick-add__panel-input"
-                                value={addReminderDraft}
-                                onChange={(e) => setAddReminderDraft(e.target.value)}
-                                aria-label={t("reminderLabel")}
-                              />
-                            </div>
-                          )}
-                          {addOpenPanel === "repeat" && (
-                            <div className="lists-quick-add__panel">
-                              <label className="lists-quick-add__panel-label" htmlFor="qa-repeat">{t("repeatLabel")}</label>
-                              <select
-                                id="qa-repeat"
-                                className="lists-quick-add__panel-input"
-                                value={addRepeatFreqDraft}
-                                onChange={(e) => {
-                                  setAddRepeatFreqDraft(e.target.value);
-                                  if (e.target.value !== "Weekly") setAddRepeatDaysDraft([]);
-                                }}
-                                aria-label={t("repeatLabel")}
-                              >
-                                <option value="">{t("repeatNone")}</option>
-                                <option value="Daily">{t("repeatDaily")}</option>
-                                <option value="Weekly">{t("repeatWeekly")}</option>
-                                <option value="Monthly">{t("repeatMonthly")}</option>
-                                <option value="Yearly">{t("repeatYearly")}</option>
-                              </select>
-                              {addRepeatFreqDraft === "Weekly" && (
-                                <div className="li-inspector__repeat-days" style={{ marginTop: "0.5rem" }}>
-                                  {WEEK_DAYS.map((label, idx) => (
-                                    <button
-                                      key={idx}
-                                      type="button"
-                                      className={`li-inspector__day-btn${addRepeatDaysDraft.includes(idx) ? " li-inspector__day-btn--on" : ""}`}
-                                      onClick={() => setAddRepeatDaysDraft((prev) =>
-                                        prev.includes(idx) ? prev.filter((d) => d !== idx) : [...prev, idx]
-                                      )}
-                                      aria-pressed={addRepeatDaysDraft.includes(idx)}
-                                      aria-label={label}
-                                    >
-                                      {label}
-                                    </button>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          )}
+                          <ListsAddTemporalPanel
+                            openPanel={addOpenPanel}
+                            dueDateValue={addDueDateDraft}
+                            reminderValue={addReminderDraft}
+                            repeatFreq={addRepeatFreqDraft}
+                            repeatDays={addRepeatDaysDraft}
+                            dueDateInputId="qa-due"
+                            reminderInputId="qa-reminder"
+                            repeatInputId="qa-repeat"
+                            onDueDateChange={setAddDueDateDraft}
+                            onReminderChange={setAddReminderDraft}
+                            onRepeatFreqChange={(v) => {
+                              setAddRepeatFreqDraft(v);
+                              if (v !== "Weekly") setAddRepeatDaysDraft([]);
+                            }}
+                            onRepeatDayToggle={(idx) =>
+                              setAddRepeatDaysDraft((prev) =>
+                                prev.includes(idx) ? prev.filter((d) => d !== idx) : [...prev, idx],
+                              )
+                            }
+                          />
                           <p className="lists-quick-add__hint">{t("addRowHint")}</p>
                         </>
                       )}
@@ -1368,7 +1279,7 @@ export function ListsPage() {
           title={selectedInStore?.name ?? (detail?.name)}
           onClose={selectedInStore ? () => setSelectedItem(null) : undefined}
         >
-          {inspectorBody}
+          {inspectorContent}
         </InspectorPanel>
       </div>
 
@@ -1430,68 +1341,27 @@ export function ListsPage() {
               <IconRepeat />
             </button>
           </div>
-          {addOpenPanel === "dueDate" && (
-            <div className="lists-quick-add__panel">
-              <label className="lists-quick-add__panel-label" htmlFor="m-qa-due">{t("dueDateLabel")}</label>
-              <input
-                id="m-qa-due"
-                type="date"
-                className="lists-quick-add__panel-input"
-                value={addDueDateDraft}
-                onChange={(e) => setAddDueDateDraft(e.target.value)}
-              />
-            </div>
-          )}
-          {addOpenPanel === "reminder" && (
-            <div className="lists-quick-add__panel">
-              <label className="lists-quick-add__panel-label" htmlFor="m-qa-rem">{t("reminderLabel")}</label>
-              <input
-                id="m-qa-rem"
-                type="datetime-local"
-                className="lists-quick-add__panel-input"
-                value={addReminderDraft}
-                onChange={(e) => setAddReminderDraft(e.target.value)}
-              />
-            </div>
-          )}
-          {addOpenPanel === "repeat" && (
-            <div className="lists-quick-add__panel">
-              <label className="lists-quick-add__panel-label" htmlFor="m-qa-repeat">{t("repeatLabel")}</label>
-              <select
-                id="m-qa-repeat"
-                className="lists-quick-add__panel-input"
-                value={addRepeatFreqDraft}
-                onChange={(e) => {
-                  setAddRepeatFreqDraft(e.target.value);
-                  if (e.target.value !== "Weekly") setAddRepeatDaysDraft([]);
-                }}
-              >
-                <option value="">{t("repeatNone")}</option>
-                <option value="Daily">{t("repeatDaily")}</option>
-                <option value="Weekly">{t("repeatWeekly")}</option>
-                <option value="Monthly">{t("repeatMonthly")}</option>
-                <option value="Yearly">{t("repeatYearly")}</option>
-              </select>
-              {addRepeatFreqDraft === "Weekly" && (
-                <div className="li-inspector__repeat-days" style={{ marginTop: "0.5rem" }}>
-                  {WEEK_DAYS.map((label, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      className={`li-inspector__day-btn${addRepeatDaysDraft.includes(idx) ? " li-inspector__day-btn--on" : ""}`}
-                      onClick={() => setAddRepeatDaysDraft((prev) =>
-                        prev.includes(idx) ? prev.filter((d) => d !== idx) : [...prev, idx]
-                      )}
-                      aria-pressed={addRepeatDaysDraft.includes(idx)}
-                      aria-label={label}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          <ListsAddTemporalPanel
+            openPanel={addOpenPanel}
+            dueDateValue={addDueDateDraft}
+            reminderValue={addReminderDraft}
+            repeatFreq={addRepeatFreqDraft}
+            repeatDays={addRepeatDaysDraft}
+            dueDateInputId="m-qa-due"
+            reminderInputId="m-qa-rem"
+            repeatInputId="m-qa-repeat"
+            onDueDateChange={setAddDueDateDraft}
+            onReminderChange={setAddReminderDraft}
+            onRepeatFreqChange={(v) => {
+              setAddRepeatFreqDraft(v);
+              if (v !== "Weekly") setAddRepeatDaysDraft([]);
+            }}
+            onRepeatDayToggle={(idx) =>
+              setAddRepeatDaysDraft((prev) =>
+                prev.includes(idx) ? prev.filter((d) => d !== idx) : [...prev, idx],
+              )
+            }
+          />
           <button
             type="button"
             className="lists-add-composer__close"
@@ -1510,7 +1380,7 @@ export function ListsPage() {
           onClose={() => setSelectedItem(null)}
           title={selectedInStore?.name}
         >
-          {inspectorBody}
+          {inspectorContent}
         </BottomSheetDetail>
       )}
 
