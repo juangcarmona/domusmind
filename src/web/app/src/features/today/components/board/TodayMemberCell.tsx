@@ -14,7 +14,7 @@ interface TodayMemberCellProps {
   /** Called to toggle expanded state. Caller manages single-expanded invariant. */
   onToggle: () => void;
   onMemberClick: (memberId: string) => void;
-  onItemClick: (sourceType: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (sourceType: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 /**

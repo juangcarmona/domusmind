@@ -7,6 +7,7 @@ Depends on:
   - docs/00_product/surface-system.md
   - docs/04_contexts/calendar.md
   - docs/04_contexts/tasks.md
+  - docs/04_contexts/shared-lists.md
 Replaces:
   - specs/surfaces/today.md
   - specs/surfaces/planning.md
@@ -178,6 +179,8 @@ Item grammar:
 □   task
 ●   hh:mm plan
 ⟳   routine
+☆   projected list item (with importance)
+◇   projected list item (without importance)
 ✓   completed
 ```
 
@@ -258,12 +261,69 @@ Month is a navigation and awareness surface, not a primary editing surface.
 
 ### What Agenda may show
 
+Agenda is the unified temporal read surface. It gathers from five source categories:
+
+| Source | Entry type | Write owner |
+| ------ | ---------- | ----------- |
+| Calendar events (plans) | Plan | Calendar |
+| Tasks | Task | Tasks |
+| Routines | Routine (projected occurrence) | Tasks |
+| Temporal list items | List Item projection | Shared Lists |
+| External calendar entries | Imported entry (member scope only) | External integration |
+
+**The write model is divided. Agenda unifies only the read surface.**
+
 - plans (Events in domain language): timed and untimed
 - tasks: due on the selected date, overdue, or assigned to a member
 - routines: projected occurrences for the selected date or range
 - imported external calendar entries in Member scope only when they fall inside the selected date window and an active sync horizon
+- **projected list items**: list items with temporal fields (due date, reminder, or repeat) that fall within the selected date window
 - completed items: present but de-emphasized
 - unavailability blocks: where relevant and available
+
+### Projected List Items
+
+Shared List items carrying temporal fields (due date, reminder, repeat) project into Agenda as a distinct entry type.
+
+**Agenda does not own list items. Agenda projects them.**
+
+The write model is divided: Calendar owns Event, Tasks owns Task and Routine, Shared Lists owns SharedListItem.
+The read model is unified: Agenda shows all of them together in a single temporal surface.
+This is the intended architecture. No entity crosses a context boundary.
+
+Rules:
+
+- projected list items appear alongside tasks and events
+- projected list items carry a visual list-origin cue (e.g. list name or list icon)
+- projected list items are distinguishable from Task entries and Calendar Events in all Agenda views
+- projected list items are not editable from Agenda — edit navigates to the item's list
+- selecting a projected list item opens read-detail inline (inspector/bottom sheet) with a `Open in Lists` action
+- projected list items appear in both Household and Member scope (scoping follows the list's family scope — see scope placement rules below)
+- projected list items follow the same priority ordering as tasks for unchecked state
+- checked list items that still have a due date in the window appear de-emphasized (same as completed tasks)
+
+### Projected List Item Scope Placement Rules
+
+These rules define where temporal list items appear across Agenda scopes and time modes.
+
+V1 list items are household-scoped. There is no per-member scoping for list items.
+
+**Household scope:**
+
+- Household + Day (Board): projected list items appear in the shared row (household section), not in individual member rows
+- Household + Week: appear in a household-level lane on relevant day columns
+- Household + Month: contribute to the day cell entry count on relevant days
+
+**Member scope:**
+
+- Member + Day (Timeline): projected list items appear in the non-timed section alongside tasks and routines, ordered by importance then due date
+- Member + Week: appear in the task/non-timed lane for the relevant day
+- A plan-linked temporal list item appears at the same position as any other temporal list item — independently of the linked plan's position
+
+**Plan-linked temporal list items** project based on their own temporal fields.
+They do not inherit the linked event's time slot.
+The plan shows a compact list reference cue (unchecked count), separately from the item's own projection.
+These are two independent appearance mechanisms.
 
 ### External calendar entry rules
 
@@ -274,6 +334,22 @@ Month is a navigation and awareness surface, not a primary editing surface.
 - read-only detail may offer `Open in Outlook`
 - external entries should be omitted when they fall outside the selected date or mode window, even if stored locally
 - stale connections may trigger a lightweight catch-up sync when Agenda opens
+
+### Lists in Agenda
+
+A plan may have a related list.
+
+When it does, Agenda may surface a compact reference cue on the plan — showing the list name and unchecked item count.
+
+Rules:
+
+- the reference cue links to the full list in Lists surface
+- the cue reflects the plan-linked list, not temporally projected items
+- Agenda does not render list items inline as plan content
+- Agenda does not convert list items to tasks
+- selecting the list cue navigates to the Lists surface
+
+Temporal list items that happen to be linked to the same event via their parent list appear independently via the projection mechanism above, not as a consequence of the plan link.
 
 ### What Agenda does not own
 
@@ -289,9 +365,11 @@ Always show items in this order within a day or cell:
 
 1. overdue
 2. tasks due on this date
-3. plans (by start time ascending, untimed after timed)
-4. routines
-5. completed
+3. projected list items due on this date (unchecked, importance first)
+4. plans (by start time ascending, untimed after timed)
+5. routines
+6. projected list items due on this date (unchecked, no importance)
+7. completed / checked
 
 ---
 
@@ -306,20 +384,39 @@ Tapping or clicking any item selects it.
 
 Deselecting closes the inspector/sheet without navigation.
 
+### Click Semantics
+
+The following rules apply consistently across Household and Member scopes:
+
+**Navigate:**
+- clicking a member identity (avatar/name) in the household board or header switches to that member's scope, preserving current date and mode
+- clicking an owner or supporter identity in the Areas inspector navigates to that person's Agenda context
+
+**Inspect:**
+- clicking an item/entry/card opens the right inspector (desktop) or bottom sheet (mobile)
+- selection is reflected visually on the item
+- this applies to Day and Week views; clicking any item in any day of the week grid opens the inspector
+
+**Create:**
+- clicking an empty time slot in the Timeline (Member + Day) or the Week grid opens the add modal pre-filled with the clicked date and time
+- the primary `+ Add` action always opens the creation chooser modal
+
 ### Inspector / Bottom Sheet
 
-Shows:
+The inspector panel shows a structured summary of the selected item without requiring Edit to understand it.
 
-- item title
-- type and date context
-- participants (for plans)
-- recurrence summary (for plans and routines)
-- reminder summary (for plans)
-- assignment (for tasks)
-- status (for tasks)
-- notes where available
-- actions for native items: edit, complete, delete as appropriate
-- actions for imported external entries: read-only metadata and `Open in Outlook`
+Panel structure:
+1. Type / source cue (e.g. `Routine`, `Task`, `Plan`, `List Item`, or provider name for imported entries)
+2. Time range (if timed)
+3. Type-specific metadata:
+   - **Plan**: participants, recurrence/reminder if applicable
+   - **Task**: status, due date
+   - **Routine**: recurrence summary, scope
+   - **Projected list item**: list name, checked state, note if present, `Open in Lists` action
+   - **Imported external entry**: source label, read-only state, `Open in Outlook` link
+4. Edit action (native entries only; not available for projected list items or imported external entries)
+
+The inspector does not include a second close button. The panel header owns the single close affordance.
 
 ### Editing
 
@@ -413,3 +510,65 @@ Do not:
 - apply different visual grammar between household and member scope unless the time mode genuinely requires it
 - make Month the default view — it is navigation, not operational
 - hide the scope selector on mobile behind an extra tap
+- allow editing of a projected list item from Agenda (edit path is always via Lists)
+- render a projected list item using task visual grammar (they must be visually distinguishable)
+- omit the `Open in Lists` action from a projected list item inspector
+
+---
+
+## UX Grammar — List Items in Agenda (Locked)
+
+This section locks the visual treatment for projected list items in all Agenda views.
+
+### Identity markers
+
+Projected list items must be distinguishable from tasks and plans in all views.
+
+| Entry type        | Glyph | Distinguishing visual                   |
+| ----------------- | ----- | --------------------------------------- |
+| Task              | □     | checkbox affordance                     |
+| Plan              | ●     | filled dot + time label                 |
+| Routine           | ⟳     | cycle icon                              |
+| List item (⭐)    | ☆     | star + list cue (importance = true)     |
+| List item (plain) | ◇     | diamond + list cue (importance = false) |
+
+### List-origin cue
+
+Every projected list item must show a secondary list-origin cue:
+
+- list name in secondary text style, OR
+- small list icon
+
+This cue must be visible even in collapsed row states.
+Users must always know a projected item comes from a list, not a task.
+
+### Inspector content for projected list items
+
+The inspector for a selected projected list item shows:
+
+1. Type label: `List Item`
+2. List-origin cue: `From: [List Name]`
+3. Title (read-only)
+4. Due date or reminder (read-only)
+5. Checked state (read-only indicator)
+6. Importance (read-only star)
+7. Note if present (read-only)
+8. Single CTA: `Open in Lists` — navigates to the item in the Lists surface
+
+The inspector must NOT include:
+
+- edit controls
+- status change controls
+- date pickers
+- delete action
+
+All modifications go through Lists. This is non-negotiable.
+
+### Checked state in Agenda
+
+A projected list item that is checked (done) but still falls within the active date window:
+
+- remains visible in the de-emphasized section (same as completed tasks)
+- title is struck through
+- glyph changes to `✓`
+- does not disappear from the projection until its temporal fields are cleared or removed

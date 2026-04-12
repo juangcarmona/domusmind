@@ -512,6 +512,139 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.ToTable("family_members", (string)null);
                 });
 
+            modelBuilder.Entity("DomusMind.Domain.Lists.ListItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Checked")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("checked");
+
+                    b.Property<DateOnly?>("DueDate")
+                        .HasColumnType("date")
+                        .HasColumnName("due_date");
+
+                    b.Property<bool>("Importance")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("importance");
+
+                    b.Property<Guid?>("ItemAreaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("item_area_id");
+
+                    b.Property<Guid>("ListId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shared_list_id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("note");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("integer")
+                        .HasColumnName("order");
+
+                    b.Property<string>("Quantity")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("quantity");
+
+                    b.Property<DateTimeOffset?>("Reminder")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("reminder");
+
+                    b.Property<string>("Repeat")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("repeat");
+
+                    b.Property<Guid?>("TargetMemberId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("target_member_id");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at_utc");
+
+                    b.Property<Guid?>("UpdatedByMemberId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by_member_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ListId");
+
+                    b.ToTable("shared_list_items", (string)null);
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.Lists.SharedList", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("AreaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("area_id");
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("color");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<bool>("IsArchived")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_archived");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("kind");
+
+                    b.Property<Guid?>("LinkedEntityId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("linked_entity_id");
+
+                    b.Property<string>("LinkedEntityType")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("linked_entity_type");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("shared_lists", (string)null);
+                });
+
             modelBuilder.Entity("DomusMind.Domain.Responsibilities.ResponsibilityDomain", b =>
                 {
                     b.Property<Guid>("Id")
@@ -544,101 +677,6 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("responsibility_domains", (string)null);
-                });
-
-            modelBuilder.Entity("DomusMind.Domain.SharedLists.SharedList", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<Guid?>("AreaId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("area_id");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at_utc");
-
-                    b.Property<Guid>("FamilyId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("family_id");
-
-                    b.Property<string>("Kind")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("kind");
-
-                    b.Property<Guid?>("LinkedEntityId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("linked_entity_id");
-
-                    b.Property<string>("LinkedEntityType")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("linked_entity_type");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("shared_lists", (string)null);
-                });
-
-            modelBuilder.Entity("DomusMind.Domain.SharedLists.SharedListItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<bool>("Checked")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("checked");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Note")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("note");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer")
-                        .HasColumnName("order");
-
-                    b.Property<string>("Quantity")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("quantity");
-
-                    b.Property<Guid>("SharedListId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("shared_list_id");
-
-                    b.Property<DateTime>("UpdatedAtUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at_utc");
-
-                    b.Property<Guid?>("UpdatedByMemberId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("updated_by_member_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SharedListId");
-
-                    b.ToTable("shared_list_items", (string)null);
                 });
 
             modelBuilder.Entity("DomusMind.Domain.Tasks.HouseholdTask", b =>
@@ -1051,6 +1089,15 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("DomusMind.Domain.Lists.ListItem", b =>
+                {
+                    b.HasOne("DomusMind.Domain.Lists.SharedList", null)
+                        .WithMany("Items")
+                        .HasForeignKey("ListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DomusMind.Domain.Responsibilities.ResponsibilityDomain", b =>
                 {
                     b.OwnsOne("DomusMind.Domain.Shared.HexColor", "Color", b1 =>
@@ -1073,15 +1120,6 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         });
 
                     b.Navigation("Color")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DomusMind.Domain.SharedLists.SharedListItem", b =>
-                {
-                    b.HasOne("DomusMind.Domain.SharedLists.SharedList", null)
-                        .WithMany("Items")
-                        .HasForeignKey("SharedListId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
@@ -1266,7 +1304,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.Navigation("Members");
                 });
 
-            modelBuilder.Entity("DomusMind.Domain.SharedLists.SharedList", b =>
+            modelBuilder.Entity("DomusMind.Domain.Lists.SharedList", b =>
                 {
                     b.Navigation("Items");
                 });

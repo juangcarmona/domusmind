@@ -19,4 +19,11 @@ public sealed record MemberAgendaItem(
     string? OpenInProviderUrl,
     string? Location,
     string? ParticipantSummary,
-    DateTime? SourceLastModifiedUtc);
+    DateTime? SourceLastModifiedUtc,
+    Guid? ListId,
+    Guid? ListItemId,
+    // list-item specific fields — null for all other types
+    string? ListName,
+    bool? Importance,
+    DateOnly? DueDate,
+    DateTimeOffset? Reminder);

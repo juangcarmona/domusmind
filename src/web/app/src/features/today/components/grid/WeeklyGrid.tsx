@@ -9,7 +9,7 @@ interface WeeklyGridProps {
   grid: WeeklyGridResponse;
   selectedDate?: string; // Optional: highlight selected day column
   onDayClick?: (date: string) => void; // Optional: handle day header click
-  onItemClick?: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick?: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 function SharedRow({
@@ -21,7 +21,7 @@ function SharedRow({
   cells: GridCell[];
   label: string;
   today: string;
-  onItemClick?: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick?: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }) {
   return (
     <div className="wg-row wg-row--shared">
@@ -73,14 +73,16 @@ export function WeeklyGrid({
     if (shared) {
       count += (shared.events?.length ?? 0)
         + (shared.tasks?.length ?? 0)
-        + (shared.routines?.length ?? 0);
+        + (shared.routines?.length ?? 0)
+        + (shared.listItems?.length ?? 0);
     }
     for (const member of members) {
       const cell = (member.cells ?? []).find((c) => c.date.slice(0, 10) === day);
       if (cell) {
         count += (cell.events?.length ?? 0)
           + (cell.tasks?.length ?? 0)
-          + (cell.routines?.length ?? 0);
+          + (cell.routines?.length ?? 0)
+          + (cell.listItems?.length ?? 0);
       }
     }
     dayCounts[day] = count;

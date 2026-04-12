@@ -6,7 +6,7 @@ import { useAppSelector } from "../../../store/hooks";
 import { CalendarEntryItem } from "../../today/components/shared/CalendarEntryItem";
 import { buildMemberEntries, sortEntries } from "../../today/utils/todayPanelHelpers";
 import { useTranslation } from "react-i18next";
-import type { WeeklyGridMember } from "../../today/types";
+import type { WeeklyGridCell, WeeklyGridMember } from "../../today/types";
 
 interface MemberMonthViewProps {
   /** Member ID to scope the month calendar. Pass null for the shared/collective subject. */
@@ -19,9 +19,10 @@ interface MemberMonthViewProps {
    * May be null while the grid is loading.
    */
   memberRow?: WeeklyGridMember | null;
+  sharedCells?: WeeklyGridCell[];
   gridLoading?: boolean;
   onSelectDay: (date: string) => void;
-  onItemClick?: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick?: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 /**
@@ -35,6 +36,7 @@ export function MemberMonthView({
   selectedDate,
   firstDayOfWeek,
   memberRow,
+  sharedCells,
   gridLoading,
   onSelectDay,
   onItemClick,
@@ -61,8 +63,9 @@ export function MemberMonthView({
     /* active */ true,
   );
 
+  const sharedCellForDate = sharedCells?.find((c) => c.date.slice(0, 10) === selectedDate) ?? null;
   const dayEntries = memberRow
-    ? sortEntries(buildMemberEntries(memberRow, selectedDate))
+    ? sortEntries(buildMemberEntries(memberRow, selectedDate, sharedCellForDate))
     : [];
   const hasEntries = dayEntries.length > 0;
 

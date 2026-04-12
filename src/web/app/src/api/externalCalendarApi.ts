@@ -37,7 +37,6 @@ export interface AvailableCalendar {
   calendarName: string;
   isDefault: boolean;
   isSelected: boolean;
-  colorHex: string | null;
 }
 
 export interface ExternalCalendarConnectionDetail extends ExternalCalendarConnectionSummary {
@@ -53,11 +52,18 @@ export interface ConnectOutlookAccountRequest {
   connectState?: string;
 }
 
+export interface ConnectOutlookAccountResponse {
+  connectionId: string;
+  memberId: string;
+  provider: string;
+  providerAccountId: string;
+  accountEmail: string;
+}
+
 export interface CalendarSelectionItem {
   calendarId: string;
   calendarName: string;
   isSelected: boolean;
-  colorHex?: string | null;
 }
 
 export interface ConfigureConnectionRequest {
@@ -79,12 +85,24 @@ export interface ConfigureConnectionResponse {
 export interface SyncConnectionResponse {
   connectionId: string;
   status: string;
-  selectedFeedCount: number;
   syncedFeedCount: number;
-  importedEntryCount: number;
-  updatedEntryCount: number;
-  deletedEntryCount: number;
-  lastSuccessfulSyncUtc: string | null;
+  syncedEntryCount: number;
+  syncCompletedAtUtc: string | null;
+}
+
+export interface GetExternalCalendarEntryResponse {
+  entryId: string;
+  title: string;
+  date: string;
+  time: string | null;
+  endDate: string | null;
+  endTime: string | null;
+  isAllDay: boolean;
+  status: string;
+  location: string | null;
+  calendarName: string | null;
+  providerLabel: string | null;
+  openInProviderUrl: string | null;
 }
 
 // --- API functions ---
@@ -105,7 +123,7 @@ export const externalCalendarApi = {
     request<ExternalCalendarConnectionDetail>(`${baseUrl(familyId, memberId)}/${connectionId}`),
 
   connectOutlook: (familyId: string, memberId: string, body: ConnectOutlookAccountRequest) =>
-    request<ExternalCalendarConnectionDetail>(`${baseUrl(familyId, memberId)}/outlook`, {
+    request<ConnectOutlookAccountResponse>(`${baseUrl(familyId, memberId)}/outlook`, {
       method: "POST",
       body: JSON.stringify(body),
     }),
@@ -135,4 +153,9 @@ export const externalCalendarApi = {
 
   disconnectConnection: (familyId: string, memberId: string, connectionId: string) =>
     request<unknown>(`${baseUrl(familyId, memberId)}/${connectionId}`, { method: "DELETE" }),
+
+  getExternalEntry: (familyId: string, memberId: string, entryId: string) =>
+    request<GetExternalCalendarEntryResponse>(
+      `/api/families/${familyId}/members/${memberId}/external-calendar-entries/${entryId}`,
+    ),
 };

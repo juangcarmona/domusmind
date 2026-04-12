@@ -26,15 +26,26 @@ DomusMind V1 includes five core bounded contexts:
 
 These contexts provide the minimum viable household operating model.
 
-Shared Lists provides the **persistent shared checklist layer** of the household.
+Shared Lists provides the **household execution container** layer of the household.
 
-It complements the other core contexts by modeling reusable, non-temporal coordination state such as:
+It supports a spectrum from lightweight memory through actionable, temporally-enriched items that project into the Agenda surface.
 
-- shopping lists
-- preparation checklists
-- recurring household item tracking
+It complements the other core contexts by modeling:
 
-Shared Lists is independent from Tasks and Calendar, and must not introduce time-based or execution semantics.
+- shopping lists and reusable checklists
+- preparation lists tied to plans or areas
+- items with importance flags and optional temporal fields (due date, reminder, repeat)
+- time-aware items that appear in the Agenda surface alongside tasks and events
+
+Shared Lists items with temporal fields project into Agenda as a distinct entry type.
+Shared Lists does not own time — Calendar remains the source of truth for time.
+Shared Lists items are never automatically converted to Tasks.
+
+**Agenda is the unified temporal read surface.**
+It gathers from five sources: Calendar Events, Tasks, Routines, temporal list items, and (member scope only) external calendar entries.
+The write model is divided — each context owns its aggregates.
+The read model is unified — Agenda projects all temporal entry types together.
+No entity crosses a context boundary.
 
 ---
 
@@ -48,9 +59,9 @@ V1 supports the following capability groups:
 - external calendar ingestion for member-scoped read-only agenda projection
 - task execution
 - routine management
-- persistent shared checklist management
-- reusable household lists
-- shared state coordination across members
+- persistent shared household execution container (lists)
+- list item progressive capability model (base, importance, temporal)
+- list item Agenda projection
 - unified family timeline
 
 ---
@@ -70,13 +81,16 @@ Owns events, schedules, participants, and reminders.
 Owns tasks, routines, assignment, and completion.
 
 ### Shared Lists
-Owns persistent shared checklists and reusable household lists.
+Owns the household execution container for captured items.
 
-Shared Lists represents non-temporal coordination state and must not overlap with:
+Items support a progressive capability model: base state (name, checked, quantity, note), importance, and temporal fields (due date, reminder, repeat).
 
-- task execution (Tasks)
-- time-based planning (Calendar)
-- ownership semantics (Responsibilities)
+Shared Lists items with temporal fields project into Agenda as a distinct entry type.
+Shared Lists does not overlap with:
+
+- task execution lifecycle (Tasks)
+- event scheduling and time ownership (Calendar)
+- accountability semantics (Responsibilities)
 
 ---
 
@@ -93,7 +107,9 @@ Shared Lists represents non-temporal coordination state and must not overlap wit
 - Shared Lists may reference Responsibility domains
 - Shared Lists may optionally link to Calendar entities
 
-Shared Lists remains behaviorally independent from Tasks and Calendar.
+- Shared Lists remains behaviorally independent from Tasks.
+- Shared Lists may carry item-level temporal fields (due date, reminder, repeat); these project into Agenda without creating Calendar or Task records.
+- Repeat on a list item may be set independently of due date. Repeat is itself a temporal anchor sufficient for Agenda projection.
 
 ---
 
@@ -146,8 +162,12 @@ Shared Lists remains behaviorally independent from Tasks and Calendar.
 - remove-shared-list-item
 - toggle-shared-list-item
 - reorder-shared-list-items
+- set-item-importance
+- set-item-temporal
+- clear-item-temporal
 - get-family-shared-lists
 - get-shared-list-detail
+- get-temporal-items-for-agenda (projection query)
 
 ---
 
@@ -235,7 +255,13 @@ DomusMind V1 is complete when:
 - tasks can be executed
 - routines can be maintained
 - shared lists can be created and reused
+- temporal list items (with due date, reminder, or repeat) project into the Agenda surface as a distinct `list-item` entry type
+- the Agenda surface shows a unified view of plans, tasks, routines, temporal list items, and (member scope) external calendar entries
+- no projected entry type is ever collapsed into another type in the read model
 - list items can be added, updated, reordered, and toggled
+- list items may carry importance flags and temporal fields
+- temporally-enriched list items project into Agenda as a distinct entry type
 - timeline can be queried
-- Member Agenda can show imported external calendar entries without converting them into native plans
-- shared lists do not introduce confusion with tasks, routines, or events
+- Agenda in Member scope can show imported external calendar entries without converting them into native plans
+- projected list items in Agenda are distinguishable from tasks and events
+- list items are never automatically converted to tasks or calendar events

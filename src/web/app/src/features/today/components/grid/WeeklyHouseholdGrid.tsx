@@ -8,7 +8,7 @@ interface WeeklyHouseholdGridProps {
   error: string | null;
   selectedDate: string;
   onDayClick: (date: string) => void;
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 export function WeeklyHouseholdGrid({

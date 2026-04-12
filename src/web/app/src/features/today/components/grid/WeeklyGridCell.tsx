@@ -6,7 +6,7 @@ interface WeeklyGridCellProps {
   cell: WeeklyGridCellType;
   isToday?: boolean;
   compact?: boolean;
-  onItemClick?: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick?: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 export function WeeklyGridCell({ cell, isToday, onItemClick }: WeeklyGridCellProps) {

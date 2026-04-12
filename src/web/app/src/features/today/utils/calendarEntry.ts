@@ -1,6 +1,7 @@
 import type {
   WeeklyGridCell,
   WeeklyGridEventItem,
+  WeeklyGridListItem,
   WeeklyGridTaskItem,
   WeeklyGridRoutineItem,
 } from "../types";
@@ -13,9 +14,13 @@ import type {
 export type CalendarEntryDisplayType =
   | "overdue"
   | "task"
+  | "list-important"
   | "event"
   | "routine"
+  | "list"
   | "completed";
+
+export type CalendarEntrySourceType = "event" | "task" | "routine" | "list-item";
 
 /**
  * Normalized presentation model for a single calendar entry.
@@ -29,7 +34,7 @@ export type CalendarEntryDisplayType =
  */
 export interface CalendarEntry {
   id: string;
-  sourceType: "event" | "task" | "routine";
+  sourceType: CalendarEntrySourceType;
   /** Drives glyph selection and CSS emphasis class. */
   displayType: CalendarEntryDisplayType;
   title: string;
@@ -41,6 +46,12 @@ export interface CalendarEntry {
    * Null for tasks, routines, and untimed events.
    */
   endTime?: string | null;
+  /** ISO date (YYYY-MM-DD) for event/routine timeline context when available. */
+  date?: string | null;
+  /** Optional end date for multi-day events. */
+  endDate?: string | null;
+  /** True for all-day events from external providers. */
+  isAllDay?: boolean;
   /** Secondary label, e.g. event participant names. Null when not applicable. */
   subtitle: string | null;
   /** Raw status string from the API: "Pending", "Completed", "Cancelled", etc. */
@@ -52,8 +63,32 @@ export interface CalendarEntry {
   isReadOnly?: boolean;
   sourceLabel?: string | null;
   openInProviderUrl?: string | null;
-  /** Physical location for the entry (populated for imported external events). */
+  calendarName?: string | null;
   location?: string | null;
+  /** For routines: human-readable frequency/recurrence summary. */
+  recurrenceSummary?: string | null;
+  /** For routines: household or member scope. */
+  scope?: string | null;
+  /** For tasks: ISO due date or null when not set. */
+  dueDate?: string | null;
+  /** For projected list items: source list id. */
+  listId?: string | null;
+  /** For projected list items: source list name. */
+  listName?: string | null;
+  /** For projected list items: local note. */
+  note?: string | null;
+  /** For projected list items: recurrence summary token. */
+  repeat?: string | null;
+  /** For projected list items: reminder instant in ISO format. */
+  reminder?: string | null;
+  /** For projected list items: importance marker. */
+  importance?: boolean;
+  /** For projected list items: optional item-level area context. */
+  itemAreaId?: string | null;
+  itemAreaName?: string | null;
+  /** For projected list items: optional target member context. */
+  targetMemberId?: string | null;
+  targetMemberName?: string | null;
 }
 
 // ----------------------------------------------------------------
@@ -64,9 +99,11 @@ export const ENTRY_DISPLAY_PRIORITY: Record<CalendarEntryDisplayType, number> =
   {
     overdue: 0,
     task: 1,
-    event: 2,
-    routine: 3,
-    completed: 4,
+    "list-important": 2,
+    event: 3,
+    routine: 4,
+    list: 5,
+    completed: 6,
   };
 
 // ----------------------------------------------------------------
@@ -83,8 +120,10 @@ export const ENTRY_DISPLAY_PRIORITY: Record<CalendarEntryDisplayType, number> =
 export const ENTRY_GLYPH: Record<CalendarEntryDisplayType, string> = {
   overdue: "! □", // compound: overdue indicator + task symbol
   task: "□",
+  "list-important": "☆",
   event: "●", // time is shown separately in the glyph span: ● 19:30
   routine: "⟳",
+  list: "◇",
   completed: "✓",
 };
 
@@ -118,6 +157,9 @@ export function normalizeEventItem(
     title: e.title,
     time: e.time ?? null,
     endTime: e.endTime ?? null,
+    date: e.date,
+    endDate: e.endDate ?? null,
+    isAllDay: e.time == null,
     subtitle: participants ?? null,
     status: e.status,
     color: e.color ?? null,
@@ -126,6 +168,7 @@ export function normalizeEventItem(
     isReadOnly: e.isReadOnly ?? false,
     sourceLabel: e.providerLabel ?? null,
     openInProviderUrl: e.openInProviderUrl ?? null,
+    calendarName: e.calendarName ?? null,
     location: e.location ?? null,
   };
 }
@@ -149,6 +192,7 @@ export function normalizeTaskItem(t: WeeklyGridTaskItem): CalendarEntry {
     color: t.color ?? null,
     isCompleted: terminal,
     isOverdue: false,
+    dueDate: t.dueDate ?? null,
   };
 }
 
@@ -171,6 +215,44 @@ export function normalizeRoutineItem(
     color: r.color ?? null,
     isCompleted: false,
     isOverdue: false,
+    recurrenceSummary: r.frequency ?? null,
+    scope: r.scope ?? null,
+  };
+}
+
+/** Normalize a projected shared-list item. */
+export function normalizeListItem(item: WeeklyGridListItem): CalendarEntry {
+  const isCompleted = item.checked;
+  const displayType: CalendarEntryDisplayType = isCompleted
+    ? "completed"
+    : item.importance
+    ? "list-important"
+    : "list";
+
+  return {
+    id: item.itemId,
+    sourceType: "list-item",
+    displayType,
+    title: item.title,
+    time: null,
+    subtitle: item.listName,
+    status: item.checked ? "done" : "pending",
+    color: item.color ?? null,
+    isCompleted,
+    isOverdue: false,
+    isReadOnly: true,
+    sourceLabel: "List",
+    listId: item.listId,
+    listName: item.listName,
+    note: item.note,
+    dueDate: item.dueDate,
+    reminder: item.reminder,
+    repeat: item.repeat,
+    importance: item.importance,
+    itemAreaId: item.itemAreaId ?? null,
+    itemAreaName: item.itemAreaName ?? null,
+    targetMemberId: item.targetMemberId ?? null,
+    targetMemberName: item.targetMemberName ?? null,
   };
 }
 
@@ -198,6 +280,10 @@ export function normalizeCellItems(cell: WeeklyGridCell): CalendarEntry[] {
 
   for (const r of cell.routines ?? []) {
     entries.push(normalizeRoutineItem(r));
+  }
+
+  for (const li of cell.listItems ?? []) {
+    entries.push(normalizeListItem(li));
   }
 
   return entries;

@@ -7,7 +7,7 @@ interface SelectedDateCardProps {
   entries: CalendarEntry[];
   /** "Today" or a formatted date string, used as the card heading. */
   dateLabel: string;
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
 }
 
 /**

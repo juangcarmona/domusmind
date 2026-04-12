@@ -8,7 +8,7 @@ interface SharedWeekViewProps {
   sharedCells: WeeklyGridCell[];
   /** ISO YYYY-MM-DD — any day in the target week. */
   selectedDate: string;
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
   /** Called when the user taps a day header to drill into the Day view. */
   onDayClick?: (date: string) => void;
 }

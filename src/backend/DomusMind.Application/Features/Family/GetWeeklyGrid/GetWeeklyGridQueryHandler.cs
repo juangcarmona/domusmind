@@ -7,6 +7,8 @@ using DomusMind.Contracts.Family;
 using DomusMind.Domain.Calendar;
 using DomusMind.Domain.Calendar.ExternalConnections;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Lists;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Tasks;
 using DomusMind.Domain.Tasks.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -73,6 +75,34 @@ public sealed class GetWeeklyGridQueryHandler
                      && t.Status == HouseholdTaskStatus.Pending)
             .ToListAsync(cancellationToken);
 
+        var temporalListItems = await _dbContext
+            .Set<SharedList>()
+            .AsNoTracking()
+            .Where(l => l.FamilyId == familyId)
+            .SelectMany(l => l.Items, (l, i) => new
+            {
+                ListId = l.Id.Value,
+                ListName = l.Name.Value,
+                ListColor = l.Color,
+                ItemId = i.Id.Value,
+                Title = i.Name.Value,
+                i.Note,
+                i.Checked,
+                i.Importance,
+                i.DueDate,
+                i.Reminder,
+                i.Repeat,
+                i.ItemAreaId,
+                i.TargetMemberId,
+            })
+            .Where(i => i.DueDate.HasValue || i.Reminder.HasValue || i.Repeat != null)
+            .ToListAsync(cancellationToken);
+
+        var areaNameMap = await _dbContext.Set<ResponsibilityDomain>()
+            .AsNoTracking()
+            .Where(a => a.FamilyId == familyId)
+            .ToDictionaryAsync(a => a.Id.Value, a => a.Name.Value, cancellationToken);
+
         var routines = await _dbContext.Set<Routine>()
             .AsNoTracking()
             .Include("_targetMembers")
@@ -80,25 +110,19 @@ public sealed class GetWeeklyGridQueryHandler
                      && r.Status == RoutineStatus.Active)
             .ToListAsync(cancellationToken);
 
-        // Query by FamilyId (EF-translatable) and filter to active connections.
-        // memberIds.Contains(c.MemberId.Value) is non-translatable because the
-        // .Value accessor on the MemberId value object cannot be rendered to SQL
-        // by EF Core when the source collection is a local List<Guid>.
+        var memberIds = family.Members.Select(m => m.Id.Value).ToList();
+        var memberIdValues = family.Members.Select(m => m.Id).ToList();
         var activeConnections = await _dbContext
             .Set<ExternalCalendarConnection>()
             .AsNoTracking()
             .Include(c => c.Feeds)
-            .Where(c => c.FamilyId == familyId &&
+            .Where(c => memberIdValues.Contains(c.MemberId) &&
                         c.Status != ExternalCalendarConnectionStatus.Disconnected)
             .ToListAsync(cancellationToken);
 
         var selectedFeedIds = activeConnections
             .SelectMany(c => c.Feeds.Where(f => f.IsSelected).Select(f => f.Id))
             .ToHashSet();
-
-        var feedColorById = activeConnections
-            .SelectMany(c => c.Feeds.Where(f => f.IsSelected))
-            .ToDictionary(f => f.Id, f => f.ColorHex);
 
         var connectionById = activeConnections.ToDictionary(c => c.Id.Value);
 
@@ -162,7 +186,13 @@ public sealed class GetWeeklyGridQueryHandler
                             endTime,
                             e.Status.ToString(),
                             e.Color.Value,
-                            []);
+                                [],
+                                false,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null);
                     })
                     .ToList();
 
@@ -181,7 +211,38 @@ public sealed class GetWeeklyGridQueryHandler
                     })
                     .ToList();
 
-                return new WeeklyGridCell(day.ToString("yyyy-MM-dd"), sharedEvents, unassignedTasks, dayRoutines);
+                var dayStartUtc = day.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+                var dayEndUtcExclusive = day.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+
+                var dayListItems = temporalListItems
+                    .Where(i =>
+                        (i.DueDate.HasValue && i.DueDate.Value == day)
+                        || (i.Reminder.HasValue
+                            && i.Reminder.Value.UtcDateTime >= dayStartUtc
+                            && i.Reminder.Value.UtcDateTime < dayEndUtcExclusive)
+                        || RepeatExpansion.FiresInWindow(i.Repeat, day, day))
+                    .OrderBy(i => i.Checked)
+                    .ThenByDescending(i => i.Importance)
+                    .ThenBy(i => i.Title)
+                    .Select(i => new WeeklyGridListItem(
+                        i.ListId,
+                        i.ListName,
+                        i.ListColor,
+                        i.ItemId,
+                        i.Title,
+                        i.Note,
+                        i.Checked,
+                        i.Importance,
+                        i.DueDate?.ToString("yyyy-MM-dd"),
+                        i.Reminder?.ToString("O"),
+                        i.Repeat,
+                        i.ItemAreaId,
+                        i.ItemAreaId.HasValue ? areaNameMap.GetValueOrDefault(i.ItemAreaId.Value) : null,
+                        i.TargetMemberId,
+                        i.TargetMemberId.HasValue ? memberNameMap.GetValueOrDefault(i.TargetMemberId.Value) : null))
+                    .ToList();
+
+                return new WeeklyGridCell(day.ToString("yyyy-MM-dd"), sharedEvents, unassignedTasks, dayRoutines, dayListItems);
             })
             .ToList();
 
@@ -219,38 +280,37 @@ public sealed class GetWeeklyGridQueryHandler
                                     endTime,
                                     e.Status.ToString(),
                                     e.Color.Value,
-                                    participants);
+                                        participants,
+                                        false,
+                                        null,
+                                        null,
+                                        null,
+                                        null,
+                                        null);
                             })
                             .ToList();
 
                         var memberExternalEvents = memberExternalEntries
                             .Where(entry =>
                             {
-                                // Use the event's original timezone for local-date bucketing.
-                                // Without this, a late-evening event stored as UTC would fall
-                                // on the next calendar day for households in negative-offset zones.
-                                var startDate = LocalDateOf(entry.StartsAtUtc, entry.OriginalTimezone);
-                                var endDate = LocalDateOf(entry.EndsAtUtc ?? entry.StartsAtUtc, entry.OriginalTimezone);
+                                var startDate = DateOnly.FromDateTime(entry.StartsAtUtc);
+                                var endDate = DateOnly.FromDateTime(entry.EndsAtUtc ?? entry.StartsAtUtc);
                                 return startDate <= day && endDate >= day;
                             })
                             .OrderBy(entry => entry.StartsAtUtc)
                             .Select(entry =>
                             {
                                 connectionById.TryGetValue(entry.ConnectionId, out var conn);
+                                var feedName = conn?.Feeds.FirstOrDefault(f => f.Id == entry.FeedId)?.CalendarName;
 
                                 var date = day.ToString("yyyy-MM-dd");
-                                // Format start/end times in the event's original local timezone
-                                // so the household sees the same hour that was in the invitation.
-                                var time = entry.IsAllDay ? null : FormatLocalTime(entry.StartsAtUtc, entry.OriginalTimezone);
+                                var time = entry.IsAllDay ? null : entry.StartsAtUtc.ToString("HH:mm");
                                 var endDate = entry.EndsAtUtc.HasValue
-                                    ? LocalDateOf(entry.EndsAtUtc.Value, entry.OriginalTimezone).ToString("yyyy-MM-dd")
+                                    ? DateOnly.FromDateTime(entry.EndsAtUtc.Value).ToString("yyyy-MM-dd")
                                     : null;
                                 var endTime = entry.IsAllDay || !entry.EndsAtUtc.HasValue
                                     ? null
-                                    : FormatLocalTime(entry.EndsAtUtc.Value, entry.OriginalTimezone);
-
-                                // Use provider-supplied feed color; fall back to a neutral slate.
-                                var color = feedColorById.GetValueOrDefault(entry.FeedId) ?? "#64748B";
+                                    : entry.EndsAtUtc.Value.ToString("HH:mm");
 
                                 return new WeeklyGridEventItem(
                                     entry.Id,
@@ -260,13 +320,14 @@ public sealed class GetWeeklyGridQueryHandler
                                     endDate,
                                     endTime,
                                     entry.Status,
-                                    color,
+                                    "#64748B",
                                     [],
                                     true,
                                     "external_calendar",
                                     conn is null ? null : ExternalCalendarProviderNames.ToProviderLabel(conn.Provider),
-                                    entry.OpenInProviderUrl,
-                                    entry.Location);
+                                        entry.OpenInProviderUrl,
+                                        feedName,
+                                        entry.Location);
                             })
                             .ToList();
 
@@ -310,7 +371,8 @@ public sealed class GetWeeklyGridQueryHandler
                             day.ToString("yyyy-MM-dd"),
                             memberEvents,
                             memberTasks,
-                            cellRoutines);
+                            cellRoutines,
+                            []);
                     })
                     .ToList();
 
@@ -327,68 +389,5 @@ public sealed class GetWeeklyGridQueryHandler
             weekEnd.AddDays(-1).ToString("yyyy-MM-dd"),
             memberRows,
             sharedCells);
-    }
-
-    // -------------------------------------------------------------------------
-    // Local-time helpers for external calendar entry display
-    //
-    // ExternalCalendarEntry.StartsAtUtc/EndsAtUtc are UTC coordinates.
-    // DomusMind is a local household product — events must be shown in the
-    // household's local time. OriginalTimezone carries the IANA or Windows zone
-    // ID from the source invitation (e.g. "America/New_York").
-    //
-    // When OriginalTimezone is null or UTC the UTC value is used directly;
-    // this is correct because event times imported without a zone offset
-    // (or already in UTC) have no additional conversion required.
-    //
-    // Microsoft Graph returns Windows timezone IDs (e.g. "Eastern Standard Time")
-    // while Linux/macOS uses IANA IDs. ResolveTimeZone handles both platforms by
-    // attempting a direct lookup first, then cross-platform conversion via the
-    // built-in TimeZoneInfo conversion APIs added in .NET 6.
-    // -------------------------------------------------------------------------
-
-    private static TimeZoneInfo? ResolveTimeZone(string id)
-    {
-        if (TimeZoneInfo.TryFindSystemTimeZoneById(id, out var tz))
-            return tz;
-
-        // Direct lookup failed — the ID may be a Windows ID on a IANA platform, or vice versa.
-        if (TimeZoneInfo.TryConvertWindowsIdToIanaId(id, out var ianaId) &&
-            TimeZoneInfo.TryFindSystemTimeZoneById(ianaId, out var tzFromIana))
-            return tzFromIana;
-
-        if (TimeZoneInfo.TryConvertIanaIdToWindowsId(id, out var winId) &&
-            TimeZoneInfo.TryFindSystemTimeZoneById(winId, out var tzFromWin))
-            return tzFromWin;
-
-        return null;
-    }
-
-    private static string FormatLocalTime(DateTime utc, string? originalTimezone)
-    {
-        if (string.IsNullOrWhiteSpace(originalTimezone) ||
-            string.Equals(originalTimezone, "UTC", StringComparison.OrdinalIgnoreCase))
-        {
-            return utc.ToString("HH:mm");
-        }
-
-        var tz = ResolveTimeZone(originalTimezone);
-        return tz is not null
-            ? TimeZoneInfo.ConvertTimeFromUtc(utc, tz).ToString("HH:mm")
-            : utc.ToString("HH:mm");
-    }
-
-    private static DateOnly LocalDateOf(DateTime utc, string? originalTimezone)
-    {
-        if (string.IsNullOrWhiteSpace(originalTimezone) ||
-            string.Equals(originalTimezone, "UTC", StringComparison.OrdinalIgnoreCase))
-        {
-            return DateOnly.FromDateTime(utc);
-        }
-
-        var tz = ResolveTimeZone(originalTimezone);
-        return tz is not null
-            ? DateOnly.FromDateTime(TimeZoneInfo.ConvertTimeFromUtc(utc, tz))
-            : DateOnly.FromDateTime(utc);
     }
 }

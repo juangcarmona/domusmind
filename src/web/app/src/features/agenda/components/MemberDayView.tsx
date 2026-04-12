@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import type { WeeklyGridMember } from "../../today/types";
+import type { WeeklyGridCell, WeeklyGridMember } from "../../today/types";
 import { buildMemberEntries, sortEntries } from "../../today/utils/todayPanelHelpers";
 import { MemberSelectedDaySummary } from "./MemberSelectedDaySummary";
 import { MemberSelectedDayUntimedSection } from "./MemberSelectedDayUntimedSection";
@@ -8,7 +8,8 @@ import { MemberSelectedDayTimedSection } from "./MemberSelectedDayTimedSection";
 interface MemberDayViewProps {
   member: WeeklyGridMember;
   selectedDate: string; // ISO YYYY-MM-DD
-  onItemClick: (type: "event" | "task" | "routine", id: string) => void;
+  sharedCell?: WeeklyGridCell | null;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
   /**
    * Called when an empty timeline slot is clicked.
    * Receives "HH:MM" (the :00 or :30 slot start time).
@@ -26,10 +27,10 @@ interface MemberDayViewProps {
  *
  * No longer timeline-only — untimed state is surfaced inline, not pushed to a sidebar.
  */
-export function MemberDayView({ member, selectedDate, onItemClick, onSlotClick }: MemberDayViewProps) {
+export function MemberDayView({ member, selectedDate, sharedCell, onItemClick, onSlotClick }: MemberDayViewProps) {
   const { t } = useTranslation("agenda");
 
-  const allEntries = sortEntries(buildMemberEntries(member, selectedDate));
+  const allEntries = sortEntries(buildMemberEntries(member, selectedDate, sharedCell));
   const untimedEntries = allEntries.filter((e) => e.time === null);
   const timedEntries   = allEntries.filter((e) => e.time !== null);
 

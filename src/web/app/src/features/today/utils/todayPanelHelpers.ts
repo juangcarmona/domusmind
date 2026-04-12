@@ -4,6 +4,7 @@ import {
   type CalendarEntryDisplayType,
   ENTRY_DISPLAY_PRIORITY,
   normalizeEventItem,
+  normalizeListItem,
   normalizeTaskItem,
   normalizeRoutineItem,
 } from "./calendarEntry";
@@ -83,6 +84,10 @@ function normalizeCellWithOverdue(
     entries.push(normalizeRoutineItem(r));
   }
 
+  for (const li of cell.listItems ?? []) {
+    entries.push(normalizeListItem(li));
+  }
+
   return entries;
 }
 
@@ -160,12 +165,19 @@ export function splitForDisplay(
 export function buildMemberEntries(
   member: WeeklyGridMember,
   selectedDate: string,
+  sharedCellForDate?: WeeklyGridCell | null,
 ): CalendarEntry[] {
   const selectedCell = member.cells.find(
     (c) => c.date.slice(0, 10) === selectedDate,
-  ) ?? { date: selectedDate, events: [], tasks: [], routines: [] };
+  ) ?? { date: selectedDate, events: [], tasks: [], routines: [], listItems: [] };
 
   const todayEntries = normalizeCellWithOverdue(selectedCell, selectedDate);
+
+  if (sharedCellForDate) {
+    for (const li of sharedCellForDate.listItems ?? []) {
+      todayEntries.push(normalizeListItem(li));
+    }
+  }
 
   // Within-week overdue: pending tasks from earlier cells in the same grid.
   const overdueEntries: CalendarEntry[] = [];

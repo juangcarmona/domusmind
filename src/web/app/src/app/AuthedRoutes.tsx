@@ -10,7 +10,7 @@ import { AreaDetailPage } from "../features/areas/pages/AreaDetailPage";
 import { AreasPage } from "../features/areas/pages/AreasPage";
 import { SettingsPage } from "../features/settings/pages/SettingsPage";
 import { AgendaPage } from "../features/agenda/pages/AgendaPage";
-import { SharedListsPage } from "../features/shared-lists/pages/SharedListsPage";
+import { ListsPage } from "../features/lists/pages/ListsPage";
 
 /**
  * Manages household bootstrap and i18n sync, then renders the shell-wrapped route tree.
@@ -54,8 +54,8 @@ export function AuthedRoutes() {
         {/* Primary surfaces */}
         <Route path="/agenda" element={<AgendaPage />} />
         <Route path="/agenda/members/:memberId" element={<AgendaPage />} />
-        <Route path="/lists" element={<SharedListsPage />} />
-        <Route path="/lists/:listId" element={<SharedListsPage />} />
+        <Route path="/lists" element={<ListsPage />} />
+        <Route path="/lists/:listId" element={<ListsPage />} />
         <Route path="/areas" element={<AreasPage />} />
         <Route path="/areas/:areaId" element={<AreaDetailPage />} />
         <Route path="/settings" element={<SettingsPage />} />
