@@ -1,10 +1,12 @@
 # Shared List Item — Capability Model and Projection Rules
 
-Status: Canonical freeze
-Audience: Product / Engineering / Architecture
-Scope: V1
-Owns: Item state shape, invariants, valid combinations, projection rules, ownership of behavior
-Depends on: shared-lists.md, context-map.md, ubiquitous-language.md
+Status: Transitional
+Canonical upstream: specs/surfaces/lists.md
+Do not use this document to override canonical product docs/specs
+
+## Purpose
+
+The List Item model defines the structure and capabilities of items within lists.
 
 ---
 

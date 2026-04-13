@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import type { WeeklyGridCell } from "../../today/types";
-import { buildSharedEntries } from "../../today/utils/todayPanelHelpers";
-import { toIsoDate } from "../../today/utils/dateUtils";
+import type { WeeklyGridCell } from "../../agenda-today/types";
+import { buildSharedEntries } from "../../agenda-today/utils/todayPanelHelpers";
+import { toIsoDate } from "../../agenda-today/utils/dateUtils";
 import { HourTimeline } from "./HourTimeline";
 
 /**

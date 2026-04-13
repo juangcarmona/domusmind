@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import type { CalendarEntry } from "../../today/utils/calendarEntry";
+import type { CalendarEntry } from "../../agenda-today/utils/calendarEntry";
 import { HourTimeline } from "./HourTimeline";
-import { toIsoDate } from "../../today/utils/dateUtils";
+import { toIsoDate } from "../../agenda-today/utils/dateUtils";
 import { useIsMobile } from "../../../hooks/useIsMobile";
 
 interface MemberSelectedDayTimedSectionProps {

@@ -9,9 +9,9 @@ Toggle the checked state of an item in a household list.
 ## Context
 
 - Module: Lists
-- Aggregate: `SharedList`
-- Slice: `toggle-shared-list-item`
-- Command: `ToggleSharedListItem`
+- Aggregate: `List`
+- Slice: `toggle-list-item`
+- Command: `ToggleListItem`
 
 ---
 

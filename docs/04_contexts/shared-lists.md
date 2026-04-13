@@ -1,8 +1,12 @@
 # Shared Lists Context
 
+Status: Transitional
+Canonical upstream: specs/surfaces/lists.md
+Do not use this document to override canonical product docs/specs
+
 ## Purpose
 
-The Shared Lists context defines the **household execution container** for captured items.
+The Lists context defines the **household execution container** for captured items.
 
 It supports a spectrum from memory → action → time projection.
 

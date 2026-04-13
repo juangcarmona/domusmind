@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import type { CalendarEntry } from "../../today/utils/calendarEntry";
-import { CalendarEntryItem } from "../../today/components/shared/CalendarEntryItem";
+import type { CalendarEntry } from "../../agenda-today/utils/calendarEntry";
+import { CalendarEntryItem } from "../../agenda-today/components/shared/CalendarEntryItem";
 
 interface SelectedDateCardProps {
   /** Untimed entries for the selected date (entry.time === null). */

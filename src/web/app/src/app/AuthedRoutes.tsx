@@ -65,14 +65,7 @@ export function AuthedRoutes() {
         <Route path="/" element={<Navigate to="/agenda" replace />} />
 
         {/* Legacy redirects — consolidated in one place */}
-        <Route path="/planning" element={<Navigate to="/agenda?mode=week" replace />} />
-        <Route path="/agenda/shared" element={<Navigate to="/agenda" replace />} />
-        <Route path="/members" element={<Navigate to="/settings" replace />} />
-        <Route path="/members/:memberId" element={<Navigate to="/settings" replace />} />
-        <Route path="/timeline" element={<Navigate to="/agenda?mode=week" replace />} />
-        <Route path="/coordination" element={<Navigate to="/agenda" replace />} />
-        <Route path="/plans" element={<Navigate to="/agenda" replace />} />
-        <Route path="/tasks" element={<Navigate to="/agenda" replace />} />
+        {/* Removed legacy redirects as they are no longer needed */}
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/agenda" replace />} />

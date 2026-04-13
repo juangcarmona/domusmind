@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-import { weekApi } from "../../today/api/weekApi";
-import type { WeeklyGridResponse, DayTypeSummary } from "../../today/types";
-import type { CalendarEntry } from "../../today/utils/calendarEntry";
-import { normalizeCellItems } from "../../today/utils/calendarEntry";
-import { sortEntries } from "../../today/utils/todayPanelHelpers";
-import { DAY_ORDER, toIsoDate } from "../../today/utils/dateUtils";
+import { weekApi } from "../../agenda-today/api/weekApi";
+import type { WeeklyGridResponse, DayTypeSummary } from "../../agenda-today/types";
+import type { CalendarEntry } from "../../agenda-today/utils/calendarEntry";
+import { normalizeCellItems } from "../../agenda-today/utils/calendarEntry";
+import { sortEntries } from "../../agenda-today/utils/todayPanelHelpers";
+import { DAY_ORDER, toIsoDate } from "../../agenda-today/utils/dateUtils";
 
 /**
  * Fetches all weekly grids needed to populate a month calendar view

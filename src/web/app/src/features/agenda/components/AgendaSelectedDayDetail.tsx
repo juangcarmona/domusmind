@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
-import type { WeeklyGridResponse } from "../../today/types";
-import type { CalendarEntry } from "../../today/utils/calendarEntry";
+import type { WeeklyGridResponse } from "../../agenda-today/types";
+import type { CalendarEntry } from "../../agenda-today/utils/calendarEntry";
 import {
   buildSharedEntries,
   buildMemberEntries,
   sortEntries,
-} from "../../today/utils/todayPanelHelpers";
-import { CalendarEntryItem } from "../../today/components/shared/CalendarEntryItem";
+} from "../../agenda-today/utils/todayPanelHelpers";
+import { CalendarEntryItem } from "../../agenda-today/components/shared/CalendarEntryItem";
 import { HouseholdLogo } from "../../../components/HouseholdLogo";
 import { MemberAvatar } from "../../settings/components/avatar/MemberAvatar";
 import { useAppSelector } from "../../../store/hooks";

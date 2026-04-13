@@ -9,9 +9,9 @@ Retrieve the full detail of a household list, including its items.
 ## Context
 
 - Module: Lists
-- Read Model: `SharedListDetail`
-- Slice: `get-shared-list-detail`
-- Query: `GetSharedListDetail`
+- Read Model: `ListDetail`
+- Slice: `get-list-detail`
+- Query: `GetListDetail`
 
 ---
 

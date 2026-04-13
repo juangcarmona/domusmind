@@ -9,9 +9,9 @@ Retrieve all active lists belonging to a household.
 ## Context
 
 - Module: Lists
-- Read Model: `SharedListSummary`
-- Slice: `get-family-shared-lists`
-- Query: `GetFamilySharedLists`
+- Read Model: `ListSummary`
+- Slice: `get-family-lists`
+- Query: `GetFamilyLists`
 
 ---
 

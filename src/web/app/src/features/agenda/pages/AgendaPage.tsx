@@ -3,14 +3,14 @@ import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { useIsMobile } from "../../../hooks/useIsMobile";
-import { weekApi } from "../../today/api/weekApi";
-import type { WeeklyGridResponse } from "../../today/types";
+import { weekApi } from "../../agenda-today/api/weekApi";
+import type { WeeklyGridResponse } from "../../agenda-today/types";
 import type { ApiError } from "../../../api/domusmindApi";
 import { externalCalendarApi } from "../../../api/externalCalendarApi";
 import { fetchPlans } from "../../../store/plansSlice";
 import { fetchRoutines } from "../../../store/routinesSlice";
 import { fetchTimeline } from "../../../store/timelineSlice";
-import { PlanningAddModal } from "../../planning/components/modals/PlanningAddModal";
+import { PlanningAddModal } from "../../agenda-planning/components/modals/PlanningAddModal";
 import { InspectorPanel } from "../../../components/InspectorPanel";
 import { BottomSheetDetail } from "../../../components/BottomSheetDetail";
 import { AgendaHeader, type AgendaView } from "../components/AgendaHeader";
@@ -18,13 +18,13 @@ import { MemberDayView } from "../components/MemberDayView";
 import { MemberWeekView } from "../components/MemberWeekView";
 import { MemberMonthView } from "../components/MemberMonthView";
 import { AgendaSelectedDayDetail } from "../components/AgendaSelectedDayDetail";
-import { TodayBoard } from "../../today/components/board/TodayBoard";
-import { WeeklyHouseholdGrid } from "../../today/components/grid/WeeklyHouseholdGrid";
-import { PlanningMobileWeekStrip } from "../../planning/components/PlanningMobileWeekStrip";
-import { MonthView } from "../../today/components/MonthView";
-import { useMonthGridCache } from "../../today/hooks/useMonthGridCache";
-import type { CalendarEntry } from "../../today/utils/calendarEntry";
-import { normalizeCellItems } from "../../today/utils/calendarEntry";
+import { TodayBoard } from "../../agenda-today/components/board/TodayBoard";
+import { WeeklyHouseholdGrid } from "../../agenda-today/components/grid/WeeklyHouseholdGrid";
+import { PlanningMobileWeekStrip } from "../../agenda-planning/components/PlanningMobileWeekStrip";
+import { MonthView } from "../../agenda-today/components/MonthView";
+import { useMonthGridCache } from "../../agenda-today/hooks/useMonthGridCache";
+import type { CalendarEntry } from "../../agenda-today/utils/calendarEntry";
+import { normalizeCellItems } from "../../agenda-today/utils/calendarEntry";
 import {
   AgendaInlineEntityEditor,
   AgendaProjectedListItemBridge,
@@ -35,7 +35,7 @@ import {
   addDays,
   addMonths,
   startOfWeek,
-} from "../../today/utils/dateUtils";
+} from "../../agenda-today/utils/dateUtils";
 import "../agenda.css";
 import "../../editors/editors.css";
 

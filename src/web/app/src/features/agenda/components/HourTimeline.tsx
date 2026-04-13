@@ -1,6 +1,6 @@
 import React from "react";
-import type { CalendarEntry } from "../../today/utils/calendarEntry";
-import { ENTRY_GLYPH } from "../../today/utils/calendarEntry";
+import type { CalendarEntry } from "../../agenda-today/utils/calendarEntry";
+import { ENTRY_GLYPH } from "../../agenda-today/utils/calendarEntry";
 
 // ----------------------------------------------------------------
 // 24-hour, 30-minute slot grid

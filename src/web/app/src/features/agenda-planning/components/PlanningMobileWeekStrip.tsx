@@ -1,16 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { useAppSelector } from "../../../store/hooks";
 import { MemberAvatar } from "../../settings/components/avatar/MemberAvatar";
-import { CalendarEntryItem } from "../../today/components/shared/CalendarEntryItem";
+import { CalendarEntryItem } from "../../agenda-today/components/shared/CalendarEntryItem";
 import {
   buildMemberEntries,
   buildSharedEntries,
   sortEntries,
-} from "../../today/utils/todayPanelHelpers";
+} from "../../agenda-today/utils/todayPanelHelpers";
 import { HouseholdLogo } from "../../../components/HouseholdLogo";
-import type { WeeklyGridResponse } from "../../today/types";
-import { toIsoDate } from "../../today/utils/dateUtils";
-import type { CalendarEntry } from "../../today/utils/calendarEntry";
+import type { WeeklyGridResponse } from "../../agenda-today/types";
+import { toIsoDate } from "../../agenda-today/utils/dateUtils";
+import type { CalendarEntry } from "../../agenda-today/utils/calendarEntry";
 
 interface PlanningMobileWeekStripProps {
   grid: WeeklyGridResponse | null;

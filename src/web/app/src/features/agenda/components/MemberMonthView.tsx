@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { AgendaMonthGrid } from "./AgendaMonthGrid";
 import { useAgendaMonthCache } from "../hooks/useAgendaMonthCache";
-import { toIsoDate, addMonths } from "../../today/utils/dateUtils";
+import { toIsoDate, addMonths } from "../../agenda-today/utils/dateUtils";
 import { useAppSelector } from "../../../store/hooks";
-import { CalendarEntryItem } from "../../today/components/shared/CalendarEntryItem";
-import { buildMemberEntries, sortEntries } from "../../today/utils/todayPanelHelpers";
+import { CalendarEntryItem } from "../../agenda-today/components/shared/CalendarEntryItem";
+import { buildMemberEntries, sortEntries } from "../../agenda-today/utils/todayPanelHelpers";
 import { useTranslation } from "react-i18next";
-import type { WeeklyGridCell, WeeklyGridMember } from "../../today/types";
+import type { WeeklyGridCell, WeeklyGridMember } from "../../agenda-today/types";
 
 interface MemberMonthViewProps {
   /** Member ID to scope the month calendar. Pass null for the shared/collective subject. */
