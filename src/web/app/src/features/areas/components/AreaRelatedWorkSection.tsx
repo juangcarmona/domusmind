@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { EntityCard } from "../../../components/EntityCard";
 import { useDateFormatter } from "../../../hooks/useDateFormatter";
 import type { EnrichedTimelineEntry, FamilyTimelineEventItem, RoutineListItem } from "../../../api/domusmindApi";
-import { formatRoutineAssigned, formatRoutineDays } from "../../planning/utils/routineFormatters";
+import { formatRoutineAssigned, formatRoutineDays } from "../../agenda-planning/utils/routineFormatters";
 
 interface AreaRelatedWorkSectionProps {
   tasksLoading: boolean;

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import type { WeeklyGridCell, WeeklyGridMember } from "../../today/types";
-import { buildMemberEntries, sortEntries } from "../../today/utils/todayPanelHelpers";
+import type { WeeklyGridCell, WeeklyGridMember } from "../../agenda-today/types";
+import { buildMemberEntries, sortEntries } from "../../agenda-today/utils/todayPanelHelpers";
 import { MemberSelectedDaySummary } from "./MemberSelectedDaySummary";
 import { MemberSelectedDayUntimedSection } from "./MemberSelectedDayUntimedSection";
 import { MemberSelectedDayTimedSection } from "./MemberSelectedDayTimedSection";

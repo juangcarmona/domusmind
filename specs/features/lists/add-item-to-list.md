@@ -9,9 +9,9 @@ Add a new item to an existing household list.
 ## Context
 
 - Module: Lists
-- Aggregate: `SharedList`
-- Slice: `add-item-to-shared-list`
-- Command: `AddItemToSharedList`
+- Aggregate: `List`
+- Slice: `add-item-to-list`
+- Command: `AddItemToList`
 
 ---
 

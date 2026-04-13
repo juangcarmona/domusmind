@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { weekRangeFor } from "../utils/agendaDateGrid";
-import { toIsoDate } from "../../today/utils/dateUtils";
+import { toIsoDate } from "../../agenda-today/utils/dateUtils";
 import { MemberAvatar } from "../../settings/components/avatar/MemberAvatar";
 import { HouseholdLogo } from "../../../components/HouseholdLogo";
 

@@ -41,6 +41,8 @@ Examples:
 - Responsibility Domain
 - Shared List
 
+Note: While the product-facing term is "List", internal domain language may still contain residual "SharedList" names during migration. The target end-state should be "List" consistently unless there is a deliberate reason not to rename aggregate/class names.
+
 ### 2. Household-facing language
 
 The terms users should see in product surfaces.

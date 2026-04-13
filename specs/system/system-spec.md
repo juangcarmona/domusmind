@@ -22,7 +22,7 @@ DomusMind V1 includes five core bounded contexts:
 - Responsibilities
 - Calendar
 - Tasks
-- Shared Lists
+- Lists
 
 These contexts provide the minimum viable household operating model.
 
@@ -80,13 +80,13 @@ Owns events, schedules, participants, and reminders.
 ### Tasks
 Owns tasks, routines, assignment, and completion.
 
-### Shared Lists
+### Lists
 Owns the household execution container for captured items.
 
 Items support a progressive capability model: base state (name, checked, quantity, note), importance, and temporal fields (due date, reminder, repeat).
 
-Shared Lists items with temporal fields project into Agenda as a distinct entry type.
-Shared Lists does not overlap with:
+List items with temporal fields project into Agenda as a distinct entry type.
+Lists does not overlap with:
 
 - task execution lifecycle (Tasks)
 - event scheduling and time ownership (Calendar)
@@ -152,21 +152,20 @@ Shared Lists does not overlap with:
 - pause-routine
 - resume-routine
 
-### Shared Lists (V1.1)
-### Shared Lists
-- create-shared-list
-- rename-shared-list
-- delete-shared-list
-- add-item-to-shared-list
-- update-shared-list-item
-- remove-shared-list-item
-- toggle-shared-list-item
-- reorder-shared-list-items
+### Lists
+- create-list
+- rename-list
+- delete-list
+- add-item-to-list
+- update-list-item
+- remove-list-item
+- toggle-list-item
+- reorder-list-items
 - set-item-importance
 - set-item-temporal
 - clear-item-temporal
-- get-family-shared-lists
-- get-shared-list-detail
+- get-family-lists
+- get-list-detail
 - get-temporal-items-for-agenda (projection query)
 
 ---

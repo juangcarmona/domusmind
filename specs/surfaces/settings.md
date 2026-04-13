@@ -28,7 +28,7 @@ Settings is where phase 1 Outlook calendar connections are managed.
 
 - main navigation → `Settings`
 - profile or account menu → `Settings`
-- contextual link from Member Agenda when calendar connection setup is missing
+- contextual link from Agenda when calendar connection setup is missing
 - post-connect or sync-failure recovery link
 
 ---
@@ -141,7 +141,7 @@ The section header contains:
 
 When no connection exists, show:
 
-- concise explanation that imported Outlook items appear read-only in Member Agenda
+- concise explanation that imported Outlook items appear read-only in Agenda
 - `Connect Outlook` action
 
 Do not over-explain sync mechanics in the empty state.
@@ -230,7 +230,7 @@ Disconnect uses a confirm step.
 
 Confirmation copy must make the outcome explicit:
 
-- imported Outlook items will disappear from Member Agenda
+- imported Outlook items will disappear from Agenda
 - native household plans are unaffected
 
 ---

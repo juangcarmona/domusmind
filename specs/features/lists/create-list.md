@@ -9,9 +9,9 @@ Create a new persistent household list.
 ## Context
 
 - Module: Lists
-- Aggregate: `SharedList`
-- Slice: `create-shared-list`
-- Command: `CreateSharedList`
+- Aggregate: `List`
+- Slice: `create-list`
+- Command: `CreateList`
 
 ---
 

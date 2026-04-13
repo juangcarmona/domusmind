@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import type { CalendarEntry } from "../../today/utils/calendarEntry";
+import type { CalendarEntry } from "../../agenda-today/utils/calendarEntry";
 
 interface MemberSelectedDaySummaryProps {
   entries: CalendarEntry[];

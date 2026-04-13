@@ -22,7 +22,7 @@ import { BottomSheetDetail } from "../../../components/BottomSheetDetail";
 import { EditEntityModal } from "../../editors/components/EditEntityModal";
 import { useIsMobile } from "../../../hooks/useIsMobile";
 import { CreateAreaModal } from "../components/CreateAreaModal";
-import { PlanningAddModal } from "../../planning/components/modals/PlanningAddModal";
+import { PlanningAddModal } from "../../agenda-planning/components/modals/PlanningAddModal";
 import { AreaRelatedWorkSection } from "../components/AreaRelatedWorkSection";
 import { AREA_PALETTE } from "../utils/areaColors";
 

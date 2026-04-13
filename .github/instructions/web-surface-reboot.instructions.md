@@ -11,11 +11,10 @@ Before changing any major surface, read and follow:
 - docs/00_product/strategy.md
 - docs/00_product/experience.md
 - docs/00_product/surface-system.md
-- specs/surfaces/planning.md
-- specs/surfaces/shared-lists.md
-- specs/surfaces/today.md
-- specs/surfaces/member-agenda.md
+- specs/surfaces/agenda.md
+- specs/surfaces/lists.md
 - specs/surfaces/areas.md
+- specs/surfaces/settings.md
 - specs/system/surface-system-reboot-plan.md
 
 These are the source of truth for the current reboot.

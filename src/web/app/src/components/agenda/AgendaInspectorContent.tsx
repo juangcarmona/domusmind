@@ -7,7 +7,7 @@ import { fetchTimeline } from "../../store/timelineSlice";
 import { PlanCrudForm } from "../../features/editors/components/PlanCrudForm";
 import { RoutineCrudForm } from "../../features/editors/components/RoutineCrudForm";
 import { TaskCrudForm } from "../../features/editors/components/TaskCrudForm";
-import type { CalendarEntry } from "../../features/today/utils/calendarEntry";
+import type { CalendarEntry } from "../../features/agenda-today/utils/calendarEntry";
 
 export interface AgendaInspectorMember {
   memberId: string;

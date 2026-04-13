@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
-import type { WeeklyGridCell } from "../../today/types";
-import type { CalendarEntry } from "../../today/utils/calendarEntry";
-import { buildSharedEntries } from "../../today/utils/todayPanelHelpers";
-import { CalendarEntryItem } from "../../today/components/shared/CalendarEntryItem";
+import type { WeeklyGridCell } from "../../agenda-today/types";
+import type { CalendarEntry } from "../../agenda-today/utils/calendarEntry";
+import { buildSharedEntries } from "../../agenda-today/utils/todayPanelHelpers";
+import { CalendarEntryItem } from "../../agenda-today/components/shared/CalendarEntryItem";
 
 interface SharedWeekViewProps {
   sharedCells: WeeklyGridCell[];
