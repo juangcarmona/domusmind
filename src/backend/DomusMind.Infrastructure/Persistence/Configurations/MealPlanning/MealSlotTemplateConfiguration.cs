@@ -37,7 +37,7 @@ public sealed class MealSlotTemplateConfiguration : IEntityTypeConfiguration<Mea
         builder.Property(mst => mst.RecipeId)
             .HasConversion(                
                 id => id.HasValue ? id.Value.Value : (Guid?)null,
-                value => value.HasValue ? RecipeId.From(value.Value) : (RecipeId?)null)
+                value => value.HasValue ? new RecipeId(value.Value) : (RecipeId?)null)
             .HasColumnName("recipe_id");
 
         builder.Property(mst => mst.Notes)
@@ -52,6 +52,6 @@ public sealed class MealSlotTemplateConfiguration : IEntityTypeConfiguration<Mea
             .HasColumnName("updated_at")
             .IsRequired();
 
-        // Ignore DomainEvents property (not present on entity)
+        // Remove DomainEvents ignore - this entity doesn't have DomainEvents
     }
 }

@@ -20,6 +20,11 @@ public sealed class FamilyPreferenceConfiguration : IEntityTypeConfiguration<Fam
             .HasColumnName("id")
             .IsRequired();
 
+        builder.Property(fp => fp.FamilyId)
+            .HasConversion(id => id.Value, value => new FamilyId(value))
+            .HasColumnName("family_id")
+            .IsRequired();
+
         builder.Property(fp => fp.PreferredMealTypes)
             .HasConversion(
                 types => string.Join(",", types.Select(t => t.ToString())),
@@ -48,6 +53,6 @@ public sealed class FamilyPreferenceConfiguration : IEntityTypeConfiguration<Fam
             .HasColumnName("updated_at")
             .IsRequired();
 
-        // Ignore DomainEvents property (not present on entity)
+        // Remove DomainEvents ignore - this entity doesn't have DomainEvents
     }
 }

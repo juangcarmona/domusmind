@@ -20,7 +20,7 @@ public sealed class MealPlanConfiguration : IEntityTypeConfiguration<MealPlan>
             .IsRequired();
 
         builder.Property(mp => mp.FamilyId)
-            .HasConversion(id => id.Value, value => FamilyId.From(value))
+            .HasConversion(id => id.Value, value => new FamilyId(value))
             .HasColumnName("family_id")
             .IsRequired();
 
@@ -29,7 +29,9 @@ public sealed class MealPlanConfiguration : IEntityTypeConfiguration<MealPlan>
             .IsRequired();
 
         builder.Property(mp => mp.TemplateId)
-            .HasConversion(id => id.HasValue ? id.Value.Value : (Guid?)null, value => value.HasValue ? WeeklyTemplateId.From(value.Value) : (WeeklyTemplateId?)null)
+            .HasConversion(
+                id => id.HasValue ? id.Value.Value : (Guid?)null,
+                value => value.HasValue ? new WeeklyTemplateId(value.Value) : (WeeklyTemplateId?)null)
             .HasColumnName("template_id");
 
         builder.Property(mp => mp.CreatedAt)
@@ -47,7 +49,5 @@ public sealed class MealPlanConfiguration : IEntityTypeConfiguration<MealPlan>
 
         builder.Navigation(mp => mp.MealSlots)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
-
-        builder.Ignore(mp => mp.DomainEvents);
     }
 }

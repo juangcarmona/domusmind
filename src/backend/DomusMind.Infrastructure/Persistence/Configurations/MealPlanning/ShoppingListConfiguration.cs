@@ -20,7 +20,7 @@ public sealed class ShoppingListConfiguration : IEntityTypeConfiguration<Shoppin
             .IsRequired();
 
         builder.Property(sl => sl.FamilyId)
-            .HasConversion(id => id.Value, value => FamilyId.From(value))
+            .HasConversion(id => id.Value, value => new FamilyId(value))
             .HasColumnName("family_id")
             .IsRequired();
 
@@ -32,7 +32,7 @@ public sealed class ShoppingListConfiguration : IEntityTypeConfiguration<Shoppin
         builder.Property(sl => sl.GeneratedFromMealPlanId)
             .HasConversion(
                 id => id.HasValue ? id.Value.Value : (Guid?)null,
-                value => value.HasValue ? MealPlanId.From(value.Value) : null)
+                value => value.HasValue ? new MealPlanId(value.Value) : null)
             .HasColumnName("generated_from_meal_plan_id");
 
         builder.Property(sl => sl.CreatedAt)
@@ -51,6 +51,6 @@ public sealed class ShoppingListConfiguration : IEntityTypeConfiguration<Shoppin
         builder.Navigation(sl => sl.Items)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.Ignore(sl => sl.DomainEvents);
+        // Remove DomainEvents ignore - this entity doesn't have DomainEvents
     }
 }

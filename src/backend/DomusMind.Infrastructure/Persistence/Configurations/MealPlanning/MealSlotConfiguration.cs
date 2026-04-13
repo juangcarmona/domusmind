@@ -52,6 +52,6 @@ public sealed class MealSlotConfiguration : IEntityTypeConfiguration<MealSlot>
             .HasColumnName("updated_at")
             .IsRequired();
 
-        // Ignore DomainEvents property (not present on entity)
+        // Remove DomainEvents ignore - this entity doesn't have DomainEvents
     }
 }

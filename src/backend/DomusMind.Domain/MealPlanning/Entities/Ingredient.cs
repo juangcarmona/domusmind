@@ -6,32 +6,27 @@ namespace DomusMind.Domain.MealPlanning.Entities;
 public sealed class Ingredient : Entity<IngredientId>
 {
     public string Name { get; private set; }
-    
-    public decimal Quantity { get; private set; }
-    
-    public string? Unit { get; private set; }
-    
     public RecipeId RecipeId { get; private set; }
-    
+    public decimal Quantity { get; private set; }
+    public string Unit { get; private set; }
+    public string? Notes { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    // Parameterless constructor for EF Core
     private Ingredient() : base(default!)
     {
-        Name = string.Empty; // Initialize with default value to satisfy non-null requirement
-        RecipeId = default!; // Initialize with default value to satisfy non-null requirement
     }
 
-    public Ingredient(IngredientId id, string name, decimal quantity, string? unit, RecipeId recipeId) : base(id)
+    public Ingredient(IngredientId id, string name, RecipeId recipeId, decimal quantity, string unit, string? notes = null) : base(id)
     {
         Name = name;
+        RecipeId = recipeId;
         Quantity = quantity;
         Unit = unit;
-        RecipeId = recipeId;
+        Notes = notes;
         CreatedAt = DateTime.UtcNow;
     }
 
-    public void Update(string? name = null, decimal? quantity = null, string? unit = null)
+    public void Update(string? name = null, decimal? quantity = null, string? unit = null, string? notes = null)
     {
         if (!string.IsNullOrEmpty(name))
             Name = name;
@@ -41,5 +36,8 @@ public sealed class Ingredient : Entity<IngredientId>
             
         if (unit != null)
             Unit = unit;
+            
+        if (notes != null)
+            Notes = notes;
     }
 }

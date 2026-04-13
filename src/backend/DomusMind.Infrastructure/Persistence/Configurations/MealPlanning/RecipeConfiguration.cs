@@ -20,7 +20,7 @@ public sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
             .IsRequired();
 
         builder.Property(r => r.FamilyId)
-            .HasConversion(id => id.Value, value => FamilyId.From(value))
+            .HasConversion(id => id.Value, value => new FamilyId(value))
             .HasColumnName("family_id")
             .IsRequired();
 
@@ -41,6 +41,12 @@ public sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
 
         builder.Property(r => r.Servings)
             .HasColumnName("servings");
+
+        builder.Property(r => r.Instructions)
+            .HasColumnName("instructions");
+
+        builder.Property(r => r.Notes)
+            .HasColumnName("notes");
 
         builder.Property(r => r.CreatedAt)
             .HasColumnName("created_at")

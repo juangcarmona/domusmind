@@ -20,7 +20,7 @@ public sealed class WeeklyTemplateConfiguration : IEntityTypeConfiguration<Weekl
             .IsRequired();
 
         builder.Property(wt => wt.FamilyId)
-            .HasConversion(id => id.Value, value => FamilyId.From(value))
+            .HasConversion(id => id.Value, value => new FamilyId(value))
             .HasColumnName("family_id")
             .IsRequired();
 

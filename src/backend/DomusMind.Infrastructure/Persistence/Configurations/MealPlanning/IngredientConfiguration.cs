@@ -31,6 +31,9 @@ public sealed class IngredientConfiguration : IEntityTypeConfiguration<Ingredien
             .HasColumnName("unit")
             .HasMaxLength(50);
 
+        builder.Property(i => i.Notes)
+            .HasColumnName("notes");
+
         builder.Property(i => i.RecipeId)
             .HasConversion(id => id.Value, value => new RecipeId(value))
             .HasColumnName("recipe_id")
@@ -40,6 +43,6 @@ public sealed class IngredientConfiguration : IEntityTypeConfiguration<Ingredien
             .HasColumnName("created_at")
             .IsRequired();
 
-        // Ignore DomainEvents property (not present on entity)
+        // Remove DomainEvents ignore - this entity doesn't have DomainEvents
     }
 }

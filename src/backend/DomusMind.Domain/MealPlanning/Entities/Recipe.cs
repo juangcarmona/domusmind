@@ -18,10 +18,14 @@ public sealed class Recipe : AggregateRoot<RecipeId>
     
     public int? Servings { get; private set; }
     
+    public string? Instructions { get; private set; }
+    
+    public string? Notes { get; private set; }
+    
     public DateTime CreatedAt { get; private set; }
     
     public DateTime UpdatedAt { get; private set; }
-    
+
     private readonly List<Ingredient> _ingredients = new();
     public IReadOnlyList<Ingredient> Ingredients => _ingredients.AsReadOnly();
 
@@ -32,7 +36,7 @@ public sealed class Recipe : AggregateRoot<RecipeId>
     }
 
     public Recipe(RecipeId id, FamilyId familyId, string name, string? description, int? prepTimeMinutes, 
-        int? cookTimeMinutes, int? servings, DateTime createdAt, DateTime updatedAt) : base(id)
+        int? cookTimeMinutes, int? servings, string? instructions, string? notes, DateTime createdAt, DateTime updatedAt) : base(id)
     {
         FamilyId = familyId;
         Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -40,6 +44,8 @@ public sealed class Recipe : AggregateRoot<RecipeId>
         PrepTimeMinutes = prepTimeMinutes;
         CookTimeMinutes = cookTimeMinutes;
         Servings = servings;
+        Instructions = instructions;
+        Notes = notes;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
@@ -59,7 +65,7 @@ public sealed class Recipe : AggregateRoot<RecipeId>
     }
 
     public void Update(string? name = null, string? description = null, int? prepTimeMinutes = null, 
-        int? cookTimeMinutes = null, int? servings = null)
+        int? cookTimeMinutes = null, int? servings = null, string? instructions = null, string? notes = null)
     {
         if (!string.IsNullOrEmpty(name))
             Name = name;
@@ -75,6 +81,12 @@ public sealed class Recipe : AggregateRoot<RecipeId>
             
         if (servings.HasValue)
             Servings = servings.Value;
+            
+        if (instructions != null)
+            Instructions = instructions;
+            
+        if (notes != null)
+            Notes = notes;
             
         UpdatedAt = DateTime.UtcNow;
     }
