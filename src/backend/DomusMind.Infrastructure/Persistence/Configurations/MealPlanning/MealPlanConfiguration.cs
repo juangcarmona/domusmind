@@ -1,0 +1,53 @@
+using DomusMind.Domain.Family;
+using DomusMind.Domain.MealPlanning.Entities;
+using DomusMind.Domain.MealPlanning.ValueObjects;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace DomusMind.Infrastructure.Persistence.Configurations.MealPlanning;
+
+public sealed class MealPlanConfiguration : IEntityTypeConfiguration<MealPlan>
+{
+    public void Configure(EntityTypeBuilder<MealPlan> builder)
+    {
+        builder.ToTable("meal_plans");
+
+        builder.HasKey(mp => mp.Id);
+
+        builder.Property(mp => mp.Id)
+            .HasConversion(id => id.Value, value => new MealPlanId(value))
+            .HasColumnName("id")
+            .IsRequired();
+
+        builder.Property(mp => mp.FamilyId)
+            .HasConversion(id => id.Value, value => FamilyId.From(value))
+            .HasColumnName("family_id")
+            .IsRequired();
+
+        builder.Property(mp => mp.WeekStart)
+            .HasColumnName("week_start")
+            .IsRequired();
+
+        builder.Property(mp => mp.TemplateId)
+            .HasConversion(id => id.HasValue ? id.Value.Value : (Guid?)null, value => value.HasValue ? WeeklyTemplateId.From(value.Value) : (WeeklyTemplateId?)null)
+            .HasColumnName("template_id");
+
+        builder.Property(mp => mp.CreatedAt)
+            .HasColumnName("created_at")
+            .IsRequired();
+
+        builder.Property(mp => mp.UpdatedAt)
+            .HasColumnName("updated_at")
+            .IsRequired();
+
+        builder.HasMany(mp => mp.MealSlots)
+            .WithOne()
+            .HasForeignKey("MealPlanId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(mp => mp.MealSlots)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.Ignore(mp => mp.DomainEvents);
+    }
+}

@@ -92,6 +92,13 @@ Lists does not overlap with:
 - event scheduling and time ownership (Calendar)
 - accountability semantics (Responsibilities)
 
+### Meal Planning (Extension)
+Adds meal planning capabilities to Lists while maintaining integration with existing surfaces:
+
+- MealPlan and related entities extend the Lists context
+- ShoppingList is derived from MealPlans
+- Templates enable weekly reuse patterns
+
 ---
 
 ## Context Dependencies
@@ -168,6 +175,15 @@ Lists does not overlap with:
 - get-list-detail
 - get-temporal-items-for-agenda (projection query)
 
+### Meal Planning (V1 Extension)
+- create-meal-plan
+- update-meal-slot
+- apply-weekly-template
+- generate-shopping-list
+- create-recipe
+- update-recipe
+- create-weekly-template
+
 ---
 
 ## Deferred to V1.1
@@ -187,12 +203,19 @@ The following are explicitly outside V1:
 
 - properties
 - documents
-- food and meal planning
 - inventory automation (stock tracking, consumption models)
 - pets as separate operational context
 - finance
 - AI automation
 - external integrations beyond phase 1 Outlook calendar ingestion
+
+## Meal Planning Note
+
+Meal planning is explicitly included as a V1 extension to the Lists context, supporting:
+- Weekly meal planning with templates
+- Recipe management
+- Shopping list generation
+- Integration with existing Lists and Agenda surfaces
 
 ---
 

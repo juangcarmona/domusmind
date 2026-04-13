@@ -153,6 +153,7 @@ Lists exist for:
 - restocking
 - school preparation with due dates
 - any recurring household collection
+- meal planning (future extension)
 
 The four axes of DomusMind must remain strictly separate:
 
