@@ -45,11 +45,11 @@ public sealed class FamilyPreferenceConfiguration : IEntityTypeConfiguration<Fam
                     .ToList())
             .HasColumnName("default_dietary_constraints");
 
-        builder.Property(fp => fp.CreatedAt)
+        builder.Property(fp => fp.CreatedAtUtc)
             .HasColumnName("created_at")
             .IsRequired();
 
-        builder.Property(fp => fp.UpdatedAt)
+        builder.Property(fp => fp.UpdatedAtUtc)
             .HasColumnName("updated_at")
             .IsRequired();
 

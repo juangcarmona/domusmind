@@ -6,4 +6,5 @@ export default {
   settings: "Impostazioni",
   switchToLight: "Passa alla modalità chiara",
   switchToDark: "Passa alla modalità scura",
+  mealPlanning: "Pianificazione pasti",
 } as const;

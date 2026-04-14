@@ -48,11 +48,11 @@ public sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
         builder.Property(r => r.Notes)
             .HasColumnName("notes");
 
-        builder.Property(r => r.CreatedAt)
+        builder.Property(r => r.CreatedAtUtc)
             .HasColumnName("created_at")
             .IsRequired();
 
-        builder.Property(r => r.UpdatedAt)
+        builder.Property(r => r.UpdatedAtUtc)
             .HasColumnName("updated_at")
             .IsRequired();
 

@@ -15,22 +15,22 @@ public sealed class MealSlotConfiguration : IEntityTypeConfiguration<MealSlot>
         builder.HasKey(ms => ms.Id);
 
         builder.Property(ms => ms.Id)
-            .HasConversion(id => id.Value, value => new MealSlotId(value))
+            .HasConversion(id => id.Value, value => MealSlotId.From(value))
             .HasColumnName("id")
             .IsRequired();
 
         builder.Property(ms => ms.DayOfWeek)
-            .HasConversion(d => d.ToString(), value => Enum.Parse<DomusMind.Domain.MealPlanning.Enums.DayOfWeek>(value))
+            .HasConversion<string>()
             .HasColumnName("day_of_week")
             .IsRequired();
 
         builder.Property(ms => ms.MealType)
-            .HasConversion(m => m.ToString(), value => Enum.Parse<MealType>(value))
+            .HasConversion<int>()
             .HasColumnName("meal_type")
             .IsRequired();
 
         builder.Property(ms => ms.MealPlanId)
-            .HasConversion(id => id.Value, value => new MealPlanId(value))
+            .HasConversion(id => id.Value, value => MealPlanId.From(value))
             .HasColumnName("meal_plan_id")
             .IsRequired();
 
@@ -44,12 +44,12 @@ public sealed class MealSlotConfiguration : IEntityTypeConfiguration<MealSlot>
             .HasColumnName("notes")
             .HasMaxLength(1000);
 
-        builder.Property(ms => ms.CreatedAt)
-            .HasColumnName("created_at")
+        builder.Property(ms => ms.CreatedAtUtc)
+            .HasColumnName("created_at_utc")
             .IsRequired();
 
-        builder.Property(ms => ms.UpdatedAt)
-            .HasColumnName("updated_at")
+        builder.Property(ms => ms.UpdatedAtUtc)
+            .HasColumnName("updated_at_utc")
             .IsRequired();
 
         // Remove DomainEvents ignore - this entity doesn't have DomainEvents

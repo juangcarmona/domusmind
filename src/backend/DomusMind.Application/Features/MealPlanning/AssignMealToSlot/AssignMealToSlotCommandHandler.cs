@@ -3,8 +3,8 @@ using DomusMind.Application.Abstractions.Persistence;
 using DomusMind.Application.Features.MealPlanning.AssignMealToSlot;
 using DomusMind.Contracts.MealPlanning;
 using DomusMind.Domain.MealPlanning.Entities;
-using DomusMind.Domain.MealPlanning.Enums;
 using DomusMind.Domain.MealPlanning.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace DomusMind.Application.Features.MealPlanning.AssignMealToSlot;
 
@@ -21,14 +21,43 @@ public sealed class AssignMealToSlotCommandHandler : ICommandHandler<AssignMealT
         AssignMealToSlotCommand command,
         CancellationToken cancellationToken)
     {
-        // Implementation would go here
+        var mealSlotId = MealSlotId.From(command.MealSlotId);
+
+        var mealSlot = await _dbContext.Set<MealSlot>()
+            .FirstOrDefaultAsync(ms => ms.Id == mealSlotId, cancellationToken);
+
+        if (mealSlot is null)
+            throw new InvalidOperationException($"Meal slot '{command.MealSlotId}' not found.");
+
+        var mealType = command.MealType is not null
+            ? Enum.Parse<Domain.MealPlanning.Enums.MealType>(command.MealType, ignoreCase: true)
+            : (Domain.MealPlanning.Enums.MealType?)null;
+
+        var recipeId = command.RecipeId.HasValue
+            ? RecipeId.From(command.RecipeId.Value)
+            : (RecipeId?)null;
+
+        mealSlot.Update(mealType, recipeId, command.Notes);
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        string? recipeName = null;
+        if (mealSlot.RecipeId.HasValue)
+        {
+            recipeName = await _dbContext.Set<Recipe>()
+                .AsNoTracking()
+                .Where(r => r.Id == mealSlot.RecipeId.Value)
+                .Select(r => r.Name)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
         return new AssignMealToSlotResponse(
-            command.MealSlotId,
-            // Need to provide MealPlanId and Date - this would normally come from the meal slot
-            MealPlanId.New(), // Placeholder
-            DateOnly.FromDateTime(DateTime.UtcNow), // Placeholder
-            command.MealType ?? MealType.Dinner, // Default to Dinner
-            command.RecipeId,
-            command.Notes);
+            mealSlot.Id.Value,
+            mealSlot.MealPlanId.Value,
+            mealSlot.DayOfWeek.ToString(),
+            mealSlot.MealType.ToString(),
+            mealSlot.RecipeId?.Value,
+            recipeName,
+            mealSlot.Notes);
     }
 }

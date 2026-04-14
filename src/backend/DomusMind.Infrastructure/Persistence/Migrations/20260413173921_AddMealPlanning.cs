@@ -51,8 +51,8 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     family_id = table.Column<Guid>(type: "uuid", nullable: false),
                     week_start = table.Column<DateOnly>(type: "date", nullable: false),
                     template_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -117,12 +117,12 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     day_of_week = table.Column<string>(type: "text", nullable: false),
-                    meal_type = table.Column<string>(type: "text", nullable: false),
+                    meal_type = table.Column<int>(type: "integer", nullable: false),
                     meal_plan_id = table.Column<Guid>(type: "uuid", nullable: false),
                     recipe_id = table.Column<Guid>(type: "uuid", nullable: true),
                     notes = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,12 +187,12 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     day_of_week = table.Column<string>(type: "text", nullable: false),
-                    meal_type = table.Column<string>(type: "text", nullable: false),
+                    meal_type = table.Column<int>(type: "integer", nullable: false),
                     weekly_template_id = table.Column<Guid>(type: "uuid", nullable: false),
                     recipe_id = table.Column<Guid>(type: "uuid", nullable: true),
                     notes = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

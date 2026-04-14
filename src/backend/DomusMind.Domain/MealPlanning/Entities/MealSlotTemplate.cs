@@ -16,25 +16,31 @@ public sealed class MealSlotTemplate : Entity<MealSlotTemplateId>
     
     public string? Notes { get; private set; }
     
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAtUtc { get; private set; }
     
-    public DateTime UpdatedAt { get; private set; }
+    public DateTime UpdatedAtUtc { get; private set; }
 
     private MealSlotTemplate() : base(default!)
     {
         WeeklyTemplateId = default!; // Initialize with default value to satisfy non-null requirement
     }
 
-    public MealSlotTemplate(MealSlotTemplateId id, Enums.DayOfWeek dayOfWeek, MealType mealType, 
-        WeeklyTemplateId weeklyTemplateId, RecipeId? recipeId, string? notes) : base(id)
+    private MealSlotTemplate(MealSlotTemplateId id, Enums.DayOfWeek dayOfWeek, MealType mealType, 
+        WeeklyTemplateId weeklyTemplateId, RecipeId? recipeId, string? notes, DateTime createdAtUtc, DateTime updatedAtUtc) : base(id)
     {
         DayOfWeek = dayOfWeek;
         MealType = mealType;
         WeeklyTemplateId = weeklyTemplateId;
         RecipeId = recipeId;
         Notes = notes;
-        CreatedAt = DateTime.UtcNow;
-        UpdatedAt = DateTime.UtcNow;
+        CreatedAtUtc = createdAtUtc;
+        UpdatedAtUtc = updatedAtUtc;
+    }
+
+    public static MealSlotTemplate Create(MealSlotTemplateId id, Enums.DayOfWeek dayOfWeek, MealType mealType, 
+        WeeklyTemplateId weeklyTemplateId, RecipeId? recipeId, string? notes, DateTime createdAtUtc, DateTime updatedAtUtc)
+    {
+        return new MealSlotTemplate(id, dayOfWeek, mealType, weeklyTemplateId, recipeId, notes, createdAtUtc, updatedAtUtc);
     }
 
     public void Update(MealType? mealType = null, RecipeId? recipeId = null, string? notes = null)
@@ -48,6 +54,6 @@ public sealed class MealSlotTemplate : Entity<MealSlotTemplateId>
         if (notes != null)
             Notes = notes;
             
-        UpdatedAt = DateTime.UtcNow;
+        UpdatedAtUtc = DateTime.UtcNow;
     }
 }

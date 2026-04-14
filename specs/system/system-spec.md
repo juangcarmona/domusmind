@@ -92,12 +92,14 @@ Lists does not overlap with:
 - event scheduling and time ownership (Calendar)
 - accountability semantics (Responsibilities)
 
-### Meal Planning (Extension)
-Adds meal planning capabilities to Lists while maintaining integration with existing surfaces:
+### Meal Planning (V2)
+Owns weekly household meal coordination, recipes, weekly templates, and shopping list derivation.
 
-- MealPlan and related entities extend the Lists context
-- ShoppingList is derived from MealPlans
-- Templates enable weekly reuse patterns
+Meal Planning is a V2 bounded context, targeting the household domain expansion phase.
+
+It depends on Family for identity. It integrates with Shared Lists via event (`ShoppingListRequested`): Shared Lists creates a `SharedList` of kind `shopping` in reaction. Meal Planning does not own shopping lists.
+
+Meal slot entries may project into the Agenda surface as a read concern.
 
 ---
 
@@ -117,6 +119,10 @@ Adds meal planning capabilities to Lists while maintaining integration with exis
 - Shared Lists remains behaviorally independent from Tasks.
 - Shared Lists may carry item-level temporal fields (due date, reminder, repeat); these project into Agenda without creating Calendar or Task records.
 - Repeat on a list item may be set independently of due date. Repeat is itself a temporal anchor sufficient for Agenda projection.
+
+- Meal Planning (V2) depends on Family for identity
+- Meal Planning depends on Shared Lists via event-driven integration (shopping list creation)
+- Meal Planning carries a soft reference to Responsibilities (food area) for context
 
 ---
 

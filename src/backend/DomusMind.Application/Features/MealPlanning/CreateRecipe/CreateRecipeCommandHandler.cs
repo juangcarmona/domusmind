@@ -5,25 +5,31 @@ using DomusMind.Contracts.MealPlanning;
 using DomusMind.Domain.MealPlanning.Entities;
 using DomusMind.Domain.MealPlanning.ValueObjects;
 using DomusMind.Domain.Family;
+using Microsoft.EntityFrameworkCore;
 
 namespace DomusMind.Application.Features.MealPlanning.CreateRecipe;
 
 public sealed class CreateRecipeCommandHandler : ICommandHandler<CreateRecipeCommand, CreateRecipeResponse>
 {
     private readonly IDomusMindDbContext _dbContext;
+    private readonly IEventLogWriter _eventLogWriter;
 
-    public CreateRecipeCommandHandler(IDomusMindDbContext dbContext)
+    public CreateRecipeCommandHandler(
+        IDomusMindDbContext dbContext,
+        IEventLogWriter eventLogWriter)
     {
         _dbContext = dbContext;
+        _eventLogWriter = eventLogWriter;
     }
 
     public async Task<CreateRecipeResponse> Handle(
         CreateRecipeCommand command,
         CancellationToken cancellationToken)
     {
-        var recipe = new Recipe(
-            command.Id,
-            command.FamilyId,
+        var now = DateTime.UtcNow;
+        var recipe = Recipe.Create(
+            RecipeId.New(),
+            FamilyId.From(command.FamilyId),
             command.Name,
             command.Description,
             command.PrepTimeMinutes,
@@ -31,16 +37,19 @@ public sealed class CreateRecipeCommandHandler : ICommandHandler<CreateRecipeCom
             command.Servings,
             command.Instructions,
             command.Notes,
-            command.CreatedAt,
-            command.UpdatedAt);
+            now,
+            now);
 
         _dbContext.Set<Recipe>().Add(recipe);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
+        await _eventLogWriter.WriteAsync(recipe.DomainEvents, cancellationToken);
+        recipe.ClearDomainEvents();
+
         return new CreateRecipeResponse(
-            recipe.Id,
-            recipe.FamilyId,
+            recipe.Id.Value,
+            recipe.FamilyId.Value,
             recipe.Name,
             recipe.Description,
             recipe.PrepTimeMinutes,
@@ -48,7 +57,7 @@ public sealed class CreateRecipeCommandHandler : ICommandHandler<CreateRecipeCom
             recipe.Servings,
             recipe.Instructions,
             recipe.Notes,
-            recipe.CreatedAt,
-            recipe.UpdatedAt);
+            recipe.CreatedAtUtc,
+            recipe.UpdatedAtUtc);
     }
 }

@@ -16,9 +16,9 @@ public sealed class MealSlot : Entity<MealSlotId>
     
     public string? Notes { get; private set; }
     
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAtUtc { get; private set; }
     
-    public DateTime UpdatedAt { get; private set; }
+    public DateTime UpdatedAtUtc { get; private set; }
 
     // Parameterless constructor for EF Core
     private MealSlot() : base(default!)
@@ -26,15 +26,20 @@ public sealed class MealSlot : Entity<MealSlotId>
         MealPlanId = default!; // Initialize with default value to satisfy non-null requirement
     }
 
-    public MealSlot(MealSlotId id, Enums.DayOfWeek dayOfWeek, MealType mealType, MealPlanId mealPlanId, RecipeId? recipeId, string? notes) : base(id)
+    private MealSlot(MealSlotId id, Enums.DayOfWeek dayOfWeek, MealType mealType, MealPlanId mealPlanId, RecipeId? recipeId, string? notes, DateTime createdAtUtc, DateTime updatedAtUtc) : base(id)
     {
         DayOfWeek = dayOfWeek;
         MealType = mealType;
         MealPlanId = mealPlanId;
         RecipeId = recipeId;
         Notes = notes;
-        CreatedAt = DateTime.UtcNow;
-        UpdatedAt = DateTime.UtcNow;
+        CreatedAtUtc = createdAtUtc;
+        UpdatedAtUtc = updatedAtUtc;
+    }
+
+    public static MealSlot Create(MealSlotId id, Enums.DayOfWeek dayOfWeek, MealType mealType, MealPlanId mealPlanId, RecipeId? recipeId, string? notes, DateTime createdAtUtc, DateTime updatedAtUtc)
+    {
+        return new MealSlot(id, dayOfWeek, mealType, mealPlanId, recipeId, notes, createdAtUtc, updatedAtUtc);
     }
 
     public void Update(MealType? mealType = null, RecipeId? recipeId = null, string? notes = null)
@@ -48,6 +53,6 @@ public sealed class MealSlot : Entity<MealSlotId>
         if (notes != null)
             Notes = notes;
             
-        UpdatedAt = DateTime.UtcNow;
+        UpdatedAtUtc = DateTime.UtcNow;
     }
 }

@@ -10,6 +10,10 @@ Core contexts in V1:
 * Tasks
 * Shared Lists
 
+V2 contexts:
+
+* Meal Planning
+
 ---
 
 # Context Relationships
@@ -24,6 +28,8 @@ Tasks defines execution using Family members and references to responsibilities 
 
 Shared Lists defines the household execution container for captured items — supporting a spectrum from lightweight memory to actionable, temporally-enriched entries that project into the Agenda surface.
 
+Meal Planning (V2) defines weekly household meal coordination and recipe management. It depends on Family for identity, Shared Lists for shopping list creation, and Responsibilities for soft area ownership. It does not own shopping lists — those are created in the Shared Lists context via event-driven integration.
+
 ---
 
 # Dependency Graph
@@ -32,14 +38,17 @@ The dependency structure is **not a linear chain**.
 
 Responsibilities, Calendar, Tasks, and Shared Lists all depend on Family. Tasks may react to Calendar and Responsibilities. Shared Lists may reference Responsibilities and may optionally link to Calendar entities. Shared Lists may project temporally-enriched items into the Agenda surface without owning Calendar semantics.
 
+Meal Planning (V2) depends on Family for identity. It depends on Shared Lists for shopping list creation via event-driven integration. It references Responsibilities for soft area ownership. Meal slot entries may project into the Agenda surface as a read concern.
+
 ```
-                 Family
-          /         |         |         \
-         ↓          ↓         ↓          ↓
-Responsibilities Calendar    Tasks   Shared Lists
-         \          /                      \
-          ↓        ↓                        ↓ (projection)
-             event reactions             Agenda (read surface)
+                       Family
+          /       |         |         \         \
+         ↓        ↓         ↓          ↓         ↓
+Responsibilities Calendar  Tasks  Shared Lists  Meal Planning
+         \        /                    ↑     \       |
+          ↓      ↓                     |      ↓      ↓ (event)
+        event reactions            (event)  Agenda  Shopping
+                                  ShoppingListRequested → SharedList
 ```
 
 Dependency interpretation:
@@ -55,6 +64,10 @@ Dependency interpretation:
 * Items with temporal fields project into the Agenda surface — Calendar remains the source of truth for time
 * Shared Lists does not depend on Tasks
 * Tasks does not depend on Shared Lists
+* **Meal Planning** depends on Family for identity
+* Meal Planning depends on Shared Lists indirectly via `ShoppingListRequested` event — Shared Lists creates the shopping list, Meal Planning does not own it
+* Meal Planning carries a soft reference to Responsibilities (food area) — Responsibilities does not depend on Meal Planning
+* Meal slot entries project into Agenda as a read concern — Calendar remains the source of truth for time
 
 Interpretation:
 
@@ -63,12 +76,14 @@ Interpretation:
 * Calendar → time (source of truth)
 * Tasks → structured, explicit execution
 * Shared Lists → household execution container (lightweight to actionable)
+* Meal Planning → weekly meal coordination and recipe management
 
 ### Context Execution Boundary
 
 Lists own **capture and flexible execution**.
 Tasks own **structured execution lifecycle**.
 Calendar owns **time**.
+Meal Planning owns **weekly meal structure and recipe library**.
 
 These roles are complementary and intentionally distinct.
 A list item is not a task.
@@ -89,6 +104,7 @@ Communication rules:
 * structured execution happens in Tasks
 * household capture and flexible execution happen in Shared Lists
 * temporal item data in Shared Lists projects into Agenda — it does not flow back into Calendar
+* meal planning coordination belongs to Meal Planning; shopping list execution belongs to Shared Lists
 
 Contexts react to events rather than forming direct structural dependencies.
 
@@ -155,6 +171,56 @@ Responsibilities may provide:
 * soft ownership
 
 Shared Lists must not modify responsibility assignments.
+
+---
+
+## Meal Planning Interaction (V2)
+
+Meal Planning coordinates weekly household meals and maintains the recipe library.
+
+### Shopping List Generation
+
+Meal Planning emits:
+
+```
+ShoppingListRequested
+```
+
+Shared Lists reacts by:
+
+* creating a `SharedList` of kind `shopping`
+* pre-populating it with consolidated ingredient items from the meal plan
+* emitting `SharedListCreated`
+
+Meal Planning does not own the resulting shopping list.
+The shopping list is a first-class `SharedList` from the moment it is created.
+Further purchase coordination (checking items, adding extras) happens entirely within Shared Lists.
+
+### Tasks from Meal Planning
+
+No automatic task creation from meal plans.
+
+When a household member wants to create a preparation task (e.g., "defrost chicken"), they explicitly create a Task in the Tasks context.
+The task may optionally carry a reference to the meal plan for context.
+No event-driven automation takes place.
+
+### Responsibilities Area Reference
+
+A `MealPlan` may carry a soft reference to a `ResponsibilityDomainId` (e.g., `food`).
+
+This is informational and optional.
+Meal Planning does not assign or modify responsibility ownership.
+
+### Agenda Projection
+
+Meal slot entries for a given week project into the Agenda surface for visibility alongside tasks and plans.
+
+Projection rules:
+
+* projection is read-only
+* projected meal slots are visually distinguishable from Calendar events and Tasks
+* Calendar remains the source of truth for time
+
 ---
 
 # Context Interaction Examples
@@ -249,6 +315,14 @@ Shared Lists owns:
 * item identity and base state
 * item capability state (importance, temporal fields)
 * household capture and flexible execution
+
+Meal Planning owns:
+
+* meal plan identity, structure, and lifecycle
+* meal slot assignment within a plan
+* household recipe library
+* weekly meal templates
+* ingredient consolidation and shopping list derivation request
 
 Contexts must not leak responsibilities across boundaries.
 

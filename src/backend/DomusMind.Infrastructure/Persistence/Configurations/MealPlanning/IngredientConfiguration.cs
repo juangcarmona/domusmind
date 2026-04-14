@@ -39,7 +39,7 @@ public sealed class IngredientConfiguration : IEntityTypeConfiguration<Ingredien
             .HasColumnName("recipe_id")
             .IsRequired();
 
-        builder.Property(i => i.CreatedAt)
+        builder.Property(i => i.CreatedAtUtc)
             .HasColumnName("created_at")
             .IsRequired();
 

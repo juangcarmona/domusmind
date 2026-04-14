@@ -29,11 +29,11 @@ public sealed class WeeklyTemplateConfiguration : IEntityTypeConfiguration<Weekl
             .HasMaxLength(200)
             .IsRequired();
 
-        builder.Property(wt => wt.CreatedAt)
+        builder.Property(wt => wt.CreatedAtUtc)
             .HasColumnName("created_at")
             .IsRequired();
 
-        builder.Property(wt => wt.UpdatedAt)
+        builder.Property(wt => wt.UpdatedAtUtc)
             .HasColumnName("updated_at")
             .IsRequired();
 

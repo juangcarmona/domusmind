@@ -107,6 +107,8 @@ dotnet ef migrations add AddMealPlanningTables --project src\backend\DomusMind.I
 
 This ensures proper connection string resolution and migration placement in the correct project structure.
 
+For Aspire environments, ensure the database connection is available before running the command.
+
 For frontend tasks:
 - `npm run build` must succeed before calling the task done
 - run relevant tests if they exist

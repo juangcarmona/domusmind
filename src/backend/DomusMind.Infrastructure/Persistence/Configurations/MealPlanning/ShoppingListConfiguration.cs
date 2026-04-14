@@ -35,11 +35,11 @@ public sealed class ShoppingListConfiguration : IEntityTypeConfiguration<Shoppin
                 value => value.HasValue ? new MealPlanId(value.Value) : null)
             .HasColumnName("generated_from_meal_plan_id");
 
-        builder.Property(sl => sl.CreatedAt)
+        builder.Property(sl => sl.CreatedAtUtc)
             .HasColumnName("created_at")
             .IsRequired();
 
-        builder.Property(sl => sl.UpdatedAt)
+        builder.Property(sl => sl.UpdatedAtUtc)
             .HasColumnName("updated_at")
             .IsRequired();
 

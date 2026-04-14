@@ -10,20 +10,27 @@ public sealed class Ingredient : Entity<IngredientId>
     public decimal Quantity { get; private set; }
     public string Unit { get; private set; }
     public string? Notes { get; private set; }
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAtUtc { get; private set; }
 
     private Ingredient() : base(default!)
     {
+        Name = null!;
+        Unit = null!;
     }
 
-    public Ingredient(IngredientId id, string name, RecipeId recipeId, decimal quantity, string unit, string? notes = null) : base(id)
+    private Ingredient(IngredientId id, string name, RecipeId recipeId, decimal quantity, string unit, string? notes, DateTime createdAtUtc) : base(id)
     {
-        Name = name;
+        Name = name ?? throw new ArgumentNullException(nameof(name));
         RecipeId = recipeId;
         Quantity = quantity;
-        Unit = unit;
+        Unit = unit ?? throw new ArgumentNullException(nameof(unit));
         Notes = notes;
-        CreatedAt = DateTime.UtcNow;
+        CreatedAtUtc = createdAtUtc;
+    }
+
+    public static Ingredient Create(IngredientId id, string name, RecipeId recipeId, decimal quantity, string unit, string? notes, DateTime createdAtUtc)
+    {
+        return new Ingredient(id, name, recipeId, quantity, unit, notes, createdAtUtc);
     }
 
     public void Update(string? name = null, decimal? quantity = null, string? unit = null, string? notes = null)

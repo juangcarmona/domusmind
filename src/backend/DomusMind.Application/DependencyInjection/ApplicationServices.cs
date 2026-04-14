@@ -91,6 +91,13 @@ using DomusMind.Application.Features.Lists.SetItemTemporal;
 using DomusMind.Application.Features.Lists.ClearItemTemporal;
 using DomusMind.Application.Features.Lists.SetItemContext;
 using DomusMind.Application.Features.Lists.UpdateList;
+using DomusMind.Application.Features.MealPlanning.AssignMealToSlot;
+using DomusMind.Application.Features.MealPlanning.CreateMealPlan;
+using DomusMind.Application.Features.MealPlanning.CreateRecipe;
+using DomusMind.Application.Features.MealPlanning.GetFamilyRecipes;
+using DomusMind.Application.Features.MealPlanning.GetMealPlan;
+using DomusMind.Application.Features.MealPlanning.GetMealPlansForAgenda;
+using DomusMind.Contracts.MealPlanning;
 using DomusMind.Contracts.Auth;
 using DomusMind.Contracts.Calendar;
 using DomusMind.Contracts.Family;
@@ -225,6 +232,14 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<ClearItemTemporalCommand, ClearItemTemporalResponse>, ClearItemTemporalCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateListCommand, UpdateListResponse>, UpdateListCommandHandler>();
         services.AddScoped<ICommandHandler<SetItemContextCommand, SetItemContextResponse>, SetItemContextCommandHandler>();
+
+        // Meal Planning slices
+        services.AddScoped<ICommandHandler<CreateMealPlanCommand, CreateMealPlanResponse>, CreateMealPlanCommandHandler>();
+        services.AddScoped<ICommandHandler<CreateRecipeCommand, CreateRecipeResponse>, CreateRecipeCommandHandler>();
+        services.AddScoped<ICommandHandler<AssignMealToSlotCommand, AssignMealToSlotResponse>, AssignMealToSlotCommandHandler>();
+        services.AddScoped<IQueryHandler<GetMealPlanQuery, GetMealPlanResponse>, GetMealPlanQueryHandler>();
+        services.AddScoped<IQueryHandler<GetFamilyRecipesQuery, GetFamilyRecipesResponse>, GetFamilyRecipesQueryHandler>();
+        services.AddScoped<IQueryHandler<GetMealPlansForAgendaQuery, MealPlansForAgendaResponse>, GetMealPlansForAgendaQueryHandler>();
 
         return services;
     }

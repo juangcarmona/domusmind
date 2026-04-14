@@ -1,5 +1,6 @@
 using DomusMind.Domain.Abstractions;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.MealPlanning.Events;
 using DomusMind.Domain.MealPlanning.ValueObjects;
 
 namespace DomusMind.Domain.MealPlanning.Entities;
@@ -12,9 +13,9 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId>
     
     public MealPlanId? GeneratedFromMealPlanId { get; private set; }
     
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAtUtc { get; private set; }
     
-    public DateTime UpdatedAt { get; private set; }
+    public DateTime UpdatedAtUtc { get; private set; }
     
     private readonly List<ShoppingListItem> _items = new();
     public IReadOnlyList<ShoppingListItem> Items => _items.AsReadOnly();
@@ -25,12 +26,19 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId>
         Name = string.Empty; // Initialize with default value to satisfy non-null requirement
     }
 
-    public ShoppingList(ShoppingListId id, FamilyId familyId, string name, DateTime createdAt, DateTime updatedAt) : base(id)
+    private ShoppingList(ShoppingListId id, FamilyId familyId, string name, DateTime createdAtUtc, DateTime updatedAtUtc) : base(id)
     {
         FamilyId = familyId;
         Name = name ?? throw new ArgumentNullException(nameof(name));
-        CreatedAt = createdAt;
-        UpdatedAt = updatedAt;
+        CreatedAtUtc = createdAtUtc;
+        UpdatedAtUtc = updatedAtUtc;
+    }
+
+    public static ShoppingList Create(ShoppingListId id, FamilyId familyId, string name, DateTime createdAtUtc, DateTime updatedAtUtc)
+    {
+        var shoppingList = new ShoppingList(id, familyId, name, createdAtUtc, updatedAtUtc);
+        shoppingList.RaiseDomainEvent(new ShoppingListGenerated(Guid.NewGuid(), id.Value, Guid.Empty, createdAtUtc));
+        return shoppingList;
     }
 
     public void AddItem(ShoppingListItem item)

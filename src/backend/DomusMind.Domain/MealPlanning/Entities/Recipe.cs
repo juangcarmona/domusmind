@@ -1,5 +1,6 @@
 using DomusMind.Domain.Abstractions;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.MealPlanning.Events;
 using DomusMind.Domain.MealPlanning.ValueObjects;
 
 namespace DomusMind.Domain.MealPlanning.Entities;
@@ -22,9 +23,9 @@ public sealed class Recipe : AggregateRoot<RecipeId>
     
     public string? Notes { get; private set; }
     
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAtUtc { get; private set; }
     
-    public DateTime UpdatedAt { get; private set; }
+    public DateTime UpdatedAtUtc { get; private set; }
 
     private readonly List<Ingredient> _ingredients = new();
     public IReadOnlyList<Ingredient> Ingredients => _ingredients.AsReadOnly();
@@ -35,8 +36,8 @@ public sealed class Recipe : AggregateRoot<RecipeId>
         Name = string.Empty; // Initialize with default value to satisfy non-null requirement
     }
 
-    public Recipe(RecipeId id, FamilyId familyId, string name, string? description, int? prepTimeMinutes, 
-        int? cookTimeMinutes, int? servings, string? instructions, string? notes, DateTime createdAt, DateTime updatedAt) : base(id)
+    private Recipe(RecipeId id, FamilyId familyId, string name, string? description, int? prepTimeMinutes, 
+        int? cookTimeMinutes, int? servings, string? instructions, string? notes, DateTime createdAtUtc, DateTime updatedAtUtc) : base(id)
     {
         FamilyId = familyId;
         Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -46,8 +47,16 @@ public sealed class Recipe : AggregateRoot<RecipeId>
         Servings = servings;
         Instructions = instructions;
         Notes = notes;
-        CreatedAt = createdAt;
-        UpdatedAt = updatedAt;
+        CreatedAtUtc = createdAtUtc;
+        UpdatedAtUtc = updatedAtUtc;
+    }
+
+    public static Recipe Create(RecipeId id, FamilyId familyId, string name, string? description, int? prepTimeMinutes, 
+        int? cookTimeMinutes, int? servings, string? instructions, string? notes, DateTime createdAtUtc, DateTime updatedAtUtc)
+    {
+        var recipe = new Recipe(id, familyId, name, description, prepTimeMinutes, cookTimeMinutes, servings, instructions, notes, createdAtUtc, updatedAtUtc);
+        recipe.RaiseDomainEvent(new RecipeCreated(Guid.NewGuid(), id.Value, familyId.Value, name, createdAtUtc));
+        return recipe;
     }
 
     public void AddIngredient(Ingredient ingredient)
@@ -88,6 +97,6 @@ public sealed class Recipe : AggregateRoot<RecipeId>
         if (notes != null)
             Notes = notes;
             
-        UpdatedAt = DateTime.UtcNow;
+        UpdatedAtUtc = DateTime.UtcNow;
     }
 }

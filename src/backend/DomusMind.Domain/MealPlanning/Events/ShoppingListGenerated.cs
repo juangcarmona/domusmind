@@ -1,10 +1,10 @@
 using DomusMind.Domain.Abstractions;
-using DomusMind.Domain.MealPlanning.ValueObjects;
 
 namespace DomusMind.Domain.MealPlanning.Events;
 
 public sealed record ShoppingListGenerated(
-    ShoppingListId ShoppingListId,
+    Guid Id,
+    Guid ShoppingListId,
     Guid GeneratedFromMealPlanId,
     DateTime GeneratedAt
 ) : IDomainEvent

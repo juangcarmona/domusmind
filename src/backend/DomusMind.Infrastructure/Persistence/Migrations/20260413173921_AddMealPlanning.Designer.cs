@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DomusMind.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(DomusMindDbContext))]
-    [Migration("20260413141009_AddMealPlanning")]
+    [Migration("20260413173921_AddMealPlanning")]
     partial class AddMealPlanning
     {
         /// <inheritdoc />
@@ -684,7 +684,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -702,7 +702,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("text")
                         .HasColumnName("preferred_meal_types");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
@@ -721,7 +721,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -762,9 +762,9 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at_utc");
 
                     b.Property<Guid>("FamilyId")
                         .HasColumnType("uuid")
@@ -774,9 +774,9 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("template_id");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
+                        .HasColumnName("updated_at_utc");
 
                     b.Property<DateOnly>("WeekStart")
                         .HasColumnType("date")
@@ -793,9 +793,9 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at_utc");
 
                     b.Property<string>("DayOfWeek")
                         .IsRequired()
@@ -806,9 +806,8 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("meal_plan_id");
 
-                    b.Property<string>("MealType")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("MealType")
+                        .HasColumnType("integer")
                         .HasColumnName("meal_type");
 
                     b.Property<string>("Notes")
@@ -820,9 +819,9 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("recipe_id");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
+                        .HasColumnName("updated_at_utc");
 
                     b.HasKey("Id");
 
@@ -837,18 +836,17 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
+                        .HasColumnName("created_at_utc");
 
                     b.Property<string>("DayOfWeek")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("day_of_week");
 
-                    b.Property<string>("MealType")
-                        .IsRequired()
-                        .HasColumnType("text")
+                    b.Property<int>("MealType")
+                        .HasColumnType("integer")
                         .HasColumnName("meal_type");
 
                     b.Property<string>("Notes")
@@ -860,9 +858,9 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("recipe_id");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
+                        .HasColumnName("updated_at_utc");
 
                     b.Property<Guid>("WeeklyTemplateId")
                         .HasColumnType("uuid")
@@ -885,7 +883,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("cook_time_minutes");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -920,7 +918,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("servings");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
@@ -935,7 +933,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -953,7 +951,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("name");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
@@ -1007,7 +1005,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -1021,7 +1019,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("name");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 

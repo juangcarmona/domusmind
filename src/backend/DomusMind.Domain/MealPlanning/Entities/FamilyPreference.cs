@@ -15,9 +15,9 @@ public sealed class FamilyPreference : Entity<FamilyPreferenceId>
     
     public List<DietaryConstraintId> DefaultDietaryConstraints { get; private set; }
     
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAtUtc { get; private set; }
     
-    public DateTime UpdatedAt { get; private set; }
+    public DateTime UpdatedAtUtc { get; private set; }
 
     // Parameterless constructor for EF Core
     private FamilyPreference() : base(default!)
@@ -26,15 +26,21 @@ public sealed class FamilyPreference : Entity<FamilyPreferenceId>
         DefaultDietaryConstraints = new List<DietaryConstraintId>(); // Initialize with empty list to satisfy non-null requirement
     }
 
-    public FamilyPreference(FamilyPreferenceId id, FamilyId familyId, List<MealType> preferredMealTypes, bool weekendFlexibility, 
-        List<DietaryConstraintId> defaultDietaryConstraints, DateTime createdAt, DateTime updatedAt) : base(id)
+    private FamilyPreference(FamilyPreferenceId id, FamilyId familyId, List<MealType> preferredMealTypes, bool weekendFlexibility, 
+        List<DietaryConstraintId> defaultDietaryConstraints, DateTime createdAtUtc, DateTime updatedAtUtc) : base(id)
     {
         FamilyId = familyId;
         PreferredMealTypes = preferredMealTypes ?? throw new ArgumentNullException(nameof(preferredMealTypes));
         WeekendFlexibility = weekendFlexibility;
         DefaultDietaryConstraints = defaultDietaryConstraints ?? throw new ArgumentNullException(nameof(defaultDietaryConstraints));
-        CreatedAt = createdAt;
-        UpdatedAt = updatedAt;
+        CreatedAtUtc = createdAtUtc;
+        UpdatedAtUtc = updatedAtUtc;
+    }
+
+    public static FamilyPreference Create(FamilyPreferenceId id, FamilyId familyId, List<MealType> preferredMealTypes, bool weekendFlexibility, 
+        List<DietaryConstraintId> defaultDietaryConstraints, DateTime createdAtUtc, DateTime updatedAtUtc)
+    {
+        return new FamilyPreference(id, familyId, preferredMealTypes, weekendFlexibility, defaultDietaryConstraints, createdAtUtc, updatedAtUtc);
     }
 
     public void Update(List<MealType>? preferredMealTypes = null, bool? weekendFlexibility = null, 
@@ -49,6 +55,6 @@ public sealed class FamilyPreference : Entity<FamilyPreferenceId>
         if (defaultDietaryConstraints != null)
             DefaultDietaryConstraints = defaultDietaryConstraints;
             
-        UpdatedAt = DateTime.UtcNow;
+        UpdatedAtUtc = DateTime.UtcNow;
     }
 }

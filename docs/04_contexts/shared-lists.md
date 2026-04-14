@@ -43,7 +43,7 @@ The Shared Lists context is responsible for:
 * enabling real-time shared updates across family members
 * optionally linking lists to other household entities
 * providing projection data to the Agenda surface for temporally-enriched items
-* supporting meal planning items (V1 extension)
+* receiving shopping lists generated from meal plans (as a `SharedList` of kind `shopping`)
 
 ---
 
@@ -62,18 +62,6 @@ Owns:
 * optional ownership
 * optional linkage to another entity
 * collection of items
-
-### MealPlan (V1 Extension)
-
-Represents a weekly meal plan for a household.
-
-Owns:
-
-* identity
-* week start date
-* family association
-* collection of meal slots
-* optional template reference
 
 ---
 
@@ -106,12 +94,6 @@ Items without temporal capabilities remain list-only.
 Items never become Tasks automatically.
 No implicit task creation occurs.
 
-#### Meal Planning Extension
-
-Meal planning items may be added as list items with temporal fields:
-* MealSlot items representing meals for specific days/times
-* ShoppingList items representing grocery items
-
 ---
 
 ## Value Objects (suggested)
@@ -126,15 +108,6 @@ Meal planning items may be added as list items with temporal fields:
 * ItemDueDate
 * ItemReminderDefinition
 * ItemRepeatRule
-
-## Meal Planning Value Objects (V1 Extension)
-
-* MealPlanId
-* MealSlotId
-* RecipeId
-* IngredientId
-* ShoppingListId
-* WeeklyTemplateId
 
 ---
 
@@ -155,13 +128,6 @@ Meal planning items may be added as list items with temporal fields:
 * `repeat` may be set independently of `dueDate` — it defines a recurrence schedule that is itself a temporal anchor for Agenda projection
 * if `repeat` is set and `dueDate` is also set, the repeat rule governs projected occurrences; `dueDate` sets the anchor date for the first (or next) occurrence
 * if `dueDate` is cleared but `repeat` remains set, the item remains Agenda-eligible via `repeat`
-
-### MealPlan (V1 Extension)
-
-* must belong to exactly one family
-* must have a stable identifier
-* must have exactly 7 meal slots (one per day)
-* week start date must be a Monday
 
 ---
 
@@ -193,22 +159,6 @@ Meal planning items may be added as list items with temporal fields:
 
 * ClearSharedListItemTemporal
 
-## Meal Planning Commands (V1 Extension)
-
-* CreateMealPlan
-
-* UpdateMealSlot
-
-* ApplyWeeklyTemplate
-
-* GenerateShoppingList
-
-* CreateRecipe
-
-* UpdateRecipe
-
-* CreateWeeklyTemplate
-
 ---
 
 ## Queries
@@ -216,13 +166,6 @@ Meal planning items may be added as list items with temporal fields:
 * GetFamilySharedLists
 * GetSharedListDetail
 * GetTemporalItemsForAgenda (projection query — items with temporal fields, scoped by date window)
-
-## Meal Planning Queries (V1 Extension)
-
-* GetMealPlanDetail
-* GetRecipeDetail
-* GetWeeklyTemplateDetail
-* GetShoppingListDetail
 
 ---
 
@@ -250,23 +193,13 @@ Meal planning items may be added as list items with temporal fields:
 
 * SharedListItemScheduled (emitted when an item receives its first temporal field)
 
-## Meal Planning Domain Events (V1 Extension)
+---
 
-* MealPlanCreated
+## Domain Events (emitted by other contexts — reacted to)
 
-* MealPlanUpdated
+From Meal Planning (V2):
 
-* MealSlotAssigned
-
-* RecipeCreated
-
-* RecipeUpdated
-
-* ShoppingListGenerated
-
-* WeeklyTemplateCreated
-
-* WeeklyTemplateApplied
+* `ShoppingListRequested` — Shared Lists reacts by creating a new `SharedList` of kind `shopping` prefilled with consolidated ingredients from the meal plan. Shared Lists emits `SharedListCreated` after creation.
 
 ---
 

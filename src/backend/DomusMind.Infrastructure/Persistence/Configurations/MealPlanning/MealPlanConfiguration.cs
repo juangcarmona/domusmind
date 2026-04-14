@@ -15,12 +15,12 @@ public sealed class MealPlanConfiguration : IEntityTypeConfiguration<MealPlan>
         builder.HasKey(mp => mp.Id);
 
         builder.Property(mp => mp.Id)
-            .HasConversion(id => id.Value, value => new MealPlanId(value))
+            .HasConversion(id => id.Value, value => MealPlanId.From(value))
             .HasColumnName("id")
             .IsRequired();
 
         builder.Property(mp => mp.FamilyId)
-            .HasConversion(id => id.Value, value => new FamilyId(value))
+            .HasConversion(id => id.Value, value => FamilyId.From(value))
             .HasColumnName("family_id")
             .IsRequired();
 
@@ -31,15 +31,15 @@ public sealed class MealPlanConfiguration : IEntityTypeConfiguration<MealPlan>
         builder.Property(mp => mp.TemplateId)
             .HasConversion(
                 id => id.HasValue ? id.Value.Value : (Guid?)null,
-                value => value.HasValue ? new WeeklyTemplateId(value.Value) : (WeeklyTemplateId?)null)
+                value => value.HasValue ? WeeklyTemplateId.From(value.Value) : (WeeklyTemplateId?)null)
             .HasColumnName("template_id");
 
-        builder.Property(mp => mp.CreatedAt)
-            .HasColumnName("created_at")
+        builder.Property(mp => mp.CreatedAtUtc)
+            .HasColumnName("created_at_utc")
             .IsRequired();
 
-        builder.Property(mp => mp.UpdatedAt)
-            .HasColumnName("updated_at")
+        builder.Property(mp => mp.UpdatedAtUtc)
+            .HasColumnName("updated_at_utc")
             .IsRequired();
 
         builder.HasMany(mp => mp.MealSlots)

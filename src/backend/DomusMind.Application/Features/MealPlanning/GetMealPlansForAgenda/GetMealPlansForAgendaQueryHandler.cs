@@ -43,7 +43,7 @@ public sealed class GetMealPlansForAgendaQueryHandler
                 mp.Id.Value,
                 mp.FamilyId.Value,
                 mp.WeekStart,
-                mp.CreatedAt))
+                mp.CreatedAtUtc))
             .ToListAsync(cancellationToken);
 
         return new MealPlansForAgendaResponse(mealPlans);

@@ -17,6 +17,7 @@ import enSettings from "./locales/en/settings";
 import enToday from "./locales/en/today";
 import enLists from "./locales/en/lists";
 import enAgenda from "./locales/en/agenda";
+import enMealPlanning from "./locales/en/meal-planning";
 
 // German
 import deAuth from "./locales/de/auth";
@@ -33,6 +34,7 @@ import deSettings from "./locales/de/settings";
 import deToday from "./locales/de/today";
 import deLists from "./locales/de/lists";
 import deAgenda from "./locales/de/agenda";
+import deMealPlanning from "./locales/de/meal-planning";
 
 // Spanish
 import esAuth from "./locales/es/auth";
@@ -49,6 +51,7 @@ import esSettings from "./locales/es/settings";
 import esToday from "./locales/es/today";
 import esLists from "./locales/es/lists";
 import esAgenda from "./locales/es/agenda";
+import esMealPlanning from "./locales/es/meal-planning";
 
 // French
 import frAuth from "./locales/fr/auth";
@@ -65,6 +68,7 @@ import frSetup from "./locales/fr/setup";
 import frToday from "./locales/fr/today";
 import frLists from "./locales/fr/lists";
 import frAgenda from "./locales/fr/agenda";
+import frMealPlanning from "./locales/fr/meal-planning";
 
 // Italian
 import itAuth from "./locales/it/auth";
@@ -81,6 +85,7 @@ import itSettings from "./locales/it/settings";
 import itToday from "./locales/it/today";
 import itLists from "./locales/it/lists";
 import itAgenda from "./locales/it/agenda";
+import itMealPlanning from "./locales/it/meal-planning";
 
 // Japanese
 import jaAuth from "./locales/ja/auth";
@@ -97,6 +102,7 @@ import jaSettings from "./locales/ja/settings";
 import jaToday from "./locales/ja/today";
 import jaLists from "./locales/ja/lists";
 import jaAgenda from "./locales/ja/agenda";
+import jaMealPlanning from "./locales/ja/meal-planning";
 
 // Chinese
 import zhAuth from "./locales/zh/auth";
@@ -113,18 +119,19 @@ import zhSettings from "./locales/zh/settings";
 import zhToday from "./locales/zh/today";
 import zhLists from "./locales/zh/lists";
 import zhAgenda from "./locales/zh/agenda";
+import zhMealPlanning from "./locales/zh/meal-planning";
 
 export const SUPPORTED_LANG_CODES = ["en", "de", "es", "fr", "it", "ja", "zh"] as const;
 export type SupportedLangCode = (typeof SUPPORTED_LANG_CODES)[number];
 
 const resources = {
-  en: { auth: enAuth, common: enCommon, lang: enLang, nav: enNav, onboarding: enOnboarding, setup: enSetup, areas: enAreas, plans: enPlans, tasks: enTasks, routines: enRoutines, settings: enSettings, today: enToday, lists: enLists, agenda: enAgenda },
-  de: { auth: deAuth, common: deCommon, lang: deLang, nav: deNav, onboarding: deOnboarding, setup: deSetup, areas: deAreas, plans: dePlans, tasks: deTasks, routines: deRoutines, settings: deSettings, today: deToday, lists: deLists, agenda: deAgenda },
-  es: { auth: esAuth, common: esCommon, lang: esLang, nav: esNav, onboarding: esOnboarding, setup: esSetup, areas: esAreas, plans: esPlans, tasks: esTasks, routines: esRoutines, settings: esSettings, today: esToday, lists: esLists, agenda: esAgenda },
-  fr: { auth: frAuth, common: frCommon, lang: frLang, nav: frNav, onboarding: frOnboarding, setup: frSetup, areas: frAreas, plans: frPlans, tasks: frTasks, routines: frRoutines, settings: frSettings, today: frToday, lists: frLists, agenda: frAgenda },
-  it: { auth: itAuth, common: itCommon, lang: itLang, nav: itNav, onboarding: itOnboarding, setup: itSetup, areas: itAreas, plans: itPlans, tasks: itTasks, routines: itRoutines, settings: itSettings, today: itToday, lists: itLists, agenda: itAgenda },
-  ja: { auth: jaAuth, common: jaCommon, lang: jaLang, nav: jaNav, onboarding: jaOnboarding, setup: jaSetup, areas: jaAreas, plans: jaPlans, tasks: jaTasks, routines: jaRoutines, settings: jaSettings, today: jaToday, lists: jaLists, agenda: jaAgenda },
-  zh: { auth: zhAuth, common: zhCommon, lang: zhLang, nav: zhNav, onboarding: zhOnboarding, setup: zhSetup, areas: zhAreas, plans: zhPlans, tasks: zhTasks, routines: zhRoutines, settings: zhSettings, today: zhToday, lists: zhLists, agenda: zhAgenda },
+  en: { auth: enAuth, common: enCommon, lang: enLang, nav: enNav, onboarding: enOnboarding, setup: enSetup, areas: enAreas, plans: enPlans, tasks: enTasks, routines: enRoutines, settings: enSettings, today: enToday, lists: enLists, agenda: enAgenda, mealPlanning: enMealPlanning },
+  de: { auth: deAuth, common: deCommon, lang: deLang, nav: deNav, onboarding: deOnboarding, setup: deSetup, areas: deAreas, plans: dePlans, tasks: deTasks, routines: deRoutines, settings: deSettings, today: deToday, lists: deLists, agenda: deAgenda, mealPlanning: deMealPlanning },
+  es: { auth: esAuth, common: esCommon, lang: esLang, nav: esNav, onboarding: esOnboarding, setup: esSetup, areas: esAreas, plans: esPlans, tasks: esTasks, routines: esRoutines, settings: esSettings, today: esToday, lists: esLists, agenda: esAgenda, mealPlanning: esMealPlanning },
+  fr: { auth: frAuth, common: frCommon, lang: frLang, nav: frNav, onboarding: frOnboarding, setup: frSetup, areas: frAreas, plans: frPlans, tasks: frTasks, routines: frRoutines, settings: frSettings, today: frToday, lists: frLists, agenda: frAgenda, mealPlanning: frMealPlanning },
+  it: { auth: itAuth, common: itCommon, lang: itLang, nav: itNav, onboarding: itOnboarding, setup: itSetup, areas: itAreas, plans: itPlans, tasks: itTasks, routines: itRoutines, settings: itSettings, today: itToday, lists: itLists, agenda: itAgenda, mealPlanning: itMealPlanning },
+  ja: { auth: jaAuth, common: jaCommon, lang: jaLang, nav: jaNav, onboarding: jaOnboarding, setup: jaSetup, areas: jaAreas, plans: jaPlans, tasks: jaTasks, routines: jaRoutines, settings: jaSettings, today: jaToday, lists: jaLists, agenda: jaAgenda, mealPlanning: jaMealPlanning },
+  zh: { auth: zhAuth, common: zhCommon, lang: zhLang, nav: zhNav, onboarding: zhOnboarding, setup: zhSetup, areas: zhAreas, plans: zhPlans, tasks: zhTasks, routines: zhRoutines, settings: zhSettings, today: zhToday, lists: zhLists, agenda: zhAgenda, mealPlanning: zhMealPlanning },
 };
 
 i18n
