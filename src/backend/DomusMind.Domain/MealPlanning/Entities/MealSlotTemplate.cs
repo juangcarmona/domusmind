@@ -7,53 +7,72 @@ namespace DomusMind.Domain.MealPlanning.Entities;
 public sealed class MealSlotTemplate : Entity<MealSlotTemplateId>
 {
     public Enums.DayOfWeek DayOfWeek { get; private set; }
-    
+
     public MealType MealType { get; private set; }
-    
+
     public WeeklyTemplateId WeeklyTemplateId { get; private set; }
-    
+
+    public MealSourceType MealSourceType { get; private set; }
+
     public RecipeId? RecipeId { get; private set; }
-    
+
+    public string? FreeText { get; private set; }
+
     public string? Notes { get; private set; }
-    
+
+    public bool IsOptional { get; private set; }
+
+    public bool IsLocked { get; private set; }
+
     public DateTime CreatedAtUtc { get; private set; }
-    
+
     public DateTime UpdatedAtUtc { get; private set; }
 
     private MealSlotTemplate() : base(default!)
     {
-        WeeklyTemplateId = default!; // Initialize with default value to satisfy non-null requirement
+        WeeklyTemplateId = default!;
     }
 
-    private MealSlotTemplate(MealSlotTemplateId id, Enums.DayOfWeek dayOfWeek, MealType mealType, 
-        WeeklyTemplateId weeklyTemplateId, RecipeId? recipeId, string? notes, DateTime createdAtUtc, DateTime updatedAtUtc) : base(id)
+    private MealSlotTemplate(
+        MealSlotTemplateId id,
+        Enums.DayOfWeek dayOfWeek,
+        MealType mealType,
+        WeeklyTemplateId weeklyTemplateId,
+        MealSourceType mealSourceType,
+        RecipeId? recipeId,
+        string? freeText,
+        string? notes,
+        bool isOptional,
+        bool isLocked,
+        DateTime createdAtUtc) : base(id)
     {
         DayOfWeek = dayOfWeek;
         MealType = mealType;
         WeeklyTemplateId = weeklyTemplateId;
-        RecipeId = recipeId;
+        MealSourceType = mealSourceType;
+        RecipeId = mealSourceType == MealSourceType.Recipe ? recipeId : null;
+        FreeText = mealSourceType == MealSourceType.FreeText ? freeText : null;
         Notes = notes;
+        IsOptional = isOptional;
+        IsLocked = isLocked;
         CreatedAtUtc = createdAtUtc;
-        UpdatedAtUtc = updatedAtUtc;
+        UpdatedAtUtc = createdAtUtc;
     }
 
-    public static MealSlotTemplate Create(MealSlotTemplateId id, Enums.DayOfWeek dayOfWeek, MealType mealType, 
-        WeeklyTemplateId weeklyTemplateId, RecipeId? recipeId, string? notes, DateTime createdAtUtc, DateTime updatedAtUtc)
+    public static MealSlotTemplate Create(
+        MealSlotTemplateId id,
+        Enums.DayOfWeek dayOfWeek,
+        MealType mealType,
+        WeeklyTemplateId weeklyTemplateId,
+        MealSourceType mealSourceType,
+        RecipeId? recipeId,
+        string? freeText,
+        string? notes,
+        bool isOptional,
+        bool isLocked,
+        DateTime createdAtUtc)
     {
-        return new MealSlotTemplate(id, dayOfWeek, mealType, weeklyTemplateId, recipeId, notes, createdAtUtc, updatedAtUtc);
-    }
-
-    public void Update(MealType? mealType = null, RecipeId? recipeId = null, string? notes = null)
-    {
-        if (mealType.HasValue)
-            MealType = mealType.Value;
-            
-        if (recipeId != null)
-            RecipeId = recipeId;
-            
-        if (notes != null)
-            Notes = notes;
-            
-        UpdatedAtUtc = DateTime.UtcNow;
+        return new MealSlotTemplate(id, dayOfWeek, mealType, weeklyTemplateId, mealSourceType,
+            recipeId, freeText, notes, isOptional, isLocked, createdAtUtc);
     }
 }

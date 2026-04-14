@@ -56,7 +56,7 @@ MealPlanDetail {
 }
 ```
 
-Slots are returned ordered by day (Monday → Sunday) then by meal type (Breakfast, MidMorningSnack, Lunch, AfternoonSnack, Dinner).
+Slots are returned ordered by day (from household's configured first day of week) then by meal type (Breakfast, MidMorningSnack, Lunch, AfternoonSnack, Dinner).
 
 All slots are included in the response (materialized grid). Unplanned slots are included to show the full week structure.
 

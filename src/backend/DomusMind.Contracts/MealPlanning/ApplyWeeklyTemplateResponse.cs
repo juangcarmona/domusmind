@@ -1,7 +1,11 @@
-using DomusMind.Domain.MealPlanning.ValueObjects;
-
 namespace DomusMind.Contracts.MealPlanning;
 
 public sealed record ApplyWeeklyTemplateResponse(
-    MealPlanId MealPlanId,
-    WeeklyTemplateId WeeklyTemplateId);
+    Guid MealPlanId,
+    Guid FamilyId,
+    DateOnly WeekStart,
+    DateOnly WeekEnd,
+    Guid AppliedTemplateId,
+    int SlotCount,
+    string Status,
+    bool AlreadyExisted = false);

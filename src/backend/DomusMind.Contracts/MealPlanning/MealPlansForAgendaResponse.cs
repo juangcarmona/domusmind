@@ -1,12 +1,12 @@
-using DomusMind.Domain.MealPlanning.ValueObjects;
-
 namespace DomusMind.Contracts.MealPlanning;
 
-public sealed record MealPlansForAgendaResponse(
-    IReadOnlyList<MealPlanForAgenda> MealPlans);
+public sealed record MealPlanAgendaSlot(
+    string DayOfWeek,
+    string MealType,
+    string MealSourceType,
+    string? Label,
+    string? Notes,
+    bool IsOptional);
 
-public sealed record MealPlanForAgenda(
-    Guid Id,
-    Guid FamilyId,
-    DateOnly WeekStart,
-    DateTime CreatedAt);
+public sealed record MealPlansForAgendaResponse(
+    IReadOnlyList<MealPlanAgendaSlot> Slots);

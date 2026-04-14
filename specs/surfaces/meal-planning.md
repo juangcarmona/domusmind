@@ -211,7 +211,71 @@ Do not:
 
 ---
 
+## Surface State Model
+
+The Meal Planning surface operates in distinct visual states. For each state, the following is defined: what remains visible, what message appears, and which actions stay enabled.
+
+### 1 — Week with existing plan loaded
+
+- WeekNavigator visible
+- Toolbar visible: Apply Template (disabled, "coming soon" tooltip), Generate Shopping List
+- WeekGrid visible with all 35 slots
+- Inspector opens on slot click
+- Shopping List: button shows when no list yet; "Shopping list ready" label shows after derivation
+- Actions enabled: Update Slot, Generate Shopping List (when recipe slots exist and no list yet)
+
+### 2 — Week with no plan yet
+
+- WeekNavigator visible
+- Compact empty-state action row below header (not a full-page island):
+  - "Start from scratch" button (primary)
+  - "Copy from previous week" button (disabled while loading)
+  - "Apply template" button (disabled, "coming soon" tooltip)
+- No grid visible until a plan exists
+- Actions enabled: Start from scratch, Copy from previous week
+
+### 3 — Action in progress
+
+- Triggering button shows loading state or is disabled
+- Remainder of page stays intact
+- No spinner overlay covering the surface
+
+### 4 — Recoverable action failure
+
+Triggered by: "no previous plan found" for copy, or network failure on create/copy action.
+
+- Page stays in its current state (empty-week or plan-loaded)
+- Compact inline notice appears near the action row:
+  - "No meal plan found for the previous week." (for NoPreviousPlan)
+  - Generic failure text for network errors
+- All other actions remain enabled
+- Notice clears on next navigation
+
+### 5 — Domain conflict on action (plan already exists)
+
+Triggered by: copy or apply-template when the target week already has a plan.
+
+- Existing plan is loaded and shown in the grid (no overlay, no blocking state)
+- Compact inline notice: "This week already has a meal plan."
+- Grid remains fully interactive
+- Notice clears on next navigation
+
+### 6 — Template unavailable
+
+- "Apply template" button is always visible
+- Disabled with `title="Templates coming soon"`
+- No hidden/visible toggling based on template count
+
+### 7 — Shopping list already created
+
+- "Shopping list ready" text label replaces the generate button
+- No re-generate action exposed (creating a second list is not supported here)
+- The generated list lives in the Lists context
+
+---
+
 ## Success Criteria
+
 
 - a full week can be planned in under 2 minutes
 - reuse (template or previous week) dominates from-scratch planning

@@ -1,18 +1,33 @@
 namespace DomusMind.Contracts.MealPlanning;
 
+public sealed record MealSlotRecipeDetail(
+    Guid RecipeId,
+    string Name,
+    int? Servings,
+    int? PrepTimeMinutes,
+    int? TotalTimeMinutes,
+    IReadOnlyList<string> AllowedMealTypes);
+
 public sealed record MealSlotDetail(
-    Guid Id,
     string DayOfWeek,
     string MealType,
-    Guid? RecipeId,
-    string? RecipeName,
-    string? Notes);
+    string MealSourceType,
+    MealSlotRecipeDetail? Recipe,
+    string? FreeText,
+    string? Notes,
+    bool IsOptional,
+    bool IsLocked);
 
 public sealed record MealPlanDetail(
-    Guid Id,
+    Guid PlanId,
     Guid FamilyId,
-    string WeekStart,
-    DateTime CreatedAtUtc,
+    DateOnly WeekStart,
+    DateOnly WeekEnd,
+    string Status,
+    Guid? AppliedTemplateId,
+    Guid? ShoppingListId,
+    int ShoppingListVersion,
+    DateTime? LastDerivedAt,
     IReadOnlyList<MealSlotDetail> Slots);
 
 /// <summary>

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import type { RecipeResponse } from "../../../api/types/mealPlanningTypes";
+import type { RecipeSummary } from "../../../api/types/mealPlanningTypes";
 
 interface RecipePickerPanelProps {
-  recipes: RecipeResponse[];
+  recipes: RecipeSummary[];
   recipesStatus: "idle" | "loading" | "success" | "error";
   currentRecipeId: string | null;
   onSelect: (recipeId: string | null) => void;

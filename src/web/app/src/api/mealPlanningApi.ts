@@ -1,45 +1,66 @@
 import { request } from "./request";
 import type {
   CreateMealPlanRequest,
-  MealPlanResponse,
+  CreateMealPlanResponse,
   GetMealPlanResponse,
-  AssignMealToSlotRequest,
-  AssignMealToSlotResponse,
+  UpdateMealSlotRequest,
+  UpdateMealSlotResponse,
+  CopyMealPlanFromPreviousWeekRequest,
+  CopyMealPlanFromPreviousWeekResponse,
+  RequestShoppingListRequest,
+  RequestShoppingListResponse,
   CreateRecipeRequest,
-  RecipeResponse,
+  CreateRecipeResponse,
   GetFamilyRecipesResponse,
 } from "./types/mealPlanningTypes";
 
 export const mealPlanningApi = {
-  /** Fetch a meal plan by family + week start date. Returns null body when no plan exists for that week. */
-  getMealPlan: (familyId: string, weekStart: string) => {
-    const params = new URLSearchParams({ familyId, weekStart });
-    return request<GetMealPlanResponse>(`/api/meal-plans?${params}`);
-  },
+  /** Fetch a meal plan by family + week start date. Returns null mealPlan when no plan exists. */
+  getMealPlan: (familyId: string, weekStart: string) =>
+    request<GetMealPlanResponse>(
+      `/api/meal-plans/family/${familyId}/week/${weekStart}`,
+    ),
 
   /** Create a new meal plan for a given week. */
   createMealPlan: (body: CreateMealPlanRequest) =>
-    request<MealPlanResponse>("/api/meal-plans", {
+    request<CreateMealPlanResponse>("/api/meal-plans", {
       method: "POST",
       body: JSON.stringify(body),
     }),
 
-  /** Assign (or clear) a recipe on a meal slot. */
-  assignMealToSlot: (slotId: string, body: AssignMealToSlotRequest) =>
-    request<AssignMealToSlotResponse>(`/api/meal-plans/${slotId}/meal`, {
-      method: "PATCH",
-      body: JSON.stringify(body),
-    }),
+  /** Update a single meal slot (source type, recipe, free text, notes). */
+  updateMealSlot: (
+    planId: string,
+    dayOfWeek: string,
+    mealType: string,
+    body: UpdateMealSlotRequest,
+  ) =>
+    request<UpdateMealSlotResponse>(
+      `/api/meal-plans/${planId}/slots/${dayOfWeek}/${mealType}`,
+      { method: "PUT", body: JSON.stringify(body) },
+    ),
+
+  /** Create a new meal plan by copying the previous week's plan. */
+  copyFromPreviousWeek: (body: CopyMealPlanFromPreviousWeekRequest) =>
+    request<CopyMealPlanFromPreviousWeekResponse>(
+      "/api/meal-plans/copy-from-previous-week",
+      { method: "POST", body: JSON.stringify(body) },
+    ),
+
+  /** Generate a shopping list from the meal plan's recipe slots. */
+  requestShoppingList: (planId: string, body: RequestShoppingListRequest) =>
+    request<RequestShoppingListResponse>(
+      `/api/meal-plans/${planId}/shopping-list`,
+      { method: "POST", body: JSON.stringify(body) },
+    ),
 
   /** Get all recipes for a family. */
-  getFamilyRecipes: (familyId: string) => {
-    const params = new URLSearchParams({ familyId });
-    return request<GetFamilyRecipesResponse>(`/api/meal-plans/recipes?${params}`);
-  },
+  getFamilyRecipes: (familyId: string) =>
+    request<GetFamilyRecipesResponse>(`/api/recipes/family/${familyId}`),
 
   /** Create a new recipe for a family. */
   createRecipe: (body: CreateRecipeRequest) =>
-    request<RecipeResponse>("/api/meal-plans/recipes", {
+    request<CreateRecipeResponse>("/api/recipes", {
       method: "POST",
       body: JSON.stringify(body),
     }),

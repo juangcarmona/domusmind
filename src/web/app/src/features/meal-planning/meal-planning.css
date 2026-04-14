@@ -480,3 +480,195 @@
     border-bottom: none;
   }
 }
+
+/* ── Source type variants on slot cell ──────────────────────────── */
+.mp-slot-cell--recipe {
+  background: color-mix(in srgb, var(--success, #22c55e) 5%, var(--surface));
+}
+
+.mp-slot-cell--freetext {
+  background: color-mix(in srgb, var(--accent) 5%, var(--surface));
+}
+
+.mp-slot-cell--leftovers {
+  background: color-mix(in srgb, var(--muted) 8%, var(--surface));
+}
+
+.mp-slot-cell--locked {
+  cursor: default;
+  opacity: 0.75;
+}
+
+.mp-slot-lock {
+  font-size: 0.65em;
+  margin-left: 0.2em;
+}
+
+.mp-slot-optional-dot {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-left: 0.25em;
+  vertical-align: middle;
+}
+
+/* ── Source picker in inspector ─────────────────────────────────── */
+.mp-source-picker {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.mp-source-picker-btn {
+  padding: 0.25rem 0.55rem;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--muted);
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+
+.mp-source-picker-btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--primary) 8%, var(--surface));
+  color: var(--text);
+}
+
+.mp-source-picker-btn.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.mp-source-picker-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Slot badges (optional / locked) ────────────────────────────── */
+.mp-slot-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.4rem;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--muted) 15%, transparent);
+  color: var(--muted);
+}
+
+.mp-slot-badge--locked {
+  background: color-mix(in srgb, var(--danger, #ef4444) 12%, transparent);
+  color: var(--danger, #ef4444);
+}
+
+/* ── Form hint ───────────────────────────────────────────────────── */
+.mp-form-hint {
+  font-size: var(--font-size-xs);
+  color: var(--muted);
+  margin: 0;
+  font-style: italic;
+}
+
+/* ── Plan actions bar ────────────────────────────────────────────── */
+.mp-plan-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.75rem;
+  background: var(--surface-alt);
+  border-bottom: 1px solid var(--border);
+  gap: 0.5rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.mp-plan-actions-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.mp-plan-status {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.mp-plan-actions-right {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mp-plan-action-done {
+  font-size: var(--font-size-xs);
+  color: var(--success, #22c55e);
+  font-weight: 600;
+}
+
+/* ── Empty state secondary actions ──────────────────────────────── */
+.mp-empty-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* ── Empty week — compact action row ───────────────────────────── */
+.mp-empty-week {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+}
+
+.mp-empty-week-header {
+  display: flex;
+  align-items: center;
+}
+
+.mp-empty-week-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--muted);
+  margin: 0;
+}
+
+.mp-empty-week-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ── Inline notice (replaces full-screen error for recoverable states) ── */
+.mp-notice {
+  font-size: var(--font-size-xs);
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-sm);
+  margin: 0;
+}
+
+.mp-notice--warn {
+  background: color-mix(in srgb, var(--warning, #f59e0b) 10%, var(--surface));
+  color: color-mix(in srgb, var(--warning, #f59e0b) 70%, var(--text));
+  border: 1px solid color-mix(in srgb, var(--warning, #f59e0b) 30%, transparent);
+}
+
+/* ── Load error + retry ──────────────────────────────────────────── */
+.mp-load-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 1.25rem;
+}

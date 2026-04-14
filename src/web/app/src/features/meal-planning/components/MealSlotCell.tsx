@@ -1,12 +1,18 @@
 import { useTranslation } from "react-i18next";
-import type { MealSlotResponse } from "../../../api/types/mealPlanningTypes";
+import type { MealSlotDetail } from "../../../api/types/mealPlanningTypes";
 
-const MEAL_TYPE_ORDER = ["Breakfast", "Lunch", "Dinner", "Snack"] as const;
+const MEAL_TYPE_ORDER = [
+  "Breakfast",
+  "MidMorningSnack",
+  "Lunch",
+  "AfternoonSnack",
+  "Dinner",
+] as const;
 
 interface MealSlotCellProps {
-  slot: MealSlotResponse;
+  slot: MealSlotDetail;
   selected: boolean;
-  onClick: (slot: MealSlotResponse) => void;
+  onClick: (slot: MealSlotDetail) => void;
 }
 
 /**
@@ -15,34 +21,45 @@ interface MealSlotCellProps {
  */
 export function MealSlotCell({ slot, selected, onClick }: MealSlotCellProps) {
   const { t } = useTranslation("mealPlanning");
-  const hasRecipe = !!slot.recipeId;
+  const { mealSourceType } = slot;
+
+  const hasContent = mealSourceType !== "Unplanned";
+
+  const label = (() => {
+    switch (mealSourceType) {
+      case "Recipe": return slot.recipe?.name ?? null;
+      case "FreeText": return slot.freeText;
+      case "Leftovers": return t("sourceTypes.Leftovers");
+      case "External": return t("sourceTypes.External");
+      default: return null;
+    }
+  })();
 
   return (
     <button
       type="button"
       className={[
         "mp-slot-cell",
-        hasRecipe ? "mp-slot-cell--filled" : "mp-slot-cell--empty",
+        hasContent ? `mp-slot-cell--${mealSourceType.toLowerCase()}` : "mp-slot-cell--empty",
         selected ? "mp-slot-cell--selected" : "",
+        slot.isLocked ? "mp-slot-cell--locked" : "",
       ]
         .filter(Boolean)
         .join(" ")}
       onClick={() => onClick(slot)}
       aria-pressed={selected}
       title={
-        hasRecipe
-          ? slot.recipeName ?? t("assignedRecipe")
-          : t("slotEmpty")
+        label ?? t("slotEmpty")
       }
     >
       <span className="mp-slot-cell-type">
         {t(`mealTypes.${slot.mealType}` as Parameters<typeof t>[0])}
+        {slot.isLocked && <span className="mp-slot-lock" aria-label={t("slotLocked")}> 🔒</span>}
+        {slot.isOptional && <span className="mp-slot-optional-dot" aria-label={t("slotOptional")} />}
       </span>
-      {hasRecipe ? (
-        <span className="mp-slot-cell-recipe">{slot.recipeName}</span>
-      ) : (
-        <span className="mp-slot-cell-empty">{t("noRecipeAssigned")}</span>
-      )}
+      {label ? (
+        <span className="mp-slot-cell-recipe">{label}</span>
+      ) : null}
       {slot.notes && <span className="mp-slot-cell-notes">{slot.notes}</span>}
     </button>
   );

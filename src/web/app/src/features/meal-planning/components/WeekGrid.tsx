@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
-import type { MealPlanResponse, MealSlotResponse } from "../../../api/types/mealPlanningTypes";
+import type { MealPlanDetail, MealSlotDetail } from "../../../api/types/mealPlanningTypes";
 import { MealSlotCell, MEAL_TYPE_ORDER } from "./MealSlotCell";
 
-const DAYS_ORDER = [
+const ALL_DAYS = [
   "Monday",
   "Tuesday",
   "Wednesday",
@@ -12,18 +12,30 @@ const DAYS_ORDER = [
   "Sunday",
 ] as const;
 
+type DayName = typeof ALL_DAYS[number];
+
+function buildDaysOrder(firstDayOfWeek?: string | null): DayName[] {
+  const idx = ALL_DAYS.findIndex(
+    (d) => d.toLowerCase() === (firstDayOfWeek ?? "monday").toLowerCase(),
+  );
+  const start = idx < 0 ? 0 : idx;
+  return [...ALL_DAYS.slice(start), ...ALL_DAYS.slice(0, start)] as DayName[];
+}
+
 interface WeekGridProps {
-  plan: MealPlanResponse;
-  selectedSlotId: string | null;
-  onSlotClick: (slot: MealSlotResponse) => void;
+  plan: MealPlanDetail;
+  selectedSlotKey: string | null; // "DayOfWeek:MealType" composite
+  onSlotClick: (slot: MealSlotDetail) => void;
+  firstDayOfWeek?: string | null;
 }
 
 /**
  * WeekGrid — 7-column grid of meal slots, one column per day.
  * Pure/presentational: receives plan data, emits slot click.
  */
-export function WeekGrid({ plan, selectedSlotId, onSlotClick }: WeekGridProps) {
+export function WeekGrid({ plan, selectedSlotKey, onSlotClick, firstDayOfWeek }: WeekGridProps) {
   const { t } = useTranslation("mealPlanning");
+  const DAYS_ORDER = buildDaysOrder(firstDayOfWeek);
 
   return (
     <div className="mp-week-grid">
@@ -45,7 +57,6 @@ export function WeekGrid({ plan, selectedSlotId, onSlotClick }: WeekGridProps) {
       <div className="mp-week-grid-body">
         {DAYS_ORDER.map((day) => {
           const daySlots = (plan.slots ?? []).filter((s) => s.dayOfWeek === day);
-          // Sort slots by the canonical meal type order
           const sorted = [...daySlots].sort(
             (a, b) =>
               MEAL_TYPE_ORDER.indexOf(a.mealType as typeof MEAL_TYPE_ORDER[number]) -
@@ -54,14 +65,17 @@ export function WeekGrid({ plan, selectedSlotId, onSlotClick }: WeekGridProps) {
 
           return (
             <div key={day} className="mp-week-grid-day-col">
-              {sorted.map((slot) => (
-                <MealSlotCell
-                  key={slot.id}
-                  slot={slot}
-                  selected={slot.id === selectedSlotId}
-                  onClick={onSlotClick}
-                />
-              ))}
+              {sorted.map((slot) => {
+                const key = `${slot.dayOfWeek}:${slot.mealType}`;
+                return (
+                  <MealSlotCell
+                    key={key}
+                    slot={slot}
+                    selected={key === selectedSlotKey}
+                    onClick={onSlotClick}
+                  />
+                );
+              })}
             </div>
           );
         })}

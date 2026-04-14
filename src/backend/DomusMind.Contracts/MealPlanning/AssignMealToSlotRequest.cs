@@ -1,6 +1,9 @@
 namespace DomusMind.Contracts.MealPlanning;
 
-public sealed record AssignMealToSlotRequest(
-    string? MealType,
-    Guid? RecipeId,
-    string? Notes);
+public sealed record UpdateMealSlotRequest(
+    string MealSourceType,
+    Guid? RecipeId = null,
+    string? FreeText = null,
+    string? Notes = null,
+    bool? IsOptional = null,
+    bool? IsLocked = null);

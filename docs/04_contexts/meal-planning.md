@@ -91,7 +91,7 @@ It represents a **planned set of meals for a household over a defined week**.
 MealPlan owns:
 
 - plan identity
-- week definition (start date: always a Monday)
+- week definition (start date: the household's configured first day of week)
 - family association
 - status (`Draft`, `Active`, `Completed`)
 - collection of meal slots — one per day and meal type combination, materialized at plan creation
@@ -105,7 +105,8 @@ MealPlan owns:
 **Invariants:**
 
 - must belong to exactly one family
-- week start must be a Monday
+- week start must equal the household's configured first day of week
+- week spans weekStart through weekStart + 6 days
 - only one Active plan per family per week
 - meal slots are materialized at plan creation covering all days × all meal types
 - meal slots must not duplicate (same day + same meal type combination within a plan)
@@ -170,7 +171,7 @@ Represents a single scheduled meal within a `MealPlan`.
 
 A meal slot is defined by:
 
-- day of week (Monday–Sunday)
+- day of week (first configured day through last day of the household week)
 - meal type (Breakfast, MidMorningSnack, Lunch, AfternoonSnack, Dinner)
 - `mealSourceType` — how the slot is populated:
   - `Recipe` — references a recipe from the library
@@ -401,7 +402,7 @@ Write intents (one per slice):
 - weekEnd
 - familyId
 - status
-- slots (ordered by day Monday→Sunday, then meal type Breakfast→Dinner)
+- slots (ordered by day from household's configured first day of week, then meal type Breakfast→Dinner)
   - dayOfWeek
   - mealType
   - mealSourceType

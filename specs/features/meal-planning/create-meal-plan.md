@@ -4,7 +4,7 @@
 
 Create a new weekly meal plan for the household.
 
-A meal plan represents the household's intended meals for a specific calendar week, identified by its Monday start date.
+A meal plan represents the household's intended meals for a specific calendar week, identified by its configured week-start date.
 
 ## Context
 
@@ -19,7 +19,7 @@ Required:
 
 - `mealPlanId`
 - `familyId`
-- `weekStart` (must be a Monday)
+- `weekStart` (must align with the household's configured first day of week)
 
 Optional:
 
@@ -29,8 +29,8 @@ Optional:
 
 - target family must exist
 - `mealPlanId` must be unique
-- `weekStart` must be a valid Monday date
-- no existing active meal plan for the same family and week
+- `weekStart` must be a valid date aligned to the household's configured first day of week
+- no existing meal plan for the same family and week (if one exists, it is returned as the result)
 
 ## State Changes
 
@@ -38,7 +38,7 @@ On success, the system creates a new `MealPlan` aggregate with:
 
 - stable identifier
 - family association
-- week definition (Monday–Sunday)
+- week definition (weekStart through weekStart + 6 days)
 - status: `Draft`
 - full meal slot grid materialized: all seven days × all meal types (Breakfast, MidMorningSnack, Lunch, AfternoonSnack, Dinner), each initialized to `mealSourceType = Unplanned`
 - optional responsibility domain reference
@@ -46,7 +46,7 @@ On success, the system creates a new `MealPlan` aggregate with:
 ## Invariants
 
 - every meal plan belongs to exactly one family
-- week start must be a Monday
+- week start must equal the household's configured first day of week
 - only one Active plan per family per week
 - the full slot grid (7 days × 5 meal types = 35 slots) is always materialized at creation
 
@@ -70,7 +70,8 @@ Return:
 
 - family not found
 - duplicate `mealPlanId`
-- `weekStart` is not a Monday
+- `weekStart` is not aligned to the household's configured first day of week
+- duplicate `mealPlanId` (idempotent guard)
 - active meal plan already exists for this family and week
 
 ## Notes

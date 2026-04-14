@@ -645,73 +645,6 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.ToTable("shared_lists", (string)null);
                 });
 
-            modelBuilder.Entity("DomusMind.Domain.MealPlanning.Entities.DietaryConstraint", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("description");
-
-                    b.Property<Guid>("FamilyId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("family_id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("dietary_constraints", (string)null);
-                });
-
-            modelBuilder.Entity("DomusMind.Domain.MealPlanning.Entities.FamilyPreference", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("DefaultDietaryConstraints")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("default_dietary_constraints");
-
-                    b.Property<Guid>("FamilyId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("family_id");
-
-                    b.Property<string>("PreferredMealTypes")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("preferred_meal_types");
-
-                    b.Property<DateTime>("UpdatedAtUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<bool>("WeekendFlexibility")
-                        .HasColumnType("boolean")
-                        .HasColumnName("weekend_flexibility");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("family_preferences", (string)null);
-                });
-
             modelBuilder.Entity("DomusMind.Domain.MealPlanning.Entities.Ingredient", b =>
                 {
                     b.Property<Guid>("Id")
@@ -728,11 +661,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("name");
 
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.Property<decimal>("Quantity")
+                    b.Property<decimal?>("Quantity")
                         .HasColumnType("numeric")
                         .HasColumnName("quantity");
 
@@ -741,14 +670,15 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnName("recipe_id");
 
                     b.Property<string>("Unit")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("unit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RecipeId");
+                    b.HasIndex("RecipeId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_ingredients_recipe_id_name");
 
                     b.ToTable("ingredients", (string)null);
                 });
@@ -759,6 +689,14 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<bool>("AffectsWholeHousehold")
+                        .HasColumnType("boolean")
+                        .HasColumnName("affects_whole_household");
+
+                    b.Property<Guid?>("AppliedTemplateId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("applied_template_id");
+
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at_utc");
@@ -767,9 +705,21 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("family_id");
 
-                    b.Property<Guid?>("TemplateId")
+                    b.Property<DateTime?>("LastDerivedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_derived_at");
+
+                    b.Property<Guid?>("ShoppingListId")
                         .HasColumnType("uuid")
-                        .HasColumnName("template_id");
+                        .HasColumnName("shopping_list_id");
+
+                    b.Property<int>("ShoppingListVersion")
+                        .HasColumnType("integer")
+                        .HasColumnName("shopping_list_version");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
 
                     b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone")
@@ -781,6 +731,10 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FamilyId", "WeekStart")
+                        .IsUnique()
+                        .HasDatabaseName("ix_meal_plans_family_id_week_start");
+
                     b.ToTable("meal_plans", (string)null);
                 });
 
@@ -790,18 +744,40 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<bool>("AffectsWholeHousehold")
+                        .HasColumnType("boolean")
+                        .HasColumnName("affects_whole_household");
+
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at_utc");
 
                     b.Property<string>("DayOfWeek")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("day_of_week");
+
+                    b.Property<string>("FreeText")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("free_text");
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_locked");
+
+                    b.Property<bool>("IsOptional")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_optional");
 
                     b.Property<Guid>("MealPlanId")
                         .HasColumnType("uuid")
                         .HasColumnName("meal_plan_id");
+
+                    b.Property<int>("MealSourceType")
+                        .HasColumnType("integer")
+                        .HasColumnName("meal_source_type");
 
                     b.Property<int>("MealType")
                         .HasColumnType("integer")
@@ -822,7 +798,9 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MealPlanId");
+                    b.HasIndex("MealPlanId", "DayOfWeek", "MealType")
+                        .IsUnique()
+                        .HasDatabaseName("ix_meal_slots_plan_day_type");
 
                     b.ToTable("meal_slots", (string)null);
                 });
@@ -839,8 +817,26 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("DayOfWeek")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("day_of_week");
+
+                    b.Property<string>("FreeText")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("free_text");
+
+                    b.Property<bool>("IsLocked")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_locked");
+
+                    b.Property<bool>("IsOptional")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_optional");
+
+                    b.Property<int>("MealSourceType")
+                        .HasColumnType("integer")
+                        .HasColumnName("meal_source_type");
 
                     b.Property<int>("MealType")
                         .HasColumnType("integer")
@@ -865,7 +861,9 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WeeklyTemplateId");
+                    b.HasIndex("WeeklyTemplateId", "DayOfWeek", "MealType")
+                        .IsUnique()
+                        .HasDatabaseName("ix_meal_slot_templates_template_day_type");
 
                     b.ToTable("meal_slot_templates", (string)null);
                 });
@@ -875,6 +873,11 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<string>("AllowedMealTypes")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("allowed_meal_types");
 
                     b.Property<int?>("CookTimeMinutes")
                         .HasColumnType("integer")
@@ -893,19 +896,15 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("family_id");
 
-                    b.Property<string>("Instructions")
-                        .HasColumnType("text")
-                        .HasColumnName("instructions");
+                    b.Property<bool>("IsFavorite")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_favorite");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("name");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
 
                     b.Property<int?>("PrepTimeMinutes")
                         .HasColumnType("integer")
@@ -915,85 +914,22 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("servings");
 
+                    b.Property<string>("Tags")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("tags");
+
                     b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FamilyId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_recipes_family_id_name");
 
                     b.ToTable("recipes", (string)null);
-                });
-
-            modelBuilder.Entity("DomusMind.Domain.MealPlanning.Entities.ShoppingList", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<Guid>("FamilyId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("family_id");
-
-                    b.Property<Guid?>("GeneratedFromMealPlanId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("generated_from_meal_plan_id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("name");
-
-                    b.Property<DateTime>("UpdatedAtUtc")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("shopping_lists", (string)null);
-                });
-
-            modelBuilder.Entity("DomusMind.Domain.MealPlanning.Entities.ShoppingListItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<Guid>("IngredientId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("ingredient_id");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("notes");
-
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("numeric")
-                        .HasColumnName("quantity");
-
-                    b.Property<Guid>("ShoppingListId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("shopping_list_id");
-
-                    b.Property<string>("Unit")
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("unit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ShoppingListId");
-
-                    b.ToTable("shopping_list_items", (string)null);
                 });
 
             modelBuilder.Entity("DomusMind.Domain.MealPlanning.Entities.WeeklyTemplate", b =>
@@ -1021,6 +957,10 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FamilyId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_weekly_templates_family_id_name");
 
                     b.ToTable("weekly_templates", (string)null);
                 });
@@ -1505,15 +1445,6 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DomusMind.Domain.MealPlanning.Entities.ShoppingListItem", b =>
-                {
-                    b.HasOne("DomusMind.Domain.MealPlanning.Entities.ShoppingList", null)
-                        .WithMany("Items")
-                        .HasForeignKey("ShoppingListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DomusMind.Domain.Responsibilities.ResponsibilityDomain", b =>
                 {
                     b.OwnsOne("DomusMind.Domain.Shared.HexColor", "Color", b1 =>
@@ -1733,11 +1664,6 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("DomusMind.Domain.MealPlanning.Entities.Recipe", b =>
                 {
                     b.Navigation("Ingredients");
-                });
-
-            modelBuilder.Entity("DomusMind.Domain.MealPlanning.Entities.ShoppingList", b =>
-                {
-                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("DomusMind.Domain.MealPlanning.Entities.WeeklyTemplate", b =>

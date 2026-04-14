@@ -1,50 +1,42 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
 import { mealPlanningApi } from "../api/mealPlanningApi";
 import type {
-  MealPlanResponse,
-  MealSlotResponse,
-  RecipeResponse,
+  MealPlanDetail,
+  RecipeSummary,
 } from "../api/types/mealPlanningTypes";
 
 // ── State ─────────────────────────────────────────────────────────────────────
 
 interface MealPlanningState {
-  // Current week's meal plan (null = no plan exists for this week)
-  currentPlan: MealPlanResponse | null;
+  currentPlan: MealPlanDetail | null;
   planStatus: "idle" | "loading" | "success" | "error";
   planError: string | null;
-
-  // Currently displayed week (ISO "YYYY-MM-DD", always a Monday)
   currentWeekStart: string;
-
-  // Family recipes library
-  recipes: RecipeResponse[];
+  recipes: RecipeSummary[];
   recipesStatus: "idle" | "loading" | "success" | "error";
-
-  // Slot mutation
-  assignStatus: "idle" | "loading" | "error";
-
-  // Recipe creation
+  updateSlotStatus: "idle" | "loading" | "error";
   createRecipeStatus: "idle" | "loading" | "error";
-}
-
-function currentMondayIso(): string {
-  const d = new Date();
-  const day = d.getDay(); // 0=Sun, 1=Mon …
-  const diff = day === 0 ? -6 : 1 - day;
-  d.setDate(d.getDate() + diff);
-  return d.toISOString().slice(0, 10);
+  createError: string | null;
+  copyStatus: "idle" | "loading" | "error";
+  copyError: string | null;
+  shoppingListStatus: "idle" | "loading" | "success" | "error";
+  shoppingListId: string | null;
 }
 
 const initialState: MealPlanningState = {
   currentPlan: null,
   planStatus: "idle",
   planError: null,
-  currentWeekStart: currentMondayIso(),
+  currentWeekStart: "",
   recipes: [],
   recipesStatus: "idle",
-  assignStatus: "idle",
+  updateSlotStatus: "idle",
   createRecipeStatus: "idle",
+  createError: null,
+  copyStatus: "idle",
+  copyError: null,
+  shoppingListStatus: "idle",
+  shoppingListId: null,
 };
 
 // ── Thunks ────────────────────────────────────────────────────────────────────
@@ -73,8 +65,8 @@ export const createMealPlan = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      await mealPlanningApi.createMealPlan({ familyId, weekStart });
-      // Fetch the full plan with slots after creation
+      const mealPlanId = crypto.randomUUID();
+      await mealPlanningApi.createMealPlan({ mealPlanId, familyId, weekStart });
       const res = await mealPlanningApi.getMealPlan(familyId, weekStart);
       return res.mealPlan;
     } catch (err: unknown) {
@@ -85,31 +77,97 @@ export const createMealPlan = createAsyncThunk(
   },
 );
 
-export const assignMealToSlot = createAsyncThunk(
-  "mealPlanning/assignSlot",
+export const updateMealSlot = createAsyncThunk(
+  "mealPlanning/updateSlot",
   async (
     {
-      slotId,
-      recipeId,
+      planId,
+      familyId,
+      weekStart,
+      dayOfWeek,
       mealType,
+      mealSourceType,
+      recipeId,
+      freeText,
       notes,
     }: {
-      slotId: string;
-      recipeId: string | null;
-      mealType?: string;
+      planId: string;
+      familyId: string;
+      weekStart: string;
+      dayOfWeek: string;
+      mealType: string;
+      mealSourceType: string;
+      recipeId?: string | null;
+      freeText?: string | null;
       notes?: string | null;
     },
     { rejectWithValue },
   ) => {
     try {
-      return await mealPlanningApi.assignMealToSlot(slotId, {
+      await mealPlanningApi.updateMealSlot(planId, dayOfWeek, mealType, {
+        mealSourceType,
         recipeId,
-        mealType,
+        freeText,
         notes,
+      });
+      const res = await mealPlanningApi.getMealPlan(familyId, weekStart);
+      return res.mealPlan;
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to update slot",
+      );
+    }
+  },
+);
+
+export const copyFromPreviousWeek = createAsyncThunk(
+  "mealPlanning/copyFromPreviousWeek",
+  async (
+    { familyId, weekStart }: { familyId: string; weekStart: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const mealPlanId = crypto.randomUUID();
+      const copyRes = await mealPlanningApi.copyFromPreviousWeek({
+        mealPlanId,
+        familyId,
+        weekStart,
+      });
+      if (!copyRes.success && copyRes.errorCode === "NoPreviousPlan") {
+        return { kind: "noPreviousPlan" as const };
+      }
+      // AlreadyExisted or success — fetch the full plan detail either way
+      const res = await mealPlanningApi.getMealPlan(familyId, weekStart);
+      if (copyRes.alreadyExisted) {
+        return { kind: "alreadyExisted" as const, plan: res.mealPlan };
+      }
+      return { kind: "ok" as const, plan: res.mealPlan };
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to copy plan",
+      );
+    }
+  },
+);
+
+export const requestShoppingList = createAsyncThunk(
+  "mealPlanning/requestShoppingList",
+  async (
+    {
+      planId,
+      familyId,
+      shoppingListName,
+    }: { planId: string; familyId: string; shoppingListName?: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      return await mealPlanningApi.requestShoppingList(planId, {
+        familyId,
+        shoppingListName,
       });
     } catch (err: unknown) {
       return rejectWithValue(
-        (err as { message?: string }).message ?? "Failed to assign meal",
+        (err as { message?: string }).message ?? "Failed to generate shopping list",
       );
     }
   },
@@ -150,7 +208,9 @@ export const createRecipe = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
+      const recipeId = crypto.randomUUID();
       return await mealPlanningApi.createRecipe({
+        recipeId,
         familyId,
         name,
         description,
@@ -174,15 +234,30 @@ const mealPlanningSlice = createSlice({
   reducers: {
     setCurrentWeek(state, action: PayloadAction<string>) {
       state.currentWeekStart = action.payload;
-      // Clear current plan so the page re-fetches for the new week
       state.currentPlan = null;
       state.planStatus = "idle";
       state.planError = null;
+      state.createError = null;
+      state.copyError = null;
+      state.copyStatus = "idle";
+      state.shoppingListStatus = "idle";
+      state.shoppingListId = null;
     },
     clearPlan(state) {
       state.currentPlan = null;
       state.planStatus = "idle";
       state.planError = null;
+    },
+    clearShoppingListStatus(state) {
+      state.shoppingListStatus = "idle";
+      state.shoppingListId = null;
+    },
+    clearCopyError(state) {
+      state.copyError = null;
+      state.copyStatus = "idle";
+    },
+    clearCreateError(state) {
+      state.createError = null;
     },
   },
   extraReducers: (builder) => {
@@ -205,39 +280,76 @@ const mealPlanningSlice = createSlice({
     builder
       .addCase(createMealPlan.pending, (state) => {
         state.planStatus = "loading";
-        state.planError = null;
+        state.createError = null;
       })
       .addCase(createMealPlan.fulfilled, (state, action) => {
         state.planStatus = "success";
         state.currentPlan = action.payload;
+        state.createError = null;
       })
       .addCase(createMealPlan.rejected, (state, action) => {
-        state.planStatus = "error";
-        state.planError = action.payload as string;
+        // Do NOT set planStatus=error — page stays in its current state
+        state.planStatus = "success";
+        state.createError = action.payload as string;
       });
 
-    // ── assignMealToSlot ──────────────────────────────────────────────────────
+    // ── updateMealSlot ────────────────────────────────────────────────────────
     builder
-      .addCase(assignMealToSlot.pending, (state) => {
-        state.assignStatus = "loading";
+      .addCase(updateMealSlot.pending, (state) => {
+        state.updateSlotStatus = "loading";
       })
-      .addCase(assignMealToSlot.fulfilled, (state, action) => {
-        state.assignStatus = "idle";
-        // Patch the slot in current plan
-        if (state.currentPlan) {
-          const slot = state.currentPlan.slots.find(
-            (s: MealSlotResponse) => s.id === action.payload.slotId,
-          );
-          if (slot) {
-            slot.recipeId = action.payload.recipeId;
-            slot.recipeName = action.payload.recipeName;
-            slot.mealType = action.payload.mealType;
-            slot.notes = action.payload.notes;
-          }
+      .addCase(updateMealSlot.fulfilled, (state, action) => {
+        state.updateSlotStatus = "idle";
+        state.currentPlan = action.payload;
+      })
+      .addCase(updateMealSlot.rejected, (state) => {
+        state.updateSlotStatus = "error";
+      });
+
+    // ── copyFromPreviousWeek ──────────────────────────────────────────────────
+    builder
+      .addCase(copyFromPreviousWeek.pending, (state) => {
+        state.copyStatus = "loading";
+        state.copyError = null;
+      })
+      .addCase(copyFromPreviousWeek.fulfilled, (state, action) => {
+        const result = action.payload;
+        if (result.kind === "noPreviousPlan") {
+          state.copyStatus = "error";
+          state.copyError = "noPreviousPlan";
+        } else if (result.kind === "alreadyExisted") {
+          // Load the existing plan; surface a compact notice
+          state.copyStatus = "error";
+          state.copyError = "alreadyExisted";
+          state.planStatus = "success";
+          state.currentPlan = result.plan;
+        } else {
+          state.copyStatus = "idle";
+          state.copyError = null;
+          state.planStatus = "success";
+          state.currentPlan = result.plan;
         }
       })
-      .addCase(assignMealToSlot.rejected, (state) => {
-        state.assignStatus = "error";
+      .addCase(copyFromPreviousWeek.rejected, (state, action) => {
+        // Network/auth failure — only touch copy state, not plan state
+        state.copyStatus = "error";
+        state.copyError = action.payload as string;
+      });
+
+    // ── requestShoppingList ───────────────────────────────────────────────────
+    builder
+      .addCase(requestShoppingList.pending, (state) => {
+        state.shoppingListStatus = "loading";
+      })
+      .addCase(requestShoppingList.fulfilled, (state, action) => {
+        state.shoppingListStatus = "success";
+        state.shoppingListId = action.payload.shoppingListId;
+        if (state.currentPlan) {
+          state.currentPlan.shoppingListId = action.payload.shoppingListId;
+        }
+      })
+      .addCase(requestShoppingList.rejected, (state) => {
+        state.shoppingListStatus = "error";
       });
 
     // ── fetchFamilyRecipes ────────────────────────────────────────────────────
@@ -258,9 +370,10 @@ const mealPlanningSlice = createSlice({
       .addCase(createRecipe.pending, (state) => {
         state.createRecipeStatus = "loading";
       })
-      .addCase(createRecipe.fulfilled, (state, action) => {
+      .addCase(createRecipe.fulfilled, (state) => {
         state.createRecipeStatus = "idle";
-        state.recipes = [action.payload, ...state.recipes];
+        // Invalidate so next open re-fetches
+        state.recipesStatus = "idle";
       })
       .addCase(createRecipe.rejected, (state) => {
         state.createRecipeStatus = "error";
@@ -268,5 +381,6 @@ const mealPlanningSlice = createSlice({
   },
 });
 
-export const { setCurrentWeek, clearPlan } = mealPlanningSlice.actions;
+export const { setCurrentWeek, clearPlan, clearShoppingListStatus, clearCopyError, clearCreateError } =
+  mealPlanningSlice.actions;
 export default mealPlanningSlice.reducer;

@@ -20,7 +20,7 @@ Slots are always present (materialized at plan creation). This command updates t
 Required:
 
 - `mealPlanId`
-- `dayOfWeek` (Monday–Sunday)
+- `dayOfWeek` (any day in the household week)
 - `mealType` (Breakfast, MidMorningSnack, Lunch, AfternoonSnack, Dinner)
 - `mealSourceType` (Recipe, FreeText, External, Leftovers, Unplanned)
 

@@ -1,10 +1,11 @@
 using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Persistence;
-using DomusMind.Application.Features.MealPlanning.CreateRecipe;
+using DomusMind.Application.Abstractions.Security;
 using DomusMind.Contracts.MealPlanning;
-using DomusMind.Domain.MealPlanning.Entities;
-using DomusMind.Domain.MealPlanning.ValueObjects;
 using DomusMind.Domain.Family;
+using DomusMind.Domain.MealPlanning.Entities;
+using DomusMind.Domain.MealPlanning.Enums;
+using DomusMind.Domain.MealPlanning.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace DomusMind.Application.Features.MealPlanning.CreateRecipe;
@@ -13,35 +14,73 @@ public sealed class CreateRecipeCommandHandler : ICommandHandler<CreateRecipeCom
 {
     private readonly IDomusMindDbContext _dbContext;
     private readonly IEventLogWriter _eventLogWriter;
+    private readonly IFamilyAuthorizationService _authorizationService;
 
     public CreateRecipeCommandHandler(
         IDomusMindDbContext dbContext,
-        IEventLogWriter eventLogWriter)
+        IEventLogWriter eventLogWriter,
+        IFamilyAuthorizationService authorizationService)
     {
         _dbContext = dbContext;
         _eventLogWriter = eventLogWriter;
+        _authorizationService = authorizationService;
     }
 
     public async Task<CreateRecipeResponse> Handle(
         CreateRecipeCommand command,
         CancellationToken cancellationToken)
     {
+        var canAccess = await _authorizationService.CanAccessFamilyAsync(
+            command.RequestedByUserId, command.FamilyId, cancellationToken);
+        if (!canAccess)
+            throw new UnauthorizedAccessException("Access to this family is denied.");
+
+        var familyId = FamilyId.From(command.FamilyId);
+
+        var nameExists = await _dbContext.Set<Recipe>()
+            .AnyAsync(r => r.FamilyId == familyId && r.Name == command.Name, cancellationToken);
+        if (nameExists)
+            throw new InvalidOperationException($"A recipe named '{command.Name}' already exists in this family.");
+
+        var allowedMealTypes = command.AllowedMealTypes?
+            .Select(s => Enum.Parse<MealType>(s, ignoreCase: true))
+            .ToList();
+
         var now = DateTime.UtcNow;
+        var recipeId = RecipeId.From(command.RecipeId);
+
         var recipe = Recipe.Create(
-            RecipeId.New(),
-            FamilyId.From(command.FamilyId),
+            recipeId,
+            familyId,
             command.Name,
             command.Description,
             command.PrepTimeMinutes,
             command.CookTimeMinutes,
             command.Servings,
-            command.Instructions,
-            command.Notes,
-            now,
+            command.IsFavorite,
+            allowedMealTypes,
+            command.Tags,
             now);
 
-        _dbContext.Set<Recipe>().Add(recipe);
+        if (command.Ingredients is { Count: > 0 })
+        {
+            var seenNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var ing in command.Ingredients)
+            {
+                if (!seenNames.Add(ing.Name))
+                    throw new InvalidOperationException($"Duplicate ingredient name '{ing.Name}' in request.");
 
+                recipe.AddIngredient(Ingredient.Create(
+                    IngredientId.New(),
+                    ing.Name,
+                    recipeId,
+                    ing.Quantity,
+                    ing.Unit,
+                    now));
+            }
+        }
+
+        _dbContext.Set<Recipe>().Add(recipe);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         await _eventLogWriter.WriteAsync(recipe.DomainEvents, cancellationToken);
@@ -51,13 +90,8 @@ public sealed class CreateRecipeCommandHandler : ICommandHandler<CreateRecipeCom
             recipe.Id.Value,
             recipe.FamilyId.Value,
             recipe.Name,
-            recipe.Description,
-            recipe.PrepTimeMinutes,
-            recipe.CookTimeMinutes,
-            recipe.Servings,
-            recipe.Instructions,
-            recipe.Notes,
-            recipe.CreatedAtUtc,
-            recipe.UpdatedAtUtc);
+            recipe.Ingredients.Count,
+            recipe.TotalTimeMinutes,
+            recipe.IsFavorite);
     }
 }

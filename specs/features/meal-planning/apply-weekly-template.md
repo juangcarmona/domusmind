@@ -19,7 +19,7 @@ Required:
 
 - `mealPlanId`
 - `familyId`
-- `weekStart` (must be a Monday)
+- `weekStart` (must align with the household's configured first day of week)
 - `templateId`
 
 Optional:
@@ -30,8 +30,8 @@ Optional:
 
 - target family must exist
 - `mealPlanId` must be unique
-- `weekStart` must be a valid Monday date
-- no existing active meal plan for the same family and week
+- `weekStart` must be a valid date aligned to the household's configured first day of week
+- no existing meal plan for the same family and week (if one exists, it is returned as the result; template is not re-applied)
 - `templateId` must exist and belong to the same family
 
 ## State Changes
@@ -53,7 +53,7 @@ Subsequent changes to the template do not affect already-created meal plans.
 ## Invariants
 
 - every meal plan belongs to exactly one family
-- week start must be a Monday
+- week start must equal the household's configured first day of week
 - copied recipe references must still be valid at the time of application
 
 ## Events
@@ -79,10 +79,9 @@ Return:
 
 - family not found
 - duplicate `mealPlanId`
-- `weekStart` is not a Monday
-- active meal plan already exists for this family and week
-- template not found
-- template belongs to a different family
+- `weekStart` is not aligned to the household's configured first day of week
+- template not found or belongs to a different family
+- if a plan already exists for the week, it is returned without re-applying the template
 
 ## Notes
 

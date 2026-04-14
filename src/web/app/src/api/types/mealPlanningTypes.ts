@@ -2,74 +2,171 @@
 // All fields are primitives (string, number, boolean). No domain types.
 // Date strings are ISO "YYYY-MM-DD"; timestamps are ISO UTC strings.
 
+// ── Source types ─────────────────────────────────────────────────────────────
+
+export type MealSourceType =
+  | "Unplanned"
+  | "Recipe"
+  | "FreeText"
+  | "External"
+  | "Leftovers";
+
+// ── Slot ─────────────────────────────────────────────────────────────────────
+
+export interface MealSlotRecipeDetail {
+  recipeId: string;
+  name: string;
+  servings: number | null;
+  prepTimeMinutes: number | null;
+  totalTimeMinutes: number | null;
+  allowedMealTypes: string[];
+}
+
+export interface MealSlotDetail {
+  dayOfWeek: string;   // "Monday" | … | "Sunday"
+  mealType: string;    // "Breakfast" | "MidMorningSnack" | "Lunch" | "AfternoonSnack" | "Dinner"
+  mealSourceType: MealSourceType;
+  recipe: MealSlotRecipeDetail | null;
+  freeText: string | null;
+  notes: string | null;
+  isOptional: boolean;
+  isLocked: boolean;
+}
+
 // ── MealPlan ─────────────────────────────────────────────────────────────────
 
-export interface CreateMealPlanRequest {
+export interface MealPlanDetail {
+  planId: string;
   familyId: string;
   weekStart: string; // "YYYY-MM-DD" (Monday)
-}
-
-export interface MealSlotResponse {
-  id: string;
-  dayOfWeek: string; // "Monday" | "Tuesday" | ... | "Sunday"
-  mealType: string;  // "Breakfast" | "Lunch" | "Dinner" | "Snack"
-  recipeId: string | null;
-  recipeName: string | null;
-  notes: string | null;
-}
-
-export interface MealPlanResponse {
-  id: string;
-  familyId: string;
-  weekStart: string; // "YYYY-MM-DD"
-  createdAtUtc: string;
-  slots: MealSlotResponse[];
+  weekEnd: string;   // "YYYY-MM-DD" (Sunday)
+  status: string;    // "Draft" | "Active" | "Completed"
+  appliedTemplateId: string | null;
+  shoppingListId: string | null;
+  shoppingListVersion: number;
+  lastDerivedAt: string | null;
+  slots: MealSlotDetail[];
 }
 
 export interface GetMealPlanResponse {
-  mealPlan: MealPlanResponse | null;
+  mealPlan: MealPlanDetail | null;
 }
 
-// ── Slot assignment ───────────────────────────────────────────────────────────
+export interface CreateMealPlanRequest {
+  mealPlanId: string;
+  familyId: string;
+  weekStart: string; // "YYYY-MM-DD" (Monday)
+  responsibilityDomainId?: string | null;
+}
 
-export interface AssignMealToSlotRequest {
-  recipeId: string | null;
-  mealType?: string;
+export interface CreateMealPlanResponse {
+  id: string;
+  familyId: string;
+  weekStart: string;
+  weekEnd: string;
+  status: string;
+  createdAtUtc: string;
+  alreadyExisted: boolean;
+}
+
+// ── Slot update ───────────────────────────────────────────────────────────────
+
+export interface UpdateMealSlotRequest {
+  mealSourceType: string;
+  recipeId?: string | null;
+  freeText?: string | null;
   notes?: string | null;
+  isOptional?: boolean;
+  isLocked?: boolean;
 }
 
-export interface AssignMealToSlotResponse {
-  slotId: string;
+export interface UpdateMealSlotResponse {
   mealPlanId: string;
   dayOfWeek: string;
   mealType: string;
+  mealSourceType: string;
   recipeId: string | null;
-  recipeName: string | null;
+  freeText: string | null;
   notes: string | null;
+  isOptional: boolean;
+  isLocked: boolean;
+}
+
+// ── Copy plan ─────────────────────────────────────────────────────────────────
+
+export interface CopyMealPlanFromPreviousWeekRequest {
+  mealPlanId: string;
+  familyId: string;
+  weekStart: string;
+  sourceMealPlanId?: string | null;
+}
+
+export interface CopyMealPlanFromPreviousWeekResponse {
+  mealPlanId: string | null;
+  familyId: string;
+  weekStart: string;
+  weekEnd: string;
+  sourceMealPlanId: string | null;
+  status: string | null;
+  slotCount: number;
+  success: boolean;
+  errorCode: string | null;
+  alreadyExisted: boolean;
+}
+
+// ── Shopping list ─────────────────────────────────────────────────────────────
+
+export interface RequestShoppingListRequest {
+  familyId: string;
+  shoppingListName?: string | null;
+}
+
+export interface RequestShoppingListResponse {
+  mealPlanId: string;
+  shoppingListId: string;
+  shoppingListName: string;
+  itemCount: number;
 }
 
 // ── Recipe ────────────────────────────────────────────────────────────────────
 
-export interface CreateRecipeRequest {
-  familyId: string;
-  name: string;
-  description?: string | null;
-  prepTimeMinutes?: number | null;
-  cookTimeMinutes?: number | null;
-  servings?: number | null;
-}
-
-export interface RecipeResponse {
+export interface RecipeSummary {
   id: string;
   familyId: string;
   name: string;
   description: string | null;
   prepTimeMinutes: number | null;
   cookTimeMinutes: number | null;
+  totalTimeMinutes: number | null;
   servings: number | null;
+  isFavorite: boolean;
+  tags: string[];
+  ingredientCount: number;
   createdAtUtc: string;
 }
 
 export interface GetFamilyRecipesResponse {
-  recipes: RecipeResponse[];
+  recipes: RecipeSummary[];
+}
+
+export interface CreateRecipeRequest {
+  recipeId: string;
+  familyId: string;
+  name: string;
+  description?: string | null;
+  prepTimeMinutes?: number | null;
+  cookTimeMinutes?: number | null;
+  servings?: number | null;
+  isFavorite?: boolean;
+  allowedMealTypes?: string[] | null;
+  tags?: string[] | null;
+}
+
+export interface CreateRecipeResponse {
+  id: string;
+  familyId: string;
+  name: string;
+  ingredientCount: number;
+  totalTimeMinutes: number | null;
+  isFavorite: boolean;
 }

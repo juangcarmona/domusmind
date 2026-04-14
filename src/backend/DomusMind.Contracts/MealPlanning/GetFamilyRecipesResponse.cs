@@ -7,7 +7,11 @@ public sealed record FamilyRecipeItem(
     string? Description,
     int? PrepTimeMinutes,
     int? CookTimeMinutes,
+    int? TotalTimeMinutes,
     int? Servings,
+    bool IsFavorite,
+    IReadOnlyList<string> Tags,
+    int IngredientCount,
     DateTime CreatedAtUtc);
 
 public sealed record GetFamilyRecipesResponse(IReadOnlyList<FamilyRecipeItem> Recipes);

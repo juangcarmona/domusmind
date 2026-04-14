@@ -1,16 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-const DAYS_ORDER = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-] as const;
-
-/** Returns the previous or next Monday relative to the given ISO week start. */
+/** Returns the week start shifted by ±7 days from the given ISO date. */
 export function shiftWeek(weekStart: string, direction: "prev" | "next"): string {
   const d = new Date(weekStart + "T00:00:00");
   d.setDate(d.getDate() + (direction === "next" ? 7 : -7));
@@ -62,5 +52,3 @@ export function WeekNavigator({ weekStart, onPrev, onNext }: WeekNavigatorProps)
     </div>
   );
 }
-
-export { DAYS_ORDER };

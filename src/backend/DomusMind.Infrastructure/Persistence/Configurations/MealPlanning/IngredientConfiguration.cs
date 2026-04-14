@@ -24,15 +24,11 @@ public sealed class IngredientConfiguration : IEntityTypeConfiguration<Ingredien
             .IsRequired();
 
         builder.Property(i => i.Quantity)
-            .HasColumnName("quantity")
-            .IsRequired();
+            .HasColumnName("quantity");
 
         builder.Property(i => i.Unit)
             .HasColumnName("unit")
             .HasMaxLength(50);
-
-        builder.Property(i => i.Notes)
-            .HasColumnName("notes");
 
         builder.Property(i => i.RecipeId)
             .HasConversion(id => id.Value, value => new RecipeId(value))
@@ -43,6 +39,8 @@ public sealed class IngredientConfiguration : IEntityTypeConfiguration<Ingredien
             .HasColumnName("created_at")
             .IsRequired();
 
-        // Remove DomainEvents ignore - this entity doesn't have DomainEvents
+        builder.HasIndex(i => new { i.RecipeId, i.Name })
+            .IsUnique()
+            .HasDatabaseName("ix_ingredients_recipe_id_name");
     }
 }

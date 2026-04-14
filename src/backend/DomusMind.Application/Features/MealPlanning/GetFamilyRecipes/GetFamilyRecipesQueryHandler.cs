@@ -42,7 +42,13 @@ public sealed class GetFamilyRecipesQueryHandler : IQueryHandler<GetFamilyRecipe
                 r.Description,
                 r.PrepTimeMinutes,
                 r.CookTimeMinutes,
+                r.PrepTimeMinutes.HasValue && r.CookTimeMinutes.HasValue
+                    ? r.PrepTimeMinutes.Value + r.CookTimeMinutes.Value
+                    : (int?)null,
                 r.Servings,
+                r.IsFavorite,
+                r.Tags,
+                r.Ingredients.Count,
                 r.CreatedAtUtc))
             .ToListAsync(cancellationToken);
 

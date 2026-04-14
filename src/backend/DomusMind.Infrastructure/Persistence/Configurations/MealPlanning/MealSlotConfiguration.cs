@@ -19,9 +19,15 @@ public sealed class MealSlotConfiguration : IEntityTypeConfiguration<MealSlot>
             .HasColumnName("id")
             .IsRequired();
 
+        builder.Property(ms => ms.MealPlanId)
+            .HasConversion(id => id.Value, value => MealPlanId.From(value))
+            .HasColumnName("meal_plan_id")
+            .IsRequired();
+
         builder.Property(ms => ms.DayOfWeek)
             .HasConversion<string>()
             .HasColumnName("day_of_week")
+            .HasMaxLength(20)
             .IsRequired();
 
         builder.Property(ms => ms.MealType)
@@ -29,9 +35,9 @@ public sealed class MealSlotConfiguration : IEntityTypeConfiguration<MealSlot>
             .HasColumnName("meal_type")
             .IsRequired();
 
-        builder.Property(ms => ms.MealPlanId)
-            .HasConversion(id => id.Value, value => MealPlanId.From(value))
-            .HasColumnName("meal_plan_id")
+        builder.Property(ms => ms.MealSourceType)
+            .HasConversion<int>()
+            .HasColumnName("meal_source_type")
             .IsRequired();
 
         builder.Property(ms => ms.RecipeId)
@@ -40,9 +46,25 @@ public sealed class MealSlotConfiguration : IEntityTypeConfiguration<MealSlot>
                 value => value.HasValue ? RecipeId.From(value.Value) : (RecipeId?)null)
             .HasColumnName("recipe_id");
 
+        builder.Property(ms => ms.FreeText)
+            .HasColumnName("free_text")
+            .HasMaxLength(500);
+
         builder.Property(ms => ms.Notes)
             .HasColumnName("notes")
             .HasMaxLength(1000);
+
+        builder.Property(ms => ms.IsOptional)
+            .HasColumnName("is_optional")
+            .IsRequired();
+
+        builder.Property(ms => ms.IsLocked)
+            .HasColumnName("is_locked")
+            .IsRequired();
+
+        builder.Property(ms => ms.AffectsWholeHousehold)
+            .HasColumnName("affects_whole_household")
+            .IsRequired();
 
         builder.Property(ms => ms.CreatedAtUtc)
             .HasColumnName("created_at_utc")
@@ -52,6 +74,8 @@ public sealed class MealSlotConfiguration : IEntityTypeConfiguration<MealSlot>
             .HasColumnName("updated_at_utc")
             .IsRequired();
 
-        // Remove DomainEvents ignore - this entity doesn't have DomainEvents
+        builder.HasIndex(ms => new { ms.MealPlanId, ms.DayOfWeek, ms.MealType })
+            .IsUnique()
+            .HasDatabaseName("ix_meal_slots_plan_day_type");
     }
 }

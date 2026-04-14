@@ -6,5 +6,5 @@ export default {
   settings: "设置",
   switchToLight: "切换到亮色模式",
   switchToDark: "切换到深色模式",
-  mealPlanning: "膳食计划",
+  mealPlanning: "餐食",
 } as const;

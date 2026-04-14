@@ -39,11 +39,15 @@ public sealed class WeeklyTemplateConfiguration : IEntityTypeConfiguration<Weekl
 
         builder.HasMany(wt => wt.MealSlotTemplates)
             .WithOne()
-            .HasForeignKey("WeeklyTemplateId")
+            .HasForeignKey(mst => mst.WeeklyTemplateId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(wt => wt.MealSlotTemplates)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasIndex(wt => new { wt.FamilyId, wt.Name })
+            .IsUnique()
+            .HasDatabaseName("ix_weekly_templates_family_id_name");
 
         builder.Ignore(wt => wt.DomainEvents);
     }

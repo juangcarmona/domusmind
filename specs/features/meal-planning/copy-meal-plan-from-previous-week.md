@@ -19,7 +19,7 @@ Required:
 
 - `mealPlanId` (new plan identifier)
 - `familyId`
-- `weekStart` (target week; must be a Monday)
+- `weekStart` (target week; must align with the household's configured first day of week)
 
 Optional:
 
@@ -29,8 +29,8 @@ Optional:
 
 - target family must exist
 - `mealPlanId` must be unique
-- `weekStart` must be a valid Monday date
-- no existing active meal plan for the same family and target week
+- `weekStart` must be a valid date aligned to the household's configured first day of week
+- no existing meal plan for the same family and target week (if one exists, it is returned without copying)
 - a source plan must exist for the resolved preceding week (or the explicit `sourceMealPlanId`)
 - source plan must belong to the same family
 
@@ -56,7 +56,7 @@ On success, the system creates a new `MealPlan` aggregate with:
 ## Invariants
 
 - every meal plan belongs to exactly one family
-- week start must be a Monday
+- week start must equal the household's configured first day of week
 - only one Active plan per family per week
 - source plan must belong to the same family as the target plan
 - shopping list references are never transferred between plans
@@ -80,15 +80,19 @@ Return:
 - `status`
 - `slotCount`
 
+## Recoverable Operational Outcomes
+
+- **No source plan found**: when no plan exists for the preceding week (or the explicit source), the command returns `Success = false, ErrorCode = "NoPreviousPlan"`. This is not an error — the UI stays on the current week surface and shows a compact inline notice. The user can still create a plan from scratch or apply a template.
+- **Plan already exists for target week**: when a plan already exists for the target week, the existing plan is returned with `AlreadyExisted = true`. The UI shows a compact notice and keeps the loaded plan.
+
 ## Failure Cases
 
 - family not found
-- duplicate `mealPlanId`
-- `weekStart` is not a Monday
-- active meal plan already exists for this family and target week
-- no source plan found for the preceding week (and no explicit `sourceMealPlanId` provided)
-- explicit `sourceMealPlanId` not found
+- duplicate `mealPlanId` (idempotent guard)
+- `weekStart` is not aligned to the household's configured first day of week
 - source plan belongs to a different family
+
+("No previous plan found" and "plan already exists for target week" are recoverable operational outcomes, not failure cases — see above.)
 
 ## Notes
 

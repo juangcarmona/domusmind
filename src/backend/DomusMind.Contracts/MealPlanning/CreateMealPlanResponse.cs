@@ -4,5 +4,7 @@ public sealed record CreateMealPlanResponse(
     Guid Id,
     Guid FamilyId,
     DateOnly WeekStart,
-    DateTime CreatedAt,
-    DateTime UpdatedAt);
+    DateOnly WeekEnd,
+    string Status,
+    DateTime CreatedAtUtc,
+    bool AlreadyExisted = false);

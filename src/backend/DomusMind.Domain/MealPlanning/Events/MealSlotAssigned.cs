@@ -1,14 +1,15 @@
 using DomusMind.Domain.Abstractions;
-using DomusMind.Domain.MealPlanning.ValueObjects;
+using DomusMind.Domain.MealPlanning.Enums;
 
 namespace DomusMind.Domain.MealPlanning.Events;
 
 public sealed record MealSlotAssigned(
-    MealSlotId MealSlotId,
+    Guid Id,
     Guid MealPlanId,
+    Enums.DayOfWeek DayOfWeek,
+    MealType MealType,
+    MealSourceType MealSourceType,
     Guid? RecipeId,
-    string? Notes
-) : IDomainEvent
-{
-    public DateTime OccurredAtUtc => DateTime.UtcNow;
-}
+    string? FreeText,
+    DateTime OccurredAtUtc
+) : IDomainEvent;

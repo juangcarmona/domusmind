@@ -12,45 +12,18 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "dietary_constraints",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    family_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_dietary_constraints", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "family_preferences",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    family_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    preferred_meal_types = table.Column<string>(type: "text", nullable: false),
-                    weekend_flexibility = table.Column<bool>(type: "boolean", nullable: false),
-                    default_dietary_constraints = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_family_preferences", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "meal_plans",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     family_id = table.Column<Guid>(type: "uuid", nullable: false),
                     week_start = table.Column<DateOnly>(type: "date", nullable: false),
-                    template_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    status = table.Column<int>(type: "integer", nullable: false),
+                    applied_template_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    shopping_list_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    shopping_list_version = table.Column<int>(type: "integer", nullable: false),
+                    last_derived_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    affects_whole_household = table.Column<bool>(type: "boolean", nullable: false),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -70,30 +43,15 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     prep_time_minutes = table.Column<int>(type: "integer", nullable: true),
                     cook_time_minutes = table.Column<int>(type: "integer", nullable: true),
                     servings = table.Column<int>(type: "integer", nullable: true),
-                    instructions = table.Column<string>(type: "text", nullable: true),
-                    notes = table.Column<string>(type: "text", nullable: true),
+                    is_favorite = table.Column<bool>(type: "boolean", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    allowed_meal_types = table.Column<string>(type: "text", nullable: false),
+                    tags = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_recipes", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "shopping_lists",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    family_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    generated_from_meal_plan_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_shopping_lists", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,11 +74,16 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    day_of_week = table.Column<string>(type: "text", nullable: false),
+                    day_of_week = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     meal_type = table.Column<int>(type: "integer", nullable: false),
                     meal_plan_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    meal_source_type = table.Column<int>(type: "integer", nullable: false),
                     recipe_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    free_text = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     notes = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    is_optional = table.Column<bool>(type: "boolean", nullable: false),
+                    is_locked = table.Column<bool>(type: "boolean", nullable: false),
+                    affects_whole_household = table.Column<bool>(type: "boolean", nullable: false),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -142,9 +105,8 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     recipe_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    quantity = table.Column<decimal>(type: "numeric", nullable: false),
-                    unit = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    notes = table.Column<string>(type: "text", nullable: true),
+                    quantity = table.Column<decimal>(type: "numeric", nullable: true),
+                    unit = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -159,38 +121,19 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "shopping_list_items",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ingredient_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    quantity = table.Column<decimal>(type: "numeric", nullable: false),
-                    unit = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    notes = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    shopping_list_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_shopping_list_items", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_shopping_list_items_shopping_lists_shopping_list_id",
-                        column: x => x.shopping_list_id,
-                        principalTable: "shopping_lists",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "meal_slot_templates",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    day_of_week = table.Column<string>(type: "text", nullable: false),
+                    day_of_week = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     meal_type = table.Column<int>(type: "integer", nullable: false),
                     weekly_template_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    meal_source_type = table.Column<int>(type: "integer", nullable: false),
                     recipe_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    free_text = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     notes = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    is_optional = table.Column<bool>(type: "boolean", nullable: false),
+                    is_locked = table.Column<bool>(type: "boolean", nullable: false),
                     created_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at_utc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -206,35 +149,45 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ingredients_recipe_id",
+                name: "ix_ingredients_recipe_id_name",
                 table: "ingredients",
-                column: "recipe_id");
+                columns: new[] { "recipe_id", "name" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_meal_slot_templates_weekly_template_id",
+                name: "ix_meal_plans_family_id_week_start",
+                table: "meal_plans",
+                columns: new[] { "family_id", "week_start" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_meal_slot_templates_template_day_type",
                 table: "meal_slot_templates",
-                column: "weekly_template_id");
+                columns: new[] { "weekly_template_id", "day_of_week", "meal_type" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_meal_slots_meal_plan_id",
+                name: "ix_meal_slots_plan_day_type",
                 table: "meal_slots",
-                column: "meal_plan_id");
+                columns: new[] { "meal_plan_id", "day_of_week", "meal_type" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_shopping_list_items_shopping_list_id",
-                table: "shopping_list_items",
-                column: "shopping_list_id");
+                name: "ix_recipes_family_id_name",
+                table: "recipes",
+                columns: new[] { "family_id", "name" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_weekly_templates_family_id_name",
+                table: "weekly_templates",
+                columns: new[] { "family_id", "name" },
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "dietary_constraints");
-
-            migrationBuilder.DropTable(
-                name: "family_preferences");
-
             migrationBuilder.DropTable(
                 name: "ingredients");
 
@@ -245,9 +198,6 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                 name: "meal_slots");
 
             migrationBuilder.DropTable(
-                name: "shopping_list_items");
-
-            migrationBuilder.DropTable(
                 name: "recipes");
 
             migrationBuilder.DropTable(
@@ -255,9 +205,6 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "meal_plans");
-
-            migrationBuilder.DropTable(
-                name: "shopping_lists");
         }
     }
 }

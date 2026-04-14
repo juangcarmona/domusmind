@@ -7,44 +7,39 @@ public sealed class Ingredient : Entity<IngredientId>
 {
     public string Name { get; private set; }
     public RecipeId RecipeId { get; private set; }
-    public decimal Quantity { get; private set; }
-    public string Unit { get; private set; }
-    public string? Notes { get; private set; }
+    public decimal? Quantity { get; private set; }
+    public string? Unit { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
 
     private Ingredient() : base(default!)
     {
         Name = null!;
-        Unit = null!;
+        RecipeId = default;
     }
 
-    private Ingredient(IngredientId id, string name, RecipeId recipeId, decimal quantity, string unit, string? notes, DateTime createdAtUtc) : base(id)
+    private Ingredient(
+        IngredientId id,
+        string name,
+        RecipeId recipeId,
+        decimal? quantity,
+        string? unit,
+        DateTime createdAtUtc) : base(id)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
         RecipeId = recipeId;
         Quantity = quantity;
-        Unit = unit ?? throw new ArgumentNullException(nameof(unit));
-        Notes = notes;
+        Unit = unit;
         CreatedAtUtc = createdAtUtc;
     }
 
-    public static Ingredient Create(IngredientId id, string name, RecipeId recipeId, decimal quantity, string unit, string? notes, DateTime createdAtUtc)
+    public static Ingredient Create(
+        IngredientId id,
+        string name,
+        RecipeId recipeId,
+        decimal? quantity,
+        string? unit,
+        DateTime createdAtUtc)
     {
-        return new Ingredient(id, name, recipeId, quantity, unit, notes, createdAtUtc);
-    }
-
-    public void Update(string? name = null, decimal? quantity = null, string? unit = null, string? notes = null)
-    {
-        if (!string.IsNullOrEmpty(name))
-            Name = name;
-            
-        if (quantity.HasValue)
-            Quantity = quantity.Value;
-            
-        if (unit != null)
-            Unit = unit;
-            
-        if (notes != null)
-            Notes = notes;
+        return new Ingredient(id, name, recipeId, quantity, unit, createdAtUtc);
     }
 }

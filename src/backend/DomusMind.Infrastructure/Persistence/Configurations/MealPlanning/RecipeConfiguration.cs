@@ -1,5 +1,6 @@
 using DomusMind.Domain.Family;
 using DomusMind.Domain.MealPlanning.Entities;
+using DomusMind.Domain.MealPlanning.Enums;
 using DomusMind.Domain.MealPlanning.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -39,14 +40,34 @@ public sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
         builder.Property(r => r.CookTimeMinutes)
             .HasColumnName("cook_time_minutes");
 
+        builder.Ignore(r => r.TotalTimeMinutes);
+
         builder.Property(r => r.Servings)
             .HasColumnName("servings");
 
-        builder.Property(r => r.Instructions)
-            .HasColumnName("instructions");
+        builder.Property(r => r.IsFavorite)
+            .HasColumnName("is_favorite")
+            .IsRequired();
 
-        builder.Property(r => r.Notes)
-            .HasColumnName("notes");
+        builder.Property(r => r.AllowedMealTypes)
+            .HasConversion(
+                v => string.Join(",", v.Select(x => (int)x)),
+                v => string.IsNullOrWhiteSpace(v)
+                    ? new List<MealType>()
+                    : v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => (MealType)int.Parse(x))
+                        .ToList())
+            .HasColumnName("allowed_meal_types")
+            .HasColumnType("text");
+
+        builder.Property(r => r.Tags)
+            .HasConversion(
+                v => string.Join(",", v),
+                v => string.IsNullOrWhiteSpace(v)
+                    ? new List<string>()
+                    : v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
+            .HasColumnName("tags")
+            .HasColumnType("text");
 
         builder.Property(r => r.CreatedAtUtc)
             .HasColumnName("created_at")
@@ -58,11 +79,15 @@ public sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
 
         builder.HasMany(r => r.Ingredients)
             .WithOne()
-            .HasForeignKey("RecipeId")
+            .HasForeignKey(i => i.RecipeId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(r => r.Ingredients)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasIndex(r => new { r.FamilyId, r.Name })
+            .IsUnique()
+            .HasDatabaseName("ix_recipes_family_id_name");
 
         builder.Ignore(r => r.DomainEvents);
     }
