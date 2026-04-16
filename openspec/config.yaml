@@ -1,0 +1,51 @@
+schema: spec-driven
+
+context: |
+  DomusMind is a household operating platform. Domain-centric modular monolith.
+
+  **Backend**: .NET 9, ASP.NET Core Controllers (never Minimal APIs), EF Core direct (no generic repos), FluentValidation.
+  **Frontend**: React, TypeScript, CSS with c-/l-/u-/is-/has- naming conventions, feature-based folder structure.
+
+  **Forbidden patterns**: MediatR, AutoMapper, generic repositories, Minimal APIs.
+
+  **Internal mediator contracts** (already exist — do not reinvent):
+  ICommand<TResponse>, IQuery<TResponse>, ICommandHandler, IQueryHandler,
+  ICommandDispatcher, IQueryDispatcher, IDomainEvent, IDomainEventHandler, IDomainEventDispatcher
+
+  **Slices**: Features/<Module>/<Capability>/ containing Command.cs (or Query.cs), Handler.cs, Validator.cs.
+  One command modifies exactly one aggregate. Cross-module reactions via domain events only.
+
+  **IDs**: ULID-based strongly typed (FamilyId, MemberId, EventId, TaskId, etc.), serialized as strings externally.
+
+  **Domain layer**: framework-agnostic — no EF Core, no ASP.NET, no infrastructure concerns.
+  **Auth identity ≠ domain identity** (built-in local auth is a separate internal module).
+
+  **Read queries**: projection-based + AsNoTracking. Never expose domain entities through API contracts.
+
+  **Migrations**:
+  dotnet ef migrations add <Name> --project src\backend\DomusMind.Infrastructure --startup-project src\backend\DomusMind.Api --output-dir Persistence\Migrations
+
+  **Ubiquitous language**: Event, Task, Routine, ResponsibilityDomain, SharedList/List, Family, Member.
+  Product-facing labels use: Household, Person, Task, Plan, Area, List.
+
+rules:
+  specs:
+    - Use ubiquitous language from docs/03_domain/ubiquitous-language.md — never invent new terms.
+    - Include a context block with Module, Aggregate, Slice name, and Command/Query name.
+    - Always include sections for Preconditions, Invariants, Events emitted, State Changes, and Success Result.
+    - Preconditions and invariants must be expressed as plain statements (not code).
+    - One spec file per slice capability.
+
+  design:
+    - Identify the bounded context and the aggregate being mutated.
+    - State explicitly whether domain events are emitted and which cross-context reactions they trigger.
+    - Map each capability to its slice path (Features/<Module>/<Capability>/).
+    - Flag any new DB tables or columns — include the migration command.
+    - Do not propose generic repositories, base classes, or AutoMapper.
+
+  tasks:
+    - Order tasks by layer: Domain → Application → Contracts → Infrastructure → API → Tests.
+    - One task = one file or one slice. No multi-file mega-tasks.
+    - If the change requires a DB migration, include it as an explicit task in the Infrastructure layer group.
+    - Frontend tasks: note whether the change touches API state, feature UI, or shared components.
+    - Final task must be "Build and verify tests pass".
