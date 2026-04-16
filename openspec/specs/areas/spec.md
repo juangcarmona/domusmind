@@ -33,12 +33,6 @@ Default Areas may be bootstrapped for a newly created household to reduce setup 
 - THEN the Area is created scoped to that family
 - AND it has no owner assigned by default
 
-#### Scenario: Area is created without an owner
-
-- GIVEN an Area has been created with no owner
-- THEN the Area exists in an unowned state
-- AND ownership may be assigned later
-
 ---
 
 ### Requirement: Primary Owner Assignment
