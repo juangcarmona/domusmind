@@ -75,7 +75,7 @@ Slot structure is fixed at plan creation. This operation updates content only, n
 
 #### Scenario: Household assigns a recipe to a slot
 
-- GIVEN an Active (or Draft) meal plan exists
+- GIVEN a meal plan in Draft or Active status exists
 - AND a recipe from the household library is available
 - WHEN the household assigns the recipe to a specific day and meal type
 - THEN the slot's source type is set to Recipe with the recipe reference
@@ -140,9 +140,11 @@ A household SHALL maintain a library of recipes scoped to the family.
 
 A recipe has a name (unique within the family), optional description, optional preparation and cook times, optional servings count, an ingredient list, optional tags for classification, an optional set of allowed meal types indicating which meal types the recipe is appropriate for, and an `isFavorite` flag.
 
-Ingredients within a recipe must have unique names (to support deduplication during shopping list derivation). Ingredient quantity and unit are optional.
+Ingredients within a recipe must have unique names (to support deduplication during shopping list derivation). Ingredient quantity and unit are optional. When both preparation and cook times are provided, total time is derived as their sum; if either is absent, total time is unset.
 
 A recipe may not be deleted if it is currently referenced by any active meal plan slot.
+
+Recipes may be updated after creation; ingredients can be added or modified.
 
 #### Scenario: Household adds a recipe to the library
 
@@ -172,6 +174,8 @@ A household SHALL be able to create named, reusable weekly meal patterns.
 
 A weekly template captures a set of slot assignments (day + meal type combinations) with the same source type and metadata as meal slots. Template names must be unique within the family. Templates may have fewer than 35 slots defined; unrepresented slots default to Unplanned when the template is applied.
 
+Templates may be updated after creation; slot assignments can be added or modified.
+
 #### Scenario: Household creates a weekly template
 
 - GIVEN a family exists
@@ -193,6 +197,8 @@ A household SHALL be able to create a new meal plan for a target week pre-popula
 
 Template application creates a new meal plan with slots copied from the template. Slots not represented in the template default to Unplanned. The plan records which template was applied. Template application is a snapshot — subsequent changes to the template do not affect already-created plans.
 
+Recipe references within the template must be valid at the time of application. If a recipe referenced by the template has been deleted, the application fails.
+
 If a plan already exists for the target week, the existing plan is returned and the template is not re-applied.
 
 After a template is applied, individual slots may still be modified.
@@ -204,6 +210,14 @@ After a template is applied, individual slots may still be modified.
 - THEN a meal plan is created in Draft status with slots populated from the template
 - AND slots not covered by the template are Unplanned
 - AND the plan records a reference to the applied template
+
+#### Scenario: Template references a deleted recipe
+
+- GIVEN a weekly template with a slot that references a recipe
+- AND that recipe has since been deleted from the household library
+- WHEN the household applies the template to a target week
+- THEN the application fails
+- AND no meal plan is created
 
 #### Scenario: A plan already exists for the target week
 
@@ -244,7 +258,7 @@ This operation is distinct from applying a template. Templates are named, reusab
 
 ### Requirement: Shopping List Derivation
 
-A household SHALL be able to derive a shopping list from an Active meal plan's recipe assignments.
+A household SHALL be able to derive a shopping list from a meal plan's recipe assignments.
 
 Derivation consolidates all ingredients from all Recipe-type slots in the plan. Ingredients are deduplicated by name (case-insensitive) within the same unit. Ingredients with differing units are kept as separate items.
 
@@ -306,9 +320,9 @@ Slots with `mealSourceType = Unplanned` and no notes are not projected. Projecte
 
 The context document states a plan may be promoted to Active "explicitly, or automatically when the week begins." The automatic promotion rule is marked as TBD. The current spec treats promotion as explicit only.
 
-### Ambiguity: Mutation on Draft vs. Active plans
+### Resolved: Mutation on Draft vs. Active plans
 
-The `UpdateMealSlot` feature spec states the precondition as "Active status" but immediately parenthesizes "Draft plans allow mutation; Completed plans do not." This is contradictory. The intent is likely that both Draft and Active plans allow slot mutation, with only Completed plans preventing it. This should be resolved before implementation.
+Both Draft and Active plans allow slot mutation. Only Completed plans prevent mutation. The source `update-meal-slot` feature spec contained a contradictory precondition; the intent documented in the same file ("Draft plans allow mutation; Completed plans do not") is treated as the authoritative statement.
 
 ### Future behavior: Completed transition
 
