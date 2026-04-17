@@ -297,5 +297,5 @@ Neither projection creates or modifies aggregates. Tasks and Routines remain own
 - `specs/features/tasks/update-routine.md`
 - `specs/features/tasks/pause-routine.md`
 - `specs/features/tasks/resume-routine.md`
-- `specs/surfaces/agenda.md` — Agenda projection grammar, temporal entry model, item display grammar
+- `00_product/surfaces/agenda.md` — Agenda projection grammar, temporal entry model, item display grammar
 - `docs/03_domain/ubiquitous-language.md` — canonical term definitions for Task, Routine, Agenda, Projection

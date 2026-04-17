@@ -9,9 +9,9 @@ Depends on:
   - docs/04_contexts/tasks.md
   - docs/04_contexts/shared-lists.md
 Replaces:
-  - specs/surfaces/today.md
-  - specs/surfaces/planning.md
-  - specs/surfaces/member-agenda.md
+  - 00_product/surfaces/today.md
+  - 00_product/surfaces/planning.md
+  - 00_product/surfaces/member-agenda.md
 
 ---
 

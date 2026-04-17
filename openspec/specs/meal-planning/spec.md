@@ -337,7 +337,7 @@ The consolidation rule for mismatched units (e.g., "500g flour" and "2 cups flou
 ## Source References
 
 - `docs/04_contexts/meal-planning.md`
-- `specs/surfaces/meal-planning.md`
+- `00_product/surfaces/meal-planning.md`
 - `specs/features/meal-planning/create-meal-plan.md`
 - `specs/features/meal-planning/view-meal-plan.md`
 - `specs/features/meal-planning/update-meal-slot.md`

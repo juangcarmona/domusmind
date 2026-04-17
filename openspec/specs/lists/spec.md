@@ -302,7 +302,7 @@ When an item transitions from having no temporal fields to having at least one, 
 - GIVEN a list item
 - WHEN the household sets a repeat rule
 - THEN the item becomes eligible for Agenda projection on each recurrence occurrence
-- AND the repeat rule alone is sufficient for projection eligibility (see Notes for constraint ambiguity)
+- AND the repeat rule alone is sufficient for projection eligibility
 
 ---
 
@@ -339,7 +339,7 @@ An item projects when any of the following conditions is satisfied:
 - its reminder datetime falls within the Agenda's requested date window
 - its repeat rule produces an occurrence within the requested date window
 
-All three conditions are independently sufficient. No temporal field requires another as a prerequisite (subject to the ambiguity noted in Notes).
+All three conditions are independently sufficient. No temporal field requires another as a prerequisite.
 
 Projected list items are read-only in Agenda. They carry a visible list-origin cue. Editing an item is done through the Lists surface only.
 
@@ -372,11 +372,11 @@ Checked items that meet a projection condition still appear in Agenda, de-emphas
 
 ### Terminology: "Shared Lists" vs "Lists"
 
-The context document (`docs/04_contexts/shared-lists.md`) and the item model document use "Shared Lists" and "SharedList" throughout. The product surface (`specs/surfaces/lists.md`) and feature specs use "Lists". This spec uses "Lists" as the product-facing term. The transition is incomplete in the domain docs; "SharedList" remains the aggregate name in the domain model.
+The context document (`docs/04_contexts/shared-lists.md`) and the item model document use "Shared Lists" and "SharedList" throughout. The product surface (`00_product/surfaces/lists.md`) and feature specs use "Lists". This spec uses "Lists" as the product-facing term. The transition is incomplete in the domain docs; "SharedList" remains the aggregate name in the domain model.
 
-### Contradiction: `repeat` independence
+### Contradiction: `repeat` independence — Resolved
 
-The item model document (`docs/04_contexts/shared-lists-item-model.md`) states that `repeat` is independently sufficient for Agenda projection — no `dueDate` required. However, the `set-item-temporal` feature spec states that `repeat` requires a `dueDate` to be present (either in the request or already on the item), and rejects the operation if only `repeat` is provided with no `dueDate`. These two specifications directly contradict each other. The item model is marked as the canonical lock document; the feature spec may be stale. This must be resolved before implementation.
+The `set-item-temporal` feature spec previously stated that `repeat` requires a `dueDate` to be present, contradicting the item model document which states that `repeat` is independently sufficient for Agenda projection. This contradiction is resolved by `docs/01_system/system-spec.md`, which explicitly states: "Repeat on a list item may be set independently of due date. Repeat is itself a temporal anchor sufficient for Agenda projection." The item model canonical position is confirmed. The `set-item-temporal` feature spec constraint was stale.
 
 ### `get-list-detail` item fields
 
@@ -396,7 +396,7 @@ The context document notes that the Lists context receives shopping lists genera
 
 - `docs/04_contexts/shared-lists.md`
 - `docs/04_contexts/shared-lists-item-model.md`
-- `specs/surfaces/lists.md`
+- `00_product/surfaces/lists.md`
 - `specs/features/lists/create-list.md`
 - `specs/features/lists/update-list.md`
 - `specs/features/lists/archive-list.md`

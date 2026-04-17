@@ -434,7 +434,7 @@ Mobile must feel like the same product at a smaller scale, not a different produ
 
 ### Meal Planning surface
 
-The Meal Planning surface spec (`specs/surfaces/meal-planning.md`) is fully specified and describes a complete surface. However, the domain context document (`docs/04_contexts/meal-planning.md`) marks Meal Planning as a **V2 bounded context**, not part of the V1 core. Whether Meal Planning is included as a V1 navigation entry in the web app is not definitively resolved in the source material. It is excluded from the navigation requirements above until its V1 inclusion is confirmed.
+The Meal Planning surface spec (`00_product/surfaces/meal-planning.md`) is fully specified and describes a complete surface. However, the domain context document (`docs/04_contexts/meal-planning.md`) marks Meal Planning as a **V2 bounded context**, not part of the V1 core. Whether Meal Planning is included as a V1 navigation entry in the web app is not definitively resolved in the source material. It is excluded from the navigation requirements above until its V1 inclusion is confirmed.
 
 ### Tasks surface
 
@@ -454,8 +454,8 @@ Member scope in Agenda requires a household with multiple members. Single-member
 
 - `docs/00_product/surface-system.md`
 - `docs/00_product/experience.md`
-- `specs/surfaces/agenda.md`
-- `specs/surfaces/areas.md`
-- `specs/surfaces/lists.md`
-- `specs/surfaces/meal-planning.md`
-- `specs/surfaces/settings.md`
+- `00_product/surfaces/agenda.md`
+- `00_product/surfaces/areas.md`
+- `00_product/surfaces/lists.md`
+- `00_product/surfaces/meal-planning.md`
+- `00_product/surfaces/settings.md`

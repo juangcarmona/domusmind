@@ -32,7 +32,7 @@ When working on UX, surfaces, layout, or interaction behavior, treat these as ca
 - docs/00_product/strategy.md
 - docs/00_product/experience.md
 - docs/00_product/surface-system.md
-- specs/surfaces/*.md
+- 00_product/surfaces/*.md
 
 Do not let implementation files, old comments, or outdated docs override these documents.
 If code conflicts with them, update code or explicitly document the blocker.
