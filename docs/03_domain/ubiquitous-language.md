@@ -556,14 +556,69 @@ Avoid these unless a future scope change explicitly introduces them:
 * Property
 * Asset
 * Inventory
-* Meal Plan
-* Recipe
 * Contract
 * Document as a standalone bounded-context concept
 * Pet as a separate bounded context
 * Chore as a distinct modeled entity
 
 These may exist in future discussions, but they are not part of the current active ubiquitous language.
+
+---
+
+## Meal Planning Vocabulary (V2)
+
+The following terms enter the active vocabulary with the Meal Planning (V2) context.
+
+### Meal Plan
+
+A **Meal Plan** is the weekly household coordination unit for meals.
+
+It organizes meal slot assignments across a Monday–Sunday week.
+
+- belongs to Meal Planning context
+- household-facing term: **Meal Plan**
+- internal domain term: `MealPlan`
+
+### Meal Slot
+
+A **Meal Slot** is a single meal position within a meal plan defined by day of week and meal type.
+
+A meal slot may or may not have an assigned recipe.
+
+- belongs to `MealPlan` as an internal entity
+- identified by: day of week × meal type
+
+### Recipe
+
+A **Recipe** is a household-defined set of ingredients with optional preparation notes.
+
+Recipes belong to the household recipe library.
+
+- belongs to Meal Planning context
+- may be assigned to one or more meal slots
+
+### Ingredient
+
+An **Ingredient** is a named component of a recipe with an optional quantity and unit.
+
+- belongs to `Recipe` as an internal entity
+
+### Weekly Template
+
+A **Weekly Template** is a reusable named weekly meal pattern.
+
+It enables households to apply a familiar routine to a new week without planning from scratch.
+
+- belongs to Meal Planning context
+- internal term: `WeeklyTemplate`
+
+### Shopping List (in Meal Planning context)
+
+When a household requests a shopping list from a meal plan, Meal Planning emits `ShoppingListRequested`.  
+The resulting list is a `SharedList` of kind `shopping` in the **Shared Lists context**.
+
+The shopping list is always a Shared Lists artifact.
+Meal Planning does not own shopping lists.
 
 ---
 

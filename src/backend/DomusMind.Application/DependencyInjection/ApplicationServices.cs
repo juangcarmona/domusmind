@@ -91,6 +91,17 @@ using DomusMind.Application.Features.Lists.SetItemTemporal;
 using DomusMind.Application.Features.Lists.ClearItemTemporal;
 using DomusMind.Application.Features.Lists.SetItemContext;
 using DomusMind.Application.Features.Lists.UpdateList;
+using DomusMind.Application.Features.MealPlanning.ApplyWeeklyTemplate;
+using DomusMind.Application.Features.MealPlanning.CopyMealPlanFromPreviousWeek;
+using DomusMind.Application.Features.MealPlanning.CreateMealPlan;
+using DomusMind.Application.Features.MealPlanning.CreateRecipe;
+using DomusMind.Application.Features.MealPlanning.CreateWeeklyTemplate;
+using DomusMind.Application.Features.MealPlanning.GetFamilyRecipes;
+using DomusMind.Application.Features.MealPlanning.GetMealPlan;
+using DomusMind.Application.Features.MealPlanning.GetMealPlansForAgenda;
+using DomusMind.Application.Features.MealPlanning.RequestShoppingList;
+using DomusMind.Application.Features.MealPlanning.UpdateMealSlot;
+using DomusMind.Contracts.MealPlanning;
 using DomusMind.Contracts.Auth;
 using DomusMind.Contracts.Calendar;
 using DomusMind.Contracts.Family;
@@ -225,6 +236,18 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<ClearItemTemporalCommand, ClearItemTemporalResponse>, ClearItemTemporalCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateListCommand, UpdateListResponse>, UpdateListCommandHandler>();
         services.AddScoped<ICommandHandler<SetItemContextCommand, SetItemContextResponse>, SetItemContextCommandHandler>();
+
+        // Meal Planning slices
+        services.AddScoped<ICommandHandler<CreateMealPlanCommand, CreateMealPlanResponse>, CreateMealPlanCommandHandler>();
+        services.AddScoped<ICommandHandler<CreateRecipeCommand, CreateRecipeResponse>, CreateRecipeCommandHandler>();
+        services.AddScoped<ICommandHandler<UpdateMealSlotCommand, UpdateMealSlotResponse>, UpdateMealSlotCommandHandler>();
+        services.AddScoped<ICommandHandler<CreateWeeklyTemplateCommand, CreateWeeklyTemplateResponse>, CreateWeeklyTemplateCommandHandler>();
+        services.AddScoped<ICommandHandler<ApplyWeeklyTemplateCommand, ApplyWeeklyTemplateResponse>, ApplyWeeklyTemplateCommandHandler>();
+        services.AddScoped<ICommandHandler<CopyMealPlanFromPreviousWeekCommand, CopyMealPlanFromPreviousWeekResponse>, CopyMealPlanFromPreviousWeekCommandHandler>();
+        services.AddScoped<ICommandHandler<RequestShoppingListCommand, RequestShoppingListResponse>, RequestShoppingListCommandHandler>();
+        services.AddScoped<IQueryHandler<GetMealPlanQuery, GetMealPlanResponse>, GetMealPlanQueryHandler>();
+        services.AddScoped<IQueryHandler<GetFamilyRecipesQuery, GetFamilyRecipesResponse>, GetFamilyRecipesQueryHandler>();
+        services.AddScoped<IQueryHandler<GetMealPlansForAgendaQuery, MealPlansForAgendaResponse>, GetMealPlansForAgendaQueryHandler>();
 
         return services;
     }

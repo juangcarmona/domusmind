@@ -1,7 +1,7 @@
 # Shared Lists Context
 
 Status: Transitional
-Canonical upstream: specs/surfaces/lists.md
+Canonical upstream: 00_product/surfaces/lists.md
 Do not use this document to override canonical product docs/specs
 
 ## Purpose
@@ -43,6 +43,7 @@ The Shared Lists context is responsible for:
 * enabling real-time shared updates across family members
 * optionally linking lists to other household entities
 * providing projection data to the Agenda surface for temporally-enriched items
+* receiving shopping lists generated from meal plans (as a `SharedList` of kind `shopping`)
 
 ---
 
@@ -194,6 +195,14 @@ No implicit task creation occurs.
 
 ---
 
+## Domain Events (emitted by other contexts — reacted to)
+
+From Meal Planning (V2):
+
+* `ShoppingListRequested` — Shared Lists reacts by creating a new `SharedList` of kind `shopping` prefilled with consolidated ingredients from the meal plan. Shared Lists emits `SharedListCreated` after creation.
+
+---
+
 ## Domain Events (consumed)
 
 From Family:
@@ -292,6 +301,14 @@ Key properties:
 * no completion lifecycle
 * no scheduling
 
+## Meal Planning Extension Notes
+
+Meal planning extends the Lists context to support:
+* Weekly meal planning with templates
+* Recipe management
+* Shopping list generation
+* Integration with existing Lists and Agenda surfaces
+
 ---
 
 # Initial Feature Specs
@@ -310,6 +327,20 @@ Input:
 Output:
 
 * listId
+
+## create-meal-plan
+
+Creates a new weekly meal plan.
+
+Input:
+
+* familyId
+* weekStart (Monday date)
+* optional templateId
+
+Output:
+
+* mealPlanId
 
 ---
 

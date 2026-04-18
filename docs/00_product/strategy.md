@@ -166,6 +166,16 @@ DomusMind also does not promise magic automation.
 
 The product promise is shared clarity, visible responsibility, and a better operating model for the household.
 
+# Meal Planning Addition
+
+Meal planning is an extension of the existing household coordination system, not a separate product. It should:
+
+- Integrate seamlessly with existing Lists and Agenda surfaces
+- Follow the same family-first, household-level approach as other features
+- Avoid recipe database complexity or social features
+- Support weekly reuse patterns through templates and history
+- Generate shopping lists automatically from meal plans
+
 ---
 
 # Language Rules

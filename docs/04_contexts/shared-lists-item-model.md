@@ -1,7 +1,7 @@
 # Shared List Item — Capability Model and Projection Rules
 
 Status: Transitional
-Canonical upstream: specs/surfaces/lists.md
+Canonical upstream: 00_product/surfaces/lists.md
 Do not use this document to override canonical product docs/specs
 
 ## Purpose

@@ -134,7 +134,11 @@ DomusMind V1 currently recognizes five core bounded contexts:
 * Tasks
 * Shared Lists
 
-Only events belonging to these active contexts belong in this document.
+DomusMind V2 adds:
+
+* Meal Planning
+
+Only events belonging to active contexts belong in this document.
 
 ---
 
@@ -348,6 +352,53 @@ Possible reactions:
 * update responsibility-aware projections
 
 Cross-context reactions happen after commit.
+
+---
+
+## Meal Planning Events (V2)
+
+Meal Planning owns weekly meal coordination, recipe management, and shopping list derivation requests.
+
+Stable events:
+
+```text
+MealPlanCreated
+MealPlanUpdated
+MealSlotAssigned
+MealSlotCleared
+RecipeCreated
+RecipeUpdated
+RecipeDeleted
+WeeklyTemplateCreated
+WeeklyTemplateUpdated
+WeeklyTemplateApplied
+ShoppingListRequested
+```
+
+Event notes:
+
+* `MealSlotAssigned` — emitted when a recipe is assigned to a specific day + meal type slot
+* `MealSlotCleared` — emitted when the recipe assignment is removed from a slot (slot remains, recipe reference is null)
+* `WeeklyTemplateApplied` — emitted after a template is used to create a new meal plan; carries `mealPlanId` and `templateId`
+* `ShoppingListRequested` — emitted when the household requests shopping list generation from a plan; carries the consolidated ingredient payload; Shared Lists reacts by creating a `SharedList` of kind `shopping`
+
+Typical downstream uses:
+
+* Shared Lists reacts to `ShoppingListRequested` by creating a shopping `SharedList`
+* Agenda projection source updated when meal slot dates change
+* Read models updated for meal plan surfaces
+
+### Meal Planning → Shared Lists
+
+```text
+ShoppingListRequested
+```
+
+Possible reactions:
+
+* Shared Lists creates a new `SharedList` of kind `shopping` with ingredient items pre-populated
+* Shared Lists emits `SharedListCreated`
+* Meal Planning may observe `SharedListCreated` to record the `shoppingListId` reference on the plan
 
 ---
 
