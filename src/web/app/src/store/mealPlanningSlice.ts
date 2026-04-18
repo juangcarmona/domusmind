@@ -197,6 +197,9 @@ export const createRecipe = createAsyncThunk(
       prepTimeMinutes,
       cookTimeMinutes,
       servings,
+      isFavorite,
+      allowedMealTypes,
+      tags,
     }: {
       familyId: string;
       name: string;
@@ -204,6 +207,9 @@ export const createRecipe = createAsyncThunk(
       prepTimeMinutes?: number | null;
       cookTimeMinutes?: number | null;
       servings?: number | null;
+      isFavorite?: boolean;
+      allowedMealTypes?: string[];
+      tags?: string[];
     },
     { rejectWithValue },
   ) => {
@@ -217,6 +223,9 @@ export const createRecipe = createAsyncThunk(
         prepTimeMinutes,
         cookTimeMinutes,
         servings,
+        isFavorite,
+        allowedMealTypes,
+        tags,
       });
     } catch (err: unknown) {
       return rejectWithValue(

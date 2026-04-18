@@ -10,6 +10,7 @@ import uiReducer from "./uiSlice";
 import listsReducer from "./listsSlice";
 import externalCalendarReducer from "./externalCalendarSlice";
 import mealPlanningReducer from "./mealPlanningSlice";
+import recipeLibraryReducer from "./recipeLibrarySlice";
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     lists: listsReducer,
     externalCalendar: externalCalendarReducer,
     mealPlanning: mealPlanningReducer,
+    recipeLibrary: recipeLibraryReducer,
   },
 });
 

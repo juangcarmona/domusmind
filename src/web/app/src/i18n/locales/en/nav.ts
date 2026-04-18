@@ -7,4 +7,5 @@ export default {
   switchToLight: "Switch to light mode",
   switchToDark: "Switch to dark mode",
   mealPlanning: "Meals",
+  recipes: "Recipes",
 } as const;

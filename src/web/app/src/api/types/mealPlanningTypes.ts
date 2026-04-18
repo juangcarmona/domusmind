@@ -141,6 +141,7 @@ export interface RecipeSummary {
   servings: number | null;
   isFavorite: boolean;
   tags: string[];
+  allowedMealTypes: string[];
   ingredientCount: number;
   createdAtUtc: string;
 }
@@ -169,4 +170,83 @@ export interface CreateRecipeResponse {
   ingredientCount: number;
   totalTimeMinutes: number | null;
   isFavorite: boolean;
+}
+
+// ── Recipe detail (full, includes ingredients) ────────────────────────────────
+
+export interface IngredientDetail {
+  name: string;
+  quantity: number | null;
+  unit: string | null;
+}
+
+export interface RecipeDetail {
+  id: string;
+  familyId: string;
+  name: string;
+  description: string | null;
+  prepTimeMinutes: number | null;
+  cookTimeMinutes: number | null;
+  totalTimeMinutes: number | null;
+  servings: number | null;
+  isFavorite: boolean;
+  tags: string[];
+  allowedMealTypes: string[];
+  ingredients: IngredientDetail[];
+  createdAtUtc: string;
+  updatedAtUtc: string;
+}
+
+export interface UpdateRecipeRequest {
+  name: string;
+  description?: string | null;
+  prepTimeMinutes?: number | null;
+  cookTimeMinutes?: number | null;
+  servings?: number | null;
+  isFavorite: boolean;
+  allowedMealTypes?: string[] | null;
+  tags?: string[] | null;
+}
+
+export interface UpdateRecipeResponse {
+  id: string;
+  familyId: string;
+  name: string;
+  totalTimeMinutes: number | null;
+  isFavorite: boolean;
+}
+
+export interface DeleteRecipeResponse {
+  id: string;
+  deleted: boolean;
+}
+
+export interface AddRecipeIngredientRequest {
+  name: string;
+  quantity?: number | null;
+  unit?: string | null;
+}
+
+export interface AddRecipeIngredientResponse {
+  recipeId: string;
+  ingredientName: string;
+  ingredientCount: number;
+}
+
+export interface UpdateRecipeIngredientRequest {
+  quantity?: number | null;
+  unit?: string | null;
+}
+
+export interface UpdateRecipeIngredientResponse {
+  recipeId: string;
+  ingredientName: string;
+  quantity: number | null;
+  unit: string | null;
+}
+
+export interface RemoveRecipeIngredientResponse {
+  recipeId: string;
+  ingredientName: string;
+  ingredientCount: number;
 }

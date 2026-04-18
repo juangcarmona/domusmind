@@ -1,6 +1,11 @@
 namespace DomusMind.Contracts.MealPlanning;
 
-public sealed record FamilyRecipeItem(
+public sealed record IngredientDetail(
+    string Name,
+    decimal? Quantity,
+    string? Unit);
+
+public sealed record GetRecipeDetailResponse(
     Guid Id,
     Guid FamilyId,
     string Name,
@@ -12,7 +17,6 @@ public sealed record FamilyRecipeItem(
     bool IsFavorite,
     IReadOnlyList<string> Tags,
     IReadOnlyList<string> AllowedMealTypes,
-    int IngredientCount,
-    DateTime CreatedAtUtc);
-
-public sealed record GetFamilyRecipesResponse(IReadOnlyList<FamilyRecipeItem> Recipes);
+    IReadOnlyList<IngredientDetail> Ingredients,
+    DateTime CreatedAtUtc,
+    DateTime UpdatedAtUtc);

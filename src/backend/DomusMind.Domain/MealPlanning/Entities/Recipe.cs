@@ -95,6 +95,34 @@ public sealed class Recipe : AggregateRoot<RecipeId>
         return recipe;
     }
 
+    public void Update(
+        string name,
+        string? description,
+        int? prepTimeMinutes,
+        int? cookTimeMinutes,
+        int? servings,
+        bool isFavorite,
+        IEnumerable<MealType>? allowedMealTypes,
+        IEnumerable<string>? tags)
+    {
+        Name = name ?? throw new ArgumentNullException(nameof(name));
+        Description = description;
+        PrepTimeMinutes = prepTimeMinutes;
+        CookTimeMinutes = cookTimeMinutes;
+        Servings = servings;
+        IsFavorite = isFavorite;
+
+        _allowedMealTypes.Clear();
+        if (allowedMealTypes is not null)
+            _allowedMealTypes.AddRange(allowedMealTypes);
+
+        _tags.Clear();
+        if (tags is not null)
+            _tags.AddRange(tags);
+
+        UpdatedAtUtc = DateTime.UtcNow;
+    }
+
     public void AddIngredient(Ingredient ingredient)
     {
         if (_ingredients.Any(i => i.Name.Equals(ingredient.Name, StringComparison.OrdinalIgnoreCase)))
@@ -102,5 +130,35 @@ public sealed class Recipe : AggregateRoot<RecipeId>
 
         _ingredients.Add(ingredient);
         UpdatedAtUtc = DateTime.UtcNow;
+    }
+
+    public void RemoveIngredient(string name)
+    {
+        var ingredient = _ingredients
+            .FirstOrDefault(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+        if (ingredient is null)
+            throw new InvalidOperationException($"Ingredient '{name}' not found in this recipe.");
+
+        _ingredients.Remove(ingredient);
+        UpdatedAtUtc = DateTime.UtcNow;
+    }
+
+    public void UpdateIngredient(string name, decimal? newQuantity, string? newUnit)
+    {
+        var existing = _ingredients
+            .FirstOrDefault(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+        if (existing is null)
+            throw new InvalidOperationException($"Ingredient '{name}' not found in this recipe.");
+
+        _ingredients.Remove(existing);
+        _ingredients.Add(Ingredient.Create(existing.Id, existing.Name, existing.RecipeId, newQuantity, newUnit, existing.CreatedAtUtc));
+        UpdatedAtUtc = DateTime.UtcNow;
+    }
+
+    public void Delete()
+    {
+        RaiseDomainEvent(new RecipeDeleted(Guid.NewGuid(), Id.Value, FamilyId.Value, DateTime.UtcNow));
     }
 }

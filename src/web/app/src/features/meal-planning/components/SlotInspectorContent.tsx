@@ -109,6 +109,7 @@ export function SlotInspectorContent({
           recipes={recipes}
           recipesStatus={recipesStatus}
           currentRecipeId={pendingRecipeId}
+          slotMealType={slot.mealType}
           onSelect={(id) => setPendingRecipeId(id)}
           onCreateNew={onCreateRecipe}
         />

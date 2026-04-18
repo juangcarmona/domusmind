@@ -44,10 +44,21 @@ const IconMeals = (
   </svg>
 );
 
+const IconRecipes = (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M4 3h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>
+    <line x1="6" y1="7" x2="12" y2="7"/>
+    <line x1="6" y1="10" x2="10" y2="10"/>
+    <circle cx="13" cy="13" r="2.5" fill="none"/>
+    <line x1="14.8" y1="14.8" x2="16.5" y2="16.5"/>
+  </svg>
+);
+
 const NAV_ITEMS: readonly NavRailItem[] = [
   { to: "/agenda", labelKey: "agenda", icon: IconAgenda },
   { to: "/lists", labelKey: "lists", icon: IconLists },
   { to: "/meal-planning", labelKey: "mealPlanning", icon: IconMeals },
+  { to: "/recipes", labelKey: "recipes", icon: IconRecipes },
   { to: "/areas", labelKey: "areas", icon: IconAreas },
 ] as const;
 

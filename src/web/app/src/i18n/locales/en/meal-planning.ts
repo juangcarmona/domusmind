@@ -100,4 +100,5 @@ export default {
   noRecipesMatch: "No recipes match your search.",
   assignedRecipe: "Recipe",
   noRecipeAssigned: "No meal",
+  createRecipeIngredientsHint: "Ingredients can be added from the recipe library.",
 } as const;

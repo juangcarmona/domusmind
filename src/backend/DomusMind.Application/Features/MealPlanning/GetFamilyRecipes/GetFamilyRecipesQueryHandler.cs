@@ -31,11 +31,25 @@ public sealed class GetFamilyRecipesQueryHandler : IQueryHandler<GetFamilyRecipe
 
         var familyId = FamilyId.From(query.FamilyId);
 
-        var recipes = await _dbContext.Set<Recipe>()
+        var recipesQuery = _dbContext.Set<Recipe>()
             .AsNoTracking()
-            .Where(r => r.FamilyId == familyId)
+            .Where(r => r.FamilyId == familyId);
+
+        // When a meal type filter is provided, return recipes that are compatible:
+        // either no restriction (AllowedMealTypes is empty) or the list contains the requested meal type.
+        if (query.MealType.HasValue)
+        {
+            var mealType = query.MealType.Value;
+            recipesQuery = recipesQuery.Where(r =>
+                !r.AllowedMealTypes.Any() || r.AllowedMealTypes.Contains(mealType));
+        }
+
+        var recipes = await recipesQuery
+            .Include(r => r.Ingredients)
             .OrderBy(r => r.Name)
-            .Select(r => new FamilyRecipeItem(
+            .ToListAsync(cancellationToken);
+
+        var items = recipes.Select(r => new FamilyRecipeItem(
                 r.Id.Value,
                 r.FamilyId.Value,
                 r.Name,
@@ -48,10 +62,11 @@ public sealed class GetFamilyRecipesQueryHandler : IQueryHandler<GetFamilyRecipe
                 r.Servings,
                 r.IsFavorite,
                 r.Tags,
+                r.AllowedMealTypes.Select(m => m.ToString()).ToList(),
                 r.Ingredients.Count,
                 r.CreatedAtUtc))
-            .ToListAsync(cancellationToken);
+            .ToList();
 
-        return new GetFamilyRecipesResponse(recipes);
+        return new GetFamilyRecipesResponse(items);
     }
 }

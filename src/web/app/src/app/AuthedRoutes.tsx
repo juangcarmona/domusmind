@@ -12,6 +12,7 @@ import { SettingsPage } from "../features/settings/pages/SettingsPage";
 import { AgendaPage } from "../features/agenda/pages/AgendaPage";
 import { ListsPage } from "../features/lists/pages/ListsPage";
 import { MealPlanningPage } from "../features/meal-planning/pages/MealPlanningPage";
+import { RecipesPage } from "../features/recipe-library/pages/RecipesPage";
 
 /**
  * Manages household bootstrap and i18n sync, then renders the shell-wrapped route tree.
@@ -59,6 +60,7 @@ export function AuthedRoutes() {
         <Route path="/lists/:listId" element={<ListsPage />} />
         <Route path="/meal-planning" element={<MealPlanningPage />} />
         <Route path="/meal-planning/:weekStart" element={<MealPlanningPage />} />
+        <Route path="/recipes" element={<RecipesPage />} />
         <Route path="/areas" element={<AreasPage />} />
         <Route path="/areas/:areaId" element={<AreaDetailPage />} />
         <Route path="/settings" element={<SettingsPage />} />

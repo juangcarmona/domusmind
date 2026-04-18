@@ -134,6 +134,8 @@ export function CreateRecipeModal({
 
           {error && <p className="mp-form-error">{error}</p>}
 
+          <p className="mp-form-hint">{t("createRecipeIngredientsHint")}</p>
+
           <div className="mp-modal-actions">
             <button
               type="button"

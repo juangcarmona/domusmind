@@ -6,6 +6,8 @@ interface RecipePickerPanelProps {
   recipes: RecipeSummary[];
   recipesStatus: "idle" | "loading" | "success" | "error";
   currentRecipeId: string | null;
+  /** When provided, only compatible recipes are shown (allowedMealTypes empty or includes this type). */
+  slotMealType?: string | null;
   onSelect: (recipeId: string | null) => void;
   onCreateNew: () => void;
 }
@@ -18,6 +20,7 @@ export function RecipePickerPanel({
   recipes,
   recipesStatus,
   currentRecipeId,
+  slotMealType,
   onSelect,
   onCreateNew,
 }: RecipePickerPanelProps) {
@@ -29,7 +32,16 @@ export function RecipePickerPanel({
     setSearch("");
   }, [currentRecipeId]);
 
-  const filtered = recipes.filter((r) =>
+  // Filter by allowedMealTypes when a slotMealType is known
+  const mealTypeFiltered = slotMealType
+    ? recipes.filter(
+        (r) =>
+          r.allowedMealTypes.length === 0 ||
+          r.allowedMealTypes.includes(slotMealType),
+      )
+    : recipes;
+
+  const filtered = mealTypeFiltered.filter((r) =>
     r.name.toLowerCase().includes(search.toLowerCase()),
   );
 
