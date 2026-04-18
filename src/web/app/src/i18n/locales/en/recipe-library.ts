@@ -8,6 +8,7 @@ export default {
   noMatch: "No recipes match your search.",
   // Detail panel
   detailLoading: "Loading recipe…",
+  detailError: "Could not load recipe.",
   ingredients: "Ingredients",
   noIngredients: "No ingredients added.",
   prep: "Prep",
@@ -15,6 +16,8 @@ export default {
   servings: "Servings",
   totalTime: "Total",
   minutes: "{{count}} min",
+  servingsShort: "{{count}} srv",
+  ingredientsShort: "{{count}} ing.",
   favorite: "Favourite",
   mealTypes: "Suitable for",
   tags: "Tags",

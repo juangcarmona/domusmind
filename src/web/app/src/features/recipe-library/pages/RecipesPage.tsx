@@ -18,9 +18,12 @@ import { useIsMobile } from "../../../hooks/useIsMobile";
 import { InspectorPanel } from "../../../components/InspectorPanel";
 import { BottomSheetDetail } from "../../../components/BottomSheetDetail";
 import { RecipeDetailPanel } from "../components/RecipeDetailPanel";
-import { RecipeFormModal, type RecipeFormData } from "../components/RecipeFormModal";
+import { RecipeFormPanel } from "../components/RecipeFormPanel";
+import type { RecipeFormData } from "../components/RecipeFormModal";
 import type { RecipeSummary } from "../../../api/types/mealPlanningTypes";
 import "../recipe-library.css";
+
+type InspectorMode = "detail" | "edit" | "create" | null;
 
 export function RecipesPage() {
   const { t } = useTranslation("recipeLibrary");
@@ -41,21 +44,17 @@ export function RecipesPage() {
 
   const [search, setSearch] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [showForm, setShowForm] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [inspectorMode, setInspectorMode] = useState<InspectorMode>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // Create recipe state from mealPlanningSlice
   const createStatus = useAppSelector((s) => s.mealPlanning.createRecipeStatus);
   const createError = useAppSelector((s) => s.mealPlanning.createError);
 
-  // Fetch recipes once per family
   useEffect(() => {
     if (!family?.familyId || listStatus !== "idle") return;
     dispatch(fetchRecipes(family.familyId));
   }, [family?.familyId, listStatus, dispatch]);
 
-  // Fetch detail when a recipe is selected
   useEffect(() => {
     if (!selectedId || detailStatus !== "idle") return;
     if (selectedRecipe?.id !== selectedId) {
@@ -63,31 +62,32 @@ export function RecipesPage() {
     }
   }, [selectedId, detailStatus, selectedRecipe, dispatch]);
 
-  // Close delete confirm and de-select after successful delete
   useEffect(() => {
     if (deleteStatus === "idle" && showDeleteConfirm) {
       setShowDeleteConfirm(false);
       setSelectedId(null);
+      setInspectorMode(null);
       dispatch(clearSelectedRecipe());
     }
   }, [deleteStatus]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Handlers ───────────────────────────────────────────────────────────────
-
   function handleSelectRecipe(id: string) {
-    if (id === selectedId) return;
+    if (id === selectedId && inspectorMode === "detail") return;
     setSelectedId(id);
+    setInspectorMode("detail");
+    setShowDeleteConfirm(false);
     dispatch(clearSelectedRecipe());
   }
 
   function handleNewRecipe() {
-    setIsEditing(false);
-    setShowForm(true);
+    setSelectedId(null);
+    setInspectorMode("create");
+    setShowDeleteConfirm(false);
+    dispatch(clearSelectedRecipe());
   }
 
   function handleEditRecipe() {
-    setIsEditing(true);
-    setShowForm(true);
+    setInspectorMode("edit");
     dispatch(clearUpdateError());
   }
 
@@ -101,9 +101,16 @@ export function RecipesPage() {
     dispatch(deleteRecipe(selectedId));
   }
 
+  function handleCloseInspector() {
+    setSelectedId(null);
+    setInspectorMode(null);
+    setShowDeleteConfirm(false);
+    dispatch(clearSelectedRecipe());
+  }
+
   function handleFormSubmit(data: RecipeFormData) {
     if (!family?.familyId) return;
-    if (isEditing && selectedId) {
+    if (inspectorMode === "edit" && selectedId) {
       dispatch(
         updateRecipe({
           recipeId: selectedId,
@@ -120,7 +127,7 @@ export function RecipesPage() {
         }),
       ).then((result) => {
         if (result.meta.requestStatus === "fulfilled") {
-          setShowForm(false);
+          setInspectorMode("detail");
           dispatch(fetchRecipeDetail(selectedId));
           dispatch(fetchRecipes(family.familyId!));
         }
@@ -140,28 +147,47 @@ export function RecipesPage() {
         }),
       ).then((result) => {
         if (result.meta.requestStatus === "fulfilled") {
-          setShowForm(false);
+          setInspectorMode(null);
           dispatch(fetchRecipes(family.familyId!));
         }
       });
     }
   }
 
-  // ── Filtered list ──────────────────────────────────────────────────────────
-
   const filtered: RecipeSummary[] = recipes.filter((r) =>
     r.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  // ── Recipe detail content ──────────────────────────────────────────────────
+  const inspectorContent = (() => {
+    if (inspectorMode === "create") {
+      return (
+        <RecipeFormPanel
+          isSubmitting={createStatus === "loading"}
+          error={createError}
+          onSubmit={handleFormSubmit}
+          onCancel={handleCloseInspector}
+        />
+      );
+    }
 
-  const detailContent =
-    selectedRecipe && selectedRecipe.id === selectedId ? (
-      showDeleteConfirm ? (
+    if (inspectorMode === "edit" && selectedRecipe && selectedRecipe.id === selectedId) {
+      return (
+        <RecipeFormPanel
+          initial={selectedRecipe}
+          isSubmitting={updateStatus === "loading"}
+          error={updateError}
+          onSubmit={handleFormSubmit}
+          onCancel={() => setInspectorMode("detail")}
+        />
+      );
+    }
+
+    if (showDeleteConfirm) {
+      return (
         <div className="rl-delete-confirm">
           <p className="rl-delete-confirm-body">{t("deleteConfirmBody")}</p>
           {deleteError && (
-            <p className="mp-form-error">
+            <p className="rl-delete-confirm-error">
               {deleteError.includes("active") ? t("deleteBlockedBySlot") : deleteError}
             </p>
           )}
@@ -184,55 +210,57 @@ export function RecipesPage() {
             </button>
           </div>
         </div>
-      ) : (
+      );
+    }
+
+    if (selectedRecipe && selectedRecipe.id === selectedId) {
+      return (
         <RecipeDetailPanel
           recipe={selectedRecipe}
           onEdit={handleEditRecipe}
           onDelete={handleDeleteRequest}
         />
-      )
-    ) : detailStatus === "loading" ? (
-      <div style={{ padding: "var(--spacing-4)", color: "var(--color-text-secondary)" }}>
-        {t("detailLoading")}
-      </div>
-    ) : null;
+      );
+    }
 
-  // ── Render ─────────────────────────────────────────────────────────────────
+    if (detailStatus === "loading") {
+      return <div className="rl-inspector-message">{t("detailLoading")}</div>;
+    }
+
+    if (detailStatus === "error") {
+      return <div className="rl-inspector-message">{t("detailError")}</div>;
+    }
+
+    return null;
+  })();
+
+  const showInspector = inspectorMode !== null;
 
   return (
-    <div className="rl-page">
-      {/* Header */}
+    <div className="rl-surface l-surface">
       <div className="rl-header">
         <h1 className="rl-header-title">{t("title")}</h1>
         <div className="rl-header-actions">
-          <button
-            type="button"
-            className="btn btn-sm btn-primary"
-            onClick={handleNewRecipe}
-          >
+          <button type="button" className="btn btn-sm btn-primary" onClick={handleNewRecipe}>
             {t("newRecipe")}
           </button>
         </div>
       </div>
 
-      {/* Search */}
-      <div className="rl-search">
-        <input
-          type="search"
-          className="rl-search-input"
-          placeholder={t("searchPlaceholder")}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          aria-label={t("searchPlaceholder")}
-        />
-      </div>
+      <div className="l-surface-body">
+        <div className="rl-list-pane l-surface-content">
+          <div className="rl-search">
+            <input
+              type="search"
+              className="rl-search-input"
+              placeholder={t("searchPlaceholder")}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              aria-label={t("searchPlaceholder")}
+            />
+          </div>
 
-      {/* Body: list + inspector */}
-      <div className="rl-body">
-        <div className="rl-list-pane">
-          {listStatus === "loading" && (
-            <p className="rl-list-empty">{t("loading")}</p>
-          )}
+          {listStatus === "loading" && <p className="rl-list-empty">{t("loading")}</p>}
 
           {listStatus !== "loading" && filtered.length === 0 && (
             <div className="rl-list-empty">
@@ -255,7 +283,7 @@ export function RecipesPage() {
                     type="button"
                     className={[
                       "rl-recipe-row",
-                      recipe.id === selectedId ? "is-selected" : "",
+                      recipe.id === selectedId && inspectorMode === "detail" ? "is-selected" : "",
                     ]
                       .filter(Boolean)
                       .join(" ")}
@@ -265,7 +293,7 @@ export function RecipesPage() {
                       <span className="rl-recipe-row-name">
                         {recipe.isFavorite && (
                           <span className="rl-recipe-favorite-icon" aria-hidden="true">
-                            ★{" "}
+                            {"★ "}
                           </span>
                         )}
                         {recipe.name}
@@ -278,12 +306,12 @@ export function RecipesPage() {
                         )}
                         {recipe.servings != null && (
                           <span className="rl-recipe-row-meta-item">
-                            {recipe.servings} srv
+                            {t("servingsShort", { count: recipe.servings })}
                           </span>
                         )}
                         {recipe.ingredientCount > 0 && (
                           <span className="rl-recipe-row-meta-item">
-                            {recipe.ingredientCount} ing.
+                            {t("ingredientsShort", { count: recipe.ingredientCount })}
                           </span>
                         )}
                       </div>
@@ -295,32 +323,17 @@ export function RecipesPage() {
           )}
         </div>
 
-        {/* Desktop inspector panel */}
-        {!isMobile && selectedId && (
-          <InspectorPanel onClose={() => setSelectedId(null)}>
-            {detailContent}
+        {!isMobile && showInspector && (
+          <InspectorPanel onClose={handleCloseInspector}>
+            {inspectorContent}
           </InspectorPanel>
         )}
       </div>
 
-      {/* Mobile bottom sheet */}
-      {isMobile && selectedId && (
-        <BottomSheetDetail open={!!selectedId} onClose={() => setSelectedId(null)}>
-          {detailContent}
+      {isMobile && showInspector && (
+        <BottomSheetDetail open={showInspector} onClose={handleCloseInspector}>
+          {inspectorContent}
         </BottomSheetDetail>
-      )}
-
-      {/* Create/Edit form modal */}
-      {showForm && (
-        <RecipeFormModal
-          initial={isEditing ? (selectedRecipe ?? undefined) : undefined}
-          isSubmitting={
-            isEditing ? updateStatus === "loading" : createStatus === "loading"
-          }
-          error={isEditing ? updateError : createError}
-          onSubmit={handleFormSubmit}
-          onCancel={() => setShowForm(false)}
-        />
       )}
     </div>
   );

@@ -436,6 +436,12 @@ Mobile must feel like the same product at a smaller scale, not a different produ
 
 The Meal Planning surface spec (`00_product/surfaces/meal-planning.md`) is fully specified and describes a complete surface. However, the domain context document (`docs/04_contexts/meal-planning.md`) marks Meal Planning as a **V2 bounded context**, not part of the V1 core. Whether Meal Planning is included as a V1 navigation entry in the web app is not definitively resolved in the source material. It is excluded from the navigation requirements above until its V1 inclusion is confirmed.
 
+### Recipes surface
+
+The Recipes surface (`/recipes`) is the canonical recipe-management surface for the household. It owns the full recipe lifecycle: creation, editing, ingredient management, and deletion. Meal Planning is a recipe _consumer_: it reads the recipe library for slot assignment and may provide a quick-add entry for creating new recipes, but does not own recipe management. All persistent recipe operations (edit, delete, ingredient mutation) must be performed through the Recipes surface.
+
+The Recipes surface follows the same split-view layout grammar as Lists: a list pane and a right inspector panel. Create and edit flows operate inside the inspector, not in disconnected overlay modals.
+
 ### Tasks surface
 
 Tasks are referenced throughout Agenda as a primary data source (tasks project into Agenda). However, no Tasks surface spec was available in the source material. Task surface behavior is unspecced. This spec does not cover a Tasks surface.

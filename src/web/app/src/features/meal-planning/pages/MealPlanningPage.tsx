@@ -27,7 +27,7 @@ import { BottomSheetDetail } from "../../../components/BottomSheetDetail";
 import { WeekNavigator, shiftWeek } from "../components/WeekNavigator";
 import { WeekGrid } from "../components/WeekGrid";
 import { SlotInspectorContent } from "../components/SlotInspectorContent";
-import { CreateRecipeModal } from "../components/CreateRecipeModal";
+import { RecipeFormModal, type RecipeFormData } from "../../recipe-library/components/RecipeFormModal";
 import type { MealSlotDetail } from "../../../api/types/mealPlanningTypes";
 import "../meal-planning.css";
 
@@ -162,16 +162,22 @@ export function MealPlanningPage() {
     [dispatch, currentPlan, family?.familyId],
   );
 
-  function handleCreateRecipe(data: {
-    name: string;
-    description?: string;
-    prepTimeMinutes?: number;
-    cookTimeMinutes?: number;
-    servings?: number;
-  }) {
+  function handleCreateRecipe(data: RecipeFormData) {
     if (!family?.familyId) return;
     setCreateRecipeError(null);
-    dispatch(createRecipe({ familyId: family.familyId, ...data }))
+    dispatch(
+      createRecipe({
+        familyId: family.familyId,
+        name: data.name,
+        description: data.description ?? undefined,
+        prepTimeMinutes: data.prepTimeMinutes ?? undefined,
+        cookTimeMinutes: data.cookTimeMinutes ?? undefined,
+        servings: data.servings ?? undefined,
+        isFavorite: data.isFavorite,
+        allowedMealTypes: data.allowedMealTypes,
+        tags: data.tags,
+      }),
+    )
       .unwrap()
       .then(() => setShowCreateRecipe(false))
       .catch((err: unknown) => {
@@ -382,8 +388,8 @@ export function MealPlanningPage() {
 
       {/* Create recipe modal */}
       {showCreateRecipe && (
-        <CreateRecipeModal
-          onConfirm={handleCreateRecipe}
+        <RecipeFormModal
+          onSubmit={handleCreateRecipe}
           onCancel={() => {
             setShowCreateRecipe(false);
             setCreateRecipeError(null);

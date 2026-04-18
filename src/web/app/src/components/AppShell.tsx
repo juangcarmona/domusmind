@@ -38,19 +38,21 @@ const IconAreas = (
 
 const IconMeals = (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M3 4h12M3 8h8M3 12h5"/>
-    <circle cx="14" cy="12" r="2.5"/>
-    <path d="M14 6v3.5"/>
+    <rect x="2" y="2" width="14" height="14" rx="2"/>
+    <path d="M2 6h14"/>
+    <path d="M6 6v10M12 6v10"/>
+    <path d="M2 10h14"/>
+    <rect x="3.5" y="7" width="1.5" height="2.5" rx="0.3" fill="currentColor" stroke="none"/>
+    <rect x="7.5" y="11" width="1.5" height="2.5" rx="0.3" fill="currentColor" stroke="none"/>
+    <rect x="13" y="7" width="1.5" height="2.5" rx="0.3" fill="currentColor" stroke="none"/>
   </svg>
 );
 
 const IconRecipes = (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    <path d="M4 3h10a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>
-    <line x1="6" y1="7" x2="12" y2="7"/>
-    <line x1="6" y1="10" x2="10" y2="10"/>
-    <circle cx="13" cy="13" r="2.5" fill="none"/>
-    <line x1="14.8" y1="14.8" x2="16.5" y2="16.5"/>
+    <path d="M9 3v12"/>
+    <path d="M9 3C9 3 6.5 2.5 3.5 4.5v9.5C6.5 12 9 12.5 9 12.5"/>
+    <path d="M9 3C9 3 11.5 2.5 14.5 4.5v9.5C11.5 12 9 12.5 9 12.5"/>
   </svg>
 );
 

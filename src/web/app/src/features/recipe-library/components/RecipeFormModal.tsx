@@ -117,13 +117,13 @@ export function RecipeFormModal({
             <label className="mp-form-label" htmlFor="rl-description">
               {t("descriptionLabel")}
             </label>
-            <input
+            <textarea
               id="rl-description"
-              type="text"
-              className="mp-form-input"
+              className="mp-form-input mp-form-textarea"
               placeholder={t("descriptionPlaceholder")}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              rows={3}
             />
           </div>
 

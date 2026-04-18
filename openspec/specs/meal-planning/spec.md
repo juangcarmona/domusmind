@@ -136,6 +136,8 @@ The plan may be retrieved by plan identifier or by family + week start.
 
 ### Requirement: Recipe Library
 
+> **Surface ownership:** The Recipes surface (`/recipes`) is the canonical location for recipe management (create, edit, delete, ingredient management). This section specifies the domain requirements only. The Meal Planning surface consumes the recipe library for slot assignment and may expose quick-add recipe creation, but does not own the recipe management lifecycle.
+
 A household SHALL maintain a library of recipes scoped to the family.
 
 A recipe has a name (unique within the family), optional description, optional preparation and cook times, optional servings count, an ingredient list, optional tags for classification, an optional set of allowed meal types indicating which meal types the recipe is appropriate for, and an `isFavorite` flag.

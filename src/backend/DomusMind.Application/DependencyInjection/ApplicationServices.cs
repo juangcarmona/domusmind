@@ -96,8 +96,14 @@ using DomusMind.Application.Features.MealPlanning.CopyMealPlanFromPreviousWeek;
 using DomusMind.Application.Features.MealPlanning.CreateMealPlan;
 using DomusMind.Application.Features.MealPlanning.CreateRecipe;
 using DomusMind.Application.Features.MealPlanning.CreateWeeklyTemplate;
+using DomusMind.Application.Features.MealPlanning.AddRecipeIngredient;
+using DomusMind.Application.Features.MealPlanning.DeleteRecipe;
 using DomusMind.Application.Features.MealPlanning.GetFamilyRecipes;
 using DomusMind.Application.Features.MealPlanning.GetMealPlan;
+using DomusMind.Application.Features.MealPlanning.GetRecipeDetail;
+using DomusMind.Application.Features.MealPlanning.RemoveRecipeIngredient;
+using DomusMind.Application.Features.MealPlanning.UpdateRecipe;
+using DomusMind.Application.Features.MealPlanning.UpdateRecipeIngredient;
 using DomusMind.Application.Features.MealPlanning.GetMealPlansForAgenda;
 using DomusMind.Application.Features.MealPlanning.RequestShoppingList;
 using DomusMind.Application.Features.MealPlanning.UpdateMealSlot;
@@ -247,6 +253,12 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<RequestShoppingListCommand, RequestShoppingListResponse>, RequestShoppingListCommandHandler>();
         services.AddScoped<IQueryHandler<GetMealPlanQuery, GetMealPlanResponse>, GetMealPlanQueryHandler>();
         services.AddScoped<IQueryHandler<GetFamilyRecipesQuery, GetFamilyRecipesResponse>, GetFamilyRecipesQueryHandler>();
+        services.AddScoped<IQueryHandler<GetRecipeDetailQuery, GetRecipeDetailResponse?>, GetRecipeDetailQueryHandler>();
+        services.AddScoped<ICommandHandler<UpdateRecipeCommand, UpdateRecipeResponse>, UpdateRecipeCommandHandler>();
+        services.AddScoped<ICommandHandler<DeleteRecipeCommand, DeleteRecipeResponse>, DeleteRecipeCommandHandler>();
+        services.AddScoped<ICommandHandler<AddRecipeIngredientCommand, AddRecipeIngredientResponse>, AddRecipeIngredientCommandHandler>();
+        services.AddScoped<ICommandHandler<UpdateRecipeIngredientCommand, UpdateRecipeIngredientResponse>, UpdateRecipeIngredientCommandHandler>();
+        services.AddScoped<ICommandHandler<RemoveRecipeIngredientCommand, RemoveRecipeIngredientResponse>, RemoveRecipeIngredientCommandHandler>();
         services.AddScoped<IQueryHandler<GetMealPlansForAgendaQuery, MealPlansForAgendaResponse>, GetMealPlansForAgendaQueryHandler>();
 
         return services;
