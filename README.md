@@ -59,6 +59,18 @@ The system is intentionally simple and evolvable.
 
 ---
 
+## Product Definition
+
+The product is defined as code under `docs/product/`, managed with
+[ProductShape](https://github.com/juangcarmona/productshape). Browse it as the
+Product Snapshot: the [product-snapshot workflow](https://github.com/juangcarmona/domusmind/actions/workflows/product-snapshot.yml)
+attaches `domusmind-product-snapshot.html` to each run and links it from the run
+summary; it is a static page that opens in any browser. Locally,
+`npx @prodshape/cli@0.22.0 graph --format html` writes the same page to
+`.product/generated/snapshot.html`.
+
+---
+
 ## Goals
 
 DomusMind is trying to achieve three things:
