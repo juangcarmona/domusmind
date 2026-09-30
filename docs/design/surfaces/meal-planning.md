@@ -1,7 +1,7 @@
 # Surface Spec — Meal Planning
 
-Canonical upstream: docs/04_contexts/meal-planning.md
-Depends on: docs/00_product/experience.md, docs/00_product/surface-system.md
+Canonical upstream: docs/product/model
+Depends on: docs/product/model, docs/design/surface-system.md
 
 ---
 

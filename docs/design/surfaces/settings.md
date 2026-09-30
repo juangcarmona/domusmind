@@ -16,11 +16,11 @@ Settings is where phase 1 Outlook calendar connections are managed.
 
 ## Depends On
 
-- `docs/00_product/experience.md`
-- `docs/00_product/surface-system.md`
-- `docs/04_contexts/family.md`
-- `docs/04_contexts/calendar.md`
-- `docs/06_interfaces/external-calendar-api.md`
+- `docs/product/model`
+- `docs/design/surface-system.md`
+- `docs/product/model`
+- `docs/product/model`
+- `docs/_legacy/06_interfaces/external-calendar-api.md`
 
 ---
 

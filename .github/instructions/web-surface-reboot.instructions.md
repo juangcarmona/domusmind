@@ -8,14 +8,12 @@ applyTo: "src/web/app/src/**/*.{ts,tsx,css}"
 
 Before changing any major surface, read and follow:
 
-- docs/_legacy/00_product/strategy.md
-- docs/_legacy/00_product/experience.md
-- docs/_legacy/00_product/surface-system.md
-- 00_product/surfaces/agenda.md
-- 00_product/surfaces/lists.md
-- 00_product/surfaces/areas.md
-- 00_product/surfaces/settings.md
-- specs/system/surface-system-reboot-plan.md
+- docs/product/model/ (the product model; browse it with `npx @prodshape/cli@0.22.0 graph --format html`)
+- docs/design/surface-system.md
+- docs/design/surfaces/agenda.md
+- docs/design/surfaces/lists.md
+- docs/design/surfaces/areas.md
+- docs/design/surfaces/settings.md
 
 These are the source of truth for the current reboot.
 
@@ -102,7 +100,7 @@ Do not use styling changes as a substitute for layout and interaction fixes.
 ## Completion rule for UX tasks
 
 Do not report a surface task as done unless:
-1. the touched surface aligns with docs/_legacy/00_product/surface-system.md
+1. the touched surface aligns with docs/design/surface-system.md
 2. the touched area removes legacy anti-patterns where relevant
 3. desktop and mobile preserve the same core product logic
 4. changed code is consistent with the target surface spec

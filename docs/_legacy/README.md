@@ -6,7 +6,8 @@ input: every passage is checked against the code before it is carried forward.
 
 | Destination | Holds | Migrated from here |
 | --- | --- | --- |
-| `docs/product/` | Product model (ProductShape, recovered as `CHG-INITIAL`) | `00_product`, `01_system`, `03_domain`, `04_contexts`, `09_roadmap` |
+| `docs/product/` | Product model (ProductShape, recovered as `CHG-INITIAL`) | Done: `00_product/strategy.md`, `experience.md` and `09_roadmap` are retired; `01_system`, `03_domain` and `04_contexts` stay until the architecture pass, which also draws on them |
+| `docs/design/` | UI guidance for the surfaces and the public site | Done: `00_product/surface-system.md`, `surfaces/`, `public-site.md` |
 | `docs/architecture/` | arc42, twelve sections | `01_system`, `02_architecture`, `04_contexts`, `05_slices`, `06_interfaces`, `07_platform`, `08_ai` |
 | `docs/adr/` | Architecture decision records | `02_architecture/adrs` |
 
