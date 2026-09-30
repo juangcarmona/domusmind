@@ -8,9 +8,9 @@ applyTo: "src/web/app/src/**/*.{ts,tsx,css}"
 
 Before changing any major surface, read and follow:
 
-- docs/00_product/strategy.md
-- docs/00_product/experience.md
-- docs/00_product/surface-system.md
+- docs/_legacy/00_product/strategy.md
+- docs/_legacy/00_product/experience.md
+- docs/_legacy/00_product/surface-system.md
 - 00_product/surfaces/agenda.md
 - 00_product/surfaces/lists.md
 - 00_product/surfaces/areas.md
@@ -102,7 +102,7 @@ Do not use styling changes as a substitute for layout and interaction fixes.
 ## Completion rule for UX tasks
 
 Do not report a surface task as done unless:
-1. the touched surface aligns with docs/00_product/surface-system.md
+1. the touched surface aligns with docs/_legacy/00_product/surface-system.md
 2. the touched area removes legacy anti-patterns where relevant
 3. desktop and mobile preserve the same core product logic
 4. changed code is consistent with the target surface spec

@@ -29,9 +29,9 @@ Docs and specs are the source of truth for behavior, terminology, and architectu
 
 When working on UX, surfaces, layout, or interaction behavior, treat these as canonical and upstream:
 
-- docs/00_product/strategy.md
-- docs/00_product/experience.md
-- docs/00_product/surface-system.md
+- docs/_legacy/00_product/strategy.md
+- docs/_legacy/00_product/experience.md
+- docs/_legacy/00_product/surface-system.md
 - 00_product/surfaces/*.md
 
 Do not let implementation files, old comments, or outdated docs override these documents.

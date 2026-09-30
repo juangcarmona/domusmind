@@ -267,9 +267,9 @@ Neither projection creates or modifies aggregates. Tasks and Routines remain own
 
 ## Notes
 
-1. **Routine generation contradiction** — The feature specs for `update-routine`, `pause-routine`, and `resume-routine` reference "generated tasks" (e.g., "future generated tasks use the new routine configuration," "existing generated tasks remain unchanged"). This directly contradicts `docs/04_contexts/tasks.md`, which explicitly states routines do **not** generate Task aggregates and are projected on-the-fly only. This spec follows the context document as canonical. References to "generated tasks" in the feature specs should be treated as stale.
+1. **Routine generation contradiction** — The feature specs for `update-routine`, `pause-routine`, and `resume-routine` reference "generated tasks" (e.g., "future generated tasks use the new routine configuration," "existing generated tasks remain unchanged"). This directly contradicts `docs/_legacy/04_contexts/tasks.md`, which explicitly states routines do **not** generate Task aggregates and are projected on-the-fly only. This spec follows the context document as canonical. References to "generated tasks" in the feature specs should be treated as stale.
 
-2. **Task in-progress state** — `docs/04_contexts/tasks.md` defines four task lifecycle states: pending, in progress, completed, cancelled. The `StartTask` command (pending → in progress) is listed in the domain command inventory but has no feature spec. The behavioral rule for initiating the in-progress transition is not currently documented.
+2. **Task in-progress state** — `docs/_legacy/04_contexts/tasks.md` defines four task lifecycle states: pending, in progress, completed, cancelled. The `StartTask` command (pending → in progress) is listed in the domain command inventory but has no feature spec. The behavioral rule for initiating the in-progress transition is not currently documented.
 
 3. **Unassignment** — `UnassignTask` is listed as a domain command but has no feature spec. The behavior of removing an assignee from a task is not specified.
 
@@ -287,7 +287,7 @@ Neither projection creates or modifies aggregates. Tasks and Routines remain own
 
 ## Source References
 
-- `docs/04_contexts/tasks.md` — primary context document: aggregate definitions, lifecycle invariants, projection model, domain events, boundary rules
+- `docs/_legacy/04_contexts/tasks.md` — primary context document: aggregate definitions, lifecycle invariants, projection model, domain events, boundary rules
 - `specs/features/tasks/create-task.md`
 - `specs/features/tasks/assign-task.md`
 - `specs/features/tasks/reschedule-task.md`
@@ -298,4 +298,4 @@ Neither projection creates or modifies aggregates. Tasks and Routines remain own
 - `specs/features/tasks/pause-routine.md`
 - `specs/features/tasks/resume-routine.md`
 - `00_product/surfaces/agenda.md` — Agenda projection grammar, temporal entry model, item display grammar
-- `docs/03_domain/ubiquitous-language.md` — canonical term definitions for Task, Routine, Agenda, Projection
+- `docs/_legacy/03_domain/ubiquitous-language.md` — canonical term definitions for Task, Routine, Agenda, Projection
