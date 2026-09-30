@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-09-30T13:27:09.693766+00:00'
+generated_at: '2026-09-30T13:28:04.337916+00:00'
 apm_version: 0.30.0
 dependencies:
 - repo_url: plainconceptschapters/chapter-devex
@@ -1795,7 +1795,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:42dbf4f6f1e202b8e5d804e4f9633d46789c8bbd8ae20a8a0852138413d5a803
+  content_hash: sha256:b60d9d1f6a30bb570026c81309a8cf6e762dc8534c160b4f81961602c1a922a2
 - kind: project-relative
   target: claude
   value: .claude/skills/read-work-item
@@ -3586,7 +3586,7 @@ deployments:
   owners:
   - .
   active_owner: .
-  content_hash: sha256:42dbf4f6f1e202b8e5d804e4f9633d46789c8bbd8ae20a8a0852138413d5a803
+  content_hash: sha256:b60d9d1f6a30bb570026c81309a8cf6e762dc8534c160b4f81961602c1a922a2
 - kind: project-relative
   target: legacy
   value: .agents/skills/read-work-item
@@ -3784,7 +3784,7 @@ local_deployed_file_hashes:
   .agents/skills/product-definition/references/pdac-changes.md: sha256:56b84dc39ab246bfce47ce5cc9f1ba2e664591c9b2270094a167cca8fa39219f
   .agents/skills/product-definition/references/pdac-contracts.md: sha256:1d070bff159341e7052a970b180b676fd25c08257ada260b5c42fb6f21ca0cc9
   .agents/skills/product-definition/references/product-review.md: sha256:128b162e8e4301205582a51af66f4b7d7cab07a2caedba62060fe41610c7428b
-  .agents/skills/product-definition/references/productshape-cli.md: sha256:42dbf4f6f1e202b8e5d804e4f9633d46789c8bbd8ae20a8a0852138413d5a803
+  .agents/skills/product-definition/references/productshape-cli.md: sha256:b60d9d1f6a30bb570026c81309a8cf6e762dc8534c160b4f81961602c1a922a2
   .agents/skills/read-work-item/SKILL.md: sha256:1b8e837b9307f2616c5e78884ddcc67c36179fc8c50ae46014ad4a07b3941078
   .agents/skills/transition-work-item/SKILL.md: sha256:8768f280df0dbfdbf9b78b3186d62b9d0342ad156010b0a5129921f587cc5443
   .agents/skills/wip-query/SKILL.md: sha256:6f4283ad68287a24cb267b3688117fbb31fc1ac301c5c3d9d0e818943e8c4c77
@@ -3829,7 +3829,7 @@ local_deployed_file_hashes:
   .claude/skills/product-definition/references/pdac-changes.md: sha256:56b84dc39ab246bfce47ce5cc9f1ba2e664591c9b2270094a167cca8fa39219f
   .claude/skills/product-definition/references/pdac-contracts.md: sha256:1d070bff159341e7052a970b180b676fd25c08257ada260b5c42fb6f21ca0cc9
   .claude/skills/product-definition/references/product-review.md: sha256:128b162e8e4301205582a51af66f4b7d7cab07a2caedba62060fe41610c7428b
-  .claude/skills/product-definition/references/productshape-cli.md: sha256:42dbf4f6f1e202b8e5d804e4f9633d46789c8bbd8ae20a8a0852138413d5a803
+  .claude/skills/product-definition/references/productshape-cli.md: sha256:b60d9d1f6a30bb570026c81309a8cf6e762dc8534c160b4f81961602c1a922a2
   .claude/skills/read-work-item/SKILL.md: sha256:1b8e837b9307f2616c5e78884ddcc67c36179fc8c50ae46014ad4a07b3941078
   .claude/skills/transition-work-item/SKILL.md: sha256:8768f280df0dbfdbf9b78b3186d62b9d0342ad156010b0a5129921f587cc5443
   .claude/skills/wip-query/SKILL.md: sha256:6f4283ad68287a24cb267b3688117fbb31fc1ac301c5c3d9d0e818943e8c4c77
