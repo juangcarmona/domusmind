@@ -78,3 +78,8 @@ jobs:
 
       - name: Verify the managed integration files
         run: npx -y @prodshape/cli@0.22.0 integration update --check
+
+      # Every current OpenSpec document must be bound to the model with current
+      # citations, or exempt with a human-approved reason.
+      - name: Verify OpenSpec citations
+        run: npx -y @prodshape/cli@0.22.0 citations verify --provider openspec
