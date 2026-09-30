@@ -1,0 +1,101 @@
+name: product-snapshot
+
+# Builds the Product Snapshot of docs/product and keeps it as a workflow run
+# artifact rather than a Pages site. The snapshot is derived output, generated
+# from the commit being built and never committed. `prodshape graph` refuses to
+# write while the model has blocking diagnostics, so a broken model fails this
+# job instead of producing a snapshot.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/product/**'
+      - '.product/**'
+      - '.github/workflows/product-snapshot.yml'
+  # A pull request that changes the model gets its own snapshot, so a reviewer
+  # can open the proposed product rather than read the diff. No path filter:
+  # gated on `changes`, like every other pull_request workflow here.
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: product-snapshot-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: product snapshot changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - name: Detect relevant changes
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
+            --paginate --jq '.[].filename')
+          echo "$files"
+          if printf '%s\n' "$files" | grep -qE '^(docs/product/|\.product/|\.github/workflows/product-snapshot\.yml$)'; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "relevant=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    name: product snapshot
+    needs: changes
+    if: needs.changes.outputs.relevant == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Generate the snapshot
+        run: npx -y @prodshape/cli@0.22.0 graph --format html
+
+      # The file is self-contained, so it is uploaded unzipped and opens
+      # straight from disk. With `archive: false` the artifact takes the file's
+      # name, hence the rename.
+      - name: Name the snapshot after the product
+        run: cp .product/generated/snapshot.html domusmind-product-snapshot.html
+
+      - name: Upload the snapshot
+        id: upload
+        uses: actions/upload-artifact@v7
+        with:
+          path: domusmind-product-snapshot.html
+          archive: false
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Link the snapshot from the run summary
+        env:
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+        run: |
+          {
+            echo "## Product snapshot"
+            echo
+            echo "[domusmind-product-snapshot.html](${ARTIFACT_URL}) for \`${GITHUB_SHA}\`. Download it and open it in a browser; it needs no server."
+          } >> "$GITHUB_STEP_SUMMARY"
