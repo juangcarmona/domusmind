@@ -31,8 +31,29 @@ coverage/
 !.env.example
 
 # Claude
-.claude/
+# Local Claude state stays out; only the files ProductShape manages are tracked,
+# because `prodshape integration update --check` verifies them in CI.
+.claude/*
+!.claude/commands/
+.claude/commands/*
+!.claude/commands/product/
+!.claude/hooks/
+.claude/hooks/*
+!.claude/hooks/product-definition.json
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/analyze-product-change/
+!.claude/skills/audit-product-model/
+!.claude/skills/bind-consumers/
+!.claude/skills/define-product/
+!.claude/skills/explore-product/
+!.claude/skills/recover-product/
+!.claude/skills/refine-product/
 CLAUDE.md
 
 # APM dependencies
 apm_modules/
+
+# Product Definition as Code: regenerable outputs, never canonical.
+.product/generated/
+.product/cache/
