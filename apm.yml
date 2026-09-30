@@ -5,10 +5,16 @@ author: Juan G. Carmona
 dependencies:
   apm:
   - PlainConceptsChapters/chapter-devex/plugins/pc-lifecycle#v0.2.0
+  - juangcarmona/agent-toolkit/packages/product-definition#3b0c543077d3ad9a09a18e46feebd3258a7738c6
+  - git: juangcarmona/agent-toolkit
+    ref: 3b0c543077d3ad9a09a18e46feebd3258a7738c6
+    skills: [architecture-docs, product-definition]
   mcp: []
 includes:
 - auto
 - .apm/skills
 targets:
 - copilot
+- claude
+- agent-skills
 scripts: {}
