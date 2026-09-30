@@ -3,7 +3,7 @@
 This repository is documentation-driven.
 
 Before making non-trivial changes:
-- read the relevant files in `docs/` and `specs/`
+- read the relevant files in `docs/` and `openspec/specs/`
 - identify the owning area (backend, web app, public site)
 - find an existing pattern and follow it
 

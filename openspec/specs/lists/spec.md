@@ -372,11 +372,11 @@ Checked items that meet a projection condition still appear in Agenda, de-emphas
 
 ### Terminology: "Shared Lists" vs "Lists"
 
-The context document (`docs/04_contexts/shared-lists.md`) and the item model document use "Shared Lists" and "SharedList" throughout. The product surface (`00_product/surfaces/lists.md`) and feature specs use "Lists". This spec uses "Lists" as the product-facing term. The transition is incomplete in the domain docs; "SharedList" remains the aggregate name in the domain model.
+The context document (`docs/_legacy/04_contexts/shared-lists.md`) and the item model document use "Shared Lists" and "SharedList" throughout. The product surface (`00_product/surfaces/lists.md`) and feature specs use "Lists". This spec uses "Lists" as the product-facing term. The transition is incomplete in the domain docs; "SharedList" remains the aggregate name in the domain model.
 
 ### Contradiction: `repeat` independence — Resolved
 
-The `set-item-temporal` feature spec previously stated that `repeat` requires a `dueDate` to be present, contradicting the item model document which states that `repeat` is independently sufficient for Agenda projection. This contradiction is resolved by `docs/01_system/system-spec.md`, which explicitly states: "Repeat on a list item may be set independently of due date. Repeat is itself a temporal anchor sufficient for Agenda projection." The item model canonical position is confirmed. The `set-item-temporal` feature spec constraint was stale.
+The `set-item-temporal` feature spec previously stated that `repeat` requires a `dueDate` to be present, contradicting the item model document which states that `repeat` is independently sufficient for Agenda projection. This contradiction is resolved by `docs/_legacy/01_system/system-spec.md`, which explicitly states: "Repeat on a list item may be set independently of due date. Repeat is itself a temporal anchor sufficient for Agenda projection." The item model canonical position is confirmed. The `set-item-temporal` feature spec constraint was stale.
 
 ### `get-list-detail` item fields
 
@@ -394,8 +394,8 @@ The context document notes that the Lists context receives shopping lists genera
 
 ## Source References
 
-- `docs/04_contexts/shared-lists.md`
-- `docs/04_contexts/shared-lists-item-model.md`
+- `docs/_legacy/04_contexts/shared-lists.md`
+- `docs/_legacy/04_contexts/shared-lists-item-model.md`
 - `00_product/surfaces/lists.md`
 - `specs/features/lists/create-list.md`
 - `specs/features/lists/update-list.md`

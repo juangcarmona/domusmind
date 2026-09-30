@@ -225,6 +225,19 @@ Mobile validation only.
 
 Only public release publisher.
 
+### `product-ci.yml`
+
+Product model verification only: `prodshape validate` and
+`prodshape integration update --check`, pinned to
+`@prodshape/cli@0.22.0`. The job is `product model`.
+
+### `product-snapshot.yml`
+
+Builds the Product Snapshot (`prodshape graph --format html`) and keeps it
+as the run artifact `domusmind-product-snapshot.html`, linked from the run
+summary, for 30 days. It runs on every push to `main` that touches the
+model and on every pull request that does. The job is `product snapshot`.
+
 ### Required checks and the `changes` gate
 
 Each CI workflow above starts with a small `changes` job, and its real job
@@ -267,7 +280,8 @@ Three consequences to preserve:
 
 Current required contexts on `main`: `backend build`, `webapp build`,
 `Validate Astro site`, `Analyze (csharp)`,
-`Analyze (javascript-typescript)`.
+`Analyze (javascript-typescript)`. `product model` and `product snapshot`
+follow the same gate but are not required yet.
 
 `required_approving_review_count` is `0`. Pull requests are still
 required, but GitHub forbids approving your own, so on a

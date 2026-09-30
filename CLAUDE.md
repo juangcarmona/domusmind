@@ -18,39 +18,42 @@ Before changing code:
 
 ## Source of truth
 
-Read these first when working on backend scaffolding:
+The documentation is being migrated into three homes: the product model
+(`docs/product/`, ProductShape), arc42 architecture (`docs/architecture/`) and
+ADRs (`docs/adr/`). Until each part lands, its source is still under
+`docs/_legacy/`; see `docs/_legacy/README.md`.
+
+### Product
+- `docs/product/model/` (once populated; validate with `npx @prodshape/cli@0.22.0 validate`)
+- `docs/_legacy/00_product/strategy.md`
+- `docs/_legacy/01_system/system-spec.md`
 
 ### Core architecture
-- `docs/03_architecture/architecture.md`
-- `docs/03_architecture/application-model.md`
-- `docs/03_architecture/aggregate-design.md`
-- `docs/03_architecture/event-processing.md`
-- `docs/03_architecture/id-strategy.md`
+- `docs/_legacy/02_architecture/architecture.md`
+- `docs/_legacy/02_architecture/application-model.md`
+- `docs/_legacy/02_architecture/aggregate-design.md`
+- `docs/_legacy/02_architecture/event-processing.md`
+- `docs/_legacy/02_architecture/id-strategy.md`
 
 ### ADRs
-- `docs/03_architecture/decision-records/ADR-001-internal-application-mediator.md`
-- `docs/03_architecture/decision-records/ADR-002-authentication-and-identity.md`
+- `docs/_legacy/02_architecture/adrs/ADR-001-internal-application-mediator.md`
+- `docs/_legacy/02_architecture/adrs/ADR-002-authentication-and-identity.md`
+- `docs/_legacy/02_architecture/adrs/ADR-003-outlook-delegated-auth-transport.md`
 
 ### Implementation rules
-- `docs/06_slices/slice-conventions.md`
-- `docs/07_interfaces/api.md`
-- `docs/08_data/data-model.md`
-- `docs/09_security/security.md`
+- `docs/_legacy/05_slices/slice-conventions.md`
+- `docs/_legacy/06_interfaces/api.md`
+- `docs/_legacy/07_platform/data-model.md`
+- `docs/_legacy/07_platform/security.md`
 
 ### Domain/context references
-- `docs/04_domain/domain-overview.md`
-- `docs/04_domain/domain-events.md`
-- `docs/04_domain/ubiquitous-language.md`
-- `docs/05_contexts/context-map.md`
-- `docs/05_contexts/family-context.md`
-- `docs/05_contexts/responsibility-context.md`
-- `docs/05_contexts/calendar-context.md`
-- `docs/05_contexts/tasks-context.md`
+- `docs/_legacy/03_domain/context-map.md`
+- `docs/_legacy/03_domain/domain-events.md`
+- `docs/_legacy/03_domain/ubiquitous-language.md`
+- `docs/_legacy/04_contexts/*.md`
 
-### System + feature specs
-- `specs/system/system-spec.md`
-- `specs/contexts/*.md`
-- `specs/features/**/*.md`
+### Behaviour specs
+- `openspec/specs/*/spec.md`
 
 ## Mandatory architectural rules
 
