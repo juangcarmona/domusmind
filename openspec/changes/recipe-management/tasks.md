@@ -1,5 +1,7 @@
 ## 1. Domain — Recipe Aggregate Mutations
 
+<!-- pdac-scope: none reason="Implementation checklist of completed work items; the product behaviour it implements is cited in proposal.md, design.md and the change specs." -->
+
 - [x] 1.1 Add `Update(name, description, prepTimeMinutes, cookTimeMinutes, servings, isFavorite, allowedMealTypes, tags)` method to `Recipe` aggregate; enforce name uniqueness at application layer
 - [x] 1.2 Add `RemoveIngredient(name)` method to `Recipe` aggregate (case-insensitive match)
 - [x] 1.3 Add `UpdateIngredient(name, newQuantity, newUnit)` method to `Recipe` aggregate
