@@ -3,11 +3,11 @@ Audience: Product / Design / Engineering
 Scope: V1 and current surface-system-reboot
 Owns: Unified Agenda surface — scope, time modes, views, interaction grammar, CRUD flows
 Depends on:
-  - docs/00_product/experience.md
-  - docs/00_product/surface-system.md
-  - docs/04_contexts/calendar.md
-  - docs/04_contexts/tasks.md
-  - docs/04_contexts/shared-lists.md
+  - docs/product/model
+  - docs/design/surface-system.md
+  - docs/product/model
+  - docs/product/model
+  - docs/product/model
 Replaces:
   - 00_product/surfaces/today.md
   - 00_product/surfaces/planning.md

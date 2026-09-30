@@ -2,7 +2,7 @@ Status: Canonical
 Audience: Product / Design / Engineering
 Scope: Cross-surface UX system for V1 and the current surface-system-reboot
 Owns: App shell, layout grammar, density rules, visual tone, interaction grammar, responsive behavior, and surface anti-patterns
-Depends on: docs/00_product/strategy.md, docs/00_product/experience.md
+Depends on: docs/product/model, docs/product/model
 
 # DomusMind - Surface System
 

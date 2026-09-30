@@ -7,9 +7,9 @@ DomusMind is documented in the open. Everything about how it is designed, why de
 
 ## Product definition
 
-The canonical product docs: strategy, experience, and public-site guidance.
+The product defined as code: who uses DomusMind, the household areas it covers, what each part must do and the rules it keeps.
 
-[View on GitHub](https://github.com/juangcarmona/domusmind/tree/main/docs/00_product)
+[View on GitHub](https://github.com/juangcarmona/domusmind/tree/main/docs/product)
 
 ## Architecture
 
@@ -21,7 +21,7 @@ The technical model: modular monolith, bounded contexts, domain-centric design, 
 
 The household concepts behind the system: family, members, responsibilities, events, tasks, routines, and the ubiquitous language.
 
-[Domain docs](https://github.com/juangcarmona/domusmind/tree/main/docs/04_domain)
+[Domain docs](https://github.com/juangcarmona/domusmind/tree/main/docs/product/model/domain)
 
 ## Specs and features
 

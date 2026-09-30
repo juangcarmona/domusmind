@@ -2,7 +2,7 @@ Status: Canonical
 Audience: Product / Design / Engineering / Marketing
 Scope: V1 with future-direction notes
 Owns: Public-site messaging, homepage structure, CTA hierarchy, proof blocks, SEO themes, and copy guardrails
-Depends on: docs/00_product/strategy.md, docs/00_product/experience.md
+Depends on: docs/product/model, docs/product/model
 Replaces: docs/01_principles/homepage-content-contract.md, website and copy sections from docs/00_vision/domusmind-public-marketing-foundation.md
 
 # DomusMind - Public Site

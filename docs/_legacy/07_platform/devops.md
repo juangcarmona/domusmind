@@ -227,8 +227,9 @@ Only public release publisher.
 
 ### `product-ci.yml`
 
-Product model verification only: `prodshape validate` and
-`prodshape integration update --check`, pinned to
+Product model verification only: `prodshape validate`,
+`prodshape integration update --check` and
+`prodshape citations verify --provider openspec`, pinned to
 `@prodshape/cli@0.22.0`. The job is `product model`.
 
 ### `product-snapshot.yml`

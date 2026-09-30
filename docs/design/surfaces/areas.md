@@ -17,9 +17,9 @@ This is an ownership surface, not a task board and not an admin console.
 
 ## Depends On
 
-- `docs/00_product/experience.md`
-- `docs/00_product/surface-system.md`
-- `docs/04_contexts/responsibilities.md`
+- `docs/product/model`
+- `docs/design/surface-system.md`
+- `docs/product/model`
 
 ---
 

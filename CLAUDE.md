@@ -19,14 +19,13 @@ Before changing code:
 ## Source of truth
 
 The documentation is being migrated into three homes: the product model
-(`docs/product/`, ProductShape), arc42 architecture (`docs/architecture/`) and
-ADRs (`docs/adr/`). Until each part lands, its source is still under
+(`docs/product/`, ProductShape, done), arc42 architecture (`docs/architecture/`) and
+ADRs (`docs/adr/`). Until the architecture part lands, its source is still under
 `docs/_legacy/`; see `docs/_legacy/README.md`.
 
 ### Product
-- `docs/product/model/` (once populated; validate with `npx @prodshape/cli@0.22.0 validate`)
-- `docs/_legacy/00_product/strategy.md`
-- `docs/_legacy/01_system/system-spec.md`
+- `docs/product/model/`: the accepted product model (ProductShape). Validate with `npx @prodshape/cli@0.22.0 validate`; browse it with `npx @prodshape/cli@0.22.0 graph --format html`. It changes only through a Product Change under `docs/product/changes/`.
+- `docs/design/`: UI guidance for the surfaces, subordinate to the model.
 
 ### Core architecture
 - `docs/_legacy/02_architecture/architecture.md`
