@@ -91,6 +91,8 @@ using DomusMind.Application.Features.Lists.SetItemTemporal;
 using DomusMind.Application.Features.Lists.ClearItemTemporal;
 using DomusMind.Application.Features.Lists.SetItemContext;
 using DomusMind.Application.Features.Lists.UpdateList;
+using DomusMind.Application.Features.Lists.ArchiveList;
+using DomusMind.Application.Features.Lists.RestoreList;
 using DomusMind.Application.Features.MealPlanning.ApplyWeeklyTemplate;
 using DomusMind.Application.Features.MealPlanning.CopyMealPlanFromPreviousWeek;
 using DomusMind.Application.Features.MealPlanning.CreateMealPlan;
@@ -101,6 +103,12 @@ using DomusMind.Application.Features.MealPlanning.GetMealPlan;
 using DomusMind.Application.Features.MealPlanning.GetMealPlansForAgenda;
 using DomusMind.Application.Features.MealPlanning.RequestShoppingList;
 using DomusMind.Application.Features.MealPlanning.UpdateMealSlot;
+using DomusMind.Application.Features.MealPlanning.AddRecipeIngredient;
+using DomusMind.Application.Features.MealPlanning.DeleteRecipe;
+using DomusMind.Application.Features.MealPlanning.GetRecipeDetail;
+using DomusMind.Application.Features.MealPlanning.RemoveRecipeIngredient;
+using DomusMind.Application.Features.MealPlanning.UpdateRecipe;
+using DomusMind.Application.Features.MealPlanning.UpdateRecipeIngredient;
 using DomusMind.Contracts.MealPlanning;
 using DomusMind.Contracts.Auth;
 using DomusMind.Contracts.Calendar;
@@ -236,6 +244,8 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<ClearItemTemporalCommand, ClearItemTemporalResponse>, ClearItemTemporalCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateListCommand, UpdateListResponse>, UpdateListCommandHandler>();
         services.AddScoped<ICommandHandler<SetItemContextCommand, SetItemContextResponse>, SetItemContextCommandHandler>();
+        services.AddScoped<ICommandHandler<ArchiveListCommand, bool>, ArchiveListCommandHandler>();
+        services.AddScoped<ICommandHandler<RestoreListCommand, bool>, RestoreListCommandHandler>();
 
         // Meal Planning slices
         services.AddScoped<ICommandHandler<CreateMealPlanCommand, CreateMealPlanResponse>, CreateMealPlanCommandHandler>();
@@ -248,6 +258,12 @@ public static class ApplicationServices
         services.AddScoped<IQueryHandler<GetMealPlanQuery, GetMealPlanResponse>, GetMealPlanQueryHandler>();
         services.AddScoped<IQueryHandler<GetFamilyRecipesQuery, GetFamilyRecipesResponse>, GetFamilyRecipesQueryHandler>();
         services.AddScoped<IQueryHandler<GetMealPlansForAgendaQuery, MealPlansForAgendaResponse>, GetMealPlansForAgendaQueryHandler>();
+        services.AddScoped<ICommandHandler<UpdateRecipeCommand, UpdateRecipeResponse>, UpdateRecipeCommandHandler>();
+        services.AddScoped<ICommandHandler<DeleteRecipeCommand, DeleteRecipeResponse>, DeleteRecipeCommandHandler>();
+        services.AddScoped<ICommandHandler<AddRecipeIngredientCommand, AddRecipeIngredientResponse>, AddRecipeIngredientCommandHandler>();
+        services.AddScoped<ICommandHandler<UpdateRecipeIngredientCommand, UpdateRecipeIngredientResponse>, UpdateRecipeIngredientCommandHandler>();
+        services.AddScoped<ICommandHandler<RemoveRecipeIngredientCommand, RemoveRecipeIngredientResponse>, RemoveRecipeIngredientCommandHandler>();
+        services.AddScoped<IQueryHandler<GetRecipeDetailQuery, GetRecipeDetailResponse?>, GetRecipeDetailQueryHandler>();
 
         return services;
     }
