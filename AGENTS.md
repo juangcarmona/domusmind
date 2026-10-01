@@ -214,3 +214,13 @@ dotnet ef migrations add <MigrationName> --project src/backend/DomusMind.Infrast
 ```
 
 Under Aspire, make sure the database is running before generating a migration.
+
+## AI artifacts
+
+Claude Code and GitHub Copilot share one copy of every artifact; do not add per-tool copies.
+
+- Skills: `.claude/skills/<name>/SKILL.md`, read by both tools.
+- Commands: `.claude/commands/` (Claude Code; Copilot uses the skills).
+- Agents: `.claude/agents/`. The GitHub cloud coding agent reads only `.github/agents/`, so `.github/agents/product-engineer.agent.md` mirrors `.claude/agents/product-engineer.md` and changes with it.
+- Instructions: this file. `CLAUDE.md` only imports it; path-scoped Copilot rules are in `.github/instructions/`.
+- ProductShape manages its skills, commands and hook under `.claude/` (listed in `.product/installation.lock.json`): regenerate them with `npx -y @prodshape/cli@0.22.0 integration update`, never edit them by hand. OpenSpec's `openspec-*` skills and `opsx` commands come from `openspec init --tools claude`.

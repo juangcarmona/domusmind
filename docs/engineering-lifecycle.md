@@ -116,18 +116,16 @@ Who decides the judgement items above. A role is a person, a team, or a named re
 
 ## Installed roles
 
-Role skills the `adopt` capability installed into `.apm/skills/`: the provider-neutral source. Re-running adopt reconciles against this list rather than overwriting blind.
+Role skills the `adopt` capability installed. They live in `.claude/skills/`, the single copy that both Claude Code and GitHub Copilot read, and are edited there. Re-running adopt reconciles against this list rather than overwriting blind.
 
-Projected harness copies (`.claude/skills/`, read by both Claude Code and GitHub Copilot) are generated from that source; edit the source, never a projection.
-
-| Role skill | Adapted from | Installed | Projected to |
+| Role skill | Adapted from | Installed | Location |
 | --- | --- | --- | --- |
-| `read-work-item` | `references/github-issues.md` | 2026-09-08 | `.claude/skills/` (via `apm install`) |
-| `transition-work-item` | `references/github-issues.md` | 2026-09-08 | `.claude/skills/` (via `apm install`) |
-| `open-pull-request` | `references/github.md` | 2026-09-08 | `.claude/skills/` (via `apm install`) |
-| `inspect-ci-result` | `references/github.md` | 2026-09-08 | `.claude/skills/` (via `apm install`) |
-| `merge-pull-request` | `references/github.md` | 2026-09-08 | `.claude/skills/` (via `apm install`) |
-| `wip-query` | `references/github-projects.md` | 2026-09-08 | `.claude/skills/` (via `apm install`) |
+| `read-work-item` | `references/github-issues.md` | 2026-09-08 | `.claude/skills/` |
+| `transition-work-item` | `references/github-issues.md` | 2026-09-08 | `.claude/skills/` |
+| `open-pull-request` | `references/github.md` | 2026-09-08 | `.claude/skills/` |
+| `inspect-ci-result` | `references/github.md` | 2026-09-08 | `.claude/skills/` |
+| `merge-pull-request` | `references/github.md` | 2026-09-08 | `.claude/skills/` |
+| `wip-query` | `references/github-projects.md` | 2026-09-08 | `.claude/skills/` |
 
 ### Roles not installed and why
 
