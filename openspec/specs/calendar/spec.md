@@ -649,7 +649,7 @@ The projection assembles entries from five sources: Calendar Events where the me
 
 ## Notes
 
-1. **Recurring events** — `docs/_legacy/04_contexts/calendar.md` includes `RecurrenceRule` as a value object and mentions recurring events (e.g. "football practice every Tuesday"), but no feature spec covers creating or modifying recurring events beyond the basic schedule invariant (recurring events must define a recurrence rule). This spec captures the invariant. Full recurring event management (skip occurrence, move occurrence) is listed as future scope in the context document.
+1. **Recurring events** — `docs/04_contexts/calendar.md` includes `RecurrenceRule` as a value object and mentions recurring events (e.g. "football practice every Tuesday"), but no feature spec covers creating or modifying recurring events beyond the basic schedule invariant (recurring events must define a recurrence rule). This spec captures the invariant. Full recurring event management (skip occurrence, move occurrence) is listed as future scope in the context document.
 
 <!-- pdac-drift ids="TERM-PLAN" summary="Note says the spec captures a recurrence-rule invariant; the model (Q-0044) has no current recurrence behaviour and plans recurring-plan management for V2" -->
 
@@ -677,7 +677,7 @@ The projection assembles entries from five sources: Calendar Events where the me
 
 ## Source References
 
-- `docs/_legacy/04_contexts/calendar.md` — primary context document: aggregates, invariants, commands, events, boundary rules, external calendar model
+- `docs/04_contexts/calendar.md` — primary context document: aggregates, invariants, commands, events, boundary rules, external calendar model
 - `specs/features/calendar/schedule-event.md`
 - `specs/features/calendar/reschedule-event.md`
 - `specs/features/calendar/cancel-event.md`
@@ -692,4 +692,4 @@ The projection assembles entries from five sources: Calendar Events where the me
 - `specs/features/calendar/refresh-external-calendar-feeds.md`
 - `specs/features/calendar/view-family-timeline.md`
 - `specs/features/calendar/view-member-agenda.md`
-- `docs/_legacy/03_domain/ubiquitous-language.md` — Plan vs Event terminology, Agenda architectural invariant
+- `docs/03_domain/ubiquitous-language.md` — Plan vs Event terminology, Agenda architectural invariant

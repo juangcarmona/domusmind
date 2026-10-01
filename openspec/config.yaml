@@ -29,9 +29,10 @@ context: >-
   through domain events only.
 
 
-  IDs are ULID-based strongly typed identifiers (FamilyId, MemberId, EventId,
-  TaskId, etc.) and are serialized as strings externally. We use record structs
-  for IDs to avoid nullability and reference equality issues.
+  IDs are strongly typed identifiers (FamilyId, MemberId, EventId, TaskId,
+  etc.): record structs wrapping a Guid, to avoid nullability and reference
+  equality issues (docs/adr/0010; the earlier ULID proposal, 0009, is
+  superseded).
 
 
   The Domain layer is framework-agnostic: no EF Core, no ASP.NET, no
@@ -174,7 +175,7 @@ rules:
       and never declare an exemption just because citations are missing.'
   specs:
     - Write specs as behavior contracts, not implementation plans.
-    - Use ubiquitous language from docs/_legacy/03_domain/ubiquitous-language.md and
+    - Use ubiquitous language from docs/product/model/domain/terms/ and
       existing OpenSpec/domain specs; never invent new terms.
     - Prefer one consolidated spec per domain, surface, or client artifact
       rather than one spec per backend slice capability.

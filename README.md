@@ -57,6 +57,8 @@ Key ideas:
 
 The system is intentionally simple and evolvable.
 
+The architecture is documented in arc42 under [`docs/architecture/`](docs/architecture/README.md), with decisions in [`docs/adr/`](docs/adr/README.md). [`docs/README.md`](docs/README.md) maps where each kind of documentation lives.
+
 ---
 
 ## Product Definition

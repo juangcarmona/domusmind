@@ -18,41 +18,30 @@ Before changing code:
 
 ## Source of truth
 
-The documentation is being migrated into three homes: the product model
-(`docs/product/`, ProductShape, done), arc42 architecture (`docs/architecture/`) and
-ADRs (`docs/adr/`). Until the architecture part lands, its source is still under
-`docs/_legacy/`; see `docs/_legacy/README.md`.
+`docs/README.md` maps where each kind of truth lives. Read these first:
 
 ### Product
 - `docs/product/model/`: the accepted product model (ProductShape). Validate with `npx @prodshape/cli@0.22.0 validate`; browse it with `npx @prodshape/cli@0.22.0 graph --format html`. It changes only through a Product Change under `docs/product/changes/`.
 - `docs/design/`: UI guidance for the surfaces, subordinate to the model.
 
-### Core architecture
-- `docs/_legacy/02_architecture/architecture.md`
-- `docs/_legacy/02_architecture/application-model.md`
-- `docs/_legacy/02_architecture/aggregate-design.md`
-- `docs/_legacy/02_architecture/event-processing.md`
-- `docs/_legacy/02_architecture/id-strategy.md`
+### Architecture
+- `docs/architecture/`: arc42, twelve sections; start at `docs/architecture/README.md`.
+  - Building blocks, modules and slices: `05-building-block-view.md`
+  - Runtime flows (dispatcher, event log, sync, auth): `06-runtime-view.md`
+  - Crosscutting rules (aggregates, mediator, mapping, persistence, events, IDs, auth, API conventions, testing): `08-crosscutting-concepts.md`
+  - Known gaps between the docs, the model and the code: `11-risks-and-technical-debt.md`
 
-### ADRs
-- `docs/_legacy/02_architecture/adrs/ADR-001-internal-application-mediator.md`
-- `docs/_legacy/02_architecture/adrs/ADR-002-authentication-and-identity.md`
-- `docs/_legacy/02_architecture/adrs/ADR-003-outlook-delegated-auth-transport.md`
-
-### Implementation rules
-- `docs/_legacy/05_slices/slice-conventions.md`
-- `docs/_legacy/06_interfaces/api.md`
-- `docs/_legacy/07_platform/data-model.md`
-- `docs/_legacy/07_platform/security.md`
-
-### Domain/context references
-- `docs/_legacy/03_domain/context-map.md`
-- `docs/_legacy/03_domain/domain-events.md`
-- `docs/_legacy/03_domain/ubiquitous-language.md`
-- `docs/_legacy/04_contexts/*.md`
+### Decisions
+- `docs/adr/`: architecture decision records. `docs/adr/README.md` lists every record with its status; `docs/architecture/09-architecture-decisions.md` maps the ones in effect to the views. Only `Accepted` records bind a change.
+  - `0001-use-an-internal-application-mediator.md` (the mediator rule below)
+  - `0002-keep-authentication-local-and-separate-from-member-identity.md`
+  - `0010-use-guid-backed-strongly-typed-identifiers.md` (identifiers; supersedes the ULID rule of 0009)
 
 ### Behaviour specs
-- `openspec/specs/*/spec.md`
+- `openspec/specs/*/spec.md`, bound to the product model by citations (`npx @prodshape/cli@0.22.0 citations verify --provider openspec`).
+
+### Operations
+- `docs/devops.md`: versioning, release, CI workflows and required checks.
 
 ## Mandatory architectural rules
 

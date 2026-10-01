@@ -37,4 +37,4 @@ npm run build
 - Build output: `dist`
 - Workflow files:
   - `.github/workflows/public-site-ci.yml`
-  - `.github/workflows/public-site-deploy.yml`
+  - `.github/workflows/public-site-cd.yml`

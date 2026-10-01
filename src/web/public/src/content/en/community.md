@@ -28,7 +28,7 @@ If you want to contribute to a problem that is structural, not cosmetic, there i
 - Extend the API or build integrations
 - Improve documentation, translations, or accessibility
 
-[Explore the architecture](/architecture) · [View specs on GitHub](https://github.com/juangcarmona/domusmind/tree/main/specs)
+[Explore the architecture](https://github.com/juangcarmona/domusmind/tree/main/docs/architecture) · [View specs on GitHub](https://github.com/juangcarmona/domusmind/tree/main/openspec/specs)
 
 ## Contribution paths
 
