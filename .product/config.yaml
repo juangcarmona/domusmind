@@ -10,10 +10,11 @@ extensions:
     integrations:
       ai:
         - claude
-        - copilot
       shorthand-commands: false
     citations:
       # Directories `prodshape citations verify` scans when no target is given.
       consumer-roots:
         - openspec
         - docs/architecture
+        - src
+        - tests

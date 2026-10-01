@@ -49,7 +49,7 @@ here.
 ## Convention constraints
 
 Team decisions that every change must respect. They are stated as rules in
-[`CLAUDE.md`](../../CLAUDE.md) and justified in the ADRs.
+[`AGENTS.md`](../../AGENTS.md) and justified in the ADRs.
 
 | Convention | ADR |
 | --- | --- |

@@ -35,6 +35,6 @@ API models are contracts, not domain entities; domain entities are never exposed
 ## References
 
 - Legacy source: `docs/06_interfaces/api.md` (Models, Mapping)
-- Rule: [`CLAUDE.md`](../../CLAUDE.md) (mandatory architectural rules)
+- Rule: [`AGENTS.md`](../../AGENTS.md) (mandatory architectural rules)
 - Evidence: [`src/backend/DomusMind.Contracts/`](../../src/backend/DomusMind.Contracts/), [`src/backend/DomusMind.Application/Features/`](../../src/backend/DomusMind.Application/Features/), project files under [`src/backend/`](../../src/backend/)
 - Related: [ADR-0005](0005-expose-a-rest-api-through-aspnet-core-controllers.md), [ADR-0007](0007-use-ef-core-directly-without-generic-repositories.md)

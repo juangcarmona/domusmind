@@ -36,6 +36,6 @@ The backend keeps separate projects per layer (Domain, Application, Contracts, I
 ## References
 
 - Legacy sources: `docs/02_architecture/architecture.md`, `docs/02_architecture/application-model.md`, `docs/02_architecture/c4/02-containers.md`
-- Rule: [`CLAUDE.md`](../../CLAUDE.md) (mandatory architectural rules)
+- Rule: [`AGENTS.md`](../../AGENTS.md) (mandatory architectural rules)
 - Evidence: [`DomusMind.slnx`](../../DomusMind.slnx), [`src/backend/DomusMind.Domain/DomusMind.Domain.csproj`](../../src/backend/DomusMind.Domain/DomusMind.Domain.csproj), [`src/backend/DomusMind.Application/Features/`](../../src/backend/DomusMind.Application/Features/), [`src/backend/DomusMind.Api/Dockerfile`](../../src/backend/DomusMind.Api/Dockerfile), [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml)
 - Related: [ADR-0001](0001-use-an-internal-application-mediator.md), [ADR-0002](0002-keep-authentication-local-and-separate-from-member-identity.md), [ADR-0008](0008-collaborate-across-modules-through-persisted-domain-events.md)

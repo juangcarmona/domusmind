@@ -10,6 +10,5 @@ includes:
 - auto
 - .apm/skills
 targets:
-- copilot
 - claude
 scripts: {}

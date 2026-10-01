@@ -65,5 +65,5 @@ architecture documentation are:
 | Reader | Expectation |
 | --- | --- |
 | Maintainers and contributors | Know where a change belongs, which module boundary and layer rule it must respect, and which ADR governs it. |
-| Coding agents | A stable, citation-checked description of the shape they must preserve, consistent with [`CLAUDE.md`](../../CLAUDE.md). |
+| Coding agents | A stable, citation-checked description of the shape they must preserve, consistent with [`AGENTS.md`](../../AGENTS.md). |
 | Self-hosting operators | What runs, what it depends on and what crosses the system boundary ([03](03-context-and-scope.md), [07](07-deployment-view.md)). |

@@ -35,6 +35,6 @@ Aggregates emit immutable, past-tense events after a state change. Each event be
 ## References
 
 - Legacy sources: `docs/02_architecture/event-processing.md`, `docs/07_platform/data-model.md` (Event Log)
-- Rule: [`CLAUDE.md`](../../CLAUDE.md) (mandatory architectural rules)
+- Rule: [`AGENTS.md`](../../AGENTS.md) (mandatory architectural rules)
 - Evidence: [`src/backend/DomusMind.Application/Abstractions/Persistence/IEventLogWriter.cs`](../../src/backend/DomusMind.Application/Abstractions/Persistence/IEventLogWriter.cs), [`src/backend/DomusMind.Infrastructure/Events/EventLogWriter.cs`](../../src/backend/DomusMind.Infrastructure/Events/EventLogWriter.cs), [`src/backend/DomusMind.Infrastructure/Messaging/DomainEventDispatcher.cs`](../../src/backend/DomusMind.Infrastructure/Messaging/DomainEventDispatcher.cs), [`src/backend/DomusMind.Application/Features/MealPlanning/RequestShoppingList/RequestShoppingListCommandHandler.cs`](../../src/backend/DomusMind.Application/Features/MealPlanning/RequestShoppingList/RequestShoppingListCommandHandler.cs)
 - Related: [ADR-0001](0001-use-an-internal-application-mediator.md), [ADR-0004](0004-build-a-domain-centric-modular-monolith.md)
