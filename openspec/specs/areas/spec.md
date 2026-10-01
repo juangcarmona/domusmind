@@ -342,7 +342,7 @@ Referencing an Area does not change ownership assignments. Ownership belongs exc
 
 "Area" (product surface) and "Responsibility Domain" (domain model) refer to the same concept. All repository sources are consistent on this mapping. "Owner" maps to Primary Owner; "Support" maps to Secondary Owner. This spec uses Area, Owner, and Support when describing product-facing behavior, and notes the domain terms where relevant.
 
-`docs/_legacy/04_contexts/areas.md` does not exist in this repository. The context document for this domain lives at `docs/_legacy/04_contexts/responsibilities.md`. The Areas label is used by the product surface (`00_product/surfaces/areas.md`) and the navigation entry point.
+`docs/04_contexts/areas.md` does not exist in this repository. The context document for this domain lives at `docs/04_contexts/responsibilities.md`. The Areas label is used by the product surface (`00_product/surfaces/areas.md`) and the navigation entry point.
 
 ### AssignPrimaryOwner vs. TransferResponsibility
 
@@ -368,10 +368,10 @@ The repository specifies archiving but does not document reactivation or permane
 
 ## Source References
 
-- `docs/_legacy/04_contexts/responsibilities.md`
+- `docs/04_contexts/responsibilities.md`
 - `00_product/surfaces/areas.md`
 - `specs/features/responsibilities/create-responsibility-domain.md`
 - `specs/features/responsibilities/assign-primary-owner.md`
 - `specs/features/responsibilities/assign-secondary-owner.md`
 - `specs/features/responsibilities/transfer-responsibility.md`
-- `docs/_legacy/03_domain/ubiquitous-language.md`
+- `docs/03_domain/ubiquitous-language.md`

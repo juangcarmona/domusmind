@@ -456,11 +456,11 @@ No other context may create, modify, or remove members, pets, or relationships. 
 
 ## Notes
 
-**N1 — Dependent entity status**: `docs/_legacy/04_contexts/family.md` describes `Dependent` as a separate internal entity. However, `specs/system/system-spec.md` lists only `create-family` and `add-member` in the V1 Family feature set — there is no `add-dependent` in V1. `specs/features/family/member-management.md` confirms Phase 1 uses `FamilyMember` as the single member entity with `Child` and `Caregiver` as roles; the `Dependent` entity was designed but never shipped as a V1 capability. The associated commands (`AddDependent`, `RemoveDependent`) and events (`DependentAdded`, `DependentRemoved`) belong to the domain design and a future roadmap phase. This spec reflects the Phase 1 implementation state: children and care recipients are `Member` entities with `MemberRole = Child` or `Caregiver`.
+**N1 — Dependent entity status**: `docs/04_contexts/family.md` describes `Dependent` as a separate internal entity. However, `specs/system/system-spec.md` lists only `create-family` and `add-member` in the V1 Family feature set — there is no `add-dependent` in V1. `specs/features/family/member-management.md` confirms Phase 1 uses `FamilyMember` as the single member entity with `Child` and `Caregiver` as roles; the `Dependent` entity was designed but never shipped as a V1 capability. The associated commands (`AddDependent`, `RemoveDependent`) and events (`DependentAdded`, `DependentRemoved`) belong to the domain design and a future roadmap phase. This spec reflects the Phase 1 implementation state: children and care recipients are `Member` entities with `MemberRole = Child` or `Caregiver`.
 
 <!-- pdac-drift ids="TERM-MEMBER-ROLE, TERM-MEMBER, BC-FAMILY" summary="spec treats Caregiver as a Phase 1 member role; the model has no Caregiver role (decided: Q-0021)" -->
 
-**N2 — `UpdateFamilySettings` command**: Listed in `docs/_legacy/04_contexts/family.md` but not detailed in any spec or feature document. Behavior is undefined. Excluded from this spec.
+**N2 — `UpdateFamilySettings` command**: Listed in `docs/04_contexts/family.md` but not detailed in any spec or feature document. Behavior is undefined. Excluded from this spec.
 
 <!-- pdac-drift ids="FR-FAMILY-HOUSEHOLD-SETTINGS, UC-FAMILY-CONFIGURE-HOUSEHOLD-SETTINGS, TERM-HOUSEHOLD-SETTINGS" summary="spec excludes household settings as undefined; the model defines name, primary language, first day of week and date format, changed only by managers (decided: Q-0025)" -->
 
@@ -472,7 +472,7 @@ No other context may create, modify, or remove members, pets, or relationships. 
 
 **N5 — Relationship assignment deferral**: `specs/system/system-spec.md` explicitly defers `assign-relationship` and `remove-member` to V1.1, citing cascading complexity. The relationship model (Relationship entity, RelationshipType, RelationshipAssigned/Removed events) is fully modeled in the domain but not exposed via V1 API or UI.
 
-**N6 — Pet entity vs. Pet role**: `docs/_legacy/04_contexts/family.md` describes Pet as a separate aggregate with its own `PetId`, `PetAdded`, and `PetRemoved` events. `specs/features/family/member-management.md` Phase 1 baseline documents `MemberRole` with values `Adult`, `Child`, `Caregiver`, `Pet` — pets are stored as `FamilyMember` and their identity uses `MemberId`. Phase 1 emits `MemberAdded`/`MemberRemoved` for pet operations. The separate Pet entity model and its associated events (`PetAdded`, `PetRemoved`) represent a domain design goal deferred beyond Phase 1.
+**N6 — Pet entity vs. Pet role**: `docs/04_contexts/family.md` describes Pet as a separate aggregate with its own `PetId`, `PetAdded`, and `PetRemoved` events. `specs/features/family/member-management.md` Phase 1 baseline documents `MemberRole` with values `Adult`, `Child`, `Caregiver`, `Pet` — pets are stored as `FamilyMember` and their identity uses `MemberId`. Phase 1 emits `MemberAdded`/`MemberRemoved` for pet operations. The separate Pet entity model and its associated events (`PetAdded`, `PetRemoved`) represent a domain design goal deferred beyond Phase 1.
 
 **N7 — Auth identity vs. domain identity**: The authentication identity of a user and the household `MemberId` are deliberately separate concerns. Auth identity is linked to a member via `AuthUserId` but the Family context does not own authentication. This spec describes the household identity side only.
 
@@ -482,9 +482,9 @@ No other context may create, modify, or remove members, pets, or relationships. 
 
 ## Sources
 
-- `docs/_legacy/04_contexts/family.md`
-- `docs/_legacy/03_domain/ubiquitous-language.md`
-- `docs/_legacy/03_domain/context-map.md`
+- `docs/04_contexts/family.md`
+- `docs/03_domain/ubiquitous-language.md`
+- `docs/03_domain/context-map.md`
 - `specs/features/family/create-family.md`
 - `specs/features/family/add-member.md`
 - `specs/features/family/assign-relationship.md`

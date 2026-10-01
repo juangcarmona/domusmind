@@ -686,7 +686,7 @@ Mobile must feel like the same product at a smaller scale, not a different produ
 
 ### Meal Planning surface
 
-The Meal Planning surface spec (`docs/design/surfaces/meal-planning.md`) is fully specified and describes a complete surface. However, the domain context document (`docs/_legacy/04_contexts/meal-planning.md`) marks Meal Planning as a **V2 bounded context**, not part of the V1 core. Whether Meal Planning is included as a V1 navigation entry in the web app is not definitively resolved in the source material. It is excluded from the navigation requirements above until its V1 inclusion is confirmed.
+The Meal Planning surface spec (`docs/design/surfaces/meal-planning.md`) is fully specified and describes a complete surface. However, the domain context document (`docs/04_contexts/meal-planning.md`) marks Meal Planning as a **V2 bounded context**, not part of the V1 core. Whether Meal Planning is included as a V1 navigation entry in the web app is not definitively resolved in the source material. It is excluded from the navigation requirements above until its V1 inclusion is confirmed.
 
 <!-- pdac-drift ids="FR-WEB-APP-SHELL, UC-WEB-MOVE-BETWEEN-SURFACES" summary="Spec excludes Meal Planning from navigation pending V1 status and names four primary surfaces; the model (Q-0001, Q-0051) makes Meal Planning current product and a navigable primary surface" -->
 
