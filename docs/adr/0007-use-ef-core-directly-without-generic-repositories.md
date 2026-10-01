@@ -35,6 +35,6 @@ Write handlers load the aggregate they modify explicitly and persist it. Read qu
 ## References
 
 - Legacy sources: `docs/07_platform/data-model.md` (EF Core Usage, Read Model), `docs/06_interfaces/api.md` (Queries)
-- Rule: [`CLAUDE.md`](../../CLAUDE.md) (mandatory architectural rules)
+- Rule: [`AGENTS.md`](../../AGENTS.md) (mandatory architectural rules)
 - Evidence: [`src/backend/DomusMind.Application/Abstractions/Persistence/IDomusMindDbContext.cs`](../../src/backend/DomusMind.Application/Abstractions/Persistence/IDomusMindDbContext.cs), [`src/backend/DomusMind.Infrastructure/Persistence/DomusMindDbContext.cs`](../../src/backend/DomusMind.Infrastructure/Persistence/DomusMindDbContext.cs), [`src/backend/DomusMind.Application/Features/`](../../src/backend/DomusMind.Application/Features/)
 - Related: [ADR-0004](0004-build-a-domain-centric-modular-monolith.md), [ADR-0006](0006-map-explicitly-without-automapper.md)
