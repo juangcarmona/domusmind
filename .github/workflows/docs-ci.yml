@@ -1,0 +1,80 @@
+name: docs-ci
+
+# Architecture documentation is a third consumer of the product model, with its
+# own contract, so it gets its own verdict next to product-ci. An unresolved or
+# tampered citation fails; a stale one only warns, because .product/config.yaml
+# sets `validation.warnings-as-errors: false`: the product artifact moved and a
+# person has to re-read the statement. See the note in backend-ci.yml: no path
+# filter on pull_request, gated on `changes` instead, so the check always reports.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'docs/architecture/**'
+      - 'docs/adr/**'
+      - 'docs/product/**'
+      - '.product/config.yaml'
+      - 'scripts/check-arc42-frontmatter.mjs'
+      - '.markdownlint-cli2.jsonc'
+      - '.github/workflows/docs-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: architecture docs changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - name: Detect relevant changes
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
+            --paginate --jq '.[].filename')
+          echo "$files"
+          if printf '%s\n' "$files" | grep -qE '^(docs/architecture/|docs/adr/|docs/product/|\.product/config\.yaml$|scripts/check-arc42-frontmatter\.mjs$|\.markdownlint-cli2\.jsonc$|\.github/workflows/docs-ci\.yml$)'; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "relevant=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  verify:
+    name: architecture docs
+    needs: changes
+    if: needs.changes.outputs.relevant == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Verify the arc42 document contract
+        run: node scripts/check-arc42-frontmatter.mjs
+
+      - name: Lint the architecture and ADR docs
+        run: npx -y markdownlint-cli2@0.23.3 "docs/architecture/**/*.md" "docs/adr/**/*.md"
+
+      - name: Verify architecture citations
+        run: npx -y @prodshape/cli@0.22.0 citations verify docs/architecture --format json

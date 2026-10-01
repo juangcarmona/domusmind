@@ -16,3 +16,4 @@ extensions:
       # Directories `prodshape citations verify` scans when no target is given.
       consumer-roots:
         - openspec
+        - docs/architecture
