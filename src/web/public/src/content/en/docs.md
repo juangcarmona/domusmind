@@ -7,30 +7,30 @@ DomusMind is documented in the open. Everything about how it is designed, why de
 
 ## Product definition
 
-The canonical product docs: strategy, experience, and public-site guidance.
+The product defined as code: who uses DomusMind, the household areas it covers, what each part must do and the rules it keeps.
 
-[View on GitHub](https://github.com/juangcarmona/domusmind/tree/main/docs/00_product)
+[View on GitHub](https://github.com/juangcarmona/domusmind/tree/main/docs/product)
 
 ## Architecture
 
 The technical model: modular monolith, bounded contexts, domain-centric design, command/query separation, event-driven collaboration.
 
-[Architecture docs](https://github.com/juangcarmona/domusmind/tree/main/docs/03_architecture)
+[Architecture docs](https://github.com/juangcarmona/domusmind/tree/main/docs/architecture)
 
 ## Domain model
 
 The household concepts behind the system: family, members, responsibilities, events, tasks, routines, and the ubiquitous language.
 
-[Domain docs](https://github.com/juangcarmona/domusmind/tree/main/docs/04_domain)
+[Domain docs](https://github.com/juangcarmona/domusmind/tree/main/docs/product/model/domain)
 
 ## Specs and features
 
-Feature specifications and context-level contracts for each bounded context: Family, Responsibilities, Calendar, Tasks.
+Behaviour specifications for each area of the product: Family, Areas, Calendar, Tasks, Lists, Meal Planning and the web app.
 
-[Specs](https://github.com/juangcarmona/domusmind/tree/main/specs)
+[Specs](https://github.com/juangcarmona/domusmind/tree/main/openspec/specs)
 
 ## Roadmap
 
-Where the project is going: V1 core, V1.1 shared lists, and the extended model.
+Where the project is going: the phased roadmap (V1.1, V2, V3), proposed as a product change.
 
-[Roadmap](https://github.com/juangcarmona/domusmind/tree/main/docs/12_roadmap)
+[Roadmap](https://github.com/juangcarmona/domusmind/tree/main/docs/product/changes/active/chg-roadmap)

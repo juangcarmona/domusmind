@@ -57,6 +57,20 @@ Key ideas:
 
 The system is intentionally simple and evolvable.
 
+The architecture is documented in arc42 under [`docs/architecture/`](docs/architecture/README.md), with decisions in [`docs/adr/`](docs/adr/README.md). [`docs/README.md`](docs/README.md) maps where each kind of documentation lives.
+
+---
+
+## Product Definition
+
+The product is defined as code under `docs/product/`, managed with
+[ProductShape](https://github.com/juangcarmona/productshape). Browse it as the
+Product Snapshot: the [product-snapshot workflow](https://github.com/juangcarmona/domusmind/actions/workflows/product-snapshot.yml)
+attaches `domusmind-product-snapshot.html` to each run and links it from the run
+summary; it is a static page that opens in any browser. Locally,
+`npx @prodshape/cli@0.22.0 graph --format html` writes the same page to
+`.product/generated/snapshot.html`.
+
 ---
 
 ## Goals

@@ -31,8 +31,22 @@ coverage/
 !.env.example
 
 # Claude
-.claude/
-CLAUDE.md
+# Skills, commands and agents under .claude/ are the single copy that both Claude
+# Code and GitHub Copilot read, so they are tracked. Local state (settings.local.json,
+# worktrees, plans) stays out. APM and ProductShape regenerate their managed files.
+.claude/*
+!.claude/skills/
+!.claude/commands/
+!.claude/agents/
+!.claude/hooks/
+.claude/hooks/*
+!.claude/hooks/product-definition.json
 
-# APM dependencies
-apm_modules/
+# Agent folders some IDE tools (Codex and others) generate from .claude/ on
+# workspace open; this repository keeps the single copy under .claude/.
+.agents/
+.codex/
+
+# Product Definition as Code: regenerable outputs, never canonical.
+.product/generated/
+.product/cache/

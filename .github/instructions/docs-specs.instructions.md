@@ -29,10 +29,9 @@ Docs and specs are the source of truth for behavior, terminology, and architectu
 
 When working on UX, surfaces, layout, or interaction behavior, treat these as canonical and upstream:
 
-- docs/00_product/strategy.md
-- docs/00_product/experience.md
-- docs/00_product/surface-system.md
-- 00_product/surfaces/*.md
+- docs/product/model/ (the product model; browse it with `npx @prodshape/cli@0.22.0 graph --format html`)
+- docs/design/surface-system.md
+- docs/design/surfaces/*.md
 
 Do not let implementation files, old comments, or outdated docs override these documents.
 If code conflicts with them, update code or explicitly document the blocker.

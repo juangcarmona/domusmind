@@ -1,70 +1,252 @@
 schema: spec-driven
+context: >-
+  DomusMind is a household operating platform built as a domain-centric modular
+  monolith.
 
-context: |
-  DomusMind is a household operating platform built as a domain-centric modular monolith.
 
-  Backend stack: .NET 10, ASP.NET Core Controllers (never Minimal APIs), EF Core direct (no generic repositories), FluentValidation.
-  Frontend stack: React, TypeScript, CSS with c-/l-/u-/is-/has- naming conventions, feature-based folder structure.
+  Backend stack: .NET 10, ASP.NET Core Controllers (never Minimal APIs), EF Core
+  direct (no generic repositories), FluentValidation.
+
+  Frontend stack: React, TypeScript, CSS with c-/l-/u-/is-/has- naming
+  conventions, feature-based folder structure.
+
 
   Forbidden patterns: MediatR, AutoMapper, generic repositories, Minimal APIs.
 
+
   Internal mediator contracts already exist and must not be reinvented:
+
   ICommand<TResponse>, IQuery<TResponse>, ICommandHandler, IQueryHandler,
-  ICommandDispatcher, IQueryDispatcher, IDomainEvent, IDomainEventHandler, IDomainEventDispatcher
 
-  Backend slices follow Features/<Module>/<Capability>/ with Command.cs or Query.cs, Handler.cs, and Validator.cs.
-  One command modifies exactly one aggregate. Cross-module reactions happen through domain events only.
+  ICommandDispatcher, IQueryDispatcher, IDomainEvent, IDomainEventHandler,
+  IDomainEventDispatcher
 
-  IDs are ULID-based strongly typed identifiers (FamilyId, MemberId, EventId, TaskId, etc.) and are serialized as strings externally. We use record structs for IDs to avoid nullability and reference equality issues.
 
-  The Domain layer is framework-agnostic: no EF Core, no ASP.NET, no infrastructure concerns.
-  Auth identity is not the same as domain identity; built-in local auth is a separate internal module.
+  Backend slices follow Features/<Module>/<Capability>/ with Command.cs or
+  Query.cs, Handler.cs, and Validator.cs.
+
+  One command modifies exactly one aggregate. Cross-module reactions happen
+  through domain events only.
+
+
+  IDs are strongly typed identifiers (FamilyId, MemberId, EventId, TaskId,
+  etc.): record structs wrapping a Guid, to avoid nullability and reference
+  equality issues (docs/adr/0010; the earlier ULID proposal, 0009, is
+  superseded).
+
+
+  The Domain layer is framework-agnostic: no EF Core, no ASP.NET, no
+  infrastructure concerns.
+
+  Auth identity is not the same as domain identity; built-in local auth is a
+  separate internal module.
+
 
   Read queries are projection-based and use AsNoTracking.
+
   Domain entities must never be exposed directly through API contracts.
 
-  EF migrations command:
-  dotnet ef migrations add <Name> --project src\backend\DomusMind.Infrastructure --startup-project src\backend\DomusMind.Api --output-dir Persistence\Migrations
 
-  Ubiquitous language includes: Event, Task, Routine, ResponsibilityDomain, SharedList/List, Family, Member.
+  EF migrations command:
+
+  dotnet ef migrations add <Name> --project src\backend\DomusMind.Infrastructure
+  --startup-project src\backend\DomusMind.Api --output-dir
+  Persistence\Migrations
+
+
+  Ubiquitous language includes: Event, Task, Routine, ResponsibilityDomain,
+  SharedList/List, Family, Member.
+
   Product-facing labels use: Household, Person, Task, Plan, Area, List.
 
+
   OpenSpec role split:
+
   - openspec/specs contains current behavioral source of truth
+
   - openspec/changes contains proposed modifications and planning artifacts
+
   - docs contains architecture, context, conventions, and reference material
+
   - do not create new behavioral truth outside OpenSpec
 
+
+  <!-- pdac:context begin -->
+
+  This repository uses Product Definition as Code (PDaC). The canonical product
+  definition lives in docs/product/model (actors, journeys, use cases, business
+  rules, domain terms, bounded contexts, structured behaviours, and functional,
+  quality and constraint requirements). OpenSpec artifacts consume it and are
+  never a second source of truth.
+
+  A citation binds consumer text to a canonical artifact: it records the
+  artifact id, a sha256 content digest and an optional verification scenario
+  anchor. Verification reports one status per citation: current, stale, tampered
+  or unresolved.
+
+  To cite: run `npx prodshape inspect <ID>` to read the current digest, then
+  `npx prodshape cite --id <ID> --digest <digest>` to emit the canonical
+  payload. Wrap it in the document's native comment (`<!-- ... -->` in Markdown)
+  on its own line directly under the text it grounds.
+
+  To find which artifacts a change impacts, compare the change's intent with the
+  whole product definition first, then widen the result with `npx prodshape
+  impact <ID>`. When the intent contradicts or goes beyond the definition,
+  record that drift in the proposal with the marker `<!-- pdac-drift ids="..."
+  summary="..." -->` (listed by `npx prodshape drift`) and let humans decide —
+  never fix it quietly.
+
+  Every current OpenSpec document (proposal, specs, design, tasks and
+  openspec/specs/) carries exactly one explicit scope declaration: `pdac-scope:
+  cited` for a bound document that carries at least one citation, or
+  `pdac-scope: none` with a non-empty human-authored reason (`pdac-scope-reason:
+  <why>` in frontmatter, or `<!-- pdac-scope: none reason="<why>" -->`) for an
+  exempt one. Citations alone never bind: a document without a declaration is
+  unclassified and fails verification, a bound document with zero citations
+  fails, and an exemption without a reason or contradicted by citations fails.
+  Binding and exemption are human declarations: never declare an exemption
+  merely because citations are missing. Verify with `npx prodshape citations
+  verify --provider openspec`: it enumerates the expected current documents, so
+  zero discovered citations is a set of failures, never a pass. Archived changes
+  are excluded by default; `--include-archived` also verifies the citations
+  history carries, reported as warnings, because archived history cannot be
+  edited.
+
+  The accepted Product Definition changes only through a Product Change:
+  validate it as an overlay while the baseline stays untouched, obtain human
+  product approval (represented by status: approved; the integration verifies
+  the state but cannot identify or judge the actor), apply explicitly on a
+  working branch, and let a human accept the resulting baseline by merging its
+  pull request. A Product Change is not a pull request; apply is not acceptance;
+  neither apply nor merge attests implementation, verification, release or
+  deployment. A Product Change lives under docs/product/changes/ or hosted
+  inside a valid OpenSpec change created with the product schema
+  (product-change/change.md plus product-change/proposed/**); its
+  deterministically validated, apply-authorised apply is the only write path
+  into docs/product/model. A spec-driven OpenSpec delivery change never edits
+  docs/product/model directly: it may share a pull request with an applied
+  Product Change or follow later, but it never supplies Product Change status.
+
+  <!-- pdac:context end -->
 rules:
   proposal:
-    - Reference existing OpenSpec specs, docs, and repository terminology before proposing new structures.
-    - State clearly which bounded context, surface, or client artifact is affected.
-    - Do not invent parallel concepts when an existing domain or product term already exists.
-    - Explicitly separate in-scope behavior, out-of-scope behavior, and unresolved ambiguity.
-
+    - Reference existing OpenSpec specs, docs, and repository terminology before
+      proposing new structures.
+    - State clearly which bounded context, surface, or client artifact is
+      affected.
+    - Do not invent parallel concepts when an existing domain or product term
+      already exists.
+    - Explicitly separate in-scope behavior, out-of-scope behavior, and
+      unresolved ambiguity.
+    - State which PDaC artifacts this change touches, each with a citation
+      payload emitted by `npx prodshape cite --id <ID> --digest <digest>` and
+      wrapped in the document native comment (`<!-- ... -->` in Markdown). Never
+      write a citation record by hand.
+    - "Find the impacted artifacts as a separate step, before writing any
+      proposal content. Read the whole product definition (docs/product/model by
+      default), compare it with what this change wants — the backlog item behind
+      it, if there is one — and list every artifact the change depends on,
+      alters or contradicts. Then widen the list: run `npx prodshape impact
+      <ID>` on each artifact you found and check its direct and indirect
+      neighbours. Put the resulting list in the proposal, cite every impacted
+      artifact from each document that uses it (proposal, specs, design, tasks),
+      and name any neighbour you checked and left out."
+    - "If this change's goals contradict the product definition, or need
+      behaviour it does not describe, that is product-definition drift. Record
+      it in the proposal under a 'Product definition drift' note naming the
+      artifacts involved, with the marker `<!-- pdac-drift ids=\"<ID>[,
+      <ID>...]\" summary=\"<one line>\" -->` on its own line so `npx prodshape
+      drift` can list it. The decision is human: the developer and the product
+      owner agree whether to propose a Product Change or adjust this change.
+      Never fix drift quietly, drop or weaken a citation to hide it, or write
+      around the conflict."
+    - If the change implements altered product behaviour, name the Product
+      Change (CHG id) whose applied or accepted artifacts it implements. If no
+      overlay-validated, apply-authorised Product Change exists yet, stop and
+      ask for one instead of proceeding. A spec-driven OpenSpec change is not
+      the Product Change; product intent travels through a Product Change, under
+      docs/product/changes or hosted by a product-change OpenSpec change.
+    - 'Every document of this change must end up bound or exempt, each with an
+      explicit declaration: declare `pdac-scope: cited` on a line of its own and
+      cite the canonical text the document depends on, or declare `pdac-scope:
+      none` with a non-empty reason (`pdac-scope-reason: <why>` in frontmatter,
+      or `<!-- pdac-scope: none reason="<why>" -->`) when a human judges the
+      document has no product-semantic dependency. Citations alone never bind,
+      and never declare an exemption just because citations are missing.'
   specs:
     - Write specs as behavior contracts, not implementation plans.
-    - Use ubiquitous language from docs/03_domain/ubiquitous-language.md and existing OpenSpec/domain specs; never invent new terms.
-    - Prefer one consolidated spec per domain, surface, or client artifact rather than one spec per backend slice capability.
-    - Focus on observable behavior, outcomes, invariants, and externally meaningful constraints.
+    - Use ubiquitous language from docs/product/model/domain/terms/ and
+      existing OpenSpec/domain specs; never invent new terms.
+    - Prefer one consolidated spec per domain, surface, or client artifact
+      rather than one spec per backend slice capability.
+    - Focus on observable behavior, outcomes, invariants, and externally
+      meaningful constraints.
     - Use Requirements and Scenarios in a behavior-first style.
-    - Keep implementation details out of specs: no handlers, component internals, file paths, framework wiring, or migration steps.
-    - If the spec is client-specific (for example web-app), describe interaction behavior and surface responsibilities without leaking implementation details.
-    - If behavior is ambiguous or contradictory in source material, add a NOTE instead of inventing.
-
+    - Keep implementation details out of specs: no handlers, component internals, file
+        paths, framework wiring, or migration steps.
+    - If the spec is client-specific (for example web-app), describe interaction
+      behavior and surface responsibilities without leaking implementation
+      details.
+    - If behavior is ambiguous or contradictory in source material, add a NOTE
+      instead of inventing.
+    - Every requirement derived from canonical product text MUST carry a
+      citation to every PDaC artifact it derives from — not only the closest one
+      — one citation per line, placed after the requirement text and before the
+      first scenario. Never place citations between the requirement heading and
+      the requirement text; OpenSpec reads the first paragraph as the
+      requirement.
+    - Cite a specific verification scenario with an anchor when the requirement
+      maps to one (anchor="<scenario id>").
+    - Never paraphrase canonical text as if it were new; either cite it inline
+      or embed it in a marker-block citation (<!-- pdac:cite ... --> canonical
+      text <!-- /pdac:cite -->).
+    - Never invent artifact ids or digests. Read them with `npx prodshape
+      inspect <ID>`.
   design:
-    - Identify the bounded context and, where applicable, the aggregate being mutated.
-    - State explicitly whether domain events are emitted and which cross-context reactions they trigger.
-    - When backend implementation is involved, map each capability to its slice path (Features/<Module>/<Capability>/).
-    - Distinguish clearly between domain behavior, API/contracts, and web-app interaction behavior.
-    - Reuse existing contracts, read models, and architectural patterns before proposing new structures.
-    - Flag any new DB tables or columns and include the EF migration command when relevant.
-    - Do not propose generic repositories, base classes, AutoMapper, or Minimal APIs.
-
+    - Identify the bounded context and, where applicable, the aggregate being
+      mutated.
+    - State explicitly whether domain events are emitted and which cross-context
+      reactions they trigger.
+    - When backend implementation is involved, map each capability to its slice
+      path (Features/<Module>/<Capability>/).
+    - Distinguish clearly between domain behavior, API/contracts, and web-app
+      interaction behavior.
+    - Reuse existing contracts, read models, and architectural patterns before
+      proposing new structures.
+    - Flag any new DB tables or columns and include the EF migration command
+      when relevant.
+    - Do not propose generic repositories, base classes, AutoMapper, or Minimal
+      APIs.
+    - When a design decision depends on canonical product text, cite the
+      artifact it depends on.
   tasks:
     - Order backend tasks by layer: Domain → Application → Contracts → Infrastructure → API → Tests.
     - Group tasks by impacted artifact when relevant: backend, web app, shared contracts, tests.
-    - One task should be one coherent unit of work; avoid multi-file mega-tasks unless the files are inseparable.
-    - If the change requires a DB migration, include it as an explicit Infrastructure task.
-    - For frontend work, state whether the change affects API state, feature UI, shared components, or navigation/surface behavior.
+    - One task should be one coherent unit of work; avoid multi-file mega-tasks
+      unless the files are inseparable.
+    - If the change requires a DB migration, include it as an explicit
+      Infrastructure task.
+    - For frontend work, state whether the change affects API state, feature UI,
+      shared components, or navigation/surface behavior.
     - Final task must be: Build and verify tests pass.
+    - "A task that depends on a business rule's parameter cites the rule itself,
+      not only the requirement derived from it: staleness follows the cited
+      artifact's own digest, never its relationships."
+    - A task that changes cited behaviour must include a follow-up task to
+      refresh the affected citations.
+    - Never infer implementation, verification, release or deployment from
+      Product Change status; record that evidence in the delivery workflow.
+operations:
+  apply:
+    guidance:
+      - "Before finishing, run `npx prodshape citations verify --provider
+        openspec` and fix every stale, tampered or unresolved citation, every
+        unclassified document, every bound document without citations and every
+        exemption without a reason. Refresh a stale digest by re-running `npx
+        prodshape inspect <ID>`; never delete a citation or declare `pdac-scope:
+        none` to silence a diagnostic."
+  archive:
+    guidance:
+      - Run `npx prodshape citations verify --provider openspec` one final time.
+        Archive only when every document is bound or exempt and every citation
+        is current.

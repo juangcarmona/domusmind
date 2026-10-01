@@ -1,6 +1,6 @@
 /**
  * Canonical demo family data for public-site examples.
- * Source of truth: docs/00_product/public-site.md — Localized Family Examples table.
+ * Source of truth: docs/design/public-site.md — Localized Family Examples table.
  *
  * All visible names in proof panels, screenshots captions, and homepage examples
  * must come from this table. No ad-hoc invented names.

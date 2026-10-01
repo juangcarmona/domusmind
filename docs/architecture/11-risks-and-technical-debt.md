@@ -1,0 +1,105 @@
+---
+title: Risks and Technical Debt
+arc42-section: "11"
+description: Prioritized architectural risks and technical debt, with evidence and the mitigation or decision each needs.
+---
+
+# Risks and Technical Debt
+
+Entries are ordered by priority. **Debt** is an observed condition in the repository; **risk** is a credible consequence that has not yet materialised. Each entry was checked against the implementation on 2026-10-01. Remove an entry when its condition no longer holds.
+
+## Architecture and security
+
+| Risk or debt | Architectural impact | Evidence | Priority | Mitigation or decision |
+| --- | --- | --- | --- | --- |
+| Debt: the Outlook connect flow uses a predictable OAuth `state` (`familyId:memberId`) that is not validated on callback, accepts the `redirectUri` from the query string without an allow-list, uses no PKCE, and stores the granted scopes without checking them | Trust boundary to Microsoft Graph is weaker than [ADR-0003](../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md) intends; risk of login CSRF and of linking a provider account to the wrong member | [`ExternalCalendarConnectionsController.cs`](../../src/backend/DomusMind.Api/Controllers/ExternalCalendarConnectionsController.cs), [`MicrosoftGraphCalendarAuthService.cs`](../../src/backend/DomusMind.Infrastructure/Integrations/Calendar/Microsoft/MicrosoftGraphCalendarAuthService.cs) | High | Bind `state` to a server-side nonce, allow-list redirect URIs, add PKCE, reject an incomplete scope grant |
+| Debt: `POST /api/auth/register` is anonymous, so anyone who can reach an instance can create an account | Local authentication ([ADR-0002](../adr/0002-keep-authentication-local-and-separate-from-member-identity.md)) has an open self-registration path on a self-hosted, internet-reachable deployment | [`AuthController.cs`](../../src/backend/DomusMind.Api/Controllers/AuthController.cs) | High | Restrict registration to setup and invited members, or make it configurable and off by default |
+| Debt: domain events are persisted but never dispatched; `IDomainEventDispatcher` is registered and unused and no `IDomainEventHandler` exists | Cross-module collaboration through events ([ADR-0008](../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)) is not wired; modules cannot react to each other, and any feature that needs a reaction is pushed towards direct cross-module writes | [`DomainEventDispatcher.cs`](../../src/backend/DomusMind.Infrastructure/Messaging/DomainEventDispatcher.cs), [`InfrastructureServices.cs`](../../src/backend/DomusMind.Infrastructure/DependencyInjection/InfrastructureServices.cs) | High | Invoke the dispatcher after a successful commit and move the first cross-module reaction onto it |
+| Debt: `RequestShoppingList` changes a meal plan and creates a shared list in one command, and saves state before writing events in further `SaveChanges` calls | Breaks one-command-one-aggregate and the Meal Planning/Lists module boundary; state and event log can diverge on failure | [`RequestShoppingListCommandHandler.cs`](../../src/backend/DomusMind.Application/Features/MealPlanning/RequestShoppingList/RequestShoppingListCommandHandler.cs) | High | Have Lists create the list in reaction to the meal-planning event once dispatch exists |
+| Debt: the event log records `AggregateType` and `AggregateId` as `"unknown"`, infers the module only for Family, Responsibilities, Calendar and Tasks (Lists and Meal Planning become `"unknown"`), leaves correlation and causation empty, always writes `Version` 1, and is append-only by convention only | The log cannot yet serve audit, replay or projections as [ADR-0008](../adr/0008-collaborate-across-modules-through-persisted-domain-events.md) expects | [`EventLogWriter.cs`](../../src/backend/DomusMind.Infrastructure/Events/EventLogWriter.cs) | Medium | Carry aggregate identity and module on each event; enforce append-only at the database |
+| Debt: 13 command handlers (external calendar, Meal Planning, and the two Family account-provisioning handlers) commit aggregate state and the event log in two `SaveChanges` calls | A failure between the two leaves state without its events (or the reverse); the log is not a reliable record | [`EventLogWriter.cs`](../../src/backend/DomusMind.Infrastructure/Events/EventLogWriter.cs), [`RequestShoppingListCommandHandler.cs`](../../src/backend/DomusMind.Application/Features/MealPlanning/RequestShoppingList/RequestShoppingListCommandHandler.cs) | Medium | Commit state and events in one `SaveChanges` or transaction |
+| Debt: aggregates have no optimistic concurrency token, so concurrent edits are last-writer-wins | Two members editing the same list, plan or task silently overwrite each other, which matters more because lists are shared | [`Persistence/Configurations`](../../src/backend/DomusMind.Infrastructure/Persistence/Configurations/) | Medium | Add a concurrency token per aggregate and map conflicts to HTTP 409 |
+| Debt: the web client refreshes its access token only once at load and never on a 401 | Long-lived sessions fail mid-use instead of renewing | [`src/web/app/src/api`](../../src/web/app/src/api/), [`src/web/app/src/auth`](../../src/web/app/src/auth/) | Medium | Retry once through the refresh-token endpoint on a 401 |
+| Debt: Outlook ingestion does not recover when Graph rejects a delta token; delta state resets only when the sync horizon changes | A rejected cursor stops a feed from syncing until the member changes configuration | [`BackgroundJobs/Calendar`](../../src/backend/DomusMind.Infrastructure/BackgroundJobs/Calendar/), [`Integrations/Calendar`](../../src/backend/DomusMind.Infrastructure/Integrations/Calendar/) | Medium | Reset the cursor and run a full window sync on a rejected delta token |
+| Debt: the MSAL token cache, which holds the member's Microsoft refresh token, is AES-encrypted only when `MicrosoftGraph:TokenEncryptionKey` is set; without it the cache is stored Base64-encoded, and nothing warns or fails at startup | Provider credentials can sit in the database effectively in clear text, against the server-side custody [ADR-0003](../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md) relies on; the AES mode used has no integrity check | [`MicrosoftGraphCalendarAuthService.cs`](../../src/backend/DomusMind.Infrastructure/Integrations/Calendar/Microsoft/MicrosoftGraphCalendarAuthService.cs) | High | Require the key whenever Microsoft Graph is configured and fail fast without it; use authenticated encryption |
+| Debt: the MSAL token cache is stored in a field named `EncryptedRefreshToken` | Misleading name for a secret-bearing column invites wrong handling | [`ExternalCalendarProviderAccount.cs`](../../src/backend/DomusMind.Application/Abstractions/Integrations/Calendar/ExternalCalendarProviderAccount.cs) | Low | Rename through a migration |
+| Debt: handlers call `DateTime.UtcNow` directly (54 files); there is no clock abstraction | Time-dependent rules (Agenda windows, routines, sync horizons) are hard to test deterministically | `grep -rl DateTime.UtcNow src/backend` | Low | Introduce a clock service in Infrastructure and inject it |
+| Debt: the domain and client lack behaviours the product model requires (see [Gaps against the product model](#gaps-against-the-product-model)) | The domain is the stable centre; missing invariants and operations surface as wrong behaviour, not as API gaps | Domain sources linked below | Medium | Implement each through a slice in the owning module, governed by the cited artifact |
+| Debt: errors are mapped per controller to ad-hoc `{ error }` bodies, unhandled domain `InvalidOperationException`s become 500, and the global handler emits a custom JSON shape rather than problem details | API error contract is inconsistent across modules; clients cannot rely on codes or status | [`Program.cs`](../../src/backend/DomusMind.Api/Program.cs), [`ListsController.cs`](../../src/backend/DomusMind.Api/Controllers/ListsController.cs), [`MealPlansController.cs`](../../src/backend/DomusMind.Api/Controllers/MealPlansController.cs) | Medium | Define one error model in Contracts and map context exceptions centrally |
+| Risk: all modules, including authentication, share one PostgreSQL database and one `DbContext`; read models and command handlers in one context read other contexts' aggregates directly (for example Calendar and Lists handlers reading Family members) | Module boundaries are held by convention only; extracting a module or isolating auth data needs schema work | [`DomusMindDbContext.cs`](../../src/backend/DomusMind.Infrastructure/Persistence/DomusMindDbContext.cs), [`GetWeeklyGridQueryHandler.cs`](../../src/backend/DomusMind.Application/Features/Family/GetWeeklyGrid/GetWeeklyGridQueryHandler.cs) | Low | Accept for the monolith; revisit if a module must be extracted |
+| Debt: application slices have no validators (`IValidator<T>` is defined but unimplemented); input rules live only in domain value objects and handlers | Slice convention and implementation disagree; invalid input fails late, often as a domain exception | [`IValidator.cs`](../../src/backend/DomusMind.Application/Abstractions/Validation/IValidator.cs) | Low | Either implement validators where rules belong to the application layer or drop the abstraction |
+| Debt: `DomusMind.Contracts` references `DomusMind.Domain` although no contract uses a domain type, and contracts live in `DomusMind.Contracts.*` namespaces where `AGENTS.md` says `Model.*` | Contracts can start depending on domain types unnoticed; guidance and code disagree | [`DomusMind.Contracts.csproj`](../../src/backend/DomusMind.Contracts/DomusMind.Contracts.csproj), [`AGENTS.md`](../../AGENTS.md) | Low | Remove the project reference; align the guidance with the namespaces in use |
+| Debt: the Tasks domain still models a routine kind (`Cue`/`Scheduled`) that the product model removed | Dead concept in the domain and persistence | [`RoutineKind.cs`](../../src/backend/DomusMind.Domain/Tasks/Enums/RoutineKind.cs), [`CreateRoutineCommandHandler.cs`](../../src/backend/DomusMind.Application/Features/Tasks/CreateRoutine/CreateRoutineCommandHandler.cs) | Low | Remove through a Tasks slice change |
+
+## Deployment and operations
+
+| Risk or debt | Architectural impact | Evidence | Priority | Mitigation or decision |
+| --- | --- | --- | --- | --- |
+| Debt: `UseHttpsRedirection` runs in an HTTP-only container behind a reverse proxy with no forwarded-headers middleware | Scheme and client IP are wrong behind the proxy; redirects can loop or point at the wrong scheme | [`Program.cs`](../../src/backend/DomusMind.Api/Program.cs), [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml) | Medium | Add forwarded-headers handling; drop HTTPS redirection where TLS ends at the proxy |
+| Debt: Swagger and Swagger UI are enabled in every environment, including Production | The full API surface is published on every self-hosted instance | [`Program.cs`](../../src/backend/DomusMind.Api/Program.cs) | Medium | Enable Swagger only in Development or behind configuration |
+| Debt: Outlook ingestion needs `MicrosoftGraph` settings (client id, client secret, tenant id, token encryption key) that neither `deploy/docker-compose.yml` nor `deploy/.env.example` passes through | Self-hosted instances cannot connect Outlook and get HTTP 503 "not configured" | [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml), [`MicrosoftGraphCalendarAuthService.cs`](../../src/backend/DomusMind.Infrastructure/Integrations/Calendar/Microsoft/MicrosoftGraphCalendarAuthService.cs) | Medium | Add the settings to the Compose environment and `.env.example` |
+| Debt: the Compose stack health-checks Postgres but not the application, and the backend exposes no version endpoint or startup version log | Operators cannot tell whether the app is healthy or which version runs | [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml), [`SystemController.cs`](../../src/backend/DomusMind.Api/Controllers/SystemController.cs) | Low | Probe `GET /api/system/ping` from a Compose health check; report the build version |
+| Debt: release documentation disagrees with the release pipeline: `deploy/README.md` lists `latest` and `1.0` tags that `release.yml` never produces, and `.env.example` defaults `VERSION=edge`, mentions an alpha prerelease the release tag pattern rejects and omits `JWT_AUDIENCE` | Self-hosters follow instructions that do not match the published images or configuration | [`deploy/README.md`](../../deploy/README.md), [`release.yml`](../../.github/workflows/release.yml) | Low | Align the README and `.env.example` with the release workflow |
+| Debt: the `Microsoft.Graph` SDK package is referenced but unused; Graph is called through raw REST | Unneeded dependency surface and update noise | [`DomusMind.Infrastructure.csproj`](../../src/backend/DomusMind.Infrastructure/DomusMind.Infrastructure.csproj) | Low | Remove the package reference |
+| Debt: `src/web/app/nginx.conf.template` is orphaned; the API serves the built web app from `wwwroot` | Dead deployment artefact suggests a topology that is not used | [`nginx.conf.template`](../../src/web/app/nginx.conf.template), [`Program.cs`](../../src/backend/DomusMind.Api/Program.cs) | Low | Delete it |
+
+## Product alignment and delivery
+
+| Risk or debt | Architectural impact | Evidence | Priority | Mitigation or decision |
+| --- | --- | --- | --- | --- |
+| Debt: `openspec validate --all` fails for the `family` (2) and `web-app` (8) specs because those requirements have no scenario; no CI job runs `openspec validate` | Malformed specs pass review unnoticed and OpenSpec tooling rejects them | [`openspec/specs/family/spec.md`](../../openspec/specs/family/spec.md), [`openspec/specs/web-app/spec.md`](../../openspec/specs/web-app/spec.md) | Low | Add scenarios to those requirements and run `openspec validate --all` in product-ci |
+| Debt: OpenSpec specs lag the accepted product model; ProductShape reports 46 drift warnings across 7 specs (48 `pdac-drift` markers under `openspec/`, including the active change) | Implementers reading OpenSpec build against superseded behaviour | `npx -y @prodshape/cli@0.22.0 drift openspec` | High | Refresh the drifted specs through OpenSpec changes |
+| Debt: the `recipe-management` OpenSpec change is still active although all 49 of its tasks are done and recipe management is delivered | OpenSpec's current specs do not include delivered behaviour | [`openspec/changes/recipe-management/tasks.md`](../../openspec/changes/recipe-management/tasks.md), [`RecipesController.cs`](../../src/backend/DomusMind.Api/Controllers/RecipesController.cs) | Medium | Archive the change into `openspec/specs/` |
+| Debt: required status checks on `main` are only `backend build`, `webapp build`, `Validate Astro site` and the two CodeQL analyses; `product model` (product-ci) and `architecture docs` (docs-ci) are not required | Product-model validity, OpenSpec citations and architecture citations can regress on `main` | `gh api repos/juangcarmona/domusmind/branches/main/protection/required_status_checks`, [`product-ci.yml`](../../.github/workflows/product-ci.yml), [`docs-ci.yml`](../../.github/workflows/docs-ci.yml) | Medium | Add both checks to branch protection |
+| Debt: list changes are not pushed to other open clients | A product quality requirement is unmet (see [10 Quality requirements](10-quality-requirements.md#list-changes-reach-the-whole-household)) | [`package.json`](../../src/web/app/package.json), [`Program.cs`](../../src/backend/DomusMind.Api/Program.cs) | Medium | Decide on a push or polling mechanism; record it as an ADR |
+| Risk: backend application tests run on the EF Core in-memory provider and nothing tests the composed container image end to end | PostgreSQL-specific and transactional behaviour, including the two-`SaveChanges` event-log writes, is untested; deployment regressions surface only in production | [`tests/backend/DomusMind.Application.Tests`](../../tests/backend/DomusMind.Application.Tests/), [`backend-ci.yml`](../../.github/workflows/backend-ci.yml) | Medium | Run integration tests against PostgreSQL (for example in a container) and smoke-test the built image in CI |
+| Risk: web behaviour, including mobile parity, is barely tested (two web unit test files, no end-to-end or viewport tests) | Regressions in the single client reach every device | [`src/web/app/src`](../../src/web/app/src/), [`webapp-ci.yml`](../../.github/workflows/webapp-ci.yml) | Medium | Add end-to-end tests at desktop and phone width for primary surfaces |
+| Risk: local development orchestration exists only as the Aspire AppHost (Postgres, API, Vite app); the Compose stack under `deploy/` runs published images only | Contributors without the Aspire workload and a container runtime cannot run the system locally | [`AppHost.cs`](../../src/backend/DomusMind.AppHost/AppHost.cs), [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml) | Low | Document the AppHost prerequisites, or add a source-build Compose profile |
+
+## Gaps against the product model
+
+Each gap below is a missing operation, invariant or client call. The product artifact owns the expected behaviour.
+
+A cancelled calendar event rejects new participants, rescheduling and edits, but still accepts participant removal and reminder changes ([`CalendarEvent.cs`](../../src/backend/DomusMind.Domain/Calendar/CalendarEvent.cs)).
+
+<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:d0ffa51dd1b3cb43b9ccec2077dd08a91fc3e03e0124f8112b361e122abf94f9" -->
+
+A task can be assigned and reassigned but never unassigned; no slice or domain operation removes the assignee ([`HouseholdTask.cs`](../../src/backend/DomusMind.Domain/Tasks/HouseholdTask.cs)).
+
+<!-- pdac:cite id="FR-TASKS-UNASSIGN-TASK" digest="sha256:2057c892be97aeb4381f29ad87654ae5ebc6325d6b265bcfad315ae83b9e90c3" -->
+
+A routine can be paused and resumed but not deleted ([`Routine.cs`](../../src/backend/DomusMind.Domain/Tasks/Routine.cs), [`Features/Tasks`](../../src/backend/DomusMind.Application/Features/Tasks/)).
+
+<!-- pdac:cite id="FR-TASKS-DELETE-ROUTINE" digest="sha256:3f55aec0f42f5f5bcfe0f91e9160a1e2a02f8fa99df833f7ce878ba7c3b9ca68" -->
+
+A list item's timing can be set field by field or cleared as a whole, but one field cannot be cleared on its own, because the domain treats a missing value as "unchanged" ([`ListItem.cs`](../../src/backend/DomusMind.Domain/Lists/ListItem.cs)).
+
+<!-- pdac:cite id="FR-LISTS-SET-ITEM-TIMING" digest="sha256:d7ebe6861d147b98d3f0b647ac8ab6123a20cea7ff52e516210fe306593e9a93" -->
+
+Lists have no privacy state; every list is visible to the whole family ([`SharedList.cs`](../../src/backend/DomusMind.Domain/Lists/SharedList.cs)).
+
+<!-- pdac:cite id="FR-LISTS-PRIVATE-LIST" digest="sha256:825ff8f3be841b73cae76621c39cfd78921322cd056211fce5d0789287bac123" -->
+
+Responsibility domains (Areas) have no archive state or operation ([`ResponsibilityDomain.cs`](../../src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs)).
+
+<!-- pdac:cite id="FR-AREAS-ARCHIVE-AREA" digest="sha256:37a18941dff1c63714b9850f75311a250443fabcb729a5ac4d6ba21ff1c089bd" -->
+
+The routine kind still required by the create and update routine handlers has no counterpart in the product's routine definition.
+
+<!-- pdac:cite id="FR-TASKS-CREATE-ROUTINE" digest="sha256:b9390e584d6706d601fc674e6b000f9c94da1966898fe7152f965d7cff3a2eb6" -->
+
+Shopping-list derivation is delivered, but by a command that writes into the Lists module directly rather than through a Lists reaction.
+
+<!-- pdac:cite id="FR-MEALS-SHOPPING-LIST-DERIVATION" digest="sha256:bb9dc8626edf5e2bca7ec7a3d6de5d6d06eba9856b28540ee7b09f50c9ca1030" -->
+
+Recipe management is delivered while its OpenSpec change remains active.
+
+<!-- pdac:cite id="FR-RECIPES-LIBRARY" digest="sha256:702c8c7996f89cc2fd0f678d4a163db664aae0ca384e742133ad8cdd9001bcfc" -->
+
+Meal plans never reach the Agenda: the backend has a meal-plan Agenda query, but the web app does not call it ([`GetMealPlansForAgenda`](../../src/backend/DomusMind.Application/Features/MealPlanning/GetMealPlansForAgenda/), [`src/web/app/src/api`](../../src/web/app/src/api/)).
+
+<!-- pdac:cite id="FR-MEALS-AGENDA-PROJECTION" digest="sha256:14542a51f00845c388cd4e159f50674eca6d349656eacac4935fa63b064cd244" -->
+
+External calendars refresh only through the background worker and manual sync; the web app never triggers the catch-up sync endpoint on sign-in or when the Agenda opens ([`ExternalCalendarRefreshWorker.cs`](../../src/backend/DomusMind.Infrastructure/BackgroundJobs/Calendar/ExternalCalendarRefreshWorker.cs), [`externalCalendarApi.ts`](../../src/web/app/src/api/externalCalendarApi.ts)).
+
+<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:4a820cb4807164b225e417fbb59c0b4cba8a5b188bde26f1821e62a258b2aeb4" -->

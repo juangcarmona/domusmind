@@ -1,0 +1,18 @@
+// Scoped by docs-ci to docs/architecture and docs/adr. Line length is off because the
+// docs keep one paragraph per line; product citations are HTML comments and pass MD033.
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD024": { "siblings_only": true },
+    "MD041": false,
+    "MD025": { "front_matter_title": "" }
+  },
+  "ignores": [
+    "**/node_modules/**",
+    "apm_modules/**",
+    ".claude/**",
+    ".product/**",
+    "openspec/changes/archive/**"
+  ]
+}
