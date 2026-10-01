@@ -50,7 +50,6 @@ A release can be traced through the git tag, the GitHub Release, the immutable i
 | [`product-ci.yml`](../.github/workflows/product-ci.yml) | `product model` | `prodshape validate`, `prodshape integration update --check` and `prodshape citations verify --provider openspec`, pinned to `@prodshape/cli@0.22.0` |
 | [`product-snapshot.yml`](../.github/workflows/product-snapshot.yml) | `product snapshot` | Builds the Product Snapshot (`prodshape graph --format html`) and keeps it for 30 days as the run artifact `domusmind-product-snapshot.html`, linked from the run summary. It runs on pushes to `main` that touch the model and on pull requests that do |
 | [`docs-ci.yml`](../.github/workflows/docs-ci.yml) | `architecture docs` | Checks the arc42 frontmatter contract (`scripts/check-arc42-frontmatter.mjs`), runs markdownlint over `docs/architecture` and `docs/adr`, and runs `prodshape citations verify docs/architecture`. Unresolved or tampered citations fail the job. Stale citations only warn |
-| [`mobile-ci.yml`](../.github/workflows/mobile-ci.yml) | `build` | Builds `src/mobile/DomusMind.Mobile`, a directory that does not exist in the repository. The workflow uses `paths:` filters and has no `changes` job |
 
 [`public-site-cd.yml`](../.github/workflows/public-site-cd.yml) deploys the public site to Azure Static Web Apps on pushes to `main` that touch `src/web/public`. In short, CI validates, `docker-edge.yml` publishes edge images, and `release.yml` is the only publisher of release images.
 
