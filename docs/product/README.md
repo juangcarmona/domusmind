@@ -8,6 +8,8 @@ Product Definition as Code.
   `changes/completed/`, `changes/rejected/` and `changes/superseded/` hold the change history,
   one directory per terminal status, and are inert; they materialize when the first change is
   applied or archived.
+  In this repository an applied change keeps only its `change.md`: its `proposed/` tree is
+  identical to what it wrote into `model/`, so it is removed after apply and stays in git history.
 
 The definition changes through exactly one mechanism: a Product Change, validated as an overlay,
 approved by a human, applied with `prodshape change apply`, and accepted when a human merges the
