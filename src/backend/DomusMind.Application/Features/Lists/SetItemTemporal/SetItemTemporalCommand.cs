@@ -9,4 +9,7 @@ public sealed record SetItemTemporalCommand(
     DateOnly? DueDate,
     DateTimeOffset? Reminder,
     string? Repeat,
-    Guid RequestedByUserId) : ICommand<SetItemTemporalResponse>;
+    Guid RequestedByUserId,
+    bool ClearDueDate = false,
+    bool ClearReminder = false,
+    bool ClearRepeat = false) : ICommand<SetItemTemporalResponse>;

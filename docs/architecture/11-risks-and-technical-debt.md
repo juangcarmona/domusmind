@@ -68,10 +68,6 @@ A routine can be paused and resumed but not deleted ([`Routine.cs`](../../src/ba
 
 <!-- pdac:cite id="FR-TASKS-DELETE-ROUTINE" digest="sha256:3f55aec0f42f5f5bcfe0f91e9160a1e2a02f8fa99df833f7ce878ba7c3b9ca68" -->
 
-A list item's timing can be set field by field or cleared as a whole, but one field cannot be cleared on its own, because the domain treats a missing value as "unchanged" ([`ListItem.cs`](../../src/backend/DomusMind.Domain/Lists/ListItem.cs)).
-
-<!-- pdac:cite id="FR-LISTS-SET-ITEM-TIMING" digest="sha256:d7ebe6861d147b98d3f0b647ac8ab6123a20cea7ff52e516210fe306593e9a93" -->
-
 Lists have no privacy state; every list is visible to the whole family ([`SharedList.cs`](../../src/backend/DomusMind.Domain/Lists/SharedList.cs)).
 
 <!-- pdac:cite id="FR-LISTS-PRIVATE-LIST" digest="sha256:825ff8f3be841b73cae76621c39cfd78921322cd056211fce5d0789287bac123" -->

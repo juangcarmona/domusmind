@@ -277,10 +277,26 @@ export function ListsPage() {
     if (!dueDate && !reminder && !repeat) {
       dispatch(clearItemTemporal({ listId: activeListId, itemId: item.itemId }));
     } else {
-      const payload: { dueDate?: string | null; reminder?: string | null; repeat?: string | null } = {};
-      if (dudChanged) payload.dueDate = dueDate;
-      if (remChanged) payload.reminder = reminder;
-      if (repChanged) payload.repeat = repeat;
+      const payload: {
+        dueDate?: string | null;
+        reminder?: string | null;
+        repeat?: string | null;
+        clearDueDate?: boolean;
+        clearReminder?: boolean;
+        clearRepeat?: boolean;
+      } = {};
+      if (dudChanged) {
+        if (dueDate === null) payload.clearDueDate = true;
+        else payload.dueDate = dueDate;
+      }
+      if (remChanged) {
+        if (reminder === null) payload.clearReminder = true;
+        else payload.reminder = reminder;
+      }
+      if (repChanged) {
+        if (repeat === null) payload.clearRepeat = true;
+        else payload.repeat = repeat;
+      }
       dispatch(setItemTemporal({ listId: activeListId, itemId: item.itemId, ...payload }));
     }
   }, [selectedItem, activeListId, iDueDateDraft, iReminderDraft, iRepeatFreq, iRepeatDays, dispatch]); // eslint-disable-line react-hooks/exhaustive-deps

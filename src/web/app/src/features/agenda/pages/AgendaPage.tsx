@@ -149,7 +149,7 @@ export function AgendaPage() {
         setGridLoading(false);
       }
     },
-    [familyId, isHousehold, mealPlanWeekStarts, t],
+    [familyId, mealPlanWeekStarts, t],
   );
 
   useEffect(() => {

@@ -28,9 +28,10 @@ public sealed class SetItemTemporalCommandHandler
         SetItemTemporalCommand command,
         CancellationToken cancellationToken)
     {
-        if (command.DueDate is null && command.Reminder is null && command.Repeat is null)
+        if (command.DueDate is null && command.Reminder is null && command.Repeat is null
+            && !command.ClearDueDate && !command.ClearReminder && !command.ClearRepeat)
             throw new ListException(ListErrorCode.InvalidInput,
-                "At least one temporal field (dueDate, reminder, repeat) must be provided.");
+                "At least one temporal field must be provided or explicitly cleared.");
 
         var listId = ListId.From(command.ListId);
 
@@ -53,7 +54,9 @@ public sealed class SetItemTemporalCommandHandler
         ListItem item;
         try
         {
-            item = list.SetItemTemporal(itemId, command.DueDate, command.Reminder, command.Repeat, now);
+            item = list.SetItemTemporal(
+                itemId, command.DueDate, command.Reminder, command.Repeat, now,
+                command.ClearDueDate, command.ClearReminder, command.ClearRepeat);
         }
         catch (InvalidOperationException)
         {

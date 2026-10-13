@@ -290,14 +290,17 @@ export const setItemImportance = createAsyncThunk(
 export const setItemTemporal = createAsyncThunk(
   "sharedLists/setItemTemporal",
   async (
-    { listId, itemId, dueDate, reminder, repeat }: {
+    { listId, itemId, dueDate, reminder, repeat, clearDueDate, clearReminder, clearRepeat }: {
       listId: string; itemId: string;
       dueDate?: string | null; reminder?: string | null; repeat?: string | null;
+      clearDueDate?: boolean; clearReminder?: boolean; clearRepeat?: boolean;
     },
     { rejectWithValue },
   ) => {
     try {
-      return await listsApi.setItemTemporal(listId, itemId, { dueDate, reminder, repeat });
+      return await listsApi.setItemTemporal(listId, itemId, {
+        dueDate, reminder, repeat, clearDueDate, clearReminder, clearRepeat,
+      });
     } catch (err: unknown) {
       return rejectWithValue(
         (err as { message?: string }).message ?? "Failed to set temporal fields",

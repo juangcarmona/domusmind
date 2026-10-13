@@ -91,7 +91,7 @@ public sealed class ListItem : Entity<ListItemId>
     }
 
     /// <summary>
-    /// Sets temporal fields. At least one must be provided.
+    /// Sets or clears selected temporal fields. Unspecified fields remain unchanged.
     /// All temporal fields are independently optional; repeat does not require due date.
     /// Returns whether this is the first time temporal data is being set (transition event).
     /// </summary>
@@ -99,13 +99,19 @@ public sealed class ListItem : Entity<ListItemId>
         DateOnly? dueDate,
         DateTimeOffset? reminder,
         string? repeat,
-        DateTime updatedAtUtc)
+        DateTime updatedAtUtc,
+        bool clearDueDate,
+        bool clearReminder,
+        bool clearRepeat)
     {
         var wasTemporalBefore = HasTemporalData;
 
-        if (dueDate.HasValue) DueDate = dueDate;
-        if (reminder.HasValue) Reminder = reminder;
-        if (repeat is not null) Repeat = repeat;
+        if (clearDueDate) DueDate = null;
+        else if (dueDate.HasValue) DueDate = dueDate;
+        if (clearReminder) Reminder = null;
+        else if (reminder.HasValue) Reminder = reminder;
+        if (clearRepeat) Repeat = null;
+        else if (repeat is not null) Repeat = repeat;
 
         UpdatedAtUtc = updatedAtUtc;
 
