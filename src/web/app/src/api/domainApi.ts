@@ -55,6 +55,9 @@ export const domainApi = {
   assignTask: (taskId: string, body: AssignTaskRequest) =>
     request<unknown>(`/api/tasks/${taskId}/assign`, { method: "POST", body: JSON.stringify(body) }),
 
+  unassignTask: (taskId: string) =>
+    request<unknown>(`/api/tasks/${taskId}/unassign`, { method: "POST" }),
+
   completeTask: (taskId: string) =>
     request<unknown>(`/api/tasks/${taskId}/complete`, { method: "POST" }),
 
