@@ -117,11 +117,9 @@ export function TaskCrudForm({
         color,
       );
       if (assigneeId && assigneeId !== initialAssigneeId) {
-        try {
-          await domusmindApi.assignTask(taskId, { assigneeId });
-        } catch (assignErr) {
-          console.error("Failed to assign task", assignErr);
-        }
+        await domusmindApi.assignTask(taskId, { assigneeId });
+      } else if (initialAssigneeId && !assigneeId) {
+        await domusmindApi.unassignTask(taskId);
       }
       setSubmitting(false);
       await Promise.resolve(onSuccess());

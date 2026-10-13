@@ -101,4 +101,62 @@ public sealed class HouseholdTaskReassignTests
         var act = () => task.Reassign(MemberId.New());
         act.Should().Throw<InvalidOperationException>();
     }
+
+    [Fact]
+    public void Unassign_ClearsAssignee()
+    {
+        var task = BuildAssignedTask();
+
+        task.Unassign();
+
+        task.AssigneeId.Should().BeNull();
+    }
+
+    [Fact]
+    public void Unassign_EmitsTaskUnassignedWithPreviousAssignee()
+    {
+        var task = BuildAssignedTask();
+        var previousAssigneeId = task.AssigneeId!.Value.Value;
+
+        task.Unassign();
+
+        task.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<TaskUnassigned>();
+        var unassigned = (TaskUnassigned)task.DomainEvents.Single();
+        unassigned.PreviousAssigneeId.Should().Be(previousAssigneeId);
+        unassigned.FamilyId.Should().Be(task.FamilyId.Value);
+    }
+
+    [Fact]
+    public void Unassign_UnassignedTask_Throws()
+    {
+        var task = BuildUnassignedTask();
+
+        var act = () => task.Unassign();
+
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void Unassign_CompletedTask_Throws()
+    {
+        var task = BuildAssignedTask();
+        task.Complete();
+        task.ClearDomainEvents();
+
+        var act = () => task.Unassign();
+
+        act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void Unassign_CancelledTask_Throws()
+    {
+        var task = BuildAssignedTask();
+        task.Cancel();
+        task.ClearDomainEvents();
+
+        var act = () => task.Unassign();
+
+        act.Should().Throw<InvalidOperationException>();
+    }
 }

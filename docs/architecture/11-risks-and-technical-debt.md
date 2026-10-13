@@ -60,10 +60,6 @@ Entries are ordered by priority. **Debt** is an observed condition in the reposi
 
 Each gap below is a missing operation, invariant or client call. The product artifact owns the expected behaviour.
 
-A task can be assigned and reassigned but never unassigned; no slice or domain operation removes the assignee ([`HouseholdTask.cs`](../../src/backend/DomusMind.Domain/Tasks/HouseholdTask.cs)).
-
-<!-- pdac:cite id="FR-TASKS-UNASSIGN-TASK" digest="sha256:2057c892be97aeb4381f29ad87654ae5ebc6325d6b265bcfad315ae83b9e90c3" -->
-
 A routine can be paused and resumed but not deleted ([`Routine.cs`](../../src/backend/DomusMind.Domain/Tasks/Routine.cs), [`Features/Tasks`](../../src/backend/DomusMind.Application/Features/Tasks/)).
 
 <!-- pdac:cite id="FR-TASKS-DELETE-ROUTINE" digest="sha256:3f55aec0f42f5f5bcfe0f91e9160a1e2a02f8fa99df833f7ce878ba7c3b9ca68" -->
