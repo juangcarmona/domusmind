@@ -147,6 +147,20 @@ public sealed class RoutineTests
         routine.TargetMemberIds.Should().ContainSingle().Which.Should().Be(memberId);
     }
 
+    [Fact]
+    public void Delete_EmitsRoutineDeletedEvent()
+    {
+        var routine = BuildRoutine();
+        routine.ClearDomainEvents();
+
+        routine.Delete();
+
+        routine.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<RoutineDeleted>();
+        var deleted = (RoutineDeleted)routine.DomainEvents.Single();
+        deleted.RoutineId.Should().Be(routine.Id.Value);
+        deleted.FamilyId.Should().Be(routine.FamilyId.Value);
+    }
+
     // --- Update ---
 
     [Fact]

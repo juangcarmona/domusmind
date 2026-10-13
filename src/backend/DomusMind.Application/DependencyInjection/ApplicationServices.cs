@@ -65,6 +65,7 @@ using DomusMind.Application.Features.Tasks.AssignTask;
 using DomusMind.Application.Features.Tasks.CancelTask;
 using DomusMind.Application.Features.Tasks.CompleteTask;
 using DomusMind.Application.Features.Tasks.CreateRoutine;
+using DomusMind.Application.Features.Tasks.DeleteRoutine;
 using DomusMind.Application.Features.Tasks.CreateTask;
 using DomusMind.Application.Features.Tasks.GetRoutinesByFamily;
 using DomusMind.Application.Features.Tasks.PauseRoutine;
@@ -195,6 +196,7 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<UpdateRoutineCommand, UpdateRoutineResponse>, UpdateRoutineCommandHandler>();
         services.AddScoped<ICommandHandler<PauseRoutineCommand, PauseRoutineResponse>, PauseRoutineCommandHandler>();
         services.AddScoped<ICommandHandler<ResumeRoutineCommand, ResumeRoutineResponse>, ResumeRoutineCommandHandler>();
+        services.AddScoped<ICommandHandler<DeleteRoutineCommand, DeleteRoutineResponse>, DeleteRoutineCommandHandler>();
         services.AddScoped<ICommandHandler<ReassignTaskCommand, ReassignTaskResponse>, ReassignTaskCommandHandler>();
         services.AddScoped<ICommandHandler<UnassignTaskCommand, UnassignTaskResponse>, UnassignTaskCommandHandler>();
         services.AddScoped<IQueryHandler<GetRoutinesByFamilyQuery, RoutineListResponse>, GetRoutinesByFamilyQueryHandler>();

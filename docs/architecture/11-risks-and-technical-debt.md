@@ -60,10 +60,6 @@ Entries are ordered by priority. **Debt** is an observed condition in the reposi
 
 Each gap below is a missing operation, invariant or client call. The product artifact owns the expected behaviour.
 
-A routine can be paused and resumed but not deleted ([`Routine.cs`](../../src/backend/DomusMind.Domain/Tasks/Routine.cs), [`Features/Tasks`](../../src/backend/DomusMind.Application/Features/Tasks/)).
-
-<!-- pdac:cite id="FR-TASKS-DELETE-ROUTINE" digest="sha256:3f55aec0f42f5f5bcfe0f91e9160a1e2a02f8fa99df833f7ce878ba7c3b9ca68" -->
-
 Lists have no privacy state; every list is visible to the whole family ([`SharedList.cs`](../../src/backend/DomusMind.Domain/Lists/SharedList.cs)).
 
 <!-- pdac:cite id="FR-LISTS-PRIVATE-LIST" digest="sha256:825ff8f3be841b73cae76621c39cfd78921322cd056211fce5d0789287bac123" -->

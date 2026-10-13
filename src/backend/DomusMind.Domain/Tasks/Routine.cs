@@ -172,6 +172,11 @@ public sealed class Routine : AggregateRoot<RoutineId>
             DateTime.UtcNow));
     }
 
+    public void Delete()
+    {
+        RaiseDomainEvent(new RoutineDeleted(Guid.NewGuid(), Id.Value, FamilyId.Value, DateTime.UtcNow));
+    }
+
     public bool AppliesTo(MemberId memberId)
         => Scope == RoutineScope.Household || _targetMembers.Any(x => x.MemberId == memberId);
 

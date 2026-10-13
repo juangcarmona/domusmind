@@ -40,4 +40,6 @@ export default {
   cancel: "キャンセル",
   createError: "ルーティンを作成できませんでした",
   updateError: "ルーティンを更新できませんでした",
+  delete: "ルーティンを削除",
+  deleteConfirm: "「{{name}}」を削除しますか？今後は予定表に表示されません。既存のタスクは残ります。",
 } as const;

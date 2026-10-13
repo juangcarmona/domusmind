@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { createRoutine, updateRoutine } from "../../../store/routinesSlice";
+import { createRoutine, deleteRoutine, updateRoutine } from "../../../store/routinesSlice";
 import { fetchAreas } from "../../../store/areasSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import type { RoutineListItem } from "../../../api/domusmindApi";
@@ -143,6 +143,19 @@ export function RoutineCrudForm({
     );
     setSubmitting(false);
     if (updateRoutine.fulfilled.match(result)) {
+      await Promise.resolve(onSuccess());
+    } else {
+      setError((result.payload as string) ?? tCommon("failed"));
+    }
+  }
+
+  async function handleDelete() {
+    if (!initialRoutine || !window.confirm(tRoutines("deleteConfirm", { name: initialRoutine.name }))) return;
+    setSubmitting(true);
+    setError(null);
+    const result = await dispatch(deleteRoutine(initialRoutine.routineId));
+    setSubmitting(false);
+    if (deleteRoutine.fulfilled.match(result)) {
       await Promise.resolve(onSuccess());
     } else {
       setError((result.payload as string) ?? tCommon("failed"));
@@ -348,6 +361,11 @@ export function RoutineCrudForm({
         </div>
         {error && <p className="error-msg">{error}</p>}
         <div className="modal-footer">
+          {mode === "edit" && (
+            <button type="button" className="btn btn-ghost" onClick={() => void handleDelete()} disabled={submitting}>
+              {tRoutines("delete")}
+            </button>
+          )}
           <button type="button" className="btn btn-ghost" onClick={onCancel}>
             {tCommon("cancel")}
           </button>

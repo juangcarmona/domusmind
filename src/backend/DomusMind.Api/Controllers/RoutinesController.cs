@@ -2,6 +2,7 @@ using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Features.Tasks;
 using DomusMind.Application.Features.Tasks.CreateRoutine;
+using DomusMind.Application.Features.Tasks.DeleteRoutine;
 using DomusMind.Application.Features.Tasks.GetRoutinesByFamily;
 using DomusMind.Application.Features.Tasks.PauseRoutine;
 using DomusMind.Application.Features.Tasks.ResumeRoutine;
@@ -138,6 +139,28 @@ public sealed class RoutinesController : ControllerBase
                 new PauseRoutineCommand(id, _currentUser.UserId!.Value),
                 cancellationToken);
 
+            return Ok(response);
+        }
+        catch (TasksException ex)
+        {
+            return MapTasksException(ex);
+        }
+    }
+
+    [HttpDelete("{id:guid}")]
+    [ProducesResponseType(typeof(DeleteRoutineResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteRoutine(
+        Guid id,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new DeleteRoutineCommand(id, _currentUser.UserId!.Value), cancellationToken);
             return Ok(response);
         }
         catch (TasksException ex)

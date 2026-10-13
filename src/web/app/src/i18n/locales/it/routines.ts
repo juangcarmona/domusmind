@@ -40,4 +40,6 @@ export default {
   cancel: "Annulla",
   createError: "Impossibile creare la routine",
   updateError: "Impossibile aggiornare la routine",
+  delete: "Elimina routine",
+  deleteConfirm: "Eliminare “{{name}}”? Non apparirà più nell’agenda. Le attività esistenti resteranno.",
 } as const;
