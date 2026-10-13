@@ -32,7 +32,7 @@ export function AssignOwnerModal({
     setError(null);
 
     const isTransfer = !!area.primaryOwnerId && area.primaryOwnerId !== memberId;
-    let succeeded = false;
+    let succeeded: boolean;
 
     if (isTransfer) {
       const result = await dispatch(
