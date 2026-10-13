@@ -48,7 +48,7 @@ public sealed class CancelEventCommandHandler
         {
             calendarEvent.Cancel();
         }
-        catch (InvalidOperationException ex)
+        catch (CalendarEventAlreadyCancelledException ex)
         {
             throw new CalendarException(CalendarErrorCode.EventAlreadyCancelled, ex.Message);
         }

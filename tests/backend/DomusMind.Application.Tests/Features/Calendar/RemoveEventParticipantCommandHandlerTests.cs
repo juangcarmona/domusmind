@@ -94,4 +94,23 @@ public sealed class RemoveEventParticipantCommandHandlerTests
         await act.Should().ThrowAsync<CalendarException>()
             .Where(e => e.Code == CalendarErrorCode.ParticipantNotFound);
     }
+
+    [Fact]
+    public async Task Handle_CancelledEvent_ThrowsEventAlreadyCancelled()
+    {
+        var (db, evt) = await BuildWithEventAsync();
+        var memberId = MemberId.New();
+        evt.AddParticipant(memberId);
+        evt.Cancel();
+        await db.SaveChangesAsync();
+        var handler = BuildHandler(db);
+
+        var act = () => handler.Handle(
+            new RemoveEventParticipantCommand(evt.Id.Value, memberId.Value, Guid.NewGuid()),
+            CancellationToken.None);
+
+        await act.Should().ThrowAsync<CalendarException>()
+            .Where(e => e.Code == CalendarErrorCode.EventAlreadyCancelled);
+        evt.ParticipantIds.Should().ContainSingle().Which.Should().Be(memberId);
+    }
 }

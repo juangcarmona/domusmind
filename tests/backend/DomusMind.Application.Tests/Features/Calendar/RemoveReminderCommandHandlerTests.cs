@@ -93,4 +93,22 @@ public sealed class RemoveReminderCommandHandlerTests
         await act.Should().ThrowAsync<CalendarException>()
             .Where(e => e.Code == CalendarErrorCode.ReminderOffsetNotFound);
     }
+
+    [Fact]
+    public async Task Handle_CancelledEvent_ThrowsEventAlreadyCancelled()
+    {
+        var (db, evt) = await BuildWithEventAsync();
+        evt.AddReminder(30);
+        evt.Cancel();
+        await db.SaveChangesAsync();
+        var handler = BuildHandler(db);
+
+        var act = () => handler.Handle(
+            new RemoveReminderCommand(evt.Id.Value, 30, Guid.NewGuid()),
+            CancellationToken.None);
+
+        await act.Should().ThrowAsync<CalendarException>()
+            .Where(e => e.Code == CalendarErrorCode.EventAlreadyCancelled);
+        evt.ReminderOffsets.Should().ContainSingle().Which.Should().Be(30);
+    }
 }

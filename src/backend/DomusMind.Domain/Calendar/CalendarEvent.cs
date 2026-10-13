@@ -74,8 +74,7 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
 
     public void Reschedule(EventTime newTime)
     {
-        if (Status == EventStatus.Cancelled)
-            throw new InvalidOperationException("Cannot reschedule a cancelled event.");
+        EnsureNotCancelled("reschedule");
 
         Time = newTime;
 
@@ -85,8 +84,7 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
 
     public void Edit(EventTitle newTitle, string? newDescription)
     {
-        if (Status == EventStatus.Cancelled)
-            throw new InvalidOperationException("Cannot edit a cancelled event.");
+        EnsureNotCancelled("edit");
 
         Title = newTitle;
         Description = string.IsNullOrWhiteSpace(newDescription) ? null : newDescription.Trim();
@@ -94,8 +92,7 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
 
     public void Repaint(HexColor newColor)
     {
-        if (Status == EventStatus.Cancelled)
-            throw new InvalidOperationException("Cannot repaint a cancelled event.");
+        EnsureNotCancelled("repaint");
 
         Color = newColor;
     }
@@ -103,7 +100,7 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
     public void Cancel()
     {
         if (Status == EventStatus.Cancelled)
-            throw new InvalidOperationException("Event is already cancelled.");
+            throw new CalendarEventAlreadyCancelledException("Event is already cancelled.");
 
         Status = EventStatus.Cancelled;
 
@@ -113,8 +110,7 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
 
     public void AddParticipant(MemberId memberId)
     {
-        if (Status == EventStatus.Cancelled)
-            throw new InvalidOperationException("Cannot add participants to a cancelled event.");
+        EnsureNotCancelled("add participants to");
 
         if (_participantIds.Contains(memberId))
             throw new InvalidOperationException(
@@ -128,6 +124,8 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
 
     public void RemoveParticipant(MemberId memberId)
     {
+        EnsureNotCancelled("remove participants from");
+
         if (!_participantIds.Contains(memberId))
             throw new InvalidOperationException(
                 $"Member '{memberId.Value}' is not a participant of this event.");
@@ -140,6 +138,8 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
 
     public void AddReminder(int minutesBefore)
     {
+        EnsureNotCancelled("add reminders to");
+
         if (minutesBefore <= 0)
             throw new InvalidOperationException("Reminder offset must be greater than zero.");
 
@@ -155,6 +155,8 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
 
     public void RemoveReminder(int minutesBefore)
     {
+        EnsureNotCancelled("remove reminders from");
+
         if (!_reminderOffsets.Contains(minutesBefore))
             throw new InvalidOperationException(
                 $"No reminder with offset {minutesBefore} minutes exists for this event.");
@@ -163,6 +165,13 @@ public sealed class CalendarEvent : AggregateRoot<CalendarEventId>
 
         RaiseDomainEvent(new ReminderRemoved(
             Guid.NewGuid(), Id.Value, minutesBefore, DateTime.UtcNow));
+    }
+
+    private void EnsureNotCancelled(string operation)
+    {
+        if (Status == EventStatus.Cancelled)
+            throw new CalendarEventAlreadyCancelledException(
+                $"Cannot {operation} a cancelled event.");
     }
 
 #pragma warning disable CS8618
