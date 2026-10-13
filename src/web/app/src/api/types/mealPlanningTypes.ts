@@ -11,6 +11,19 @@ export type MealSourceType =
   | "External"
   | "Leftovers";
 
+export interface MealAgendaSlot {
+  dayOfWeek: string;
+  mealType: string;
+  mealSourceType: MealSourceType;
+  label: string | null;
+  notes: string | null;
+  isOptional: boolean;
+}
+
+export interface MealPlansForAgendaResponse {
+  slots: MealAgendaSlot[];
+}
+
 // ── Slot ─────────────────────────────────────────────────────────────────────
 
 export interface MealSlotRecipeDetail {

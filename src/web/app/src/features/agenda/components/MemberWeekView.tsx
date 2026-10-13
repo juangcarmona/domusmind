@@ -12,7 +12,7 @@ interface MemberWeekViewProps {
   sharedCells?: WeeklyGridCell[];
   /** ISO YYYY-MM-DD — the currently selected day (must be within the loaded week). */
   selectedDate: string;
-  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item" | "meal", id: string) => void;
   /** Called when the user taps a day in the strip — stays in week view. */
   onDaySelect?: (date: string) => void;
   /** Called when the user explicitly drills into a day (tapping the detail header). */

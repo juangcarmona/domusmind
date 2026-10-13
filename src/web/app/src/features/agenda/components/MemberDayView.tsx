@@ -9,7 +9,7 @@ interface MemberDayViewProps {
   member: WeeklyGridMember;
   selectedDate: string; // ISO YYYY-MM-DD
   sharedCell?: WeeklyGridCell | null;
-  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item" | "meal", id: string) => void;
   /**
    * Called when an empty timeline slot is clicked.
    * Receives "HH:MM" (the :00 or :30 slot start time).

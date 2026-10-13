@@ -96,10 +96,6 @@ Recipe management is delivered while its OpenSpec change remains active.
 
 <!-- pdac:cite id="FR-RECIPES-LIBRARY" digest="sha256:702c8c7996f89cc2fd0f678d4a163db664aae0ca384e742133ad8cdd9001bcfc" -->
 
-Meal plans never reach the Agenda: the backend has a meal-plan Agenda query, but the web app does not call it ([`GetMealPlansForAgenda`](../../src/backend/DomusMind.Application/Features/MealPlanning/GetMealPlansForAgenda/), [`src/web/app/src/api`](../../src/web/app/src/api/)).
-
-<!-- pdac:cite id="FR-MEALS-AGENDA-PROJECTION" digest="sha256:14542a51f00845c388cd4e159f50674eca6d349656eacac4935fa63b064cd244" -->
-
 External calendars refresh only through the background worker and manual sync; the web app never triggers the catch-up sync endpoint on sign-in or when the Agenda opens ([`ExternalCalendarRefreshWorker.cs`](../../src/backend/DomusMind.Infrastructure/BackgroundJobs/Calendar/ExternalCalendarRefreshWorker.cs), [`externalCalendarApi.ts`](../../src/web/app/src/api/externalCalendarApi.ts)).
 
 <!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:4a820cb4807164b225e417fbb59c0b4cba8a5b188bde26f1821e62a258b2aeb4" -->

@@ -20,7 +20,7 @@ export type CalendarEntryDisplayType =
   | "list"
   | "completed";
 
-export type CalendarEntrySourceType = "event" | "task" | "routine" | "list-item";
+export type CalendarEntrySourceType = "event" | "task" | "routine" | "list-item" | "meal" | "meal";
 
 /**
  * Normalized presentation model for a single calendar entry.
@@ -284,6 +284,23 @@ export function normalizeCellItems(cell: WeeklyGridCell): CalendarEntry[] {
 
   for (const li of cell.listItems ?? []) {
     entries.push(normalizeListItem(li));
+  }
+
+  for (const meal of cell.meals ?? []) {
+    entries.push({
+      id: meal.id,
+      sourceType: "meal",
+      displayType: "event",
+      title: meal.title,
+      time: null,
+      subtitle: meal.notes,
+      status: "Planned",
+      color: null,
+      isCompleted: false,
+      isOverdue: false,
+      isReadOnly: true,
+      sourceLabel: meal.mealType,
+    });
   }
 
   return entries;

@@ -21,9 +21,16 @@ import type {
   UpdateRecipeIngredientRequest,
   UpdateRecipeIngredientResponse,
   RemoveRecipeIngredientResponse,
+  MealPlansForAgendaResponse,
 } from "./types/mealPlanningTypes";
 
 export const mealPlanningApi = {
+  /** Fetch the read-only meal slots projected into the household Agenda. */
+  getForAgenda: (familyId: string, weekStart: string) =>
+    request<MealPlansForAgendaResponse>(
+      `/api/meal-plans/family/${familyId}/agenda/${weekStart}`,
+    ),
+
   /** Fetch a meal plan by family + week start date. Returns null mealPlan when no plan exists. */
   getMealPlan: (familyId: string, weekStart: string) =>
     request<GetMealPlanResponse>(

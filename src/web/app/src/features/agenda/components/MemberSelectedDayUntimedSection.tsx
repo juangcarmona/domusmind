@@ -5,7 +5,7 @@ import { CalendarEntryItem } from "../../agenda-today/components/shared/Calendar
 interface MemberSelectedDayUntimedSectionProps {
   /** All untimed entries for the selected day (time === null). */
   entries: CalendarEntry[];
-  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item" | "meal", id: string) => void;
 }
 
 /**

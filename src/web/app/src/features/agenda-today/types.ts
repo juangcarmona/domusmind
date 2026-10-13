@@ -55,12 +55,21 @@ export interface WeeklyGridRoutineItem {
   scope: string;
 }
 
+export interface WeeklyGridMealItem {
+  id: string;
+  title: string;
+  mealType: string;
+  notes: string | null;
+  isOptional: boolean;
+}
+
 export interface WeeklyGridCell {
   date: string;
   events: WeeklyGridEventItem[];
   tasks: WeeklyGridTaskItem[];
   routines: WeeklyGridRoutineItem[];
   listItems: WeeklyGridListItem[];
+  meals?: WeeklyGridMealItem[];
 }
 
 /** Per-day item-type summary used by the month view density pips. */
