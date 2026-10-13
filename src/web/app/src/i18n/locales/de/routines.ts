@@ -40,4 +40,6 @@ export default {
   cancel: "Abbrechen",
   createError: "Routine konnte nicht erstellt werden",
   updateError: "Routine konnte nicht aktualisiert werden",
+  delete: "Routine löschen",
+  deleteConfirm: "„{{name}}“ löschen? Sie erscheint danach nicht mehr im Kalender. Bestehende Aufgaben bleiben erhalten.",
 } as const;

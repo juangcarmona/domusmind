@@ -56,6 +56,20 @@ export const updateRoutine = createAsyncThunk(
   },
 );
 
+export const deleteRoutine = createAsyncThunk(
+  "routines/delete",
+  async (routineId: string, { rejectWithValue }) => {
+    try {
+      await domusmindApi.deleteRoutine(routineId);
+      return routineId;
+    } catch (err: unknown) {
+      return rejectWithValue(
+        (err as { message?: string }).message ?? "Failed to delete routine",
+      );
+    }
+  },
+);
+
 export const pauseRoutine = createAsyncThunk(
   "routines/pause",
   async ({ routineId, familyId }: { routineId: string; familyId: string }, { dispatch, rejectWithValue }) => {
@@ -110,6 +124,9 @@ const routinesSlice = createSlice({
       .addCase(updateRoutine.fulfilled, (state, action) => {
         const idx = state.items.findIndex((r) => r.routineId === action.payload.routineId);
         if (idx !== -1) state.items[idx] = action.payload;
+      })
+      .addCase(deleteRoutine.fulfilled, (state, action) => {
+        state.items = state.items.filter((r) => r.routineId !== action.payload);
       });
   },
 });

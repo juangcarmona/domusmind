@@ -80,6 +80,9 @@ export const domainApi = {
   updateRoutine: (routineId: string, body: UpdateRoutineRequest) =>
     request<RoutineListItem>(`/api/routines/${routineId}`, { method: "PUT", body: JSON.stringify(body) }),
 
+  deleteRoutine: (routineId: string) =>
+    request<{ routineId: string }>(`/api/routines/${routineId}`, { method: "DELETE" }),
+
   pauseRoutine: (routineId: string) =>
     request<unknown>(`/api/routines/${routineId}/pause`, { method: "POST" }),
 

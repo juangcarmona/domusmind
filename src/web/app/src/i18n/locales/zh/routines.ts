@@ -40,4 +40,6 @@ export default {
   cancel: "取消",
   createError: "创建例行事务失败",
   updateError: "更新例行事务失败",
+  delete: "删除例行事务",
+  deleteConfirm: "确定删除“{{name}}”吗？它将不再显示在日程中。现有任务会保留。",
 } as const;

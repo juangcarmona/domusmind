@@ -40,4 +40,6 @@ export default {
   cancel: "Cancel",
   createError: "Failed to create routine",
   updateError: "Failed to update routine",
+  delete: "Delete routine",
+  deleteConfirm: "Delete “{{name}}”? It will no longer appear on the agenda. Existing tasks will remain.",
 } as const;

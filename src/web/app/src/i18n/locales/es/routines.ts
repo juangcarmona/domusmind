@@ -40,4 +40,6 @@ export default {
   cancel: "Cancelar",
   createError: "No se pudo crear la rutina",
   updateError: "No se pudo actualizar la rutina",
+  delete: "Eliminar rutina",
+  deleteConfirm: "¿Eliminar “{{name}}”? Ya no aparecerá en la agenda. Las tareas existentes se conservarán.",
 } as const;

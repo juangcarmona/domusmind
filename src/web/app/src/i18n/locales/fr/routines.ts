@@ -40,4 +40,6 @@ export default {
   cancel: "Annuler",
   createError: "Impossible de créer la routine",
   updateError: "Impossible de mettre à jour la routine",
+  delete: "Supprimer la routine",
+  deleteConfirm: "Supprimer « {{name}} » ? Elle n’apparaîtra plus dans l’agenda. Les tâches existantes seront conservées.",
 } as const;
