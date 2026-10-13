@@ -41,4 +41,10 @@ export default {
   viewDetail: "Ver detalle completo",
   ownerAgenda: "Ver agenda",
   createFromArea: "Crear…",
+  showArchived: "Archivadas",
+  showActive: "Activas",
+  archived: "Archivada",
+  archivedNotice: "Esta área está archivada y es de solo lectura.",
+  archiveAction: "Archivar área",
+  archiveConfirm: "¿Archivar “{{name}}”? Las tareas y rutinas vinculadas dejarán de pertenecer a esta área. Las tareas existentes se conservarán.",
 } as const;

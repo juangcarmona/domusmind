@@ -4,6 +4,7 @@ using DomusMind.Application.Features.Responsibilities;
 using DomusMind.Application.Features.Responsibilities.AssignPrimaryOwner;
 using DomusMind.Application.Features.Responsibilities.AssignSecondaryOwner;
 using DomusMind.Application.Features.Responsibilities.CreateResponsibilityDomain;
+using DomusMind.Application.Features.Responsibilities.ArchiveResponsibilityDomain;
 using DomusMind.Application.Features.Responsibilities.DetectResponsibilityOverload;
 using DomusMind.Application.Features.Responsibilities.GetHouseholdAreas;
 using DomusMind.Application.Features.Responsibilities.GetResponsibilityBalance;
@@ -171,15 +172,38 @@ public sealed class ResponsibilityDomainsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetHouseholdAreas(
         [FromQuery] Guid familyId,
+        [FromQuery] bool archivedOnly,
         [FromServices] IQueryDispatcher dispatcher,
         CancellationToken cancellationToken)
     {
         try
         {
             var response = await dispatcher.Dispatch(
-                new GetHouseholdAreasQuery(familyId, _currentUser.UserId!.Value),
+                new GetHouseholdAreasQuery(familyId, _currentUser.UserId!.Value, archivedOnly),
                 cancellationToken);
 
+            return Ok(response);
+        }
+        catch (ResponsibilitiesException ex)
+        {
+            return MapResponsibilitiesException(ex);
+        }
+    }
+
+    [HttpPost("{id:guid}/archive")]
+    [ProducesResponseType(typeof(ArchiveResponsibilityDomainResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ArchiveResponsibilityDomain(
+        Guid id,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            var response = await dispatcher.Dispatch(
+                new ArchiveResponsibilityDomainCommand(id, _currentUser.UserId!.Value), cancellationToken);
             return Ok(response);
         }
         catch (ResponsibilitiesException ex)
@@ -347,6 +371,8 @@ public sealed class ResponsibilityDomainsController : ControllerBase
         ResponsibilitiesErrorCode.AccessDenied =>
             StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message }),
         ResponsibilitiesErrorCode.DuplicateSecondaryOwner =>
+            Conflict(new { error = ex.Message }),
+        ResponsibilitiesErrorCode.AlreadyArchived =>
             Conflict(new { error = ex.Message }),
         ResponsibilitiesErrorCode.MemberNotFound =>
             NotFound(new { error = ex.Message }),

@@ -18,9 +18,11 @@ const initialState: AreasState = {
 
 export const fetchAreas = createAsyncThunk(
   "areas/fetch",
-  async (familyId: string, { rejectWithValue }) => {
+  async (request: string | { familyId: string; archivedOnly?: boolean }, { rejectWithValue }) => {
     try {
-      const res = await domusmindApi.getAreas(familyId);
+      const familyId = typeof request === "string" ? request : request.familyId;
+      const archivedOnly = typeof request === "string" ? false : request.archivedOnly ?? false;
+      const res = await domusmindApi.getAreas(familyId, archivedOnly);
       return res.areas;
     } catch (err: unknown) {
       return rejectWithValue(
@@ -61,11 +63,25 @@ export const createArea = createAsyncThunk(
         primaryOwnerId: null,
         primaryOwnerName: null,
         secondaryOwnerIds: [],
+        isArchived: false,
       } as HouseholdAreaItem;
     } catch (err: unknown) {
       return rejectWithValue(
         (err as { message?: string }).message ?? "Failed to create area",
       );
+    }
+  },
+);
+
+export const archiveArea = createAsyncThunk(
+  "areas/archive",
+  async ({ areaId, familyId }: { areaId: string; familyId: string }, { dispatch, rejectWithValue }) => {
+    try {
+      await domusmindApi.archiveArea(areaId);
+      await dispatch(fetchAreas(familyId));
+      return areaId;
+    } catch (err: unknown) {
+      return rejectWithValue((err as { message?: string }).message ?? "Failed to archive area");
     }
   },
 );
@@ -193,6 +209,10 @@ const areasSlice = createSlice({
         const { areaId, color } = action.payload;
         const item = state.items.find((a) => a.areaId === areaId);
         if (item) item.color = color;
+      })
+      .addCase(archiveArea.fulfilled, (state, action) => {
+        const item = state.items.find((a) => a.areaId === action.payload);
+        if (item) item.isArchived = true;
       });
   },
 });

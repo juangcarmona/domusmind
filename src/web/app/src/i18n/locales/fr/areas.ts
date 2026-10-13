@@ -41,4 +41,10 @@ export default {
   viewDetail: "Voir le détail complet",
   ownerAgenda: "Voir l'agenda",
   createFromArea: "Créer…",
+  showArchived: "Archivées",
+  showActive: "Actives",
+  archived: "Archivée",
+  archivedNotice: "Cette zone est archivée et en lecture seule.",
+  archiveAction: "Archiver la zone",
+  archiveConfirm: "Archiver « {{name}} » ? Les tâches et routines liées ne dépendront plus de cette zone. Les tâches existantes seront conservées.",
 } as const;

@@ -45,4 +45,10 @@ export default {
   createRoutine: "Routine",
   createPlan: "Plan",
   colorHint: "Change color",
+  showArchived: "Archived",
+  showActive: "Active",
+  archived: "Archived",
+  archivedNotice: "This area is archived and read-only.",
+  archiveAction: "Archive area",
+  archiveConfirm: "Archive “{{name}}”? Linked tasks and routines will no longer belong to this area. Existing tasks remain.",
 } as const;

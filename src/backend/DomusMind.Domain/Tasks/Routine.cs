@@ -177,6 +177,15 @@ public sealed class Routine : AggregateRoot<RoutineId>
         RaiseDomainEvent(new RoutineDeleted(Guid.NewGuid(), Id.Value, FamilyId.Value, DateTime.UtcNow));
     }
 
+    public void ClearArea()
+    {
+        if (AreaId is null) return;
+        var previousAreaId = AreaId.Value;
+        AreaId = null;
+        RaiseDomainEvent(new RoutineAreaCleared(
+            Guid.NewGuid(), Id.Value, FamilyId.Value, previousAreaId.Value, DateTime.UtcNow));
+    }
+
     public bool AppliesTo(MemberId memberId)
         => Scope == RoutineScope.Household || _targetMembers.Any(x => x.MemberId == memberId);
 

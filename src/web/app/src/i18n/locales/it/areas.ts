@@ -41,4 +41,10 @@ export default {
   viewDetail: "Vedi dettaglio completo",
   ownerAgenda: "Vedi agenda",
   createFromArea: "Crea…",
+  showArchived: "Archiviate",
+  showActive: "Attive",
+  archived: "Archiviata",
+  archivedNotice: "Quest’area è archiviata e in sola lettura.",
+  archiveAction: "Archivia area",
+  archiveConfirm: "Archiviare “{{name}}”? Le attività e le routine collegate non faranno più parte di quest’area. Le attività esistenti saranno conservate.",
 } as const;

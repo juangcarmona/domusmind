@@ -6,7 +6,8 @@ public sealed record HouseholdAreaItem(
     string Color,
     Guid? PrimaryOwnerId,
     string? PrimaryOwnerName,
-    IReadOnlyCollection<Guid> SecondaryOwnerIds);
+    IReadOnlyCollection<Guid> SecondaryOwnerIds,
+    bool IsArchived);
 
 public sealed record HouseholdAreasResponse(
     IReadOnlyCollection<HouseholdAreaItem> Areas);

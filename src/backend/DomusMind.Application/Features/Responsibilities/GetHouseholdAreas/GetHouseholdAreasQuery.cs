@@ -5,4 +5,5 @@ namespace DomusMind.Application.Features.Responsibilities.GetHouseholdAreas;
 
 public sealed record GetHouseholdAreasQuery(
     Guid FamilyId,
-    Guid RequestedByUserId) : IQuery<HouseholdAreasResponse>;
+    Guid RequestedByUserId,
+    bool ArchivedOnly = false) : IQuery<HouseholdAreasResponse>;

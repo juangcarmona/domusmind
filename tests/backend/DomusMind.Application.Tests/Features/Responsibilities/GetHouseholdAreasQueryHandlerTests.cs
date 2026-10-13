@@ -78,6 +78,29 @@ public sealed class GetHouseholdAreasQueryHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ArchivedFilterReturnsOnlyArchivedAreas()
+    {
+        var db = CreateDb();
+        var familyId = FamilyId.New();
+        db.Set<Domain.Family.Family>().Add(MakeFamily(familyId, MemberId.New()));
+        var active = MakeDomain(familyId, "Active");
+        var archived = MakeDomain(familyId, "Archived");
+        archived.Archive();
+        db.Set<ResponsibilityDomain>().AddRange(active, archived);
+        await db.SaveChangesAsync();
+        var handler = BuildHandler(db);
+
+        var activeResult = await handler.Handle(
+            new GetHouseholdAreasQuery(familyId.Value, Guid.NewGuid()), CancellationToken.None);
+        var archivedResult = await handler.Handle(
+            new GetHouseholdAreasQuery(familyId.Value, Guid.NewGuid(), ArchivedOnly: true), CancellationToken.None);
+
+        activeResult.Areas.Should().ContainSingle().Which.Name.Should().Be("Active");
+        archivedResult.Areas.Should().ContainSingle().Which.Name.Should().Be("Archived");
+        archivedResult.Areas.Single().IsArchived.Should().BeTrue();
+    }
+
+    [Fact]
     public async Task Handle_AreaWithPrimaryOwner_IncludesOwnerName()
     {
         var db = CreateDb();

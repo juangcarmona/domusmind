@@ -1,4 +1,5 @@
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Shared;
 using DomusMind.Domain.Tasks;
 using DomusMind.Domain.Tasks.Enums;
@@ -145,6 +146,22 @@ public sealed class RoutineTests
         routine.Color.Value.Should().Be("#EF4444");
         routine.Schedule.Should().Be(schedule);
         routine.TargetMemberIds.Should().ContainSingle().Which.Should().Be(memberId);
+    }
+
+    [Fact]
+    public void ClearArea_RemovesAreaReferenceAndEmitsEvent()
+    {
+        var areaId = ResponsibilityDomainId.New();
+        var routine = Routine.Create(
+            RoutineId.New(), FamilyId.New(), RoutineName.Create("Weekly cleanup"),
+            RoutineScope.Household, RoutineKind.Scheduled, HexColor.From("#3B82F6"),
+            RoutineSchedule.Weekly([DayOfWeek.Monday]), areaId, Array.Empty<MemberId>());
+        routine.ClearDomainEvents();
+
+        routine.ClearArea();
+
+        routine.AreaId.Should().BeNull();
+        routine.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<RoutineAreaCleared>();
     }
 
     [Fact]

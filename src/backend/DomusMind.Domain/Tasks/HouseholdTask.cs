@@ -173,6 +173,15 @@ public sealed class HouseholdTask : AggregateRoot<TaskId>
         Title = newTitle;
     }
 
+    public void ClearArea()
+    {
+        if (AreaId is null) return;
+        var previousAreaId = AreaId.Value;
+        AreaId = null;
+        RaiseDomainEvent(new TaskAreaCleared(
+            Guid.NewGuid(), Id.Value, FamilyId.Value, previousAreaId.Value, DateTime.UtcNow));
+    }
+
 #pragma warning disable CS8618
     // EF Core parameterless constructor
     private HouseholdTask() : base(default) { }
