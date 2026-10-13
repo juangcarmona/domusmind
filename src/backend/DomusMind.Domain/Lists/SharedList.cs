@@ -290,7 +290,7 @@ public sealed class SharedList : AggregateRoot<ListId>
 
     /// <summary>
     /// Sets temporal fields (dueDate, reminder, repeat) on an item.
-    /// At least one field must be provided.
+    /// At least one field must be provided or explicitly cleared.
     /// All three fields are independently optional — repeat does not require dueDate.
     /// </summary>
     public ListItem SetItemTemporal(
@@ -298,18 +298,34 @@ public sealed class SharedList : AggregateRoot<ListId>
         DateOnly? dueDate,
         DateTimeOffset? reminder,
         string? repeat,
-        DateTime now)
+        DateTime now,
+        bool clearDueDate = false,
+        bool clearReminder = false,
+        bool clearRepeat = false)
     {
-        if (dueDate is null && reminder is null && repeat is null)
+        if ((clearDueDate && dueDate.HasValue)
+            || (clearReminder && reminder.HasValue)
+            || (clearRepeat && repeat is not null))
+            throw new ArgumentException("A temporal field cannot be set and cleared in the same operation.");
+
+        if (dueDate is null && reminder is null && repeat is null
+            && !clearDueDate && !clearReminder && !clearRepeat)
             throw new ArgumentException(
-                "At least one temporal field (dueDate, reminder, repeat) must be provided.");
+                "At least one temporal field must be set or explicitly cleared.");
 
         var item = _items.FirstOrDefault(i => i.Id == itemId)
             ?? throw new InvalidOperationException($"Item '{itemId.Value}' does not exist in this list.");
 
-        var isFirstTemporalSet = item.SetTemporal(dueDate, reminder, repeat, now);
+        var hadTemporalData = item.HasTemporalData;
+        var isFirstTemporalSet = item.SetTemporal(
+            dueDate, reminder, repeat, now, clearDueDate, clearReminder, clearRepeat);
 
-        if (isFirstTemporalSet)
+        if (hadTemporalData && !item.HasTemporalData)
+        {
+            RaiseDomainEvent(new ListItemScheduled(
+                Guid.NewGuid(), Id.Value, itemId.Value, null, null, null, now));
+        }
+        else if (isFirstTemporalSet)
         {
             RaiseDomainEvent(new ListItemScheduled(
                 Guid.NewGuid(), Id.Value, itemId.Value,

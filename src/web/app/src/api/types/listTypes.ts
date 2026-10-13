@@ -126,6 +126,9 @@ export interface SetItemTemporalRequest {
   dueDate?: string | null;
   reminder?: string | null;
   repeat?: string | null;
+  clearDueDate?: boolean;
+  clearReminder?: boolean;
+  clearRepeat?: boolean;
 }
 
 export interface SetItemTemporalResponse {

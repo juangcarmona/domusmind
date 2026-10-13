@@ -441,7 +441,7 @@ public sealed class ListsController : ControllerBase
         catch (ListException ex) { return MapException(ex); }
     }
 
-    /// <summary>Sets temporal fields (due date, reminder, repeat) on a list item.</summary>
+    /// <summary>Sets or individually clears temporal fields on a list item.</summary>
     [HttpPatch("{listId:guid}/items/{itemId:guid}/temporal")]
     [ProducesResponseType(typeof(SetItemTemporalResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -457,7 +457,9 @@ public sealed class ListsController : ControllerBase
         try
         {
             var response = await dispatcher.Dispatch(
-                new SetItemTemporalCommand(listId, itemId, request.DueDate, request.Reminder, request.Repeat, _currentUser.UserId!.Value),
+                new SetItemTemporalCommand(
+                    listId, itemId, request.DueDate, request.Reminder, request.Repeat,
+                    _currentUser.UserId!.Value, request.ClearDueDate, request.ClearReminder, request.ClearRepeat),
                 cancellationToken);
             return Ok(response);
         }

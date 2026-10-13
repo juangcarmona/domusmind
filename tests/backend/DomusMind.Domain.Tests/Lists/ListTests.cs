@@ -746,15 +746,70 @@ public sealed class ListTests
         list.AddItem(id, name, null, null, DateTime.UtcNow);
         list.SetItemTemporal(id, new DateOnly(2026, 4, 11), null, "weekly", DateTime.UtcNow);
 
-        // Now clear just the dueDate (simulate clearing it leaving repeat)
-        // SetTemporal is additive — use ClearTemporal then re-set repeat only
-        list.ClearItemTemporal(id, DateTime.UtcNow);
-        list.SetItemTemporal(id, null, null, "weekly", DateTime.UtcNow);
+        list.SetItemTemporal(
+            id, null, null, null, DateTime.UtcNow, clearDueDate: true);
 
         var item = list.Items.Single(i => i.Id == id);
         item.DueDate.Should().BeNull();
         item.Repeat.Should().Be("weekly");
         item.HasTemporalData.Should().BeTrue();
+    }
+
+    [Fact]
+    public void SetItemTemporal_ClearingReminder_PreservesDueDateAndRepeat()
+    {
+        var list = BuildList();
+        var (id, name) = NewItem("Task with independent timing");
+        list.AddItem(id, name, null, null, DateTime.UtcNow);
+        var dueDate = new DateOnly(2026, 4, 11);
+        var reminder = DateTimeOffset.UtcNow.AddDays(1);
+        list.SetItemTemporal(id, dueDate, reminder, "weekly", DateTime.UtcNow);
+
+        list.SetItemTemporal(id, null, null, null, DateTime.UtcNow, clearReminder: true);
+
+        var item = list.Items.Single(i => i.Id == id);
+        item.DueDate.Should().Be(dueDate);
+        item.Reminder.Should().BeNull();
+        item.Repeat.Should().Be("weekly");
+        item.HasTemporalData.Should().BeTrue();
+    }
+
+    [Fact]
+    public void SetItemTemporal_ClearingRepeat_PreservesDueDateAndReminder()
+    {
+        var list = BuildList();
+        var (id, name) = NewItem("Task with independent timing");
+        list.AddItem(id, name, null, null, DateTime.UtcNow);
+        var dueDate = new DateOnly(2026, 4, 11);
+        var reminder = DateTimeOffset.UtcNow.AddDays(1);
+        list.SetItemTemporal(id, dueDate, reminder, "weekly", DateTime.UtcNow);
+
+        list.SetItemTemporal(id, null, null, null, DateTime.UtcNow, clearRepeat: true);
+
+        var item = list.Items.Single(i => i.Id == id);
+        item.DueDate.Should().Be(dueDate);
+        item.Reminder.Should().Be(reminder);
+        item.Repeat.Should().BeNull();
+        item.HasTemporalData.Should().BeTrue();
+    }
+
+    [Fact]
+    public void SetItemTemporal_ClearingFinalField_EmitsAgendaInvalidation()
+    {
+        var list = BuildList();
+        var (id, name) = NewItem("Task with due date");
+        list.AddItem(id, name, null, null, DateTime.UtcNow);
+        list.SetItemTemporal(id, new DateOnly(2026, 4, 11), null, null, DateTime.UtcNow);
+        list.ClearDomainEvents();
+
+        list.SetItemTemporal(id, null, null, null, DateTime.UtcNow, clearDueDate: true);
+
+        list.Items.Single(i => i.Id == id).HasTemporalData.Should().BeFalse();
+        list.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<ListItemScheduled>();
+        var invalidation = (ListItemScheduled)list.DomainEvents.Single();
+        invalidation.DueDate.Should().BeNull();
+        invalidation.Reminder.Should().BeNull();
+        invalidation.Repeat.Should().BeNull();
     }
 }
 
