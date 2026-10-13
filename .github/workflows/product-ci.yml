@@ -15,6 +15,8 @@ on:
       - '.claude/skills/**'
       - '.claude/commands/product/**'
       - '.claude/hooks/**'
+      - '.github/prompts/product-*.prompt.md'
+      - '.github/skills/**'
       - '.github/workflows/product-ci.yml'
   workflow_dispatch:
 
@@ -47,7 +49,7 @@ jobs:
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
             --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(docs/product/|\.product/|openspec/|\.claude/(skills|commands/product|hooks)/|\.github/workflows/product-ci\.yml$)'; then
+          if printf '%s\n' "$files" | grep -qE '^(docs/product/|\.product/|openspec/|\.claude/(skills|commands/product|hooks)/|\.github/(prompts/product-.*\.prompt\.md|skills/)|\.github/workflows/product-ci\.yml$)'; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
