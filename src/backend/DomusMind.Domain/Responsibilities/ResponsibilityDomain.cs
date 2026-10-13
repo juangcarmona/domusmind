@@ -16,6 +16,7 @@ public sealed class ResponsibilityDomain : AggregateRoot<ResponsibilityDomainId>
     public MemberId? PrimaryOwnerId { get; private set; }
     public IReadOnlyCollection<MemberId> SecondaryOwnerIds => _secondaryOwnerIds.AsReadOnly();
     public DateTime CreatedAtUtc { get; private set; }
+    public bool IsArchived { get; private set; }
 
     private ResponsibilityDomain(
         ResponsibilityDomainId id,
@@ -85,6 +86,16 @@ public sealed class ResponsibilityDomain : AggregateRoot<ResponsibilityDomainId>
     public void Repaint(HexColor newColor)
     {
         Color = newColor;
+    }
+
+    public void Archive()
+    {
+        if (IsArchived)
+            throw new InvalidOperationException("Responsibility area is already archived.");
+
+        IsArchived = true;
+        RaiseDomainEvent(new ResponsibilityDomainArchived(
+            Guid.NewGuid(), Id.Value, FamilyId.Value, DateTime.UtcNow));
     }
 
 #pragma warning disable CS8618

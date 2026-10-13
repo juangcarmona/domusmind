@@ -41,4 +41,10 @@ export default {
   viewDetail: "詳細を表示",
   ownerAgenda: "予定を見る",
   createFromArea: "作成…",
+  showArchived: "アーカイブ済み",
+  showActive: "有効",
+  archived: "アーカイブ済み",
+  archivedNotice: "このエリアはアーカイブされ、読み取り専用です。",
+  archiveAction: "エリアをアーカイブ",
+  archiveConfirm: "「{{name}}」をアーカイブしますか？関連するタスクとルーティンはこのエリアから切り離されます。既存のタスクは残ります。",
 } as const;

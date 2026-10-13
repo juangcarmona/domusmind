@@ -5,6 +5,7 @@ export interface HouseholdAreaItem {
   primaryOwnerId: string | null;
   primaryOwnerName: string | null;
   secondaryOwnerIds: string[];
+  isArchived: boolean;
 }
 
 export interface HouseholdAreasResponse {

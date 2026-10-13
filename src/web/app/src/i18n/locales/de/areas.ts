@@ -45,4 +45,10 @@ export default {
   createRoutine: "Routine",
   createPlan: "Plan",
   colorHint: "Farbe ändern",
+  showArchived: "Archiviert",
+  showActive: "Aktiv",
+  archived: "Archiviert",
+  archivedNotice: "Dieser Bereich ist archiviert und schreibgeschützt.",
+  archiveAction: "Bereich archivieren",
+  archiveConfirm: "„{{name}}“ archivieren? Verknüpfte Aufgaben und Routinen gehören danach nicht mehr zu diesem Bereich. Bestehende Aufgaben bleiben erhalten.",
 } as const;

@@ -57,6 +57,11 @@ public sealed class ResponsibilityDomainConfiguration : IEntityTypeConfiguration
             .HasColumnName("created_at_utc")
             .IsRequired();
 
+        builder.Property(d => d.IsArchived)
+            .HasColumnName("is_archived")
+            .HasDefaultValue(false)
+            .IsRequired();
+
         // Secondary owner IDs stored as a JSON array string.
         // Stored in a text column; works with both PostgreSQL and EF InMemory.
         var secondaryOwnerConverter = new ValueConverter<List<MemberId>, string>(

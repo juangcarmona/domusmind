@@ -43,7 +43,7 @@ public sealed class GetHouseholdAreasQueryHandler
 
         var domains = await _dbContext.Set<ResponsibilityDomain>()
             .AsNoTracking()
-            .Where(d => d.FamilyId == familyId)
+            .Where(d => d.FamilyId == familyId && d.IsArchived == query.ArchivedOnly)
             .ToListAsync(cancellationToken);
 
         var memberNameById = family.Members.ToDictionary(m => m.Id.Value, m => m.Name.Value);
@@ -58,7 +58,8 @@ public sealed class GetHouseholdAreasQueryHandler
                 d.PrimaryOwnerId.HasValue && memberNameById.TryGetValue(d.PrimaryOwnerId.Value.Value, out var name)
                     ? name
                     : null,
-                d.SecondaryOwnerIds.Select(s => s.Value).ToList()))
+                d.SecondaryOwnerIds.Select(s => s.Value).ToList(),
+                d.IsArchived))
             .ToList();
 
         return new HouseholdAreasResponse(areas);

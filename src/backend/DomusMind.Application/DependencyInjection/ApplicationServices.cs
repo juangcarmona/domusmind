@@ -51,6 +51,7 @@ using DomusMind.Application.Features.Setup.GetSetupStatus;
 using DomusMind.Application.Features.Setup.InitializeSystem;
 using DomusMind.Application.Features.Responsibilities.AssignPrimaryOwner;
 using DomusMind.Application.Features.Responsibilities.AssignSecondaryOwner;
+using DomusMind.Application.Features.Responsibilities.ArchiveResponsibilityDomain;
 using DomusMind.Application.Features.Responsibilities.CreateResponsibilityDomain;
 using DomusMind.Application.Features.Responsibilities.DetectResponsibilityOverload;
 using DomusMind.Application.Features.Responsibilities.GetHouseholdAreas;
@@ -214,6 +215,7 @@ public static class ApplicationServices
 
         // Household system slices (Phase 6)
         services.AddScoped<IQueryHandler<GetHouseholdAreasQuery, HouseholdAreasResponse>, GetHouseholdAreasQueryHandler>();
+        services.AddScoped<ICommandHandler<ArchiveResponsibilityDomainCommand, ArchiveResponsibilityDomainResponse>, ArchiveResponsibilityDomainCommandHandler>();
         services.AddScoped<IQueryHandler<GetResponsibilityVisibilityQuery, ResponsibilityVisibilityResponse>, GetResponsibilityVisibilityQueryHandler>();
         services.AddScoped<IQueryHandler<GetMemberActivityQuery, MemberActivityResponse>, GetMemberActivityQueryHandler>();
 

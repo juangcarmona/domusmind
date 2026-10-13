@@ -77,6 +77,29 @@ public sealed class ResponsibilityDomainTests
         evt.FamilyId.Should().Be(familyId.Value);
     }
 
+    [Fact]
+    public void Archive_MarksAreaAndEmitsEvent()
+    {
+        var domain = BuildDomain();
+        domain.ClearDomainEvents();
+
+        domain.Archive();
+
+        domain.IsArchived.Should().BeTrue();
+        domain.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<ResponsibilityDomainArchived>();
+    }
+
+    [Fact]
+    public void Archive_AlreadyArchived_Throws()
+    {
+        var domain = BuildDomain();
+        domain.Archive();
+
+        var act = () => domain.Archive();
+
+        act.Should().Throw<InvalidOperationException>();
+    }
+
     // ── AssignPrimaryOwner ─────────────────────────────────────────────────────
 
     [Fact]

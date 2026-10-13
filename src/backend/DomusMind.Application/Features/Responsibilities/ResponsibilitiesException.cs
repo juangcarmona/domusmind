@@ -7,6 +7,7 @@ public enum ResponsibilitiesErrorCode
     MemberNotFound,
     DuplicateSecondaryOwner,
     InvalidInput,
+    AlreadyArchived,
 }
 
 public sealed class ResponsibilitiesException : Exception

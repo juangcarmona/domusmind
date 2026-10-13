@@ -41,4 +41,10 @@ export default {
   viewDetail: "查看完整详情",
   ownerAgenda: "查看日程",
   createFromArea: "创建…",
+  showArchived: "已归档",
+  showActive: "进行中",
+  archived: "已归档",
+  archivedNotice: "此区域已归档且为只读状态。",
+  archiveAction: "归档区域",
+  archiveConfirm: "确定归档“{{name}}”吗？关联的任务和例行事务将不再属于此区域。现有任务会保留。",
 } as const;

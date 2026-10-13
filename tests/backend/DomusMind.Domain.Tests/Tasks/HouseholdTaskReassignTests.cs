@@ -1,4 +1,5 @@
 using DomusMind.Domain.Family;
+using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Shared;
 using DomusMind.Domain.Tasks;
 using DomusMind.Domain.Tasks.Events;
@@ -158,5 +159,21 @@ public sealed class HouseholdTaskReassignTests
         var act = () => task.Unassign();
 
         act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void ClearArea_RemovesAreaReferenceAndEmitsEvent()
+    {
+        var familyId = FamilyId.New();
+        var areaId = ResponsibilityDomainId.New();
+        var task = HouseholdTask.Create(
+            TaskId.New(), familyId, TaskTitle.Create("Clean kitchen"), null,
+            TaskSchedule.NoSchedule(), HexColor.From("#3B82F6"), areaId);
+        task.ClearDomainEvents();
+
+        task.ClearArea();
+
+        task.AreaId.Should().BeNull();
+        task.DomainEvents.Should().ContainSingle().Which.Should().BeOfType<TaskAreaCleared>();
     }
 }

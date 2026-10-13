@@ -24,8 +24,11 @@ import type {
 
 export const domainApi = {
   /* Responsibility Domains / Areas */
-  getAreas: (familyId: string) =>
-    request<HouseholdAreasResponse>(`/api/responsibility-domains?familyId=${familyId}`),
+  getAreas: (familyId: string, archivedOnly = false) =>
+    request<HouseholdAreasResponse>(`/api/responsibility-domains?familyId=${familyId}&archivedOnly=${archivedOnly}`),
+
+  archiveArea: (areaId: string) =>
+    request<{ responsibilityDomainId: string }>(`/api/responsibility-domains/${areaId}/archive`, { method: "POST" }),
 
   createArea: (body: CreateResponsibilityDomainRequest) =>
     request<CreateResponsibilityDomainResponse>("/api/responsibility-domains", { method: "POST", body: JSON.stringify(body) }),

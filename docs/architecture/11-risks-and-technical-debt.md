@@ -64,10 +64,6 @@ Lists have no privacy state; every list is visible to the whole family ([`Shared
 
 <!-- pdac:cite id="FR-LISTS-PRIVATE-LIST" digest="sha256:825ff8f3be841b73cae76621c39cfd78921322cd056211fce5d0789287bac123" -->
 
-Responsibility domains (Areas) have no archive state or operation ([`ResponsibilityDomain.cs`](../../src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs)).
-
-<!-- pdac:cite id="FR-AREAS-ARCHIVE-AREA" digest="sha256:37a18941dff1c63714b9850f75311a250443fabcb729a5ac4d6ba21ff1c089bd" -->
-
 The routine kind still required by the create and update routine handlers has no counterpart in the product's routine definition.
 
 <!-- pdac:cite id="FR-TASKS-CREATE-ROUTINE" digest="sha256:b9390e584d6706d601fc674e6b000f9c94da1966898fe7152f965d7cff3a2eb6" -->

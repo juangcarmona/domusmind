@@ -11,6 +11,7 @@ import {
   transferArea,
   renameArea,
   updateAreaColor,
+  archiveArea,
 } from "../../../store/areasSlice";
 import { fetchPlans } from "../../../store/plansSlice";
 import { fetchRoutines, pauseRoutine, resumeRoutine } from "../../../store/routinesSlice";
@@ -69,7 +70,7 @@ function AreaListRow({
     >
       <span className="area-row-dot" style={{ background: area.color }} aria-hidden="true" />
       <span className="area-row-body">
-        <span className="area-row-name">{area.name}</span>
+        <span className="area-row-name">{area.name}{area.isArchived ? ` · ${t("archived")}` : ""}</span>
         <span className="area-row-meta">
           {hasOwner ? (
             <span className="area-row-owner">{area.primaryOwnerName}</span>
@@ -154,6 +155,7 @@ function AreaInspectorContent({
   onCancelTask,
   onPauseRoutine,
   onResumeRoutine,
+  onArchiveArea,
 }: {
   area: HouseholdAreaItem | null;
   members: FamilyMemberResponse[];
@@ -189,6 +191,7 @@ function AreaInspectorContent({
   onCancelTask: (id: string) => void;
   onPauseRoutine: (id: string) => void;
   onResumeRoutine: (id: string) => void;
+  onArchiveArea: () => void;
 }) {
   const { t } = useTranslation("areas");
   const nameRef = useRef<HTMLInputElement>(null);
@@ -201,6 +204,18 @@ function AreaInspectorContent({
     return (
       <div className="area-inspector-idle">
         <p className="area-inspector-idle-hint">{t("selectAreaHint")}</p>
+      </div>
+    );
+  }
+
+  if (area.isArchived) {
+    return (
+      <div className="area-inspector-content">
+        <div className="area-inspector-name-row">
+          <span className="area-inspector-dot" style={{ background: area.color }} aria-hidden="true" />
+          <h2 className="area-inspector-name">{area.name}</h2>
+        </div>
+        <p className="area-inspector-hint">{t("archivedNotice")}</p>
       </div>
     );
   }
@@ -404,6 +419,9 @@ function AreaInspectorContent({
             + {t("createPlan")}
           </button>
         </div>
+        <button type="button" className="btn btn-ghost btn-sm" onClick={onArchiveArea}>
+          {t("archiveAction")}
+        </button>
       </div>
     </div>
   );
@@ -428,6 +446,8 @@ export function AreasPage() {
   // List state
   const [selectedAreaId, setSelectedAreaId] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "unowned" | "mine">("all");
+  const [showArchived, setShowArchived] = useState(false);
+  const [archiveError, setArchiveError] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
 
   // Inspector editing state — reset when selected area changes
@@ -458,8 +478,8 @@ export function AreasPage() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (familyId) dispatch(fetchAreas(familyId));
-  }, [familyId, dispatch]);
+    if (familyId) dispatch(showArchived ? fetchAreas({ familyId, archivedOnly: true }) : fetchAreas(familyId));
+  }, [familyId, showArchived, dispatch]);
 
   // Load linked work for count cues and inspector detail
   useEffect(() => {
@@ -554,6 +574,7 @@ export function AreasPage() {
   }
 
   const filteredAreas = areas.filter((a) => {
+    if (a.isArchived !== showArchived) return false;
     if (filter === "unowned") return !a.primaryOwnerId;
     if (filter === "mine")
       return (
@@ -568,6 +589,19 @@ export function AreasPage() {
 
   function handleSelectArea(areaId: string) {
     setSelectedAreaId((prev) => (prev === areaId ? null : areaId));
+  }
+
+  async function handleArchiveArea() {
+    if (!familyId || !selectedArea) return;
+    setArchiveError(null);
+    if (!window.confirm(t("archiveConfirm", { name: selectedArea.name }))) return;
+    const result = await dispatch(archiveArea({ areaId: selectedArea.areaId, familyId }));
+    if (archiveArea.fulfilled.match(result)) {
+      setSelectedAreaId(null);
+      refreshLinkedWork();
+    } else {
+      setArchiveError((result.payload as string) ?? tCommon("failed"));
+    }
   }
 
   async function handleOwnerChange(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -706,6 +740,7 @@ export function AreasPage() {
     onCancelTask: (id: string) => { void handleCancelTask(id); },
     onPauseRoutine: (id: string) => { void handlePauseRoutine(id); },
     onResumeRoutine: (id: string) => { void handleResumeRoutine(id); },
+    onArchiveArea: () => { void handleArchiveArea(); },
   };
 
   return (
@@ -714,7 +749,7 @@ export function AreasPage() {
       <div className="areas-header">
         <div className="areas-header-row">
           <h1 className="areas-header-title">{t("title")}</h1>
-          {hasAreas && (
+          {hasAreas && !showArchived && (
             <button
               type="button"
               className="btn btn-sm"
@@ -743,7 +778,18 @@ export function AreasPage() {
               )}
             </button>
           ))}
+          <button
+            type="button"
+            className={`areas-filter-tab${showArchived ? " areas-filter-tab--active" : ""}`}
+            aria-pressed={showArchived}
+            onClick={() => {
+              setSelectedAreaId(null);
+              setShowArchived((current) => !current);
+              setFilter("all");
+            }}
+          >{t("showArchived")}</button>
         </div>
+        {archiveError && <p className="error-msg">{archiveError}</p>}
       </div>
 
       {/* ── Surface body: list | inspector ── */}
@@ -752,7 +798,7 @@ export function AreasPage() {
           {loading && <div className="loading-wrap">{t("loading")}</div>}
           {status === "error" && <p className="error-msg">{error}</p>}
 
-          {!loading && !hasAreas && status !== "error" && (
+          {!loading && !hasAreas && status !== "error" && !showArchived && (
             <div className="empty-state">
               <p className="empty-state-headline">{t("emptyHeadline")}</p>
               <p className="empty-state-hint">{t("emptyHint")}</p>
@@ -764,6 +810,10 @@ export function AreasPage() {
                 {t("add")}
               </button>
             </div>
+          )}
+
+          {!loading && !hasAreas && status !== "error" && showArchived && (
+            <p className="areas-filter-empty">{t("filterEmpty")}</p>
           )}
 
           {!loading && hasAreas && filteredAreas.length === 0 && (
