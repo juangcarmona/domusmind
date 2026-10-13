@@ -47,7 +47,7 @@ Invoke deliberately. No lifecycle stage runs this one on its own.
 
 **Both lanes, or it has not passed.** A green deterministic lane is half the gate, not the gate. `verify-done` never marks a judgement item satisfied on its own: an item is in that lane precisely because someone decided a person must look.
 
-After it: a **human** reviews the change. Stop here, and name the **integrate** capability as what follows once that review passes.
+After it: a **human** reviews the change. Stop here when invoked as a standalone stage and name the **integrate** capability as what follows once that review passes. When the developer explicitly invoked `/ff`, return the verified change for human review; the orchestrator may continue only after the developer explicitly approves integration.
 
 ## Guardrails
 
@@ -57,4 +57,4 @@ After it: a **human** reviews the change. Stop here, and name the **integrate** 
 - **`unrunnable` is never `passing`.** A check this machine cannot run leaves its Definition of Done item unmet, by name.
 - **Never soften the gate to unblock the change.** Widening it is not passing it.
 - **Never approve your own work.** The review after this gate is a human's.
-- **Never invoke the next stage.** This stage ends at its gate and names what follows.
+- **Never invoke the next stage on a standalone call.** Only the explicit `/ff` orchestration may continue past this gate, and only after the human review and approval required by the lifecycle.
