@@ -18,7 +18,7 @@ interface PlanningMobileWeekStripProps {
   error: string | null;
   selectedDate: string; // ISO YYYY-MM-DD
   onDaySelect: (date: string) => void;
-  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item" | "meal", id: string) => void;
 }
 
 const ACTOR_ROLES = new Set(["Adult", "Child", "Caregiver"]);
@@ -188,7 +188,7 @@ function MemberDaySection({
   memberId: string;
   name: string;
   entries: CalendarEntry[];
-  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item" | "meal", id: string) => void;
 }) {
   const householdMember = useAppSelector((s) =>
     s.household.members.find((m) => m.memberId === memberId),

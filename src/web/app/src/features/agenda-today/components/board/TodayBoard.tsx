@@ -24,7 +24,7 @@ interface TodayBoardProps {
   onPrevDay: () => void;
   onNextDay: () => void;
   onToday: () => void;
-  onItemClick: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
+  onItemClick: (type: "event" | "task" | "routine" | "list-item" | "meal", id: string) => void;
   onMemberClick: (memberId: string) => void;
   /** Called when the user clicks the shared/household row to open the shared agenda. */
   onSharedClick?: () => void;
@@ -211,14 +211,14 @@ export function TodayBoard({
                 <CalendarEntryItem
                   key={entry.id}
                   entry={entry}
-                  onClick={() => onItemClick(entry.sourceType, entry.id)}
+                  onClick={entry.sourceType === "meal" ? undefined : () => onItemClick(entry.sourceType, entry.id)}
                 />
               ))}
               {sharedDisplayState.completedItems.map((entry) => (
                 <CalendarEntryItem
                   key={entry.id}
                   entry={entry}
-                  onClick={() => onItemClick(entry.sourceType, entry.id)}
+                  onClick={entry.sourceType === "meal" ? undefined : () => onItemClick(entry.sourceType, entry.id)}
                 />
               ))}
             </>

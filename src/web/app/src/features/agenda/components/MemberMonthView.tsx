@@ -22,7 +22,7 @@ interface MemberMonthViewProps {
   sharedCells?: WeeklyGridCell[];
   gridLoading?: boolean;
   onSelectDay: (date: string) => void;
-  onItemClick?: (type: "event" | "task" | "routine" | "list-item", id: string) => void;
+  onItemClick?: (type: "event" | "task" | "routine" | "list-item" | "meal", id: string) => void;
 }
 
 /**

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
@@ -7,6 +7,7 @@ import { weekApi } from "../../agenda-today/api/weekApi";
 import type { WeeklyGridResponse } from "../../agenda-today/types";
 import type { ApiError } from "../../../api/domusmindApi";
 import { externalCalendarApi } from "../../../api/externalCalendarApi";
+import { mealPlanningApi } from "../../../api/mealPlanningApi";
 import { fetchPlans } from "../../../store/plansSlice";
 import { fetchRoutines } from "../../../store/routinesSlice";
 import { fetchTimeline } from "../../../store/timelineSlice";
@@ -98,6 +99,12 @@ export function AgendaPage() {
   const weekStartForSelected = toIsoDate(
     startOfWeek(new Date(selectedDate + "T00:00:00"), firstDayOfWeek),
   );
+  const mealPlanWeekStarts = useMemo(() => isHousehold
+    ? [...new Set([
+        toIsoDate(startOfWeek(new Date(weekStartForSelected + "T00:00:00"), "monday")),
+        toIsoDate(startOfWeek(new Date(addDays(weekStartForSelected, 6) + "T00:00:00"), "monday")),
+      ])]
+    : [], [isHousehold, weekStartForSelected]);
 
   const fetchGrid = useCallback(
     async (weekStart: string) => {
@@ -105,7 +112,35 @@ export function AgendaPage() {
       setGridLoading(true);
       setGridError(null);
       try {
-        const data = await weekApi.getWeeklyGrid(familyId, weekStart);
+        const [data, mealAgendas] = await Promise.all([
+          weekApi.getWeeklyGrid(familyId, weekStart),
+          Promise.all(mealPlanWeekStarts.map((mealWeekStart) =>
+            mealPlanningApi.getForAgenda(familyId, mealWeekStart).then((agenda) => ({ mealWeekStart, agenda })),
+          )),
+        ]);
+        const mealsByDate = new Map<string, NonNullable<WeeklyGridResponse["sharedCells"][number]["meals"]>>();
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        for (const { mealWeekStart, agenda } of mealAgendas) {
+          for (const slot of agenda.slots) {
+            const dayOffset = days.indexOf(slot.dayOfWeek);
+            if (dayOffset < 0) continue;
+            const date = addDays(mealWeekStart, dayOffset);
+            const title = slot.label?.trim() || slot.notes?.trim() || slot.mealType;
+            const meals = mealsByDate.get(date) ?? [];
+            meals.push({
+              id: `meal:${date}:${slot.mealType}`,
+              title: `${slot.mealType}: ${title}`,
+              mealType: slot.mealType,
+              notes: slot.notes,
+              isOptional: slot.isOptional,
+            });
+            mealsByDate.set(date, meals);
+          }
+        }
+        data.sharedCells = data.sharedCells.map((cell) => ({
+          ...cell,
+          meals: mealsByDate.get(cell.date.slice(0, 10)) ?? [],
+        }));
         setGrid(data);
       } catch (err) {
         const apiErr = err as Partial<ApiError>;
@@ -114,7 +149,7 @@ export function AgendaPage() {
         setGridLoading(false);
       }
     },
-    [familyId, t],
+    [familyId, isHousehold, mealPlanWeekStarts, t],
   );
 
   useEffect(() => {
@@ -183,7 +218,7 @@ export function AgendaPage() {
   }
 
   function findEntryAcrossGrid(
-    type: "event" | "task" | "routine" | "list-item",
+    type: "event" | "task" | "routine" | "list-item" | "meal",
     id: string,
   ): CalendarEntry | null {
     if (!grid) return null;
@@ -200,7 +235,8 @@ export function AgendaPage() {
     return null;
   }
 
-  function handleItemClick(type: "event" | "task" | "routine" | "list-item", id: string) {
+  function handleItemClick(type: "event" | "task" | "routine" | "list-item" | "meal", id: string) {
+    if (type === "meal") return;
     setSelectedEntry(null);
     setSelectionHydrationError(null);
 

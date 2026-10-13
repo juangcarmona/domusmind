@@ -14,7 +14,7 @@ interface TodayMemberCellProps {
   /** Called to toggle expanded state. Caller manages single-expanded invariant. */
   onToggle: () => void;
   onMemberClick: (memberId: string) => void;
-  onItemClick: (sourceType: "event" | "task" | "routine" | "list-item", id: string) => void;
+  onItemClick: (sourceType: "event" | "task" | "routine" | "list-item" | "meal", id: string) => void;
 }
 
 /**
@@ -96,7 +96,7 @@ export function TodayMemberCell({
               <CalendarEntryItem
                 key={entry.id}
                 entry={entry}
-                onClick={() => onItemClick(entry.sourceType, entry.id)}
+                onClick={entry.sourceType === "meal" ? undefined : () => onItemClick(entry.sourceType, entry.id)}
               />
             ))}
             {completedItems.length > 0 && (
@@ -105,7 +105,7 @@ export function TodayMemberCell({
                   <CalendarEntryItem
                     key={entry.id}
                     entry={entry}
-                    onClick={() => onItemClick(entry.sourceType, entry.id)}
+                    onClick={entry.sourceType === "meal" ? undefined : () => onItemClick(entry.sourceType, entry.id)}
                   />
                 ))}
               </div>
@@ -118,7 +118,7 @@ export function TodayMemberCell({
               <CalendarEntryItem
                 key={entry.id}
                 entry={entry}
-                onClick={() => onItemClick(entry.sourceType, entry.id)}
+                onClick={entry.sourceType === "meal" ? undefined : () => onItemClick(entry.sourceType, entry.id)}
               />
             ))}
             {overflowCount > 0 && (

@@ -250,6 +250,24 @@ describe("normalizeCellItems", () => {
     expect(done?.displayType).toBe("completed");
   });
 
+  it("normalizes meal slots as read-only untimed entries", () => {
+    const entries = normalizeCellItems(makeCell({ meals: [{
+      id: "meal:2026-03-27:Dinner",
+      title: "Dinner: Soup",
+      mealType: "Dinner",
+      notes: "Use leftovers",
+      isOptional: false,
+    }] }));
+    expect(entries).toMatchObject([{
+      id: "meal:2026-03-27:Dinner",
+      sourceType: "meal",
+      title: "Dinner: Soup",
+      time: null,
+      subtitle: "Use leftovers",
+      isReadOnly: true,
+    }]);
+  });
+
   it("does NOT perform overdue detection (no cross-cell scanning)", () => {
     // A cell with a task dated yesterday should not be flagged overdue by normalizeCellItems.
     const cell = makeCell({
