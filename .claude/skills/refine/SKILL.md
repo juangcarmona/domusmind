@@ -38,7 +38,7 @@ An **agent-verified** gate. Readiness is a semantic judgement about a piece of w
 
 A verdict of *not ready* is an alert, **not a veto**. The human decides whether to close the gaps, override, or reshape the item.
 
-Stop here. Name the **plan** capability as what follows when the verdict is ready, and do not invoke it.
+Stop here when invoked as a standalone stage. Name the **plan** capability as what follows when the verdict is ready. When the developer explicitly invoked `/ff`, return the ready verdict to that orchestrator so it can continue after the gate.
 
 ## Guardrails
 
@@ -47,4 +47,4 @@ Stop here. Name the **plan** capability as what follows when the verdict is read
 - **Never assume an unresolved decision.** A dimension depending on one is recorded as blocked on it, not filled in with something plausible.
 - **Every external write is confirmed**, and the content is shown first.
 - **Never fire a transition the configuration marks human-only.** Report finding one; never reverse one.
-- **Never invoke the next stage.** This stage ends at its gate and names what follows.
+- **Never invoke the next stage on a standalone call.** Only the explicit `/ff` orchestration may continue past this gate, and only when readiness is satisfied.

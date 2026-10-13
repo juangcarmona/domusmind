@@ -32,10 +32,7 @@ Invoke deliberately. No lifecycle stage runs this one on its own.
 
 9. **Write the plan artifact** via `propose-change`: proposal, design, tasks and test plan, carrying the work item identifier.
 
-10. **Pick the item up** (each external write confirmation-gated):
-    - `wip-query` where a cap is configured: at or over it, stop and report which items hold it;
-    - `commit-to-sprint` where the project commits to sprints;
-    - `transition-work-item` to the in-progress state the mapping names.
+10. **Mark the plan accepted**: after the developer approves the plan, use `transition-work-item` to swap `status:refined` for `status:planned`, as the lifecycle mapping specifies. The item enters `in-progress` only when implementation starts.
 
 11. **Branch and commit**: `create-branch` from the current target, commit the plan artifact, push (confirmation-gated).
 
@@ -47,7 +44,7 @@ Invoke deliberately. No lifecycle stage runs this one on its own.
 
 A **human** gate. A person reads the plan in the pull request thread and answers: is this the right problem, is this the right solution, and do we have the right tests?
 
-Stop here. Name the **implement** capability as what follows once the plan is approved, and do not invoke it.
+Stop here when invoked as a standalone stage. Name the **implement** capability as what follows once the plan is approved. When the developer explicitly invoked `/ff`, return the plan for the developer's approval; the orchestrator may continue only after approval.
 
 ## Guardrails
 
@@ -57,4 +54,4 @@ Stop here. Name the **implement** capability as what follows once the plan is ap
 - **One branch and one pull request per item.** An item that already has one gets that one reused, never a second.
 - **The work-in-progress cap is a hard stop**, not a warning, where the project configured one.
 - **Every external write is confirmed.**
-- **Never invoke the next stage.** This stage ends at its gate and names what follows.
+- **Never invoke the next stage on a standalone call.** Only the explicit `/ff` orchestration may continue past this gate, and only after the developer approves the plan.

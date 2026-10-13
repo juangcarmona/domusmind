@@ -2,6 +2,22 @@
 
 **Project**: DomusMind · **Adopted**: 2026-09-08 · **Last amended**: 2026-09-08
 
+## Fast feedback loop
+
+Use `/ff <work-item-id> [work-item-id ...]` to carry one or more existing work items through the lifecycle in sequence. It is an orchestration path over the same `refine`, `plan`, `implement`, `integrate` and `review` gates, not a shortcut around them. A single item can resume from its actual state; a batch advances to the next item only after the current item is merged and its post-merge result is checked.
+
+The loop keeps handoffs short and explicit:
+
+1. **Refine** the problem and acceptance criteria. If the item is not ready, show the missing dimensions and stop for input.
+2. **Plan** the solution, small implementation slices, tests and affected documentation. Show the proposed plan and wait for the developer's approval before implementation.
+3. **Implement** one verifiable slice at a time. Run focused checks after each slice, then the full applicable Definition of Done checks. Keep the plan aligned with the diff.
+4. **Review before merge**: inspect the final diff, acceptance criteria and check evidence. The agent may self-review, but the developer makes the human-review decision and explicitly approves merge. The post-merge `/review` capability is a separate retrospective and remains optional.
+5. **Integrate** only after that approval; verify merge status and post-merge CI before advancing to the next supplied item.
+
+The invocation authorizes local investigation and implementation work required by the item. It does not grant approval to change the plan, widen product scope, or merge. Existing confirmation requirements for tracker, pull request, push and merge writes still apply. Stop and surface a proposed adjustment if the product model, an accepted decision, or the approved plan does not cover what implementation requires. Never continue a batch past a failed check, an unresolved blocker, a missing approval, or an unsuccessful merge. Report the completed item, evidence, and the next item or next required decision at each stop.
+
+The individual commands remain available for work that should stop at a single stage. `/ff` is the short path when the developer wants the whole loop handled in one continuous workflow.
+
 ## Definition of Ready
 
 Governs the **Ready** gate at the end of the `refine` capability: *is the problem sufficiently defined?* Verified semantically by an agent, which alerts a human when a dimension is missing, vague or contradictory rather than refusing outright.
@@ -158,3 +174,4 @@ The `review` capability proposes changes to this file from delivery evidence. Ev
 | Date | Section | Change | Why |
 | --- | --- | --- | --- |
 | 2026-09-08 | All | Initial adoption | First run of the `adopt` capability |
+| 2026-10-13 | Fast feedback loop | Added `/ff` orchestration with plan, review and merge checkpoints and sequential batch handling | Reduce stage handoffs while preserving lifecycle gates |

@@ -34,13 +34,15 @@ Invoke deliberately. No lifecycle stage runs this one on its own.
 
 9. **Merge** via `merge-pull-request` (confirmation-gated). Set the commit message **explicitly**: the subject describes the *implemented change*, not the proposal the pull request opened with, and no auto-generated body is allowed to carry anything unintended onto the target branch.
 
-10. **Verify traceability**: the branch, the commits, the pull request and the artifacts all carry the work item identifier, and the item links to the merge.
+10. **Verify the target branch** via `inspect-ci-result` for the merge commit. If CI is still running, wait for its result. A failed or unavailable required check is reported as unmet; do not call the item complete or continue a fast-feedback batch.
 
-11. **Close the loop in the tracker**: `transition-work-item` to the state the mapping names, and `comment-work-item` with the merge link, both confirmation-gated.
+11. **Verify traceability**: the branch, the commits, the pull request and the artifacts all carry the work item identifier, and the item links to the merge.
 
-12. **Publish documentation** where a pair is repository-ahead: `sync-doc-to-kb`, confirmation-gated. A pair reported **diverged** is refused: both sides changed, and either write destroys work.
+12. **Close the loop in the tracker**: `transition-work-item` to the state the mapping names, and `comment-work-item` with the merge link, both confirmation-gated.
 
-13. **Offer the review now.** Draft the review entry from what just happened (the effort figures via `collect-usage`, what worked, what did not, what to change), and offer it while the human is still here. Declining is one word.
+13. **Publish documentation** where a pair is repository-ahead: `sync-doc-to-kb`, confirmation-gated. A pair reported **diverged** is refused: both sides changed, and either write destroys work.
+
+14. **Offer the review now.** Draft the review entry from what just happened (the effort figures via `collect-usage`, what worked, what did not, what to change), and offer it while the human is still here. Declining is one word.
 
     This is the moment attention exists. It never blocks the merge, which has already happened.
 

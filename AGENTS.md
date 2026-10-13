@@ -22,6 +22,20 @@ Before changing code:
 
 `docs/README.md` maps where each kind of truth lives. Read these first:
 
+### CodeGraph for fast, targeted code navigation
+
+When the CodeGraph MCP server is available, use it to reduce broad repository scans:
+
+- Start with `codegraph_get_edit_context` for unfamiliar code; it combines the definition, callers, related tests and recent commits.
+- For a known symbol, use `codegraph_symbol_search`, then follow the returned `nodeId` rather than searching the whole tree repeatedly.
+- Before changing behaviour or a signature, use `codegraph_get_callers` or `codegraph_analyze_impact`, followed by `codegraph_find_related_tests`.
+- For architecture and dependency questions, prefer `codegraph_get_module_summary`, `codegraph_get_dependency_graph` or `codegraph_find_by_imports`.
+- Keep scans cheap: pass `compact: true`, use the smallest useful `depth`, and request only the slice or symbol needed.
+- Reuse a returned `nodeId` and narrow subsequent queries instead of repeating repository-wide symbol searches.
+- Use native `rg`, file reads, git commands and test/build commands for exact text, configuration, documentation, history and verification; CodeGraph is not a replacement for those tools.
+- If an expected symbol is missing after a recent edit, wait for index freshness before retrying; call `codegraph_reindex_workspace` once for an incremental refresh only when necessary. Do not use `force` unless explicitly requested.
+- If CodeGraph is unavailable, continue with native tools and do not create CodeGraph artifacts or configuration files in the repository.
+
 ### Product
 - `docs/product/model/`: the accepted product model (ProductShape). Validate with `npx @prodshape/cli@0.22.0 validate`; browse it with `npx @prodshape/cli@0.22.0 graph --format html`. It changes only through a Product Change under `docs/product/changes/`.
 - `docs/design/`: UI guidance for the surfaces, subordinate to the model.
