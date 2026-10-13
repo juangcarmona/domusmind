@@ -490,7 +490,9 @@ export function ListsPage() {
     ? detail?.items.find((i) => i.itemId === selectedItem.item.itemId) ?? selectedItem.item
     : null;
   const selectedInStoreRef = useRef(selectedInStore);
-  selectedInStoreRef.current = selectedInStore;
+  useEffect(() => {
+    selectedInStoreRef.current = selectedInStore;
+  }, [selectedInStore]);
 
   const hasTemporalDraft = Boolean(iDueDateDraft || iReminderDraft || iRepeatFreq);
   const itemHasTemporal = Boolean(
