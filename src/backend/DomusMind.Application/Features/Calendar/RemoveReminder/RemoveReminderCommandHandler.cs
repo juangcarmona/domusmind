@@ -48,6 +48,10 @@ public sealed class RemoveReminderCommandHandler
         {
             calendarEvent.RemoveReminder(command.MinutesBefore);
         }
+        catch (CalendarEventAlreadyCancelledException ex)
+        {
+            throw new CalendarException(CalendarErrorCode.EventAlreadyCancelled, ex.Message);
+        }
         catch (InvalidOperationException ex)
         {
             throw new CalendarException(CalendarErrorCode.ReminderOffsetNotFound, ex.Message);

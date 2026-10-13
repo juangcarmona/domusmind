@@ -108,4 +108,21 @@ public sealed class AddReminderCommandHandlerTests
         await act.Should().ThrowAsync<CalendarException>()
             .Where(e => e.Code == CalendarErrorCode.InvalidInput);
     }
+
+    [Fact]
+    public async Task Handle_CancelledEvent_ThrowsEventAlreadyCancelled()
+    {
+        var (db, evt) = await BuildWithEventAsync();
+        evt.Cancel();
+        await db.SaveChangesAsync();
+        var handler = BuildHandler(db);
+
+        var act = () => handler.Handle(
+            new AddReminderCommand(evt.Id.Value, 30, Guid.NewGuid()),
+            CancellationToken.None);
+
+        await act.Should().ThrowAsync<CalendarException>()
+            .Where(e => e.Code == CalendarErrorCode.EventAlreadyCancelled);
+        evt.ReminderOffsets.Should().BeEmpty();
+    }
 }

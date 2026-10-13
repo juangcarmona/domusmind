@@ -60,10 +60,6 @@ Entries are ordered by priority. **Debt** is an observed condition in the reposi
 
 Each gap below is a missing operation, invariant or client call. The product artifact owns the expected behaviour.
 
-A cancelled calendar event rejects new participants, rescheduling and edits, but still accepts participant removal and reminder changes ([`CalendarEvent.cs`](../../src/backend/DomusMind.Domain/Calendar/CalendarEvent.cs)).
-
-<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:d0ffa51dd1b3cb43b9ccec2077dd08a91fc3e03e0124f8112b361e122abf94f9" -->
-
 A task can be assigned and reassigned but never unassigned; no slice or domain operation removes the assignee ([`HouseholdTask.cs`](../../src/backend/DomusMind.Domain/Tasks/HouseholdTask.cs)).
 
 <!-- pdac:cite id="FR-TASKS-UNASSIGN-TASK" digest="sha256:2057c892be97aeb4381f29ad87654ae5ebc6325d6b265bcfad315ae83b9e90c3" -->

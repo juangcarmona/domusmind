@@ -49,6 +49,10 @@ public sealed class RemoveEventParticipantCommandHandler
         {
             calendarEvent.RemoveParticipant(MemberId.From(command.MemberId));
         }
+        catch (CalendarEventAlreadyCancelledException ex)
+        {
+            throw new CalendarException(CalendarErrorCode.EventAlreadyCancelled, ex.Message);
+        }
         catch (InvalidOperationException ex)
         {
             throw new CalendarException(CalendarErrorCode.ParticipantNotFound, ex.Message);

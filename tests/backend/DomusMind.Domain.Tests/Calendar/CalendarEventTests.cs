@@ -363,6 +363,22 @@ public sealed class CalendarEventTests
         act.Should().Throw<InvalidOperationException>();
     }
 
+    [Fact]
+    public void RemoveParticipant_CancelledEvent_LeavesParticipantsUnchanged()
+    {
+        var evt = BuildEvent();
+        var memberId = MemberId.New();
+        evt.AddParticipant(memberId);
+        evt.Cancel();
+        evt.ClearDomainEvents();
+
+        var act = () => evt.RemoveParticipant(memberId);
+
+        act.Should().Throw<CalendarEventAlreadyCancelledException>();
+        evt.ParticipantIds.Should().ContainSingle().Which.Should().Be(memberId);
+        evt.DomainEvents.Should().BeEmpty();
+    }
+
     // ── AddReminder ────────────────────────────────────────────────────────────
 
     [Fact]
@@ -436,6 +452,21 @@ public sealed class CalendarEventTests
         act.Should().Throw<InvalidOperationException>();
     }
 
+    [Fact]
+    public void AddReminder_CancelledEvent_LeavesRemindersUnchanged()
+    {
+        var evt = BuildEvent();
+        evt.AddReminder(30);
+        evt.Cancel();
+        evt.ClearDomainEvents();
+
+        var act = () => evt.AddReminder(60);
+
+        act.Should().Throw<CalendarEventAlreadyCancelledException>();
+        evt.ReminderOffsets.Should().ContainSingle().Which.Should().Be(30);
+        evt.DomainEvents.Should().BeEmpty();
+    }
+
     // ── RemoveReminder ─────────────────────────────────────────────────────────
 
     [Fact]
@@ -471,5 +502,20 @@ public sealed class CalendarEventTests
         var act = () => evt.RemoveReminder(30);
 
         act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void RemoveReminder_CancelledEvent_LeavesRemindersUnchanged()
+    {
+        var evt = BuildEvent();
+        evt.AddReminder(30);
+        evt.Cancel();
+        evt.ClearDomainEvents();
+
+        var act = () => evt.RemoveReminder(30);
+
+        act.Should().Throw<CalendarEventAlreadyCancelledException>();
+        evt.ReminderOffsets.Should().ContainSingle().Which.Should().Be(30);
+        evt.DomainEvents.Should().BeEmpty();
     }
 }

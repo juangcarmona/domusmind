@@ -48,6 +48,10 @@ public sealed class AddReminderCommandHandler
         {
             calendarEvent.AddReminder(command.MinutesBefore);
         }
+        catch (CalendarEventAlreadyCancelledException ex)
+        {
+            throw new CalendarException(CalendarErrorCode.EventAlreadyCancelled, ex.Message);
+        }
         catch (InvalidOperationException ex) when (ex.Message.Contains("already exists"))
         {
             throw new CalendarException(CalendarErrorCode.DuplicateReminderOffset, ex.Message);

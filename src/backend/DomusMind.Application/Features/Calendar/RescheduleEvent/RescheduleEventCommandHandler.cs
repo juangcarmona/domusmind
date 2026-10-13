@@ -75,7 +75,7 @@ public sealed class RescheduleEventCommandHandler
                 calendarEvent.Repaint(HexColor.From(command.Color));
             }
         }
-        catch (InvalidOperationException ex) when (ex.Message.Contains("cancelled"))
+        catch (CalendarEventAlreadyCancelledException ex)
         {
             throw new CalendarException(CalendarErrorCode.EventAlreadyCancelled, ex.Message);
         }
