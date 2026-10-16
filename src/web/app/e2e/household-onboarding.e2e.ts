@@ -25,10 +25,8 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
     await page.getByPlaceholder("Name").fill("E2E Member");
     await page.getByRole("button", { name: "Add", exact: true }).click();
     await page.getByRole("button", { name: "Set up household" }).click();
-    await expect(page.getByRole("heading", { name: "Your household is ready" })).toBeVisible();
-    await page.getByRole("button", { name: "Open Timeline" }).click();
     await expect(page).toHaveURL(/\/agenda$/);
-    await expect(page.locator("aside[aria-label='Primary navigation']")).toBeVisible();
+    await expect(page.getByRole("complementary", { name: "Primary navigation" })).toBeVisible();
     const householdScope = page.getByRole("group", { name: "Scope" }).getByRole("button", { name: new RegExp(`E2E Household ${runKey.slice(0, 8)}`) });
     await expect(householdScope).toHaveAttribute("aria-pressed", "true");
     await expect(page.getByRole("tab", { name: "Day" })).toHaveAttribute("aria-selected", "true");
@@ -36,7 +34,7 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
   });
 
   await test.step("navigate from Agenda to Lists on desktop", async () => {
-    await page.locator("aside[aria-label='Primary navigation']").getByRole("link", { name: "Lists" }).click();
+    await page.getByRole("complementary", { name: "Primary navigation" }).getByRole("link", { name: "Lists" }).click();
     await expect(page).toHaveURL(/\/lists$/);
     await testInfo.attach("lists-desktop.png", { body: await page.screenshot(), contentType: "image/png" });
   });

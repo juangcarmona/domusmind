@@ -8,7 +8,9 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   forbidOnly: Boolean(process.env.CI),
-  retries: process.env.CI ? 1 : 0,
+  // Setup is intentionally one-shot against an empty database; retrying it in
+  // the same job would reuse the initialized system rather than test fresh data.
+  retries: 0,
   failOnFlakyTests: Boolean(process.env.CI),
   timeout: 90_000,
   expect: { timeout: 10_000 },

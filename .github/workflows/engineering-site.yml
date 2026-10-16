@@ -173,12 +173,12 @@ jobs:
           COMMIT_SHA: ${{ github.sha }}
           RUN_ID: ${{ github.run_id }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          CREATED_AT: ${{ github.run_started_at }}
         run: |
           set -euo pipefail
           mkdir -p e2e-report playwright-results/html playwright-results/evidence
           echo "available=true" >> "$GITHUB_OUTPUT"
-          jq -n --arg commitSha "$COMMIT_SHA" --arg runId "$RUN_ID" --arg runUrl "$RUN_URL" --arg createdAt "$CREATED_AT" '{commitSha:$commitSha,runId:$runId,runUrl:$runUrl,createdAt:$createdAt}' > /tmp/domusmind-e2e-metadata.json
+          created_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          jq -n --arg commitSha "$COMMIT_SHA" --arg runId "$RUN_ID" --arg runUrl "$RUN_URL" --arg createdAt "$created_at" '{commitSha:$commitSha,runId:$runId,runUrl:$runUrl,createdAt:$createdAt}' > /tmp/domusmind-e2e-metadata.json
           node tools/e2e-report/report.mjs prepare playwright-results/results.json playwright-results/html playwright-results/evidence e2e-report /tmp/domusmind-e2e-metadata.json
 
       - name: Save the report and raw evidence for recovery
