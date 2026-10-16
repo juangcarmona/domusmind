@@ -44,6 +44,19 @@ An item is ready when every applicable dimension is present. Inapplicable ones a
 
 No additional dimensions. The reference dimensions are sufficient for this project.
 
+## GitHub issue classification
+
+GitHub labels carry two independent facts:
+
+| Label family | Allowed values | Meaning |
+| --- | --- | --- |
+| Work type | `bug`, `enhancement`, `documentation` | What kind of work the issue describes |
+| Lifecycle | `status:refined`, `status:planned`, `status:in-progress`, `status:in-review`, `status:done` | Where the issue is in DomusMind's delivery lifecycle |
+
+An issue has at most one work-type label and at most one `status:` label. An issue with no `status:` label is in Backlog. Work type is optional until classification is clear; do not invent a type to satisfy a transition. These labels do not replace GitHub's independent open/closed state, and labels such as `duplicate`, `good first issue`, and `help wanted` remain separate metadata.
+
+When creating an issue, validate the required Ready dimensions below (mark inapplicable dimensions `N/A` with a reason), check for likely duplicates using the title and distinctive terms, and request no more than one existing work-type label. Creation does not advance lifecycle state: omit `status:` so the new issue starts in Backlog, then use the transition workflow as a separate act if a lifecycle transition is valid.
+
 ## Definition of Done
 
 Governs the **Done** gate at the end of the `implement` capability: *is the resulting change sufficiently verified?* The `integrate` capability refuses to merge a change that has not passed it.
@@ -100,6 +113,10 @@ How the loop's stages map onto this project's work-item states. The lifecycle st
 | `/integrate` | In Review | Done | swap `status:in-review` → `status:done`; close issue | `/integrate` |
 | `/review` | Done | — | — | — |
 
+The transition skill reads this table before each write. It may apply only one listed transition per invocation, after confirming the exact source and target labels with the user. It rereads the issue immediately before writing and stops if GitHub open/closed state, lifecycle label, or type labels changed since confirmation. After the one-operation label swap it rereads and verifies that the requested lifecycle label is the only `status:` label and that type labels were preserved.
+
+Pull requests are not work items for this lifecycle transition workflow. The issue API exposes an issue-shaped record for a pull request; the skill must inspect the `pull_request` field and refuse it. Reopen, block, and deprioritise remain human-only decisions and are never performed by the transition skill. If a work item is closed, that GitHub state is reported independently from its lifecycle label; `/integrate` keeps the existing behavior of setting `status:done` and closing the issue together.
+
 ### Transitions no command ever fires
 
 | Transition | Meaning | Who fires it |
@@ -115,6 +132,7 @@ Fields a transition's screen requires. GitHub Issues has no transition screens; 
 | Field | Identifier | Required by | Notes |
 | --- | --- | --- | --- |
 | Lifecycle state | `status:<state>` label | every transition | One `status:` label per issue; remove the old label when adding the new one |
+| Work type | one of `bug`, `enhancement`, `documentation` | issue creation / classification | Optional; at most one, and independent of lifecycle |
 | Acceptance criteria | `## Acceptance Criteria` section in issue body | `/refine` (Ready gate) | Markdown heading in the issue body |
 | Work item link | `Closes #<number>` in PR body | `/implement` | Placed in the PR body, not the title |
 
@@ -132,12 +150,13 @@ Who decides the judgement items above. A role is a person, a team, or a named re
 
 ## Installed roles
 
-Role skills the `adopt` capability installed. They live in `.claude/skills/`, the single copy that both Claude Code and GitHub Copilot read, and are edited there. Re-running adopt reconciles against this list rather than overwriting blind.
+Role skills maintained in `.claude/skills/`, the single copy that both Claude Code and GitHub Copilot read. Some were installed by `adopt`; `create-work-item` was authored for this repository. Re-running adopt reconciles against this list rather than overwriting blind.
 
-| Role skill | Adapted from | Installed | Location |
+| Role skill | Origin | Added | Location |
 | --- | --- | --- | --- |
 | `read-work-item` | `references/github-issues.md` | 2026-09-08 | `.claude/skills/` |
 | `transition-work-item` | `references/github-issues.md` | 2026-09-08 | `.claude/skills/` |
+| `create-work-item` | Authored for GitHub Issues | 2026-10-16 | `.claude/skills/` |
 | `open-pull-request` | `references/github.md` | 2026-09-08 | `.claude/skills/` |
 | `inspect-ci-result` | `references/github.md` | 2026-09-08 | `.claude/skills/` |
 | `merge-pull-request` | `references/github.md` | 2026-09-08 | `.claude/skills/` |
@@ -150,7 +169,6 @@ Role skills the `adopt` capability installed. They live in `.claude/skills/`, th
 | `commit-to-sprint` | No sprints |
 | `create-branch` | Not required; implement creates branches directly |
 | `comment-work-item` | Solo developer; progress recorded in PR, not issue comments |
-| `create-work-item` | Items created manually |
 | `update-work-item` | Items updated manually |
 | `read-work-item-attachments` | No attachments used |
 | `read-work-item-links` | No linking used |
@@ -175,3 +193,4 @@ The `review` capability proposes changes to this file from delivery evidence. Ev
 | --- | --- | --- | --- |
 | 2026-09-08 | All | Initial adoption | First run of the `adopt` capability |
 | 2026-10-13 | Fast feedback loop | Added `/ff` orchestration with plan, review and merge checkpoints and sequential batch handling | Reduce stage handoffs while preserving lifecycle gates |
+| 2026-10-16 | GitHub issue classification and transitions | Defined type labels separately from lifecycle labels; added issue creation guidance and guarded, verified transitions | Make issue classification consistent and lifecycle changes auditable |
