@@ -30,6 +30,7 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
     const householdScope = page.getByRole("group", { name: "Scope" }).getByRole("button", { name: new RegExp(`E2E Household ${runKey.slice(0, 8)}`) });
     await expect(householdScope).toHaveAttribute("aria-pressed", "true");
     await expect(page.getByRole("tab", { name: "Day" })).toHaveAttribute("aria-selected", "true");
+    await expect(page.getByText(/^today$/i)).toBeVisible();
     await testInfo.attach("agenda-desktop.png", { body: await page.screenshot(), contentType: "image/png" });
   });
 
