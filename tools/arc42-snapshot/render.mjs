@@ -93,6 +93,9 @@ export async function renderMermaid(sources) {
       await run(inFile, outFile, {
         quiet: true,
         outputFormat: 'svg',
+        puppeteerConfig: process.env.ARC42_PUPPETEER_NO_SANDBOX === 'true'
+          ? { args: ['--no-sandbox', '--disable-setuid-sandbox'] }
+          : {},
         parseMMDOptions: {
           backgroundColor: 'transparent',
           mermaidConfig: { securityLevel: 'strict', htmlLabels: false },

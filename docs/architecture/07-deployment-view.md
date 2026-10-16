@@ -19,7 +19,7 @@ flowchart LR
     browser["Household browser<br/>(web app SPA)"]
     proxy["Reverse proxy<br/>(operator-provided, TLS)"]
     ghcr[("GHCR<br/>ghcr.io/&lt;owner&gt;/domusmind")]
-    graph["Microsoft identity platform<br/>and Graph API"]
+    graphApi["Microsoft identity platform<br/>and Graph API"]
 
     subgraph host["Docker host (one household)"]
         subgraph compose["Compose network"]
@@ -33,7 +33,7 @@ flowchart LR
     proxy -- "HTTP host:APP_PORT (default 24365)" --> app
     app -- "Npgsql, internal only" --> db
     db --- vol
-    app -- "HTTPS outbound (optional)" --> graph
+    app -- "HTTPS outbound (optional)" --> graphApi
     ghcr -. "docker compose pull" .-> app
 ```
 

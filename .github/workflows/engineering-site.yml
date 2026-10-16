@@ -104,6 +104,10 @@ jobs:
         run: node tools/static-site/static-site.mjs build _site "${{ steps.pages.outputs.base_url }}"
 
       - name: Generate self-contained arc42 and ADR snapshot
+        env:
+          # Hosted Ubuntu runners disable Chrome's unprivileged namespace sandbox.
+          # This job has read-only repository permissions and no publishing token.
+          ARC42_PUPPETEER_NO_SANDBOX: 'true'
         run: node tools/arc42-snapshot/generate.mjs docs/architecture --out "$GITHUB_WORKSPACE/_site/architecture/index.html" --title "DomusMind Architecture"
 
       - name: Generate ProductShape snapshot
