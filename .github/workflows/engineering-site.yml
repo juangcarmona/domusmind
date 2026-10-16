@@ -1,0 +1,136 @@
+name: engineering-site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/engineering-site.yml'
+      - 'tools/engineering-site/**'
+      - 'tools/static-site/**'
+      - 'tools/arc42-snapshot/**'
+      - 'docs/architecture/**'
+      - 'docs/adr/**'
+      - 'docs/product/model/**'
+      - '.product/config.yaml'
+      - 'docs/engineering-site.md'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Every published update restores the current site before replacing its own
+# sections. Keep a single publisher active so two runs cannot overwrite one
+# another's manifest and generated pages.
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('engineering-site-pr-{0}', github.event.pull_request.number) || 'domusmind-engineering-site' }}
+  cancel-in-progress: false
+
+jobs:
+  changes:
+    name: engineering site changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - name: Detect relevant changes
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" --paginate --jq '.[].filename')
+          echo "$files"
+          if printf '%s\n' "$files" | grep -qE '^(\.github/workflows/engineering-site\.yml$|tools/(engineering-site|static-site|arc42-snapshot)/|docs/(architecture|adr|product/model)/|\.product/config\.yaml$|docs/engineering-site\.md$)'; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "relevant=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    name: Build Engineering site
+    needs: changes
+    if: needs.changes.outputs.relevant == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+        id: pages
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: tools/arc42-snapshot/package-lock.json
+
+      - name: Install snapshot renderer
+        run: npm ci --ignore-scripts --prefix tools/arc42-snapshot
+
+      - name: Test site generation utilities
+        run: |
+          node --check tools/static-site/static-site.mjs
+          node tools/static-site/static-site.test.mjs
+          npm test --prefix tools/arc42-snapshot
+
+      - name: Install Chromium for offline Mermaid rendering
+        run: npm exec --offline --prefix tools/arc42-snapshot -- puppeteer browsers install chrome
+
+      - name: Restore current Pages sections
+        if: github.event_name != 'pull_request'
+        run: node tools/static-site/static-site.mjs restore "${{ steps.pages.outputs.base_url }}" _site
+
+      - name: Build Engineering landing page
+        run: node tools/static-site/static-site.mjs build _site "${{ steps.pages.outputs.base_url }}"
+
+      - name: Generate self-contained arc42 and ADR snapshot
+        run: node tools/arc42-snapshot/generate.mjs docs/architecture --out "$GITHUB_WORKSPACE/_site/architecture/index.html" --title "DomusMind Architecture"
+
+      - name: Generate ProductShape snapshot
+        run: |
+          npx -y @prodshape/cli@0.22.0 graph --format html
+          mkdir -p _site/model
+          cp .product/generated/snapshot.html _site/model/index.html
+
+      - name: Finalize the site manifest
+        run: node tools/static-site/static-site.mjs finalize _site
+
+      - name: Upload GitHub Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    name: Publish Engineering site
+    needs: build
+    if: github.event_name != 'pull_request' && needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -78,6 +78,20 @@ The public site ([`src/web/public`](../../src/web/public), Astro, `https://domus
 | --- | --- | --- |
 | Public site static build (`dist`) | Azure Static Web Apps (GitHub environment `production`) | Hosted |
 
+## Infrastructure Level 1: Engineering Documentation Site
+
+The Engineering documentation site is a separate static publication on GitHub
+Pages. The [`engineering-site.yml`](../../.github/workflows/engineering-site.yml)
+workflow builds its landing page and self-contained arc42, ADR and ProductShape
+snapshots from the repository. It contains no product runtime or household data.
+Its deployment uses GitHub's Pages artifact and short-lived OIDC permissions;
+it does not share the Azure public-site deployment or credential. The publication
+and one-time Pages setup are documented in [Engineering site](../engineering-site.md).
+
+| Building block or artifact | Infrastructure element | Environment |
+| --- | --- | --- |
+| Engineering landing page and documentation snapshots | GitHub Pages | Hosted |
+
 ## Infrastructure Level 1: Local Development
 
 Development uses .NET Aspire through [`DomusMind.AppHost`](../../src/backend/DomusMind.AppHost/AppHost.cs); it is never used in production.
