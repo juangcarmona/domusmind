@@ -146,7 +146,7 @@ jobs:
 
       - name: Start the API and web app against generated local test data
         run: |
-          nohup env ASPNETCORE_URLS=http://127.0.0.1:52250 ConnectionStrings__domusmind='Host=127.0.0.1;Port=5432;Database=domusmind;Username=domusmind;Password=e2e-local-only' Jwt__SigningKey='e2e-run-only-signing-key-never-used-outside-this-job' dotnet run --project src/backend/DomusMind.Api/DomusMind.Api.csproj --no-build --configuration Release > /tmp/domusmind-e2e-api.log 2>&1 &
+          nohup env ASPNETCORE_URLS=http://127.0.0.1:52250 ConnectionStrings__domusmind='Host=127.0.0.1;Port=5432;Database=domusmind;Username=domusmind;Password=e2e-local-only' Jwt__SigningKey='e2e-run-only-signing-key-never-used-outside-this-job' dotnet run --project src/backend/DomusMind.Api/DomusMind.Api.csproj --no-build --no-launch-profile --configuration Release > /tmp/domusmind-e2e-api.log 2>&1 &
           nohup env API_HTTP=http://127.0.0.1:52250 npm --prefix src/web/app run dev -- --host 127.0.0.1 --port 61546 --strictPort > /tmp/domusmind-e2e-web.log 2>&1 &
           for attempt in $(seq 1 60); do
             if curl --silent --fail http://127.0.0.1:52250/api/setup/status > /dev/null && curl --silent --fail http://127.0.0.1:61546/ > /dev/null; then exit 0; fi
