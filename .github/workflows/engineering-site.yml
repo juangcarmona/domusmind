@@ -62,7 +62,9 @@ jobs:
     name: Build Engineering site
     needs: changes
     if: needs.changes.outputs.relevant == 'true'
-    runs-on: ubuntu-latest
+    # Raccord's working static-site publisher uses this runner image for
+    # Puppeteer/Chromium Mermaid rendering; ubuntu-latest blocks its sandbox.
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       pages: read
