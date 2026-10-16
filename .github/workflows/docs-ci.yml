@@ -15,6 +15,9 @@ on:
       - 'docs/architecture/**'
       - 'docs/adr/**'
       - 'docs/product/**'
+      - 'docs/devops.md'
+      - 'docs/engineering-site.md'
+      - 'docs/engineering-e2e.md'
       - '.product/config.yaml'
       - 'scripts/check-arc42-frontmatter.mjs'
       - '.markdownlint-cli2.jsonc'
@@ -50,7 +53,7 @@ jobs:
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
             --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(docs/architecture/|docs/adr/|docs/product/|\.product/config\.yaml$|scripts/check-arc42-frontmatter\.mjs$|\.markdownlint-cli2\.jsonc$|\.github/workflows/docs-ci\.yml$)'; then
+          if printf '%s\n' "$files" | grep -qE '^(docs/architecture/|docs/adr/|docs/product/|docs/(devops|engineering-site|engineering-e2e)\.md$|\.product/config\.yaml$|scripts/check-arc42-frontmatter\.mjs$|\.markdownlint-cli2\.jsonc$|\.github/workflows/docs-ci\.yml$)'; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
@@ -74,7 +77,7 @@ jobs:
         run: node scripts/check-arc42-frontmatter.mjs
 
       - name: Lint the architecture and ADR docs
-        run: npx -y markdownlint-cli2@0.23.3 "docs/architecture/**/*.md" "docs/adr/**/*.md"
+        run: npx -y markdownlint-cli2@0.23.3 "docs/architecture/**/*.md" "docs/adr/**/*.md" docs/devops.md docs/engineering-site.md docs/engineering-e2e.md
 
       - name: Verify architecture citations
         run: npx -y @prodshape/cli@0.22.0 citations verify docs/architecture --format json

@@ -8,14 +8,22 @@ on:
       - 'tools/engineering-site/**'
       - 'tools/static-site/**'
       - 'tools/arc42-snapshot/**'
+      - 'tools/e2e-report/**'
+      - 'src/web/app/e2e/**'
+      - 'src/web/app/playwright.config.ts'
+      - 'src/web/app/package.json'
+      - 'src/web/app/package-lock.json'
       - 'docs/architecture/**'
       - 'docs/adr/**'
       - 'docs/product/model/**'
       - '.product/config.yaml'
       - 'docs/engineering-site.md'
+      - 'docs/engineering-e2e.md'
   pull_request:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '23 3 * * *'
 
 permissions:
   contents: read
@@ -52,16 +60,140 @@ jobs:
           fi
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(\.github/workflows/engineering-site\.yml$|tools/(engineering-site|static-site|arc42-snapshot)/|docs/(architecture|adr|product/model)/|\.product/config\.yaml$|docs/engineering-site\.md$)'; then
+          if printf '%s\n' "$files" | grep -qE '^(\.github/workflows/engineering-site\.yml$|tools/(engineering-site|static-site|arc42-snapshot|e2e-report)/|src/web/app/(e2e/|playwright\.config\.ts$|package(-lock)?\.json$)|docs/(architecture|adr|product/model)/|\.product/config\.yaml$|docs/engineering-(site|e2e)\.md$)'; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
           fi
 
+  e2e-gate:
+    name: E2E run gate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      run: ${{ steps.gate.outputs.run }}
+    steps:
+      - name: Skip a scheduled run already reported for this commit
+        id: gate
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          CURRENT_SHA: ${{ github.sha }}
+          REPORT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/e2e/latest.json
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" != "schedule" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          reported_sha=$(curl --silent --show-error --fail "$REPORT_URL" | jq -r '.commitSha // empty' || true)
+          if [ "$reported_sha" = "$CURRENT_SHA" ]; then
+            echo "The current main commit already has a published browser report."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  e2e:
+    name: Browser journeys
+    needs: e2e-gate
+    if: needs.e2e-gate.outputs.run == 'true'
+    runs-on: ubuntu-26.04
+    permissions:
+      contents: read
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: domusmind
+          POSTGRES_PASSWORD: e2e-local-only
+          POSTGRES_DB: domusmind
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U domusmind -d domusmind"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    outputs:
+      report_available: ${{ steps.report.outputs.available }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: src/web/app/package-lock.json
+
+      - name: Restore and build the API
+        run: |
+          dotnet restore src/backend/DomusMind.Api/DomusMind.Api.csproj
+          dotnet build src/backend/DomusMind.Api/DomusMind.Api.csproj --no-restore --configuration Release
+
+      - name: Install and build the web app
+        run: npm ci && npm run build
+        working-directory: src/web/app
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+        working-directory: src/web/app
+
+      - name: Validate report generation logic
+        run: node tools/e2e-report/report.test.mjs
+
+      - name: Start the API and web app against generated local test data
+        run: |
+          nohup env ASPNETCORE_URLS=http://127.0.0.1:52250 ConnectionStrings__domusmind='Host=127.0.0.1;Port=5432;Database=domusmind;Username=domusmind;Password=e2e-local-only' Jwt__SigningKey='e2e-run-only-signing-key-never-used-outside-this-job' dotnet run --project src/backend/DomusMind.Api/DomusMind.Api.csproj --no-build --configuration Release > /tmp/domusmind-e2e-api.log 2>&1 &
+          nohup env API_HTTP=http://127.0.0.1:52250 npm --prefix src/web/app run dev -- --host 127.0.0.1 --port 61546 --strictPort > /tmp/domusmind-e2e-web.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            if curl --silent --fail http://127.0.0.1:52250/api/setup/status > /dev/null && curl --silent --fail http://127.0.0.1:61546/ > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/domusmind-e2e-api.log
+          cat /tmp/domusmind-e2e-web.log
+          exit 1
+
+      - name: Run the selected browser journeys
+        run: npm run test:e2e
+        working-directory: src/web/app
+        env:
+          CI: 'true'
+          PLAYWRIGHT_JSON: ${{ github.workspace }}/playwright-results/results.json
+          PLAYWRIGHT_REPORT_DIR: ${{ github.workspace }}/playwright-results/html
+          PLAYWRIGHT_OUTPUT_DIR: ${{ github.workspace }}/playwright-results/evidence
+          E2E_BASE_URL: http://127.0.0.1:61546
+
+      - name: Prepare a report, including missing-evidence failures
+        id: report
+        if: always()
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          CREATED_AT: ${{ github.run_started_at }}
+        run: |
+          set -euo pipefail
+          mkdir -p e2e-report playwright-results/html playwright-results/evidence
+          echo "available=true" >> "$GITHUB_OUTPUT"
+          jq -n --arg commitSha "$COMMIT_SHA" --arg runId "$RUN_ID" --arg runUrl "$RUN_URL" --arg createdAt "$CREATED_AT" '{commitSha:$commitSha,runId:$runId,runUrl:$runUrl,createdAt:$createdAt}' > /tmp/domusmind-e2e-metadata.json
+          node tools/e2e-report/report.mjs prepare playwright-results/results.json playwright-results/html playwright-results/evidence e2e-report /tmp/domusmind-e2e-metadata.json
+
+      - name: Save the report and raw evidence for recovery
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-report-${{ github.run_id }}
+          path: e2e-report
+          if-no-files-found: error
+          retention-days: 14
+
   build:
     name: Build Engineering site
-    needs: changes
-    if: needs.changes.outputs.relevant == 'true'
+    needs: [changes, e2e]
+    if: always() && needs.changes.outputs.relevant == 'true' && (needs.e2e.result == 'success' || needs.e2e.result == 'failure' || needs.e2e.result == 'skipped')
     # Raccord's working static-site publisher uses this runner image for
     # Puppeteer/Chromium Mermaid rendering; ubuntu-latest blocks its sandbox.
     runs-on: ubuntu-26.04
@@ -91,6 +223,7 @@ jobs:
         run: |
           node --check tools/static-site/static-site.mjs
           node tools/static-site/static-site.test.mjs
+          node tools/e2e-report/report.test.mjs
           npm test --prefix tools/arc42-snapshot
 
       - name: Install Chromium for offline Mermaid rendering
@@ -99,6 +232,17 @@ jobs:
       - name: Restore current Pages sections
         if: github.event_name != 'pull_request'
         run: node tools/static-site/static-site.mjs restore "${{ steps.pages.outputs.base_url }}" _site
+
+      - name: Download the current E2E report, including failure evidence
+        if: needs.e2e.outputs.report_available == 'true'
+        uses: actions/download-artifact@v6
+        with:
+          name: e2e-report-${{ github.run_id }}
+          path: e2e-report
+
+      - name: Add the report and prune to the retention window
+        if: needs.e2e.outputs.report_available == 'true'
+        run: node tools/e2e-report/report.mjs publish _site e2e-report "${{ github.run_id }}-${{ github.sha }}" 14
 
       - name: Build Engineering landing page
         run: node tools/static-site/static-site.mjs build _site "${{ steps.pages.outputs.base_url }}"
@@ -128,7 +272,7 @@ jobs:
   deploy:
     name: Publish Engineering site
     needs: build
-    if: github.event_name != 'pull_request' && needs.build.result == 'success'
+    if: always() && github.event_name != 'pull_request' && needs.build.result == 'success'
     runs-on: ubuntu-latest
     permissions:
       pages: write

@@ -16,6 +16,9 @@ Its source content is generated from the repository on every relevant push to
   repository or external assets.
 - `/model/` is generated with the pinned ProductShape CLI version used by
   `product-snapshot.yml`.
+- `/e2e/` contains the browser journey report index, a stable latest URL, and
+  bounded history. See [Browser end-to-end reports](engineering-e2e.md) for
+  the selected journeys, evidence and retention policy.
 
 `tools/static-site/static-site.mjs` restores files listed in the current
 `site-manifest.json`, builds the landing page, and writes a new manifest for the
@@ -33,6 +36,8 @@ The publisher workflow can also be run from **Actions → engineering-site → R
 workflow** to initialize or refresh the publication.
 
 The `engineering-site` workflow validates utility tests and generates both
-snapshots during pull requests, but only pushes to `main` and manual runs deploy.
+snapshots during pull requests. It also runs the selected browser journey in an
+ephemeral composed environment; only pushes to `main`, nightly runs and manual
+runs deploy.
 The public marketing site's Azure workflow and deployment credential are not
 used by this publisher.
