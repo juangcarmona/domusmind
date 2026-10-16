@@ -70,7 +70,7 @@ All backend projects, with one test project for each under [`tests/backend`](../
 - **Domain tests** (`DomusMind.Domain.Tests`, organised by context) exercise aggregates directly. They assert state changes, rejected invariants and the domain events raised.
 - **Application tests** (`DomusMind.Application.Tests`) run each handler against `DomusMindDbContext` on the EF Core in-memory provider (not PostgreSQL), testing state change, authorization denial, error codes and event-log writes. Separate folders cover the dispatchers and the event log.
 - **Infrastructure tests** cover authentication services and the calendar integration. **API tests** cover controllers.
-- No end-to-end test runs against the composed container image.
+- The selected browser journey runs against the composed API, Vite app and disposable PostgreSQL service in CI. It covers first-run household onboarding, Agenda entry and Agenda-to-Lists navigation at desktop and phone widths; it does not exercise the published container image or all surface behaviors. See [`docs/engineering-e2e.md`](../engineering-e2e.md).
 
 ### Evidence
 
