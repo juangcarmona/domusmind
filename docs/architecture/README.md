@@ -25,9 +25,10 @@ verified with `npx prodshape citations verify docs/architecture`. Where the
 architecture and the code disagree, the code is current and the gap is recorded in
 [section 11](11-risks-and-technical-debt.md).
 
-The browsable **Product Snapshot** of the product model is not committed: the
-[`product-snapshot`](../../.github/workflows/product-snapshot.yml) workflow builds it
-from `docs/product` and keeps it as a workflow run artifact.
+The **Product Snapshot** is generated from `docs/product` by the
+[`product-snapshot`](../../.github/workflows/product-snapshot.yml) workflow for
+review artifacts and by the [Engineering site](../engineering-site.md) publisher
+for its browsable GitHub Pages copy. The HTML is generated output, not committed.
 
 ## Sections
 

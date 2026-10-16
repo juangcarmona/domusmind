@@ -19,7 +19,7 @@ flowchart LR
     browser["Household browser<br/>(web app SPA)"]
     proxy["Reverse proxy<br/>(operator-provided, TLS)"]
     ghcr[("GHCR<br/>ghcr.io/&lt;owner&gt;/domusmind")]
-    graph["Microsoft identity platform<br/>and Graph API"]
+    graphApi["Microsoft identity platform<br/>and Graph API"]
 
     subgraph host["Docker host (one household)"]
         subgraph compose["Compose network"]
@@ -33,7 +33,7 @@ flowchart LR
     proxy -- "HTTP host:APP_PORT (default 24365)" --> app
     app -- "Npgsql, internal only" --> db
     db --- vol
-    app -- "HTTPS outbound (optional)" --> graph
+    app -- "HTTPS outbound (optional)" --> graphApi
     ghcr -. "docker compose pull" .-> app
 ```
 
@@ -77,6 +77,20 @@ The public site ([`src/web/public`](../../src/web/public), Astro, `https://domus
 | Building block or artifact | Infrastructure element | Environment |
 | --- | --- | --- |
 | Public site static build (`dist`) | Azure Static Web Apps (GitHub environment `production`) | Hosted |
+
+## Infrastructure Level 1: Engineering Documentation Site
+
+The Engineering documentation site is a separate static publication on GitHub
+Pages. The [`engineering-site.yml`](../../.github/workflows/engineering-site.yml)
+workflow builds its landing page and self-contained arc42, ADR and ProductShape
+snapshots from the repository. It contains no product runtime or household data.
+Its deployment uses GitHub's Pages artifact and short-lived OIDC permissions;
+it does not share the Azure public-site deployment or credential. The publication
+and one-time Pages setup are documented in [Engineering site](../engineering-site.md).
+
+| Building block or artifact | Infrastructure element | Environment |
+| --- | --- | --- |
+| Engineering landing page and documentation snapshots | GitHub Pages | Hosted |
 
 ## Infrastructure Level 1: Local Development
 

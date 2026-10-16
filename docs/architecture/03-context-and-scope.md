@@ -68,7 +68,7 @@ flowchart LR
     browser["Browser<br/>(desktop or mobile)"]
     operator["Self-hosting operator"]
     msid["Microsoft identity platform<br/>login.microsoftonline.com"]
-    graph["Microsoft Graph<br/>graph.microsoft.com"]
+    msgraph["Microsoft Graph<br/>graph.microsoft.com"]
     ghcr["Container registry<br/>(GHCR)"]
     swa["Azure Static Web Apps"]
 
@@ -83,8 +83,8 @@ flowchart LR
     browser -- "HTTPS JSON /api,<br/>JWT bearer" --> api
     browser -- "OAuth authorize redirect" --> msid
     api -- "auth-code exchange,<br/>token refresh (MSAL)" --> msid
-    api -- "HTTPS REST, delegated token" --> graph
-    worker -- "HTTPS REST, delegated token" --> graph
+    api -- "HTTPS REST, delegated token" --> msgraph
+    worker -- "HTTPS REST, delegated token" --> msgraph
     api --- db
     worker --- db
     operator -- "pulls image" --> ghcr

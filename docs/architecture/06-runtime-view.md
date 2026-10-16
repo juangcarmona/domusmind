@@ -174,14 +174,14 @@ sequenceDiagram
     Web->>AC: POST /api/auth/login (email, password)
     AC->>H: Dispatch(LoginCommand)
     H->>Users: find by normalized email, verify password hash
-    H->>H: reject if disabled; issue JWT access token
+    H->>H: reject if disabled, issue JWT access token
     H->>RT: create refresh token (stored hashed)
     RT->>DB: insert
     H-->>Web: access token, refresh token, must-change-password flag
     Web->>AC: GET /api/auth/me (bearer)
     Note over Web: tokens kept in browser storage
     Web->>AC: later requests carry the bearer token
-    AC->>AC: JWT bearer middleware validates; CurrentUserAccessor exposes user id
+    AC->>AC: JWT bearer middleware validates, CurrentUserAccessor exposes user id
 ```
 
 ### Notable Interactions

@@ -16,7 +16,7 @@ DomusMind is one backend process, one relational database and two browser front 
 flowchart LR
     person([Household member])
     visitor([Site visitor])
-    graph[(Microsoft Graph)]
+    msgraph[(Microsoft Graph)]
 
     subgraph domusmind [DomusMind]
         web["Web app<br/>React + Vite SPA"]
@@ -31,7 +31,7 @@ flowchart LR
     visitor --> site
     web -- "HTTPS/JSON, JWT bearer" --> api
     api -- "EF Core / Npgsql" --> db
-    api -- "delegated OAuth, delta queries" --> graph
+    api -- "delegated OAuth, delta queries" --> msgraph
     apphost -. "starts and wires" .-> api
     apphost -. "starts and wires" .-> web
     apphost -. "provisions" .-> db
