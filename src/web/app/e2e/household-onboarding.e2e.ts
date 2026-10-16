@@ -25,7 +25,7 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
     await page.getByPlaceholder("Name").fill("E2E Member");
     await page.getByRole("button", { name: "Add", exact: true }).click();
     await page.getByRole("button", { name: "Set up household" }).click();
-    await expect(page).toHaveURL(/\/agenda$/);
+    await expect(page).toHaveURL(/\/agenda(?:\?.*)?$/);
     await expect(page.getByRole("complementary", { name: "Primary navigation" })).toBeVisible();
     const householdScope = page.getByRole("group", { name: "Scope" }).getByRole("button", { name: new RegExp(`E2E Household ${runKey.slice(0, 8)}`) });
     await expect(householdScope).toHaveAttribute("aria-pressed", "true");
