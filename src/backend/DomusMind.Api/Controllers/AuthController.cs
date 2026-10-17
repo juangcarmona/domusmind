@@ -6,7 +6,6 @@ using DomusMind.Application.Features.Auth.GetCurrentUser;
 using DomusMind.Application.Features.Auth.Login;
 using DomusMind.Application.Features.Auth.Logout;
 using DomusMind.Application.Features.Auth.RefreshToken;
-using DomusMind.Application.Features.Auth.RegisterUser;
 using DomusMind.Contracts.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -60,36 +59,15 @@ public sealed class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Creates a new auth-user account.
-    /// Email must be unique. Password must be at least 8 characters.
+    /// Public account registration is disabled. Accounts are created through first-run setup
+    /// or by a household manager provisioning a member.
     /// </summary>
     [HttpPost("register")]
     [AllowAnonymous]
-    [ProducesResponseType(typeof(RegisterUserResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status409Conflict)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Register(
-        [FromBody] RegisterUserRequest request,
-        [FromServices] ICommandDispatcher dispatcher,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            var response = await dispatcher.Dispatch(
-                new RegisterUserCommand(request.Email, request.Password),
-                cancellationToken);
-
-            return CreatedAtAction(nameof(Me), response);
-        }
-        catch (AuthException ex) when (ex.Code == AuthErrorCode.EmailAlreadyTaken)
-        {
-            return Conflict(new { error = ex.Message });
-        }
-        catch (AuthException ex) when (ex.Code == AuthErrorCode.WeakPassword)
-        {
-            return BadRequest(new { error = ex.Message });
-        }
-    }
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IActionResult Register() => StatusCode(
+        StatusCodes.Status403Forbidden,
+        new { code = "auth.registration_disabled", message = "Account registration is disabled." });
 
     /// <summary>
     /// Authenticates a user and returns an access token plus a refresh token.

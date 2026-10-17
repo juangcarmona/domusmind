@@ -23,7 +23,6 @@ interface AuthState {
 
 interface AuthContextValue extends AuthState {
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<boolean>;
   changePassword: (current: string, next: string) => Promise<void>;
@@ -80,10 +79,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setState({ user, accessToken: res.accessToken, isLoading: false });
   }, []);
 
-  const register = useCallback(async (email: string, password: string) => {
-    await authApi.register({ email, password });
-  }, []);
-
   const logout = useCallback(async () => {
     const rt = getRefreshToken();
     if (rt) {
@@ -127,7 +122,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ ...state, login, register, logout, refreshToken, changePassword }}
+      value={{ ...state, login, logout, refreshToken, changePassword }}
     >
       {children}
     </AuthContext.Provider>

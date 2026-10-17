@@ -4,9 +4,9 @@ import { useAuth } from "../../../auth/AuthProvider";
 import type { ApiError } from "../../../api/authApi";
 import { HouseholdLogo } from "../../../components/HouseholdLogo";
 
-interface Props { onSuccess?: () => void; onGoToRegister?: () => void; }
+interface Props { onSuccess?: () => void; }
 
-export function LoginPage({ onSuccess, onGoToRegister }: Props) {
+export function LoginPage({ onSuccess }: Props) {
   const { login } = useAuth();
   const { t } = useTranslation("auth");
   const [email, setEmail] = useState("");
@@ -46,12 +46,6 @@ export function LoginPage({ onSuccess, onGoToRegister }: Props) {
             {loading ? t("signingIn") : t("signIn")}
           </button>
         </form>
-        {onGoToRegister && (
-          <p className="auth-footer">
-            {t("noAccount")}{" "}
-            <button onClick={onGoToRegister}>{t("createOne")}</button>
-          </p>
-        )}
       </div>
     </div>
   );

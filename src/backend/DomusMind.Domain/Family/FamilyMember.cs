@@ -35,7 +35,7 @@ public sealed class FamilyMember : Entity<MemberId>
 
     /// <summary>
     /// Links this member to an authenticated user. Only set for members who have a
-    /// DomusMind account (typically adults who registered). Children and pets have no
+    /// DomusMind account (typically adults whose access was provisioned by a manager). Children and pets have no
     /// auth account and therefore no AuthUserId.
     /// </summary>
     public Guid? AuthUserId { get; private set; }

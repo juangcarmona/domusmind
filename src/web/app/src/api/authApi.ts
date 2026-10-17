@@ -36,16 +36,6 @@ async function request<T>(
 
 // ── Auth endpoint shapes ──────────────────────────────────────────────────────
 
-export interface RegisterRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterResponse {
-  userId: string;
-  email: string;
-}
-
 export interface LoginRequest {
   email: string;
   password: string;
@@ -81,12 +71,6 @@ export interface ChangePasswordRequest {
 // ── API client ────────────────────────────────────────────────────────────────
 
 export const authApi = {
-  register: (body: RegisterRequest) =>
-    request<RegisterResponse>("/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
-
   login: (body: LoginRequest) =>
     request<LoginResponse>("/api/auth/login", {
       method: "POST",
