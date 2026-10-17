@@ -159,6 +159,9 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
     await test.step("propagate a checked item to the other open browser", async () => {
       const memberRow = memberPage.locator(".li-row").filter({ hasText: "Apples" });
       await memberRow.getByRole("button", { name: "Mark complete" }).click();
+      const showCompleted = page.getByRole("button", { name: /Show completed/ });
+      await expect(showCompleted).toBeVisible();
+      await showCompleted.click();
       const managerRow = page.locator(".li-row").filter({ hasText: "Apples" });
       await expect(managerRow).toHaveClass(/li-row--checked/);
     });
