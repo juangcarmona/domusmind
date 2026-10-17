@@ -73,15 +73,15 @@ sequenceDiagram
     participant DB as DomusMind database
 
     Ctl->>H: Dispatch(RequestShoppingListCommand)
-    H->>DB: load MealPlan with slots; authorize family
+    H->>DB: load MealPlan with slots and authorize family
     H->>MP: Record list id, derivation version and ShoppingListRequested
     H->>ELW: WriteAsync([MealPlan])
-    ELW->>DB: Begin transaction; save MealPlan and event_log
+    ELW->>DB: Begin transaction and save MealPlan plus event_log
     ELW->>DD: Dispatch ShoppingListRequested
     DD->>LH: invoke Lists-owned handler
     LH->>DB: load MealPlan slots and recipes with ingredients
     LH->>LH: consolidate ingredients by name and unit
-    LH->>SL: Create SharedList with event's stable list id; add items
+    LH->>SL: Create SharedList with event's stable list id and add items
     LH->>ELW: WriteAsync([SharedList])
     ELW->>DB: save SharedList and its event_log rows in same transaction
     ELW->>DB: commit after reaction succeeds
