@@ -29,6 +29,11 @@ services:
       Jwt__SigningKey: ${JWT_SECRET}
       Jwt__Issuer:    ${JWT_ISSUER:-domusmind}
       Jwt__Audience:  ${JWT_AUDIENCE:-${JWT_ISSUER:-domusmind}}
+      MicrosoftGraph__ClientId: ${MICROSOFT_GRAPH_CLIENT_ID:-}
+      MicrosoftGraph__ClientSecret: ${MICROSOFT_GRAPH_CLIENT_SECRET:-}
+      MicrosoftGraph__TenantId: ${MICROSOFT_GRAPH_TENANT_ID:-common}
+      MicrosoftGraph__TokenEncryptionKey: ${MICROSOFT_GRAPH_TOKEN_ENCRYPTION_KEY:-}
+      MicrosoftGraph__AllowedRedirectUris__0: ${MICROSOFT_GRAPH_REDIRECT_URI:-}
       # First-run bootstrap admin - disable after initial setup.
       # BootstrapAdmin__Enabled:     true
       # BootstrapAdmin__Email:        ${BOOTSTRAP_ADMIN_EMAIL}

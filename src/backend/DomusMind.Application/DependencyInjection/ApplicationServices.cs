@@ -25,6 +25,7 @@ using DomusMind.Application.Features.Calendar.ScheduleEvent;
 using DomusMind.Application.Features.Calendar.SuggestEventParticipants;
 using DomusMind.Application.Features.Calendar.SyncExternalCalendarConnection;
 using DomusMind.Application.Features.Calendar.SyncMemberExternalCalendarConnections;
+using DomusMind.Application.Features.Calendar.StartOutlookAuthorization;
 using DomusMind.Application.Features.Family.AddMember;
 using DomusMind.Application.Features.Family.CompleteOnboarding;
 using DomusMind.Application.Features.Family.CreateFamily;
@@ -176,6 +177,7 @@ public static class ApplicationServices
 
         // External calendar connection slices
         services.AddScoped<ICommandHandler<ConnectOutlookAccountCommand, ExternalCalendarConnectionDetailResponse>, ConnectOutlookAccountCommandHandler>();
+        services.AddScoped<ICommandHandler<StartOutlookAuthorizationCommand, OutlookAuthorizationUrlResponse>, StartOutlookAuthorizationCommandHandler>();
         services.AddScoped<ICommandHandler<ConfigureExternalCalendarConnectionCommand, ConfigureExternalCalendarConnectionResponse>, ConfigureExternalCalendarConnectionCommandHandler>();
         services.AddScoped<ICommandHandler<SyncExternalCalendarConnectionCommand, SyncExternalCalendarConnectionResponse>, SyncExternalCalendarConnectionCommandHandler>();
         services.AddScoped<ICommandHandler<SyncMemberExternalCalendarConnectionsCommand, SyncMemberExternalCalendarConnectionsResponse>, SyncMemberExternalCalendarConnectionsCommandHandler>();

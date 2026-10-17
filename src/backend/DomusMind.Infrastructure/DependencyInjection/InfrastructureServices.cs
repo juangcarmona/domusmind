@@ -34,6 +34,12 @@ public static class InfrastructureServices
         services.AddScoped<ISupportedLanguageReader, SupportedLanguageReader>();
 
         // External calendar integrations
+        services.AddOptions<MicrosoftGraphOptions>()
+            .Bind(configuration.GetSection(MicrosoftGraphOptions.SectionName))
+            .Validate(
+                options => options.Validate() is null,
+                "MicrosoftGraph requires both credentials, an allowed callback URI, and a Base64 encryption key containing exactly 32 bytes.")
+            .ValidateOnStart();
         services.AddScoped<IExternalCalendarAuthService, MicrosoftGraphCalendarAuthService>();
         services.AddScoped<IExternalCalendarProviderClient, MicrosoftGraphCalendarClient>();
         services.AddScoped<IExternalCalendarSyncLeaseService, ExternalCalendarConnectionLeaseService>();

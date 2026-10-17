@@ -1,25 +1,28 @@
 using DomusMind.Api.OpenApi;
-using DomusMind.Api.Telemetry;
 using DomusMind.Application.DependencyInjection;
 using DomusMind.Infrastructure.Auth;
 using DomusMind.Infrastructure.DependencyInjection;
 using DomusMind.Infrastructure.Languages;
 using DomusMind.Infrastructure.Messaging;
 using DomusMind.Infrastructure.Persistence;
+using DomusMind.Infrastructure.Integrations.Calendar.Microsoft;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.AddDevelopmentTelemetry();
 builder.Services.AddDomusMindAuthentication(builder.Configuration);
 builder.Services.AddDomusMindAuthorization();
 builder.Services.AddDomusMindOpenApi();
 
 var app = builder.Build();
+
+// Validate provider secrets before database migrations can modify existing token material.
+_ = app.Services.GetRequiredService<IOptions<MicrosoftGraphOptions>>().Value;
 
 app.UseExceptionHandler(errorApp =>
 {
@@ -37,6 +40,7 @@ app.UseExceptionHandler(errorApp =>
         if (exception is HandlerResolutionException resolutionException)
         {
             logger.LogError(
+                resolutionException,
                 "Dispatcher handler resolution failed for {HandlerType}",
                 resolutionException.HandlerType);
 
@@ -49,7 +53,7 @@ app.UseExceptionHandler(errorApp =>
             return;
         }
 
-        logger.LogError("Unhandled server exception. TraceId={TraceId}", context.TraceIdentifier);
+        logger.LogError(exception, "Unhandled server exception");
         await context.Response.WriteAsJsonAsync(new
         {
             code = "internal_server_error",

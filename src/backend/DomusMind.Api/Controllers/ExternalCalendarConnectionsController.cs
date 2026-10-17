@@ -8,10 +8,10 @@ using DomusMind.Application.Features.Calendar.GetExternalCalendarConnectionDetai
 using DomusMind.Application.Features.Calendar.GetMemberExternalCalendarConnections;
 using DomusMind.Application.Features.Calendar.SyncExternalCalendarConnection;
 using DomusMind.Application.Features.Calendar.SyncMemberExternalCalendarConnections;
+using DomusMind.Application.Features.Calendar.StartOutlookAuthorization;
 using DomusMind.Contracts.Calendar;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace DomusMind.Api.Controllers;
 
@@ -21,42 +21,39 @@ namespace DomusMind.Api.Controllers;
 public sealed class ExternalCalendarConnectionsController : ControllerBase
 {
     private readonly ICurrentUser _currentUser;
-    private readonly IConfiguration _configuration;
 
-    public ExternalCalendarConnectionsController(ICurrentUser currentUser, IConfiguration configuration)
+    public ExternalCalendarConnectionsController(ICurrentUser currentUser)
     {
         _currentUser = currentUser;
-        _configuration = configuration;
     }
 
     /// <summary>Returns the Microsoft OAuth authorization URL for initiating and Outlook connection.</summary>
     [HttpGet("outlook/auth-url")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public IActionResult GetOutlookAuthUrl(
+    public async Task<IActionResult> GetOutlookAuthUrl(
         Guid familyId,
         Guid memberId,
-        [FromQuery] string redirectUri)
+        [FromQuery] string redirectUri,
+        [FromServices] ICommandDispatcher dispatcher,
+        CancellationToken cancellationToken)
     {
-        var clientId = _configuration["MicrosoftGraph:ClientId"];
-        if (string.IsNullOrEmpty(clientId))
-            return StatusCode(StatusCodes.Status503ServiceUnavailable, new { error = "Outlook integration is not configured." });
+        try
+        {
+            var result = await dispatcher.Dispatch(
+                new StartOutlookAuthorizationCommand(
+                    familyId,
+                    memberId,
+                    redirectUri,
+                    _currentUser.UserId!.Value),
+                cancellationToken);
 
-        var tenantId = _configuration["MicrosoftGraph:TenantId"] ?? "common";
-        var scopes = Uri.EscapeDataString("https://graph.microsoft.com/Calendars.Read offline_access");
-        var redirectEncoded = Uri.EscapeDataString(redirectUri);
-        var state = Uri.EscapeDataString($"{familyId}:{memberId}");
-
-        var authUrl =
-            $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/authorize" +
-            $"?client_id={clientId}" +
-            $"&response_type=code" +
-            $"&redirect_uri={redirectEncoded}" +
-            $"&scope={scopes}" +
-            $"&state={state}" +
-            $"&response_mode=query";
-
-        return Ok(new { authUrl });
+            return Ok(result);
+        }
+        catch (CalendarException ex)
+        {
+            return MapCalendarException(ex);
+        }
     }
 
     /// <summary>Returns all active external calendar connections for a member.</summary>
@@ -132,6 +129,7 @@ public sealed class ExternalCalendarConnectionsController : ControllerBase
                     familyId,
                     memberId,
                     request.AuthorizationCode,
+                    request.State,
                     request.RedirectUri,
                     request.AccountDisplayLabel,
                     _currentUser.UserId!.Value),
@@ -286,6 +284,8 @@ public sealed class ExternalCalendarConnectionsController : ControllerBase
 
     private IActionResult MapCalendarException(CalendarException ex) => ex.Code switch
     {
+        CalendarErrorCode.ProviderNotConfigured =>
+            StatusCode(StatusCodes.Status503ServiceUnavailable, new { error = ex.Message }),
         CalendarErrorCode.AccessDenied =>
             StatusCode(StatusCodes.Status403Forbidden, new { error = ex.Message }),
         CalendarErrorCode.ConnectionNotFound =>

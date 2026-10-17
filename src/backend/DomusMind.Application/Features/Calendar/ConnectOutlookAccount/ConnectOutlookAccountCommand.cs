@@ -7,6 +7,7 @@ public sealed record ConnectOutlookAccountCommand(
     Guid FamilyId,
     Guid MemberId,
     string AuthorizationCode,
+    string State,
     string RedirectUri,
     string? AccountDisplayLabel,
     Guid RequestedByUserId)

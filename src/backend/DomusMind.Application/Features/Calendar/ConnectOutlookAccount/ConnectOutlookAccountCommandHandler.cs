@@ -43,6 +43,9 @@ public sealed class ConnectOutlookAccountCommandHandler
         if (string.IsNullOrWhiteSpace(command.AuthorizationCode))
             throw new CalendarException(CalendarErrorCode.InvalidInput, "Authorization code is required.");
 
+        if (string.IsNullOrWhiteSpace(command.State))
+            throw new CalendarException(CalendarErrorCode.InvalidInput, "OAuth state is required.");
+
         if (string.IsNullOrWhiteSpace(command.RedirectUri))
             throw new CalendarException(CalendarErrorCode.InvalidInput, "Redirect URI is required.");
 
@@ -56,38 +59,48 @@ public sealed class ConnectOutlookAccountCommandHandler
         try
         {
             providerAccount = await _authService.ExchangeAuthorizationCodeAsync(
-                command.AuthorizationCode, command.RedirectUri, cancellationToken);
+                command.AuthorizationCode,
+                command.State,
+                command.FamilyId,
+                command.MemberId,
+                command.RequestedByUserId,
+                command.RedirectUri,
+                cancellationToken);
         }
         catch (Exception ex) when (ex is not CalendarException)
         {
-            _logger.LogWarning("OAuth code exchange failed.");
+            _logger.LogWarning(
+                "OAuth code exchange failed for member {MemberId} with error type {ErrorType}",
+                command.MemberId,
+                ex.GetType().Name);
             throw new CalendarException(CalendarErrorCode.ProviderAuthFailed, "Authorization code exchange failed.");
         }
 
-        // Duplicate check: same member + same provider account
+        // Reusing the same provider account for the same member is a reconnect.
+        // It replaces credentials while preserving the connection, feeds and imported entries.
         var memberId = MemberId.From(command.MemberId);
         var existing = await _dbContext
             .Set<ExternalCalendarConnection>()
-            .AsNoTracking()
             .FirstOrDefaultAsync(c =>
-                c.MemberId == memberId &&
+                c.Provider == ExternalCalendarProvider.Microsoft &&
                 c.ProviderAccountId == providerAccount.ProviderAccountId &&
                 c.Status != ExternalCalendarConnectionStatus.Disconnected,
                 cancellationToken);
 
-        if (existing is not null)
+        if (existing is not null &&
+            (existing.FamilyId != FamilyId.From(command.FamilyId) || existing.MemberId != memberId))
             throw new CalendarException(CalendarErrorCode.ConnectionAlreadyExists,
                 "An active connection for this provider account already exists.");
 
         string? accessToken;
         try
         {
-            var connectionId = ExternalCalendarConnectionId.New();
             var familyId = FamilyId.From(command.FamilyId);
             var now = DateTime.UtcNow;
 
-            var connection = ExternalCalendarConnection.Connect(
-                connectionId,
+            var isReconnect = existing is not null;
+            var connection = existing ?? ExternalCalendarConnection.Connect(
+                ExternalCalendarConnectionId.New(),
                 familyId,
                 memberId,
                 ExternalCalendarProvider.Microsoft,
@@ -97,7 +110,8 @@ public sealed class ConnectOutlookAccountCommandHandler
                 providerAccount.TenantId,
                 now);
 
-            _dbContext.Set<ExternalCalendarConnection>().Add(connection);
+            if (!isReconnect)
+                _dbContext.Set<ExternalCalendarConnection>().Add(connection);
 
             // Write auth material into shadow properties before the initial SaveChanges.
             // Without this the token cache is not persisted and every subsequent
@@ -109,10 +123,15 @@ public sealed class ConnectOutlookAccountCommandHandler
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation("External calendar connection created and authorization material persisted.");
+            _logger.LogInformation(
+                "External calendar connection {ConnectionId} {Operation} for member {MemberId}.",
+                connection.Id.Value, isReconnect ? "reconnected" : "created", command.MemberId);
 
-            await _eventLogWriter.WriteAsync(connection.DomainEvents, cancellationToken);
-            connection.ClearDomainEvents();
+            if (!isReconnect)
+            {
+                await _eventLogWriter.WriteAsync(connection.DomainEvents, cancellationToken);
+                connection.ClearDomainEvents();
+            }
 
             // Discover available calendars using a fresh access token
             accessToken = await _authService.GetAccessTokenAsync(connection.Id.Value, cancellationToken);
@@ -129,16 +148,20 @@ public sealed class ConnectOutlookAccountCommandHandler
                     }
                     await _dbContext.SaveChangesAsync(cancellationToken);
 
-                    _logger.LogInformation("Discovered provider calendars for the external calendar connection.");
+                    _logger.LogInformation(
+                        "Discovered {CalendarCount} provider calendar(s) for connection {ConnectionId}",
+                        availableCalendars.Count, connection.Id.Value);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    _logger.LogWarning("Calendar discovery failed; continuing without a feed list.");
+                    _logger.LogWarning(ex, "Calendar discovery failed for connection {ConnectionId}, continuing without feed list", connection.Id.Value);
                 }
             }
             else
             {
-                _logger.LogWarning("Could not acquire an access token after connection creation; calendar discovery skipped.");
+                _logger.LogWarning(
+                    "Could not acquire access token immediately after connection {ConnectionId} was created — calendar discovery skipped",
+                    connection.Id.Value);
             }
 
             var feedResponses = connection.Feeds.Select(f => new ExternalCalendarFeedResponse(
@@ -174,9 +197,9 @@ public sealed class ConnectOutlookAccountCommandHandler
         {
             throw;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            _logger.LogError("Failed to persist external calendar connection.");
+            _logger.LogError(ex, "Failed to persist external calendar connection for member {MemberId}", command.MemberId);
             throw new CalendarException(CalendarErrorCode.ProviderApiError, "Failed to complete connection setup.");
         }
     }

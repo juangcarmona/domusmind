@@ -6,10 +6,25 @@ namespace DomusMind.Application.Abstractions.Integrations.Calendar;
 public interface IExternalCalendarAuthService
 {
     /// <summary>
+    /// Creates a short-lived, member-bound Microsoft authorization request.
+    /// Returns null when the integration is not configured.
+    /// </summary>
+    Task<string?> CreateAuthorizationUrlAsync(
+        Guid familyId,
+        Guid memberId,
+        Guid requestedByUserId,
+        string redirectUri,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Exchanges an authorization code for provider account details and encrypted refresh material.
     /// </summary>
     Task<ExternalCalendarProviderAccount> ExchangeAuthorizationCodeAsync(
         string authorizationCode,
+        string state,
+        Guid familyId,
+        Guid memberId,
+        Guid requestedByUserId,
         string redirectUri,
         CancellationToken cancellationToken = default);
 
