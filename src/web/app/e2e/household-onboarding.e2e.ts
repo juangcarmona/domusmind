@@ -163,11 +163,19 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
     });
 
     await test.step("propagate an item update to the other open browser", async () => {
+      const showManagerCompleted = page.getByRole("button", { name: /Show completed/ });
+      await expect(showManagerCompleted).toBeVisible();
+      await showManagerCompleted.click();
       const managerRow = page.locator(".li-row").filter({ hasText: "Apples" });
+      await expect(managerRow).toBeVisible();
       await managerRow.locator(".li-row__main").click();
       const itemName = page.getByRole("textbox", { name: "Item name" });
       await itemName.fill("Apples washed");
       await itemName.press("Enter");
+
+      const showMemberCompleted = memberPage.getByRole("button", { name: /Show completed/ });
+      await expect(showMemberCompleted).toBeVisible();
+      await showMemberCompleted.click();
       await expect(memberPage.getByText("Apples washed", { exact: true })).toBeVisible();
     });
 
