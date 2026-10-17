@@ -1289,6 +1289,48 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.ToTable("event_log", (string)null);
                 });
 
+            modelBuilder.Entity("DomusMind.Infrastructure.Persistence.ExternalCalendarOAuthTransaction", b =>
+                {
+                    b.Property<string>("StateHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("state_hash");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at_utc");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("member_id");
+
+                    b.Property<string>("ProtectedPkceVerifier")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("protected_pkce_verifier");
+
+                    b.Property<string>("RedirectUri")
+                        .IsRequired()
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)")
+                        .HasColumnName("redirect_uri");
+
+                    b.Property<Guid>("RequestedByUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("requested_by_user_id");
+
+                    b.HasKey("StateHash");
+
+                    b.HasIndex("ExpiresAtUtc")
+                        .HasDatabaseName("ix_external_calendar_oauth_transactions_expires_at_utc");
+
+                    b.ToTable("external_calendar_oauth_transactions", (string)null);
+                });
+
             modelBuilder.Entity("DomusMind.Infrastructure.Persistence.UserFamilyAccess", b =>
                 {
                     b.Property<Guid>("UserId")

@@ -243,8 +243,11 @@ public sealed class SyncExternalCalendarConnectionCommandHandlerTests
 
         public StubSyncAuthService(string? token) => _token = token;
 
+        public Task<string?> CreateAuthorizationUrlAsync(Guid familyId, Guid memberId, Guid requestedByUserId, string redirectUri, CancellationToken cancellationToken = default)
+            => Task.FromResult<string?>(null);
+
         public Task<ExternalCalendarProviderAccount> ExchangeAuthorizationCodeAsync(
-            string authorizationCode, string redirectUri, CancellationToken cancellationToken = default)
+            string authorizationCode, string state, Guid familyId, Guid memberId, Guid requestedByUserId, string redirectUri, CancellationToken cancellationToken = default)
             => throw new NotSupportedException();
 
         public Task<string?> GetAccessTokenAsync(Guid connectionId, CancellationToken cancellationToken = default)
@@ -256,8 +259,15 @@ public sealed class SyncExternalCalendarConnectionCommandHandlerTests
 
     private sealed class ThrowingSyncAuthService : IExternalCalendarAuthService
     {
+        public Task<string?> CreateAuthorizationUrlAsync(Guid familyId, Guid memberId, Guid requestedByUserId, string redirectUri, CancellationToken cancellationToken = default)
+            => Task.FromResult<string?>(null);
+
         public Task<ExternalCalendarProviderAccount> ExchangeAuthorizationCodeAsync(
             string authorizationCode,
+            string state,
+            Guid familyId,
+            Guid memberId,
+            Guid requestedByUserId,
             string redirectUri,
             CancellationToken cancellationToken = default)
             => throw new NotSupportedException();

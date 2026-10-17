@@ -54,6 +54,9 @@ public sealed class DomusMindDbContext : DbContext, IDomusMindDbContext
     public DbSet<ExternalCalendarEntry> ExternalCalendarEntries
         => Set<ExternalCalendarEntry>();
 
+    public DbSet<ExternalCalendarOAuthTransaction> ExternalCalendarOAuthTransactions
+        => Set<ExternalCalendarOAuthTransaction>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DomusMindDbContext).Assembly);
@@ -66,5 +69,7 @@ public sealed class DomusMindDbContext : DbContext, IDomusMindDbContext
     {
         Entry(connection).Property<string?>("EncryptedRefreshToken").CurrentValue = encryptedTokenCache;
         Entry(connection).Property<string?>("GrantedScopes").CurrentValue = grantedScopes;
+        Entry(connection).Property<string?>("CachedAccessToken").CurrentValue = null;
+        Entry(connection).Property<DateTime?>("AccessTokenExpiresAtUtc").CurrentValue = null;
     }
 }

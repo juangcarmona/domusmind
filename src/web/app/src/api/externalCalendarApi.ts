@@ -47,9 +47,9 @@ export interface ExternalCalendarConnectionDetail extends ExternalCalendarConnec
 
 export interface ConnectOutlookAccountRequest {
   authorizationCode: string;
+  state: string;
   redirectUri: string;
   accountDisplayLabel?: string;
-  connectState?: string;
 }
 
 export interface ConnectOutlookAccountResponse {

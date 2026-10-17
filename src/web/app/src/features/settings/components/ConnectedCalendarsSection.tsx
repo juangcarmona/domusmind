@@ -11,7 +11,7 @@ import {
 } from "../../../store/externalCalendarSlice";
 import type { ExternalCalendarConnectionDetail } from "../../../api/externalCalendarApi";
 import { ConnectionStatusBadge } from "./ConnectionStatusBadge";
-import { ConnectOutlookPanel } from "./ConnectOutlookPanel";
+import { ConnectOutlookPanel, OUTLOOK_CALLBACK_PATH } from "./ConnectOutlookPanel";
 import { CalendarFeedSelector } from "./CalendarFeedSelector";
 
 export function ConnectedCalendarsSection() {
@@ -28,7 +28,9 @@ export function ConnectedCalendarsSection() {
   // Find the member that corresponds to the currently authenticated user.
   const myMember = members.find((m) => m.isCurrentUser);
 
-  const [showConnectPanel, setShowConnectPanel] = useState(false);
+  const [showConnectPanel, setShowConnectPanel] = useState(
+    window.location.pathname === OUTLOOK_CALLBACK_PATH,
+  );
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [disconnecting, setDisconnecting] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);

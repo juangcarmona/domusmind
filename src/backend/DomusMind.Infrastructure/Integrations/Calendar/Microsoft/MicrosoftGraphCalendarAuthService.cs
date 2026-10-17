@@ -1,102 +1,205 @@
 using DomusMind.Application.Abstractions.Integrations.Calendar;
+using DomusMind.Application.Features.Calendar;
 using DomusMind.Domain.Calendar.ExternalConnections;
+using DomusMind.Infrastructure.Persistence;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
+using Microsoft.Extensions.Options;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace DomusMind.Infrastructure.Integrations.Calendar.Microsoft;
 
-/// <summary>
-/// Handles Microsoft delegated OAuth for external calendar connections.
-/// 
-/// Important:
-/// - This implementation uses MSAL user token cache persistence.
-/// - The shadow property currently named "EncryptedRefreshToken" stores the encrypted
-///   serialized MSAL user token cache, not a raw refresh token.
-/// - Access tokens are cached separately for short-circuit reads, but silent acquisition
-///   always relies on the MSAL user token cache.
-/// </summary>
+/// <summary>Owns the server-side Microsoft OAuth transaction and delegated token cache.</summary>
 public sealed class MicrosoftGraphCalendarAuthService : IExternalCalendarAuthService
 {
     private const string CachedAccessTokenProperty = "CachedAccessToken";
     private const string AccessTokenExpiresAtUtcProperty = "AccessTokenExpiresAtUtc";
     private const string EncryptedTokenCacheProperty = "EncryptedRefreshToken";
+    private const string GrantedScopesProperty = "GrantedScopes";
+    private const string CalendarReadScope = "https://graph.microsoft.com/Calendars.Read";
+    private static readonly string[] DelegatedScopes = [CalendarReadScope];
 
-    private static readonly string[] DelegatedScopes =
-    [
-        "https://graph.microsoft.com/Calendars.Read"
-    ];
-
-    private readonly DomusMind.Infrastructure.Persistence.DomusMindDbContext _dbContext;
-    private readonly IConfiguration _configuration;
+    private readonly DomusMindDbContext _dbContext;
+    private readonly MicrosoftGraphOptions _options;
+    private readonly MicrosoftTokenCacheProtector _protector;
     private readonly ILogger<MicrosoftGraphCalendarAuthService> _logger;
 
     public MicrosoftGraphCalendarAuthService(
-        DomusMind.Infrastructure.Persistence.DomusMindDbContext dbContext,
-        IConfiguration configuration,
+        DomusMindDbContext dbContext,
+        IOptions<MicrosoftGraphOptions> options,
         ILogger<MicrosoftGraphCalendarAuthService> logger)
     {
         _dbContext = dbContext;
-        _configuration = configuration;
+        _options = options.Value;
+        _protector = new MicrosoftTokenCacheProtector(_options);
         _logger = logger;
+    }
+
+    public async Task<string?> CreateAuthorizationUrlAsync(
+        Guid familyId,
+        Guid memberId,
+        Guid requestedByUserId,
+        string redirectUri,
+        CancellationToken cancellationToken = default)
+    {
+        if (!_options.IsConfigured)
+            return null;
+
+        if (!_options.IsRedirectUriAllowed(redirectUri))
+            throw new CalendarException(CalendarErrorCode.InvalidInput, "OAuth redirect URI is not allowed.");
+
+        var state = CreateRandomUrlToken(32);
+        var verifier = CreateRandomUrlToken(32);
+        var challenge = Base64UrlEncode(SHA256.HashData(Encoding.ASCII.GetBytes(verifier)));
+        var now = DateTime.UtcNow;
+
+        var expiredTransactions = await _dbContext.Set<ExternalCalendarOAuthTransaction>()
+            .Where(transaction => transaction.ExpiresAtUtc <= now)
+            .ToListAsync(cancellationToken);
+
+        if (expiredTransactions.Count > 0)
+        {
+            _dbContext.RemoveRange(expiredTransactions);
+            try
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                foreach (var expired in expiredTransactions)
+                    _dbContext.Entry(expired).State = EntityState.Detached;
+            }
+        }
+
+        _dbContext.Set<ExternalCalendarOAuthTransaction>().Add(new ExternalCalendarOAuthTransaction(
+            HashState(state),
+            requestedByUserId,
+            familyId,
+            memberId,
+            redirectUri,
+            _protector.Protect(verifier),
+            now.AddMinutes(10)));
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        var tenantId = string.IsNullOrWhiteSpace(_options.TenantId) ? "common" : _options.TenantId;
+        var authorizeUri = $"https://login.microsoftonline.com/{Uri.EscapeDataString(tenantId)}/oauth2/v2.0/authorize";
+        return QueryHelpers.AddQueryString(authorizeUri, new Dictionary<string, string?>
+        {
+            ["client_id"] = _options.ClientId,
+            ["response_type"] = "code",
+            ["redirect_uri"] = redirectUri,
+            ["scope"] = "https://graph.microsoft.com/Calendars.Read offline_access",
+            ["state"] = state,
+            ["response_mode"] = "query",
+            ["code_challenge"] = challenge,
+            ["code_challenge_method"] = "S256",
+        });
     }
 
     public async Task<ExternalCalendarProviderAccount> ExchangeAuthorizationCodeAsync(
         string authorizationCode,
+        string state,
+        Guid familyId,
+        Guid memberId,
+        Guid requestedByUserId,
         string redirectUri,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(authorizationCode))
-            throw new InvalidOperationException("Authorization code is required.");
+            throw new CalendarException(CalendarErrorCode.InvalidInput, "Authorization code is required.");
 
-        if (string.IsNullOrWhiteSpace(redirectUri))
-            throw new InvalidOperationException("OAuth redirect URI is required.");
+        if (!string.IsNullOrWhiteSpace(redirectUri) && !_options.IsRedirectUriAllowed(redirectUri))
+            throw new CalendarException(CalendarErrorCode.InvalidInput, "OAuth redirect URI is not allowed.");
 
-        var clientId = GetRequiredSetting("MicrosoftGraph:ClientId");
-        var clientSecret = GetRequiredSetting("MicrosoftGraph:ClientSecret");
-        var tenantId = _configuration["MicrosoftGraph:TenantId"] ?? "common";
+        var verifier = await ConsumeAuthorizationStateAsync(
+            state,
+            familyId,
+            memberId,
+            requestedByUserId,
+            redirectUri,
+            cancellationToken);
+
+        if (verifier is null)
+            throw new CalendarException(CalendarErrorCode.InvalidInput, "Outlook authorization request is invalid or has expired.");
 
         var tokenCacheEnvelope = new TokenCacheEnvelope();
-        var app = BuildConfidentialClient(clientId, clientSecret, tenantId, redirectUri, tokenCacheEnvelope);
+        var app = BuildConfidentialClient(redirectUri, tokenCacheEnvelope);
 
         AuthenticationResult result;
         try
         {
             result = await app
                 .AcquireTokenByAuthorizationCode(DelegatedScopes, authorizationCode)
+                .WithPkceCodeVerifier(verifier)
                 .ExecuteAsync(cancellationToken);
         }
         catch (MsalException ex)
         {
-            _logger.LogWarning("Microsoft auth code exchange failed.");
-
-            throw new InvalidOperationException(
-                "Authorization code exchange failed: " + ex.Message,
-                ex);
+            _logger.LogWarning("Microsoft authorization code exchange failed with error code {ErrorCode}.", ex.ErrorCode);
+            throw new InvalidOperationException("Authorization code exchange failed.", ex);
         }
 
         if (result.Account is null)
             throw new InvalidOperationException("Microsoft authorization succeeded but no account was returned.");
+
+        if (!MicrosoftGraphScopePolicy.HasOnlyCalendarRead(result.Scopes))
+            throw new CalendarException(CalendarErrorCode.ProviderAuthFailed, "Microsoft did not grant the required read-only calendar permission.");
 
         if (string.IsNullOrWhiteSpace(tokenCacheEnvelope.SerializedCache))
             throw new InvalidOperationException("Microsoft authorization succeeded but token cache serialization produced no data.");
 
         var providerAccountId = result.Account.HomeAccountId?.Identifier ?? result.UniqueId;
         var accountEmail = result.Account.Username ?? string.Empty;
-        var effectiveTenantId = result.TenantId;
         var grantedScopes = string.Join(" ", result.Scopes);
-
-        var encryptedSerializedTokenCache = Encrypt(tokenCacheEnvelope.SerializedCache);
 
         return new ExternalCalendarProviderAccount(
             providerAccountId,
             accountEmail,
-            effectiveTenantId,
-            encryptedSerializedTokenCache,
+            result.TenantId,
+            _protector.Protect(tokenCacheEnvelope.SerializedCache),
             grantedScopes);
+    }
+
+    internal async Task<string?> ConsumeAuthorizationStateAsync(
+        string state,
+        Guid familyId,
+        Guid memberId,
+        Guid requestedByUserId,
+        string redirectUri,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(state) || string.IsNullOrWhiteSpace(redirectUri))
+            return null;
+
+        var stateHash = HashState(state);
+        var now = DateTime.UtcNow;
+        var transaction = await _dbContext.Set<ExternalCalendarOAuthTransaction>()
+            .FirstOrDefaultAsync(candidate =>
+                candidate.StateHash == stateHash &&
+                candidate.FamilyId == familyId &&
+                candidate.MemberId == memberId &&
+                candidate.RequestedByUserId == requestedByUserId &&
+                candidate.RedirectUri == redirectUri &&
+                candidate.ExpiresAtUtc > now,
+                cancellationToken);
+
+        if (transaction is null || !_protector.TryUnprotect(transaction.ProtectedPkceVerifier, out var verifier))
+            return null;
+
+        _dbContext.Remove(transaction);
+        try
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return verifier;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return null;
+        }
     }
 
     public async Task<string?> GetAccessTokenAsync(
@@ -112,55 +215,48 @@ public sealed class MicrosoftGraphCalendarAuthService : IExternalCalendarAuthSer
         if (connection is null)
             return null;
 
-        var cachedToken = _dbContext.Entry(connection)
-            .Property<string?>(CachedAccessTokenProperty)
-            .CurrentValue;
-
-        var expiresAtUtc = _dbContext.Entry(connection)
-            .Property<DateTime?>(AccessTokenExpiresAtUtcProperty)
-            .CurrentValue;
+        var entry = _dbContext.Entry(connection);
+        var cachedToken = entry.Property<string?>(CachedAccessTokenProperty).CurrentValue;
+        var expiresAtUtc = entry.Property<DateTime?>(AccessTokenExpiresAtUtcProperty).CurrentValue;
 
         if (!string.IsNullOrWhiteSpace(cachedToken) &&
             expiresAtUtc.HasValue &&
-            expiresAtUtc.Value > DateTime.UtcNow.AddMinutes(5))
+            expiresAtUtc.Value > DateTime.UtcNow.AddMinutes(5) &&
+            _protector.TryUnprotect(cachedToken, out var accessToken))
         {
-            return cachedToken;
+            return accessToken;
         }
 
-        var encryptedSerializedTokenCache = _dbContext.Entry(connection)
-            .Property<string?>(EncryptedTokenCacheProperty)
-            .CurrentValue;
-
-        if (string.IsNullOrWhiteSpace(encryptedSerializedTokenCache))
+        if (!string.IsNullOrWhiteSpace(cachedToken))
         {
-            _logger.LogInformation("No Microsoft token cache is stored. Reconnect is required.");
+            entry.Property<string?>(CachedAccessTokenProperty).CurrentValue = null;
+            entry.Property<DateTime?>(AccessTokenExpiresAtUtcProperty).CurrentValue = null;
+        }
 
+        var protectedTokenCache = entry.Property<string?>(EncryptedTokenCacheProperty).CurrentValue;
+        if (string.IsNullOrWhiteSpace(protectedTokenCache))
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            _logger.LogInformation("No Microsoft token cache is stored for connection {ConnectionId}. Reconnect is required.", connectionId);
+            return null;
+        }
+
+        if (!_protector.TryUnprotect(protectedTokenCache, out var serializedTokenCache))
+        {
+            ClearTokenMaterial(entry);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            _logger.LogWarning("Microsoft token cache for connection {ConnectionId} is legacy, invalid, or encrypted with a different key. Reconnect is required.", connectionId);
             return null;
         }
 
         try
         {
-            var serializedTokenCache = Decrypt(encryptedSerializedTokenCache);
             var tokenCacheEnvelope = new TokenCacheEnvelope(serializedTokenCache);
-
-            var clientId = GetRequiredSetting("MicrosoftGraph:ClientId");
-            var clientSecret = GetRequiredSetting("MicrosoftGraph:ClientSecret");
-            var tenantId = _configuration["MicrosoftGraph:TenantId"] ?? "common";
-
-            // Redirect URI is not required for silent acquisition, but MSAL builder
-            // is kept otherwise identical.
-            var app = BuildConfidentialClient(
-                clientId,
-                clientSecret,
-                tenantId,
-                redirectUri: null,
-                tokenCacheEnvelope);
-
+            var app = BuildConfidentialClient(redirectUri: null, tokenCacheEnvelope);
             var account = await ResolveAccountAsync(app, connection);
             if (account is null)
             {
-                _logger.LogInformation("No cached MSAL account could be resolved. Reconnect is required.");
-
+                _logger.LogInformation("No cached MSAL account could be resolved for connection {ConnectionId}. Reconnect is required.", connectionId);
                 return null;
             }
 
@@ -171,26 +267,23 @@ public sealed class MicrosoftGraphCalendarAuthService : IExternalCalendarAuthSer
                     .AcquireTokenSilent(DelegatedScopes, account)
                     .ExecuteAsync(cancellationToken);
             }
-            catch (MsalUiRequiredException)
+            catch (MsalUiRequiredException ex)
             {
-                _logger.LogInformation("Silent Microsoft token acquisition requires reauthentication.");
-
+                _logger.LogInformation("Silent Microsoft token acquisition requires reauthentication for connection {ConnectionId}: {ErrorCode}.", connectionId, ex.ErrorCode);
                 return null;
             }
 
-            _dbContext.Entry(connection).Property<string?>(CachedAccessTokenProperty).CurrentValue = result.AccessToken;
-            _dbContext.Entry(connection).Property<DateTime?>(AccessTokenExpiresAtUtcProperty).CurrentValue = result.ExpiresOn.UtcDateTime;
-            _dbContext.Entry(connection).Property<string?>(EncryptedTokenCacheProperty).CurrentValue =
-                Encrypt(tokenCacheEnvelope.SerializedCache ?? serializedTokenCache);
+            entry.Property<string?>(CachedAccessTokenProperty).CurrentValue = _protector.Protect(result.AccessToken);
+            entry.Property<DateTime?>(AccessTokenExpiresAtUtcProperty).CurrentValue = result.ExpiresOn.UtcDateTime;
+            entry.Property<string?>(EncryptedTokenCacheProperty).CurrentValue =
+                _protector.Protect(tokenCacheEnvelope.SerializedCache ?? serializedTokenCache);
 
             await _dbContext.SaveChangesAsync(cancellationToken);
-
             return result.AccessToken;
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            _logger.LogWarning("Failed to acquire delegated Microsoft access token.");
-
+            _logger.LogWarning("Failed to acquire delegated Microsoft access token for connection {ConnectionId}: {ErrorType}.", connectionId, ex.GetType().Name);
             return null;
         }
     }
@@ -206,123 +299,70 @@ public sealed class MicrosoftGraphCalendarAuthService : IExternalCalendarAuthSer
         if (connection is null)
             return;
 
-        _dbContext.Entry(connection).Property<string?>(EncryptedTokenCacheProperty).CurrentValue = null;
-        _dbContext.Entry(connection).Property<string?>(CachedAccessTokenProperty).CurrentValue = null;
-        _dbContext.Entry(connection).Property<DateTime?>(AccessTokenExpiresAtUtcProperty).CurrentValue = null;
-
+        ClearTokenMaterial(_dbContext.Entry(connection));
+        _dbContext.Entry(connection).Property<string?>(GrantedScopesProperty).CurrentValue = null;
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     private IConfidentialClientApplication BuildConfidentialClient(
-        string clientId,
-        string clientSecret,
-        string tenantId,
         string? redirectUri,
         TokenCacheEnvelope tokenCacheEnvelope)
     {
+        var tenantId = string.IsNullOrWhiteSpace(_options.TenantId) ? "common" : _options.TenantId;
         var builder = ConfidentialClientApplicationBuilder
-            .Create(clientId)
-            .WithClientSecret(clientSecret)
-            .WithAuthority(new Uri($"https://login.microsoftonline.com/{tenantId}"))
+            .Create(_options.ClientId!)
+            .WithClientSecret(_options.ClientSecret!)
+            .WithAuthority(new Uri($"https://login.microsoftonline.com/{Uri.EscapeDataString(tenantId)}"))
             .WithLegacyCacheCompatibility(false);
 
         if (!string.IsNullOrWhiteSpace(redirectUri))
-        {
             builder = builder.WithRedirectUri(redirectUri);
-        }
 
         var app = builder.Build();
         RegisterTokenCacheSerialization(app.UserTokenCache, tokenCacheEnvelope);
         return app;
     }
 
-    private void RegisterTokenCacheSerialization(
-        ITokenCache tokenCache,
-        TokenCacheEnvelope envelope)
+    private static void RegisterTokenCacheSerialization(ITokenCache tokenCache, TokenCacheEnvelope envelope)
     {
         tokenCache.SetBeforeAccess(args =>
         {
             if (!string.IsNullOrWhiteSpace(envelope.SerializedCache))
-            {
                 args.TokenCache.DeserializeMsalV3(Encoding.UTF8.GetBytes(envelope.SerializedCache), shouldClearExistingCache: true);
-            }
         });
 
         tokenCache.SetAfterAccess(args =>
         {
-            if (!args.HasStateChanged)
-                return;
-
-            envelope.SerializedCache = Encoding.UTF8.GetString(args.TokenCache.SerializeMsalV3());
+            if (args.HasStateChanged)
+                envelope.SerializedCache = Encoding.UTF8.GetString(args.TokenCache.SerializeMsalV3());
         });
     }
 
-    private async Task<IAccount?> ResolveAccountAsync(
+    private static async Task<IAccount?> ResolveAccountAsync(
         IConfidentialClientApplication app,
         ExternalCalendarConnection connection)
     {
-        var persistedProviderAccountId = connection.ProviderAccountId;
-
-        if (string.IsNullOrWhiteSpace(persistedProviderAccountId))
+        if (string.IsNullOrWhiteSpace(connection.ProviderAccountId))
             return null;
 
-        return await app.GetAccountAsync(persistedProviderAccountId).ConfigureAwait(false);
+        return await app.GetAccountAsync(connection.ProviderAccountId).ConfigureAwait(false);
     }
 
-    private string GetRequiredSetting(string key) =>
-        _configuration[key] ?? throw new InvalidOperationException($"{key} is not configured.");
-
-    private string Encrypt(string plainText)
+    private static void ClearTokenMaterial(EntityEntry<ExternalCalendarConnection> entry)
     {
-        if (string.IsNullOrEmpty(plainText))
-            return plainText;
-
-        var keyBase64 = _configuration["MicrosoftGraph:TokenEncryptionKey"];
-        if (string.IsNullOrWhiteSpace(keyBase64))
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(plainText));
-
-        var key = Convert.FromBase64String(keyBase64);
-
-        using var aes = Aes.Create();
-        aes.Key = key;
-        aes.GenerateIV();
-
-        using var encryptor = aes.CreateEncryptor();
-        var plainBytes = Encoding.UTF8.GetBytes(plainText);
-        var cipherBytes = encryptor.TransformFinalBlock(plainBytes, 0, plainBytes.Length);
-
-        var result = new byte[aes.IV.Length + cipherBytes.Length];
-        aes.IV.CopyTo(result, 0);
-        cipherBytes.CopyTo(result, aes.IV.Length);
-
-        return Convert.ToBase64String(result);
+        entry.Property<string?>(EncryptedTokenCacheProperty).CurrentValue = null;
+        entry.Property<string?>(CachedAccessTokenProperty).CurrentValue = null;
+        entry.Property<DateTime?>(AccessTokenExpiresAtUtcProperty).CurrentValue = null;
+        entry.Property<string?>(GrantedScopesProperty).CurrentValue = null;
     }
 
-    private string Decrypt(string encryptedText)
-    {
-        if (string.IsNullOrEmpty(encryptedText))
-            return encryptedText;
+    private static string CreateRandomUrlToken(int byteCount) => Base64UrlEncode(RandomNumberGenerator.GetBytes(byteCount));
 
-        var keyBase64 = _configuration["MicrosoftGraph:TokenEncryptionKey"];
-        if (string.IsNullOrWhiteSpace(keyBase64))
-            return Encoding.UTF8.GetString(Convert.FromBase64String(encryptedText));
+    private static string Base64UrlEncode(byte[] value) =>
+        Convert.ToBase64String(value).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
-        var encryptedBytes = Convert.FromBase64String(encryptedText);
-        var key = Convert.FromBase64String(keyBase64);
-
-        using var aes = Aes.Create();
-        aes.Key = key;
-
-        var ivLength = aes.BlockSize / 8;
-        var iv = encryptedBytes[..ivLength];
-        var cipherBytes = encryptedBytes[ivLength..];
-        aes.IV = iv;
-
-        using var decryptor = aes.CreateDecryptor();
-        var plainBytes = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
-
-        return Encoding.UTF8.GetString(plainBytes);
-    }
+    private static string HashState(string state) =>
+        Convert.ToHexString(SHA256.HashData(Encoding.ASCII.GetBytes(state)));
 
     private sealed class TokenCacheEnvelope
     {
@@ -330,11 +370,30 @@ public sealed class MicrosoftGraphCalendarAuthService : IExternalCalendarAuthSer
         {
         }
 
-        public TokenCacheEnvelope(string serializedCache)
-        {
-            SerializedCache = serializedCache;
-        }
+        public TokenCacheEnvelope(string serializedCache) => SerializedCache = serializedCache;
 
         public string? SerializedCache { get; set; }
+    }
+}
+
+internal static class MicrosoftGraphScopePolicy
+{
+    private static readonly HashSet<string> NonResourceScopes = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "offline_access",
+        "openid",
+        "profile",
+    };
+
+    public static bool HasOnlyCalendarRead(IEnumerable<string> scopes)
+    {
+        var grantedGraphScopes = scopes
+            .Select(scope => scope.StartsWith("https://graph.microsoft.com/", StringComparison.OrdinalIgnoreCase)
+                ? scope["https://graph.microsoft.com/".Length..]
+                : scope)
+            .Where(scope => !NonResourceScopes.Contains(scope))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        return grantedGraphScopes.SetEquals(["Calendars.Read"]);
     }
 }

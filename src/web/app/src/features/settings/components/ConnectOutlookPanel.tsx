@@ -12,7 +12,7 @@ interface Props {
   onCancel: () => void;
 }
 
-const REDIRECT_PATH = "/settings/oauth/outlook/callback";
+export const OUTLOOK_CALLBACK_PATH = "/settings/oauth/outlook/callback";
 
 export function ConnectOutlookPanel({ familyId, memberId, onConnected, onCancel }: Props) {
   const { t } = useTranslation("settings");
@@ -23,30 +23,52 @@ export function ConnectOutlookPanel({ familyId, memberId, onConnected, onCancel 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Detect OAuth callback: if the URL contains ?code=... and we're on the callback path,
-  // complete the connection automatically.
+  // Complete only a callback initiated in this browser tab. The server binds state
+  // to the authenticated user, family, member, redirect URI and PKCE verifier.
   useEffect(() => {
     const url = new URL(window.location.href);
     const code = url.searchParams.get("code");
     const state = url.searchParams.get("state");
+    const providerError = url.searchParams.get("error");
 
-    if (!code || !window.location.pathname.includes("oauth/outlook/callback")) return;
+    if (window.location.pathname !== OUTLOOK_CALLBACK_PATH) return;
 
-    const redirectUri = `${window.location.origin}${REDIRECT_PATH}`;
-
-    // Parse state: familyId:memberId
-    const [stateFamilyId, stateMemberId] = (state ?? ":").split(":");
-    if (!stateFamilyId || !stateMemberId) return;
-
-    // Clear the query string so a reload doesn't re-submit
     window.history.replaceState({}, "", window.location.pathname);
+
+    if (providerError) {
+      if (state) sessionStorage.removeItem(`outlook-oauth:${state}`);
+      setError(tCommon("failed"));
+      return;
+    }
+
+    if (!code || !state) {
+      setError(tCommon("failed"));
+      return;
+    }
+
+    const transactionKey = `outlook-oauth:${state}`;
+    const stored = sessionStorage.getItem(transactionKey);
+    sessionStorage.removeItem(transactionKey);
+
+    if (!stored) {
+      setError(tCommon("failed"));
+      return;
+    }
+
+    let context: { familyId: string; memberId: string; redirectUri: string };
+    try {
+      context = JSON.parse(stored) as typeof context;
+    } catch {
+      setError(tCommon("failed"));
+      return;
+    }
 
     setLoading(true);
     dispatch(
       connectOutlook({
-        familyId: stateFamilyId,
-        memberId: stateMemberId,
-        body: { authorizationCode: code, redirectUri },
+        familyId: context.familyId,
+        memberId: context.memberId,
+        body: { authorizationCode: code, state, redirectUri: context.redirectUri },
       }),
     )
       .unwrap()
@@ -59,8 +81,15 @@ export function ConnectOutlookPanel({ familyId, memberId, onConnected, onCancel 
     setLoading(true);
     setError(null);
     try {
-      const redirectUri = `${window.location.origin}${REDIRECT_PATH}`;
+      const redirectUri = `${window.location.origin}${OUTLOOK_CALLBACK_PATH}`;
       const { authUrl } = await externalCalendarApi.getOutlookAuthUrl(familyId, memberId, redirectUri);
+      const state = new URL(authUrl).searchParams.get("state");
+      if (!state) throw new Error("Microsoft authorization URL did not include state.");
+
+      sessionStorage.setItem(
+        `outlook-oauth:${state}`,
+        JSON.stringify({ familyId, memberId, redirectUri }),
+      );
       // Redirect to Microsoft OAuth
       window.location.href = authUrl;
     } catch (err) {

@@ -14,6 +14,7 @@ public enum CalendarErrorCode
     ConnectionAlreadyExists,
     ConnectionSyncInProgress,
     ConnectionAuthExpired,
+    ProviderNotConfigured,
     ProviderAuthFailed,
     ProviderApiError,
 }

@@ -4,6 +4,7 @@ using DomusMind.Application.Features.Auth.GetCurrentUser;
 using DomusMind.Application.Features.Auth.Login;
 using DomusMind.Application.Features.Auth.Logout;
 using DomusMind.Application.Features.Auth.RefreshToken;
+using DomusMind.Application.Features.Auth.RegisterUser;
 using DomusMind.Application.Features.Calendar.AddEventParticipant;
 using DomusMind.Application.Features.Calendar.AddReminder;
 using DomusMind.Application.Features.Calendar.CancelEvent;
@@ -25,6 +26,7 @@ using DomusMind.Application.Features.Calendar.ScheduleEvent;
 using DomusMind.Application.Features.Calendar.SuggestEventParticipants;
 using DomusMind.Application.Features.Calendar.SyncExternalCalendarConnection;
 using DomusMind.Application.Features.Calendar.SyncMemberExternalCalendarConnections;
+using DomusMind.Application.Features.Calendar.StartOutlookAuthorization;
 using DomusMind.Application.Features.Family.AddMember;
 using DomusMind.Application.Features.Family.CompleteOnboarding;
 using DomusMind.Application.Features.Family.CreateFamily;
@@ -130,6 +132,7 @@ public static class ApplicationServices
         this IServiceCollection services)
     {
         // Auth slices
+        services.AddScoped<ICommandHandler<RegisterUserCommand, RegisterUserResponse>, RegisterUserCommandHandler>();
         services.AddScoped<ICommandHandler<LoginCommand, LoginResponse>, LoginCommandHandler>();
         services.AddScoped<ICommandHandler<RefreshTokenCommand, RefreshTokenResponse>, RefreshTokenCommandHandler>();
         services.AddScoped<ICommandHandler<ChangePasswordCommand, ChangePasswordResponse>, ChangePasswordCommandHandler>();
@@ -176,6 +179,7 @@ public static class ApplicationServices
 
         // External calendar connection slices
         services.AddScoped<ICommandHandler<ConnectOutlookAccountCommand, ExternalCalendarConnectionDetailResponse>, ConnectOutlookAccountCommandHandler>();
+        services.AddScoped<ICommandHandler<StartOutlookAuthorizationCommand, OutlookAuthorizationUrlResponse>, StartOutlookAuthorizationCommandHandler>();
         services.AddScoped<ICommandHandler<ConfigureExternalCalendarConnectionCommand, ConfigureExternalCalendarConnectionResponse>, ConfigureExternalCalendarConnectionCommandHandler>();
         services.AddScoped<ICommandHandler<SyncExternalCalendarConnectionCommand, SyncExternalCalendarConnectionResponse>, SyncExternalCalendarConnectionCommandHandler>();
         services.AddScoped<ICommandHandler<SyncMemberExternalCalendarConnectionsCommand, SyncMemberExternalCalendarConnectionsResponse>, SyncMemberExternalCalendarConnectionsCommandHandler>();
