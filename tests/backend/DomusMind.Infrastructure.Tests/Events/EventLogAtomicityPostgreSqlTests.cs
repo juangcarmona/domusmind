@@ -15,6 +15,83 @@ namespace DomusMind.Infrastructure.Tests.Events;
 public sealed class EventLogAtomicityPostgreSqlTests
 {
     [PostgreSqlFact]
+    public async Task SharedList_WhenTwoContextsEditTheSameVersion_RejectsTheStaleWrite()
+    {
+        var baseConnectionString = Environment.GetEnvironmentVariable("DOMUSMIND_TEST_POSTGRES")!;
+        var schema = $"list_concurrency_test_{Guid.NewGuid():N}";
+        var adminConnectionString = new NpgsqlConnectionStringBuilder(baseConnectionString).ConnectionString;
+        var testConnectionString = new NpgsqlConnectionStringBuilder(baseConnectionString)
+        {
+            SearchPath = schema
+        }.ConnectionString;
+
+        await using (var admin = new NpgsqlConnection(adminConnectionString))
+        {
+            await admin.OpenAsync();
+            await using var createSchema = admin.CreateCommand();
+            createSchema.CommandText = $"CREATE SCHEMA \"{schema}\"";
+            await createSchema.ExecuteNonQueryAsync();
+        }
+
+        try
+        {
+            var options = new DbContextOptionsBuilder<DomusMindDbContext>()
+                .UseNpgsql(testConnectionString)
+                .Options;
+            var familyId = FamilyId.New();
+            var listId = ListId.New();
+
+            await using (var setup = new DomusMindDbContext(options))
+            {
+                await setup.Database.EnsureCreatedAsync();
+                setup.Families.Add(Family.Create(
+                    familyId,
+                    FamilyName.Create("Concurrent list test"),
+                    "en",
+                    DateTime.UtcNow));
+                setup.Lists.Add(SharedList.Create(
+                    listId,
+                    familyId,
+                    ListName.Create("Concurrent list"),
+                    ListKind.Create("Shopping"),
+                    null,
+                    null,
+                    null,
+                    DateTime.UtcNow));
+                await setup.SaveChangesAsync();
+            }
+
+            await using var first = new DomusMindDbContext(options);
+            await using var second = new DomusMindDbContext(options);
+            var firstList = await first.Lists.Include(list => list.Items)
+                .SingleAsync(list => list.Id == listId);
+            var secondList = await second.Lists.Include(list => list.Items)
+                .SingleAsync(list => list.Id == listId);
+
+            firstList.AddItem(ListItemId.New(), ListItemName.Create("Milk"), null, null, DateTime.UtcNow);
+            secondList.AddItem(ListItemId.New(), ListItemName.Create("Bread"), null, null, DateTime.UtcNow);
+
+            await first.SaveChangesAsync();
+            await Assert.ThrowsAsync<DbUpdateConcurrencyException>(() => second.SaveChangesAsync());
+
+            await using var verification = new DomusMindDbContext(options);
+            var savedList = await verification.Lists.Include(list => list.Items)
+                .SingleAsync(list => list.Id == listId);
+            Assert.Equal(2, savedList.Version);
+            Assert.Single(savedList.Items);
+            Assert.Equal("Milk", savedList.Items.Single().Name.Value);
+        }
+        finally
+        {
+            await using var admin = new NpgsqlConnection(adminConnectionString);
+            await admin.OpenAsync();
+            await using var dropSchema = admin.CreateCommand();
+            dropSchema.CommandText = $"DROP SCHEMA IF EXISTS \"{schema}\" CASCADE";
+            await dropSchema.ExecuteNonQueryAsync();
+        }
+    }
+
+    [PostgreSqlFact]
     public async Task WriteAsync_WhenReactionFails_RollsBackAggregateAndEventLog()
     {
         var baseConnectionString = Environment.GetEnvironmentVariable("DOMUSMIND_TEST_POSTGRES")!;
