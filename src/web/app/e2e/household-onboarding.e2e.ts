@@ -133,6 +133,16 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
     await memberPage.getByLabel("Email").fill(memberEmail);
     await memberPage.getByLabel("Password").fill(memberPassword);
     await memberPage.getByRole("button", { name: "Sign in" }).click();
+    await expect(memberPage.getByRole("heading", { name: "Set your password" })).toBeVisible();
+    const memberNewPassword = `Dm-${runKey}-B8!`;
+    await memberPage.getByLabel("Temporary password").fill(memberPassword);
+    await memberPage.getByLabel("New password").fill(memberNewPassword);
+    await memberPage.getByLabel("Confirm new password").fill(memberNewPassword);
+    await memberPage.getByRole("button", { name: "Set new password" }).click();
+    await expect(memberPage.getByRole("heading", { name: "Sign in" })).toBeVisible();
+    await memberPage.getByLabel("Email").fill(memberEmail);
+    await memberPage.getByLabel("Password").fill(memberNewPassword);
+    await memberPage.getByRole("button", { name: "Sign in" }).click();
     await expect(memberPage).toHaveURL(/\/agenda(?:\?.*)?$/);
     await memberPage.goto(`/lists/${list.listId}`);
     await expect(memberPage.getByRole("textbox", { name: "Add item" })).toBeVisible();
