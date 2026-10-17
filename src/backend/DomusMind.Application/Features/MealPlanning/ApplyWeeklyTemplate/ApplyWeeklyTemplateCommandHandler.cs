@@ -72,9 +72,8 @@ public sealed class ApplyWeeklyTemplateCommandHandler
         var mealPlan = MealPlan.CreateFromTemplate(planId, familyId, command.WeekStart, template, now);
 
         _dbContext.Set<MealPlan>().Add(mealPlan);
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _eventLogWriter.WriteAsync(mealPlan.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([mealPlan], cancellationToken);
         mealPlan.ClearDomainEvents();
 
         return new ApplyWeeklyTemplateResponse(

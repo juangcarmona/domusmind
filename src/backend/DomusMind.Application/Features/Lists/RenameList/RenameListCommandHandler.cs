@@ -58,7 +58,7 @@ public sealed class RenameListCommandHandler
 
         list.Rename(newName, DateTime.UtcNow);
 
-        await _eventLogWriter.WriteAsync(list.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([list], cancellationToken);
         list.ClearDomainEvents();
         await _dbContext.SaveChangesAsync(cancellationToken);
 

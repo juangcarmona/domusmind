@@ -94,7 +94,7 @@ public sealed class ScheduleEventCommandHandler
 
         _dbContext.Set<Domain.Calendar.CalendarEvent>().Add(calendarEvent);
 
-        await _eventLogWriter.WriteAsync(calendarEvent.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([calendarEvent], cancellationToken);
         calendarEvent.ClearDomainEvents();
 
         var (date, time, endDate, endTime) = TemporalParser.FormatEventTime(eventTime);

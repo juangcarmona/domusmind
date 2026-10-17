@@ -68,7 +68,7 @@ public sealed class UpdateListItemCommandHandler
             throw new ListException(ListErrorCode.ItemNotFound, "Item not found in this list.");
         }
 
-        await _eventLogWriter.WriteAsync(list.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([list], cancellationToken);
         list.ClearDomainEvents();
         await _dbContext.SaveChangesAsync(cancellationToken);
 

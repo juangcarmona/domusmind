@@ -7,7 +7,7 @@ public class AggregateRootTests
     [Fact]
     public void RaiseDomainEvent_AddsEventToCollection()
     {
-        var aggregate = new TestAggregate(Guid.NewGuid());
+        var aggregate = new TestAggregate(new TestAggregateId(Guid.NewGuid()));
         var domainEvent = new TestDomainEvent(DateTime.UtcNow);
 
         aggregate.Publish(domainEvent);
@@ -16,9 +16,9 @@ public class AggregateRootTests
         Assert.Contains(domainEvent, aggregate.DomainEvents);
     }
 
-    private sealed class TestAggregate : AggregateRoot<Guid>
+    private sealed class TestAggregate : AggregateRoot<TestAggregateId>
     {
-        public TestAggregate(Guid id) : base(id)
+        public TestAggregate(TestAggregateId id) : base(id)
         {
         }
 
@@ -27,6 +27,8 @@ public class AggregateRootTests
             RaiseDomainEvent(domainEvent);
         }
     }
+
+    private readonly record struct TestAggregateId(Guid Value) : IAggregateIdentifier;
 
     private sealed record TestDomainEvent(DateTime OccurredAtUtc) : IDomainEvent;
 }

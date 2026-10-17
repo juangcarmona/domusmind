@@ -1,7 +1,7 @@
 namespace DomusMind.Domain.Abstractions;
 
-public abstract class AggregateRoot<TId> : Entity<TId>, IHasDomainEvents
-    where TId : notnull
+public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot
+    where TId : notnull, IAggregateIdentifier
 {
     private readonly List<IDomainEvent> _domainEvents = [];
 
@@ -10,6 +10,8 @@ public abstract class AggregateRoot<TId> : Entity<TId>, IHasDomainEvents
     }
 
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    public Guid AggregateId => Id.Value;
 
     protected void RaiseDomainEvent(IDomainEvent domainEvent)
     {

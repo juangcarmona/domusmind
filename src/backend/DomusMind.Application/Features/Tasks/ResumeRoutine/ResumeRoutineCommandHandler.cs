@@ -52,7 +52,7 @@ public sealed class ResumeRoutineCommandHandler
             throw new TasksException(TasksErrorCode.RoutineAlreadyActive, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(routine.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([routine], cancellationToken);
         routine.ClearDomainEvents();
 
         return new ResumeRoutineResponse(command.RoutineId, routine.Status.ToString());

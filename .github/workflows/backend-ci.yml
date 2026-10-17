@@ -56,6 +56,24 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: domusmind_tests
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d domusmind_tests"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DOMUSMIND_TEST_POSTGRES: Host=localhost;Port=5432;Database=domusmind_tests;Username=postgres;Password=postgres
+
     steps:
       - uses: actions/checkout@v7
 

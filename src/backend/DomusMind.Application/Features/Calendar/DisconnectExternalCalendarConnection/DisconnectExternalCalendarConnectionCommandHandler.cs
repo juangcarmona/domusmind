@@ -71,7 +71,8 @@ public sealed class DisconnectExternalCalendarConnectionCommandHandler
             _dbContext.Set<ExternalCalendarEntry>().RemoveRange(entries);
         }
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _eventLogWriter.WriteAsync([connection], cancellationToken);
+        connection.ClearDomainEvents();
 
         // Revoke stored auth material
         try
@@ -82,9 +83,6 @@ public sealed class DisconnectExternalCalendarConnectionCommandHandler
         {
             _logger.LogWarning("Failed to revoke external calendar authorization material.");
         }
-
-        await _eventLogWriter.WriteAsync(connection.DomainEvents, cancellationToken);
-        connection.ClearDomainEvents();
 
         return true;
     }

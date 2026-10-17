@@ -5,6 +5,6 @@ namespace DomusMind.Application.Abstractions.Persistence;
 public interface IEventLogWriter
 {
     Task WriteAsync(
-        IReadOnlyCollection<IDomainEvent> domainEvents,
+        IReadOnlyCollection<IAggregateRoot> aggregates,
         CancellationToken cancellationToken = default);
 }

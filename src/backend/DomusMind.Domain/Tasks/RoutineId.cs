@@ -1,6 +1,8 @@
+using DomusMind.Domain.Abstractions;
+
 namespace DomusMind.Domain.Tasks;
 
-public readonly record struct RoutineId(Guid Value)
+public readonly record struct RoutineId(Guid Value) : IAggregateIdentifier
 {
     public static RoutineId New() => new(Guid.NewGuid());
     public static RoutineId From(Guid value) => new(value);

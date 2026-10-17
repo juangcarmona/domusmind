@@ -71,9 +71,7 @@ public sealed class UpdateMealSlotCommandHandler : ICommandHandler<UpdateMealSlo
         plan.UpdateSlot(dayOfWeek, mealType, mealSourceType, recipeId, command.FreeText,
             command.Notes, command.IsOptional, command.IsLocked, now);
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        await _eventLogWriter.WriteAsync(plan.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([plan], cancellationToken);
         plan.ClearDomainEvents();
 
         var slot = plan.MealSlots.First(s => s.DayOfWeek == dayOfWeek && s.MealType == mealType);

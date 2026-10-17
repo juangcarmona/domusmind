@@ -50,7 +50,7 @@ public sealed class CreateResponsibilityDomainCommandHandler
 
         _dbContext.Set<Domain.Responsibilities.ResponsibilityDomain>().Add(domain);
 
-        await _eventLogWriter.WriteAsync(domain.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([domain], cancellationToken);
         domain.ClearDomainEvents();
 
         return new CreateResponsibilityDomainResponse(id.Value, familyId.Value, name.Value, color.Value, now);

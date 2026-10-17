@@ -56,7 +56,7 @@ public sealed class AssignSecondaryOwnerCommandHandler
             throw new ResponsibilitiesException(ResponsibilitiesErrorCode.DuplicateSecondaryOwner, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(responsibilityDomain.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([responsibilityDomain], cancellationToken);
         responsibilityDomain.ClearDomainEvents();
 
         return new AssignSecondaryOwnerResponse(command.ResponsibilityDomainId, command.MemberId);

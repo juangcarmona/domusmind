@@ -44,11 +44,9 @@ public sealed class DeleteListCommandHandler
 
         list.Delete(DateTime.UtcNow);
 
-        await _eventLogWriter.WriteAsync(list.DomainEvents, cancellationToken);
-        list.ClearDomainEvents();
-
         _dbContext.Set<SharedList>().Remove(list);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _eventLogWriter.WriteAsync([list], cancellationToken);
+        list.ClearDomainEvents();
 
         return true;
     }

@@ -97,9 +97,8 @@ public sealed class LinkMemberAccountCommandHandler
 
         // Persist the auth user and domain changes before writing events
         // so that if persistence fails no events are emitted.
-        await _authUserRepository.SaveChangesAsync(cancellationToken);
 
-        await _eventLogWriter.WriteAsync(family.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([family], cancellationToken);
         family.ClearDomainEvents();
 
         return new LinkMemberAccountResponse(

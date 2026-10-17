@@ -91,9 +91,8 @@ public sealed class CreateWeeklyTemplateCommandHandler
         }
 
         _dbContext.Set<WeeklyTemplate>().Add(template);
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _eventLogWriter.WriteAsync(template.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([template], cancellationToken);
         template.ClearDomainEvents();
 
         return new CreateWeeklyTemplateResponse(

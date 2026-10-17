@@ -62,7 +62,7 @@ public sealed class AddMemberCommandHandler : ICommandHandler<AddMemberCommand, 
             throw new FamilyException(FamilyErrorCode.MemberAlreadyExists, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(family.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([family], cancellationToken);
         family.ClearDomainEvents();
 
         return new AddMemberResponse(memberId.Value, family.Id.Value, name.Value, role.Value, now);

@@ -57,10 +57,8 @@ public sealed class DeleteRecipeCommandHandler : ICommandHandler<DeleteRecipeCom
 
         recipe.Delete();
 
-        await _eventLogWriter.WriteAsync(recipe.DomainEvents, cancellationToken);
-
         _dbContext.Set<Recipe>().Remove(recipe);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _eventLogWriter.WriteAsync([recipe], cancellationToken);
 
         return new DeleteRecipeResponse(command.RecipeId, true);
     }

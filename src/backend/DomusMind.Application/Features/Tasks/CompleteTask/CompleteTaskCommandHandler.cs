@@ -56,7 +56,7 @@ public sealed class CompleteTaskCommandHandler
             throw new TasksException(TasksErrorCode.TaskAlreadyCancelled, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(task.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([task], cancellationToken);
         task.ClearDomainEvents();
 
         return new CompleteTaskResponse(command.TaskId, task.Status.ToString());

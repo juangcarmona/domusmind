@@ -88,7 +88,7 @@ public sealed class UpdateFamilySettingsCommandHandler
 
         family.UpdateSettings(name, languageCode, command.FirstDayOfWeek, command.DateFormatPreference, now);
 
-        await _eventLogWriter.WriteAsync(family.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([family], cancellationToken);
         family.ClearDomainEvents();
 
         return new UpdateFamilySettingsResponse(

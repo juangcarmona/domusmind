@@ -93,7 +93,7 @@ public sealed class CompleteOnboardingCommandHandler
             throw new FamilyException(FamilyErrorCode.InvalidInput, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(family.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([family], cancellationToken);
         family.ClearDomainEvents();
 
         return new CompleteOnboardingResponse(

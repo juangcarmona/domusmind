@@ -62,7 +62,7 @@ public sealed class AddItemToListCommandHandler
 
         var item = list.AddItem(itemId, itemName, command.Quantity, command.Note, now);
 
-        await _eventLogWriter.WriteAsync(list.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([list], cancellationToken);
         list.ClearDomainEvents();
         await _dbContext.SaveChangesAsync(cancellationToken);
 

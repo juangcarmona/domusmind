@@ -128,8 +128,7 @@ public sealed class ConfigureExternalCalendarConnectionCommandHandler
             selectedFeedCount,
             now);
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
-        await _eventLogWriter.WriteAsync(connection.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([connection], cancellationToken);
         connection.ClearDomainEvents();
 
         return new ConfigureExternalCalendarConnectionResponse(

@@ -74,7 +74,7 @@ public sealed class UpdateRoutineCommandHandler
                 newAreaId,
                 targetMembers);
 
-            await _eventLogWriter.WriteAsync(routine.DomainEvents, cancellationToken);
+            await _eventLogWriter.WriteAsync([routine], cancellationToken);
             routine.ClearDomainEvents();
 
             return new UpdateRoutineResponse(

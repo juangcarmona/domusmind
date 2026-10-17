@@ -2,7 +2,7 @@ using DomusMind.Domain.Abstractions;
 
 namespace DomusMind.Domain.MealPlanning.ValueObjects;
 
-public readonly record struct WeeklyTemplateId(Guid Value)
+public readonly record struct WeeklyTemplateId(Guid Value) : IAggregateIdentifier
 {
     public static WeeklyTemplateId New() => new(Guid.NewGuid());
     public static WeeklyTemplateId From(Guid value) => new(value);

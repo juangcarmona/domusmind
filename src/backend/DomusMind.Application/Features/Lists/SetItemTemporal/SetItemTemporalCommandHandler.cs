@@ -67,7 +67,7 @@ public sealed class SetItemTemporalCommandHandler
             throw new ListException(ListErrorCode.InvalidInput, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(list.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([list], cancellationToken);
         list.ClearDomainEvents();
         await _dbContext.SaveChangesAsync(cancellationToken);
 

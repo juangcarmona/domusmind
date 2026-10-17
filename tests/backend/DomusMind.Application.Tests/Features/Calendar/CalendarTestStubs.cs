@@ -21,9 +21,9 @@ internal sealed class StubCalendarEventLogWriter : IEventLogWriter
 {
     public List<IDomainEvent> WrittenEvents { get; } = [];
 
-    public Task WriteAsync(IReadOnlyCollection<IDomainEvent> domainEvents, CancellationToken cancellationToken = default)
+    public Task WriteAsync(IReadOnlyCollection<IAggregateRoot> aggregates, CancellationToken cancellationToken = default)
     {
-        WrittenEvents.AddRange(domainEvents);
+        WrittenEvents.AddRange(aggregates.SelectMany(aggregate => aggregate.DomainEvents));
         return Task.CompletedTask;
     }
 }

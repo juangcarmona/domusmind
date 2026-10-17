@@ -88,7 +88,7 @@ public sealed class RescheduleEventCommandHandler
             throw new CalendarException(CalendarErrorCode.InvalidInput, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(calendarEvent.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([calendarEvent], cancellationToken);
         calendarEvent.ClearDomainEvents();
 
         var (date, time, endDate, endTime) = TemporalParser.FormatEventTime(newTime);

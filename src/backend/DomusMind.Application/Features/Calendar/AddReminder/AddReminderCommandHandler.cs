@@ -61,7 +61,7 @@ public sealed class AddReminderCommandHandler
             throw new CalendarException(CalendarErrorCode.InvalidInput, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(calendarEvent.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([calendarEvent], cancellationToken);
         calendarEvent.ClearDomainEvents();
 
         return new AddReminderResponse(command.CalendarEventId, command.MinutesBefore);

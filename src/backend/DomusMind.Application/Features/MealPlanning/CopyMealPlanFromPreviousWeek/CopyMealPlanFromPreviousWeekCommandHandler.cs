@@ -95,9 +95,8 @@ public sealed class CopyMealPlanFromPreviousWeekCommandHandler
         var newPlan = MealPlan.CopyFromPlan(planId, familyId, command.WeekStart, sourcePlan, now);
 
         _dbContext.Set<MealPlan>().Add(newPlan);
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _eventLogWriter.WriteAsync(newPlan.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([newPlan], cancellationToken);
         newPlan.ClearDomainEvents();
 
         return new CopyMealPlanFromPreviousWeekResponse(

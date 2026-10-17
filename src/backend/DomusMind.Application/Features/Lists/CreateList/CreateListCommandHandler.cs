@@ -64,7 +64,7 @@ public sealed class CreateListCommandHandler
             command.LinkedEntityId, now);
 
         _dbContext.Set<SharedList>().Add(list);
-        await _eventLogWriter.WriteAsync(list.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([list], cancellationToken);
         list.ClearDomainEvents();
         await _dbContext.SaveChangesAsync(cancellationToken);
 

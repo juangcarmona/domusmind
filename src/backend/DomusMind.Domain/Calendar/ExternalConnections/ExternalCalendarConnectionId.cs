@@ -1,6 +1,8 @@
+using DomusMind.Domain.Abstractions;
+
 namespace DomusMind.Domain.Calendar.ExternalConnections;
 
-public readonly record struct ExternalCalendarConnectionId(Guid Value)
+public readonly record struct ExternalCalendarConnectionId(Guid Value) : IAggregateIdentifier
 {
     public static ExternalCalendarConnectionId New() => new(Guid.NewGuid());
     public static ExternalCalendarConnectionId From(Guid value) => new(value);

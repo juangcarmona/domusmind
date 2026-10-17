@@ -71,7 +71,7 @@ public sealed class UpdateMemberCommandHandler : ICommandHandler<UpdateMemberCom
             throw new FamilyException(FamilyErrorCode.MemberNotFound, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(family.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([family], cancellationToken);
         family.ClearDomainEvents();
 
         return new UpdateMemberResponse(

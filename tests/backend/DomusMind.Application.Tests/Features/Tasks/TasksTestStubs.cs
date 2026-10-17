@@ -22,10 +22,10 @@ internal sealed class StubTasksEventLogWriter : IEventLogWriter
     public List<IDomainEvent> WrittenEvents { get; } = [];
 
     public Task WriteAsync(
-        IReadOnlyCollection<IDomainEvent> domainEvents,
+        IReadOnlyCollection<IAggregateRoot> aggregates,
         CancellationToken cancellationToken = default)
     {
-        WrittenEvents.AddRange(domainEvents);
+        WrittenEvents.AddRange(aggregates.SelectMany(aggregate => aggregate.DomainEvents));
         return Task.CompletedTask;
     }
 }
