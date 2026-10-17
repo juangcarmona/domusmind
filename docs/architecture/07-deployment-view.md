@@ -54,7 +54,7 @@ Keeping PostgreSQL off the host network makes the application the single entry p
 
 ### Quality and Performance Characteristics
 
-- **Single instance.** The stack runs one application replica. The external-calendar sync lease (a database-backed lease per connection) prevents overlapping syncs between the worker and user-triggered syncs, but nothing else is designed for horizontal scale-out.
+- **Single instance.** The stack runs one application replica. The external-calendar sync lease (a database-backed lease per connection) prevents overlapping syncs between the worker and user-triggered syncs. Shared-list change notices use an in-process notifier and server-sent events, so multiple application replicas would need a shared notification channel. The reverse proxy must pass `text/event-stream` responses through without buffering; clients reconnect and reload the list after a disconnect.
 - **Availability** relies on `restart: unless-stopped` for both services. Only PostgreSQL has a Compose health check; the application exposes `GET /api/system/ping` but the stack does not probe it.
 - **Upgrades** replace the image and restart; schema migration happens at startup, so an upgrade is a restart that may take longer while migrations run.
 - **Transport security** is outside the container. The pipeline calls `UseHttpsRedirection` but the container has no HTTPS listener, and forwarded-header processing is not configured, so the application sees the proxy as the client.
