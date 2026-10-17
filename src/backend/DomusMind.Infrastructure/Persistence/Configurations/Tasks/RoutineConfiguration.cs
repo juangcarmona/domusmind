@@ -1,6 +1,7 @@
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -70,7 +71,7 @@ public sealed class RoutineConfiguration : IEntityTypeConfiguration<Routine>
             schedule.Property(s => s.EndTime)
                 .HasColumnName("schedule_end_time");
 
-            schedule.Property(s => s.DaysOfWeek)
+            var daysOfWeek = schedule.Property(s => s.DaysOfWeek)
                 .HasConversion(
                     v => string.Join(",", v.Select(x => (int)x)),
                     v => string.IsNullOrWhiteSpace(v)
@@ -81,8 +82,12 @@ public sealed class RoutineConfiguration : IEntityTypeConfiguration<Routine>
                 .HasColumnName("schedule_days_of_week")
                 .HasColumnType("text")
                 .IsRequired();
+            daysOfWeek.Metadata.SetValueComparer(new ValueComparer<IReadOnlyCollection<DayOfWeek>>(
+                (current, snapshot) => current!.SequenceEqual(snapshot!),
+                value => value!.Aggregate(0, (hash, item) => HashCode.Combine(hash, item)),
+                value => value!.ToArray()));
 
-            schedule.Property(s => s.DaysOfMonth)
+            var daysOfMonth = schedule.Property(s => s.DaysOfMonth)
                 .HasConversion(
                     v => string.Join(",", v),
                     v => string.IsNullOrWhiteSpace(v)
@@ -93,6 +98,10 @@ public sealed class RoutineConfiguration : IEntityTypeConfiguration<Routine>
                 .HasColumnName("schedule_days_of_month")
                 .HasColumnType("text")
                 .IsRequired();
+            daysOfMonth.Metadata.SetValueComparer(new ValueComparer<IReadOnlyCollection<int>>(
+                (current, snapshot) => current!.SequenceEqual(snapshot!),
+                value => value!.Aggregate(0, (hash, item) => HashCode.Combine(hash, item)),
+                value => value!.ToArray()));
         });
 
         builder.OwnsMany<RoutineTargetMember>("_targetMembers", members =>
