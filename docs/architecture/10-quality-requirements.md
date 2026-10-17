@@ -46,11 +46,11 @@ Evidence: [`AddItemToListCommand.cs`](../../src/backend/DomusMind.Application/Fe
 
 ### List changes reach the whole household
 
-Not realised. The client fetches list state when a list is opened and holds it in its store; the API has no push channel (no SignalR, WebSocket or server-sent events) and the client does not poll, so another member's change appears only after a reload or navigation. The persisted event log could feed a push mechanism, but nothing consumes it (see [11 Risks and technical debt](11-risks-and-technical-debt.md)).
+The API exposes an authenticated server-sent-events stream for an open list. After a list mutation succeeds, the API sends an empty invalidation notice to subscribers; the client then reloads the detail through the existing authorized query. The stream is authorized with the same list-detail query at subscription time, and mutation handlers continue to check household access. Notifications contain no list contents. The client reconnects after a dropped stream and reloads immediately, so disconnects do not leave a list stale indefinitely.
 
 <!-- pdac:cite id="QR-LISTS-REAL-TIME-SHARING" digest="sha256:bc063af2dad51048a90d0f8d29ee7466d0d74e5ad96462900c5a476996d89455" -->
 
-Evidence: [`ListsPage.tsx`](../../src/web/app/src/features/lists/pages/ListsPage.tsx), [`package.json`](../../src/web/app/package.json) (no real-time dependency), [`Program.cs`](../../src/backend/DomusMind.Api/Program.cs) (no hub mapped).
+Evidence: [`ListsController.cs`](../../src/backend/DomusMind.Api/Controllers/ListsController.cs), [`ListChangeNotifier.cs`](../../src/backend/DomusMind.Api/Realtime/ListChangeNotifier.cs), [`useListChangeStream.ts`](../../src/web/app/src/features/lists/useListChangeStream.ts). The in-process notifier supports the documented single-application-instance deployment; a multi-instance deployment would need a shared notification channel. The product requirement defines no latency SLO, so verification asserts eventual propagation without a manual refresh and sets no product latency target.
 
 ### Low-effort meal planning
 
@@ -77,6 +77,6 @@ These scenarios evaluate the architecture against the requirements above; their 
 | Open today | A signed-in member opens the app root | Router redirects to the Agenda; one projection query returns the household picture | Met |
 | Phone-width use | A member uses the Agenda, Lists or Areas below the 768 px breakpoint | Same pages render the mobile layout over the same API and store | Met by construction; not covered by tests |
 | Sequential capture | A member adds several list items in a row | One `AddItemToList` command per item, name only | Met |
-| Shared list edit | Member A checks an item while member B has the list open | No server push or polling reaches B | Not met |
+| Shared list edit | Member A changes a list while member B has it open | The API sends an invalidation notice; B reloads the authorized detail and sees the change without refreshing the page | Met; browser journey uses two authenticated members and checks eventual visibility without setting a latency SLO |
 | Week from last week | A member copies the previous week and requests a shopping list | Two commands, each completing server-side in one request | Met; shopping-list command crosses a module boundary |
 | Spot unowned areas | A member opens Areas | One projection query returns all areas with owners | Met |

@@ -23,6 +23,7 @@ using DomusMind.Application.Features.Lists.SetItemContext;
 using DomusMind.Application.Features.Lists.RestoreList;
 using DomusMind.Application.Features.Lists.UpdateList;
 using DomusMind.Contracts.Lists;
+using DomusMind.Api.Realtime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,8 +35,13 @@ namespace DomusMind.Api.Controllers;
 public sealed class ListsController : ControllerBase
 {
     private readonly ICurrentUser _currentUser;
+    private readonly IListChangeNotifier _listChangeNotifier;
 
-    public ListsController(ICurrentUser currentUser) => _currentUser = currentUser;
+    public ListsController(ICurrentUser currentUser, IListChangeNotifier listChangeNotifier)
+    {
+        _currentUser = currentUser;
+        _listChangeNotifier = listChangeNotifier;
+    }
 
     /// <summary>Creates a new shared list for a family.</summary>
     [HttpPost]
@@ -100,6 +106,81 @@ public sealed class ListsController : ControllerBase
         catch (ListException ex) { return MapException(ex); }
     }
 
+    /// <summary>Streams list-change notices to an authorized viewer.</summary>
+    [HttpGet("{listId:guid}/events")]
+    [Produces("text/event-stream")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task StreamListChanges(
+        Guid listId,
+        [FromServices] IQueryDispatcher dispatcher,
+        CancellationToken cancellationToken)
+    {
+        using var subscription = _listChangeNotifier.Subscribe(listId);
+
+        try
+        {
+            await dispatcher.Dispatch(
+                new GetListDetailQuery(listId, _currentUser.UserId!.Value),
+                cancellationToken);
+        }
+        catch (ListException ex)
+        {
+            Response.StatusCode = ex.Code switch
+            {
+                ListErrorCode.ListNotFound => StatusCodes.Status404NotFound,
+                ListErrorCode.AccessDenied => StatusCodes.Status403Forbidden,
+                _ => StatusCodes.Status400BadRequest,
+            };
+            return;
+        }
+
+        Response.StatusCode = StatusCodes.Status200OK;
+        Response.ContentType = "text/event-stream";
+        Response.Headers.CacheControl = "no-cache";
+        Response.Headers["X-Accel-Buffering"] = "no";
+        await Response.WriteAsync("event: refresh\ndata: {}\n\n", cancellationToken);
+        await Response.Body.FlushAsync(cancellationToken);
+
+        var changesReady = subscription.Changes.WaitToReadAsync(cancellationToken).AsTask();
+        while (true)
+        {
+            var heartbeat = Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
+            var completed = await Task.WhenAny(changesReady, heartbeat);
+            if (completed == heartbeat)
+            {
+                try
+                {
+                    await dispatcher.Dispatch(
+                        new GetListDetailQuery(listId, _currentUser.UserId!.Value),
+                        cancellationToken);
+                }
+                catch (ListException)
+                {
+                    await Response.WriteAsync("event: closed\ndata: {}\n\n", cancellationToken);
+                    await Response.Body.FlushAsync(cancellationToken);
+                    return;
+                }
+
+                await Response.WriteAsync(": keep-alive\n\n", cancellationToken);
+                await Response.Body.FlushAsync(cancellationToken);
+                continue;
+            }
+
+            if (!await changesReady)
+                break;
+
+            while (subscription.Changes.TryRead(out _))
+            {
+                await Response.WriteAsync("event: refresh\ndata: {}\n\n", cancellationToken);
+                await Response.Body.FlushAsync(cancellationToken);
+            }
+
+            changesReady = subscription.Changes.WaitToReadAsync(cancellationToken).AsTask();
+        }
+    }
+
     /// <summary>Adds a new item to a shared list.</summary>
     [HttpPost("{listId:guid}/items")]
     [ProducesResponseType(typeof(AddItemToListResponse), StatusCodes.Status201Created)]
@@ -113,10 +194,12 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            var response = await dispatcher.Dispatch(
+            var response = await DispatchListCommand(
+                dispatcher,
                 new AddItemToListCommand(
                     listId, request.Name, request.Quantity, request.Note,
                     null, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return Created($"/api/shared-lists/{listId}/items/{response.ItemId}", response);
         }
@@ -135,9 +218,11 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            var response = await dispatcher.Dispatch(
+            var response = await DispatchListCommand(
+                dispatcher,
                 new ToggleListItemCommand(
                     listId, itemId, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return Ok(response);
         }
@@ -158,9 +243,11 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            var response = await dispatcher.Dispatch(
+            var response = await DispatchListCommand(
+                dispatcher,
                 new UpdateListItemCommand(
                     listId, itemId, request.Name, request.Quantity, request.Note, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return Ok(response);
         }
@@ -179,8 +266,10 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            await dispatcher.Dispatch(
+            await DispatchListCommand(
+                dispatcher,
                 new RemoveListItemCommand(listId, itemId, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return NoContent();
         }
@@ -210,8 +299,10 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            var response = await dispatcher.Dispatch(
+            var response = await DispatchListCommand(
+                dispatcher,
                 new LinkListCommand(listId, request.LinkedEntityType, request.LinkedEntityId, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return Ok(response);
         }
@@ -230,8 +321,10 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            await dispatcher.Dispatch(
+            await DispatchListCommand(
+                dispatcher,
                 new UnlinkListCommand(listId, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return NoContent();
         }
@@ -294,8 +387,10 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            var response = await dispatcher.Dispatch(
+            var response = await DispatchListCommand(
+                dispatcher,
                 new RenameListCommand(listId, request.Name, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return Ok(response);
         }
@@ -314,8 +409,10 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            await dispatcher.Dispatch(
+            await DispatchListCommand(
+                dispatcher,
                 new DeleteListCommand(listId, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return NoContent();
         }
@@ -336,8 +433,10 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            await dispatcher.Dispatch(
+            await DispatchListCommand(
+                dispatcher,
                 new ReorderListItemsCommand(listId, request.ItemIds, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return NoContent();
         }
@@ -358,7 +457,8 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            var response = await dispatcher.Dispatch(
+            var response = await DispatchListCommand(
+                dispatcher,
                 new UpdateListCommand(
                     listId,
                     request.Name,
@@ -370,6 +470,7 @@ public sealed class ListsController : ControllerBase
                     request.Color,
                     request.ClearColor,
                     _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return Ok(response);
         }
@@ -389,8 +490,10 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            await dispatcher.Dispatch(
+            await DispatchListCommand(
+                dispatcher,
                 new ArchiveListCommand(listId, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return NoContent();
         }
@@ -410,8 +513,10 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            await dispatcher.Dispatch(
+            await DispatchListCommand(
+                dispatcher,
                 new RestoreListCommand(listId, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return NoContent();
         }
@@ -433,8 +538,10 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            var response = await dispatcher.Dispatch(
+            var response = await DispatchListCommand(
+                dispatcher,
                 new SetItemImportanceCommand(listId, itemId, request.Importance, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return Ok(response);
         }
@@ -456,10 +563,12 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            var response = await dispatcher.Dispatch(
+            var response = await DispatchListCommand(
+                dispatcher,
                 new SetItemTemporalCommand(
                     listId, itemId, request.DueDate, request.Reminder, request.Repeat,
                     _currentUser.UserId!.Value, request.ClearDueDate, request.ClearReminder, request.ClearRepeat),
+                listId,
                 cancellationToken);
             return Ok(response);
         }
@@ -479,8 +588,10 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            var response = await dispatcher.Dispatch(
+            var response = await DispatchListCommand(
+                dispatcher,
                 new ClearItemTemporalCommand(listId, itemId, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return Ok(response);
         }
@@ -502,11 +613,24 @@ public sealed class ListsController : ControllerBase
     {
         try
         {
-            var response = await dispatcher.Dispatch(
+            var response = await DispatchListCommand(
+                dispatcher,
                 new SetItemContextCommand(listId, itemId, request.ItemAreaId, request.TargetMemberId, _currentUser.UserId!.Value),
+                listId,
                 cancellationToken);
             return Ok(response);
         }
         catch (ListException ex) { return MapException(ex); }
+    }
+
+    private async Task<TResponse> DispatchListCommand<TResponse>(
+        ICommandDispatcher dispatcher,
+        ICommand<TResponse> command,
+        Guid listId,
+        CancellationToken cancellationToken)
+    {
+        var response = await dispatcher.Dispatch(command, cancellationToken);
+        _listChangeNotifier.Publish(listId);
+        return response;
     }
 }

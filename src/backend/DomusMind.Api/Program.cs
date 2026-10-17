@@ -6,6 +6,7 @@ using DomusMind.Infrastructure.Languages;
 using DomusMind.Infrastructure.Messaging;
 using DomusMind.Infrastructure.Persistence;
 using DomusMind.Infrastructure.Integrations.Calendar.Microsoft;
+using DomusMind.Api.Realtime;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddSingleton<IListChangeNotifier, ListChangeNotifier>();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddDomusMindAuthentication(builder.Configuration);
@@ -36,6 +38,19 @@ app.UseExceptionHandler(errorApp =>
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+        if (exception is DbUpdateConcurrencyException)
+        {
+            logger.LogInformation("Concurrent update rejected for a versioned resource");
+            context.Response.StatusCode = StatusCodes.Status409Conflict;
+            await context.Response.WriteAsJsonAsync(new
+            {
+                code = "concurrency_conflict",
+                error = "This list changed in another session. Refresh and retry.",
+                traceId = context.TraceIdentifier,
+            });
+            return;
+        }
 
         if (exception is HandlerResolutionException resolutionException)
         {

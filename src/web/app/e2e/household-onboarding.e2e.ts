@@ -108,5 +108,82 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
     await expect(modal.getByRole("heading", { name: "Share these credentials" })).toBeVisible();
     await expect(modal.getByText(`member-${runKey}@example.test`)).toBeVisible();
     await expect(modal.locator("strong").last()).not.toBeEmpty();
+
+    const memberEmail = `member-${runKey}@example.test`;
+    const memberPassword = await modal.locator("strong").last().innerText();
+    const accessToken = await page.evaluate(() => localStorage.getItem("dm_access_token"));
+    expect(accessToken).toBeTruthy();
+    const familyResponse = await page.request.get("/api/families/mine", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    expect(familyResponse.ok()).toBeTruthy();
+    const family = await familyResponse.json() as { familyId: string };
+    const listResponse = await page.request.post("/api/shared-lists", {
+      headers: { Authorization: `Bearer ${accessToken}` },
+      data: { familyId: family.familyId, name: `Live list ${runKey.slice(0, 8)}`, kind: "General" },
+    });
+    expect(listResponse.status()).toBe(201);
+    const list = await listResponse.json() as { listId: string };
+
+    const memberContext = await browser.newContext({
+      baseURL: testInfo.project.use.baseURL as string,
+    });
+    const memberPage = await memberContext.newPage();
+    await memberPage.goto("/");
+    await memberPage.getByLabel("Email").fill(memberEmail);
+    await memberPage.getByLabel("Password").fill(memberPassword);
+    await memberPage.getByRole("button", { name: "Sign in" }).click();
+    await expect(memberPage.getByRole("heading", { name: "Set your password" })).toBeVisible();
+    const memberNewPassword = `Dm-${runKey}-B8!`;
+    await memberPage.getByLabel("Temporary password").fill(memberPassword);
+    await memberPage.getByLabel("New password", { exact: true }).fill(memberNewPassword);
+    await memberPage.getByLabel("Confirm new password").fill(memberNewPassword);
+    await memberPage.getByRole("button", { name: "Set new password" }).click();
+    await expect(memberPage.getByRole("heading", { name: "Sign in" })).toBeVisible();
+    await memberPage.getByLabel("Email").fill(memberEmail);
+    await memberPage.getByLabel("Password").fill(memberNewPassword);
+    await memberPage.getByRole("button", { name: "Sign in" }).click();
+    await expect(memberPage).toHaveURL(/\/agenda(?:\?.*)?$/);
+    await memberPage.goto(`/lists/${list.listId}`);
+    await expect(memberPage.getByRole("textbox", { name: "Add item" })).toBeVisible();
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(`/lists/${list.listId}`);
+    await expect(page.getByRole("textbox", { name: "Add item" })).toBeVisible();
+
+    await test.step("propagate an added item to the other open browser without refresh", async () => {
+      const addItem = page.getByRole("textbox", { name: "Add item" });
+      await addItem.fill("Apples");
+      await addItem.press("Enter");
+      await expect(memberPage.getByText("Apples", { exact: true })).toBeVisible();
+    });
+
+    await test.step("propagate an item update to the other open browser", async () => {
+      const detailResponse = await page.request.get(`/api/shared-lists/${list.listId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      expect(detailResponse.ok()).toBeTruthy();
+      const detail = await detailResponse.json() as {
+        items: Array<{ itemId: string; name: string; quantity: string | null; note: string | null }>;
+      };
+      const item = detail.items.find((candidate) => candidate.name === "Apples");
+      if (!item) throw new Error("The added item was not returned by the list detail query.");
+      const updateResponse = await page.request.patch(
+        `/api/shared-lists/${list.listId}/items/${item.itemId}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          data: { name: "Apples washed", quantity: item.quantity, note: item.note },
+        },
+      );
+      expect(updateResponse.status()).toBe(200);
+      await expect(memberPage.getByText("Apples washed", { exact: true })).toBeVisible();
+    });
+
+    await test.step("propagate a checked item to the other open browser", async () => {
+      const memberRow = memberPage.locator(".li-row").filter({ hasText: "Apples washed" });
+      await memberRow.getByRole("button", { name: "Mark complete" }).click();
+      await expect(page.getByRole("button", { name: /Show completed \(1\)/ })).toBeVisible();
+    });
+
+    await memberContext.close();
   });
 });

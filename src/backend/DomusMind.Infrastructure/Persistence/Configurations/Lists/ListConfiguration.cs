@@ -58,6 +58,12 @@ public sealed class SharedListConfiguration : IEntityTypeConfiguration<SharedLis
             .HasColumnName("created_at_utc")
             .IsRequired();
 
+        builder.Property(l => l.Version)
+            .HasColumnName("version")
+            .HasDefaultValue(1L)
+            .IsConcurrencyToken()
+            .IsRequired();
+
         builder.Property(l => l.IsArchived)
             .HasColumnName("is_archived")
             .HasDefaultValue(false)
