@@ -63,15 +63,7 @@ public sealed class ExternalCalendarRefreshWorker : BackgroundService
 
         var now = DateTime.UtcNow;
 
-        var dueConnections = await dbContext
-            .Set<ExternalCalendarConnection>()
-            .AsNoTracking()
-            .Where(c => c.ScheduledRefreshEnabled &&
-                        c.Status != ExternalCalendarConnectionStatus.Disconnected &&
-                        c.Status != ExternalCalendarConnectionStatus.AuthExpired &&
-                        (c.NextScheduledSyncUtc == null || c.NextScheduledSyncUtc <= now) &&
-                        (c.SyncLeaseId == null || c.SyncLeaseExpiresAtUtc <= now))
-            .Take(_options.BatchSize)
+        var dueConnections = await SelectDueConnectionBatch(dbContext, now, _options.BatchSize)
             .Select(c => new { c.Id.Value, c.FamilyId, c.MemberId })
             .ToListAsync(cancellationToken);
 
@@ -110,5 +102,24 @@ public sealed class ExternalCalendarRefreshWorker : BackgroundService
                 _logger.LogWarning(ex, "Background sync failed for connection {ConnectionId}", conn.Value);
             }
         }
+    }
+
+    internal static IQueryable<ExternalCalendarConnection> SelectDueConnectionBatch(
+        DomusMind.Infrastructure.Persistence.DomusMindDbContext dbContext,
+        DateTime now,
+        int batchSize)
+    {
+        return dbContext
+            .Set<ExternalCalendarConnection>()
+            .AsNoTracking()
+            .Where(c => c.ScheduledRefreshEnabled &&
+                        c.Status != ExternalCalendarConnectionStatus.Disconnected &&
+                        c.Status != ExternalCalendarConnectionStatus.AuthExpired &&
+                        (c.NextScheduledSyncUtc == null || c.NextScheduledSyncUtc <= now) &&
+                        (c.SyncLeaseId == null || c.SyncLeaseExpiresAtUtc <= now))
+            .OrderBy(c => c.NextScheduledSyncUtc.HasValue)
+            .ThenBy(c => c.NextScheduledSyncUtc)
+            .ThenBy(c => c.Id.Value)
+            .Take(batchSize);
     }
 }
