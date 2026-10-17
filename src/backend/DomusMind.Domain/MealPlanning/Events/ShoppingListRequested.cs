@@ -6,5 +6,7 @@ public sealed record ShoppingListRequested(
     Guid Id,
     Guid MealPlanId,
     Guid FamilyId,
+    Guid ShoppingListId,
+    string ShoppingListName,
     DateTime OccurredAtUtc
 ) : IDomainEvent;

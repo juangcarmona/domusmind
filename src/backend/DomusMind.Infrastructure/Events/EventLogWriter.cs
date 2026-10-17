@@ -1,19 +1,25 @@
 using System.Diagnostics;
 using System.Text.Json;
+using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Persistence;
 using DomusMind.Domain.Abstractions;
 using DomusMind.Infrastructure.Persistence;
 using EventLogRecord = DomusMind.Infrastructure.Persistence.EventLogEntry;
+using Microsoft.EntityFrameworkCore;
 
 namespace DomusMind.Infrastructure.Events;
 
 public sealed class EventLogWriter : IEventLogWriter
 {
     private readonly DomusMindDbContext _dbContext;
+    private readonly IDomainEventDispatcher? _domainEventDispatcher;
 
-    public EventLogWriter(DomusMindDbContext dbContext)
+    public EventLogWriter(
+        DomusMindDbContext dbContext,
+        IDomainEventDispatcher? domainEventDispatcher = null)
     {
         _dbContext = dbContext;
+        _domainEventDispatcher = domainEventDispatcher;
     }
 
     public async Task WriteAsync(
@@ -29,8 +35,39 @@ public sealed class EventLogWriter : IEventLogWriter
             .SelectMany(aggregate => aggregate.DomainEvents.Select(domainEvent => ToEntry(aggregate, domainEvent)))
             .ToList();
 
-        _dbContext.EventLog.AddRange(entries);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        var domainEvents = entries.Count == 0
+            ? Array.Empty<IDomainEvent>()
+            : aggregates.SelectMany(aggregate => aggregate.DomainEvents).ToArray();
+        var ownsTransaction = _domainEventDispatcher is not null
+            && _dbContext.Database.IsRelational()
+            && _dbContext.Database.CurrentTransaction is null;
+        var transaction = ownsTransaction
+            ? await _dbContext.Database.BeginTransactionAsync(cancellationToken)
+            : null;
+
+        try
+        {
+            _dbContext.EventLog.AddRange(entries);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            if (_domainEventDispatcher is not null)
+                await _domainEventDispatcher.Dispatch(domainEvents, cancellationToken);
+
+            if (transaction is not null)
+                await transaction.CommitAsync(cancellationToken);
+        }
+        catch
+        {
+            if (transaction is not null)
+                await transaction.RollbackAsync(CancellationToken.None);
+
+            throw;
+        }
+        finally
+        {
+            if (transaction is not null)
+                await transaction.DisposeAsync();
+        }
     }
 
     private static EventLogRecord ToEntry(IAggregateRoot aggregate, IDomainEvent domainEvent)

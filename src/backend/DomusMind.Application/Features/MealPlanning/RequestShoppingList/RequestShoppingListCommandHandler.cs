@@ -4,7 +4,6 @@ using DomusMind.Application.Abstractions.Security;
 using DomusMind.Contracts.MealPlanning;
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Lists;
-using DomusMind.Domain.Lists.ValueObjects;
 using DomusMind.Domain.MealPlanning.Entities;
 using DomusMind.Domain.MealPlanning.Enums;
 using DomusMind.Domain.MealPlanning.ValueObjects;
@@ -49,75 +48,30 @@ public sealed class RequestShoppingListCommandHandler
         if (plan.FamilyId != FamilyId.From(command.FamilyId))
             throw new InvalidOperationException("Meal plan does not belong to this family.");
 
-        var recipeSlots = plan.MealSlots
-            .Where(s => s.MealSourceType == MealSourceType.Recipe && s.RecipeId.HasValue)
-            .Select(s => s.RecipeId!.Value)
-            .Distinct()
-            .ToList();
-
-        if (recipeSlots.Count == 0)
+        if (!plan.MealSlots.Any(s => s.MealSourceType == MealSourceType.Recipe && s.RecipeId.HasValue))
             throw new InvalidOperationException("Cannot derive a shopping list: no recipe slots are assigned.");
 
-        var recipes = await _dbContext.Set<Recipe>()
-            .Include(r => r.Ingredients)
-            .AsNoTracking()
-            .Where(r => recipeSlots.Contains(r.Id))
-            .ToListAsync(cancellationToken);
-
-        // Consolidate ingredients: group by name+unit, sum quantities
-        var consolidated = recipes
-            .SelectMany(r => r.Ingredients)
-            .GroupBy(i => (Name: i.Name.ToLowerInvariant(), Unit: (i.Unit ?? string.Empty).ToLowerInvariant()))
-            .Select(g => new
-            {
-                Name = g.First().Name,
-                Unit = g.First().Unit,
-                Quantity = g.Any(i => i.Quantity.HasValue)
-                    ? g.Where(i => i.Quantity.HasValue).Sum(i => i.Quantity!.Value)
-                    : (decimal?)null
-            })
-            .ToList();
-
         var now = DateTime.UtcNow;
-        var familyId = FamilyId.From(command.FamilyId);
-
         var listName = !string.IsNullOrWhiteSpace(command.ShoppingListName)
             ? command.ShoppingListName
             : $"Shopping list - week of {plan.WeekStart:yyyy-MM-dd}";
 
         var listId = ListId.New();
-        var sharedList = SharedList.Create(
-            listId,
-            familyId,
-            ListName.Create(listName),
-            ListKind.Create("shopping"),
-            areaId: null,
-            linkedEntityType: "MealPlan",
-            linkedEntityId: command.MealPlanId,
-            createdAtUtc: now);
+        plan.RequestShoppingList(listId.Value, listName, now);
 
-        foreach (var item in consolidated)
-        {
-            var quantity = item.Quantity.HasValue
-                ? $"{item.Quantity.Value}{(string.IsNullOrEmpty(item.Unit) ? "" : " " + item.Unit)}"
-                : null;
-
-            sharedList.AddItem(ListItemId.New(), ListItemName.Create(item.Name), quantity, null, now);
-        }
-
-        _dbContext.Set<SharedList>().Add(sharedList);
-
-        // Record the shopping list reference on the meal plan
-        plan.RecordShoppingListCreated(listId.Value, now);
-
-        await _eventLogWriter.WriteAsync([sharedList, plan], cancellationToken);
-        sharedList.ClearDomainEvents();
+        await _eventLogWriter.WriteAsync([plan], cancellationToken);
         plan.ClearDomainEvents();
+
+        var itemCount = await _dbContext.Set<SharedList>()
+            .AsNoTracking()
+            .Where(list => list.Id == listId)
+            .Select(list => list.Items.Count)
+            .SingleAsync(cancellationToken);
 
         return new RequestShoppingListResponse(
             plan.Id.Value,
             listId.Value,
             listName,
-            sharedList.Items.Count);
+            itemCount);
     }
 }

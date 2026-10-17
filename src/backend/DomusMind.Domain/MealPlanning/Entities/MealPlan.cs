@@ -186,24 +186,18 @@ public sealed class MealPlan : AggregateRoot<MealPlanId>
             RaiseDomainEvent(new MealSlotAssigned(Guid.NewGuid(), Id.Value, dayOfWeek, mealType, mealSourceType, recipeId?.Value, freeText, updatedAtUtc));
     }
 
-    public void RecordShoppingListCreated(Guid shoppingListId, DateTime now)
-    {
-        ShoppingListId = shoppingListId;
-        ShoppingListVersion++;
-        LastDerivedAt = now;
-        UpdatedAtUtc = now;
-    }
-
-    public void RequestShoppingList(DateTime now)
+    public void RequestShoppingList(Guid shoppingListId, string shoppingListName, DateTime now)
     {
         var hasRecipeSlot = _mealSlots.Any(s => s.MealSourceType == MealSourceType.Recipe && s.RecipeId.HasValue);
         if (!hasRecipeSlot)
             throw new InvalidOperationException("Cannot derive a shopping list: no recipe slots are assigned.");
 
+        ShoppingListId = shoppingListId;
         ShoppingListVersion++;
         LastDerivedAt = now;
         UpdatedAtUtc = now;
 
-        RaiseDomainEvent(new ShoppingListRequested(Guid.NewGuid(), Id.Value, FamilyId.Value, now));
+        RaiseDomainEvent(new ShoppingListRequested(
+            Guid.NewGuid(), Id.Value, FamilyId.Value, shoppingListId, shoppingListName, now));
     }
 }

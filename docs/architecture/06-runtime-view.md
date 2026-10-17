@@ -21,6 +21,8 @@ sequenceDiagram
     participant Auth as FamilyAuthorizationService
     participant Agg as CalendarEvent aggregate
     participant ELW as EventLogWriter
+    participant DD as DomainEventDispatcher
+    participant EH as DomainEventHandler
     participant DB as DomusMind database
 
     Web->>Ctl: POST with bearer token
@@ -30,8 +32,14 @@ sequenceDiagram
     Auth->>DB: read user-to-household access grant
     H->>Agg: Create(...) raises EventScheduled
     H->>H: stage aggregate in DbContext
-    H->>ELW: WriteAsync(aggregate.DomainEvents)
-    ELW->>DB: SaveChanges (aggregate row and event log rows)
+    H->>ELW: WriteAsync([aggregate])
+    ELW->>DB: Begin transaction, save aggregate and event-log rows
+    ELW->>DD: Dispatch the persisted domain events
+    opt matching event handler registered
+        DD->>EH: Resolve IDomainEventHandler from DI
+        EH->>DB: Save reaction aggregate and its event-log rows
+    end
+    ELW->>DB: Commit transaction after every reaction succeeds
     H->>Agg: ClearDomainEvents
     H-->>Ctl: Contracts response
     Ctl-->>Web: 2xx JSON
@@ -40,8 +48,8 @@ sequenceDiagram
 ### Notable Interactions
 
 - The controller adds only the authenticated user's id to the command; the handler decides access to the household and enforces it itself. There is no dispatcher pipeline: validation, authorization and mapping happen inside the handler.
-- One handler changes one aggregate and writes the events that aggregate raised to the append-only event log in the same database ([ADR-0008](../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)). The event log is the only consumer of domain events at run time.
-- The sequence shows the common persistence order, in which the event log writer's `SaveChanges` commits aggregate and events together. Some handlers save the aggregate first and write the events in a second `SaveChanges`, so a failure between the two leaves a committed state change with no logged event. Which handlers do this, and which log columns are not yet populated, is owned by [section 08](08-crosscutting-concepts.md#domain-events-and-the-event-log).
+- The event-log writer saves aggregate state and event rows before dispatching the events through the internal dispatcher. In PostgreSQL it holds the transaction open until all synchronous reactions and their event-log writes succeed; a failure rolls back the originating aggregate, event rows and reaction aggregates together.
+- Handlers clear their buffered events after the writer returns. The dispatcher runs registered handlers in the same request and DbContext scope; it does not add a broker or background worker.
 
 Queries follow the same shape through `QueryDispatcher` to a query handler that reads with `AsNoTracking()` projections and returns a `Contracts` model; they write nothing.
 
@@ -51,37 +59,44 @@ Handlers throw a module-specific exception (for example `CalendarException` with
 
 ## Cross-module reaction: shopping list from a meal plan
 
-The intended collaboration is event-driven: Meal Planning would emit a fact, and Lists would react by creating a list in its own command ([ADR-0008](../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)). That path is not wired: `IDomainEventDispatcher` is registered but never invoked and no `IDomainEventHandler` implementation exists, so no module reacts to another module's events today. The derivation runs synchronously inside one Meal Planning command instead.
+Meal Planning emits `ShoppingListRequested` after checking household access and confirming that the plan contains a recipe slot. The Lists module owns the reaction and creates the `SharedList` from the event ([ADR-0008](../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)).
 
 ```mermaid
 sequenceDiagram
     participant Ctl as MealPlansController
     participant H as RequestShoppingList handler
     participant MP as MealPlan aggregate
+    participant DD as DomainEventDispatcher
+    participant LH as Lists reaction handler
     participant SL as SharedList aggregate
     participant ELW as EventLogWriter
     participant DB as DomusMind database
 
     Ctl->>H: Dispatch(RequestShoppingListCommand)
-    H->>DB: load MealPlan with slots, recipes with ingredients
-    H->>H: consolidate ingredients by name and unit
-    H->>SL: SharedList.Create(kind shopping, linked to MealPlan) and AddItem per ingredient
-    H->>MP: RecordShoppingListCreated(listId)
-    H->>DB: SaveChanges (new SharedList and updated MealPlan)
-    H->>ELW: WriteAsync(SharedList events)
-    H->>ELW: WriteAsync(MealPlan events)
+    H->>DB: load MealPlan with slots; authorize family
+    H->>MP: Record list id, derivation version and ShoppingListRequested
+    H->>ELW: WriteAsync([MealPlan])
+    ELW->>DB: Begin transaction; save MealPlan and event_log
+    ELW->>DD: Dispatch ShoppingListRequested
+    DD->>LH: invoke Lists-owned handler
+    LH->>DB: load MealPlan slots and recipes with ingredients
+    LH->>LH: consolidate ingredients by name and unit
+    LH->>SL: Create SharedList with event's stable list id; add items
+    LH->>ELW: WriteAsync([SharedList])
+    ELW->>DB: save SharedList and its event_log rows in same transaction
+    ELW->>DB: commit after reaction succeeds
     H-->>Ctl: plan id, list id, item count
 ```
 
 ### Notable Interactions
 
-- The new list is a regular `SharedList` from the moment it exists and is linked back to the meal plan only through its untyped link fields; after creation Meal Planning keeps a reference to it and has no further interaction with it.
+- The new list is a regular `SharedList` from the moment it exists and is linked back to the meal plan through its untyped link fields. Meal Planning stores the requested list id and derivation version; Lists owns creation and item contents.
   <!-- pdac:cite id="BR-MEALS-SHOPPING-LIST-NEW-EACH-TIME" digest="sha256:66bbb87ee56438054657395a8491fb49c3b1c8b4ded3b5451c8c3933b50f08e1" -->
-- The command creates an aggregate of the Lists module and changes a MealPlan in one transaction, which departs from the one-aggregate-per-command rule and from event-only collaboration. Creating a list linked to a plan (`Features/Lists/CreateLinkedListForEvent`) reads the Calendar aggregate directly but changes only the list.
+- A repeated delivery uses the same list id from the event. The Lists handler finds the existing list and returns without creating duplicate rows or events.
 
 ### Failure Behavior
 
-The aggregates are committed together; the two event log writes follow in separate `SaveChanges` calls, so a failure there leaves both state changes committed without their logged events. A plan with no recipe slots is rejected before anything is written.
+The originating MealPlan, `ShoppingListRequested` row, new `SharedList`, and its event rows commit together in PostgreSQL. If the Lists reaction fails, the transaction rolls back and the command can be retried without a partial list or a bumped derivation version. A plan with no recipe slots is rejected before anything is written.
 
 ## Agenda read projection
 

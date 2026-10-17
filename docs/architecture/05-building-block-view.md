@@ -120,7 +120,7 @@ flowchart TB
     Lists --> Resp
 ```
 
-Arrows are domain-level references and point at the module whose identifier type is used. In the domain project, modules reference each other only through strongly typed identifiers (`FamilyId`, `MemberId`, `ResponsibilityDomainId`); no aggregate holds or changes another module's aggregate. References to Calendar, Lists and Meal Planning entities from other modules (a list linked to a plan, a shopping list linked to a meal plan) are stored as untyped link fields, so these modules have no domain-level dependency on each other. Each command handler changes one aggregate and cross-module reactions go through domain events ([ADR-0008](../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)); [section 06](06-runtime-view.md) shows where the current handlers depart from that rule.
+Arrows are domain-level references and point at the module whose identifier type is used. In the domain project, modules reference each other only through strongly typed identifiers (`FamilyId`, `MemberId`, `ResponsibilityDomainId`); no aggregate holds or changes another module's aggregate. References to Calendar, Lists and Meal Planning entities from other modules (a list linked to a plan, a shopping list linked to a meal plan) are stored as untyped link fields, so these modules have no domain-level dependency on each other. Each command handler changes one aggregate and cross-module reactions go through domain events ([ADR-0008](../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)). The shopping-list derivation is the first runtime reaction; [section 06](06-runtime-view.md) describes it.
 
 | Module | Architectural responsibility | Aggregate roots | Source location |
 | --- | --- | --- | --- |
