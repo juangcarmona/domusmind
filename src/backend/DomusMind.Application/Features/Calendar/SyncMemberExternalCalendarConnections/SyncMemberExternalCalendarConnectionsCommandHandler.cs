@@ -72,7 +72,7 @@ public sealed class SyncMemberExternalCalendarConnectionsCommandHandler
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
-                _logger.LogWarning(ex, "Sync failed for connection {ConnectionId}", connectionId);
+                _logger.LogWarning("External calendar sync failed.");
                 skipped++;
             }
         }

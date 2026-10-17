@@ -39,7 +39,7 @@ public sealed class ExternalCalendarConnectionLeaseService : IExternalCalendarSy
 
         if (!connection.TryAcquireLease(leaseId, LeaseDuration, now))
         {
-            _logger.LogDebug("Sync lease already held for connection {ConnectionId}", connectionId);
+            _logger.LogDebug("Sync lease already held for a connection.");
             return null;
         }
 

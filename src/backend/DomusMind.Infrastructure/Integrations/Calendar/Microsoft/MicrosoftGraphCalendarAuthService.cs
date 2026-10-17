@@ -71,10 +71,7 @@ public sealed class MicrosoftGraphCalendarAuthService : IExternalCalendarAuthSer
         }
         catch (MsalException ex)
         {
-            _logger.LogWarning(
-                ex,
-                "Microsoft auth code exchange failed. RedirectUri={RedirectUri}",
-                redirectUri);
+            _logger.LogWarning("Microsoft auth code exchange failed.");
 
             throw new InvalidOperationException(
                 "Authorization code exchange failed: " + ex.Message,
@@ -136,9 +133,7 @@ public sealed class MicrosoftGraphCalendarAuthService : IExternalCalendarAuthSer
 
         if (string.IsNullOrWhiteSpace(encryptedSerializedTokenCache))
         {
-            _logger.LogInformation(
-                "No Microsoft token cache is stored for connection {ConnectionId}. Reconnect is required.",
-                connectionId);
+            _logger.LogInformation("No Microsoft token cache is stored. Reconnect is required.");
 
             return null;
         }
@@ -164,9 +159,7 @@ public sealed class MicrosoftGraphCalendarAuthService : IExternalCalendarAuthSer
             var account = await ResolveAccountAsync(app, connection);
             if (account is null)
             {
-                _logger.LogInformation(
-                    "No cached MSAL account could be resolved for external calendar connection {ConnectionId}. Reconnect is required.",
-                    connectionId);
+                _logger.LogInformation("No cached MSAL account could be resolved. Reconnect is required.");
 
                 return null;
             }
@@ -178,12 +171,9 @@ public sealed class MicrosoftGraphCalendarAuthService : IExternalCalendarAuthSer
                     .AcquireTokenSilent(DelegatedScopes, account)
                     .ExecuteAsync(cancellationToken);
             }
-            catch (MsalUiRequiredException ex)
+            catch (MsalUiRequiredException)
             {
-                _logger.LogInformation(
-                    ex,
-                    "Silent Microsoft token acquisition requires reauthentication for connection {ConnectionId}.",
-                    connectionId);
+                _logger.LogInformation("Silent Microsoft token acquisition requires reauthentication.");
 
                 return null;
             }
@@ -199,10 +189,7 @@ public sealed class MicrosoftGraphCalendarAuthService : IExternalCalendarAuthSer
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
-            _logger.LogWarning(
-                ex,
-                "Failed to acquire delegated Microsoft access token for connection {ConnectionId}.",
-                connectionId);
+            _logger.LogWarning("Failed to acquire delegated Microsoft access token.");
 
             return null;
         }

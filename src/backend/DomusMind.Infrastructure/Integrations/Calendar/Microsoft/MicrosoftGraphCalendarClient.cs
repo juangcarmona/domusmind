@@ -62,9 +62,7 @@ public sealed class MicrosoftGraphCalendarClient : IExternalCalendarProviderClie
         var url = $"https://graph.microsoft.com/v1.0/me/calendars/{Uri.EscapeDataString(calendarId)}/calendarView/delta" +
                   $"?startDateTime={startTime}&endDateTime={endTime}";
 
-        _logger.LogInformation(
-            "Initial calendarView delta sync for calendar {CalendarId}. Url={Url}",
-            calendarId, url);
+        _logger.LogInformation("Starting initial Microsoft Graph calendar delta sync.");
 
         await foreach (var page in FetchDeltaPagesAsync(accessToken, url, "initial", cancellationToken))
             yield return page;
@@ -85,9 +83,7 @@ public sealed class MicrosoftGraphCalendarClient : IExternalCalendarProviderClie
             ? deltaToken
             : $"https://graph.microsoft.com/v1.0/me/calendars/{Uri.EscapeDataString(calendarId)}/calendarView/delta?$deltatoken={Uri.EscapeDataString(deltaToken)}";
 
-        _logger.LogInformation(
-            "Incremental delta sync for calendar {CalendarId}. DeltaLinkIsFullUrl={IsFullUrl}",
-            calendarId, isFullUrl);
+        _logger.LogInformation("Starting incremental Microsoft Graph calendar delta sync.");
 
         await foreach (var page in FetchDeltaPagesAsync(accessToken, url, "delta", cancellationToken))
             yield return page;

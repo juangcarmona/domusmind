@@ -46,6 +46,6 @@ public sealed class AuthSeedService
         await repository.SaveChangesAsync(cancellationToken);
         await initState.MarkInitializedAsync(cancellationToken);
 
-        logger.LogInformation("Bootstrap fallback: admin user created for {Email}. System marked as initialized.", email);
+        logger.LogInformation("Bootstrap fallback administrator created. System marked as initialized.");
     }
 }

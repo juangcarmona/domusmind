@@ -69,11 +69,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
             throw new CalendarException(CalendarErrorCode.ConnectionSyncInProgress,
                 "Sync is already in progress for this connection.");
 
-        _logger.LogInformation(
-            "External calendar sync started. ConnectionId={ConnectionId}, MemberId={MemberId}, Reason={Reason}",
-            connection.Id.Value,
-            connection.MemberId.Value,
-            command.Reason ?? "unspecified");
+        _logger.LogInformation("External calendar sync started.");
 
         Exception? syncException = null;
         try
@@ -101,16 +97,10 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
             catch (Exception persistenceEx) when (persistenceEx is not OperationCanceledException)
             {
                 _logger.LogError(
-                    persistenceEx,
-                    "Failed to persist terminal failed sync state for connection {ConnectionId}",
-                    connection.Id.Value);
+                    "Failed to persist terminal failed external calendar sync state.");
             }
 
-            _logger.LogError(
-                ex,
-                "External calendar sync failed. ConnectionId={ConnectionId}, MemberId={MemberId}",
-                connection.Id.Value,
-                connection.MemberId.Value);
+            _logger.LogError("External calendar sync failed.");
 
             throw;
         }
@@ -123,10 +113,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
             catch (Exception releaseEx) when (releaseEx is not OperationCanceledException)
             {
                 _logger.LogError(
-                    releaseEx,
-                    "Failed to release sync lease for connection {ConnectionId} (LeaseId={LeaseId})",
-                    command.ConnectionId,
-                    leaseId.Value);
+                    "Failed to release an external calendar sync lease.");
 
                 // If there is no primary sync exception, propagate lease release failure.
                 if (syncException is null)
@@ -159,8 +146,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
 
         var selectedFeeds = connection.GetSelectedFeeds();
         _logger.LogInformation(
-            "Sync selected feeds resolved. ConnectionId={ConnectionId}, SelectedFeedCount={SelectedFeedCount}",
-            connection.Id.Value,
+            "Sync selected feeds resolved. SelectedFeedCount={SelectedFeedCount}",
             selectedFeeds.Count);
 
         int totalImported = 0, totalUpdated = 0, totalDeleted = 0;
@@ -173,9 +159,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
             try
             {
                 _logger.LogInformation(
-                    "Feed sync started. ConnectionId={ConnectionId}, ProviderCalendarId={ProviderCalendarId}",
-                    connection.Id.Value,
-                    feed.ProviderCalendarId);
+                    "Feed sync started.");
 
                 var (imported, updated, deleted, syncMode) = await SyncFeedAsync(
                     connection, feed, accessToken, now, cancellationToken);
@@ -186,9 +170,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
                 syncedFeedCount++;
 
                 _logger.LogInformation(
-                    "Feed sync completed. ConnectionId={ConnectionId}, ProviderCalendarId={ProviderCalendarId}, SyncMode={SyncMode}, Imported={Imported}, Updated={Updated}, Deleted={Deleted}",
-                    connection.Id.Value,
-                    feed.ProviderCalendarId,
+                    "Feed sync completed. SyncMode={SyncMode}, Imported={Imported}, Updated={Updated}, Deleted={Deleted}",
                     syncMode,
                     imported,
                     updated,
@@ -198,10 +180,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
             {
                 failedFeedCount++;
                 _logger.LogWarning(
-                    ex,
-                    "Feed sync failed. ConnectionId={ConnectionId}, ProviderCalendarId={ProviderCalendarId}",
-                    connection.Id.Value,
-                    feed.ProviderCalendarId);
+                    "Feed sync failed.");
             }
         }
 
@@ -214,8 +193,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
         if (allFeedsFailed)
         {
             _logger.LogWarning(
-                "All {Count} selected feed(s) failed to sync for connection {ConnectionId}.",
-                selectedFeeds.Count, connection.Id.Value);
+                "All selected external calendar feeds failed to sync.");
             connection.RecordSyncFailure("sync_all_feeds_failed", "All selected calendar feeds failed to sync.", false, completedAt);
         }
         else if (partialFeedFailure)
@@ -238,9 +216,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
         connection.ClearDomainEvents();
 
         _logger.LogInformation(
-            "External calendar sync completed. ConnectionId={ConnectionId}, MemberId={MemberId}, Outcome={Outcome}, SelectedFeedCount={SelectedFeedCount}, SyncedFeedCount={SyncedFeedCount}, FailedFeedCount={FailedFeedCount}, Imported={Imported}, Updated={Updated}, Deleted={Deleted}",
-            connection.Id.Value,
-            connection.MemberId.Value,
+            "External calendar sync completed. Outcome={Outcome}, SelectedFeedCount={SelectedFeedCount}, SyncedFeedCount={SyncedFeedCount}, FailedFeedCount={FailedFeedCount}, Imported={Imported}, Updated={Updated}, Deleted={Deleted}",
             ExternalCalendarConnectionStatusNames.ToStatusString(connection.Status),
             selectedFeeds.Count,
             syncedFeedCount,
@@ -276,9 +252,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
         string syncMode = useInitialSync ? "initial" : "delta";
 
         _logger.LogInformation(
-            "Feed sync mode resolved. ConnectionId={ConnectionId}, ProviderCalendarId={ProviderCalendarId}, SyncMode={SyncMode}",
-            connection.Id.Value,
-            feed.ProviderCalendarId,
+            "Feed sync mode resolved. SyncMode={SyncMode}",
             syncMode);
 
         IAsyncEnumerable<ExternalCalendarProviderDeltaPage> pages;
