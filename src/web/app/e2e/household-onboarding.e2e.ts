@@ -146,6 +146,7 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
     await expect(memberPage).toHaveURL(/\/agenda(?:\?.*)?$/);
     await memberPage.goto(`/lists/${list.listId}`);
     await expect(memberPage.getByRole("textbox", { name: "Add item" })).toBeVisible();
+    await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto(`/lists/${list.listId}`);
     await expect(page.getByRole("textbox", { name: "Add item" })).toBeVisible();
 
