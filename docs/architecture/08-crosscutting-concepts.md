@@ -104,7 +104,7 @@ All state in PostgreSQL through one EF Core context. Recorded in [ADR-0007](../a
 - Mapping lives in one `IEntityTypeConfiguration` per type under [`Persistence/Configurations/<Context>`](../../src/backend/DomusMind.Infrastructure/Persistence/Configurations), applied from the assembly. Tables and columns use snake_case. Strongly typed IDs and value objects are stored through value conversions, and children are owned or mapped inside their aggregate's configuration.
 - Reads use `AsNoTracking()` and project straight into response types. No separate read-model store exists.
 - Migrations live in [`Persistence/Migrations`](../../src/backend/DomusMind.Infrastructure/Persistence/Migrations) and are applied at application startup (see [Deployment View](07-deployment-view.md)).
-- No optimistic concurrency token is configured on any aggregate, so concurrent writes to the same aggregate are last-writer-wins.
+- `SharedList.Version` is an optimistic concurrency token. Each list mutation increments it, so concurrent writes from separate `DbContext` instances cannot silently overwrite a committed list change. Other aggregates remain last-writer-wins.
 
 ### Evidence
 
@@ -171,7 +171,7 @@ The REST surface of `DomusMind.Api`.
 ### Mechanism
 
 - Routes are `api/<plural-resource>` and are nested under `families/{familyId}` or `members/{memberId}` only when ownership is explicit. Queries use `GET` and commands use `POST`, `PUT`, `PATCH` or `DELETE`. Swagger (Swashbuckle) documents every endpoint with a bearer security scheme and is enabled in all environments.
-- **Errors do not use RFC 7807 problem details.** Each context defines one exception type with an error-code enum, for example `FamilyException` with `FamilyErrorCode`. Each controller maps codes to statuses: invalid input becomes 400, access denied 403, not found 404, and duplicates or invalid state 409. Calendar also uses 422, 502 and 503. Most error bodies are `{ "error": "<message>" }`, setup returns `{ "code", "message" }`, and unhandled exceptions return 500 with `{ "code", "message", "traceId" }`. Only model-binding failures produce ASP.NET's default `ValidationProblemDetails`. `DomusMind.Contracts` defines no shared error model.
+- **Errors do not use RFC 7807 problem details.** Each context defines one exception type with an error-code enum, for example `FamilyException` with `FamilyErrorCode`. Each controller maps codes to statuses: invalid input becomes 400, access denied 403, not found 404, and duplicates or invalid state 409. EF concurrency failures also return 409 with code `concurrency_conflict` so the client can reload the current list. Calendar also uses 422, 502 and 503. Most error bodies are `{ "error": "<message>" }`, setup returns `{ "code", "message" }`, and other unhandled exceptions return 500 with `{ "code", "message", "traceId" }`. Only model-binding failures produce ASP.NET's default `ValidationProblemDetails`. `DomusMind.Contracts` defines no shared error model.
 
 ### Evidence
 
