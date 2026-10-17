@@ -85,6 +85,7 @@ using DomusMind.Application.Features.Lists.RemoveListItem;
 using DomusMind.Application.Features.Lists.LinkList;
 using DomusMind.Application.Features.Lists.UnlinkList;
 using DomusMind.Application.Features.Lists.CreateLinkedListForEvent;
+using DomusMind.Application.Features.Lists.CreateShoppingListFromMealPlan;
 using DomusMind.Application.Features.Lists.GetListByLinkedEntity;
 using DomusMind.Application.Features.Lists.RenameList;
 using DomusMind.Application.Features.Lists.DeleteList;
@@ -121,6 +122,7 @@ using DomusMind.Contracts.Responsibilities;
 using DomusMind.Contracts.Setup;
 using DomusMind.Contracts.Tasks;
 using DomusMind.Contracts.Lists;
+using DomusMind.Domain.MealPlanning.Events;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DomusMind.Application.DependencyInjection;
@@ -241,6 +243,7 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<LinkListCommand, LinkListResponse>, LinkListCommandHandler>();
         services.AddScoped<ICommandHandler<UnlinkListCommand, bool>, UnlinkListCommandHandler>();
         services.AddScoped<ICommandHandler<CreateLinkedListForEventCommand, CreateListResponse>, CreateLinkedListForEventCommandHandler>();
+        services.AddScoped<IDomainEventHandler<ShoppingListRequested>, CreateShoppingListFromMealPlanEventHandler>();
         services.AddScoped<IQueryHandler<GetListByLinkedEntityQuery, GetListByLinkedEntityResponse>, GetListByLinkedEntityQueryHandler>();
         services.AddScoped<ICommandHandler<RenameListCommand, RenameListResponse>, RenameListCommandHandler>();
         services.AddScoped<ICommandHandler<DeleteListCommand, bool>, DeleteListCommandHandler>();
