@@ -23,6 +23,7 @@ public sealed class SharedList : AggregateRoot<ListId>
     public string? LinkedEntityType { get; private set; }
     public Guid? LinkedEntityId { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
+    public long Version { get; private set; } = 1;
 
     public bool IsArchived { get; private set; }
 
@@ -47,6 +48,7 @@ public sealed class SharedList : AggregateRoot<ListId>
         LinkedEntityId = linkedEntityId;
         CreatedAtUtc = createdAtUtc;
         IsArchived = false;
+        Version = 1;
     }
 
     // Required by EF Core for materialization
@@ -82,6 +84,7 @@ public sealed class SharedList : AggregateRoot<ListId>
         var order = _items.Count + 1;
         var item = ListItem.Create(itemId, name, quantity, note, order, now);
         _items.Add(item);
+        Touch();
 
         RaiseDomainEvent(new ListItemAdded(
             Guid.NewGuid(), Id.Value, itemId.Value, name.Value, order, now));
@@ -98,6 +101,7 @@ public sealed class SharedList : AggregateRoot<ListId>
             ?? throw new InvalidOperationException($"Item '{itemId.Value}' does not exist in this list.");
 
         item.Toggle(updatedByMemberId, now);
+        Touch();
 
         RaiseDomainEvent(new ListItemToggled(
             Guid.NewGuid(), Id.Value, itemId.Value, item.Checked, now));
@@ -116,6 +120,7 @@ public sealed class SharedList : AggregateRoot<ListId>
             ?? throw new InvalidOperationException($"Item '{itemId.Value}' does not exist in this list.");
 
         item.Update(name, quantity, note, now);
+        Touch();
 
         RaiseDomainEvent(new ListItemUpdated(
             Guid.NewGuid(), Id.Value, itemId.Value, name.Value, quantity, note, now));
@@ -129,6 +134,7 @@ public sealed class SharedList : AggregateRoot<ListId>
             ?? throw new InvalidOperationException($"Item '{itemId.Value}' does not exist in this list.");
 
         _items.Remove(item);
+        Touch();
 
         RaiseDomainEvent(new ListItemRemoved(
             Guid.NewGuid(), Id.Value, itemId.Value, now));
@@ -138,6 +144,7 @@ public sealed class SharedList : AggregateRoot<ListId>
     {
         LinkedEntityType = entityType;
         LinkedEntityId = entityId;
+        Touch();
         RaiseDomainEvent(new ListLinked(Guid.NewGuid(), Id.Value, entityType, entityId, now));
     }
 
@@ -145,12 +152,14 @@ public sealed class SharedList : AggregateRoot<ListId>
     {
         LinkedEntityType = null;
         LinkedEntityId = null;
+        Touch();
         RaiseDomainEvent(new ListUnlinked(Guid.NewGuid(), Id.Value, now));
     }
 
     public void Rename(ListName newName, DateTime now)
     {
         Name = newName;
+        Touch();
         RaiseDomainEvent(new ListRenamed(Guid.NewGuid(), Id.Value, newName.Value, now));
     }
 
@@ -169,6 +178,7 @@ public sealed class SharedList : AggregateRoot<ListId>
         ListKind? newKind,
         DateTime now)
     {
+        Touch();
         if (newName is not null)
         {
             Name = newName;
@@ -200,10 +210,12 @@ public sealed class SharedList : AggregateRoot<ListId>
     public void SetColor(string? color, DateTime now)
     {
         Color = color;
+        Touch();
     }
 
     public void Delete(DateTime now)
     {
+        Touch();
         RaiseDomainEvent(new ListDeleted(Guid.NewGuid(), Id.Value, now));
     }
 
@@ -217,6 +229,7 @@ public sealed class SharedList : AggregateRoot<ListId>
             ?? throw new InvalidOperationException($"Item '{itemId.Value}' does not exist in this list.");
 
         item.SetContext(itemAreaId, targetMemberId, now);
+        Touch();
         return item;
     }
 
@@ -226,6 +239,7 @@ public sealed class SharedList : AggregateRoot<ListId>
             throw new InvalidOperationException("List is already archived.");
 
         IsArchived = true;
+        Touch();
         RaiseDomainEvent(new ListArchived(Guid.NewGuid(), Id.Value, now));
     }
 
@@ -235,6 +249,7 @@ public sealed class SharedList : AggregateRoot<ListId>
             throw new InvalidOperationException("List is not archived.");
 
         IsArchived = false;
+        Touch();
         RaiseDomainEvent(new ListRestored(Guid.NewGuid(), Id.Value, now));
     }
 
@@ -265,6 +280,7 @@ public sealed class SharedList : AggregateRoot<ListId>
             var item = _items.Single(it => it.Id == orderedItemIds[i]);
             item.SetOrder(i + 1);
         }
+        Touch();
 
         var entries = orderedItemIds
             .Select((id, i) => new ItemOrderEntry(id.Value, i + 1))
@@ -281,6 +297,7 @@ public sealed class SharedList : AggregateRoot<ListId>
             ?? throw new InvalidOperationException($"Item '{itemId.Value}' does not exist in this list.");
 
         item.SetImportance(importance, now);
+        Touch();
 
         RaiseDomainEvent(new ListItemImportanceSet(
             Guid.NewGuid(), Id.Value, itemId.Value, importance, now));
@@ -319,6 +336,7 @@ public sealed class SharedList : AggregateRoot<ListId>
         var hadTemporalData = item.HasTemporalData;
         var isFirstTemporalSet = item.SetTemporal(
             dueDate, reminder, repeat, now, clearDueDate, clearReminder, clearRepeat);
+        Touch();
 
         if (hadTemporalData && !item.HasTemporalData)
         {
@@ -351,6 +369,8 @@ public sealed class SharedList : AggregateRoot<ListId>
             ?? throw new InvalidOperationException($"Item '{itemId.Value}' does not exist in this list.");
 
         var hadTemporalData = item.ClearTemporal(now);
+        if (hadTemporalData)
+            Touch();
 
         if (hadTemporalData)
         {
@@ -361,4 +381,6 @@ public sealed class SharedList : AggregateRoot<ListId>
 
         return item;
     }
+
+    private void Touch() => Version++;
 }
