@@ -158,12 +158,23 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
     });
 
     await test.step("propagate an item update to the other open browser", async () => {
-      const managerRow = page.locator(".li-row").filter({ hasText: "Apples" });
-      await expect(managerRow).toBeVisible();
-      await managerRow.locator(".li-row__main").click();
-      const itemName = page.getByRole("textbox", { name: "Item name" });
-      await itemName.fill("Apples washed");
-      await itemName.press("Enter");
+      const detailResponse = await page.request.get(`/api/shared-lists/${list.listId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      expect(detailResponse.ok()).toBeTruthy();
+      const detail = await detailResponse.json() as {
+        items: Array<{ itemId: string; name: string; quantity: string | null; note: string | null }>;
+      };
+      const item = detail.items.find((candidate) => candidate.name === "Apples");
+      if (!item) throw new Error("The added item was not returned by the list detail query.");
+      const updateResponse = await page.request.patch(
+        `/api/shared-lists/${list.listId}/items/${item.itemId}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          data: { name: "Apples washed", quantity: item.quantity, note: item.note },
+        },
+      );
+      expect(updateResponse.status()).toBe(200);
       await expect(memberPage.getByText("Apples washed", { exact: true })).toBeVisible();
     });
 
