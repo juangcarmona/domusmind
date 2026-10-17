@@ -47,6 +47,7 @@ import { ListItemInspectorContent } from "../components/ListItemInspectorContent
 import { ListMetaInspectorContent } from "../components/ListMetaInspectorContent";
 import { IconGrid, IconList, IconOptions, IconCalendar, IconBell, IconRepeat, IconTrash, IconChevronDown } from "../components/ListsIcons";
 import { toLocalInput, fromLocalInput, parseRepeat, serializeRepeat, WEEK_DAYS } from "../utils";
+import { useListChangeStream } from "../useListChangeStream";
 import type { SharedListItemDetail } from "../../../api/types/listTypes";
 import {
   DndContext,
@@ -90,6 +91,7 @@ export function ListsPage() {
   const members = useAppSelector((s) => s.household.members);
 
   const [activeListId, setActiveListId] = useState<string | null>(routeListId ?? null);
+  useListChangeStream(activeListId);
   const [showCreate, setShowCreate] = useState(false);
   const [showSwitcherSheet, setShowSwitcherSheet] = useState(false);
   const [checkedCollapsed, setCheckedCollapsed] = useState(true);
