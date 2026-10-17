@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Threading.Channels;
 
 namespace DomusMind.Api.Realtime;
@@ -31,7 +30,8 @@ public sealed class ListChangeSubscription : IDisposable
 
 public sealed class ListChangeNotifier : IListChangeNotifier
 {
-    private readonly ConcurrentDictionary<Guid, ConcurrentDictionary<Guid, Channel<bool>>> _subscribers = new();
+    private readonly object _gate = new();
+    private readonly Dictionary<Guid, Dictionary<Guid, Channel<bool>>> _subscribers = [];
 
     public ListChangeSubscription Subscribe(Guid listId)
     {
@@ -43,28 +43,46 @@ public sealed class ListChangeNotifier : IListChangeNotifier
             SingleWriter = false,
         });
 
-        _subscribers.GetOrAdd(listId, _ => new()).TryAdd(subscriberId, channel);
+        lock (_gate)
+        {
+            if (!_subscribers.TryGetValue(listId, out var subscribers))
+            {
+                subscribers = [];
+                _subscribers.Add(listId, subscribers);
+            }
+
+            subscribers.Add(subscriberId, channel);
+        }
+
         return new ListChangeSubscription(channel.Reader, () => Unsubscribe(listId, subscriberId, channel));
     }
 
     public void Publish(Guid listId)
     {
-        if (!_subscribers.TryGetValue(listId, out var subscribers))
-            return;
+        Channel<bool>[] channels;
+        lock (_gate)
+        {
+            if (!_subscribers.TryGetValue(listId, out var subscribers))
+                return;
 
-        foreach (var subscriber in subscribers.Values)
-            subscriber.Writer.TryWrite(true);
+            channels = subscribers.Values.ToArray();
+        }
+
+        foreach (var channel in channels)
+            channel.Writer.TryWrite(true);
     }
 
     private void Unsubscribe(Guid listId, Guid subscriberId, Channel<bool> channel)
     {
         channel.Writer.TryComplete();
-        if (!_subscribers.TryGetValue(listId, out var subscribers))
-            return;
+        lock (_gate)
+        {
+            if (!_subscribers.TryGetValue(listId, out var subscribers))
+                return;
 
-        subscribers.TryRemove(subscriberId, out _);
-        if (subscribers.IsEmpty)
-            ((ICollection<KeyValuePair<Guid, ConcurrentDictionary<Guid, Channel<bool>>>>)_subscribers)
-                .Remove(new KeyValuePair<Guid, ConcurrentDictionary<Guid, Channel<bool>>>(listId, subscribers));
+            subscribers.Remove(subscriberId);
+            if (subscribers.Count == 0)
+                _subscribers.Remove(listId);
+        }
     }
 }
