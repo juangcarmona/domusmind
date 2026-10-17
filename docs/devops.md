@@ -82,6 +82,26 @@ Current required contexts on `main`: `backend build`, `webapp build`, `Validate 
 
 The release workflow repeats the backend and web app validation steps inline rather than calling a reusable workflow.
 
+## Local Development and Aspire Telemetry
+
+The local development AppHost and its resource graph are described in the [Deployment View](architecture/07-deployment-view.md#infrastructure-level-1-local-development). Install the .NET 10 SDK, Docker Engine or Docker Desktop, and the Aspire CLI on the developer machine. The CLI can be installed per user with:
+
+```bash
+dotnet tool install --global Aspire.Cli
+```
+
+From the AppHost directory, start the development resources with `aspire start`. This starts PostgreSQL, the API, Vite and the Aspire Dashboard. The API emits OpenTelemetry HTTP request/client and PostgreSQL traces, plus HTTP and runtime metrics, only when both conditions hold: its environment is `Development` and Aspire provides `OTEL_EXPORTER_OTLP_ENDPOINT`. HTTP spans omit raw paths and query strings; outgoing HTTP spans retain the method and host, but omit URL paths and queries. Aspire MCP exposes structured and console logs from resources, so keep application log messages free of identities, credentials, exception contents and household payloads. The dashboard remains local to the Aspire session; this configuration does not create a production telemetry backend.
+
+To verify request-to-outbound correlation without a Microsoft Graph account, call `GET https://localhost:7214/api/system/telemetry/outbound-probe` while the Aspire AppHost is running. This development-only endpoint makes a loopback request to the Vite resource configured by the AppHost and returns only its status code. The Aspire MCP trace should show the API server span and its child HTTP client span under one trace ID. The endpoint returns `404` outside Development or when no loopback target is configured.
+
+For Codex on that machine and user account, register Aspire's MCP server once:
+
+```bash
+codex mcp add aspire -- aspire agent mcp
+```
+
+This stores a user-level Codex MCP entry; restart Codex after adding it. The server discovers the AppHost in the current workspace and exposes its resources, traces, structured logs, and console logs while it is running. The MCP tool set does not query metrics; inspect those in the Aspire Dashboard. This is per operating-system user, not a shared configuration for every account on the host.
+
 ## Installation Configuration
 
 All installation-specific values live in a host-side `.env` next to the compose file and are never committed. Start from [`deploy/.env.example`](../deploy/.env.example).

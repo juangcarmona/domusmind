@@ -1,4 +1,5 @@
 using DomusMind.Api.OpenApi;
+using DomusMind.Api.Telemetry;
 using DomusMind.Application.DependencyInjection;
 using DomusMind.Infrastructure.Auth;
 using DomusMind.Infrastructure.DependencyInjection;
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.AddDevelopmentTelemetry();
 builder.Services.AddDomusMindAuthentication(builder.Configuration);
 builder.Services.AddDomusMindAuthorization();
 builder.Services.AddDomusMindOpenApi();
@@ -35,7 +37,6 @@ app.UseExceptionHandler(errorApp =>
         if (exception is HandlerResolutionException resolutionException)
         {
             logger.LogError(
-                resolutionException,
                 "Dispatcher handler resolution failed for {HandlerType}",
                 resolutionException.HandlerType);
 
@@ -48,7 +49,7 @@ app.UseExceptionHandler(errorApp =>
             return;
         }
 
-        logger.LogError(exception, "Unhandled server exception");
+        logger.LogError("Unhandled server exception. TraceId={TraceId}", context.TraceIdentifier);
         await context.Response.WriteAsJsonAsync(new
         {
             code = "internal_server_error",

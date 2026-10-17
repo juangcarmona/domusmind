@@ -76,9 +76,9 @@ public sealed class GetExternalCalendarConnectionDetailQueryHandler
                 availableCalendars = providerCalendars.Select(c => new AvailableExternalCalendarResponse(
                     c.CalendarId, c.CalendarName, c.IsDefault, selectedIds.Contains(c.CalendarId))).ToList();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogWarning(ex, "Failed to refresh available calendars for connection {ConnectionId}", query.ConnectionId);
+                _logger.LogWarning("Failed to refresh available external calendars.");
             }
         }
 

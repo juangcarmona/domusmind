@@ -114,9 +114,9 @@ public sealed class ConfigureExternalCalendarConnectionCommandHandler
         int selectedFeedCount = command.SelectedCalendars.Count(s => s.IsSelected);
 
         _logger.LogInformation(
-            "Configuring connection {ConnectionId}: {Added} feed(s) added, {Updated} updated, " +
-            "{Deselected} deselected, {Selected} total selected",
-            command.ConnectionId, added, updated, deselected, selectedFeedCount);
+            "External calendar feeds configured. {Added} added, {Updated} updated, " +
+            "{Deselected} deselected, {Selected} selected",
+            added, updated, deselected, selectedFeedCount);
 
         // Apply aggregate-level settings (horizon, refresh schedule, domain event).
         // Feed delta invalidation on horizon change operates only on _feeds, which

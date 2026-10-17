@@ -46,7 +46,7 @@ public sealed class ExternalCalendarRefreshWorker : BackgroundService
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
-                _logger.LogError(ex, "ExternalCalendarRefreshWorker encountered an error in the main loop");
+                _logger.LogError("ExternalCalendarRefreshWorker encountered an error in the main loop.");
             }
 
             await Task.Delay(TimeSpan.FromSeconds(_options.WorkerCycleSeconds), stoppingToken);
@@ -99,7 +99,7 @@ public sealed class ExternalCalendarRefreshWorker : BackgroundService
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {
-                _logger.LogWarning(ex, "Background sync failed for connection {ConnectionId}", conn.Value);
+                _logger.LogWarning("Background sync failed for a connection.");
             }
         }
     }

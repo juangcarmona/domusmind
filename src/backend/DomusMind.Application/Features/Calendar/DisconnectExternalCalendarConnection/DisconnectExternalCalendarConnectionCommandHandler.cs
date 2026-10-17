@@ -78,9 +78,9 @@ public sealed class DisconnectExternalCalendarConnectionCommandHandler
         {
             await _authService.RevokeAsync(command.ConnectionId, cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            _logger.LogWarning(ex, "Failed to revoke auth material for connection {ConnectionId}", command.ConnectionId);
+            _logger.LogWarning("Failed to revoke external calendar authorization material.");
         }
 
         await _eventLogWriter.WriteAsync(connection.DomainEvents, cancellationToken);

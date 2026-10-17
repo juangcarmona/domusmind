@@ -60,7 +60,7 @@ public sealed class ConnectOutlookAccountCommandHandler
         }
         catch (Exception ex) when (ex is not CalendarException)
         {
-            _logger.LogWarning(ex, "OAuth code exchange failed for member {MemberId}", command.MemberId);
+            _logger.LogWarning("OAuth code exchange failed.");
             throw new CalendarException(CalendarErrorCode.ProviderAuthFailed, "Authorization code exchange failed.");
         }
 
@@ -109,10 +109,7 @@ public sealed class ConnectOutlookAccountCommandHandler
 
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            _logger.LogInformation(
-                "External calendar connection {ConnectionId} created for member {MemberId} — " +
-                "token cache material persisted, scopes: {GrantedScopes}",
-                connection.Id.Value, command.MemberId, providerAccount.GrantedScopes);
+            _logger.LogInformation("External calendar connection created and authorization material persisted.");
 
             await _eventLogWriter.WriteAsync(connection.DomainEvents, cancellationToken);
             connection.ClearDomainEvents();
@@ -132,20 +129,16 @@ public sealed class ConnectOutlookAccountCommandHandler
                     }
                     await _dbContext.SaveChangesAsync(cancellationToken);
 
-                    _logger.LogInformation(
-                        "Discovered {CalendarCount} provider calendar(s) for connection {ConnectionId}",
-                        availableCalendars.Count, connection.Id.Value);
+                    _logger.LogInformation("Discovered provider calendars for the external calendar connection.");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    _logger.LogWarning(ex, "Calendar discovery failed for connection {ConnectionId}, continuing without feed list", connection.Id.Value);
+                    _logger.LogWarning("Calendar discovery failed; continuing without a feed list.");
                 }
             }
             else
             {
-                _logger.LogWarning(
-                    "Could not acquire access token immediately after connection {ConnectionId} was created — calendar discovery skipped",
-                    connection.Id.Value);
+                _logger.LogWarning("Could not acquire an access token after connection creation; calendar discovery skipped.");
             }
 
             var feedResponses = connection.Feeds.Select(f => new ExternalCalendarFeedResponse(
@@ -181,9 +174,9 @@ public sealed class ConnectOutlookAccountCommandHandler
         {
             throw;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            _logger.LogError(ex, "Failed to persist external calendar connection for member {MemberId}", command.MemberId);
+            _logger.LogError("Failed to persist external calendar connection.");
             throw new CalendarException(CalendarErrorCode.ProviderApiError, "Failed to complete connection setup.");
         }
     }

@@ -100,6 +100,7 @@ Development uses .NET Aspire through [`DomusMind.AppHost`](../../src/backend/Dom
 flowchart LR
     dev["Developer browser"]
     subgraph aspire["Aspire AppHost (developer machine)"]
+        dashboard["Aspire Dashboard"]
         vite["web-app<br/>Vite dev server :61546"]
         api["api<br/>DomusMind.Api :52250"]
         pg[("postgres + data volume<br/>database domusmind")]
@@ -109,9 +110,10 @@ flowchart LR
     vite -- "proxy /api" --> api
     api --> pg
     pgadmin --> pg
+    api -. "OpenTelemetry via OTLP" .-> dashboard
 ```
 
-Aspire provisions PostgreSQL with a data volume and pgAdmin, injects the `domusmind` connection string into the API, and runs the web app from source through Vite, which proxies `/api` to the API. Unlike the self-hosted image, the SPA is not served by ASP.NET Core here; with no `wwwroot`, the API root redirects to Swagger.
+Aspire provisions PostgreSQL with a data volume and pgAdmin, injects the `domusmind` connection string into the API, and runs the web app from source through Vite, which proxies `/api` to the API. In Development, the API exports HTTP server/client and PostgreSQL spans plus runtime and HTTP metrics to the local Aspire Dashboard when Aspire injects an OTLP endpoint. HTTP traces omit raw paths and query strings; outbound HTTP spans retain the host and method while omitting URL paths and queries. Aspire MCP exposes structured and console logs from resources; application log messages omit identities, credentials, exception contents and household payloads. Unlike the self-hosted image, the SPA is not served by ASP.NET Core here; with no `wwwroot`, the API root redirects to Swagger. See [local development](../devops.md#local-development-and-aspire-telemetry) for setup.
 
 | Building block or artifact | Infrastructure element | Environment |
 | --- | --- | --- |
