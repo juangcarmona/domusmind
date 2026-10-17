@@ -2,6 +2,7 @@ using DomusMind.Domain.Family;
 using DomusMind.Domain.MealPlanning.Entities;
 using DomusMind.Domain.MealPlanning.Enums;
 using DomusMind.Domain.MealPlanning.ValueObjects;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -49,7 +50,7 @@ public sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
             .HasColumnName("is_favorite")
             .IsRequired();
 
-        builder.Property(r => r.AllowedMealTypes)
+        var allowedMealTypes = builder.Property(r => r.AllowedMealTypes)
             .HasConversion(
                 v => string.Join(",", v.Select(x => (int)x)),
                 v => string.IsNullOrWhiteSpace(v)
@@ -59,8 +60,12 @@ public sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
                         .ToList())
             .HasColumnName("allowed_meal_types")
             .HasColumnType("text");
+        allowedMealTypes.Metadata.SetValueComparer(new ValueComparer<IReadOnlyList<MealType>>(
+            (current, snapshot) => current!.SequenceEqual(snapshot!),
+            value => value!.Aggregate(0, (hash, item) => HashCode.Combine(hash, item)),
+            value => value!.ToList()));
 
-        builder.Property(r => r.Tags)
+        var tags = builder.Property(r => r.Tags)
             .HasConversion(
                 v => string.Join(",", v),
                 v => string.IsNullOrWhiteSpace(v)
@@ -68,6 +73,10 @@ public sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe>
                     : v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
             .HasColumnName("tags")
             .HasColumnType("text");
+        tags.Metadata.SetValueComparer(new ValueComparer<IReadOnlyList<string>>(
+            (current, snapshot) => current!.SequenceEqual(snapshot!),
+            value => value!.Aggregate(0, (hash, item) => HashCode.Combine(hash, item)),
+            value => value!.ToList()));
 
         builder.Property(r => r.CreatedAtUtc)
             .HasColumnName("created_at")
