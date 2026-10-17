@@ -113,7 +113,7 @@ public sealed class ConnectOutlookAccountCommandHandler
             if (!isReconnect)
                 _dbContext.Set<ExternalCalendarConnection>().Add(connection);
 
-            // Write auth material into shadow properties before the initial SaveChanges.
+            // Write auth material into shadow properties before the initial persistence call.
             // Without this the token cache is not persisted and every subsequent
             // GetAccessTokenAsync call immediately returns null.
             _dbContext.SetExternalCalendarConnectionAuthMaterial(
@@ -121,17 +121,19 @@ public sealed class ConnectOutlookAccountCommandHandler
                 providerAccount.EncryptedRefreshToken,
                 providerAccount.GrantedScopes);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            if (!isReconnect)
+            {
+                await _eventLogWriter.WriteAsync([connection], cancellationToken);
+                connection.ClearDomainEvents();
+            }
+            else
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
 
             _logger.LogInformation(
                 "External calendar connection {ConnectionId} {Operation} for member {MemberId}.",
                 connection.Id.Value, isReconnect ? "reconnected" : "created", command.MemberId);
-
-            if (!isReconnect)
-            {
-                await _eventLogWriter.WriteAsync(connection.DomainEvents, cancellationToken);
-                connection.ClearDomainEvents();
-            }
 
             // Discover available calendars using a fresh access token
             accessToken = await _authService.GetAccessTokenAsync(connection.Id.Value, cancellationToken);

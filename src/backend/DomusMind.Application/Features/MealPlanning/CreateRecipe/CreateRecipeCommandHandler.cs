@@ -81,9 +81,8 @@ public sealed class CreateRecipeCommandHandler : ICommandHandler<CreateRecipeCom
         }
 
         _dbContext.Set<Recipe>().Add(recipe);
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _eventLogWriter.WriteAsync(recipe.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([recipe], cancellationToken);
         recipe.ClearDomainEvents();
 
         return new CreateRecipeResponse(

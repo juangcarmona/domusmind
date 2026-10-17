@@ -52,7 +52,7 @@ public sealed class PauseRoutineCommandHandler
             throw new TasksException(TasksErrorCode.RoutineAlreadyPaused, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(routine.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([routine], cancellationToken);
         routine.ClearDomainEvents();
 
         return new PauseRoutineResponse(command.RoutineId, routine.Status.ToString());

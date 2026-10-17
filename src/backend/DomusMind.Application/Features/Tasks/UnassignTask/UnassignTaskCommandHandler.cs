@@ -49,7 +49,7 @@ public sealed class UnassignTaskCommandHandler
             throw new TasksException(TasksErrorCode.InvalidInput, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(task.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([task], cancellationToken);
         task.ClearDomainEvents();
 
         return new UnassignTaskResponse(command.TaskId, previousAssigneeId!.Value);

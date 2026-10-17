@@ -60,9 +60,8 @@ public sealed class CreateMealPlanCommandHandler : ICommandHandler<CreateMealPla
         var mealPlan = MealPlan.Create(planId, familyId, command.WeekStart, true, now);
 
         _dbContext.Set<MealPlan>().Add(mealPlan);
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await _eventLogWriter.WriteAsync(mealPlan.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([mealPlan], cancellationToken);
         mealPlan.ClearDomainEvents();
 
         return new CreateMealPlanResponse(

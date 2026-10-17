@@ -72,7 +72,7 @@ public sealed class CreateTaskCommandHandler
         var task = HouseholdTask.Create(id, familyId, title, command.Description, schedule, taskColor, areaId, now);
         _dbContext.Set<HouseholdTask>().Add(task);
 
-        await _eventLogWriter.WriteAsync(task.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([task], cancellationToken);
         task.ClearDomainEvents();
 
         var (dueDate, dueTime) = TemporalParser.FormatTaskSchedule(schedule);

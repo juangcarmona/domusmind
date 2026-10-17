@@ -84,7 +84,7 @@ public sealed class UpdateListCommandHandler
         else if (command.Color is not null)
             list.SetColor(command.Color, DateTime.UtcNow);
 
-        await _eventLogWriter.WriteAsync(list.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([list], cancellationToken);
         list.ClearDomainEvents();
         await _dbContext.SaveChangesAsync(cancellationToken);
 

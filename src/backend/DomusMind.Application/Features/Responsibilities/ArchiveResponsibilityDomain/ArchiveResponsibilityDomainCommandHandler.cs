@@ -2,7 +2,6 @@ using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Persistence;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Contracts.Responsibilities;
-using DomusMind.Domain.Abstractions;
 using DomusMind.Domain.Responsibilities;
 using DomusMind.Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -55,11 +54,7 @@ public sealed class ArchiveResponsibilityDomainCommandHandler
         foreach (var task in tasks) task.ClearArea();
         foreach (var routine in routines) routine.ClearArea();
 
-        var events = new List<IDomainEvent>();
-        events.AddRange(area.DomainEvents);
-        events.AddRange(tasks.SelectMany(task => task.DomainEvents));
-        events.AddRange(routines.SelectMany(routine => routine.DomainEvents));
-        await _eventLogWriter.WriteAsync(events, cancellationToken);
+        await _eventLogWriter.WriteAsync([area, .. tasks, .. routines], cancellationToken);
 
         area.ClearDomainEvents();
         foreach (var task in tasks) task.ClearDomainEvents();

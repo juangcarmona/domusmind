@@ -96,7 +96,7 @@ public sealed class InviteMemberCommandHandler : ICommandHandler<InviteMemberCom
 
         await _familyAccessGranter.GrantAccessAsync(authUserId, command.FamilyId, cancellationToken);
 
-        await _eventLogWriter.WriteAsync(family.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([family], cancellationToken);
         family.ClearDomainEvents();
 
         await _authUserRepository.SaveChangesAsync(cancellationToken);

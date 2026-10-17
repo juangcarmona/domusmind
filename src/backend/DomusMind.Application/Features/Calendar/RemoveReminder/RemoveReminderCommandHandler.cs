@@ -57,7 +57,7 @@ public sealed class RemoveReminderCommandHandler
             throw new CalendarException(CalendarErrorCode.ReminderOffsetNotFound, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(calendarEvent.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([calendarEvent], cancellationToken);
         calendarEvent.ClearDomainEvents();
 
         return new RemoveReminderResponse(command.CalendarEventId, command.MinutesBefore);

@@ -63,7 +63,7 @@ public sealed class ReorderListItemsCommandHandler
             throw new ListException(ListErrorCode.ItemNotFound, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(list.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([list], cancellationToken);
         list.ClearDomainEvents();
         await _dbContext.SaveChangesAsync(cancellationToken);
 

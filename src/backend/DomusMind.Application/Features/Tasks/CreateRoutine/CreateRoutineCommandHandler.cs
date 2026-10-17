@@ -88,7 +88,7 @@ public sealed class CreateRoutineCommandHandler
 
             _dbContext.Set<Routine>().Add(routine);
 
-            await _eventLogWriter.WriteAsync(routine.DomainEvents, cancellationToken);
+            await _eventLogWriter.WriteAsync([routine], cancellationToken);
             routine.ClearDomainEvents();
 
             return new CreateRoutineResponse(

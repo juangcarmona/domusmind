@@ -90,8 +90,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
 
             try
             {
-                await _dbContext.SaveChangesAsync(cancellationToken);
-                await _eventLogWriter.WriteAsync(connection.DomainEvents, cancellationToken);
+                await _eventLogWriter.WriteAsync([connection], cancellationToken);
                 connection.ClearDomainEvents();
             }
             catch (Exception persistenceEx) when (persistenceEx is not OperationCanceledException)
@@ -131,14 +130,12 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
         _ = leaseId;
         var now = DateTime.UtcNow;
         connection.MarkSyncing(now);
-        await _dbContext.SaveChangesAsync(cancellationToken);
 
         var accessToken = await _authService.GetAccessTokenAsync(connection.Id.Value, cancellationToken);
         if (accessToken is null)
         {
             connection.RecordSyncFailure("auth_expired", "Access token could not be refreshed.", true, DateTime.UtcNow);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-            await _eventLogWriter.WriteAsync(connection.DomainEvents, cancellationToken);
+            await _eventLogWriter.WriteAsync([connection], cancellationToken);
             connection.ClearDomainEvents();
             throw new CalendarException(CalendarErrorCode.ConnectionAuthExpired,
                 "Provider token expired. Please reconnect the account.");
@@ -211,8 +208,7 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
             connection.RecordSyncSuccess(totalImported, totalUpdated, totalDeleted, completedAt);
         }
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
-        await _eventLogWriter.WriteAsync(connection.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([connection], cancellationToken);
         connection.ClearDomainEvents();
 
         _logger.LogInformation(
@@ -286,7 +282,6 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
             feed.RecordDeltaToken(lastDeltaToken, now);
 
         feed.RecordSuccessfulSync(now);
-        await _dbContext.SaveChangesAsync(cancellationToken);
         return (imported, updated, deleted, syncMode);
     }
 
@@ -297,9 +292,11 @@ public sealed class SyncExternalCalendarConnectionCommandHandler
         DateTime now,
         CancellationToken cancellationToken)
     {
-        var existing = await _dbContext
-            .Set<ExternalCalendarEntry>()
-            .FirstOrDefaultAsync(e => e.FeedId == feed.Id && e.ExternalEventId == evt.ExternalEventId, cancellationToken);
+        var existing = _dbContext.Set<ExternalCalendarEntry>().Local
+            .FirstOrDefault(e => e.FeedId == feed.Id && e.ExternalEventId == evt.ExternalEventId)
+            ?? await _dbContext
+                .Set<ExternalCalendarEntry>()
+                .FirstOrDefaultAsync(e => e.FeedId == feed.Id && e.ExternalEventId == evt.ExternalEventId, cancellationToken);
 
         if (evt.IsDeleted)
         {

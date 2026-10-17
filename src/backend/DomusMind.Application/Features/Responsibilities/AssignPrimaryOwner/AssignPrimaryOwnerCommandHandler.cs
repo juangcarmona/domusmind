@@ -49,7 +49,7 @@ public sealed class AssignPrimaryOwnerCommandHandler
 
         responsibilityDomain.AssignPrimaryOwner(MemberId.From(command.MemberId));
 
-        await _eventLogWriter.WriteAsync(responsibilityDomain.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([responsibilityDomain], cancellationToken);
         responsibilityDomain.ClearDomainEvents();
 
         return new AssignPrimaryOwnerResponse(command.ResponsibilityDomainId, command.MemberId);

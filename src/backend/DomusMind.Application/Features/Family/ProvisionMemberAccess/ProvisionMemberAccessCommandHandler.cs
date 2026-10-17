@@ -110,9 +110,7 @@ public sealed class ProvisionMemberAccessCommandHandler
 
         await _familyAccessGranter.GrantAccessAsync(authUserId, command.FamilyId, cancellationToken);
 
-        await _authUserRepository.SaveChangesAsync(cancellationToken);
-
-        await _eventLogWriter.WriteAsync(family.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([family], cancellationToken);
         family.ClearDomainEvents();
 
         // temporaryPassword is returned exactly once and never retrievable afterwards

@@ -49,7 +49,7 @@ public sealed class TransferResponsibilityCommandHandler
 
         responsibilityDomain.TransferPrimaryOwner(MemberId.From(command.NewPrimaryOwnerId));
 
-        await _eventLogWriter.WriteAsync(responsibilityDomain.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([responsibilityDomain], cancellationToken);
         responsibilityDomain.ClearDomainEvents();
 
         return new TransferResponsibilityResponse(command.ResponsibilityDomainId, command.NewPrimaryOwnerId);

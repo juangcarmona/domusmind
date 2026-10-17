@@ -81,7 +81,7 @@ public sealed class RescheduleTaskCommandHandler
             throw new TasksException(TasksErrorCode.TaskAlreadyCancelled, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(task.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([task], cancellationToken);
         task.ClearDomainEvents();
 
         var (dueDate, dueTime) = TemporalParser.FormatTaskSchedule(newSchedule);

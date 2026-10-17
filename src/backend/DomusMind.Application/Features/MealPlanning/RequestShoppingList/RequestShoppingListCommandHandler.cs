@@ -110,12 +110,8 @@ public sealed class RequestShoppingListCommandHandler
         // Record the shopping list reference on the meal plan
         plan.RecordShoppingListCreated(listId.Value, now);
 
-        await _dbContext.SaveChangesAsync(cancellationToken);
-
-        await _eventLogWriter.WriteAsync(sharedList.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([sharedList, plan], cancellationToken);
         sharedList.ClearDomainEvents();
-
-        await _eventLogWriter.WriteAsync(plan.DomainEvents, cancellationToken);
         plan.ClearDomainEvents();
 
         return new RequestShoppingListResponse(

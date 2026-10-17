@@ -70,7 +70,7 @@ public sealed class CreateFamilyCommandHandler : ICommandHandler<CreateFamilyCom
 
         await _familyAccessGranter.GrantAccessAsync(command.RequestedByUserId, familyId.Value, cancellationToken);
 
-        await _eventLogWriter.WriteAsync(family.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([family], cancellationToken);
         family.ClearDomainEvents();
 
         return new CreateFamilyResponse(familyId.Value, name.Value, languageCode, now);

@@ -57,7 +57,7 @@ public sealed class AssignTaskCommandHandler
             throw new TasksException(TasksErrorCode.TaskAlreadyCancelled, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(task.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([task], cancellationToken);
         task.ClearDomainEvents();
 
         return new AssignTaskResponse(command.TaskId, command.AssigneeId, task.Status.ToString());

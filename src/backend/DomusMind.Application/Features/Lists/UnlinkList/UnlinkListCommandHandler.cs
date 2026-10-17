@@ -43,7 +43,7 @@ public sealed class UnlinkListCommandHandler
 
         list.Unlink(DateTime.UtcNow);
 
-        await _eventLogWriter.WriteAsync(list.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([list], cancellationToken);
         list.ClearDomainEvents();
         await _dbContext.SaveChangesAsync(cancellationToken);
 

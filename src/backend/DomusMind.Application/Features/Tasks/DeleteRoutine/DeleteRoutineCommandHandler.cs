@@ -41,7 +41,7 @@ public sealed class DeleteRoutineCommandHandler
 
         routine.Delete();
         _dbContext.Set<Routine>().Remove(routine);
-        await _eventLogWriter.WriteAsync(routine.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([routine], cancellationToken);
         routine.ClearDomainEvents();
 
         return new DeleteRoutineResponse(command.RoutineId);

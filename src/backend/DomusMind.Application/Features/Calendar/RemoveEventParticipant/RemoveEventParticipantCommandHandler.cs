@@ -58,7 +58,7 @@ public sealed class RemoveEventParticipantCommandHandler
             throw new CalendarException(CalendarErrorCode.ParticipantNotFound, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(calendarEvent.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([calendarEvent], cancellationToken);
         calendarEvent.ClearDomainEvents();
 
         return new RemoveEventParticipantResponse(command.CalendarEventId, command.MemberId);

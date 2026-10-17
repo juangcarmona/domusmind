@@ -58,7 +58,7 @@ public sealed class AddEventParticipantCommandHandler
             throw new CalendarException(CalendarErrorCode.EventAlreadyCancelled, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(calendarEvent.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([calendarEvent], cancellationToken);
         calendarEvent.ClearDomainEvents();
 
         return new AddEventParticipantResponse(command.CalendarEventId, command.MemberId);

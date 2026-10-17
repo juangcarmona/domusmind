@@ -52,7 +52,7 @@ public sealed class ReassignTaskCommandHandler
             throw new TasksException(TasksErrorCode.InvalidInput, ex.Message);
         }
 
-        await _eventLogWriter.WriteAsync(task.DomainEvents, cancellationToken);
+        await _eventLogWriter.WriteAsync([task], cancellationToken);
         task.ClearDomainEvents();
 
         return new ReassignTaskResponse(command.TaskId, previousAssigneeId, command.NewAssigneeId);
