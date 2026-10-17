@@ -53,6 +53,39 @@ sequenceDiagram
 
 Queries follow the same shape through `QueryDispatcher` to a query handler that reads with `AsNoTracking()` projections and returns a `Contracts` model; they write nothing.
 
+## Shared-list updates across open sessions
+
+The API publishes an empty invalidation notice only after a Lists command has committed. A subscriber reloads the list through the existing authenticated detail query, so the stream does not carry household data.
+
+```mermaid
+sequenceDiagram
+    participant A as Member A browser
+    participant C as ListsController
+    participant H as Lists command handler
+    participant DB as DomusMind database
+    participant N as ListChangeNotifier
+    participant S as Member B SSE stream
+    participant B as Member B browser
+
+    B->>C: GET /api/shared-lists/{id}/events with bearer token
+    C->>H: authorize through GetListDetail query
+    H->>DB: check list access and household membership
+    C-->>B: 200 text/event-stream with refresh event
+    B->>C: GET /api/shared-lists/{id} with bearer token
+    A->>C: POST/PATCH list mutation with bearer token
+    C->>H: Dispatch list command
+    H->>DB: authorize, update SharedList, commit event log
+    C->>N: publish list id after command succeeds
+    N-->>S: empty refresh event for this list
+    S-->>B: forward refresh event
+    B->>C: GET /api/shared-lists/{id} with bearer token
+    C->>H: authorize through GetListDetail query
+    H->>DB: load current list detail
+    C-->>B: current detail response
+```
+
+`ListChangeNotifier` is in-memory and supports the one-application-instance self-hosted topology. The controller rechecks subscription access on its keep-alive interval, while every mutation handler performs its own household authorization. On reconnect, the stream sends another refresh event so the browser reloads current state. The product does not define a latency target; the browser journey checks eventual visibility without a manual refresh.
+
 ### Failure Behavior
 
 Handlers throw a module-specific exception (for example `CalendarException` with an error code); controllers translate those into 400, 403 or 404 responses. A missing handler registration raises `HandlerResolutionException`, which the global exception handler maps to a 500 response with a `handler_resolution_failed` code; any other unhandled exception becomes a generic 500 with a trace id.
