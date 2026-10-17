@@ -136,7 +136,7 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
     await expect(memberPage.getByRole("heading", { name: "Set your password" })).toBeVisible();
     const memberNewPassword = `Dm-${runKey}-B8!`;
     await memberPage.getByLabel("Temporary password").fill(memberPassword);
-    await memberPage.getByLabel("New password").fill(memberNewPassword);
+    await memberPage.getByLabel("New password", { exact: true }).fill(memberNewPassword);
     await memberPage.getByLabel("Confirm new password").fill(memberNewPassword);
     await memberPage.getByRole("button", { name: "Set new password" }).click();
     await expect(memberPage.getByRole("heading", { name: "Sign in" })).toBeVisible();
