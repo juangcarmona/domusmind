@@ -3,6 +3,7 @@ using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Contracts.Auth;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DomusMind.Api.Tests.Controllers;
@@ -17,6 +18,21 @@ public sealed class AuthControllerTests
         var result = sut.Health();
 
         result.Should().BeOfType<OkObjectResult>();
+    }
+
+    [Fact]
+    public void Register_ReturnsStableForbiddenResponse()
+    {
+        var sut = new AuthController(new StubCurrentUser(null, null));
+
+        var result = sut.Register().Should().BeOfType<ObjectResult>().Subject;
+
+        result.StatusCode.Should().Be(StatusCodes.Status403Forbidden);
+        result.Value.Should().BeEquivalentTo(new
+        {
+            code = "auth.registration_disabled",
+            message = "Account registration is disabled.",
+        });
     }
 
     [Fact]

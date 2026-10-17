@@ -19,7 +19,7 @@ public static class OpenApiAuthExtensions
             {
                 Title = "DomusMind API",
                 Version = "v1",
-                Description = "Auth endpoints: POST /api/auth/register → POST /api/auth/login → copy AccessToken → Authorize.",
+                Description = "Auth endpoints: POST /api/auth/login → copy AccessToken → Authorize. Public registration is disabled; use first-run setup or have a household manager provision member access.",
             });
 
             var bearerScheme = new OpenApiSecurityScheme

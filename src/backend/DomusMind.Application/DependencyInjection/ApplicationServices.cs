@@ -4,7 +4,6 @@ using DomusMind.Application.Features.Auth.GetCurrentUser;
 using DomusMind.Application.Features.Auth.Login;
 using DomusMind.Application.Features.Auth.Logout;
 using DomusMind.Application.Features.Auth.RefreshToken;
-using DomusMind.Application.Features.Auth.RegisterUser;
 using DomusMind.Application.Features.Calendar.AddEventParticipant;
 using DomusMind.Application.Features.Calendar.AddReminder;
 using DomusMind.Application.Features.Calendar.CancelEvent;
@@ -131,7 +130,6 @@ public static class ApplicationServices
         this IServiceCollection services)
     {
         // Auth slices
-        services.AddScoped<ICommandHandler<RegisterUserCommand, RegisterUserResponse>, RegisterUserCommandHandler>();
         services.AddScoped<ICommandHandler<LoginCommand, LoginResponse>, LoginCommandHandler>();
         services.AddScoped<ICommandHandler<RefreshTokenCommand, RefreshTokenResponse>, RefreshTokenCommandHandler>();
         services.AddScoped<ICommandHandler<ChangePasswordCommand, ChangePasswordResponse>, ChangePasswordCommandHandler>();

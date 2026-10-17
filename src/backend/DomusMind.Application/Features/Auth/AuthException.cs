@@ -2,7 +2,6 @@ namespace DomusMind.Application.Auth;
 
 public enum AuthErrorCode
 {
-    EmailAlreadyTaken,
     InvalidCredentials,
     InvalidRefreshToken,
     InvalidCurrentPassword,
