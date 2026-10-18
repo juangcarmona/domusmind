@@ -3,23 +3,23 @@ title: "DomusMind"
 description: "Ein gemeinsames System für den Haushalt — damit eine Person aufhört, alles alleine zu tragen."
 hero:
   headline: "Wenn du aufhörst, ans Haus zu denken, geht es schief."
-  supportLine: "Jemand hat immer alles im Blick. Das Haus hört auf, vom Gedächtnis einer Person abzuhängen."
+  supportLine: "DomusMind bündelt Pläne, Routinen, Aufgaben, Listen und Bereiche an einem gemeinsamen Ort. So sehen alle, was wichtig ist, was zu tun ist und wer sich darum kümmert."
   proofBullets:
     - "Eine Person hört auf, alles zu tragen."
     - "Die anderen sehen, was passiert."
     - "Der Haushalt hört auf, von einem einzigen Gehirn abzuhängen."
   primaryCta:
-    label: "Ausprobieren"
+    label: "Frühen Zugang erhalten"
     href: "/early-access"
   secondaryCta:
-    label: "Wie dein Haus aussieht"
+    label: "So funktioniert es"
     href: "#how-it-works"
   proofPanel:
     eyebrow: "Heute"
     title: "Heute"
     groups:
-      - ["Garten → Juan", "Grillzubehör"]
-      - ["Mateo Fußball um 18:00"]
+      - ["Garten → Michael", "Grillzubehör"]
+      - ["Noah — Fußballtraining um 18:00"]
     caption: "Alle sehen, was wichtig ist. Niemand muss sich alles merken."
 reality:
   title: "Die Realität"
@@ -27,7 +27,7 @@ reality:
     - "Eine Person weiß, wann die Schule endet."
     - "Eine Person erinnert sich an den Termin."
     - "Eine Person merkt, was zu Hause fehlt."
-  summary: "Wenn diese Person aufhört zu denken, hört der Haushalt auf zu funktionieren."
+  summary: "Wenn diese Person nicht mehr alles im Blick hat, gerät der Alltag im Haushalt ins Stocken."
 breakdown:
   title: "Warum Tools das nicht lösen"
   items:
@@ -45,53 +45,62 @@ shift:
     - "Verantwortung wird klar."
     - "Andere können handeln, ohne dass jemand sie daran erinnern muss."
 proof:
-  title: "What You See"
+  title: "Was du siehst"
   primary:
     title: "Heute"
     caption: "Alle sehen, was wichtig ist. Niemand muss sich alles merken."
-    placeholder: "today-view"
+    placeholder: "Tagesansicht"
     alt: "Heute-Ansicht mit Plänen, Aufgaben und Verantwortlichkeiten des Haushalts"
     preview:
       eyebrow: "Heute"
       groups:
-        - ["Garten → Juan", "Grillzubehör"]
-        - ["Mateo Fußball um 18:00"]
+        - ["Garten → Michael", "Grillzubehör"]
+        - ["Noah — Fußballtraining um 18:00"]
   secondary:
     title: "Woche"
     caption: "Die ganze Woche im Blick — bevor volle Tage zu Stress werden."
-    placeholder: "WEEK_VIEW_SCREENSHOT"
+    placeholder: "Wochenansicht"
     alt: "Wochenansicht mit den Plänen des Haushalts für die nächsten Tage"
+    preview:
+      eyebrow: "Diese Woche"
+      groups:
+        - ["Abholung von der Schule — 15:30", "Fußballtraining — Noah"]
+        - ["Einkäufe", "Das Wochenende vorbereiten"]
 howItWorks:
-  title: "How It Works"
+  title: "So funktioniert es"
   steps:
-    - title: "TODO_STEP_1_TITLE"
-      body: "TODO_STEP_1_BODY"
-    - title: "TODO_STEP_2_TITLE"
-      body: "TODO_STEP_2_BODY"
-    - title: "TODO_STEP_3_TITLE"
-      body: "TODO_STEP_3_BODY"
+    - title: "Richte den Haushalt ein."
+      body: "Gib ihm einen Namen und beginne mit eurer gemeinsamen Planung."
+    - title: "Füge Personen hinzu."
+      body: "Ergänze die Menschen, die zu deinem Haushalt gehören."
+    - title: "Ergänze euren Alltag."
+      body: "Füge Pläne, Routinen, Aufgaben oder Listen hinzu und nutze sofort die Tages- und Wochenansicht."
 currentState:
   title: "Was heute existiert"
   groups:
-    - title: "Available now"
+    - title: "Haushalt und Mitglieder"
       items:
         - "Familie — Haushaltsidentität und Personen"
-        - "Verantwortlichkeiten — wer für welchen Bereich verantwortlich ist"
-        - "Kalender — Pläne, Termine und gemeinsame Zeitpläne"
+        - "Bereiche — wer sich um welchen Teil des Zuhauses kümmert"
+        - "Pläne — Termine, Aktivitäten und gemeinsame Zeit"
         - "Aufgaben — was erledigt werden muss und von wem"
-        - "Gemeinsame Listen — Einkaufslisten, Checklisten und wiederkehrende Haushaltsgegenstände"
-    - title: "In progress"
+        - "Routinen — wiederkehrende Aufgaben im Haushalt"
+        - "Listen — Einkäufe, Checklisten und wiederkehrende Aufgaben"
+        - "Chats — Haushaltsgespräche mit optionalem @dm-Assistenten"
+        - "Inbox — Gedanken festhalten und vorgeschlagene Änderungen prüfen"
+    - title: "Ansichten für den Haushalt"
       items:
-        - "Wochenansicht — übersichtlichere Wochenplanung"
-        - "Haushaltsbeziehungen — wer mit wem verbunden ist"
-        - "Sichere Mitgliederänderungen — Personen entfernen, ohne den Haushaltsstatus zu beschädigen"
-    - title: "Early access / next"
+        - "Agenda — was heute wichtig ist"
+        - "Woche — die nächsten Tage in einer gemeinsamen Ansicht"
+        - "Monat — der weitere Planungshorizont"
+        - "Haushalts- und Personenansichten — gemeinsame Aufgaben und persönliche Termine"
+    - title: "Früher Zugang"
       items:
-        - "Frühe Haushaltstests"
-        - "Produktverbesserung auf Basis von Nutzerfeedback"
-        - "Schnellere Ersteinrichtung"
+        - "Tests mit echten Haushalten"
+        - "Schnelle Verbesserungen durch Feedback"
+        - "Laufende Verbesserungen für mehr Übersicht und einen leichteren Einstieg"
 earlyAccess:
-  title: "Early Access / Support the Project"
+  title: "Früher Zugang / Unterstütze das Projekt"
   body: "Folge dem Projekt, teste frühe Versionen und hilf dabei, DomusMind für echte Haushalte zu gestalten."
   primaryCta:
     label: "Projekt folgen"

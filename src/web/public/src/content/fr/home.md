@@ -3,23 +3,23 @@ title: "DomusMind"
 description: "Un système partagé pour le foyer — pour qu'une personne arrête de tout porter seule."
 hero:
   headline: "Si tu arrêtes de penser à la maison, tout s'arrête."
-  supportLine: "Quelqu'un est toujours en train de tout gérer. La maison cesse de dépendre de la mémoire d'une seule personne."
+  supportLine: "DomusMind rassemble les plans, les routines, les tâches, les listes et les espaces dans un lieu partagé, pour que chacun voie ce qui compte, ce qu'il faut faire et qui s'en occupe."
   proofBullets:
     - "Une personne arrête de tout porter."
     - "Les autres voient ce qui se passe."
     - "La maison cesse de dépendre d'un seul cerveau."
   primaryCta:
-    label: "L'essayer"
+    label: "Rejoins l'accès anticipé"
     href: "/early-access"
   secondaryCta:
-    label: "Voir à quoi ressemble ta maison"
+    label: "Voir comment ça marche"
     href: "#how-it-works"
   proofPanel:
     eyebrow: "Aujourd'hui"
     title: "Aujourd'hui"
     groups:
-      - ["Jardin → Juan", "Charbon pour le barbecue"]
-      - ["Mateo football à 18h00"]
+      - ["Jardin → Nicolas", "Courses pour le barbecue"]
+      - ["Gabriel — football à 18 h"]
     caption: "Tout le monde voit ce qui compte. Plus personne n'a besoin de tout retenir."
 reality:
   title: "La réalité"
@@ -27,7 +27,7 @@ reality:
     - "Une personne sait quand l'école se termine."
     - "Une personne se souvient du rendez-vous."
     - "Une personne remarque ce qui manque à la maison."
-  summary: "Quand cette personne s'arrête de penser, la maison s'arrête de fonctionner."
+  summary: "Quand cette personne ne peut plus tout suivre, l'organisation du foyer se dérègle."
 breakdown:
   title: "Pourquoi les outils ne règlent pas ça"
   items:
@@ -45,53 +45,62 @@ shift:
     - "Les responsabilités deviennent claires."
     - "Chacun peut agir sans attendre qu'on lui dise."
 proof:
-  title: "What You See"
+  title: "Ce que tu vois"
   primary:
     title: "Aujourd'hui"
     caption: "Tout le monde voit ce qui compte. Plus personne n'a besoin de tout retenir."
-    placeholder: "today-view"
+    placeholder: "Vue du jour"
     alt: "Vue d'aujourd'hui avec les plans, tâches et responsabilités du foyer"
     preview:
       eyebrow: "Aujourd'hui"
       groups:
-        - ["Jardin → Juan", "Charbon pour le barbecue"]
-        - ["Mateo football à 18h00"]
+        - ["Jardin → Nicolas", "Courses pour le barbecue"]
+        - ["Gabriel — football à 18 h"]
   secondary:
     title: "Semaine"
     caption: "Voyez toute la semaine clairement avant que les jours chargés ne deviennent source de tension."
-    placeholder: "WEEK_VIEW_SCREENSHOT"
+    placeholder: "Vue de la semaine"
     alt: "Vue de la semaine avec les plans du foyer pour les prochains jours"
+    preview:
+      eyebrow: "Cette semaine"
+      groups:
+        - ["Sortie de l'école — 15 h 30", "Football — Gabriel"]
+        - ["Danse — Emma, 17 h", "Préparer le week-end"]
 howItWorks:
-  title: "How It Works"
+  title: "Comment ça marche"
   steps:
-    - title: "TODO_STEP_1_TITLE"
-      body: "TODO_STEP_1_BODY"
-    - title: "TODO_STEP_2_TITLE"
-      body: "TODO_STEP_2_BODY"
-    - title: "TODO_STEP_3_TITLE"
-      body: "TODO_STEP_3_BODY"
+    - title: "Crée le foyer."
+      body: "Donne-lui un nom : c'est le début de votre organisation commune."
+    - title: "Ajoute les personnes."
+      body: "Ajoute les membres de ton foyer."
+    - title: "Ajoute vos activités."
+      body: "Ajoute des plans, des routines, des tâches ou des listes, puis consulte tout de suite la journée et la semaine."
 currentState:
   title: "Ce qui existe aujourd'hui"
   groups:
-    - title: "Available now"
+    - title: "Le foyer et ses membres"
       items:
         - "Famille — identité du foyer et personnes"
-        - "Responsabilités — qui est responsable de chaque domaine"
-        - "Calendrier — plans, rendez-vous et horaires partagés"
+        - "Espaces — qui s'occupe de chaque partie du foyer"
+        - "Plans — rendez-vous, activités et temps partagé"
         - "Tâches — ce qui doit être fait et par qui"
-        - "Listes partagées — listes de courses, listes de contrôle et articles récurrents du foyer"
-    - title: "In progress"
+        - "Routines — tâches du foyer qui se répètent"
+        - "Listes — courses, listes de contrôle et tâches récurrentes"
+        - "Chats — conversations du foyer et assistant @dm en option"
+        - "Inbox — un espace pour noter tes idées et vérifier les changements proposés"
+    - title: "Vues pour organiser le foyer"
       items:
-        - "Vue de la semaine — une coordination hebdomadaire plus lisible"
-        - "Relations dans le foyer — qui est lié à qui"
-        - "Changements de membres sécurisés — retirer des personnes sans perturber l'état du foyer"
-    - title: "Early access / next"
+        - "Agenda — ce qui compte aujourd'hui"
+        - "Semaine — les prochains jours dans une vue partagée"
+        - "Mois — une vue d'ensemble pour planifier"
+        - "Vues du foyer et des personnes — le travail partagé et les engagements de chacun"
+    - title: "Accès anticipé"
       items:
-        - "Tests en foyer réel"
-        - "Amélioration du produit basée sur les retours utilisateurs"
-        - "Première prise en main plus rapide"
+        - "Essais dans de vrais foyers"
+        - "Améliorations rapides grâce aux retours"
+        - "Améliorations continues de la clarté et de la première prise en main"
 earlyAccess:
-  title: "Early Access / Support the Project"
+  title: "Accès anticipé / Soutenir le projet"
   body: "Suivez le projet, testez les premières versions et aidez à façonner DomusMind pour de vraies maisons."
   primaryCta:
     label: "Suivre le projet"

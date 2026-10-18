@@ -3,31 +3,31 @@ title: "DomusMind"
 description: "家族のための共有システム — 一人が全部を抱えるのをやめるために。"
 hero:
   headline: "家のことを考えるのをやめると、物事がうまくいかなくなる。"
-  supportLine: "誰かが常にすべてに気を配っている。家は一人の記憶に依存するのをやめる。"
+  supportLine: "DomusMindは予定、ルーティン、タスク、リスト、担当エリアを共有し、何が大切か、何をすべきか、誰が担当するかを家族みんなで確認できるようにします。"
   proofBullets:
     - "一人が全てを抱えるのをやめる。"
     - "他の人が何が起きているかを見る。"
     - "家が一つの脳に依存しなくなる。"
   primaryCta:
-    label: "試してみる"
+    label: "早期アクセスに参加"
     href: "/early-access"
   secondaryCta:
-    label: "家がどう見えるか"
+    label: "使い方を見る"
     href: "#how-it-works"
   proofPanel:
     eyebrow: "今日"
     title: "今日"
     groups:
-      - ["庭 → Juan", "バーベキュー用品"]
-      - ["マテオのサッカー 18:00"]
-    caption: "みんなが大切なことを見えている。誰も全部覚えなくていい。"
+      - ["庭 → Takashi", "バーベキューの買い出し"]
+      - ["Harutoのサッカー 18:00"]
+    caption: "大切なことをみんなで確認できる。もう一人で全部覚える必要はない。"
 reality:
   title: "現実"
   items:
     - "一人が、学校が何時に終わるか知っている。"
     - "一人が、予約や約束を覚えている。"
     - "一人が、家に何が足りないか気づいている。"
-  summary: "その人が考えるのをやめると、家全体が止まる。"
+  summary: "その人がすべてを把握し続けられなくなると、家庭の予定や役割が回らなくなります。"
 breakdown:
   title: "なぜツールでは解決できないのか"
   items:
@@ -42,57 +42,66 @@ shift:
   statement: "DomusMindはその見えない労力を、家庭全体で共有できるシステムに変える。"
   outcomes:
     - "家庭の全体像が見えるようになる。"
-    - "何が誰の貣任かが明確になる。"
+    - "誰が何を担当するかが明確になる。"
     - "言われなくても、それぞれが動けるようになる。"
 proof:
-  title: "What You See"
+  title: "見えてくること"
   primary:
     title: "今日"
-    caption: "みんなが大切なことを見えている。誰も全部覚えなくていい。"
-    placeholder: "today-view"
+    caption: "大切なことをみんなで確認できる。もう一人で全部覚える必要はない。"
+    placeholder: "今日の予定"
     alt: "今日の予定、タスク、責任を表示する今日ビュー"
     preview:
       eyebrow: "今日"
       groups:
-        - ["庭 → Juan", "バーベキュー用品"]
-        - ["マテオのサッカー 18:00"]
+        - ["庭 → Takashi", "バーベキューの買い出し"]
+        - ["Harutoのサッカー 18:00"]
   secondary:
     title: "週間"
-    caption: "濃い日がストレスになる前に、一週間全体を見渡す。"
-    placeholder: "WEEK_VIEW_SCREENSHOT"
+    caption: "予定が重なる前に、一週間全体を見渡せる。"
+    placeholder: "週間ビュー"
     alt: "家庭の予定を数日分表示する週間ビュー"
+    preview:
+      eyebrow: "今週"
+      groups:
+        - ["学校のお迎え 15:30", "Harutoのサッカー"]
+        - ["買い物", "週末の準備"]
 howItWorks:
-  title: "How It Works"
+  title: "使い方"
   steps:
-    - title: "TODO_STEP_1_TITLE"
-      body: "TODO_STEP_1_BODY"
-    - title: "TODO_STEP_2_TITLE"
-      body: "TODO_STEP_2_BODY"
-    - title: "TODO_STEP_3_TITLE"
-      body: "TODO_STEP_3_BODY"
+    - title: "家庭を作る。"
+      body: "家庭に名前をつけて、みんなで予定を共有しましょう。"
+    - title: "メンバーを追加する。"
+      body: "一緒に暮らす人たちを追加します。"
+    - title: "日々の予定を加える。"
+      body: "予定、ルーティン、タスク、リストを追加すると、今日と今週の予定をすぐに確認できます。"
 currentState:
   title: "今あるもの"
   groups:
-    - title: "Available now"
+    - title: "家庭とメンバー"
       items:
-        - "家族 — 世帯のアイデンティティとメンバー"
-        - "責任 — 誰がどのエリアを担当するか"
-        - "カレンダー — 予定、約束、共有スケジュール"
+        - "家庭 — 家庭の情報とメンバー"
+        - "エリア — 家のどの部分を誰が担当するか"
+        - "予定 — 約束、活動、みんなの予定"
         - "タスク — 何をすべきか、誰がするか"
-        - "共有リスト — 買い物リスト、チェックリスト、定期的な家庭用品"
-    - title: "In progress"
+        - "ルーティン — 繰り返し行う家事"
+        - "リスト — 買い物、チェック項目、繰り返しのタスク"
+        - "チャット — 家庭内の会話と、必要なときに使える @dm アシスタント"
+        - "Inbox — アイデアを記録し、提案された変更を確認"
+    - title: "家庭を整理する画面"
       items:
-        - "週間ビュー — 週単位の共有をより分かりやすく"
-        - "家庭内の関係 — 誰と誰がつながっているか"
-        - "安全なメンバー変更 — 家庭の状態を壊さずにメンバーを削除できる"
-    - title: "Early access / next"
+        - "Agenda — 今日大切なこと"
+        - "週間 — これから数日をみんなで確認"
+        - "月間 — 先の予定を見渡して計画"
+        - "家庭とメンバーの画面 — みんなのタスクと個人の予定を確認"
+    - title: "早期アクセス"
       items:
-        - "実際の家庭での早期テスト"
-        - "フィードバックをかたちにした改善"
-        - "初回起動の整備をもっとすほやかに"
+        - "実際の家庭で試用"
+        - "フィードバックをもとに素早く改善"
+        - "分かりやすさと初期設定を継続的に改善"
 earlyAccess:
-  title: "Early Access / Support the Project"
-  body: "プロジェクトをフォローし、早期ビルドを試し、実際の全家庭でDomusMindがどう機能するかを決めるのを手伝ってください。"
+  title: "早期アクセス / プロジェクトを応援する"
+  body: "プロジェクトをフォローし、早期ビルドを試して、実際の家庭で役立つDomusMindを一緒に作りましょう。"
   primaryCta:
     label: "プロジェクトをフォロー"
     href: "https://github.com/juangcarmona/domusmind"
