@@ -54,7 +54,7 @@ public sealed class InboxController(ICurrentUser currentUser, IConfiguration con
         try { return Ok(await commands.Dispatch(new InterpretInboxItemCommand(id, currentUser.UserId!.Value), cancellationToken)); }
         catch (UnauthorizedAccessException) { return Forbid(); }
         catch (KeyNotFoundException ex) { return NotFound(new { error = ex.Message }); }
-        catch (HttpRequestException) { return StatusCode(503, new { error = "The local interpreter is unavailable. The captured note is still saved." }); }
+        catch (HttpRequestException) { return StatusCode(503, new { error = "The configured interpreter is unavailable. The captured note is still saved." }); }
     }
 
     [HttpPost("{id:guid}/proposals/{proposalId:guid}/refine")]
