@@ -139,7 +139,7 @@ test("onboard a generated household and cover primary workflows at desktop and p
     expect(familyResponse.ok()).toBeTruthy();
     const family = await familyResponse.json() as { familyId: string; firstDayOfWeek?: string | null };
 
-    await test.step("capture, review, refine, and approve local Inbox proposals", async () => {
+    await test.step("capture, review, refine, and approve Inbox proposals", async () => {
       await page.goto("/inbox");
       await page.getByLabel("What should your household remember?").fill(
         "Task: Pay summer camp fee. Due date: 2030-06-14.",
