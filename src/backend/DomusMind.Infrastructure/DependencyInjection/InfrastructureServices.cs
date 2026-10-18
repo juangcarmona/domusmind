@@ -10,6 +10,8 @@ using DomusMind.Infrastructure.Integrations.Calendar.Microsoft;
 using DomusMind.Infrastructure.Languages;
 using DomusMind.Infrastructure.Messaging;
 using DomusMind.Infrastructure.Persistence;
+using DomusMind.Application.Features.Inbox;
+using DomusMind.Infrastructure.Inbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +34,20 @@ public static class InfrastructureServices
         services.AddScoped<IQueryDispatcher, QueryDispatcher>();
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         services.AddScoped<IEventLogWriter, EventLogWriter>();
+        services.AddHttpClient(nameof(OllamaInboxInterpreter)).ConfigureHttpClient(client =>
+            client.Timeout = TimeSpan.FromMinutes(2));
+        services.AddHttpClient(nameof(OpenAiCompatibleInboxInterpreter)).ConfigureHttpClient(client =>
+            client.Timeout = TimeSpan.FromMinutes(2));
+        services.AddScoped<IInboxInterpreter>(sp =>
+        {
+            var provider = configuration["Inbox:Interpreter:Provider"] ?? "Ollama";
+            return provider switch
+            {
+                "Ollama" => ActivatorUtilities.CreateInstance<OllamaInboxInterpreter>(sp),
+                "OpenAICompatible" => ActivatorUtilities.CreateInstance<OpenAiCompatibleInboxInterpreter>(sp),
+                _ => throw new InvalidOperationException($"Unsupported Inbox interpreter provider '{provider}'.")
+            };
+        });
 
         services.AddScoped<ISupportedLanguageReader, SupportedLanguageReader>();
 

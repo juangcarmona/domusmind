@@ -1,0 +1,14 @@
+# Select this override when INBOX_INTERPRETER_PROVIDER=OpenAICompatible so
+# Compose skips the local Ollama service and model download. Do not enable the
+# local-interpreter profile in this mode.
+services:
+  ollama:
+    profiles: [local-interpreter]
+
+  ollama-model:
+    profiles: [local-interpreter]
+
+  domusmind:
+    depends_on:
+      ollama-model:
+        required: false

@@ -1,6 +1,7 @@
 export default {
   areas: "Areas",
   agenda: "Agenda",
+  inbox: "Inbox",
   lists: "Lists",
   signOut: "Sign out",
   settings: "Settings",

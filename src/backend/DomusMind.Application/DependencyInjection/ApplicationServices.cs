@@ -6,6 +6,7 @@ using DomusMind.Application.Features.Auth.Logout;
 using DomusMind.Application.Features.Auth.RefreshToken;
 using DomusMind.Application.Features.Calendar.AddEventParticipant;
 using DomusMind.Application.Features.Calendar.AddReminder;
+using DomusMind.Application.Features.Calendar.AddTimelineNote;
 using DomusMind.Application.Features.Calendar.CalendarSubscriptions;
 using DomusMind.Application.Features.Calendar.CancelEvent;
 using DomusMind.Application.Features.Calendar.ConfigureExternalCalendarConnection;
@@ -123,7 +124,14 @@ using DomusMind.Contracts.Responsibilities;
 using DomusMind.Contracts.Setup;
 using DomusMind.Contracts.Tasks;
 using DomusMind.Contracts.Lists;
+using DomusMind.Application.Features.Inbox.Capture;
+using DomusMind.Application.Features.Inbox.Get;
+using DomusMind.Application.Features.Inbox.Interpret;
+using DomusMind.Application.Features.Inbox.Decide;
+using DomusMind.Application.Features.Inbox.Execute;
+using DomusMind.Contracts.Inbox;
 using DomusMind.Domain.MealPlanning.Events;
+using DomusMind.Domain.Inbox.Events;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DomusMind.Application.DependencyInjection;
@@ -133,6 +141,16 @@ public static class ApplicationServices
     public static IServiceCollection AddApplication(
         this IServiceCollection services)
     {
+        services.AddScoped<ICommandHandler<CaptureInboxItemCommand, InboxItemModel>, CaptureInboxItemHandler>();
+        services.AddScoped<IQueryHandler<GetInboxItemsQuery, IReadOnlyList<InboxItemModel>>, GetInboxItemsHandler>();
+        services.AddScoped<IQueryHandler<GetInboxItemQuery, InboxItemModel?>, GetInboxItemHandler>();
+        services.AddScoped<ICommandHandler<InterpretInboxItemCommand, InboxItemModel>, InterpretInboxItemHandler>();
+        services.AddScoped<ICommandHandler<RefineInboxProposalCommand, InboxItemModel>, DecideInboxProposalHandler>();
+        services.AddScoped<ICommandHandler<RejectInboxProposalCommand, InboxItemModel>, DecideInboxProposalHandler>();
+        services.AddScoped<ICommandHandler<MarkInboxProposalAppliedCommand, InboxItemModel>, DecideInboxProposalHandler>();
+        services.AddScoped<ICommandHandler<AddTimelineNoteCommand, TimelineNoteItem>, AddTimelineNoteCommandHandler>();
+        services.AddScoped<ICommandHandler<ApproveInboxProposalCommand, InboxItemModel>, ApproveInboxProposalHandler>();
+        services.AddScoped<IDomainEventHandler<InboxProposalApproved>, ExecuteApprovedInboxProposalHandler>();
         // Auth slices
         services.AddScoped<ICommandHandler<LoginCommand, LoginResponse>, LoginCommandHandler>();
         services.AddScoped<ICommandHandler<RefreshTokenCommand, RefreshTokenResponse>, RefreshTokenCommandHandler>();

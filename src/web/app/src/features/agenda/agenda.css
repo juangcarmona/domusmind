@@ -1282,3 +1282,18 @@
     gap: 0.4rem;
   }
 }
+.agenda-timeline-notes {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border-radius: var(--radius-md, 0.75rem);
+  background: var(--surface-secondary, #f4f5f7);
+}
+
+.agenda-timeline-notes h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.agenda-timeline-notes p {
+  margin: 0.25rem 0;
+}

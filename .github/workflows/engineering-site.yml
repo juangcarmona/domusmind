@@ -144,16 +144,18 @@ jobs:
       - name: Validate report generation logic
         run: node tools/e2e-report/report.test.mjs
 
-      - name: Start the API and web app against generated local test data
+      - name: Start the API and web app with a deterministic interpreter
         run: |
-          nohup env ASPNETCORE_URLS=http://127.0.0.1:52250 ConnectionStrings__domusmind='Host=127.0.0.1;Port=5432;Database=domusmind;Username=domusmind;Password=e2e-local-only' Jwt__SigningKey='e2e-run-only-signing-key-never-used-outside-this-job' dotnet run --project src/backend/DomusMind.Api/DomusMind.Api.csproj --no-build --no-launch-profile --configuration Release > /tmp/domusmind-e2e-api.log 2>&1 &
+          nohup node tools/e2e/mock-inbox-interpreter.mjs > /tmp/domusmind-e2e-interpreter.log 2>&1 &
+          nohup env ASPNETCORE_URLS=http://127.0.0.1:52250 ConnectionStrings__domusmind='Host=127.0.0.1;Port=5432;Database=domusmind;Username=domusmind;Password=e2e-local-only' Jwt__SigningKey='e2e-run-only-signing-key-never-used-outside-this-job' Inbox__Interpreter__Provider=OpenAICompatible Inbox__Interpreter__Endpoint=http://127.0.0.1:39002/v1/chat/completions Inbox__Interpreter__Model=domusmind-e2e dotnet run --project src/backend/DomusMind.Api/DomusMind.Api.csproj --no-build --no-launch-profile --configuration Release > /tmp/domusmind-e2e-api.log 2>&1 &
           nohup env API_HTTP=http://127.0.0.1:52250 npm --prefix src/web/app run dev -- --host 127.0.0.1 --port 61546 --strictPort > /tmp/domusmind-e2e-web.log 2>&1 &
           for attempt in $(seq 1 60); do
-            if curl --silent --fail http://127.0.0.1:52250/api/setup/status > /dev/null && curl --silent --fail http://127.0.0.1:61546/ > /dev/null; then exit 0; fi
+            if curl --silent --fail http://127.0.0.1:39002/health > /dev/null && curl --silent --fail http://127.0.0.1:52250/api/setup/status > /dev/null && curl --silent --fail http://127.0.0.1:61546/ > /dev/null; then exit 0; fi
             sleep 2
           done
           cat /tmp/domusmind-e2e-api.log
           cat /tmp/domusmind-e2e-web.log
+          cat /tmp/domusmind-e2e-interpreter.log
           exit 1
 
       - name: Run the selected browser journeys

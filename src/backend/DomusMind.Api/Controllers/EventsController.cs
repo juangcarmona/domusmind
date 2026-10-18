@@ -3,6 +3,7 @@ using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Features.Calendar;
 using DomusMind.Application.Features.Calendar.AddEventParticipant;
 using DomusMind.Application.Features.Calendar.AddReminder;
+using DomusMind.Application.Features.Calendar.AddTimelineNote;
 using DomusMind.Application.Features.Calendar.CancelEvent;
 using DomusMind.Application.Features.Calendar.DetectCalendarConflicts;
 using DomusMind.Application.Features.Calendar.GetFamilyPlans;
@@ -29,6 +30,22 @@ public sealed class EventsController : ControllerBase
     public EventsController(ICurrentUser currentUser)
     {
         _currentUser = currentUser;
+    }
+
+    /// <summary>Adds a dated family note to the household timeline.</summary>
+    [HttpPost("timeline-notes")]
+    [ProducesResponseType(typeof(TimelineNoteItem), StatusCodes.Status201Created)]
+    public async Task<IActionResult> AddTimelineNote([FromBody] AddTimelineNoteRequest request,
+        [FromServices] ICommandDispatcher dispatcher, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var note = await dispatcher.Dispatch(new AddTimelineNoteCommand(request.FamilyId, request.Text,
+                request.Date, _currentUser.UserId!.Value), cancellationToken);
+            return Created($"/api/events/timeline-notes/{note.TimelineNoteId}", note);
+        }
+        catch (UnauthorizedAccessException) { return Forbid(); }
+        catch (ArgumentException ex) { return BadRequest(new { error = ex.Message }); }
     }
 
     /// <summary>Schedules a new event for a family.</summary>

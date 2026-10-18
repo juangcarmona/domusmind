@@ -12,7 +12,7 @@ DomusMind has three materially different deployment variants: the **self-hosted 
 
 ### Overview
 
-A household runs DomusMind on one Docker host as a two-service Compose stack defined in [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml). The operator supplies installation values in a host-side `.env` (template: [`deploy/.env.example`](../../deploy/.env.example)) and, for external access, their own TLS-terminating reverse proxy.
+A household runs DomusMind on one Docker host as a Compose stack defined in [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml), including PostgreSQL, the API and SPA, and the selected Inbox interpreter. Ollama is the default local provider; an OpenAI-compatible endpoint can be selected with the external-interpreter Compose override. The operator supplies installation values in a host-side `.env` (template: [`deploy/.env.example`](../../deploy/.env.example)) and, for external access, their own TLS-terminating reverse proxy.
 
 ```mermaid
 flowchart LR
@@ -20,11 +20,13 @@ flowchart LR
     proxy["Reverse proxy<br/>(operator-provided, TLS)"]
     ghcr[("GHCR<br/>ghcr.io/&lt;owner&gt;/domusmind")]
     graphApi["Microsoft identity platform<br/>and Graph API"]
+    interpreterApi["Configured OpenAI-compatible<br/>interpreter (optional)"]
 
     subgraph host["Docker host (one household)"]
         subgraph compose["Compose network"]
             app["domusmind container<br/>ASP.NET Core :8080<br/>API + SPA + Swagger<br/>calendar refresh worker"]
             db[("postgres container<br/>PostgreSQL 17<br/>database domusmind")]
+            ollama["ollama container<br/>llama3.2:3b (default)"]
         end
         vol[["volume postgres_data"]]
     end
@@ -33,13 +35,16 @@ flowchart LR
     proxy -- "HTTP host:APP_PORT (default 24365)" --> app
     app -- "Npgsql, internal only" --> db
     db --- vol
+    app -- "local inference (default)" --> ollama
+    app -. "HTTPS outbound (optional)" .-> interpreterApi
     app -- "HTTPS outbound (optional)" --> graphApi
     ghcr -. "docker compose pull" .-> app
 ```
 
 - **`domusmind`** is the only published service. Its image is built by [`src/backend/DomusMind.Api/Dockerfile`](../../src/backend/DomusMind.Api/Dockerfile): a Node stage builds the web app, a .NET SDK stage publishes the API with the web app's `dist` copied into `wwwroot`, and the runtime stage is `mcr.microsoft.com/dotnet/aspnet:10.0` listening on plain HTTP port 8080. The container maps to host port `APP_PORT` (default `24365`).
 - **`postgres`** (`postgres:17-alpine`) has no host port; only the app reaches it over the Compose network. The app waits for its `pg_isready` health check before starting.
-- **`postgres_data`** is the only persistent volume and holds all application state, including the append-only event log, authentication users and refresh tokens, and encrypted external-calendar token caches. It is the unit of backup (see [DevOps](../devops.md#backup-and-restore)).
+- **`postgres_data`** holds application and event-log state. **`ollama_data`** persists the optional local model download; model weights do not contain household notes. Back up PostgreSQL as the source of household state (see [DevOps](../devops.md#backup-and-restore)).
+- **`ollama`** is reachable only on the Compose network. The one-shot `ollama-model` resource downloads `llama3.2:3b` into `ollama_data` before the API starts in the default configuration. The external-interpreter override omits both resources and sends note text to the configured endpoint; the Inbox discloses that data flow. <!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:8d7ea231e78c1835edef714637cd4f3620aa6319892b341156110022b66e96cb" -->
 - **Reverse proxy** is not part of the stack. The container speaks HTTP only; HTTPS and external exposure are the operator's responsibility, following the pattern `https://domusmind.example.com -> http://host:24365`. Forwarded scheme, host and client address are honored only from explicitly configured proxy IPs or networks; forwarded hosts can also be allowlisted. The proxy owns public HTTP-to-HTTPS redirection.
 - **Application diagnostics** use the image health check against `/api/system/ping`; Compose exposes its health status. The API logs the image version and commit at startup. Swagger is enabled in Development and disabled by default in Production, where an operator can enable it through configuration.
 - **Microsoft identity platform and Graph** are reached outbound only when a member connects an Outlook calendar; the Graph client and the periodic refresh worker run inside the `domusmind` process (see [ADR-0003](../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md)).
@@ -49,7 +54,7 @@ On every start the application applies pending EF Core migrations, then runs the
 ### Topology Rationale
 
 One household installs one instance, and the whole product ships as one image because the backend is a single modular monolith ([ADR-0004](../adr/0004-build-a-domain-centric-modular-monolith.md)) and the web app is served from that same process, so the browser always talks same-origin to `/api` and no CORS or second web server is needed. Multi-tenant hosting is not a driver of the topology.
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:45f1f39de62aeb90bc1e7c7f18f77f07d0f204fe3ab88e0d7e0c2d17b7aaa244" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:847b6e563399724961b0a0a9e630c9b902910ae34ef63579c1169def2c018388" -->
 
 Keeping PostgreSQL off the host network makes the application the single entry point to household data; all authentication and family-scoped authorization happen in that process (see [Crosscutting Concepts](08-crosscutting-concepts.md#authentication-authorization-and-identity-separation)).
 
@@ -95,7 +100,7 @@ and one-time Pages setup are documented in [Engineering site](../engineering-sit
 
 ## Infrastructure Level 1: Local Development
 
-Development uses .NET Aspire through [`DomusMind.AppHost`](../../src/backend/DomusMind.AppHost/AppHost.cs); it is never used in production.
+Development uses .NET Aspire through [`DomusMind.AppHost`](../../src/backend/DomusMind.AppHost/AppHost.cs); it is never used in production. Aspire provisions PostgreSQL and, when the selected provider is Ollama, the local model resource for Inbox interpretation. An OpenAI-compatible provider is configured through AppHost settings and does not start Ollama.
 
 ```mermaid
 flowchart LR
@@ -106,10 +111,14 @@ flowchart LR
         api["api<br/>DomusMind.Api :52250"]
         pg[("postgres + data volume<br/>database domusmind")]
         pgadmin["pgAdmin :5050"]
+        model["Ollama<br/>llama3.2:3b (when selected)"]
     end
+    external["OpenAI-compatible endpoint<br/>(when selected)"]
     dev --> vite
     vite -- "proxy /api" --> api
     api --> pg
+    api -. "when selected" .-> model
+    api -. "when selected" .-> external
     pgadmin --> pg
     api -. "OpenTelemetry via OTLP" .-> dashboard
 ```
@@ -121,3 +130,5 @@ Aspire provisions PostgreSQL with a data volume and pgAdmin, injects the `domusm
 | `DomusMind.Api` | Aspire project resource `api` | Development |
 | Web app source | Aspire Vite resource `web-app` | Development |
 | Database | Aspire PostgreSQL resource with pgAdmin | Development |
+| Local model | Aspire Ollama resource with `llama3.2:3b` when selected | Development |
+| External interpreter | Configured OpenAI-compatible endpoint when selected | Development or self-hosted |

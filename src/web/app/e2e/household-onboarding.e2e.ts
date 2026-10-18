@@ -21,7 +21,7 @@ function getHouseholdWeekStart(firstDayOfWeek: string | null | undefined): strin
 }
 
 test("onboard a generated household and cover primary workflows at desktop and phone widths", async ({ page, browser }, testInfo) => {
-  test.setTimeout(180_000);
+  test.setTimeout(600_000);
   const runKey = randomUUID();
   const email = `e2e-${runKey}@example.test`;
   const password = `Dm-${runKey}-A9!`;
@@ -138,6 +138,88 @@ test("onboard a generated household and cover primary workflows at desktop and p
     });
     expect(familyResponse.ok()).toBeTruthy();
     const family = await familyResponse.json() as { familyId: string; firstDayOfWeek?: string | null };
+
+    await test.step("capture, review, refine, and approve Inbox proposals", async () => {
+      await page.goto("/inbox");
+      await page.getByLabel("What should your household remember?").fill(
+        "Task: Pay summer camp fee. Due date: 2030-06-14.",
+      );
+      await page.getByRole("button", { name: "Save and interpret" }).click();
+
+      const taskItem = page.locator(".inbox-item").filter({ hasText: "Task: Pay summer camp fee" });
+      const taskProposal = taskItem.locator(".inbox-proposal")
+        .filter({ has: page.getByRole("heading", { name: "Task proposal" }) })
+        .filter({ hasText: "Pay summer camp fee" });
+      await expect(taskProposal).toBeVisible({ timeout: 30_000 });
+      await taskProposal.getByRole("button", { name: "Approve" }).click();
+      await expect(taskItem.getByText("Applied", { exact: true })).toBeVisible();
+
+      await page.getByLabel("What should your household remember?").fill(
+        "Plan: Family camping trip at Camp Muir. Start date: 2030-06-20. End date: 2030-06-23.",
+      );
+      await page.getByRole("button", { name: "Save and interpret" }).click();
+
+      const planItem = page.locator(".inbox-item").filter({ hasText: "Plan: Family camping trip at Camp Muir" });
+      const planProposal = planItem.locator(".inbox-proposal").filter({ hasText: "Camp Muir" });
+      await expect(planProposal).toBeVisible({ timeout: 30_000 });
+      await planProposal.getByRole("button", { name: "Refine" }).click();
+      const refineForm = planItem.locator(".inbox-refine");
+      const dates = refineForm.locator('input[type="date"]');
+      await dates.nth(0).fill("2030-06-20");
+      await dates.nth(1).fill("2030-06-23");
+      await refineForm.getByRole("button", { name: "Save changes" }).click();
+      await planItem.locator(".inbox-proposal").filter({ hasText: "Camp Muir" })
+        .getByRole("button", { name: "Approve" }).click();
+      await expect(planItem.getByText("Applied", { exact: true })).toBeVisible();
+
+      await page.getByLabel("What should your household remember?").fill(
+        "Reminder: Add a reminder 30 minutes before the Camp Muir plan starts on 2030-06-20.",
+      );
+      await page.getByRole("button", { name: "Save and interpret" }).click();
+      const reminderItem = page.locator(".inbox-item").filter({ hasText: "Camp Muir plan starts" });
+      const reminderProposal = reminderItem.locator(".inbox-proposal").filter({ has: page.getByRole("heading", { name: "Reminder proposal" }) });
+      await expect(reminderProposal).toBeVisible({ timeout: 30_000 });
+      await reminderProposal.getByRole("button", { name: "Refine" }).click();
+      const reminderForm = reminderItem.locator(".inbox-refine");
+      const planId = await reminderForm.getByLabel("Plan").locator("option").filter({ hasText: "Camp Muir" }).getAttribute("value");
+      expect(planId).toBeTruthy();
+      await reminderForm.getByLabel("Plan").selectOption(planId!);
+      await reminderForm.getByRole("button", { name: "Save changes" }).click();
+      await reminderItem.locator(".inbox-proposal").getByRole("button", { name: "Approve" }).click();
+      await expect(reminderItem.getByText("Applied", { exact: true })).toBeVisible();
+
+      await page.getByLabel("What should your household remember?").fill(
+        "Timeline note: The family visited Camp Muir for the first time on 2030-06-23.",
+      );
+      await page.getByRole("button", { name: "Save and interpret" }).click();
+      const noteItem = page.locator(".inbox-item").filter({ hasText: "visited Camp Muir for the first time" });
+      const noteProposal = noteItem.locator(".inbox-proposal").filter({ has: page.getByRole("heading", { name: "Timeline note proposal" }) });
+      await expect(noteProposal).toBeVisible({ timeout: 30_000 });
+      await noteProposal.getByRole("button", { name: "Approve" }).click();
+      await expect(noteItem.getByText("Applied", { exact: true })).toBeVisible();
+      await page.goto("/agenda?date=2030-06-23");
+      await expect(page.getByRole("region", { name: "Timeline notes" }).getByText("First Visit to Camp Muir")).toBeVisible();
+
+      const inboxResponse = await page.request.get(`/api/inbox?familyId=${family.familyId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      expect(inboxResponse.ok()).toBeTruthy();
+      const inboxItems = await inboxResponse.json() as Array<{
+        rawText: string;
+        proposals: Array<{ status: string; resultId: string | null }>;
+      }>;
+      const approvedItems = inboxItems.filter((item) =>
+        item.rawText.startsWith("Task: Pay summer camp fee")
+        || item.rawText.startsWith("Plan: Family camping trip at Camp Muir")
+        || item.rawText.startsWith("Reminder: Add a reminder 30 minutes before the Camp Muir plan starts")
+        || item.rawText.startsWith("Timeline note: The family visited Camp Muir"),
+      );
+      expect(approvedItems).toHaveLength(4);
+      expect(approvedItems.every((item) => item.proposals.some((proposal) =>
+        proposal.status === "Applied" && proposal.resultId,
+      ))).toBe(true);
+    });
+
     const listResponse = await page.request.post("/api/shared-lists", {
       headers: { Authorization: `Bearer ${accessToken}` },
       data: { familyId: family.familyId, name: `Live list ${runKey.slice(0, 8)}`, kind: "General" },

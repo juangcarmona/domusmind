@@ -153,6 +153,14 @@ public sealed class GetFamilyTimelineQueryHandler
                 i.Importance))
             .ToList();
 
-        return new FamilyTimelineResponse(items, timelineListItems);
+        var notesQuery = _dbContext.Set<TimelineNote>().AsNoTracking().Where(x => x.FamilyId == familyId);
+        if (query.From.HasValue) notesQuery = notesQuery.Where(x => x.Date >= query.From.Value);
+        if (query.To.HasValue) notesQuery = notesQuery.Where(x => x.Date <= query.To.Value);
+        var noteRecords = await notesQuery.OrderBy(x => x.Date).ThenBy(x => x.CreatedAtUtc)
+            .ToListAsync(cancellationToken);
+        var notes = noteRecords.Select(x => new FamilyTimelineNoteItem(x.Id.Value, x.Text,
+            x.Date.ToString("yyyy-MM-dd"), x.CreatedAtUtc)).ToArray();
+
+        return new FamilyTimelineResponse(items, timelineListItems, notes);
     }
 }

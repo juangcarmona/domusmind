@@ -74,6 +74,14 @@ export interface FamilyTimelineEventItem {
 
 export interface FamilyTimelineResponse {
   events: FamilyTimelineEventItem[];
+  notes: FamilyTimelineNoteItem[];
+}
+
+export interface FamilyTimelineNoteItem {
+  timelineNoteId: string;
+  text: string;
+  date: string;
+  createdAtUtc: string;
 }
 
 export interface RescheduleEventRequest {

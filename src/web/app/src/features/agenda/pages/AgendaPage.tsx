@@ -7,6 +7,7 @@ import { weekApi } from "../../agenda-today/api/weekApi";
 import type { WeeklyGridResponse } from "../../agenda-today/types";
 import type { ApiError } from "../../../api/domusmindApi";
 import { externalCalendarApi } from "../../../api/externalCalendarApi";
+import { calendarApi } from "../../../api/calendarApi";
 import { mealPlanningApi } from "../../../api/mealPlanningApi";
 import { fetchPlans } from "../../../store/plansSlice";
 import { fetchRoutines } from "../../../store/routinesSlice";
@@ -73,6 +74,7 @@ export function AgendaPage() {
   const [grid, setGrid] = useState<WeeklyGridResponse | null>(null);
   const [gridLoading, setGridLoading] = useState(false);
   const [gridError, setGridError] = useState<string | null>(null);
+  const [timelineNotes, setTimelineNotes] = useState<{ timelineNoteId: string; text: string; date: string }[]>([]);
 
   const [selectedEntry, setSelectedEntry] = useState<CalendarEntry | null>(null);
   const [selectionHydrationError, setSelectionHydrationError] = useState<string | null>(null);
@@ -157,6 +159,13 @@ export function AgendaPage() {
       fetchGrid(weekStartForSelected);
     }
   }, [weekStartForSelected, fetchGrid, familyId]);
+
+  useEffect(() => {
+    if (!familyId || !isHousehold) { setTimelineNotes([]); return; }
+    void calendarApi.getEvents(familyId, selectedDate, selectedDate)
+      .then((result) => setTimelineNotes(result.notes ?? []))
+      .catch(() => setTimelineNotes([]));
+  }, [familyId, isHousehold, selectedDate]);
 
   useEffect(() => {
     setSearchParams(
@@ -443,6 +452,10 @@ export function AgendaPage() {
 
           {!gridLoading && !gridError && (
             <>
+              {isHousehold && timelineNotes.length > 0 && <section className="agenda-timeline-notes" aria-label="Timeline notes">
+                <h2>Timeline notes</h2>
+                {timelineNotes.map((note) => <p key={note.timelineNoteId}>{note.text}</p>)}
+              </section>}
               {isHousehold && view === "day" && (
                 <TodayBoard
                   grid={grid}
