@@ -44,6 +44,7 @@ A release can be traced through the git tag, the GitHub Release, the immutable i
 | Workflow | Job (check context) | What it validates |
 | --- | --- | --- |
 | [`backend-ci.yml`](../.github/workflows/backend-ci.yml) | `backend build` | Restore, build, test `DomusMind.slnx`; publishes the API as a run artifact |
+| [`image-postgres-smoke.yml`](../.github/workflows/image-postgres-smoke.yml) | `image postgres smoke` | Builds the release Dockerfile and starts the image with a disposable PostgreSQL database; verifies startup migrations, first-run setup status, API ping and the built SPA, then removes the containers, network and volumes |
 | [`webapp-ci.yml`](../.github/workflows/webapp-ci.yml) | `webapp build` | `npm ci`, lint, test, build in `src/web/app` |
 | [`public-site-ci.yml`](../.github/workflows/public-site-ci.yml) | `Validate Astro site` | Lint, Astro check and build in `src/web/public`; pull requests only |
 | [`codeql.yml`](../.github/workflows/codeql.yml) | `Analyze (csharp)`, `Analyze (javascript-typescript)` | CodeQL; also weekly on schedule |
@@ -53,6 +54,8 @@ A release can be traced through the git tag, the GitHub Release, the immutable i
 | [`engineering-site.yml`](../.github/workflows/engineering-site.yml) | `Browser journeys`, `Build Engineering site`, `Publish Engineering site` | Runs generated-data browser coverage against the composed API, web app and PostgreSQL; publishes nightly reports and bounded evidence alongside the landing page, arc42/ADR and ProductShape snapshots. The non-cancelling publisher restores the current site manifest before updating it; see [`docs/engineering-site.md`](engineering-site.md) and [`docs/engineering-e2e.md`](engineering-e2e.md) |
 
 [`public-site-cd.yml`](../.github/workflows/public-site-cd.yml) deploys the public site to Azure Static Web Apps on pushes to `main` that touch `src/web/public`. In short, CI validates, `docker-edge.yml` publishes edge images, and `release.yml` is the only publisher of release images.
+
+The image smoke workflow runs on pull requests touching the backend, web app, Docker Compose installation, or the smoke-test workflow itself, and on matching pushes to `main`. It builds from the same [`DomusMind.Api/Dockerfile`](../src/backend/DomusMind.Api/Dockerfile) used by edge and release images. Its credentials and database are generated per run; it never connects to a developer or production database and does not publish the image.
 
 ### Required checks and the `changes` gate
 

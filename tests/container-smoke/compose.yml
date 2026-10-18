@@ -1,0 +1,31 @@
+name: ${COMPOSE_PROJECT_NAME:-domusmind-image-smoke}
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: domusmind_smoke
+      POSTGRES_USER: domusmind_smoke
+      POSTGRES_PASSWORD: ${SMOKE_DB_PASSWORD:?SMOKE_DB_PASSWORD must be set}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U domusmind_smoke -d domusmind_smoke"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  app:
+    build:
+      context: ../..
+      dockerfile: src/backend/DomusMind.Api/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__domusmind: "Host=postgres;Port=5432;Database=domusmind_smoke;Username=domusmind_smoke;Password=${SMOKE_DB_PASSWORD:?SMOKE_DB_PASSWORD must be set}"
+      Jwt__SigningKey: ${SMOKE_JWT_SIGNING_KEY:?SMOKE_JWT_SIGNING_KEY must be set}
+      Jwt__Issuer: domusmind-smoke
+      Jwt__Audience: domusmind-smoke
+    ports:
+      - "127.0.0.1:${SMOKE_APP_PORT:-18080}:8080"
