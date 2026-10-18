@@ -117,6 +117,43 @@ sequenceDiagram
 
 The member's approval command changes one Inbox aggregate and emits `InboxProposalApproved`. Its synchronous domain-event reaction dispatches the normal Calendar or Tasks command, then marks the proposal applied. The owning area handler repeats household authorization and input validation. The event writer keeps all aggregate and event-log writes in one PostgreSQL transaction, so a failed action leaves the proposal pending and creates no Plan or Task. Rejected proposals update only Inbox state. <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:a0b5a7a703274aa651f59d2b20d2c200d249892473aa0bb06a9d40995073e1bd" -->
 
+## Household conversation and explicit assistant question
+
+The Chats controller reads the authenticated user and dispatches explicit commands and queries. Handlers resolve the user's household member, enforce participant membership for each thread, persist each message as its own aggregate, and append its event through the existing event-log writer. The assistant path starts only when the posted text begins with `@dm`; it routes the question to one of the existing authorized read queries, sends that data to the configured provider and stores its answer as a separate assistant message linked to the question. The assistant has no command dispatcher and cannot mutate a household aggregate. If the selected provider is external, the Chats surface displays that household context is sent to it.
+
+<!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:471f9fa8993fa17314d158ee599bfbe772b0b10251665aabcedb4f99ec16d486" -->
+<!-- pdac:cite id="BR-CHAT-MEMBER-ACCESS" digest="sha256:fa5a7ef2fc77a8b8a3c55da99567c801445606f9ecc263bafff5a0261c0bb15a" -->
+<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:0d3703a9b0b3d2e5db5baf8b8c8658a40739273f42c973e17943aec214b4d6c8" -->
+
+```mermaid
+sequenceDiagram
+    participant Web as Web app
+    participant C as ChatsController
+    participant H as Chat handlers
+    participant Auth as FamilyAuthorizationService
+    participant DB as DomusMind database
+    participant Q as Existing authorized read query
+    participant AI as Configured chat assistant
+    participant EL as EventLogWriter
+
+    Web->>C: POST /api/chats/{threadId}/messages with bearer token
+    C->>H: Dispatch(PostChatMessageCommand, current user)
+    H->>Auth: Check household access and thread participation
+    H->>DB: Persist member message and event-log row
+    alt Text begins with @dm
+        C->>H: Dispatch(AnswerAssistantQuestionCommand)
+        H->>Auth: Recheck household access and participation
+        H->>Q: Dispatch read-only query for classified topic
+        Q->>DB: Read authorized household data
+        H->>AI: Question plus authorized context
+        AI-->>H: Grounded response text
+        H->>EL: Persist assistant message linked to question
+    end
+    C-->>Web: 201 member message and optional assistant response
+```
+
+The member message is persisted before calling the provider, so an unavailable assistant does not lose the conversation text. The API indicates that the assistant is unavailable while retaining the member's message. Thread list and message queries return data only to participants.
+
 ### Failure Behavior
 
 Handlers throw a module-specific exception (for example `CalendarException` with an error code); controllers translate those into 400, 403 or 404 responses. A missing handler registration raises `HandlerResolutionException`, which the global exception handler maps to a 500 response with a `handler_resolution_failed` code; any other unhandled exception becomes a generic 500 with a trace id.

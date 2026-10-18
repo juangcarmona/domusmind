@@ -492,6 +492,93 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.ToTable("calendar_timeline_notes", (string)null);
                 });
 
+            modelBuilder.Entity("DomusMind.Domain.Chats.ChatMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid?>("AuthorMemberId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("author_member_id");
+
+                    b.Property<string>("AuthorType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("author_type");
+
+                    b.Property<Guid>("ChatThreadId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("chat_thread_id");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<Guid?>("ReplyToMessageId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("reply_to_message_id");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId");
+
+                    b.HasIndex("ReplyToMessageId")
+                        .IsUnique();
+
+                    b.HasIndex("ChatThreadId", "CreatedAtUtc");
+
+                    b.ToTable("chat_messages", (string)null);
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.Chats.ChatThread", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc");
+
+                    b.Property<Guid>("CreatedByMemberId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by_member_id");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("kind");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("character varying(120)")
+                        .HasColumnName("title");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId", "CreatedAtUtc");
+
+                    b.ToTable("chat_threads", (string)null);
+                });
+
             modelBuilder.Entity("DomusMind.Domain.Family.Family", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1580,6 +1667,32 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasForeignKey("ConnectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.Chats.ChatThread", b =>
+                {
+                    b.OwnsMany("DomusMind.Domain.Chats.ChatThreadParticipant", "Participants", b1 =>
+                        {
+                            b1.Property<Guid>("ChatThreadId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("chat_thread_id");
+
+                            b1.Property<Guid>("MemberId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uuid")
+                                .HasColumnName("member_id");
+
+                            b1.HasKey("ChatThreadId", "MemberId");
+
+                            b1.HasIndex("MemberId");
+
+                            b1.ToTable("chat_thread_participants", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("ChatThreadId");
+                        });
+
+                    b.Navigation("Participants");
                 });
 
             modelBuilder.Entity("DomusMind.Domain.Family.FamilyMember", b =>

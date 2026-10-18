@@ -6,9 +6,9 @@ status: draft
 uses-terms:
   - "TERM-HOUSEHOLD"
 provenance:
-  source: "docs/_legacy/09_roadmap/roadmap.md (Purpose, V1, V1.1, V2, V3, Planning Rules); decision Q-0004"
-  confidence: "low"
-  recovered-from: "documentation"
+  source: "docs/_legacy/09_roadmap/roadmap.md (Purpose, V1, V1.1, V2, V3, Planning Rules); decision Q-0004; GitHub issue #18"
+  confidence: low
+  recovered-from: documentation
 ---
 
 ## Constraint
@@ -18,13 +18,13 @@ Planned: V1.1, V2, V3. DomusMind evolves in additive phases, each extending the 
 - **V1 - household operating core**: household, people, areas of responsibility, plans and reminders, tasks, routines, shared lists and the Agenda (observed: docs/_legacy/09_roadmap/roadmap.md, V1).
 - **V1.1 - operational hardening**: no new areas; reliability, validation completeness, security, projection quality, UX tightening, edge cases; may complete deferred capabilities such as relationships between people, removing a person and unfinished list lifecycle operations (observed: docs/_legacy/09_roadmap/roadmap.md, V1.1).
 - **V2 - household domain expansion**: administration, documents, property and maintenance, inventory-aware household state and food or meal coordination, built on the V1 core without blurring time, execution, responsibility and list-based coordination (observed: docs/_legacy/09_roadmap/roadmap.md, V2).
-- **V3 - intelligence and integrations**: messaging integrations, calendar synchronization, import and capture shortcuts, reminder routing, automation pipelines, projections and analytics, advanced AI-assisted interpretation and autonomous execution; intelligence comes after clarity and automation must strengthen the model, not bypass it (observed: docs/_legacy/09_roadmap/roadmap.md, V3). Review-first text Inbox interpretation into Plan, Task, Plan Reminder and Timeline Note proposals with deployment-selectable provider is current product (CHG-INBOX-ASSISTED-CAPTURE and CHG-INBOX-EXPAND-PROPOSALS).
+- **V3 - intelligence and integrations**: external messaging integrations, calendar synchronization, import and capture shortcuts, reminder routing, automation pipelines, projections and analytics, advanced AI-assisted interpretation and autonomous execution; intelligence comes after clarity and automation must strengthen the model, not bypass it (observed: docs/_legacy/09_roadmap/roadmap.md, V3). Review-first text Inbox interpretation into Plan, Task, Plan Reminder and Timeline Note proposals with deployment-selectable provider is current product (CHG-INBOX-ASSISTED-CAPTURE and CHG-INBOX-EXPAND-PROPOSALS). Household-scoped Chats with an explicitly invoked read-only assistant is also current product (CHG-HOUSEHOLD-CHATS).
 
 The roadmap is a single legacy document; everything beyond the current product is intent, not commitment (inferred).
 
 ## Rationale
 
-A smaller coherent system is better than a larger ambiguous one; the core must be trustworthy before it grows (observed: docs/_legacy/09_roadmap/roadmap.md, Planning Rules 2, V1.1 Outcome).
+A smaller coherent system is better than a larger ambiguous one; the core must be trustworthy before it grows (observed: docs/_legacy/09_roadmap/roadmap.md, Planning Rules 2, V1.1 Outcome). Chats supports household coordination within the current product boundary; external messaging integrations remain future work.
 
 ## Consequences
 

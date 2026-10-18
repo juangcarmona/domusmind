@@ -47,6 +47,15 @@ const server = createServer(async (request, response) => {
   for await (const chunk of request) body += chunk;
   const payload = JSON.parse(body);
   const note = payload.messages?.find((message) => message.role === "user")?.content ?? "";
+  if (note.startsWith("Question:\n")) {
+    const content = note.includes("Pay summer camp fee")
+      ? "The household timeline includes Pay summer camp fee."
+      : "I could not find that task in the authorized household data.";
+    response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({
+      choices: [{ message: { content } }],
+    }));
+    return;
+  }
   const noteText = note.split("Note:\n").at(-1) ?? "";
   const content = JSON.stringify({ proposals: interpret(noteText) });
 

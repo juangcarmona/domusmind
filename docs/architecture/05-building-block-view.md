@@ -48,9 +48,9 @@ The backend is a single deployable modular monolith rather than a set of service
 
 | Building block | Responsibility | Interfaces | Source location |
 | --- | --- | --- | --- |
-| Web app | Household-facing single-page application: Agenda, Inbox, Lists, Areas, Meal Planning, Settings; holds the session tokens client-side | Consumes the REST API; browser routes | [`src/web/app`](../../src/web/app) |
-| DomusMind API | All product behaviour: authentication, authorization, commands, queries, domain model, persistence, configured Inbox interpretation client, external calendar ingestion and its background worker | REST API documented with Swagger ([ADR-0005](../adr/0005-expose-a-rest-api-through-aspnet-core-controllers.md)); serves the web app bundle in production | [`src/backend`](../../src/backend) |
-| Text interpreter | Structured interpretation of Inbox notes; selected by deployment configuration | Ollama local API or configured OpenAI-compatible chat-completions endpoint | Infrastructure adapters |
+| Web app | Household-facing single-page application: Agenda, Chats, Inbox, Lists, Areas, Meal Planning, Settings; holds the session tokens client-side | Consumes the REST API; browser routes | [`src/web/app`](../../src/web/app) |
+| DomusMind API | All product behaviour: authentication, authorization, commands, queries, domain model, persistence, configured Inbox interpreter and Chats assistant, external calendar ingestion and its background worker | REST API documented with Swagger ([ADR-0005](../adr/0005-expose-a-rest-api-through-aspnet-core-controllers.md)); serves the web app bundle in production | [`src/backend`](../../src/backend) |
+| Configured language-model provider | Inbox proposal interpretation and explicit read-only Chats answers; selected by deployment configuration | Ollama local API or configured OpenAI-compatible chat-completions endpoint | Infrastructure adapters |
 | DomusMind database | Operational state of every aggregate, authentication records, user-to-household access grants and the append-only event log, in one schema | PostgreSQL connection string `domusmind` | EF Core migrations in [`DomusMind.Infrastructure/Persistence`](../../src/backend/DomusMind.Infrastructure/Persistence) |
 | Public site | Static product and marketing pages | Static hosting only; no API calls | [`src/web/public`](../../src/web/public) |
 | AppHost | Local orchestration: PostgreSQL with pgAdmin, the API and the Vite dev server, wired by references | .NET Aspire app model | [`src/backend/DomusMind.AppHost`](../../src/backend/DomusMind.AppHost) |
@@ -114,12 +114,14 @@ flowchart TB
     Tasks["Tasks<br/>HouseholdTask, Routine"]
     Lists["Lists<br/>SharedList"]
     Meals["MealPlanning<br/>MealPlan, Recipe, WeeklyTemplate"]
+    Chats["Chats<br/>ChatThread, ChatMessage"]
 
     Resp --> Family
     Cal --> Family
     Tasks --> Family
     Lists --> Family
     Meals --> Family
+    Chats --> Family
     Cal --> Resp
     Tasks --> Resp
     Lists --> Resp
@@ -135,6 +137,7 @@ Arrows are domain-level references and point at the module whose identifier type
 | Tasks | Structured execution: tasks with a lifecycle and assignee, and routines that recur | `HouseholdTask`, `Routine` | [`Domain/Tasks`](../../src/backend/DomusMind.Domain/Tasks), [`Features/Tasks`](../../src/backend/DomusMind.Application/Features/Tasks) |
 | Lists | Reusable capture containers and their items, including optional temporal fields that make items eligible for Agenda projection | `SharedList` | [`Domain/Lists`](../../src/backend/DomusMind.Domain/Lists), [`Features/Lists`](../../src/backend/DomusMind.Application/Features/Lists) |
 | MealPlanning | Weekly meal plans and slots, the recipe library and weekly templates; requests shopping lists that then belong to Lists | `MealPlan`, `Recipe`, `WeeklyTemplate` | [`Domain/MealPlanning`](../../src/backend/DomusMind.Domain/MealPlanning), [`Features/MealPlanning`](../../src/backend/DomusMind.Application/Features/MealPlanning) |
+| Chats | Household and participant-scoped conversations, persistent messages and explicitly requested read-only household answers | `ChatThread`, `ChatMessage` | [`Domain/Chats`](../../src/backend/DomusMind.Domain/Chats), [`Features/Chats`](../../src/backend/DomusMind.Application/Features/Chats) |
 
 The product responsibility of each module is owned by its bounded-context artifact; the table above only states how the code realizes it.
 
@@ -144,6 +147,7 @@ The product responsibility of each module is owned by its bounded-context artifa
 <!-- pdac:cite id="BC-TASKS" digest="sha256:7a1a64e2267e7795b9766611ab9d65af92e80600a128617a728d4bff899a032d" -->
 <!-- pdac:cite id="BC-LISTS" digest="sha256:278bab0e63c76bf592a652d1a53fcaf99a6a79cf52153a4d566d26dfcd1bf0e0" -->
 <!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:3e2d211a42325e9e719480512210f6ec9c5255f4fa647518cae3598e2bd6e835" -->
+<!-- pdac:cite id="BC-CHATS" digest="sha256:02ba26543d23ee6f89430f2766bcd7c86f3e4cc4e3fcad3307a75d94a475310e" -->
 
 Cross-module read models are not owned by any single module. The Agenda week grid and household timeline queries live under `Features/Family` and the member agenda under `Features/Calendar`, and each reads the aggregates of several modules directly through `IDomusMindDbContext` (see [section 06](06-runtime-view.md)).
 

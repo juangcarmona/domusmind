@@ -37,6 +37,10 @@ public sealed class DomusMindDbContext : DbContext, IDomusMindDbContext
 
     public DbSet<Domain.Inbox.InboxItem> InboxItems => Set<Domain.Inbox.InboxItem>();
 
+    public DbSet<Domain.Chats.ChatThread> ChatThreads => Set<Domain.Chats.ChatThread>();
+
+    public DbSet<Domain.Chats.ChatMessage> ChatMessages => Set<Domain.Chats.ChatMessage>();
+
     public DbSet<Domain.Tasks.HouseholdTask> Tasks
         => Set<Domain.Tasks.HouseholdTask>();
 
