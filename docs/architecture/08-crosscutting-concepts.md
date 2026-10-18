@@ -227,8 +227,8 @@ Only the delegated `Calendars.Read` Graph permission is accepted; write or other
 <!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:a631bcb19c09716b7cbee7b25563b55eec7ca4287de67c84cb1081144d29deb9" -->
 
 Inbox interpretation and Chats answers use `Inbox:Interpreter:Provider` to select Ollama or an OpenAI-compatible endpoint, with endpoint, model and optional API key settings under `Inbox:Interpreter`. When the selected Chats provider is external, the Chats surface tells the member that the question and household context used for the response are sent outside the deployment. Ordinary chat messages are not sent to the assistant.
-<!-- pdac:cite id="QR-CHAT-PRIVATE-CONTENT" digest="sha256:2a21faf96ceea5d0842fdc28b3308c404d49f9862d15a6f646f9132f45adfea3" -->
-<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:0d3703a9b0b3d2e5db5baf8b8c8658a40739273f42c973e17943aec214b4d6c8" -->
+<!-- pdac:cite id="QR-CHAT-PRIVATE-CONTENT" digest="sha256:8ad3fa078189d181c554234ff721be2110dc75a813373ea153d16178e983e5da" -->
+<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:f1f7e93a9607dc324ecada95aa4bf2f012e7e0a96304c5b4a6d07e8ea5d4d710" -->
 
 Calendar subscription URLs are 256-bit random bearer secrets. Persistence contains only a SHA-256 verifier; the URL is returned only on creation, the feed route is public by design, and success responses disable HTTP caching. The route template prevents request telemetry from needing a raw token value. The Calendar aggregate records successful access time and count alongside its append-only domain events.
 <!-- pdac:cite id="QR-CALENDAR-SUBSCRIPTION-SECURITY" digest="sha256:e1d9579e065244b2ee489c776fe6a3cf2ffd3c586666b7f2b9127101d64bd62f" -->

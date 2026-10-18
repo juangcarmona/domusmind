@@ -12,7 +12,7 @@ All surfaces share the same shell, layout grammar, visual tone, and interaction 
 
 <!-- pdac:cite id="FR-WEB-APP-SHELL" digest="sha256:31085ec615794bf88151dee377bbfb2f5021f7a11dfbb4fbeb53ab6028cefadf" -->
 <!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:471f9fa8993fa17314d158ee599bfbe772b0b10251665aabcedb4f99ec16d486" -->
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:95653d0b301c3381633aec1e024e3a3bd998d41971df29e3bb3aa5f112185500" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:dd3281f32dbc5b36618fc57d7cfb31e7fc36d89963250aabb97446a39e4b3a66" -->
 
 <!-- pdac:cite id="UC-WEB-MOVE-BETWEEN-SURFACES" digest="sha256:644e9cb653039be248abe495399211a5757cec36a5e4296cdd494098705e05f1" -->
 
@@ -560,9 +560,9 @@ There is no separate full-detail page for Areas. A direct URL to an area detail 
 
 Settings SHALL be the low-frequency configuration surface. It does not duplicate operational functionality present in other surfaces.
 
-Phase 1 Settings has three primary sections:
+Settings has three primary sections:
 - **Profile** — member identity, account details, calendar connections
-- **Household** — household-level preferences
+- **Household** — household-level preferences, including assistant provider configuration for household managers
 - **Preferences** — personal defaults
 
 Settings opens to the Profile section by default.
@@ -571,6 +571,8 @@ Outlook calendar connections are managed in Profile. Each member manages their o
 
 Settings SHALL NOT handle: editing of native household plans, browsing of imported entries as a calendar-like surface, provider write-back, or administrative control of another member's calendar connections in phase 1.
 
+<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:6f46b897ec17ba34fa6027cdfa95a01a41d176d06edb4e69daced913c924bdc8" -->
+<!-- pdac:cite id="UC-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:b86e8a21e83677a4cbe232704a35ea0fa5f07f572d563b18f3c4fbcc87cfb39f" -->
 <!-- pdac:cite id="FR-WEB-SETTINGS-SURFACE" digest="sha256:d6bc7cc0dd3fe7d5338d0bb8e836467cde256b6feea2fce0c789204c1d22fc79" -->
 
 <!-- pdac:cite id="UC-WEB-MANAGE-SETTINGS" digest="sha256:9dbb90084c9135c6603878370913e153c97318b79ae85bbb5106eab623292734" -->

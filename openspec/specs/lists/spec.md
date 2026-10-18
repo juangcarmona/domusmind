@@ -14,7 +14,7 @@ Lists are scoped to the household (family). They may be optionally associated wi
 
 List state is shared in real time across household members — additions, toggles, and updates are visible to all without a manual refresh.
 
-<!-- pdac:cite id="BC-LISTS" digest="sha256:278bab0e63c76bf592a652d1a53fcaf99a6a79cf52153a4d566d26dfcd1bf0e0" -->
+<!-- pdac:cite id="BC-LISTS" digest="sha256:ebe914e9acf2be4ff0b5cd2bea8fbc7dd9e63713e3f6dea5e2b600a05ea7be76" -->
 
 <!-- pdac:cite id="TERM-LIST" digest="sha256:6549eba0b2224a4838902f734991430b4f097d5c9d8de8401f67573f4e78ec7a" -->
 
@@ -242,7 +242,10 @@ Restore is the symmetric inverse of archive. No item data is modified. The resto
 
 A household SHALL be able to add a new item to an active list with only a name.
 
-A new item is always created in an unchecked state. Optional fields at creation: quantity and note. Items are appended in stable order — each new item receives the next position. Importance and temporal fields are not set at item creation; they are applied through dedicated operations after creation.
+A new item is always created in an unchecked state. Optional fields at creation: quantity and note. Items are appended in stable order — each new item receives the next position. Importance and temporal fields are not set at item creation; they are applied through dedicated operations after creation. An assistant may stage an addition as an Inbox proposal, but Lists changes only after an authorized member approves it.
+
+<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:f1a488d642604dbe43c9e465683fa2602b7f027d5618c4c4d3ac7e73cc29e8be" -->
+<!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:7c54cc5879964502757faea971dacd03b841305ae6166d64072cde41aea1303f" -->
 
 <!-- pdac:cite id="FR-LISTS-ADD-ITEM" digest="sha256:e8aa749e760b1deb27d59fd5f3e997342ccfd52438cffb1f96e79479275a3ce5" -->
 
@@ -281,7 +284,7 @@ A new item is always created in an unchecked state. Optional fields at creation:
 
 A household SHALL be able to update the base fields of a list item: name, quantity, and note.
 
-At least one of these fields must be provided. Fields not included are left unchanged. Quantity may be cleared explicitly. This operation does not affect checked state, importance, temporal fields, or item order.
+At least one of these fields must be provided. Fields not included are left unchanged. Quantity may be cleared explicitly. This operation does not affect checked state, importance, temporal fields, or item order. An assistant may stage these supported fields as an Inbox proposal, but Lists changes only after an authorized member approves it.
 
 <!-- pdac:cite id="FR-LISTS-UPDATE-ITEM" digest="sha256:ffef253a196bbafe63a688a4cea869d3f9a9146ceb230dce59a9448726c092f7" -->
 
