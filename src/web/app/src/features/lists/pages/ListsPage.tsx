@@ -46,7 +46,7 @@ import { ListsAddTemporalPanel } from "../components/ListsAddTemporalPanel";
 import { ListItemInspectorContent } from "../components/ListItemInspectorContent";
 import { ListMetaInspectorContent } from "../components/ListMetaInspectorContent";
 import { IconGrid, IconList, IconOptions, IconCalendar, IconBell, IconRepeat, IconTrash, IconChevronDown } from "../components/ListsIcons";
-import { toLocalInput, fromLocalInput, parseRepeat, serializeRepeat, WEEK_DAYS } from "../utils";
+import { toLocalInput, fromLocalInput, formatListItemUpdatedDate, parseRepeat, serializeRepeat, WEEK_DAYS } from "../utils";
 import { useListChangeStream } from "../useListChangeStream";
 import type { SharedListItemDetail } from "../../../api/types/listTypes";
 import {
@@ -491,6 +491,7 @@ export function ListsPage() {
   const selectedInStore = selectedItem
     ? detail?.items.find((i) => i.itemId === selectedItem.item.itemId) ?? selectedItem.item
     : null;
+  const selectedUpdatedDate = formatListItemUpdatedDate(selectedInStore?.updatedAtUtc);
   const selectedInStoreRef = useRef(selectedInStore);
   useEffect(() => {
     selectedInStoreRef.current = selectedInStore;
@@ -814,11 +815,11 @@ export function ListsPage() {
         >
           <IconChevronDown />
         </button>
-        <span className="li-inspector__bottom-meta">
-          {t("updatedOn", {
-            date: new Date(selectedInStore.updatedAtUtc).toLocaleDateString(undefined, { month: "short", day: "numeric" }),
-          })}
-        </span>
+        {selectedUpdatedDate && (
+          <span className="li-inspector__bottom-meta">
+            {t("updatedOn", { date: selectedUpdatedDate })}
+          </span>
+        )}
         <button
           type="button"
           className="li-inspector__bottom-delete"

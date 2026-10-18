@@ -24,7 +24,7 @@ export interface SharedListItemDetail {
   dueDate: string | null;   // "YYYY-MM-DD"
   reminder: string | null;  // ISO DateTimeOffset
   repeat: string | null;
-  updatedAtUtc: string;
+  updatedAtUtc?: string | null;
   updatedByMemberId: string | null;
   itemAreaId: string | null;
   targetMemberId: string | null;

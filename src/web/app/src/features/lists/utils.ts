@@ -24,6 +24,14 @@ export function fromLocalInput(localStr: string): string | null {
   }
 }
 
+/** Formats an item's optional update timestamp for the inspector. */
+export function formatListItemUpdatedDate(updatedAtUtc?: string | null): string | null {
+  if (!updatedAtUtc) return null;
+  const date = new Date(updatedAtUtc);
+  if (Number.isNaN(date.getTime())) return null;
+  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
 // Canonical repeat format: "Daily" | "Weekly:1,3,5" | "Monthly" | "Yearly"
 // Days of week: 0=Sun, 1=Mon … 6=Sat
 
