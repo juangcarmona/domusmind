@@ -106,7 +106,7 @@ async function main() {
 
   // Route map: section file names and README.md -> hash routes.
   const fileToRoute = new Map(docs.sections.map((s) => [s.file, `#/section/${s.number}`]));
-  fileToRoute.set(docs.readme.file, '#/');
+  fileToRoute.set(docs.readme.file, '#/introduction');
 
   // ADRs are authored beside arc42 rather than inside it. Include each record
   // in section 09 so the snapshot remains self-contained and its relative ADR
@@ -141,6 +141,7 @@ async function main() {
 
   const readmeRendered = await renderMarkdown(docs.readme.body, {
     fileToRoute,
+    currentRoute: '#/introduction',
     svgs: take(readmeMermaid.length),
     title: docs.readme.title,
     sourceFile: join(docsDir, docs.readme.file),
