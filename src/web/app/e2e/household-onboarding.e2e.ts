@@ -162,6 +162,13 @@ test("onboard a generated household and cover primary workflows at desktop and p
       const planItem = page.locator(".inbox-item").filter({ hasText: "Plan: Family camping trip at Camp Muir" });
       const planProposal = planItem.locator(".inbox-proposal").filter({ hasText: "Camp Muir" });
       await expect(planProposal).toBeVisible({ timeout: 30_000 });
+      const eventsForTrip = await page.request.get(
+        `/api/events?familyId=${family.familyId}&from=2030-06-20&to=2030-06-23`,
+        { headers: { Authorization: `Bearer ${accessToken}` } },
+      );
+      expect(eventsForTrip.ok()).toBeTruthy();
+      const eventsBeforeApproval = await eventsForTrip.json() as { events: Array<{ title: string }> };
+      expect(eventsBeforeApproval.events.some((event) => event.title === "Family camping trip at Camp Muir")).toBe(false);
       await planProposal.getByRole("button", { name: "Refine" }).click();
       const refineForm = planItem.locator(".inbox-refine");
       const dates = refineForm.locator('input[type="date"]');
@@ -171,6 +178,30 @@ test("onboard a generated household and cover primary workflows at desktop and p
       await planItem.locator(".inbox-proposal").filter({ hasText: "Camp Muir" })
         .getByRole("button", { name: "Approve" }).click();
       await expect(planItem.getByText("Applied", { exact: true })).toBeVisible();
+      const eventsAfterApproval = await page.request.get(
+        `/api/events?familyId=${family.familyId}&from=2030-06-20&to=2030-06-23`,
+        { headers: { Authorization: `Bearer ${accessToken}` } },
+      );
+      expect(eventsAfterApproval.ok()).toBeTruthy();
+      const approvedEvents = await eventsAfterApproval.json() as { events: Array<{ title: string }> };
+      expect(approvedEvents.events.some((event) => event.title === "Family camping trip at Camp Muir")).toBe(true);
+
+      await page.getByLabel("What should your household remember?").fill(
+        "Plan: Rejected river picnic. Start date: 2030-06-25. End date: 2030-06-26.",
+      );
+      await page.getByRole("button", { name: "Save and interpret" }).click();
+      const rejectedItem = page.locator(".inbox-item").filter({ hasText: "Rejected river picnic" });
+      const rejectedProposal = rejectedItem.locator(".inbox-proposal").filter({ hasText: "Rejected river picnic" });
+      await expect(rejectedProposal).toBeVisible({ timeout: 30_000 });
+      await rejectedProposal.getByRole("button", { name: "Reject" }).click();
+      await expect(rejectedItem.locator(".inbox-proposal").getByText("Rejected", { exact: true })).toBeVisible();
+      const eventsAfterRejection = await page.request.get(
+        `/api/events?familyId=${family.familyId}&from=2030-06-25&to=2030-06-26`,
+        { headers: { Authorization: `Bearer ${accessToken}` } },
+      );
+      expect(eventsAfterRejection.ok()).toBeTruthy();
+      const rejectedEvents = await eventsAfterRejection.json() as { events: Array<{ title: string }> };
+      expect(rejectedEvents.events.some((event) => event.title === "Rejected river picnic")).toBe(false);
 
       await page.getByLabel("What should your household remember?").fill(
         "Reminder: Add a reminder 30 minutes before the Camp Muir plan starts on 2030-06-20.",
@@ -218,6 +249,8 @@ test("onboard a generated household and cover primary workflows at desktop and p
       expect(approvedItems.every((item) => item.proposals.some((proposal) =>
         proposal.status === "Applied" && proposal.resultId,
       ))).toBe(true);
+      const rejected = inboxItems.find((item) => item.rawText.startsWith("Plan: Rejected river picnic"));
+      expect(rejected?.proposals).toContainEqual(expect.objectContaining({ status: "Rejected", resultId: null }));
     });
 
     const listResponse = await page.request.post("/api/shared-lists", {

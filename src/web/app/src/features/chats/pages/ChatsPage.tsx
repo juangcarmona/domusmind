@@ -81,7 +81,6 @@ export function ChatsPage() {
       setMessages((current) => [...current, response.message, ...(response.assistantResponse ? [response.assistantResponse] : [])]);
       setText("");
       if (response.assistantUnavailable) setAssistantNotice("Your message was saved, but the configured assistant is unavailable. Try again later.");
-      await reloadThreads();
     } catch { setError("Your message could not be sent."); }
     finally { setBusy(false); }
   }
