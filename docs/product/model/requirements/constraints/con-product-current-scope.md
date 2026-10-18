@@ -15,7 +15,7 @@ provenance:
 
 ## Constraint
 
-The current product covers the household and its people, areas of responsibility, plans with the Agenda and Phase 1 external calendars, read-only calendar subscriptions, tasks and routines, shared lists, meal planning with recipes, and a review-first Inbox for household notes (observed: docs/_legacy/01_system/system-spec.md, V1 Bounded Contexts; docs/_legacy/01_system/system-overview.md, Core System Model; meal planning is current product by decision Q-0001; calendar subscriptions are proposed by CHG-CALENDAR-SUBSCRIPTIONS; Inbox proposed by CHG-INBOX-ASSISTED-CAPTURE).
+The current product covers the household and its people, areas of responsibility, plans with the Agenda and Phase 1 external calendars, read-only calendar subscriptions, dated family timeline notes, tasks and routines, shared lists, meal planning with recipes, and a review-first Inbox for household notes that can propose Plans, Tasks, Plan reminders and timeline notes (observed: docs/_legacy/01_system/system-spec.md, V1 Bounded Contexts; docs/_legacy/01_system/system-overview.md, Core System Model; meal planning is current product by decision Q-0001; calendar subscriptions are proposed by CHG-CALENDAR-SUBSCRIPTIONS; Inbox scope by CHG-INBOX-ASSISTED-CAPTURE and CHG-INBOX-EXPAND-PROPOSALS).
 
 Outside the current product (observed: docs/_legacy/01_system/system-spec.md, Out of Scope for V1; docs/_legacy/01_system/system-overview.md, System Boundaries; docs/_legacy/09_roadmap/roadmap.md, Out of Scope for the Current Phase):
 

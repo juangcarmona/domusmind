@@ -85,6 +85,27 @@ Current required contexts on `main`: `backend build`, `webapp build`, `Validate 
 
 The release workflow repeats the backend and web app validation steps inline rather than calling a reusable workflow.
 
+## Local Development and Aspire Telemetry
+
+Run the AppHost from the repository root:
+
+```bash
+aspire run --apphost src/backend/DomusMind.AppHost/DomusMind.AppHost.csproj
+```
+
+The default `Ollama` provider starts PostgreSQL, the API, the Vite web app and the local model in Aspire. The Dashboard exposes resource health, traces, metrics and logs; the Aspire Server MCP can inspect those signals while the AppHost is running.
+
+To use an OpenAI-compatible interpreter, keep its endpoint, model and API key in AppHost user secrets, then rerun the AppHost:
+
+```bash
+dotnet user-secrets --project src/backend/DomusMind.AppHost set "Inbox:Interpreter:Provider" "OpenAICompatible"
+dotnet user-secrets --project src/backend/DomusMind.AppHost set "Inbox:Interpreter:Endpoint" "https://provider.example/v1/chat/completions"
+dotnet user-secrets --project src/backend/DomusMind.AppHost set "Inbox:Interpreter:Model" "model-name"
+dotnet user-secrets --project src/backend/DomusMind.AppHost set "Inbox:Interpreter:ApiKey" "your-api-key"
+```
+
+The external provider mode does not start Ollama. Inbox displays whether captured text leaves the deployment. Do not put provider credentials in committed settings files.
+
 ## Installation Configuration
 
 All installation-specific values live in a host-side `.env` next to the compose file and are never committed. Start from [`deploy/.env.example`](../deploy/.env.example).

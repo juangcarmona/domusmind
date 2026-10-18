@@ -2,8 +2,8 @@
 id: CHG-INBOX-EXPAND-PROPOSALS
 type: product-change
 title: Expand Inbox proposals and interpreter choices
-status: approved
-base-revision: 'ef28d64141435ccdb9a9322d009e4337393b2565'
+status: applied
+base-revision: '42a745595ce4c1cd2d40ced073a714c8be14c06e'
 operations:
   add: []
   modify:

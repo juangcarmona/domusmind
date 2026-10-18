@@ -21,14 +21,16 @@ Inbox owns captured household notes and the proposals produced from them. It giv
 
 ## Boundaries
 
-- Inbox owns captured text and proposal state. It does not own Plans or Tasks.
+- Inbox owns captured text and proposal state. It does not own Plans, Tasks, reminders or timeline notes.
 - Calendar and Tasks remain responsible for their normal commands and rules.
 - Interpretation proposes structured data; it does not decide whether that data becomes household state.
+- Reminder proposals refer to an existing Plan and its Calendar-owned reminder offsets. Timeline Note proposals create a standalone dated family note owned by Calendar.
 - Inbox is not conversational history, external message ingestion or an autonomous agent.
 
 ## External Relationships
 
 - Family supplies household membership and authorization.
 - Calendar may receive an explicitly approved Plan proposal.
+- Calendar may receive an explicitly approved Reminder or Timeline Note proposal.
 - Tasks may receive an explicitly approved Task proposal.
 - V1 does not create List item proposals; captured notes remain available for members to review.

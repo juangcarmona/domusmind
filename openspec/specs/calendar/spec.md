@@ -24,7 +24,7 @@ User interfaces may present Events as **Plans**, but the domain model remains ce
 
 Imported external calendar data is read-only integration state. It must never be treated as native household planning state.
 
-<!-- pdac:cite id="BC-CALENDAR" digest="sha256:cbbc009517c547a73acd5bcd9d96ffb678911eed01f38327ce28396f7ed724c1" -->
+<!-- pdac:cite id="BC-CALENDAR" digest="sha256:001862e5b66de444fc8d524e4bd63d39418293fdb6ae558c1c7bcdfac68cb424" -->
 
 <!-- pdac:cite id="TERM-PLAN" digest="sha256:f06fe7678136c535cf5f55e815f161d73562165b17c565f9496386dbd8395ac3" -->
 
@@ -35,6 +35,19 @@ Imported external calendar data is read-only integration state. It must never be
 <!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:2b2ea1de6c0f9a84d96f94d20087467fa7a198f197da80a85748fb145816fe03" -->
 
 <!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:a3d8d4afcfc23492b745fa37ac5b103ae76a7bc1d214456aeddbe2f57473ceea" -->
+
+### Requirement: Standalone dated family timeline notes
+
+An authorized household member can create a family timeline note with a date and note text. A note is a standalone Calendar record and appears in the household timeline on its date without changing a Plan or another area record.
+
+<!-- pdac:cite id="BC-CALENDAR" digest="sha256:001862e5b66de444fc8d524e4bd63d39418293fdb6ae558c1c7bcdfac68cb424" -->
+
+#### Scenario: Member records a dated family note
+
+- GIVEN the member can access the family
+- WHEN the member records a note with a date and text
+- THEN Calendar stores a standalone dated family note
+- AND the note appears in the household timeline on that date
 
 ---
 

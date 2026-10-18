@@ -27,7 +27,7 @@ strategy keeps each axis owned by a single module:
 <!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:740fa2cc41d90ec6afb099c5f97fa44e9092af8d83cd68291f807262387a44b0" -->
 <!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
 <!-- pdac:cite id="BC-RESPONSIBILITIES" digest="sha256:288de55e6b2023b73e2a4c9992f9390250c4a7690500cd4d6a207c432f324cc5" -->
-<!-- pdac:cite id="BC-CALENDAR" digest="sha256:f6a45688be328163ec27e0ce9ac3c1c0127301dc99843f810520d08065bc9288" -->
+<!-- pdac:cite id="BC-CALENDAR" digest="sha256:001862e5b66de444fc8d524e4bd63d39418293fdb6ae558c1c7bcdfac68cb424" -->
 <!-- pdac:cite id="BC-TASKS" digest="sha256:7a1a64e2267e7795b9766611ab9d65af92e80600a128617a728d4bff899a032d" -->
 <!-- pdac:cite id="BC-LISTS" digest="sha256:278bab0e63c76bf592a652d1a53fcaf99a6a79cf52153a4d566d26dfcd1bf0e0" -->
 <!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:3e2d211a42325e9e719480512210f6ec9c5255f4fa647518cae3598e2bd6e835" -->
@@ -44,4 +44,4 @@ The strategy deliberately adds no extension points for capabilities outside the
 current scope, such as messaging channels, AI interpretation or further calendar
 providers. They would arrive as new modules, slices or adapters within the same shape.
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:e15c25852c199d0df3faf9577a99856fd533d983e101c646149c85d10308ae64" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:847b6e563399724961b0a0a9e630c9b902910ae34ef63579c1169def2c018388" -->

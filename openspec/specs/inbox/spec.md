@@ -6,7 +6,7 @@
 
 Inbox stores household notes and presents optional Plan, Task, Reminder and Timeline Note proposals for an authorized member's decision. A Reminder adds an offset to an existing Plan; a Timeline Note is a standalone dated family note. The household member remains responsible for every change to shared product state.
 
-<!-- pdac:cite id="BC-INBOX" digest="sha256:ec8ade6216322e9d23a6d42b3272d7d6dfb2cf156d35a9c60dd226e8afac6f22" -->
+<!-- pdac:cite id="BC-INBOX" digest="sha256:5d1c27e26d86f896dd7be4e3ab7507f69768119974525ed9817ee843f9d4ad4d" -->
 
 <!-- pdac:cite id="TERM-INBOX-ITEM" digest="sha256:282309fac7b6161f54cbb3c3247faccd8da1506796ab0319fd1b4b89aefd45a7" -->
 
@@ -33,9 +33,9 @@ An authorized household member can capture a text note and retrieve the original
 
 Inbox may interpret a note using the deployment-selected provider and suggest Plan, Task, Reminder and Timeline Note proposals. A Reminder proposal identifies an existing Plan and a positive offset. A Timeline Note proposal has a date and text. Inbox distinguishes interpreted fields and unresolved details from the original note. Interpretation must not execute product behavior. The Inbox discloses when note text is sent outside the deployment.
 
-<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:cc3f5ebae647ef1f8972093a4536af389c7198bfece25ffdc1db904f7d934f7f" -->
+<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:b03ca8cf8beb1233c86f7433dc594c9cf4dfad6c6f47bdb413a084b58e679765" -->
 
-<!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:f52f383ec2b4c06033c30d4ff1864e663f25410b6772d5d12f90343df933e7d0" -->
+<!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:8d7ea231e78c1835edef714637cd4f3620aa6319892b341156110022b66e96cb" -->
 
 #### Scenario: Interpretation is unavailable
 
