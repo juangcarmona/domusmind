@@ -118,7 +118,7 @@ main {
   z-index: 10;
 }
 
-.header-nav {
+.primary-nav {
   display: flex;
   align-items: center;
   gap: 1.25rem;
@@ -127,7 +127,16 @@ main {
   flex-wrap: wrap;
 }
 
-.header-nav__link {
+.primary-nav ul {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.primary-nav a {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--muted);
@@ -138,22 +147,24 @@ main {
   border-bottom: 2px solid transparent;
 }
 
-.header-nav__link:hover {
+.primary-nav a:hover {
   color: var(--text);
 }
 
-.header-nav__link[aria-current="page"] {
+.primary-nav a[aria-current="page"] {
   color: var(--text);
   border-bottom-color: var(--primary);
   font-weight: 600;
 }
 
-.nav-menu-toggle {
+.nav-toggle {
   display: none;
+  flex-direction: column;
+  gap: 0.2rem;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
@@ -162,9 +173,18 @@ main {
   flex-shrink: 0;
 }
 
-.nav-menu-toggle svg {
+.nav-toggle span {
+  display: block;
   width: 1.1rem;
-  height: 1.1rem;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+.nav-toggle:focus-visible,
+.primary-nav a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
 }
 
 .brand {
@@ -351,7 +371,7 @@ main {
     text-overflow: ellipsis;
   }
 
-  .nav-menu-toggle {
+  .nav-toggle {
     grid-area: toggle;
     display: inline-flex;
   }
@@ -367,24 +387,26 @@ main {
     margin-left: 0;
   }
 
-  .header-nav {
+  .primary-nav {
     grid-area: nav;
     display: none;
     width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 0;
     margin-top: 0;
     padding-top: 0.5rem;
     border-top: 1px solid var(--border);
   }
 
-  .header-nav.is-open {
-    display: flex;
+  .primary-nav.is-open {
+    display: block;
   }
 
-  .header-nav__link {
+  .primary-nav ul {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .primary-nav a {
     display: block;
     width: 100%;
     padding: 0.7rem 0;
@@ -392,7 +414,7 @@ main {
     font-size: 0.95rem;
   }
 
-  .header-nav__link[aria-current="page"] {
+  .primary-nav a[aria-current="page"] {
     border-bottom-color: var(--border);
     border-left: 2px solid var(--primary);
     padding-left: 0.6rem;
