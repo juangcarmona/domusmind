@@ -44,6 +44,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__domusmind: "Host=postgres;Database=domusmind;Username=${DB_USER};Password=${DB_PASSWORD}"
+      DataProtection__KeysPath: /var/lib/domusmind/data-protection-keys
       Inbox__Interpreter__Provider: ${INBOX_INTERPRETER_PROVIDER:-Ollama}
       Inbox__Interpreter__Endpoint: ${INBOX_INTERPRETER_ENDPOINT:-}
       Inbox__Interpreter__Model: ${INBOX_INTERPRETER_MODEL:-}
@@ -68,7 +69,10 @@ services:
       # BootstrapAdmin__Password:     ${BOOTSTRAP_ADMIN_PASSWORD}
     ports:
       - "${APP_PORT:-24365}:8080"
+    volumes:
+      - data_protection_keys:/var/lib/domusmind/data-protection-keys
 
 volumes:
+  data_protection_keys:
   postgres_data:
   ollama_data:

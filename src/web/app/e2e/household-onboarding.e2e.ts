@@ -378,7 +378,7 @@ test("onboard a generated household and cover primary workflows at desktop and p
       const excludedMember = await excludedMemberResponse.json() as { memberId: string };
 
       await page.goto("/chats");
-      await expect(page.getByRole("note")).toContainText("configured external provider");
+      await expect(page.getByRole("note")).toContainText("sent outside this deployment");
       await page.getByRole("button", { name: "New conversation" }).click();
       await page.getByLabel("Conversation name").fill(`Household chat ${runKey.slice(0, 8)}`);
       await page.getByRole("button", { name: "Create", exact: true }).click();

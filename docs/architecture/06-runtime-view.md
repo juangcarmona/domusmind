@@ -117,13 +117,16 @@ sequenceDiagram
 
 The member's approval command changes one Inbox aggregate and emits `InboxProposalApproved`. Its synchronous domain-event reaction dispatches the normal Calendar or Tasks command, then marks the proposal applied. The owning area handler repeats household authorization and input validation. The event writer keeps all aggregate and event-log writes in one PostgreSQL transaction, so a failed action leaves the proposal pending and creates no Plan or Task. Rejected proposals update only Inbox state. <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:7c54cc5879964502757faea971dacd03b841305ae6166d64072cde41aea1303f" -->
 
-## Household conversation and explicit assistant question
+## Household conversation and explicit assistant request
 
-The Chats controller reads the authenticated user and dispatches explicit commands and queries. Handlers resolve the user's household member, enforce participant membership for each thread, persist each message as its own aggregate, and append its event through the existing event-log writer. The assistant path starts only when the posted text begins with `@dm`; it routes the question to one of the existing authorized read queries, sends that data to the configured provider and stores its answer as a separate assistant message linked to the question. The assistant has no command dispatcher and cannot mutate a household aggregate. If the selected provider is external, the Chats surface displays that household context is sent to it.
+The Chats controller reads the authenticated user and dispatches commands and queries. Handlers resolve the household member, enforce thread participation, and persist each message through the event-log writer. For an explicit `@dm` request, the application gathers information through the invoking member's authorized read path and asks the household's ordered provider route. Only retryable availability or required-capability failures advance to the next target. The assistant response records the handling target and whether fallback occurred; route details and saved credentials are managed through a household-scoped application slice, with credentials protected by ASP.NET Core Data Protection.
 
-<!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:471f9fa8993fa17314d158ee599bfbe772b0b10251665aabcedb4f99ec16d486" -->
-<!-- pdac:cite id="BR-CHAT-MEMBER-ACCESS" digest="sha256:fa5a7ef2fc77a8b8a3c55da99567c801445606f9ecc263bafff5a0261c0bb15a" -->
-<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:f1f7e93a9607dc324ecada95aa4bf2f012e7e0a96304c5b4a6d07e8ea5d4d710" -->
+For a complete action request in a household thread, the assistant message raises `AssistantProposalRequested`. The Inbox-owned reaction stores an unreviewed proposal linked to the originating Chat message. It does not call a Calendar or Lists command. A private-thread request never raises this event. On explicit approval, Inbox dispatches the normal command owned by Calendar or Lists, then marks its proposal applied. The Chat message, event and Inbox reaction participate in the event writer's transaction.
+
+<!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:af9ab2889fe4bb5b9168f43d0725874432354e723000b96ae0d732fd8ffc597b" -->
+<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:f1a488d642604dbe43c9e465683fa2602b7f027d5618c4c4d3ac7e73cc29e8be" -->
+<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:6f46b897ec17ba34fa6027cdfa95a01a41d176d06edb4e69daced913c924bdc8" -->
+<!-- pdac:cite id="QR-ASSISTANT-PROVIDER-PRIVACY" digest="sha256:769c170bfea0d620610f7d331581c0c5c7685f962bcaba4060442dba5a2eb4b2" -->
 
 ```mermaid
 sequenceDiagram
@@ -133,7 +136,9 @@ sequenceDiagram
     participant Auth as FamilyAuthorizationService
     participant DB as DomusMind database
     participant Q as Existing authorized read query
-    participant AI as Configured chat assistant
+    participant R as Household provider route
+    participant AI as Hosted or local target
+    participant IR as Inbox proposal reaction
     participant EL as EventLogWriter
 
     Web->>C: POST /api/chats/{threadId}/messages with bearer token
@@ -145,14 +150,24 @@ sequenceDiagram
         H->>Auth: Recheck household access and participation
         H->>Q: Dispatch read-only query for classified topic
         Q->>DB: Read authorized household data
-        H->>AI: Question plus authorized context
-        AI-->>H: Grounded response text
+        H->>R: Resolve ordered targets for household
+        R->>AI: Question plus authorized context
+        alt Retryable provider failure or unsupported capability
+            AI-->>R: Retryable failure
+            R->>AI: Try next configured target
+        end
+        AI-->>R: Answer and optional structured proposal
+        R-->>H: Completion, target and fallback status
         H->>EL: Persist assistant message linked to question
+        opt Complete action in a household thread
+            EL->>IR: Dispatch AssistantProposalRequested
+            IR->>DB: Save Inbox item linked to source Chat message
+        end
     end
     C-->>Web: 201 member message and optional assistant response
 ```
 
-The member message is persisted before calling the provider, so an unavailable assistant does not lose the conversation text. The API indicates that the assistant is unavailable while retaining the member's message. Thread list and message queries return data only to participants.
+The member message is persisted before calling the provider, so an unavailable assistant does not lose the conversation text. The API indicates that the assistant is unavailable while retaining the member's message. Thread list and message queries return data only to participants. Chat provider metadata and the Inbox source-message link preserve the origin needed to review which target handled the request and whether fallback occurred.
 
 ### Failure Behavior
 

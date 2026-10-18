@@ -19,6 +19,9 @@ public sealed class ChatMessageConfiguration : IEntityTypeConfiguration<ChatMess
         builder.Property(x => x.AuthorType).HasColumnName("author_type").HasMaxLength(20).IsRequired();
         builder.Property(x => x.Text).HasColumnName("text").HasMaxLength(4000).IsRequired();
         builder.Property(x => x.ReplyToMessageId).HasColumnName("reply_to_message_id");
+        builder.Property(x => x.ProviderName).HasColumnName("provider_name").HasMaxLength(60);
+        builder.Property(x => x.ProviderHosting).HasColumnName("provider_hosting").HasMaxLength(20);
+        builder.Property(x => x.FallbackOccurred).HasColumnName("fallback_occurred");
         builder.Property(x => x.CreatedAtUtc).HasColumnName("created_at_utc");
         builder.HasIndex(x => new { x.ChatThreadId, x.CreatedAtUtc });
         builder.HasIndex(x => x.FamilyId);

@@ -516,9 +516,23 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at_utc");
 
+                    b.Property<bool>("FallbackOccurred")
+                        .HasColumnType("boolean")
+                        .HasColumnName("fallback_occurred");
+
                     b.Property<Guid>("FamilyId")
                         .HasColumnType("uuid")
                         .HasColumnName("family_id");
+
+                    b.Property<string>("ProviderHosting")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("provider_hosting");
+
+                    b.Property<string>("ProviderName")
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)")
+                        .HasColumnName("provider_name");
 
                     b.Property<Guid?>("ReplyToMessageId")
                         .HasColumnType("uuid")
@@ -708,11 +722,29 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("family_id");
 
+                    b.Property<bool>("ProviderFallbackOccurred")
+                        .HasColumnType("boolean")
+                        .HasColumnName("provider_fallback_occurred");
+
+                    b.Property<string>("ProviderHosting")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("provider_hosting");
+
+                    b.Property<string>("ProviderName")
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)")
+                        .HasColumnName("provider_name");
+
                     b.Property<string>("RawText")
                         .IsRequired()
                         .HasMaxLength(4000)
                         .HasColumnType("character varying(4000)")
                         .HasColumnName("raw_text");
+
+                    b.Property<Guid?>("SourceChatMessageId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("source_chat_message_id");
 
                     b.Property<Guid>("Version")
                         .IsConcurrencyToken()
@@ -1457,6 +1489,27 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.ToTable("supported_languages", (string)null);
                 });
 
+            modelBuilder.Entity("DomusMind.Infrastructure.Persistence.AssistantProviderRouteRecord", b =>
+                {
+                    b.Property<Guid>("FamilyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<string>("TargetsJson")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("targets_json");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at_utc");
+
+                    b.HasKey("FamilyId");
+
+                    b.ToTable("assistant_provider_routes", (string)null);
+                });
+
             modelBuilder.Entity("DomusMind.Infrastructure.Persistence.EventLogEntry", b =>
                 {
                     b.Property<Guid>("EventId")
@@ -1733,6 +1786,11 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                                 .HasColumnType("text")
                                 .HasColumnName("end_time");
 
+                            b1.Property<string>("Quantity")
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("quantity");
+
                             b1.Property<int?>("ReminderMinutesBefore")
                                 .HasColumnType("integer")
                                 .HasColumnName("reminder_minutes_before");
@@ -1746,6 +1804,14 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                                 .HasMaxLength(20)
                                 .HasColumnType("character varying(20)")
                                 .HasColumnName("status");
+
+                            b1.Property<Guid?>("TargetItemId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("target_item_id");
+
+                            b1.Property<Guid?>("TargetListId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("target_list_id");
 
                             b1.Property<Guid?>("TargetPlanId")
                                 .HasColumnType("uuid")

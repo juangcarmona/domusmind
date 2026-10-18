@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAuth } from "../../../auth/AuthProvider";
 import { useAppSelector } from "../../../store/hooks";
 import { chatsApi, type ChatMessage, type ChatThread } from "../../../api/chatsApi";
+import type { AssistantProviderRoute } from "../../../api/assistantProvidersApi";
 import "./chats.css";
 
 export function ChatsPage() {
@@ -20,7 +21,7 @@ export function ChatsPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [assistantNotice, setAssistantNotice] = useState("");
-  const [assistantInfo, setAssistantInfo] = useState<{ sendsTextOutsideDeployment: boolean } | null>(null);
+  const [assistantInfo, setAssistantInfo] = useState<AssistantProviderRoute | null>(null);
 
   const currentMemberId = currentMember?.memberId;
   const otherMembers = useMemo(() => members.filter((member) => member.memberId !== currentMemberId), [members, currentMemberId]);
@@ -45,9 +46,10 @@ export function ChatsPage() {
 
   useEffect(() => {
     let cancelled = false;
-    void chatsApi.assistant().then((info) => { if (!cancelled) setAssistantInfo(info); });
+    if (!family?.familyId) return;
+    void chatsApi.assistant(family.familyId).then((info) => { if (!cancelled) setAssistantInfo(info); });
     return () => { cancelled = true; };
-  }, []);
+  }, [family?.familyId]);
 
   useEffect(() => {
     if (!activeThread) { setMessages([]); return; }
@@ -85,9 +87,14 @@ export function ChatsPage() {
   }
 
   return <main className="chats-page">
-    <header className="chats-header"><div><h1>Chats</h1><p>Conversations for your household. Start a message with <code>@dm</code> to ask the read-only assistant.</p></div>
+    <header className="chats-header"><div><h1>Chats</h1><p>Start a message with <code>@dm</code> to ask about household information or prepare a Plan or List Item proposal for Inbox review.</p></div>
       <button type="button" onClick={() => setCreating((value) => !value)}>New conversation</button></header>
-    {assistantInfo?.sendsTextOutsideDeployment && <p className="chats-notice" role="note">Questions to @dm and the household information used to answer them are sent to the configured external provider.</p>}
+    {assistantInfo && <div className="chats-notice" role="note">
+      {assistantInfo.targets.length === 0 ? <p>No assistant provider is configured for this household. A household manager can set one in Settings.</p> : <>
+        <p>When you explicitly use <code>@dm</code>, the request and only household information you may access are sent to the selected target. The provider target and any fallback used appear on each answer.</p>
+        <ul>{assistantInfo.targets.map((target) => <li key={target.id}>{target.name}: {target.hosting} ({target.protocol}, {target.model}){target.hosting === "Hosted" ? " — data is sent outside this deployment." : " — data is sent to the configured local endpoint."}</li>)}</ul>
+      </>}
+    </div>}
     {error && <p className="chats-alert" role="alert">{error}</p>}
     {creating && <form className="chats-create" onSubmit={(event) => void createThread(event)}>
       <label>Conversation name<input value={title} maxLength={120} onChange={(event) => setTitle(event.target.value)} required /></label>
@@ -114,6 +121,9 @@ export function ChatsPage() {
               <article className={`chats-message ${message.authorType === "Assistant" ? "assistant" : ""}`} key={message.chatMessageId}>
                 <div><strong>{message.authorName}</strong><time dateTime={message.createdAtUtc}>{new Date(message.createdAtUtc).toLocaleString()}</time></div>
                 <p>{message.text}</p>
+                {message.authorType === "Assistant" && message.providerName && <small className="chats-provider-disclosure">
+                  Answered by {message.providerName} ({message.providerHosting?.toLowerCase()}){message.fallbackOccurred ? " after fallback" : ""}.
+                </small>}
               </article>)}
           </div>
           {assistantNotice && <p className="chats-notice" role="status">{assistantNotice}</p>}

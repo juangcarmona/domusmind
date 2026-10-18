@@ -15,6 +15,7 @@ using DomusMind.Application.Features.Chats.Assistant;
 using DomusMind.Infrastructure.Chats;
 using DomusMind.Infrastructure.Inbox;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -44,26 +45,15 @@ public static class InfrastructureServices
             client.Timeout = TimeSpan.FromMinutes(2));
         services.AddHttpClient(nameof(OpenAiCompatibleChatAssistant)).ConfigureHttpClient(client =>
             client.Timeout = TimeSpan.FromMinutes(2));
-        services.AddScoped<IInboxInterpreter>(sp =>
-        {
-            var provider = configuration["Inbox:Interpreter:Provider"] ?? "Ollama";
-            return provider switch
-            {
-                "Ollama" => ActivatorUtilities.CreateInstance<OllamaInboxInterpreter>(sp),
-                "OpenAICompatible" => ActivatorUtilities.CreateInstance<OpenAiCompatibleInboxInterpreter>(sp),
-                _ => throw new InvalidOperationException($"Unsupported Inbox interpreter provider '{provider}'.")
-            };
-        });
-        services.AddScoped<IChatAssistant>(sp =>
-        {
-            var provider = configuration["Inbox:Interpreter:Provider"] ?? "Ollama";
-            return provider switch
-            {
-                "Ollama" => ActivatorUtilities.CreateInstance<OllamaChatAssistant>(sp),
-                "OpenAICompatible" => ActivatorUtilities.CreateInstance<OpenAiCompatibleChatAssistant>(sp),
-                _ => throw new InvalidOperationException($"Unsupported Chats assistant provider '{provider}'.")
-            };
-        });
+        var dataProtection = services.AddDataProtection();
+        var keyPath = configuration["DataProtection:KeysPath"];
+        if (!string.IsNullOrWhiteSpace(keyPath))
+            dataProtection.PersistKeysToFileSystem(new DirectoryInfo(keyPath));
+        services.AddScoped<IAssistantProviderRouteStore, AssistantProviderRouteStore>();
+        services.AddScoped<IInboxInterpreterProvider, OllamaInboxInterpreter>();
+        services.AddScoped<IInboxInterpreterProvider, OpenAiCompatibleInboxInterpreter>();
+        services.AddScoped<IChatAssistantProvider, OllamaChatAssistant>();
+        services.AddScoped<IChatAssistantProvider, OpenAiCompatibleChatAssistant>();
 
         services.AddScoped<ISupportedLanguageReader, SupportedLanguageReader>();
 

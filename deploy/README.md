@@ -34,7 +34,7 @@ docker compose up -d
 #    The setup endpoint is permanently server-gated: it cannot be called twice.
 ````
 
-By default, Inbox uses the local Ollama model, whose first download can take several minutes. Set `INBOX_INTERPRETER_PROVIDER=OpenAICompatible`, `INBOX_INTERPRETER_ENDPOINT`, `INBOX_INTERPRETER_MODEL`, and optionally `INBOX_INTERPRETER_API_KEY` in `.env` to select an OpenAI-compatible provider. Start that mode with `docker compose -f docker-compose.yml -f docker-compose.external-interpreter.yml up -d`; this skips Ollama and its model download. The Inbox discloses when text is sent outside the deployment. Ollama is not published on a host port.
+By default, Inbox uses the local Ollama model, whose first download can take several minutes. Set `INBOX_INTERPRETER_PROVIDER=OpenAICompatible`, `INBOX_INTERPRETER_ENDPOINT`, `INBOX_INTERPRETER_MODEL`, and optionally `INBOX_INTERPRETER_API_KEY` in `.env` to select an OpenAI-compatible provider. Start that mode with `docker compose -f docker-compose.yml -f docker-compose.external-interpreter.yml up -d`; this skips Ollama and its model download. The Inbox discloses when text is sent outside the deployment. Ollama is not published on a host port. Household assistant credentials configured in Settings are protected with ASP.NET Core Data Protection; preserve the `data_protection_keys` volume together with PostgreSQL when moving or restoring an installation.
 
 ## Headless / recovery bootstrap (optional)
 

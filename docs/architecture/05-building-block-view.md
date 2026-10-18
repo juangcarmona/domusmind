@@ -50,7 +50,7 @@ The backend is a single deployable modular monolith rather than a set of service
 | --- | --- | --- | --- |
 | Web app | Household-facing single-page application: Agenda, Chats, Inbox, Lists, Areas, Meal Planning, Settings; holds the session tokens client-side | Consumes the REST API; browser routes | [`src/web/app`](../../src/web/app) |
 | DomusMind API | All product behaviour: authentication, authorization, commands, queries, domain model, persistence, configured Inbox interpreter and Chats assistant, external calendar ingestion and its background worker | REST API documented with Swagger ([ADR-0005](../adr/0005-expose-a-rest-api-through-aspnet-core-controllers.md)); serves the web app bundle in production | [`src/backend`](../../src/backend) |
-| Configured language-model provider | Inbox proposal interpretation and explicit read-only Chats answers; selected by deployment configuration | Ollama local API or configured OpenAI-compatible chat-completions endpoint | Infrastructure adapters |
+| Configured language-model providers | Inbox interpretation and explicitly invoked Chats answers or action proposals; each household can order one to three hosted or local targets, with a deployment default for existing households | Ollama local API or configured OpenAI-compatible endpoint; Infrastructure routes requests and protects saved credentials | Infrastructure adapters and `assistant_provider_routes` persistence |
 | DomusMind database | Operational state of every aggregate, authentication records, user-to-household access grants and the append-only event log, in one schema | PostgreSQL connection string `domusmind` | EF Core migrations in [`DomusMind.Infrastructure/Persistence`](../../src/backend/DomusMind.Infrastructure/Persistence) |
 | Public site | Static product and marketing pages | Static hosting only; no API calls | [`src/web/public`](../../src/web/public) |
 | AppHost | Local orchestration: PostgreSQL with pgAdmin, the API and the Vite dev server, wired by references | .NET Aspire app model | [`src/backend/DomusMind.AppHost`](../../src/backend/DomusMind.AppHost) |
@@ -59,7 +59,7 @@ The backend is a single deployable modular monolith rather than a set of service
 
 - **Web app to API**: JSON over HTTPS under `/api`, authenticated with a bearer access token issued by the API itself ([ADR-0002](../adr/0002-keep-authentication-local-and-separate-from-member-identity.md)). The web app keeps hand-written typed wrappers under [`src/web/app/src/api`](../../src/web/app/src/api); the OpenAPI document is the contract.
 - **API to Microsoft Graph**: outbound only, delegated per connected member, read-only calendar scope ([ADR-0003](../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md)). The external interface itself is owned by [section 03](03-context-and-scope.md).
-- **API to text interpreter**: Inbox text is sent to the configured provider for structured proposals. The Inbox identifies whether the selected provider is outside the deployment. <!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:671602d6ae7cf237d2cc2c4c93dc385e7e6e6a8940206c5f2526872610c5e851" -->
+- **API to assistant provider**: Inbox text and explicitly invoked Chat requests are routed through the household's ordered provider targets. The API protects saved credentials with ASP.NET Core Data Protection, and the web surfaces disclose target hosting and fallback. <!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:6f46b897ec17ba34fa6027cdfa95a01a41d176d06edb4e69daced913c924bdc8" -->
 
 ## Level 2
 
@@ -137,7 +137,9 @@ Arrows are domain-level references and point at the module whose identifier type
 | Tasks | Structured execution: tasks with a lifecycle and assignee, and routines that recur | `HouseholdTask`, `Routine` | [`Domain/Tasks`](../../src/backend/DomusMind.Domain/Tasks), [`Features/Tasks`](../../src/backend/DomusMind.Application/Features/Tasks) |
 | Lists | Reusable capture containers and their items, including optional temporal fields that make items eligible for Agenda projection | `SharedList` | [`Domain/Lists`](../../src/backend/DomusMind.Domain/Lists), [`Features/Lists`](../../src/backend/DomusMind.Application/Features/Lists) |
 | MealPlanning | Weekly meal plans and slots, the recipe library and weekly templates; requests shopping lists that then belong to Lists | `MealPlan`, `Recipe`, `WeeklyTemplate` | [`Domain/MealPlanning`](../../src/backend/DomusMind.Domain/MealPlanning), [`Features/MealPlanning`](../../src/backend/DomusMind.Application/Features/MealPlanning) |
-| Chats | Household and participant-scoped conversations, persistent messages and explicitly requested read-only household answers | `ChatThread`, `ChatMessage` | [`Domain/Chats`](../../src/backend/DomusMind.Domain/Chats), [`Features/Chats`](../../src/backend/DomusMind.Application/Features/Chats) |
+| Chats | Household and participant-scoped conversations, persistent messages, authorized assistant answers and review-first action proposals | `ChatThread`, `ChatMessage` | [`Domain/Chats`](../../src/backend/DomusMind.Domain/Chats), [`Features/Chats`](../../src/backend/DomusMind.Application/Features/Chats) |
+
+Chats emits an assistant-proposal event for complete household-thread actions; the Inbox reaction owns creation of the review item, so approval still reaches Calendar or Lists through their normal commands ([ADR-0008](../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)). <!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:af9ab2889fe4bb5b9168f43d0725874432354e723000b96ae0d732fd8ffc597b" -->
 
 The product responsibility of each module is owned by its bounded-context artifact; the table above only states how the code realizes it.
 

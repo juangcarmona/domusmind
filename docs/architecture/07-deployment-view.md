@@ -29,12 +29,14 @@ flowchart LR
             ollama["ollama container<br/>llama3.2:3b (default)"]
         end
         vol[["volume postgres_data"]]
+        dpvol[["volume data_protection_keys"]]
     end
 
     browser -- HTTPS --> proxy
     proxy -- "HTTP host:APP_PORT (default 24365)" --> app
     app -- "Npgsql, internal only" --> db
     db --- vol
+    app --- dpvol
     app -- "local inference (default)" --> ollama
     app -. "HTTPS outbound (optional)" .-> interpreterApi
     app -- "HTTPS outbound (optional)" --> graphApi
@@ -43,7 +45,7 @@ flowchart LR
 
 - **`domusmind`** is the only published service. Its image is built by [`src/backend/DomusMind.Api/Dockerfile`](../../src/backend/DomusMind.Api/Dockerfile): a Node stage builds the web app, a .NET SDK stage publishes the API with the web app's `dist` copied into `wwwroot`, and the runtime stage is `mcr.microsoft.com/dotnet/aspnet:10.0` listening on plain HTTP port 8080. The container maps to host port `APP_PORT` (default `24365`).
 - **`postgres`** (`postgres:17-alpine`) has no host port; only the app reaches it over the Compose network. The app waits for its `pg_isready` health check before starting.
-- **`postgres_data`** holds application and event-log state. **`ollama_data`** persists the optional local model download; model weights do not contain household notes. Back up PostgreSQL as the source of household state (see [DevOps](../devops.md#backup-and-restore)).
+- **`postgres_data`** holds application and event-log state. **`data_protection_keys`** persists the ASP.NET Core Data Protection key ring used to protect saved assistant provider credentials. **`ollama_data`** persists the optional local model download; model weights do not contain household notes. Preserve the Data Protection volume when moving or restoring an installation so saved credentials remain readable (see [DevOps](../devops.md#backup-and-restore)).
 - **`ollama`** is reachable only on the Compose network. The one-shot `ollama-model` resource downloads `llama3.2:3b` into `ollama_data` before the API starts in the default configuration. The external-interpreter override omits both resources and sends note text to the configured endpoint; the Inbox discloses that data flow. <!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:671602d6ae7cf237d2cc2c4c93dc385e7e6e6a8940206c5f2526872610c5e851" -->
 - **Reverse proxy** is not part of the stack. The container speaks HTTP only; HTTPS and external exposure are the operator's responsibility, following the pattern `https://domusmind.example.com -> http://host:24365`. Forwarded scheme, host and client address are honored only from explicitly configured proxy IPs or networks; forwarded hosts can also be allowlisted. The proxy owns public HTTP-to-HTTPS redirection.
 - **Application diagnostics** use the image health check against `/api/system/ping`; Compose exposes its health status. The API logs the image version and commit at startup. Swagger is enabled in Development and disabled by default in Production, where an operator can enable it through configuration.
@@ -73,6 +75,7 @@ Keeping PostgreSQL off the host network makes the application the single entry p
 | Web app (`src/web/app`, React + Vite build) | Static files in the `domusmind` container's `wwwroot`, SPA fallback in ASP.NET Core | Self-hosted |
 | `ExternalCalendarRefreshWorker` hosted service | Inside the `domusmind` process | Self-hosted |
 | `DomusMindDbContext` schema and event log | `postgres` container, database `domusmind`, volume `postgres_data` | Self-hosted |
+| ASP.NET Core Data Protection key ring | `domusmind` container, volume `data_protection_keys` | Self-hosted |
 | Container image | GHCR `ghcr.io/<owner>/domusmind` | Registry |
 | Compose file, `.env.example`, install README | GitHub Release assets | Distribution |
 

@@ -17,6 +17,10 @@ public sealed class InboxItemConfiguration : IEntityTypeConfiguration<InboxItem>
         builder.Property(x => x.Version).HasColumnName("version").IsConcurrencyToken();
         builder.Property(x => x.RawText).HasColumnName("raw_text").HasMaxLength(4000).IsRequired();
         builder.Property(x => x.CreatedAtUtc).HasColumnName("created_at_utc");
+        builder.Property(x => x.SourceChatMessageId).HasColumnName("source_chat_message_id");
+        builder.Property(x => x.ProviderName).HasColumnName("provider_name").HasMaxLength(60);
+        builder.Property(x => x.ProviderHosting).HasColumnName("provider_hosting").HasMaxLength(20);
+        builder.Property(x => x.ProviderFallbackOccurred).HasColumnName("provider_fallback_occurred");
         builder.HasIndex(x => new { x.FamilyId, x.CreatedAtUtc });
         builder.OwnsMany(x => x.Proposals, proposal =>
         {
@@ -38,6 +42,9 @@ public sealed class InboxItemConfiguration : IEntityTypeConfiguration<InboxItem>
             proposal.Property(x => x.TargetPlanTitle).HasColumnName("target_plan_title").HasMaxLength(200);
             proposal.Property(x => x.TargetPlanId).HasColumnName("target_plan_id");
             proposal.Property(x => x.ReminderMinutesBefore).HasColumnName("reminder_minutes_before");
+            proposal.Property(x => x.TargetListId).HasColumnName("target_list_id");
+            proposal.Property(x => x.TargetItemId).HasColumnName("target_item_id");
+            proposal.Property(x => x.Quantity).HasColumnName("quantity").HasMaxLength(200);
             proposal.HasIndex("inbox_item_id");
         });
         builder.Navigation(x => x.Proposals).UsePropertyAccessMode(PropertyAccessMode.Field);

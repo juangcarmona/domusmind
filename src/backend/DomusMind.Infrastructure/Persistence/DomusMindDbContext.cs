@@ -41,6 +41,8 @@ public sealed class DomusMindDbContext : DbContext, IDomusMindDbContext
 
     public DbSet<Domain.Chats.ChatMessage> ChatMessages => Set<Domain.Chats.ChatMessage>();
 
+    public DbSet<AssistantProviderRouteRecord> AssistantProviderRoutes => Set<AssistantProviderRouteRecord>();
+
     public DbSet<Domain.Tasks.HouseholdTask> Tasks
         => Set<Domain.Tasks.HouseholdTask>();
 

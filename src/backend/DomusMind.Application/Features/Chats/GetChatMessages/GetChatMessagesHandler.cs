@@ -32,6 +32,7 @@ public sealed class GetChatMessagesHandler(IDomusMindDbContext db, IFamilyAuthor
         return recent.OrderBy(x => x.CreatedAtUtc).Select(x => new ChatMessageModel(x.Id.Value,
             x.ChatThreadId, x.AuthorMemberId, x.AuthorType,
             x.AuthorType == "Assistant" ? "DomusMind" : names.GetValueOrDefault(x.AuthorMemberId!.Value, "Household member"),
-            x.Text, x.ReplyToMessageId, x.CreatedAtUtc)).ToArray();
+            x.Text, x.ReplyToMessageId, x.CreatedAtUtc, x.ProviderName, x.ProviderHosting,
+            x.FallbackOccurred)).ToArray();
     }
 }
