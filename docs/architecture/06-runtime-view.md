@@ -115,7 +115,7 @@ sequenceDiagram
     C-->>Web: 200 proposals for review
 ```
 
-The member's approval command changes one Inbox aggregate and emits `InboxProposalApproved`. Its synchronous domain-event reaction dispatches the normal Calendar or Tasks command, then marks the proposal applied. The owning area handler repeats household authorization and input validation. The event writer keeps all aggregate and event-log writes in one PostgreSQL transaction, so a failed action leaves the proposal pending and creates no Plan or Task. Rejected proposals update only Inbox state. <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:a0b5a7a703274aa651f59d2b20d2c200d249892473aa0bb06a9d40995073e1bd" -->
+The member's approval command changes one Inbox aggregate and emits `InboxProposalApproved`. Its synchronous domain-event reaction dispatches the normal Calendar or Tasks command, then marks the proposal applied. The owning area handler repeats household authorization and input validation. The event writer keeps all aggregate and event-log writes in one PostgreSQL transaction, so a failed action leaves the proposal pending and creates no Plan or Task. Rejected proposals update only Inbox state. <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:7c54cc5879964502757faea971dacd03b841305ae6166d64072cde41aea1303f" -->
 
 ## Household conversation and explicit assistant question
 
@@ -123,7 +123,7 @@ The Chats controller reads the authenticated user and dispatches explicit comman
 
 <!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:471f9fa8993fa17314d158ee599bfbe772b0b10251665aabcedb4f99ec16d486" -->
 <!-- pdac:cite id="BR-CHAT-MEMBER-ACCESS" digest="sha256:fa5a7ef2fc77a8b8a3c55da99567c801445606f9ecc263bafff5a0261c0bb15a" -->
-<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:0d3703a9b0b3d2e5db5baf8b8c8658a40739273f42c973e17943aec214b4d6c8" -->
+<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:f1f7e93a9607dc324ecada95aa4bf2f012e7e0a96304c5b4a6d07e8ea5d4d710" -->
 
 ```mermaid
 sequenceDiagram

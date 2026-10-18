@@ -29,7 +29,7 @@ strategy keeps each axis owned by a single module:
 <!-- pdac:cite id="BC-RESPONSIBILITIES" digest="sha256:288de55e6b2023b73e2a4c9992f9390250c4a7690500cd4d6a207c432f324cc5" -->
 <!-- pdac:cite id="BC-CALENDAR" digest="sha256:001862e5b66de444fc8d524e4bd63d39418293fdb6ae558c1c7bcdfac68cb424" -->
 <!-- pdac:cite id="BC-TASKS" digest="sha256:7a1a64e2267e7795b9766611ab9d65af92e80600a128617a728d4bff899a032d" -->
-<!-- pdac:cite id="BC-LISTS" digest="sha256:278bab0e63c76bf592a652d1a53fcaf99a6a79cf52153a4d566d26dfcd1bf0e0" -->
+<!-- pdac:cite id="BC-LISTS" digest="sha256:ebe914e9acf2be4ff0b5cd2bea8fbc7dd9e63713e3f6dea5e2b600a05ea7be76" -->
 <!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:3e2d211a42325e9e719480512210f6ec9c5255f4fa647518cae3598e2bd6e835" -->
 
 The Outlook adapter realises the pull-only, read-only integration constraint:
@@ -44,4 +44,4 @@ The strategy deliberately adds no extension points for capabilities outside the
 current scope, such as messaging channels, AI interpretation or further calendar
 providers. They would arrive as new modules, slices or adapters within the same shape.
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:95653d0b301c3381633aec1e024e3a3bd998d41971df29e3bb3aa5f112185500" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:dd3281f32dbc5b36618fc57d7cfb31e7fc36d89963250aabb97446a39e4b3a66" -->

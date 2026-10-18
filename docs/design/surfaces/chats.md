@@ -11,7 +11,7 @@ scope: Household conversations and explicit read-only assistant questions
 
 Chats gives household members one place to coordinate in household conversations and private groups, with an explicitly invoked, read-only `@dm` assistant.
 
-<!-- pdac:cite id="BC-CHATS" digest="sha256:02ba26543d23ee6f89430f2766bcd7c86f3e4cc4e3fcad3307a75d94a475310e" -->
+<!-- pdac:cite id="BC-CHATS" digest="sha256:11b1dbbc66eb13111c05c9123eaa642b4049468bd2d40b04fa86800e8d706da5" -->
 <!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:471f9fa8993fa17314d158ee599bfbe772b0b10251665aabcedb4f99ec16d486" -->
 
 ## Layout
@@ -30,8 +30,8 @@ Messages show the author's name and local time. Assistant replies are visually d
 
 Chats shows an external-provider notice when the selected assistant sends questions and household context outside the deployment. Ordinary messages are not sent to the assistant.
 
-<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:0d3703a9b0b3d2e5db5baf8b8c8658a40739273f42c973e17943aec214b4d6c8" -->
-<!-- pdac:cite id="QR-CHAT-PRIVATE-CONTENT" digest="sha256:2a21faf96ceea5d0842fdc28b3308c404d49f9862d15a6f646f9132f45adfea3" -->
+<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:f1f7e93a9607dc324ecada95aa4bf2f012e7e0a96304c5b4a6d07e8ea5d4d710" -->
+<!-- pdac:cite id="QR-CHAT-PRIVATE-CONTENT" digest="sha256:8ad3fa078189d181c554234ff721be2110dc75a813373ea153d16178e983e5da" -->
 
 ## Privacy and access
 

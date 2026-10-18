@@ -34,10 +34,10 @@ here.
 | Separate axes | One module owns each axis; cross-module read surfaces project data and never write it back. | Product decision |
 | No hidden automation | No background process creates household records. The only scheduled job refreshes read-only external calendar state. | Product decision |
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:95653d0b301c3381633aec1e024e3a3bd998d41971df29e3bb3aa5f112185500" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:dd3281f32dbc5b36618fc57d7cfb31e7fc36d89963250aabb97446a39e4b3a66" -->
 <!-- pdac:cite id="CON-PRODUCT-HOUSEHOLD-FIRST" digest="sha256:9ffd7fd5d31817890e9263cea8286b25102bd41092769a0cfe3e0765792808b3" -->
 <!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:740fa2cc41d90ec6afb099c5f97fa44e9092af8d83cd68291f807262387a44b0" -->
-<!-- pdac:cite id="CON-PRODUCT-NO-MAGIC-AUTOMATION" digest="sha256:f629cac8f00ab91a7c1ed09d1d4caea02581cfb552234ee8fe65641eebf8904d" -->
+<!-- pdac:cite id="CON-PRODUCT-NO-MAGIC-AUTOMATION" digest="sha256:dfee6795206856c7de2daa1bea17439e821f001104bcdf304d49a6ee49ec848b" -->
 
 ## Organizational and process constraints
 
