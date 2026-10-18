@@ -65,7 +65,7 @@ const canonical = canonicalUrl(locale, currentPath);
     </main>
     <SiteFooter locale={locale} ui={ui} />
     <div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
-      <img id="lightbox-img" src="" alt="" />
+      <img id="lightbox-img" alt="" />
     </div>
     <script>
       (() => {
@@ -83,7 +83,7 @@ const canonical = canonicalUrl(locale, currentPath);
         const close = () => {
           lightbox.classList.remove('is-open');
           document.body.style.overflow = '';
-          lightboxImg.src = '';
+          lightboxImg.removeAttribute('src');
         };
 
         document.querySelectorAll<HTMLImageElement>('[data-lightbox]').forEach((img) => {
