@@ -17,10 +17,12 @@ public sealed class InterpretInboxItemHandler(IDomusMindDbContext db, IEventLogW
         var item = await db.Set<InboxItem>().Include(x => x.Proposals).SingleOrDefaultAsync(x => x.Id == itemId, ct)
             ?? throw new KeyNotFoundException("Inbox item was not found.");
         if (!await auth.CanAccessFamilyAsync(c.UserId, item.FamilyId.Value, ct)) throw new UnauthorizedAccessException();
-        var proposals = (await interpreter.InterpretAsync(item.RawText, ct)).Select(p => InboxProposal.Create(
+        var interpretation = await interpreter.InterpretAsync(item.FamilyId.Value, item.RawText, ct);
+        var proposals = interpretation.Proposals.Select(p => InboxProposal.Create(
             p.Type, p.Title, p.Description, p.Date, p.Time, p.EndDate, p.EndTime, p.DueDate,
             p.UnresolvedDetails, p.TargetPlanTitle, p.ReminderMinutesBefore));
-        item.SetProposals(proposals);
+        item.SetProposals(proposals, interpretation.ProviderName, interpretation.Hosting,
+            interpretation.FallbackOccurred);
         await events.WriteAsync([item], ct); item.ClearDomainEvents();
         return InboxMapping.Map(item);
     }

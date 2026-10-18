@@ -11,6 +11,8 @@ public sealed class AssistantIntentClassifier : IAssistantIntentClassifier
             return AssistantIntent.TasksDueSoon;
         if (text.Contains("timeline") || text.Contains("everything") || text.Contains("what happened"))
             return AssistantIntent.HouseholdTimeline;
+        if (text.Contains("list") || text.Contains("shopping") || text.Contains("buy") || text.Contains("item"))
+            return AssistantIntent.Lists;
         return AssistantIntent.UpcomingPlans;
     }
 }

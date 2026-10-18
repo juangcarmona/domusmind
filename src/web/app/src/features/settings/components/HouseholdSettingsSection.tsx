@@ -5,6 +5,7 @@ import { updateHouseholdSettings } from "../../../store/householdSlice";
 import { setUiLanguage } from "../../../store/uiSlice";
 
 import { FIRST_DAY_OPTIONS, DATE_FORMAT_OPTIONS } from "../types";
+import { AssistantProvidersSection } from "./AssistantProvidersSection";
 
 export function HouseholdSettingsSection() {
   const { t } = useTranslation("settings");
@@ -132,6 +133,7 @@ export function HouseholdSettingsSection() {
           </button>
         </form>
       </section>
+      <AssistantProvidersSection />
     </>
   );
 }

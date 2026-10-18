@@ -17,6 +17,9 @@ public sealed class InboxProposal
     public string? TargetPlanTitle { get; private set; }
     public Guid? TargetPlanId { get; private set; }
     public int? ReminderMinutesBefore { get; private set; }
+    public Guid? TargetListId { get; private set; }
+    public Guid? TargetItemId { get; private set; }
+    public string? Quantity { get; private set; }
 
     private InboxProposal() { }
 
@@ -29,9 +32,11 @@ public sealed class InboxProposal
 
     public static InboxProposal Create(string type, string title, string? description,
         string? date, string? time, string? endDate, string? endTime, string? dueDate,
-        string? unresolvedDetails, string? targetPlanTitle = null, int? reminderMinutesBefore = null)
+        string? unresolvedDetails, string? targetPlanTitle = null, int? reminderMinutesBefore = null,
+        Guid? targetPlanId = null, Guid? targetListId = null, Guid? targetItemId = null,
+        string? quantity = null)
     {
-        if (type is not ("Plan" or "Task" or "Reminder" or "TimelineNote"))
+        if (type is not ("Plan" or "PlanUpdate" or "ListItemAdd" or "ListItemUpdate" or "Task" or "Reminder" or "TimelineNote"))
             throw new ArgumentException("Unsupported proposal type.", nameof(type));
         if (string.IsNullOrWhiteSpace(title)) throw new ArgumentException("A proposal title is required.", nameof(title));
         Validate(title, description, unresolvedDetails);
@@ -40,13 +45,15 @@ public sealed class InboxProposal
             Id = Guid.NewGuid(), Type = type, Title = title.Trim(), Description = description,
             Date = date, Time = time, EndDate = endDate, EndTime = endTime, DueDate = dueDate,
             UnresolvedDetails = unresolvedDetails, TargetPlanTitle = targetPlanTitle,
-            ReminderMinutesBefore = reminderMinutesBefore
+            ReminderMinutesBefore = reminderMinutesBefore, TargetPlanId = targetPlanId,
+            TargetListId = targetListId, TargetItemId = targetItemId, Quantity = quantity
         };
     }
 
     public void Refine(string title, string? description, string? date, string? time,
         string? endDate, string? endTime, string? dueDate, Guid? targetPlanId = null,
-        int? reminderMinutesBefore = null)
+        int? reminderMinutesBefore = null, Guid? targetListId = null, Guid? targetItemId = null,
+        string? quantity = null)
     {
         if (Status != "Pending") throw new InvalidOperationException("Only pending proposals can be refined.");
         if (string.IsNullOrWhiteSpace(title)) throw new ArgumentException("A proposal title is required.", nameof(title));
@@ -57,6 +64,13 @@ public sealed class InboxProposal
         {
             TargetPlanId = targetPlanId;
             ReminderMinutesBefore = reminderMinutesBefore;
+        }
+        if (Type == "PlanUpdate") TargetPlanId = targetPlanId;
+        if (Type is "ListItemAdd" or "ListItemUpdate")
+        {
+            TargetListId = targetListId;
+            TargetItemId = targetItemId;
+            Quantity = quantity;
         }
     }
 

@@ -5,7 +5,8 @@ public enum AssistantIntent
     HouseholdTimeline,
     UpcomingPlans,
     TasksDueSoon,
-    Responsibilities
+    Responsibilities,
+    Lists
 }
 
 public interface IAssistantIntentClassifier
@@ -17,12 +18,6 @@ public interface IAssistantToolRouter
 {
     Task<string> GetAuthorizedContextAsync(AssistantIntent intent, Guid familyId, Guid userId,
         CancellationToken cancellationToken);
+    Task<bool> IsProposalTargetAuthorizedAsync(AssistantActionProposal proposal, Guid familyId,
+        Guid userId, CancellationToken cancellationToken);
 }
-
-public interface IChatAssistant
-{
-    Task<string> AnswerAsync(string question, string authorizedContext, CancellationToken cancellationToken);
-}
-
-public sealed class ChatAssistantUnavailableException(string message, Exception? innerException = null)
-    : Exception(message, innerException);

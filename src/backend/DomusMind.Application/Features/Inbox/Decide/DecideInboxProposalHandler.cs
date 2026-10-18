@@ -16,7 +16,8 @@ public sealed class DecideInboxProposalHandler(IDomusMindDbContext db, IEventLog
     public Task<InboxItemModel> Handle(RefineInboxProposalCommand c, CancellationToken ct) =>
         Update(c.InboxItemId, c.UserId, (x) => x.Refine(c.ProposalId, c.Changes.Title, c.Changes.Description,
             c.Changes.Date, c.Changes.Time, c.Changes.EndDate, c.Changes.EndTime, c.Changes.DueDate,
-            c.Changes.TargetPlanId, c.Changes.ReminderMinutesBefore), ct);
+            c.Changes.TargetPlanId, c.Changes.ReminderMinutesBefore,
+            c.Changes.TargetListId, c.Changes.TargetItemId, c.Changes.Quantity), ct);
 
     public Task<InboxItemModel> Handle(RejectInboxProposalCommand c, CancellationToken ct) =>
         Update(c.InboxItemId, c.UserId, x => x.Reject(c.ProposalId), ct);

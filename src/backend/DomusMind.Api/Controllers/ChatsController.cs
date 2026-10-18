@@ -2,6 +2,7 @@ using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Features.Chats.AnswerAssistant;
 using DomusMind.Application.Features.Chats.Assistant;
+using DomusMind.Application.Features.Chats.ConfigureAssistantProviders;
 using DomusMind.Application.Features.Chats.CreateChatThread;
 using DomusMind.Application.Features.Chats.GetChatMessages;
 using DomusMind.Application.Features.Chats.GetChatThreads;
@@ -9,20 +10,40 @@ using DomusMind.Application.Features.Chats.PostChatMessage;
 using DomusMind.Contracts.Chats;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace DomusMind.Api.Controllers;
 
 [ApiController]
 [Route("api/chats")]
 [Authorize]
-public sealed class ChatsController(ICurrentUser currentUser, IConfiguration configuration) : ControllerBase
+public sealed class ChatsController(ICurrentUser currentUser) : ControllerBase
 {
-    [HttpGet("assistant")]
-    public IActionResult AssistantProvider()
+    [HttpGet("assistant/providers")]
+    public async Task<IActionResult> AssistantProviders(Guid familyId,
+        [FromServices] IQueryDispatcher queries, CancellationToken ct)
     {
-        var provider = configuration["Inbox:Interpreter:Provider"] ?? "Ollama";
-        return Ok(new { provider, sendsTextOutsideDeployment = provider != "Ollama" });
+        try
+        {
+            return Ok(await queries.Dispatch(new GetAssistantProviderRouteQuery(
+                familyId, currentUser.UserId!.Value), ct));
+        }
+        catch (UnauthorizedAccessException) { return Forbid(); }
+        catch (KeyNotFoundException ex) { return NotFound(new { error = ex.Message }); }
+    }
+
+    [HttpPut("assistant/providers")]
+    public async Task<IActionResult> ReplaceAssistantProviders(Guid familyId,
+        ReplaceAssistantProviderRouteRequest request, [FromServices] ICommandDispatcher commands,
+        CancellationToken ct)
+    {
+        try
+        {
+            return Ok(await commands.Dispatch(new ReplaceAssistantProviderRouteCommand(
+                familyId, request.Targets, currentUser.UserId!.Value), ct));
+        }
+        catch (UnauthorizedAccessException) { return Forbid(); }
+        catch (KeyNotFoundException ex) { return NotFound(new { error = ex.Message }); }
+        catch (ArgumentException ex) { return BadRequest(new { error = ex.Message }); }
     }
 
     [HttpGet]

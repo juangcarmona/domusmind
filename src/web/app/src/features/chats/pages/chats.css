@@ -19,6 +19,9 @@
 .chats-message > div { display: flex; align-items: center; gap: 12px; font-size: .84rem; }
 .chats-message time { color: var(--text-secondary, #68717e); font-size: .75rem; }
 .chats-message p { white-space: pre-wrap; overflow-wrap: anywhere; margin: 6px 0 0; }
+.chats-provider-disclosure { display: block; margin-top: 8px; color: var(--text-secondary, #68717e); font-size: .76rem; }
+.chats-notice p { margin: 0; }
+.chats-notice ul { margin: 8px 0 0; padding-left: 1.4rem; }
 .chats-compose { padding: 14px 20px; border-top: 1px solid var(--border, #dfe3e8); }
 .chats-compose label, .chats-create label { display: block; margin-bottom: 6px; font-weight: 600; }
 .chats-compose textarea, .chats-create input, .chats-create select { box-sizing: border-box; width: 100%; border: 1px solid var(--border, #cbd0d8); border-radius: 8px; padding: 10px; background: var(--surface, #fff); color: inherit; font: inherit; }

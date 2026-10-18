@@ -4,25 +4,28 @@ using DomusMind.Application.Features.Inbox.Capture;
 using DomusMind.Application.Features.Inbox.Decide;
 using DomusMind.Application.Features.Inbox.Get;
 using DomusMind.Application.Features.Inbox.Interpret;
+using DomusMind.Application.Features.Chats.ConfigureAssistantProviders;
+using DomusMind.Application.Features.Chats.Assistant;
 using DomusMind.Application.Features.Tasks;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Contracts.Inbox;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace DomusMind.Api.Controllers;
 
 [ApiController]
 [Route("api/inbox")]
 [Authorize]
-public sealed class InboxController(ICurrentUser currentUser, IConfiguration configuration) : ControllerBase
+public sealed class InboxController(ICurrentUser currentUser) : ControllerBase
 {
     [HttpGet("interpreter")]
-    public IActionResult Interpreter()
+    public async Task<IActionResult> Interpreter(Guid familyId,
+        [FromServices] IQueryDispatcher queries, CancellationToken ct)
     {
-        var provider = configuration["Inbox:Interpreter:Provider"] ?? "Ollama";
-        return Ok(new { provider, sendsTextOutsideDeployment = provider != "Ollama" });
+        try { return Ok(await queries.Dispatch(new GetAssistantProviderRouteQuery(familyId, currentUser.UserId!.Value), ct)); }
+        catch (UnauthorizedAccessException) { return Forbid(); }
+        catch (KeyNotFoundException ex) { return NotFound(new { error = ex.Message }); }
     }
 
     [HttpPost]
@@ -54,7 +57,7 @@ public sealed class InboxController(ICurrentUser currentUser, IConfiguration con
         try { return Ok(await commands.Dispatch(new InterpretInboxItemCommand(id, currentUser.UserId!.Value), cancellationToken)); }
         catch (UnauthorizedAccessException) { return Forbid(); }
         catch (KeyNotFoundException ex) { return NotFound(new { error = ex.Message }); }
-        catch (HttpRequestException) { return StatusCode(503, new { error = "The configured interpreter is unavailable. The captured note is still saved." }); }
+        catch (ChatAssistantUnavailableException) { return StatusCode(503, new { error = "No configured provider could interpret this Inbox note. The captured note is still saved." }); }
     }
 
     [HttpPost("{id:guid}/proposals/{proposalId:guid}/refine")]
@@ -83,6 +86,12 @@ public sealed class InboxController(ICurrentUser currentUser, IConfiguration con
                 return BadRequest(new { error = "Refine this Reminder with a Plan and an offset before approving it." });
             if (proposal.Type == "TimelineNote" && proposal.Date is null)
                 return BadRequest(new { error = "Refine this Timeline Note with a date before approving it." });
+            if (proposal.Type == "PlanUpdate" && !proposal.TargetPlanId.HasValue)
+                return BadRequest(new { error = "Refine this Plan update with a Plan before approving it." });
+            if (proposal.Type == "ListItemAdd" && !proposal.TargetListId.HasValue)
+                return BadRequest(new { error = "Refine this List Item proposal with a List before approving it." });
+            if (proposal.Type == "ListItemUpdate" && (!proposal.TargetListId.HasValue || !proposal.TargetItemId.HasValue))
+                return BadRequest(new { error = "Refine this List Item update with a List and item before approving it." });
             return Ok(await commands.Dispatch(new ApproveInboxProposalCommand(id, proposalId,
                 currentUser.UserId!.Value), cancellationToken));
         }

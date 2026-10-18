@@ -19,6 +19,9 @@ export interface ChatMessage {
   text: string;
   replyToMessageId: string | null;
   createdAtUtc: string;
+  providerName: string | null;
+  providerHosting: "Hosted" | "Local" | null;
+  fallbackOccurred: boolean;
 }
 
 export interface PostChatMessageResponse {
@@ -27,13 +30,9 @@ export interface PostChatMessageResponse {
   assistantUnavailable: boolean;
 }
 
-export interface ChatAssistantInfo {
-  provider: string;
-  sendsTextOutsideDeployment: boolean;
-}
-
 export const chatsApi = {
-  assistant: () => request<ChatAssistantInfo>("/api/chats/assistant"),
+  assistant: (familyId: string) => request<import("./assistantProvidersApi").AssistantProviderRoute>(
+    `/api/chats/assistant/providers?familyId=${encodeURIComponent(familyId)}`),
   list: (familyId: string) => request<ChatThread[]>(`/api/chats?familyId=${encodeURIComponent(familyId)}`),
   messages: (threadId: string) => request<ChatMessage[]>(`/api/chats/${threadId}/messages`),
   create: (familyId: string, title: string, kind: ChatThread["kind"], participantMemberIds: string[]) =>

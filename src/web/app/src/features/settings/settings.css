@@ -1,4 +1,13 @@
 /* ---- Settings styles ---- */
+.assistant-provider-settings { display: grid; gap: .8rem; margin-top: 1.5rem; padding: 1.2rem; border: 1px solid var(--color-border-default); border-radius: 12px; background: var(--color-bg-surface); }
+.assistant-provider-settings h2, .assistant-provider-settings p { margin: 0; }
+.assistant-provider-settings p, .assistant-provider-settings li div, .assistant-provider-settings small { color: var(--color-text-muted); }
+.assistant-provider-targets { display: grid; gap: 1rem; padding-left: 1.5rem; }
+.assistant-provider-targets fieldset { display: grid; gap: .65rem; padding: 1rem; border: 1px solid var(--color-border-default); border-radius: 8px; }
+.assistant-provider-targets label { display: grid; gap: .25rem; }
+.assistant-provider-targets input, .assistant-provider-targets select { font: inherit; padding: .45rem; }
+.assistant-provider-order, .assistant-provider-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.assistant-provider-error { color: var(--color-danger, #b42318); }
 .settings-tabs {
   display: flex;
   border-bottom: 2px solid var(--border);

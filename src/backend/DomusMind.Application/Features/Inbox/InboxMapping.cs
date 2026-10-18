@@ -9,5 +9,6 @@ internal static class InboxMapping
         x.RawText, x.CreatedAtUtc, x.Proposals.Select(p => new InboxProposalModel(p.Id, p.Type, p.Title,
             p.Description, p.Date, p.Time, p.EndDate, p.EndTime, p.DueDate, p.Status,
             p.UnresolvedDetails, p.ResultId, p.TargetPlanTitle, p.TargetPlanId,
-            p.ReminderMinutesBefore)).ToArray());
+            p.ReminderMinutesBefore, p.TargetListId, p.TargetItemId, p.Quantity)).ToArray(),
+        x.SourceChatMessageId, x.ProviderName, x.ProviderHosting, x.ProviderFallbackOccurred);
 }
