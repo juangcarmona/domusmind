@@ -13,12 +13,15 @@ database.
 | --- | --- | --- |
 | First-run setup, household creation, adding the manager and a member, then reaching today's household Agenda | [Start a household and reach a working Agenda](product/model/journeys/jrn-product-onboard-household.md); [Household Creation](../openspec/specs/family/spec.md#requirement-household-creation); [Agenda Default Entry State](../openspec/specs/web-app/spec.md#requirement-agenda-default-entry-state) | [`household-onboarding.e2e.ts`](../src/web/app/e2e/household-onboarding.e2e.ts) |
 | Navigate from Agenda to Lists with the shared shell retained | [App Shell and Navigation](../openspec/specs/web-app/spec.md#requirement-app-shell-and-navigation), scenario “User navigates from Agenda to Lists” | [`household-onboarding.e2e.ts`](../src/web/app/e2e/household-onboarding.e2e.ts) |
+| Create and update a household Plan on a phone and verify its Agenda projection | [What matters today?](product/model/journeys/jrn-product-what-matters-today.md); [Agenda](../openspec/specs/web-app/spec.md) | [`household-onboarding.e2e.ts`](../src/web/app/e2e/household-onboarding.e2e.ts) |
+| Assign a recipe to a meal slot, request the shared shopping list, and verify its ingredients and Agenda projection | [Plan the week](product/model/journeys/jrn-meals-plan-the-week.md) | [`household-onboarding.e2e.ts`](../src/web/app/e2e/household-onboarding.e2e.ts) |
+| Capture a reusable list item, check and uncheck it, and observe a live item update across two browser sessions | [Reuse a list](product/model/journeys/jrn-lists-reuse-a-list.md) | [`household-onboarding.e2e.ts`](../src/web/app/e2e/household-onboarding.e2e.ts) |
 
-The browser scenario completes onboarding at desktop width, navigates the
-desktop shell, then checks the Agenda and navigation drawer at 390px phone
-width. It also checks that the document does not overflow horizontally. This
-is a deliberately small baseline; the coverage does not claim full behavior
-coverage of every surface or phone layout.
+The browser scenario completes onboarding and desktop navigation, exercises
+Plan creation and editing at 390px phone width, then covers meal planning and
+shared list reuse. It also checks that the document does not overflow
+horizontally at phone width. The suite focuses on these accepted journeys and
+does not claim exhaustive behavior coverage of every surface or phone layout.
 
 ## Published reports and recovery
 
