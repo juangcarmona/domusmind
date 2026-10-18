@@ -25,12 +25,12 @@ const links = [
     </svg>
     {ui.siteName}
   </a>
-  <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+  <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav">
     <span></span>
     <span></span>
     <span></span>
   </button>
-  <nav aria-label="Primary" class="primary-nav">
+  <nav id="primary-nav" aria-label="Primary" class="primary-nav">
     <ul>
       {links.map((link) => (
         <li>
@@ -76,6 +76,12 @@ const links = [
   navToggle?.addEventListener('click', () => {
     if (!mobileMediaQuery.matches) return;
     toggleNavMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && mobileMediaQuery.matches) {
+      closeNavMenu();
+    }
   });
 
   navMenu?.addEventListener('click', (event) => {
