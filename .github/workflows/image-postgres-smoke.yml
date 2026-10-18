@@ -70,13 +70,19 @@ jobs:
             echo "SMOKE_DB_PASSWORD=$db_password"
             echo "SMOKE_JWT_SIGNING_KEY=$jwt_signing_key"
             echo "COMPOSE_PROJECT_NAME=domusmind-smoke-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          echo "SMOKE_SWAGGER_ENABLED=false"
           } >> "$GITHUB_ENV"
 
       - name: Build and start image with disposable PostgreSQL
         run: docker compose --file tests/container-smoke/compose.yml up --detach --build --wait --wait-timeout 180
 
-      - name: Verify migrations, setup status and SPA
+      - name: Verify migrations, proxy behavior, health, version and default Swagger policy
         run: bash tests/container-smoke/smoke.sh
+
+      - name: Verify Swagger can be explicitly enabled
+        run: |
+          SMOKE_SWAGGER_ENABLED=true docker compose --file tests/container-smoke/compose.yml up --detach --wait --wait-timeout 120
+          bash tests/container-smoke/swagger-config.sh
 
       - name: Show container diagnostics on failure
         if: failure()

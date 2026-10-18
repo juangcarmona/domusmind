@@ -29,8 +29,16 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 COPY --from=backend-build /app/publish .
 
+ARG DOMUSMIND_VERSION=local
+ARG DOMUSMIND_COMMIT=unknown
+ENV DOMUSMIND_VERSION=${DOMUSMIND_VERSION} \
+    DOMUSMIND_COMMIT=${DOMUSMIND_COMMIT}
+
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://0.0.0.0:8080 \
     ASPNETCORE_ENVIRONMENT=Production
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD ["bash", "-ec", "exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /api/system/ping HTTP/1.1\\r\\nHost: localhost\\r\\nX-Forwarded-Proto: https\\r\\nConnection: close\\r\\n\\r\\n' >&3 && IFS=' ' read -r protocol status _ <&3 && [[ \"$protocol\" == HTTP/* && \"$status\" == 200 ]]"]
 
 ENTRYPOINT ["dotnet", "DomusMind.Api.dll"]
