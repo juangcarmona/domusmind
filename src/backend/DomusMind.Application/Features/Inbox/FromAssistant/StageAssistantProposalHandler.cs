@@ -55,9 +55,11 @@ public sealed class StageAssistantProposalHandler(IDomusMindDbContext db, IEvent
         Guid? targetItemId = null;
         if (type == "PlanUpdate")
         {
-            targetPlanId = p.TargetId;
+            var planId = p.TargetId ?? throw new InvalidOperationException("A Plan update proposal needs a target Plan.");
+            targetPlanId = planId;
             var plan = await db.Set<Domain.Calendar.CalendarEvent>().AsNoTracking()
-                .SingleOrDefaultAsync(x => x.Id.Value == targetPlanId && x.FamilyId == FamilyId.From(request.FamilyId), ct)
+                .SingleOrDefaultAsync(x => x.Id == Domain.Calendar.CalendarEventId.From(planId)
+                    && x.FamilyId == FamilyId.From(request.FamilyId), ct)
                 ?? throw new InvalidOperationException("The Plan selected for an assistant proposal no longer exists.");
             title ??= plan.Title.Value;
             description ??= plan.Description;
@@ -65,13 +67,14 @@ public sealed class StageAssistantProposalHandler(IDomusMindDbContext db, IEvent
         }
         else if (type is "ListItemAdd" or "ListItemUpdate")
         {
-            targetListId = p.TargetId;
+            var listId = p.TargetId ?? throw new InvalidOperationException("A List Item proposal needs a target List.");
+            targetListId = listId;
             description = p.Note ?? p.Description;
             if (type == "ListItemUpdate")
             {
                 targetItemId = p.ItemId;
                 var list = await db.Set<SharedList>().AsNoTracking().Include(x => x.Items)
-                    .SingleOrDefaultAsync(x => x.Id.Value == targetListId
+                    .SingleOrDefaultAsync(x => x.Id == ListId.From(listId)
                         && x.FamilyId == FamilyId.From(request.FamilyId), ct)
                     ?? throw new InvalidOperationException("The List selected for an assistant proposal no longer exists.");
                 var current = list.Items.SingleOrDefault(x => x.Id.Value == targetItemId)

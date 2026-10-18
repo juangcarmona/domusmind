@@ -50,7 +50,7 @@ public sealed class ExecuteApprovedInboxProposalHandler(ICommandDispatcher comma
             if (!proposal.TargetPlanId.HasValue)
                 throw new InvalidOperationException("Refine this Plan update with a Plan before approving it.");
             var plan = await db.Set<Domain.Calendar.CalendarEvent>().AsNoTracking()
-                .SingleOrDefaultAsync(x => x.Id.Value == proposal.TargetPlanId.Value
+                .SingleOrDefaultAsync(x => x.Id == Domain.Calendar.CalendarEventId.From(proposal.TargetPlanId.Value)
                     && x.FamilyId == FamilyId.From(e.FamilyId) && x.Status != Domain.Calendar.EventStatus.Cancelled, ct)
                 ?? throw new InvalidOperationException("The Plan selected for update no longer exists.");
             var (currentDate, currentTime, currentEndDate, currentEndTime) = TemporalParser.FormatEventTime(plan.Time);
@@ -65,7 +65,7 @@ public sealed class ExecuteApprovedInboxProposalHandler(ICommandDispatcher comma
             if (!proposal.TargetListId.HasValue)
                 throw new InvalidOperationException("Refine this List Item proposal with a List before approving it.");
             var listExists = await db.Set<Domain.Lists.SharedList>().AsNoTracking()
-                .AnyAsync(x => x.Id.Value == proposal.TargetListId.Value
+                .AnyAsync(x => x.Id == Domain.Lists.ListId.From(proposal.TargetListId.Value)
                     && x.FamilyId == FamilyId.From(e.FamilyId) && !x.IsArchived, ct);
             if (!listExists)
                 throw new InvalidOperationException("The List selected for this proposal is no longer available.");
@@ -78,7 +78,7 @@ public sealed class ExecuteApprovedInboxProposalHandler(ICommandDispatcher comma
             if (!proposal.TargetListId.HasValue || !proposal.TargetItemId.HasValue)
                 throw new InvalidOperationException("Refine this List Item update with a List Item before approving it.");
             var list = await db.Set<Domain.Lists.SharedList>().AsNoTracking().Include(x => x.Items)
-                .SingleOrDefaultAsync(x => x.Id.Value == proposal.TargetListId.Value
+                .SingleOrDefaultAsync(x => x.Id == Domain.Lists.ListId.From(proposal.TargetListId.Value)
                     && x.FamilyId == FamilyId.From(e.FamilyId) && !x.IsArchived, ct)
                 ?? throw new InvalidOperationException("The List selected for update no longer exists.");
             var targetItem = list.Items.SingleOrDefault(x => x.Id.Value == proposal.TargetItemId.Value)
@@ -93,7 +93,7 @@ public sealed class ExecuteApprovedInboxProposalHandler(ICommandDispatcher comma
             if (!proposal.TargetPlanId.HasValue || !proposal.ReminderMinutesBefore.HasValue)
                 throw new InvalidOperationException("Refine this Reminder with a Plan and an offset before approving it.");
             var planExists = await db.Set<Domain.Calendar.CalendarEvent>().AsNoTracking()
-                .AnyAsync(x => x.Id.Value == proposal.TargetPlanId.Value
+                .AnyAsync(x => x.Id == Domain.Calendar.CalendarEventId.From(proposal.TargetPlanId.Value)
                     && x.FamilyId == FamilyId.From(e.FamilyId) && x.Status != Domain.Calendar.EventStatus.Cancelled, ct);
             if (!planExists)
                 throw new InvalidOperationException("The Plan selected for this Reminder is no longer available.");
