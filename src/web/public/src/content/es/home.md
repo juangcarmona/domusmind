@@ -3,23 +3,23 @@ title: "DomusMind"
 description: "Un sistema compartido para el hogar — para que una persona deje de cargarlo sola."
 hero:
   headline: "Deja de tener que estar pendiente de todo."
-  supportLine: "Alguien siempre lleva la casa en la cabeza. La casa deja de depender de la memoria de una persona."
+  supportLine: "DomusMind reúne planes, rutinas, tareas, listas y áreas en un espacio compartido, para que todos sepáis qué importa, qué hay que hacer y quién se ocupa de cada cosa."
   proofBullets:
     - "Una persona deja de cargar con todo."
     - "Los demás ven lo que está pasando."
     - "La casa deja de depender de un solo cerebro."
   primaryCta:
-    label: "Probarlo"
+    label: "Únete al acceso anticipado"
     href: "/early-access"
   secondaryCta:
-    label: "Ver cómo queda tu casa"
+    label: "Ver cómo funciona"
     href: "#how-it-works"
   proofPanel:
     eyebrow: "Hoy"
     title: "Hoy"
     groups:
-      - ["Jardín → Juan", "Carbón para la barbacoa"]
-      - ["Mateo fútbol a las 18:00"]
+      - ["Jardín → David", "Carbón para la barbacoa"]
+      - ["Hugo — fútbol a las 18:00"]
     caption: "Todos ven lo que importa. Nadie tiene que recordar todo."
 reality:
   title: "La realidad"
@@ -27,7 +27,7 @@ reality:
     - "Una persona sabe cuándo termina el colegio."
     - "Una persona recuerda la cita."
     - "Una persona se da cuenta de lo que falta en casa."
-  summary: "Cuando esa persona para de pensar, la casa para de funcionar."
+  summary: "Si esa persona deja de estar pendiente, la casa empieza a desorganizarse."
 breakdown:
   title: "Por qué las herramientas no lo resuelven"
   items:
@@ -45,53 +45,62 @@ shift:
     - "Las responsabilidades quedan claras."
     - "Los demás pueden actuar sin esperar que se les diga."
 proof:
-  title: "What You See"
+  title: "Lo que ves"
   primary:
     title: "Hoy"
     caption: "Todos ven lo que importa. Nadie tiene que recordar todo."
-    placeholder: "today-view"
+    placeholder: "Vista de hoy"
     alt: "Vista de hoy con planes, tareas y responsabilidades del hogar"
     preview:
       eyebrow: "Hoy"
       groups:
-        - ["Jardín → Juan", "Carbón para la barbacoa"]
-        - ["Mateo fútbol a las 18:00"]
+        - ["Jardín → David", "Carbón para la barbacoa"]
+        - ["Hugo — fútbol a las 18:00"]
   secondary:
     title: "Semana"
     caption: "Ve la semana completa antes de que los días cargados se conviertan en fricción."
-    placeholder: "WEEK_VIEW_SCREENSHOT"
+    placeholder: "Vista semanal"
     alt: "Vista semanal con los planes del hogar para los próximos días"
+    preview:
+      eyebrow: "Esta semana"
+      groups:
+        - ["Recoger del colegio — 15:30", "Fútbol — Noah"]
+        - ["Compra", "Preparar el fin de semana"]
 howItWorks:
-  title: "How It Works"
+  title: "Cómo funciona"
   steps:
-    - title: "TODO_STEP_1_TITLE"
-      body: "TODO_STEP_1_BODY"
-    - title: "TODO_STEP_2_TITLE"
-      body: "TODO_STEP_2_BODY"
-    - title: "TODO_STEP_3_TITLE"
-      body: "TODO_STEP_3_BODY"
+    - title: "Crea el hogar."
+      body: "Ponle un nombre y empieza a organizaros."
+    - title: "Añade a las personas."
+      body: "Incluye a quienes forman parte de tu hogar."
+    - title: "Añade vuestros planes y tareas."
+      body: "Crea planes, rutinas, tareas o listas y consulta enseguida el día y la semana."
 currentState:
   title: "Qué existe hoy"
   groups:
-    - title: "Available now"
+    - title: "La casa y sus personas"
       items:
         - "Familia — identidad del hogar y personas"
-        - "Responsabilidades — quién es responsable de cada área"
-        - "Calendario — planes, citas y horarios compartidos"
+        - "Áreas — quién se ocupa de cada parte del hogar"
+        - "Planes — citas, actividades y tiempo compartido"
         - "Tareas — qué hay que hacer y de quién es"
-        - "Listas compartidas — listas de la compra, checklists y elementos recurrentes del hogar"
-    - title: "In progress"
+        - "Rutinas — tareas del hogar que se repiten"
+        - "Listas — compras, listas de control y tareas recurrentes"
+        - "Chats — conversaciones del hogar y asistente opcional @dm"
+        - "Bandeja de entrada — un lugar para guardar ideas y revisar los cambios propuestos"
+    - title: "Vistas para organizar el hogar"
       items:
-        - "Vista semanal — coordinación semanal más clara"
-        - "Relaciones en el hogar — quién está conectado con quién"
-        - "Cambios de miembros más seguros — eliminar personas sin romper el estado del hogar"
-    - title: "Early access / next"
+        - "Agenda — lo que importa hoy"
+        - "Semana — próximos días en una vista compartida"
+        - "Mes — planificación más amplia"
+        - "Vistas del hogar y de las personas — tareas compartidas y compromisos individuales"
+    - title: "Acceso anticipado"
       items:
-        - "Pruebas tempranas del hogar"
-        - "Refinamiento del producto basado en feedback"
-        - "Primera configuración más rápida"
+        - "Pruebas con hogares reales"
+        - "Mejoras rápidas a partir de los comentarios"
+        - "Mejoras continuas en la claridad y la configuración inicial"
 earlyAccess:
-  title: "Early Access / Support the Project"
+  title: "Acceso anticipado / Apoya el proyecto"
   body: "Sigue el proyecto, prueba versiones anticipadas y ayuda a definir cómo funciona DomusMind en hogares reales."
   primaryCta:
     label: "Seguir el proyecto"

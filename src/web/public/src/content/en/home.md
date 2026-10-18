@@ -9,7 +9,7 @@ hero:
     - "Make ownership visible without repeated reminders."
     - "Understand busy days before they become friction."
   primaryCta:
-    label: "Start your household"
+    label: "Get early access"
     href: "/early-access"
   secondaryCta:
     label: "See how it works"
@@ -50,9 +50,8 @@ proof:
   primary:
     title: "Agenda"
     caption: "Everyone sees what matters today. No one has to remember everything."
-    placeholder: "agenda-view"
+    placeholder: "Agenda view"
     alt: "Agenda view showing plans, routines, and tasks for the household"
-    imageSrc: "/screenshots/agenda_panel.png"
     preview:
       eyebrow: "Agenda"
       groups:
@@ -62,9 +61,13 @@ proof:
   secondary:
     title: "Week"
     caption: "See the whole week clearly before it gets messy."
-    placeholder: "week-view"
+    placeholder: "Week view"
     alt: "Week view showing the household's plans for the coming days"
-    imageSrc: "/screenshots/week_panel.png"
+    preview:
+      eyebrow: "This week"
+      groups:
+        - ["School pickup — 15:30", "Football practice — Noah"]
+        - ["Groceries", "Prepare for the weekend"]
 howItWorks:
   title: "How It Works"
   steps:
@@ -77,7 +80,7 @@ howItWorks:
 currentState:
   title: "What Exists Today"
   groups:
-    - title: "Core household model"
+    - title: "The household and its people"
       items:
         - "Household — people and shared ownership"
         - "Areas — who owns what"
@@ -85,13 +88,14 @@ currentState:
         - "Tasks — what needs doing and by whom"
         - "Routines — recurring household work"
         - "Lists — groceries, checklists, and recurring household items"
-    - title: "Operational surface"
+        - "Chats — household conversations with an optional @dm assistant"
+        - "Inbox — capture ideas and review proposed changes"
+    - title: "Everyday views"
       items:
         - "Agenda — what matters now"
         - "Week — the upcoming week in one shared view"
         - "Month — wider planning at a glance"
-        - "Timeline roller — move through time without losing context"
-        - "Household + people rows — shared load and individual commitments together"
+        - "Household and people views — shared work alongside individual plans"
     - title: "Early access"
       items:
         - "Real household testing"
