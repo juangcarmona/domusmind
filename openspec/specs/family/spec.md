@@ -8,15 +8,11 @@ The Family context defines the household unit and its internal human structure.
 
 A **Family** is the primary identity boundary of DomusMind. It is the root organizational unit. All other contexts depend on Family for participant identity but may not modify its structure.
 
-A **Member** is a person belonging to a household. Members are independent participants who may be assigned tasks, hold responsibilities, and participate in plans. A member has a `MemberRole`: `Adult`, `Child`, `Caregiver`, or `Pet`. A member may additionally be designated as a **manager** — a boolean flag that grants authority to perform administrative actions (editing other members, provisioning access, etc.). How a member is first designated as manager is not specified in available source documents (see NOTE N4).
-
-<!-- pdac-drift ids="TERM-MEMBER-ROLE, BR-FAMILY-PERSON-NEEDS-NAME-AND-ROLE" summary="spec lists a Caregiver role; the model has only Adult, Child and Pet (decided: Q-0021)" -->
-
-<!-- pdac-drift ids="TERM-MANAGER, BR-FAMILY-CREATOR-IS-FIRST-MANAGER, BR-FAMILY-MANAGER-MUST-BE-ADULT" summary="spec leaves manager designation unspecified; the model makes the household creator its first manager and lets only adults be designated manager when added or edited (decided: Q-0022)" -->
+A **Member** is a person belonging to a household. Members are independent participants who may be assigned tasks, hold responsibilities, and participate in plans. A member has one `MemberRole`: `Adult`, `Child`, or `Pet`. An adult member may additionally be designated as a **manager** — a designation that grants authority to administer the household. The person who creates a household is its first manager.
 
 A **Pet** is a non-human entity belonging to the household. In Phase 1, pets are represented as household members with `MemberRole = Pet`. The domain design describes Pet as a distinct entity (with its own identity separate from Member); Phase 1 uses `FamilyMember` with `MemberRole = Pet` instead. The `Pet` role carries specific operational constraints: pets cannot be provisioned with system access, cannot receive task assignments, cannot hold responsibility ownership, and are excluded from household coordination views (Agenda rows, member timelines) in V1. Pets may be added as event participants (e.g. a vet appointment).
 
-A **Relationship** is a structural link between two family members. Relationships express household dependency and care structures (parent→child, spouse↔spouse, sibling↔sibling, caregiver→dependent). Relationship management is a V1.1 capability (see NOTE N5).
+A **Relationship** is a structural link between two household members. Relationship management is a V1.1 capability (see NOTE N5).
 
 The Family context is the upstream identity provider. It emits more than it consumes. No downstream context may create, modify, or remove family structure.
 
@@ -28,7 +24,7 @@ The Family context is the upstream identity provider. It emits more than it cons
 
 A household SHALL be created with a name as the only required input.
 
-On creation, the household starts with empty member, pet, and relationship sets. The household receives a stable, unique identifier that never changes.
+On creation, the household receives a stable, unique identifier that never changes. The person who creates it is added as its first manager. The household starts with no pets or relationships.
 
 <!-- pdac:cite id="FR-FAMILY-CREATE-HOUSEHOLD" digest="sha256:071bfc92159082ffe20b6f4f332dab2b475a9a962315a844b53c3b3b13a36817" -->
 
@@ -44,14 +40,13 @@ On creation, the household starts with empty member, pet, and relationship sets.
 
 <!-- pdac:cite id="SB-FAMILY-HOUSEHOLD-EMPTY-NAME-REJECTED" digest="sha256:b3f7c3dc8db89694942f1672cf70e2994c8b0c929e715ad645bd75bcdcab48f0" -->
 
-<!-- pdac-drift ids="FR-FAMILY-CREATE-HOUSEHOLD, BR-FAMILY-CREATOR-IS-FIRST-MANAGER, UC-FAMILY-CREATE-HOUSEHOLD" summary="spec says a new household starts with an empty member set; the model makes the person who created it its first manager (decided: Q-0022)" -->
-
 #### Scenario: Household is created
 
 - GIVEN a valid name is provided
 - WHEN a household is created
 - THEN a Family is established with a stable FamilyId
-- AND the household has an empty member set, pet set, and relationship set
+- AND the person who created it is added as its first manager
+- AND the household has no pets or relationships
 - AND a `FamilyCreated` event is emitted
 
 #### Scenario: Household creation fails with an empty name
@@ -64,9 +59,9 @@ On creation, the household starts with empty member, pet, and relationship sets.
 
 ### Requirement: Member Addition
 
-A household SHALL be able to add a new member with a name and a role.
+A household manager SHALL be able to add a new member with a name and a role.
 
-Valid roles are: `Adult`, `Child`, `Caregiver`, `Pet`. A member receives a unique identifier within the household. Once added, the member becomes part of the household roster and may be referenced by other contexts through their MemberId.
+Valid roles are: `Adult`, `Child`, `Pet`. Only an adult may be designated as a manager. A member receives a unique identifier within the household. Once added, the member becomes part of the household roster and may be referenced by other contexts through their MemberId.
 
 Optional inputs: birth date, notes.
 
@@ -90,16 +85,24 @@ Optional inputs: birth date, notes.
 
 <!-- pdac:cite id="SB-FAMILY-MEMBER-UNKNOWN-HOUSEHOLD-REJECTED" digest="sha256:560d8bbd212e4eedaafeaed93719a03bc66340b2f347657bb535372063489b7f" -->
 
-<!-- pdac-drift ids="TERM-MEMBER-ROLE, BR-FAMILY-PERSON-NEEDS-NAME-AND-ROLE, FR-FAMILY-ADD-MEMBER" summary="spec lists a Caregiver role; the model has only Adult, Child and Pet (decided: Q-0021)" -->
-
-<!-- pdac-drift ids="FR-FAMILY-ADD-MEMBER, BR-FAMILY-MANAGERS-ADMINISTER, BR-FAMILY-MANAGER-MUST-BE-ADULT" summary="spec lets the household add a member without restriction; the model lets only a manager add people (decided: Q-0024) and lets an adult be designated manager on add (decided: Q-0022)" -->
-
 #### Scenario: A member is added to the household
 
 - GIVEN a household exists
 - WHEN a member is added with a valid name and role
 - THEN the member is added to the household with a unique MemberId
 - AND a `MemberAdded` event is emitted
+
+#### Scenario: A non-manager cannot add a member
+
+- GIVEN a household exists
+- AND the requesting member is not a manager
+- WHEN that member attempts to add a person
+- THEN the operation is rejected
+
+#### Scenario: Only an adult may be designated as a manager
+
+- WHEN a Child or Pet is added with the manager designation
+- THEN the operation is rejected
 
 #### Scenario: Member addition fails with a duplicate MemberId
 
@@ -146,9 +149,9 @@ A removed member cannot participate in new relationships. Removing a member does
 
 ### Requirement: Member Core Details Update
 
-A household manager SHALL be able to update a member's full name, role, and optional birth date.
+A household manager SHALL be able to update a member's full name, role, and optional birth date. A non-manager may update their own full name and birth date, but not their role. A birth date, when provided, must be in the past.
 
-Birth date, when provided, must be in the past. Only managers may perform this action. A member may edit their own profile details through a separate profile update path.
+Members may edit their own profile details through a separate profile update path.
 
 <!-- pdac:cite id="FR-FAMILY-UPDATE-MEMBER-DETAILS" digest="sha256:60ffad3045fb6e837afd501f62a73bf93feadcb2a5b253bfa378f4ff2b74f6af" -->
 
@@ -168,8 +171,6 @@ Birth date, when provided, must be in the past. Only managers may perform this a
 
 <!-- pdac:cite id="SB-FAMILY-FUTURE-BIRTH-DATE-REJECTED" digest="sha256:4c9c89bc305863769d6b96dfcd10e19dfc7a879076382857af9399bd038178b8" -->
 
-<!-- pdac-drift ids="FR-FAMILY-UPDATE-MEMBER-DETAILS, BR-FAMILY-MANAGERS-ADMINISTER, SB-FAMILY-MEMBER-UPDATES-OWN-DETAILS, SB-FAMILY-NON-MANAGER-OWN-ROLE-REJECTED" summary="spec reserves core-detail updates to managers; the model lets a non-manager change their own name and birth date but not their own role (decided: Q-0023)" -->
-
 #### Scenario: Manager updates a member's name and role
 
 - GIVEN a household exists with a member
@@ -183,6 +184,19 @@ Birth date, when provided, must be in the past. Only managers may perform this a
 - AND the requesting user is not a manager and is not the target member
 - WHEN a core detail update is attempted
 - THEN the update is rejected
+
+#### Scenario: A non-manager updates their own name and birth date
+
+- GIVEN a household member is not a manager
+- WHEN they update their own name and birth date with valid values
+- THEN those details are updated
+
+#### Scenario: A non-manager cannot change their own role
+
+- GIVEN a household member is not a manager
+- WHEN they try to change their own role
+- THEN the update is rejected
+- AND their role is unchanged
 
 #### Scenario: Birth date in the future is rejected
 
@@ -213,6 +227,12 @@ Managers may also update any member's profile details.
 - GIVEN a household member is authenticated
 - WHEN that member updates their own preferred name, phone, email, or household note
 - THEN the profile is updated
+
+#### Scenario: Manager updates another member's profile
+
+- GIVEN a manager views another household member's profile
+- WHEN the manager updates that member's phone number
+- THEN the profile shows the updated phone number
 
 ---
 
@@ -274,6 +294,13 @@ Rules:
 - THEN the member is linked to an authentication account
 - AND the member state becomes `InvitedOrProvisioned`
 
+#### Scenario: A non-manager cannot administer access
+
+- GIVEN a member exists
+- AND the requesting user is not a manager
+- WHEN they attempt to provision, disable, enable, or reset access
+- THEN the operation is rejected
+
 #### Scenario: Manager disables a member's access
 
 - GIVEN a member exists with `Active` state
@@ -281,6 +308,20 @@ Rules:
 - AND the target is not the requesting manager themselves
 - WHEN access is disabled
 - THEN the member state becomes `Disabled`
+
+#### Scenario: A manager cannot disable their own access
+
+- GIVEN the requesting user is a manager with active access
+- WHEN they attempt to disable their own access
+- THEN the operation is rejected
+- AND their access remains active
+
+#### Scenario: A manager resets another member's password
+
+- GIVEN another member has an authentication account
+- AND the requesting user is a manager
+- WHEN the manager resets that member's password
+- THEN the member must change their password at the next sign-in
 
 #### Scenario: Manager enables a member's access
 
@@ -304,12 +345,13 @@ A household SHALL be able to register a pet by adding a member with `MemberRole 
 In Phase 1, pets are stored as `FamilyMember` entries with the `Pet` role — not as a distinct Pet entity. The domain design describes Pet as a separate entity; Phase 1 collapses this into the member model (see NOTE N6).
 
 Pets in V1:
+- may be registered only by a household manager
 - cannot be provisioned with system access
 - cannot receive task assignments
 - cannot hold responsibility ownership
 - are excluded from Agenda household rows and member coordination timelines
 - may be added as event participants (e.g. vet appointments)
-- appear in the member directory as a distinct group (after Adults, Caregivers, and Children)
+- appear in the member directory as a distinct group after adults and children
 
 <!-- pdac:cite id="FR-FAMILY-REGISTER-PET" digest="sha256:0d762688d45680d0048ed5c38f880774d6fadc4e22dee2b12a514802cb470c77" -->
 
@@ -325,16 +367,27 @@ Pets in V1:
 
 <!-- pdac:cite id="SB-FAMILY-PET-ACCESS-REJECTED" digest="sha256:f1fed230ba7bc8ed33bcd49f58bc64e6d6d5d3d70440a7cff1f39494d06233c0" -->
 
-<!-- pdac-drift ids="FR-FAMILY-REGISTER-PET, BR-FAMILY-DIRECTORY-ORDER, TERM-MEMBER-ROLE" summary="spec lists pets after Adults, Caregivers and Children; the model has no Caregiver role, so pets follow adults and children (decided: Q-0021)" -->
-
-<!-- pdac-drift ids="FR-FAMILY-REGISTER-PET, BR-FAMILY-MANAGERS-ADMINISTER, UC-FAMILY-REGISTER-PET" summary="spec lets the household register a pet without restriction; the model lets only a manager register pets (decided: Q-0024)" -->
-
 #### Scenario: A pet is added to the household
 
 - GIVEN a household exists
 - WHEN a member is added with a valid name and `MemberRole = Pet`
 - THEN the pet is part of the household with a unique MemberId
 - AND a `MemberAdded` event is emitted
+
+#### Scenario: A pet may participate in a plan but cannot coordinate work
+
+- GIVEN a household has a registered pet
+- WHEN planning, task assignment, area ownership, and household Agenda rows are considered
+- THEN the pet may be selected as a plan participant
+- AND the pet cannot be a task assignee or area owner
+- AND the pet has no household Agenda row or member timeline
+
+#### Scenario: A non-manager cannot register a pet
+
+- GIVEN a household exists
+- AND the requesting member is not a manager
+- WHEN they attempt to register a pet
+- THEN the operation is rejected
 
 #### Scenario: A pet is removed from the household
 
@@ -351,7 +404,7 @@ Pets in V1:
 
 A household SHALL be able to define a structural relationship between two of its members.
 
-Both parties must be existing members of the same household. Duplicate relationships of the same type between the same entities are not allowed. Valid relationship types include: parent→child, spouse↔spouse, sibling↔sibling, caregiver→dependent.
+Relationships connect two distinct members of the same household. Relationship types and management behavior remain deferred with this V1.1 capability.
 
 <!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
 
@@ -395,7 +448,7 @@ Both parties must be existing members of the same household. Duplicate relations
 
 A household member SHALL be able to view the member directory of their household.
 
-The directory is ordered: Adults and Caregivers first, then Children, then Pets. Within each group, managers appear before other members; within that ordering, entries are alphabetical by name.
+The directory is ordered: Adults first, then Children, then Pets. Within each group, managers appear before other members; within that ordering, entries are alphabetical by name.
 
 The directory includes server-computed access flags. Clients must not re-derive permission or access state from raw fields.
 
@@ -409,7 +462,51 @@ The directory includes server-computed access flags. Clients must not re-derive 
 
 <!-- pdac:cite id="ACT-HOUSEHOLD-MEMBER" digest="sha256:18173726b69715b42a2c09ddd0c09876f486d1abefd93c3131e2cb0d6c4df860" -->
 
-<!-- pdac-drift ids="BR-FAMILY-DIRECTORY-ORDER, FR-FAMILY-MEMBER-DIRECTORY, TERM-MEMBER-ROLE" summary="spec groups Adults and Caregivers first; the model has no Caregiver role and orders adults, then children, then pets (decided: Q-0021)" -->
+#### Scenario: Directory entries are shown in the defined order
+
+- GIVEN a household has adults, children, and pets
+- WHEN a household member views the directory
+- THEN adults appear first, then children, then pets
+- AND managers appear before other members in each group, followed by alphabetical name order
+
+#### Scenario: Directory access actions reflect the viewer and target
+
+- GIVEN a household member views the directory
+- WHEN directory entries are returned
+- THEN the server-computed access state and permitted actions are shown for each entry
+- AND a non-manager is not offered access administration
+- AND a manager is offered access provisioning only for eligible members without access
+
+---
+
+### Requirement: Household Settings
+
+A household manager SHALL be able to change the household's name, primary language, first day of week, and date format. These settings apply to everyone in the household. A person who is not a manager cannot change them.
+
+#### Scenario: Manager changes household settings
+
+- GIVEN a household exists
+- AND the requesting member is a manager
+- WHEN the manager changes one or more household settings
+- THEN the selected settings are applied to the household
+
+#### Scenario: Non-manager cannot change household settings
+
+- GIVEN a household exists
+- AND the requesting member is not a manager
+- WHEN they attempt to change a household setting
+- THEN the operation is rejected
+
+#### Scenario: First day of week applies to Agenda
+
+- GIVEN a household's first day of week is Monday
+- WHEN a member views an Agenda week
+- THEN the week starts on Monday
+
+#### Scenario: Household rename is shared
+
+- WHEN a manager changes the household name
+- THEN the new name is shown to household members
 
 ---
 
@@ -425,6 +522,17 @@ No other context may create, modify, or remove members, pets, or relationships. 
 
 <!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
 
+#### Scenario: Cross-context activity does not change household identity
+
+- WHEN a person is assigned a task, owns an area, or joins a plan
+- THEN their household identity and details remain unchanged
+
+#### Scenario: Other contexts cannot change household structure
+
+- WHEN planning, tasks, areas, or lists operate on household data
+- THEN they refer to household people by identity
+- AND provide no operation to add, change, or remove people, pets, or relationships
+
 ---
 
 ## Domain Events
@@ -434,7 +542,7 @@ No other context may create, modify, or remove members, pets, or relationships. 
 | `FamilyCreated` | A new household is created |
 | `MemberAdded` | A member is added to the household |
 | `MemberRemoved` | A member is removed from the household |
-| `MemberAdded` (role=Pet) | A pet is registered in Phase 1; the domain design describes a distinct `PetAdded` event — see NOTE N6 |
+| `MemberAdded` (role=Pet) | A pet is registered as a household member |
 | `MemberRemoved` (role=Pet) | A pet is removed in Phase 1; domain design describes a distinct `PetRemoved` event — see NOTE N6 |
 | `RelationshipAssigned` | A relationship is recorded (V1.1) |
 | `RelationshipRemoved` | A relationship is removed (V1.1) |
@@ -456,23 +564,17 @@ No other context may create, modify, or remove members, pets, or relationships. 
 
 ## Notes
 
-**N1 — Dependent entity status**: `docs/04_contexts/family.md` describes `Dependent` as a separate internal entity. However, `specs/system/system-spec.md` lists only `create-family` and `add-member` in the V1 Family feature set — there is no `add-dependent` in V1. `specs/features/family/member-management.md` confirms Phase 1 uses `FamilyMember` as the single member entity with `Child` and `Caregiver` as roles; the `Dependent` entity was designed but never shipped as a V1 capability. The associated commands (`AddDependent`, `RemoveDependent`) and events (`DependentAdded`, `DependentRemoved`) belong to the domain design and a future roadmap phase. This spec reflects the Phase 1 implementation state: children and care recipients are `Member` entities with `MemberRole = Child` or `Caregiver`.
+**N1 — Member roles**: The role set is Adult, Child, and Pet. There is no Caregiver role (decided: Q-0021). A child is a member with the Child role.
 
-<!-- pdac-drift ids="TERM-MEMBER-ROLE, TERM-MEMBER, BC-FAMILY" summary="spec treats Caregiver as a Phase 1 member role; the model has no Caregiver role (decided: Q-0021)" -->
-
-**N2 — `UpdateFamilySettings` command**: Listed in `docs/04_contexts/family.md` but not detailed in any spec or feature document. Behavior is undefined. Excluded from this spec.
-
-<!-- pdac-drift ids="FR-FAMILY-HOUSEHOLD-SETTINGS, UC-FAMILY-CONFIGURE-HOUSEHOLD-SETTINGS, TERM-HOUSEHOLD-SETTINGS" summary="spec excludes household settings as undefined; the model defines name, primary language, first day of week and date format, changed only by managers (decided: Q-0025)" -->
+**N2 — Household settings**: The baseline household settings are its name, primary language, first day of week, and date format. Managers may change them; changes apply household-wide (decided: Q-0025).
 
 **N3 — Manager self-removal and last-manager constraint**: No source document specifies whether a manager can remove themselves, whether a household must always have at least one manager, or what happens when the last manager is removed. Excluded pending clarification.
 
-**N4 — Manager designation**: The `IsManager` boolean flag determines which members may perform administrative actions (edit other members, provision/disable access, etc.). Available source documents do not specify how a member is first designated as manager at household creation, or whether manager status can be granted or revoked through a distinct capability. Excluded pending clarification.
-
-<!-- pdac-drift ids="TERM-MANAGER, BR-FAMILY-CREATOR-IS-FIRST-MANAGER, BR-FAMILY-MANAGER-MUST-BE-ADULT" summary="spec leaves first-manager designation open; the model makes the creator the first manager and sets the designation when adding or editing an adult (decided: Q-0022)" -->
+**N4 — Manager designation**: The person who creates a household is its first manager; only adults can be managers (decided: Q-0022). Managers may designate an adult as a manager when adding or editing that adult. The product model does not define a separate manager administration capability.
 
 **N5 — Relationship assignment deferral**: `specs/system/system-spec.md` explicitly defers `assign-relationship` and `remove-member` to V1.1, citing cascading complexity. The relationship model (Relationship entity, RelationshipType, RelationshipAssigned/Removed events) is fully modeled in the domain but not exposed via V1 API or UI.
 
-**N6 — Pet entity vs. Pet role**: `docs/04_contexts/family.md` describes Pet as a separate aggregate with its own `PetId`, `PetAdded`, and `PetRemoved` events. `specs/features/family/member-management.md` Phase 1 baseline documents `MemberRole` with values `Adult`, `Child`, `Caregiver`, `Pet` — pets are stored as `FamilyMember` and their identity uses `MemberId`. Phase 1 emits `MemberAdded`/`MemberRemoved` for pet operations. The separate Pet entity model and its associated events (`PetAdded`, `PetRemoved`) represent a domain design goal deferred beyond Phase 1.
+**N6 — Pet representation**: A pet is a household member with the Pet role, shares the member identity space, and uses the member lifecycle. Pet registration is manager-only (decided: Q-0024).
 
 **N7 — Auth identity vs. domain identity**: The authentication identity of a user and the household `MemberId` are deliberately separate concerns. Auth identity is linked to a member via `AuthUserId` but the Family context does not own authentication. This spec describes the household identity side only.
 
