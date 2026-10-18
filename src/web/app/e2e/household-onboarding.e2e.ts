@@ -420,6 +420,7 @@ test("onboard a generated household and cover primary workflows at desktop and p
       await page.getByLabel("Message").fill("Hello from the household chat.");
       await page.getByRole("button", { name: "Send" }).click();
       await expect(page.getByText("Hello from the household chat.")).toBeVisible();
+      await expect(page.getByLabel("Message")).toHaveValue("");
       await expect(page.getByText("The household timeline includes Pay summer camp fee.")).toHaveCount(0);
 
       const timelineBefore = await page.request.get(`/api/families/${family.familyId}/timeline`, {
@@ -432,6 +433,7 @@ test("onboard a generated household and cover primary workflows at desktop and p
       await page.getByLabel("Message").fill("@dm What tasks are due?");
       await page.getByRole("button", { name: "Send" }).click();
       await expect(page.getByText("The household timeline includes Pay summer camp fee.")).toBeVisible();
+      await expect(page.getByLabel("Message")).toHaveValue("");
 
       await page.getByLabel("Message").fill("@dm create a task called assistant-created task");
       await page.getByRole("button", { name: "Send" }).click();

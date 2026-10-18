@@ -74,6 +74,9 @@ jobs:
       - name: Install OpenSpec
         run: npm install -g @fission-ai/openspec@1
 
+      - name: Validate OpenSpec specifications
+        run: openspec validate --all
+
       - name: Validate the product model
         run: npx -y @prodshape/cli@0.22.0 validate
 

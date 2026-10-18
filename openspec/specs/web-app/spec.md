@@ -4,7 +4,7 @@
 
 ## Purpose
 
-The DomusMind web app is the primary household operational interface. It presents one shared product shell containing multiple operational surfaces: Agenda, Lists, Areas, Chats, and Settings, with Meal Planning as an additional surface (see Notes).
+The DomusMind web app is the primary household operational interface. Its primary surfaces are Agenda, Lists, Areas, Meal Planning, and Settings; household Chats also use the shared shell.
 
 The web app makes the household understandable — what is happening, what needs attention, who owns what, and what should be remembered — without requiring members to coordinate across separate tools.
 
@@ -51,18 +51,27 @@ The navigation gives access to each primary surface, including Chats for househo
 - THEN the Lists surface opens in the main content canvas
 - AND the shell (navigation, header) remains visible and consistent
 
+#### Scenario: User navigates to Meal Planning
+
+- GIVEN the user is on another primary surface
+- WHEN the user selects Meal Planning in the navigation
+- THEN the Meal Planning surface opens in the main content canvas
+- AND the shared shell remains visible
+
 ---
 
 ### Requirement: Surface Axis Separation
 
-The four primary surfaces SHALL maintain strict ownership boundaries. No surface owns another surface's entities, and no semantic collapse is permitted between them.
+The primary surfaces SHALL maintain strict ownership boundaries. No surface owns another surface's entities, and no semantic collapse is permitted between them.
 
 | Surface | Owns |
 |---|---|
 | Agenda | Time — the unified temporal read surface |
 | Lists | Household execution containers — capture, flexible execution, time reference |
 | Areas | Ownership — who is accountable for what |
+| Meal Planning | Household meal plans, recipes, and shopping-list derivation |
 | Settings | Configuration — member preferences and integrations |
+| Chats | Household conversation history and explicitly requested assistant responses |
 
 Tasks own a structured execution lifecycle. Areas own accountability. Lists own capture. Agenda reads from all sources but writes to none of them.
 
@@ -73,6 +82,17 @@ Tasks own a structured execution lifecycle. Areas own accountability. Lists own 
 <!-- pdac:cite id="BR-WEB-SETTINGS-STAYS-CONFIGURATION" digest="sha256:d39e22599e6932f15dec9d9328e42cd39b17254968c267480466de3dcfcafcdf" -->
 
 <!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:cb2e2207883d40101d5b4ef7b33d79dc2c444d62b2b66c80c5e887b5e938b061" -->
+
+<!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:3e2d211a42325e9e719480512210f6ec9c5255f4fa647518cae3598e2bd6e835" -->
+
+<!-- pdac:cite id="BC-CHATS" digest="sha256:11b1dbbc66eb13111c05c9123eaa642b4049468bd2d40b04fa86800e8d706da5" -->
+
+#### Scenario: Agenda projects source records without taking ownership
+
+- GIVEN a temporal List Item exists in Lists
+- WHEN it appears in Agenda
+- THEN it remains a List Item owned by Lists
+- AND Agenda does not change the item
 
 ---
 
@@ -112,7 +132,7 @@ Agenda SHALL support two scopes: Household and Member.
 
 **Household scope** shows the coordinated household picture — all members together, shared plans, household routines, household-level list projections, and unassigned tasks.
 
-**Member scope** shows one specific member's temporal reality — their tasks, plans, and routines; household plans they participate in; household routines they are responsible for; and their imported external calendar entries when within the active date window.
+**Member scope** shows one specific member's temporal reality — their tasks; Plans they participate in and household Plans without participants; their routines and household routines they are responsible for; and their imported external calendar entries when within the active date window.
 
 Switching to a member scope is triggered by clicking a member identity (avatar or name). The current date and mode are preserved when switching scope.
 
@@ -132,7 +152,7 @@ Switching to a member scope is triggered by clicking a member identity (avatar o
 
 <!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:b1dcb8fae830badbc584fe2a2e8b3ec117053470d9123391b2fa0d69f6bc9e69" -->
 
-<!-- pdac-drift ids="BR-AGENDA-MEMBER-SCOPE-PLANS, TERM-AGENDA-SCOPE" summary="Spec shows only household plans the member participates in; the model (Q-0041) also shows household plans without participants in every member scope" -->
+<!-- pdac:cite id="SB-AGENDA-MEMBER-HOUSEHOLD-PLAN-WITHOUT-PARTICIPANTS" digest="sha256:ed376ec2c0b4bb952338f7183a7b50c29e43e58497c5d10f0b27935113311f48" -->
 
 #### Scenario: User switches from Household to a member scope
 
@@ -140,6 +160,14 @@ Switching to a member scope is triggered by clicking a member identity (avatar o
 - WHEN the user clicks a member's avatar
 - THEN the surface switches to that member's scope
 - AND the mode remains Week and the date window is unchanged
+
+#### Scenario: Member scope includes unassigned household Plans only
+
+- GIVEN the household has one Plan without participants
+- AND another Plan whose only participant is a different member
+- WHEN this member's Agenda is shown
+- THEN the Plan without participants appears
+- AND the Plan for the other member does not appear
 
 ---
 
@@ -198,6 +226,13 @@ Completed and checked items remain visible but de-emphasized, not removed.
 <!-- pdac:cite id="BR-AGENDA-ENTRY-PRIORITY-ORDER" digest="sha256:99c2693fee545eedd4a3feb29da8d89e78edb05d8c68bba4afffc5073078cac6" -->
 
 <!-- pdac:cite id="FR-WEB-COUNTS-AND-COMPRESSED-COMPLETION" digest="sha256:75b1699d75bf1b4494c8a72fc588b0fbf1813618f8d5f608c61e14d2dda3a3fd" -->
+
+#### Scenario: Agenda items follow the defined priority order
+
+- GIVEN a day contains overdue items, tasks, important List Items, timed and untimed Plans, Routines, other List Items, and completed items
+- WHEN the Agenda displays that day
+- THEN it shows them in that priority order
+- AND completed items remain visible but de-emphasized
 
 ---
 
@@ -341,6 +376,14 @@ Agenda does not expand list items inline as plan content. Agenda does not conver
 
 <!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:cb2e2207883d40101d5b4ef7b33d79dc2c444d62b2b66c80c5e887b5e938b061" -->
 
+#### Scenario: Plan cue opens its linked List
+
+- GIVEN a Plan has an associated List with unchecked items
+- WHEN the Plan appears in Agenda
+- THEN its cue shows the List name and unchecked item count
+- AND selecting the cue opens that List in Lists
+- AND the List Items are not expanded as Plan content
+
 ---
 
 ### Requirement: Lists Surface Structure
@@ -416,6 +459,17 @@ Items do not carry an assignee, a status system beyond checked/unchecked, commen
 
 <!-- pdac:cite id="CON-LISTS-ITEM-CAPABILITY-BOUNDARY" digest="sha256:057cef9585d6cb8ab3cba66f55cdb76637abe9b9bb9342a997232b58dba53e15" -->
 
+#### Scenario: List Item works without optional capabilities
+
+- WHEN a member creates a List Item with only a title
+- THEN the item is valid and can be checked or unchecked
+
+#### Scenario: Temporal capabilities are independent
+
+- GIVEN a List Item has only a due date, only a reminder, or only a repeat rule
+- WHEN the item is saved
+- THEN the selected temporal capability is valid without requiring another temporal field
+
 ---
 
 ### Requirement: Lists Temporal Projection to Agenda
@@ -439,6 +493,18 @@ When a repeat rule is set alongside a due date, the due date acts as the anchor 
 <!-- pdac:cite id="FR-LISTS-CLEAR-ITEM-TIMING" digest="sha256:dac218145bbf6f152b37ca13e0c90761046bf9141f5cec589137e62d80d0ebda" -->
 
 <!-- pdac:cite id="SB-LISTS-CLEARED-ITEM-LEAVES-AGENDA" digest="sha256:9f66ef5bca4eecb07050a78ed725f41873bd84e1422ad2ae6d4cd783dc29c0ff" -->
+
+#### Scenario: List Item projects while it has temporal information
+
+- GIVEN a List Item has at least one temporal field
+- WHEN the Agenda is requested
+- THEN the item appears as a distinct List Item entry
+
+#### Scenario: Clearing temporal information removes the projection
+
+- GIVEN a List Item appears in Agenda
+- WHEN all of its temporal fields are cleared
+- THEN it no longer appears in Agenda
 
 ---
 
@@ -496,6 +562,19 @@ Archived lists are no longer in active use but are retained.
 <!-- pdac:cite id="UC-LISTS-ARCHIVE-LIST" digest="sha256:2395fb97234a2de067a6f26ada8345758c18ccf3ef081d97c9d20a9b04fa6afe" -->
 
 <!-- pdac:cite id="FR-WEB-COUNTS-AND-COMPRESSED-COMPLETION" digest="sha256:75b1699d75bf1b4494c8a72fc588b0fbf1813618f8d5f608c61e14d2dda3a3fd" -->
+
+#### Scenario: Completed List Items remain accessible
+
+- GIVEN a List has completed items
+- WHEN the completed section is collapsed
+- THEN the items remain available behind the Completed count
+
+#### Scenario: Archived List remains retained and read-only
+
+- GIVEN a List is archived
+- WHEN a member views the List
+- THEN the List remains retained
+- AND its items cannot be changed until the List is restored
 
 ---
 
@@ -662,6 +741,18 @@ Contextual creation actions (add plan, add task, add list item) stay close to th
 
 <!-- pdac:cite id="QR-PRODUCT-CAPTURE-EASIER-THAN-REMEMBERING" digest="sha256:a4c482905ac1c2e5c6fac9a61e6d1449d28a4d682cc4bd43a452d80a79944b8b" -->
 
+#### Scenario: Selecting an item uses contextual detail
+
+- GIVEN a member selects an item on desktop
+- WHEN its details open
+- THEN they appear in the right inspector while the surrounding surface remains visible
+- AND on mobile the same details appear in a bottom sheet or pushed section
+
+#### Scenario: Destructive action asks for confirmation
+
+- WHEN a member starts a destructive action
+- THEN a modal asks for confirmation before the action proceeds
+
 ---
 
 ### Requirement: Mobile Behavior
@@ -684,15 +775,20 @@ Mobile must feel like the same product at a smaller scale, not a different produ
 
 <!-- pdac:cite id="FR-WEB-LOCAL-CAPTURE" digest="sha256:a43d6d379267bfaaa54145e61b18a92e07c6f02dda63ef57e4d4ebfd82a33b47" -->
 
+#### Scenario: Mobile keeps the same product behavior
+
+- GIVEN a member uses the app on a mobile device
+- WHEN they navigate, inspect an item, and create an item
+- THEN navigation uses the compact pattern, contextual detail uses a bottom sheet or pushed section, and creation uses the corresponding FAB
+- AND the same product behavior remains available as on desktop
+
 ---
 
 ## Notes
 
 ### Meal Planning surface
 
-The Meal Planning surface spec (`docs/design/surfaces/meal-planning.md`) is fully specified and describes a complete surface. However, the domain context document (`docs/04_contexts/meal-planning.md`) marks Meal Planning as a **V2 bounded context**, not part of the V1 core. Whether Meal Planning is included as a V1 navigation entry in the web app is not definitively resolved in the source material. It is excluded from the navigation requirements above until its V1 inclusion is confirmed.
-
-<!-- pdac-drift ids="FR-WEB-APP-SHELL, UC-WEB-MOVE-BETWEEN-SURFACES" summary="Spec excludes Meal Planning from navigation pending V1 status and names four primary surfaces; the model (Q-0001, Q-0051) makes Meal Planning current product and a navigable primary surface" -->
+Meal Planning is a current primary surface in the shared shell (decided: Q-0051). The web-app requirement includes its navigation entry.
 
 ### Tasks surface
 
