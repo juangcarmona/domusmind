@@ -1,0 +1,89 @@
+name: image-postgres-smoke
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'src/backend/**'
+      - 'src/web/app/**'
+      - 'tests/container-smoke/**'
+      - 'deploy/docker-compose.yml'
+      - 'DomusMind.slnx'
+      - '.github/workflows/image-postgres-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: image smoke changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      relevant: ${{ steps.filter.outputs.relevant }}
+    steps:
+      - name: Detect relevant changes
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
+            --paginate --jq '.[].filename')
+          echo "$files"
+          if printf '%s\n' "$files" | grep -qE '^(src/backend/|src/web/app/|tests/container-smoke/|deploy/docker-compose\.yml$|DomusMind\.slnx$|\.github/workflows/image-postgres-smoke\.yml$)'; then
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "relevant=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  smoke:
+    name: image postgres smoke
+    needs: changes
+    if: needs.changes.outputs.relevant == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Create ephemeral credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          db_password="$(openssl rand -hex 24)"
+          jwt_signing_key="$(openssl rand -hex 32)"
+          echo "::add-mask::$db_password"
+          echo "::add-mask::$jwt_signing_key"
+          {
+            echo "SMOKE_DB_PASSWORD=$db_password"
+            echo "SMOKE_JWT_SIGNING_KEY=$jwt_signing_key"
+            echo "COMPOSE_PROJECT_NAME=domusmind-smoke-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          } >> "$GITHUB_ENV"
+
+      - name: Build and start image with disposable PostgreSQL
+        run: docker compose --file tests/container-smoke/compose.yml up --detach --build --wait --wait-timeout 180
+
+      - name: Verify migrations, setup status and SPA
+        run: bash tests/container-smoke/smoke.sh
+
+      - name: Show container diagnostics on failure
+        if: failure()
+        run: |
+          docker compose --file tests/container-smoke/compose.yml ps --all || true
+          docker compose --file tests/container-smoke/compose.yml logs --no-color --timestamps || true
+
+      - name: Remove containers, network and volumes
+        if: always()
+        run: docker compose --file tests/container-smoke/compose.yml down --volumes --remove-orphans
