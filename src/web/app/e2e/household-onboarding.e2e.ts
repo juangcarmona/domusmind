@@ -20,7 +20,7 @@ function getHouseholdWeekStart(firstDayOfWeek: string | null | undefined): strin
   return `${year}-${month}-${day}`;
 }
 
-test("onboard a generated household, open today's Agenda, and navigate at desktop and phone widths", async ({ page, browser }, testInfo) => {
+test("onboard a generated household and cover primary workflows at desktop and phone widths", async ({ page, browser }, testInfo) => {
   test.setTimeout(180_000);
   const runKey = randomUUID();
   const email = `e2e-${runKey}@example.test`;
@@ -256,8 +256,8 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
       await page.setViewportSize({ width: 1280, height: 800 });
       await page.goto(`/meal-planning/${weekStart}`);
       await page.getByRole("button", { name: "Start from scratch" }).click();
-      const mondayColumn = page.locator(".mp-week-grid-day-col").first();
-      await mondayColumn.getByRole("button", { name: "Dinner" }).click();
+      const firstDayColumn = page.locator(".mp-week-grid-day-col").first();
+      await firstDayColumn.getByRole("button", { name: "Dinner" }).click();
       await page.getByRole("button", { name: "Recipe", exact: true }).click();
       await page.getByRole("button", { name: recipeName }).click();
       await page.getByRole("button", { name: "Save" }).click();
