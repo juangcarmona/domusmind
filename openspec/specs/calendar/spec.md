@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Calendar is the temporal structure of household life. It owns the **Event** aggregate: time-bound commitments that affect one or more household participants.
+Calendar is the temporal structure of household life. It owns **Plans**: time-bound commitments that affect one or more household members.
 
 Calendar answers:
 
@@ -16,11 +16,11 @@ Calendar is the source of truth for time-based planning. It owns event schedules
 
 Calendar also manages **external calendar connections** — member-scoped delegated integrations that import read-only entries from third-party providers (Phase 1: Microsoft Outlook) into the household's temporal read surfaces.
 
-Calendar also serves private, revocable ICS subscriptions for outbound read-only sharing of DomusMind Plans. This is separate from importing external calendars.
+Calendar also serves private, revocable ICS subscriptions for outbound read-only sharing of DomusMind Plans. This is separate from importing external calendars. It owns standalone dated family timeline notes, which do not change a Plan or another household record.
 
-Calendar does not own the Agenda or family timeline read models. It is one source for those projections. The Agenda and timeline are assembled from Calendar, Tasks, and Shared Lists.
+Calendar does not own the Agenda or household timeline read models. It is one source for those projections, alongside Tasks, Lists, Meal Planning, and external calendar connections in Member scope.
 
-User interfaces may present Events as **Plans**, but the domain model remains centered on the **Event** aggregate.
+The household-facing term is **Plan**; `Event` is a domain-code synonym for the same concept.
 
 Imported external calendar data is read-only integration state. It must never be treated as native household planning state.
 
@@ -35,6 +35,8 @@ Imported external calendar data is read-only integration state. It must never be
 <!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:2b2ea1de6c0f9a84d96f94d20087467fa7a198f197da80a85748fb145816fe03" -->
 
 <!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:a3d8d4afcfc23492b745fa37ac5b103ae76a7bc1d214456aeddbe2f57473ceea" -->
+
+## Requirements
 
 ### Requirement: Standalone dated family timeline notes
 
@@ -51,13 +53,11 @@ An authorized household member can create a family timeline note with a date and
 
 ---
 
-## Requirements
+### Requirement: Plan Scheduling
 
-### Requirement: Event Scheduling
+A household SHALL be able to schedule a Plan with a title and a start date as the minimum required inputs. The start may include a time of day, or may be date-only for an all-day or multi-day Plan.
 
-A household SHALL be able to schedule a time-bound event with a title and start time as the minimum required inputs.
-
-Optional inputs: end time (must be after start time if provided), participants (family members, dependents, or pets), and a responsibility domain reference for contextual grouping. A newly created event starts in **scheduled** status and belongs to exactly one family.
+Optional inputs include an end after the start, household member participants (of any role), reminders, an optional description and colour, and an Area reference for context. A new Plan starts scheduled and belongs to exactly one household.
 
 <!-- pdac:cite id="FR-CALENDAR-SCHEDULE-PLAN" digest="sha256:bd41645e55c258195ace26b0a0c80f301df66c4f6b9da0688005e72fc34caa97" -->
 
@@ -81,38 +81,48 @@ Optional inputs: end time (must be after start time if provided), participants (
 
 <!-- pdac:cite id="SB-CALENDAR-SCHEDULE-PLAN-UNKNOWN-PARTICIPANT" digest="sha256:194bb5e8dc7345e587089e2decad2f0e38505c0891c9a87968380863e3ef2185" -->
 
-<!-- pdac-drift ids="BR-CALENDAR-PLAN-REQUIRES-TITLE-AND-START, FR-CALENDAR-SCHEDULE-PLAN, SB-CALENDAR-SCHEDULE-ALL-DAY-PLAN" summary="Spec requires a start time; the model (Q-0045) also accepts an all-day plan with a start date alone and multi-day plans" -->
+<!-- pdac:cite id="SB-CALENDAR-SCHEDULE-ALL-DAY-PLAN" digest="sha256:7d4a3dd334ecdfd337d76e96770a9edcbed638baecbdf7337b097e1c696dc3bb" -->
 
-<!-- pdac-drift ids="TERM-PLAN-PARTICIPANT, BR-CALENDAR-PARTICIPANT-IN-HOUSEHOLD" summary="Spec names members, dependents and pets as participant kinds; the model (Q-0042) has household members of any role only, pets being members with the Pet role" -->
+#### Scenario: Household creates a Plan with minimum inputs
 
-#### Scenario: Household creates an event with minimum inputs
+- GIVEN a household exists
+- WHEN a member schedules a Plan with a title and start date
+- THEN a Plan is created in scheduled status
+- AND the Plan belongs to that household
 
-- GIVEN a family exists
-- WHEN a member schedules an event with a title and start time
-- THEN an event is created in scheduled status
-- AND the event belongs to that family
+#### Scenario: Household creates an all-day Plan
 
-#### Scenario: Event with end time before start time is rejected
+- GIVEN a household exists
+- WHEN a member schedules a Plan with a title and a date without a time of day
+- THEN a scheduled all-day Plan exists for that date
+
+#### Scenario: Household creates a multi-day Plan
+
+- GIVEN a household exists
+- WHEN a member schedules a Plan spanning multiple dates without a time of day
+- THEN a scheduled multi-day Plan exists across those dates
+
+#### Scenario: Plan with end before start is rejected
 
 - GIVEN a member provides a start time and an end time
 - WHEN the end time is earlier than the start time
-- THEN the event is not created
+- THEN the Plan is not created
 - AND a validation error is returned
 
-#### Scenario: Event with invalid participant reference is rejected
+#### Scenario: Plan with an invalid participant reference is rejected
 
 - GIVEN a participant identifier does not belong to the family
 - WHEN a member attempts to schedule an event including that participant
-- THEN the event is not created
+- THEN the Plan is not created
 - AND a validation error is returned
 
 ---
 
 ### Requirement: Event Rescheduling
 
-A household SHALL be able to update the schedule of a scheduled event.
+A household SHALL be able to update the schedule of a scheduled Plan.
 
-Rescheduling updates the start time and optionally the end time. The event's identity, participants, and reminders remain unchanged. Cancelled events cannot be rescheduled.
+Rescheduling updates the start and optionally the end. A Plan's identity, participants, and reminders remain unchanged. A cancelled Plan cannot be changed.
 
 <!-- pdac:cite id="FR-CALENDAR-RESCHEDULE-PLAN" digest="sha256:0fd9effe4cc812573e94d4803c563719133e2077ca39d411b8f7332640da1eb9" -->
 
@@ -151,9 +161,9 @@ Rescheduling updates the start time and optionally the end time. The event's ide
 
 ### Requirement: Event Cancellation
 
-A household SHALL be able to cancel a scheduled event.
+A household SHALL be able to cancel a scheduled Plan.
 
-Cancellation preserves the event in history but removes it from active planning. Cancelled events cannot be rescheduled or receive new participants.
+Cancellation preserves the Plan in history but removes it from active planning. Once cancelled, a Plan cannot be changed: it cannot be rescheduled or cancelled again; participants cannot be added or removed; reminders cannot be added or removed; and title, description, or colour cannot be edited.
 
 <!-- pdac:cite id="FR-CALENDAR-CANCEL-PLAN" digest="sha256:c915803cb87d6684644fb00805bc2d506fd1f07cae4403263c20666fb23b713f" -->
 
@@ -165,7 +175,7 @@ Cancellation preserves the event in history but removes it from active planning.
 
 <!-- pdac:cite id="SB-CALENDAR-CANCEL-CANCELLED-PLAN" digest="sha256:4b76cc35c9b6b2881bfb444f6e212f38a43223d3a4f6250d1b5ad03f52d2a5ab" -->
 
-<!-- pdac-drift ids="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED, UC-CALENDAR-CANCEL-PLAN" summary="Spec only forbids rescheduling and adding participants on a cancelled event; the model (Q-0043) freezes a cancelled plan entirely: no participant removal, no reminder changes, no detail edits" -->
+<!-- pdac:cite id="SB-CALENDAR-CHANGE-REMINDER-CANCELLED-PLAN" digest="sha256:5b708c53e7d3bcc78899b29833a6a80d60e34a3d96f4d298f616bbb90cafcaf5" -->
 
 #### Scenario: Event is cancelled
 
@@ -180,13 +190,46 @@ Cancellation preserves the event in history but removes it from active planning.
 - WHEN the household attempts to cancel it again
 - THEN the operation is rejected
 
+#### Scenario: A cancelled Plan cannot be changed
+
+- GIVEN a Plan is cancelled
+- WHEN a household member tries to change its schedule, participants, reminders, title, description, or colour
+- THEN the operation is rejected
+- AND the Plan remains unchanged
+
+---
+
+### Requirement: Plan Details Editing
+
+A household member SHOULD be able to change a scheduled Plan's title, description, and colour without changing its identity or schedule. A cancelled Plan cannot be edited.
+
+<!-- pdac:cite id="FR-CALENDAR-EDIT-PLAN-DETAILS" digest="sha256:ca23082b1f6882680dce423bf2395c4b0cde1a0cc10df648c3e164c484e9e0df" -->
+
+<!-- pdac:cite id="UC-CALENDAR-EDIT-PLAN-DETAILS" digest="sha256:6b1230aff5f82056a84617fdabd59001412297dedc6da7315cf2f61daf087e68" -->
+
+<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:d0ffa51dd1b3cb43b9ccec2077dd08a91fc3e03e0124f8112b361e122abf94f9" -->
+
+#### Scenario: Member edits a scheduled Plan's details
+
+- GIVEN a scheduled Plan exists
+- WHEN a household member changes its title, description, or colour
+- THEN those details are updated
+- AND the Plan's identity, schedule, participants, and reminders remain unchanged
+
+#### Scenario: Member cannot edit a cancelled Plan
+
+- GIVEN a Plan is cancelled
+- WHEN a household member tries to edit its title, description, or colour
+- THEN the operation is rejected
+- AND the Plan remains unchanged
+
 ---
 
 ### Requirement: Event Participant Management
 
 A household SHALL be able to add and remove participants from an event.
 
-Participants may be family members, dependents, or pets. Each participant must be unique within the event. Participants cannot be added to a cancelled event.
+Each participant must be a household member and may appear only once on a Plan. Participants cannot be added to or removed from a cancelled Plan.
 
 <!-- pdac:cite id="FR-CALENDAR-MANAGE-PLAN-PARTICIPANTS" digest="sha256:c49632dc7e408cea8d44ca0643d7662abbcc67c96f0cfa2b2402cec1ef562c26" -->
 
@@ -210,14 +253,12 @@ Participants may be family members, dependents, or pets. Each participant must b
 
 <!-- pdac:cite id="SB-CALENDAR-REMOVE-NON-PARTICIPANT" digest="sha256:bfe7e70e43315a1e0bb378f36f3b2e08b01ec630f5348db59ee58154df818000" -->
 
-<!-- pdac-drift ids="TERM-PLAN-PARTICIPANT, SB-CALENDAR-ADD-PARTICIPANT, FR-CALENDAR-MANAGE-PLAN-PARTICIPANTS" summary="Spec allows family members, dependents or pets as participants; the model (Q-0042) allows household members of any role only, pets being members with the Pet role" -->
-
 #### Scenario: Participant is added to an event
 
 - GIVEN an event exists in scheduled status
-- AND a family entity (member, dependent, or pet) is not already a participant
-- WHEN the household adds that entity as a participant
-- THEN the entity is added to the event's participant set
+- AND a household member is not already a participant
+- WHEN the household adds that member as a participant
+- THEN the member is added to the Plan's participant set
 
 #### Scenario: Duplicate participant is rejected
 
@@ -231,12 +272,19 @@ Participants may be family members, dependents, or pets. Each participant must b
 - WHEN the household attempts to add a participant
 - THEN the operation is rejected
 
-#### Scenario: Participant is removed from an event
+#### Scenario: Participant is removed from a Plan
 
 - GIVEN an entity is a participant in a scheduled event
 - WHEN the household removes that participant
 - THEN the entity is no longer in the event's participant set
 - AND the event and other participants remain unchanged
+
+#### Scenario: Participant cannot be removed from a cancelled Plan
+
+- GIVEN a cancelled Plan has a participant
+- WHEN the household attempts to remove that participant
+- THEN the operation is rejected
+- AND the participant remains on the Plan
 
 #### Scenario: Removing a non-participant is rejected
 
@@ -248,7 +296,7 @@ Participants may be family members, dependents, or pets. Each participant must b
 
 ### Requirement: Event Reminders
 
-A household SHALL be able to add and remove time-based reminders on an event.
+A household SHALL be able to add and remove time-based reminders on a scheduled Plan.
 
 Reminders are defined as offsets relative to the event's start time (e.g. 30 minutes before, 24 hours before). Each offset must be unique per event. Calendar defines reminder schedules; notification delivery belongs to infrastructure.
 
@@ -270,11 +318,9 @@ Reminders are defined as offsets relative to the event's start time (e.g. 30 min
 
 <!-- pdac:cite id="SB-CALENDAR-REMOVE-MISSING-REMINDER" digest="sha256:f7912153591dacba77d84c20799ae3fb93545a726b43f9b0d85b1798ea192b85" -->
 
-<!-- pdac-drift ids="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED, FR-CALENDAR-MANAGE-PLAN-REMINDERS, UC-CALENDAR-MANAGE-PLAN-REMINDERS" summary="Spec lets reminders be added or removed on any existing event; the model (Q-0043) rejects adding or removing reminders on a cancelled plan" -->
-
 #### Scenario: Reminder is added to an event
 
-- GIVEN an event exists
+- GIVEN a scheduled Plan exists
 - AND no reminder with the same offset already exists on that event
 - WHEN the household adds a reminder with an offset
 - THEN the reminder is added to the event's reminder set
@@ -291,6 +337,13 @@ Reminders are defined as offsets relative to the event's start time (e.g. 30 min
 - WHEN the household removes that reminder
 - THEN the reminder is no longer part of the event's reminder set
 - AND the event and other reminders remain unchanged
+
+#### Scenario: Reminders cannot be changed on a cancelled Plan
+
+- GIVEN a cancelled Plan has a reminder
+- WHEN the household attempts to add or remove a reminder
+- THEN the operation is rejected
+- AND the Plan's reminders remain unchanged
 
 #### Scenario: Removing a non-existent reminder is rejected
 
@@ -559,7 +612,7 @@ The default refresh interval is 60 minutes. Catch-up triggers also fire on user 
 
 The system SHALL produce a unified household-scope temporal read model for a requested date window.
 
-The projection assembles entries from four sources: Calendar Events (as Plans), Tasks (due within the window), Routines (projected occurrences), and temporal Shared List Items (items with a due date, reminder, or repeat rule producing an occurrence within the window). External calendar entries are excluded from the household timeline — they appear in Member scope only. The projection is read-only; it must not create or modify any aggregate. A temporal list item linked to a plan projects independently of the linked event — they appear as separate entries in the timeline.
+The Agenda assembles Plans, Tasks due within the window, projected Routine occurrences, temporal List Items, and Meal slots. External calendar entries are excluded from the household scope and appear only in the owning member's scope. The projection is read-only; it must not create or modify any record. A temporal List Item linked to a Plan projects independently of that Plan as a separate entry.
 
 Projected entries follow this priority order within a day: overdue → tasks due today → list items with importance → plans (by start time) → routines → list items without importance → completed/checked.
 
@@ -587,14 +640,26 @@ Projected entries follow this priority order within a day: overdue → tasks due
 
 <!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-EXCLUDES-EXTERNAL" digest="sha256:314f199dbf9e633b3422db2e43359e1936f4c0fd61fd8c4ba4a18e76c2d3b2ea" -->
 
-<!-- pdac-drift ids="BR-MEALS-AGENDA-PROJECTION, FR-MEALS-AGENDA-PROJECTION" summary="Spec assembles the household timeline from four sources; the model also projects meal slots into the Agenda, Meal Planning being current product (Q-0001)" -->
+<!-- pdac:cite id="BR-MEALS-AGENDA-PROJECTION" digest="sha256:1b3f980477d116ba46ef6addf9e8a1b6aaeeefe5de1560bb9097a092c6b6aa6d" -->
+
+<!-- pdac:cite id="FR-MEALS-AGENDA-PROJECTION" digest="sha256:14542a51f00845c388cd4e159f50674eca6d349656eacac4935fa63b064cd244" -->
+
+<!-- pdac:cite id="SB-MEALS-AGENDA-SHOWS-ASSIGNED-MEAL" digest="sha256:924a7853fae063e0f6713b40a2f463060e02971c1a2e1d696a7189d5161879bc" -->
 
 #### Scenario: Household timeline includes events, tasks, routines, and list items
 
 - GIVEN a family has scheduled events, pending tasks, active routines, and list items with due dates
 - WHEN the household timeline is requested for a date
-- THEN all four entry types appear for that date
+- THEN the Plan, task, routine, and List Item appear for that date
 - AND external calendar entries do not appear
+
+#### Scenario: Meal slots appear as distinct household Agenda entries
+
+- GIVEN a meal slot has an assigned meal
+- WHEN the household Agenda is requested for that date
+- THEN the meal appears as a distinct, non-timed household entry
+- AND an Unplanned slot without notes is not shown
+- AND the meal is not a Plan
 
 #### Scenario: Temporal list items project into the household timeline
 
@@ -615,7 +680,7 @@ Projected entries follow this priority order within a day: overdue → tasks due
 
 The system SHALL produce a member-scoped temporal read model for a requested date window.
 
-The projection assembles entries from five sources: Calendar Events where the member participates or is a household plan, Tasks assigned to the member, Routines for the member or household scope, External Calendar Entries from the member's active connections, and temporal Shared List Items. External entries are scoped to the member whose connection owns them. External entries are read-only and carry a source label (e.g. "Outlook"). An external entry is included only when the connection is active, the feed is selected, the entry falls within the active sync horizon, and the entry has not been tombstoned as deleted. The projection is read-only; it must not create or modify any aggregate.
+The projection includes Plans the member participates in and household Plans with no participants, Tasks assigned to the member, Routines for the member or household scope, temporal List Items, and External Calendar Entries from that member's active connections. A Plan whose participants are only other people is not shown. External entries are scoped to the member whose connection owns them, are read-only, and carry a source label (e.g. "Outlook"). An external entry is included only when the connection is active, the feed is selected, the entry falls within the active sync horizon, and the entry has not been tombstoned as deleted. The projection is read-only; it must not create or modify any record.
 
 <!-- pdac:cite id="FR-AGENDA-MEMBER-AGENDA" digest="sha256:32782594f1e61544552dde7f833856d6bed5363a8be703366fc5636fb3d7b3b5" -->
 
@@ -641,7 +706,7 @@ The projection assembles entries from five sources: Calendar Events where the me
 
 <!-- pdac:cite id="SB-AGENDA-MEMBER-LIST-ITEMS-READ-ONLY" digest="sha256:aca5be88f2c84c717d71bed6e7b84dc226ebd267d0bfc2a2e7f5c05cf78f54c6" -->
 
-<!-- pdac-drift ids="BR-AGENDA-MEMBER-SCOPE-PLANS, FR-AGENDA-MEMBER-AGENDA, SB-AGENDA-MEMBER-HOUSEHOLD-PLAN-WITHOUT-PARTICIPANTS" summary="Spec includes every household plan in a member agenda; the model (Q-0041) includes the plans the person takes part in plus only household plans without participants" -->
+<!-- pdac:cite id="SB-AGENDA-MEMBER-HOUSEHOLD-PLAN-WITHOUT-PARTICIPANTS" digest="sha256:ed376ec2c0b4bb952338f7183a7b50c29e43e58497c5d10f0b27935113311f48" -->
 
 #### Scenario: Member agenda includes personal events and imported entries
 
@@ -649,6 +714,14 @@ The projection assembles entries from five sources: Calendar Events where the me
 - WHEN the member agenda is requested for that date
 - THEN both the native event and the external entries appear
 - AND external entries carry a source label and are read-only
+
+#### Scenario: Member Agenda includes unassigned household Plans only
+
+- GIVEN a household has one Plan with no participants
+- AND another Plan whose only participant is a different member
+- WHEN this member's Agenda is requested
+- THEN the Plan without participants appears
+- AND the Plan for the other member does not appear
 
 #### Scenario: External entries do not appear in household scope
 
@@ -662,34 +735,6 @@ The projection assembles entries from five sources: Calendar Events where the me
 - WHEN the member views the agenda
 - THEN the list item is distinguishable from tasks and plans
 - AND it is not editable from Agenda — editing navigates to the Lists surface
-
----
-
-## Notes
-
-1. **Recurring events** — `docs/04_contexts/calendar.md` includes `RecurrenceRule` as a value object and mentions recurring events (e.g. "football practice every Tuesday"), but no feature spec covers creating or modifying recurring events beyond the basic schedule invariant (recurring events must define a recurrence rule). This spec captures the invariant. Full recurring event management (skip occurrence, move occurrence) is listed as future scope in the context document.
-
-<!-- pdac-drift ids="TERM-PLAN" summary="Note says the spec captures a recurrence-rule invariant; the model (Q-0044) has no current recurrence behaviour and plans recurring-plan management for V2" -->
-
-1. **Event completion** — `CompleteEvent` is listed as a future command in the context document. No feature spec exists. The context document notes "completed events cannot change schedule" as an invariant, which implies the state exists but its behavioral lifecycle is unspecified. This spec does not include a Completion requirement; the invariant is noted here only.
-
-2. **RenameEvent** — `RenameEvent` is listed as an active command in the context document but has no feature spec. Behavior is unspecified beyond identity stability.
-
-<!-- pdac-drift ids="FR-CALENDAR-EDIT-PLAN-DETAILS, UC-CALENDAR-EDIT-PLAN-DETAILS" summary="Note says renaming is unspecified; the model defines editing a plan's title, description and colour as current product" -->
-
-1. **Reminder scheduling vs. delivery** — Reminders are defined as time offsets on the event. Delivery (notification infrastructure) is explicitly out of Calendar's scope. Whether reminders auto-remove when an event is cancelled is not specified in any source.
-
-2. **Participant removal from cancelled events** — `cancel-event.md` says cancelled events cannot add participants, but neither it nor `remove-event-participant.md` explicitly states whether removing a participant from a cancelled event is permitted. Not specified.
-
-<!-- pdac-drift ids="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED, TERM-REMINDER" summary="Notes 4-5 leave reminders and participant removal on cancelled events unspecified; the model (Q-0043) keeps reminders as they are and rejects any participant or reminder change on a cancelled plan" -->
-
-1. **Phase 1 sync: pull only** — External calendar synchronization is pull-based only. Webhook subscriptions are explicitly out of scope for Phase 1.
-
-<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:a631bcb19c09716b7cbee7b25563b55eec7ca4287de67c84cb1081144d29deb9" -->
-
-1. **`pausedUntil` for connections** — No equivalent time-bounded pause exists in the Calendar external connection model (unlike Routine Pause in Tasks). Connections are either active or disconnected.
-
-2. **Background refresh triggers** — Catch-up triggers fire on login and when Agenda opens in Member scope. The exact staleness threshold (distinct from the 60-minute scheduled interval) is not specified in the source documents.
 
 ---
 
@@ -734,6 +779,30 @@ An active subscription provides a read-only ICS feed of DomusMind Plans within i
 
 - **WHEN** a client requests an invalid, revoked or expired subscription
 - **THEN** DomusMind denies the request without returning calendar information
+
+---
+
+## Notes
+
+1. **Recurring Plans** — Recurring-plan management is not current product behavior; it is planned for V2 (decided: Q-0044). This specification does not define recurrence rules or recurring occurrences.
+
+1. **Event completion** — `CompleteEvent` is listed as a future command in the context document. No feature spec exists. The context document notes "completed events cannot change schedule" as an invariant, which implies the state exists but its behavioral lifecycle is unspecified. This spec does not include a Completion requirement; the invariant is noted here only.
+
+2. **Plan details** — A household member may edit a scheduled Plan's title, description, or colour without changing its identity or schedule. See Plan Details Editing.
+
+1. **Reminder scheduling vs. delivery** — Reminders are offsets relative to a Plan's start; delivery (notification infrastructure) is outside Calendar. Reminders remain unchanged when a Plan is cancelled, and cannot be added or removed after cancellation (decided: Q-0043).
+
+2. **Cancelled Plan participants** — Participants remain unchanged when a Plan is cancelled; they cannot be added or removed after cancellation (decided: Q-0043).
+
+1. **Phase 1 sync: pull only** — External calendar synchronization is pull-based only. Webhook subscriptions are explicitly out of scope for Phase 1.
+
+<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:a631bcb19c09716b7cbee7b25563b55eec7ca4287de67c84cb1081144d29deb9" -->
+
+1. **`pausedUntil` for connections** — No equivalent time-bounded pause exists in the Calendar external connection model (unlike Routine Pause in Tasks). Connections are either active or disconnected.
+
+2. **Background refresh triggers** — Catch-up triggers fire on login and when Agenda opens in Member scope. The exact staleness threshold (distinct from the 60-minute scheduled interval) is not specified in the source documents.
+
+---
 
 ## Source References
 
