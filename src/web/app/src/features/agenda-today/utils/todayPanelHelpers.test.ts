@@ -384,6 +384,28 @@ describe("buildSharedEntries", () => {
     expect(entries[1].sourceType).toBe("event");
   });
 
+  it("includes the selected day's meal as a read-only shared entry", () => {
+    const cell = makeCell(TODAY, {
+      meals: [{
+        id: "meal:2026-03-27:Dinner",
+        title: "Dinner: Soup",
+        mealType: "Dinner",
+        notes: null,
+        isOptional: false,
+      }],
+    });
+
+    const [meal] = buildSharedEntries([cell], TODAY);
+
+    expect(meal).toMatchObject({
+      id: "meal:2026-03-27:Dinner",
+      sourceType: "meal",
+      title: "Dinner: Soup",
+      isReadOnly: true,
+      sourceLabel: "Dinner",
+    });
+  });
+
   it("does NOT include items from a past or future shared cell", () => {
     const yesterday = makeCell("2026-03-26", {
       tasks: [makeTask({ taskId: "past" })],

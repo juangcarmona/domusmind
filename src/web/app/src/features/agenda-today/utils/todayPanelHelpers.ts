@@ -3,10 +3,9 @@ import {
   type CalendarEntry,
   type CalendarEntryDisplayType,
   ENTRY_DISPLAY_PRIORITY,
-  normalizeEventItem,
+  normalizeCellItems,
   normalizeListItem,
   normalizeTaskItem,
-  normalizeRoutineItem,
 } from "./calendarEntry";
 
 // ----------------------------------------------------------------
@@ -57,35 +56,19 @@ function normalizeCellWithOverdue(
   cell: WeeklyGridCell,
   selectedDate: string,
 ): CalendarEntry[] {
-  const entries: CalendarEntry[] = [];
+  const entries = normalizeCellItems(cell);
 
-  for (const e of cell.events ?? []) {
-    const participantNames =
-      e.participants?.map((p) => p.displayName).join(", ") || null;
-    entries.push(normalizeEventItem(e, participantNames));
-  }
-
-  for (const t of cell.tasks ?? []) {
-    const terminal = isTerminalStatus(t.status);
-    const isOverdue = !terminal && t.dueDate !== null && t.dueDate < selectedDate;
-    if (terminal || isOverdue) {
-      // Override displayType to overdue or completed as appropriate.
-      entries.push({
-        ...normalizeTaskItem(t),
-        displayType: isOverdue ? "overdue" : "completed",
-        isOverdue,
-      });
-    } else {
-      entries.push(normalizeTaskItem(t));
+  for (const entry of entries) {
+    if (
+      entry.sourceType === "task" &&
+      !isTerminalStatus(entry.status) &&
+      entry.dueDate !== null &&
+      entry.dueDate !== undefined &&
+      entry.dueDate < selectedDate
+    ) {
+      entry.displayType = "overdue";
+      entry.isOverdue = true;
     }
-  }
-
-  for (const r of cell.routines ?? []) {
-    entries.push(normalizeRoutineItem(r));
-  }
-
-  for (const li of cell.listItems ?? []) {
-    entries.push(normalizeListItem(li));
   }
 
   return entries;
