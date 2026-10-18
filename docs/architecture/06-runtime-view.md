@@ -149,7 +149,7 @@ sequenceDiagram
     O->>W: Create household or member subscription
     W->>C: POST /api/calendar/subscriptions (JWT)
     C->>H: Dispatch create command
-    H->>D: Persist subscription and token hash; append domain event
+    H->>D: Persist subscription and token hash, then append domain event
     H-->>W: Return private URL once
     X->>C: GET /calendar/subscriptions/{token}.ics
     C->>H: Dispatch feed query
