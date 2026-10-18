@@ -4,7 +4,7 @@
 
 import { useTranslation } from "react-i18next";
 import { ContextChip } from "../../../components/ContextChip";
-import { WEEK_DAYS } from "../utils";
+import { formatListItemUpdatedDate, WEEK_DAYS } from "../utils";
 import { IconTrash, IconChevronDown } from "./ListsIcons";
 import type { SharedListItemDetail, GetSharedListDetailResponse } from "../../../api/types/listTypes";
 import type { HouseholdAreaItem, FamilyMemberResponse } from "../../../api/domusmindApi";
@@ -88,6 +88,8 @@ export function ListItemInspectorContent({
   const updatedByMember = item.updatedByMemberId
     ? members.find((x) => x.memberId === item.updatedByMemberId)
     : null;
+  const updatedDate = formatListItemUpdatedDate(item.updatedAtUtc);
+  const updatedOn = updatedDate ? t("updatedOn", { date: updatedDate }) : null;
 
   return (
     <div className="li-inspector">
@@ -325,14 +327,7 @@ export function ListItemInspectorContent({
         >
           <IconChevronDown />
         </button>
-        <span className="li-inspector__bottom-meta">
-          {t("updatedOn", {
-            date: new Date(item.updatedAtUtc).toLocaleDateString(undefined, {
-              month: "short",
-              day: "numeric",
-            }),
-          })}
-        </span>
+        {updatedOn && <span className="li-inspector__bottom-meta">{updatedOn}</span>}
         <button
           type="button"
           className="li-inspector__bottom-delete"
