@@ -44,4 +44,4 @@ The strategy deliberately adds no extension points for capabilities outside the
 current scope, such as messaging channels, AI interpretation or further calendar
 providers. They would arrive as new modules, slices or adapters within the same shape.
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:847b6e563399724961b0a0a9e630c9b902910ae34ef63579c1169def2c018388" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:95653d0b301c3381633aec1e024e3a3bd998d41971df29e3bb3aa5f112185500" -->

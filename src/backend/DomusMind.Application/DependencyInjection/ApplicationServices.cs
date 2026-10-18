@@ -130,6 +130,13 @@ using DomusMind.Application.Features.Inbox.Interpret;
 using DomusMind.Application.Features.Inbox.Decide;
 using DomusMind.Application.Features.Inbox.Execute;
 using DomusMind.Contracts.Inbox;
+using DomusMind.Application.Features.Chats.CreateChatThread;
+using DomusMind.Application.Features.Chats.GetChatThreads;
+using DomusMind.Application.Features.Chats.GetChatMessages;
+using DomusMind.Application.Features.Chats.PostChatMessage;
+using DomusMind.Application.Features.Chats.AnswerAssistant;
+using DomusMind.Application.Features.Chats.Assistant;
+using DomusMind.Contracts.Chats;
 using DomusMind.Domain.MealPlanning.Events;
 using DomusMind.Domain.Inbox.Events;
 using Microsoft.Extensions.DependencyInjection;
@@ -151,6 +158,13 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<AddTimelineNoteCommand, TimelineNoteItem>, AddTimelineNoteCommandHandler>();
         services.AddScoped<ICommandHandler<ApproveInboxProposalCommand, InboxItemModel>, ApproveInboxProposalHandler>();
         services.AddScoped<IDomainEventHandler<InboxProposalApproved>, ExecuteApprovedInboxProposalHandler>();
+        services.AddScoped<ICommandHandler<CreateChatThreadCommand, ChatThreadModel>, CreateChatThreadHandler>();
+        services.AddScoped<IQueryHandler<GetChatThreadsQuery, IReadOnlyList<ChatThreadModel>>, GetChatThreadsHandler>();
+        services.AddScoped<IQueryHandler<GetChatMessagesQuery, IReadOnlyList<ChatMessageModel>>, GetChatMessagesHandler>();
+        services.AddScoped<ICommandHandler<PostChatMessageCommand, PostChatMessageResult>, PostChatMessageHandler>();
+        services.AddScoped<ICommandHandler<AnswerAssistantQuestionCommand, ChatMessageModel>, AnswerAssistantQuestionHandler>();
+        services.AddScoped<IAssistantIntentClassifier, AssistantIntentClassifier>();
+        services.AddScoped<IAssistantToolRouter, AssistantToolRouter>();
         // Auth slices
         services.AddScoped<ICommandHandler<LoginCommand, LoginResponse>, LoginCommandHandler>();
         services.AddScoped<ICommandHandler<RefreshTokenCommand, RefreshTokenResponse>, RefreshTokenCommandHandler>();

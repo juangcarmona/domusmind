@@ -1,5 +1,6 @@
 export default {
   areas: "エリア",
+  chats: "チャット",
   agenda: "アジェンダ",
   lists: "リスト",
   signOut: "サインアウト",

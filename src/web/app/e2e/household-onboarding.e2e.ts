@@ -292,8 +292,6 @@ test("onboard a generated household and cover primary workflows at desktop and p
       await expect(page.getByRole("button", { name: /Show completed/ })).toHaveCount(0);
     });
 
-    await memberContext.close();
-
     await test.step("create and update a household plan using the phone Agenda interaction", async () => {
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto("/agenda");
@@ -363,5 +361,97 @@ test("onboard a generated household and cover primary workflows at desktop and p
       await page.goto(`/agenda?date=${weekStart}`);
       await expect(page.getByText(new RegExp(`Dinner: ${recipeName}`))).toBeVisible();
     });
+
+    await test.step("use household chat and explicitly invoke the read-only assistant", async () => {
+      const memberDirectoryResponse = await page.request.get(`/api/families/${family.familyId}/members`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      expect(memberDirectoryResponse.ok()).toBeTruthy();
+      const memberDirectory = await memberDirectoryResponse.json() as Array<{ memberId: string; name: string }>;
+      const privateParticipant = memberDirectory.find((member) => member.name === "E2E Member");
+      expect(privateParticipant).toBeTruthy();
+      const excludedMemberResponse = await page.request.post(`/api/families/${family.familyId}/members`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        data: { name: "E2E Excluded Member", role: "Adult", isManager: false },
+      });
+      expect(excludedMemberResponse.status()).toBe(201);
+      const excludedMember = await excludedMemberResponse.json() as { memberId: string };
+
+      await page.goto("/chats");
+      await expect(page.getByRole("note")).toContainText("configured external provider");
+      await page.getByRole("button", { name: "New conversation" }).click();
+      await page.getByLabel("Conversation name").fill(`Household chat ${runKey.slice(0, 8)}`);
+      await page.getByRole("button", { name: "Create", exact: true }).click();
+      await expect(page.getByRole("heading", { name: `Household chat ${runKey.slice(0, 8)}` })).toBeVisible();
+
+      await page.getByLabel("Message").fill("Hello from the household chat.");
+      await page.getByRole("button", { name: "Send" }).click();
+      await expect(page.getByText("Hello from the household chat.")).toBeVisible();
+      await expect(page.getByText("The household timeline includes Pay summer camp fee.")).toHaveCount(0);
+
+      const timelineBefore = await page.request.get(`/api/families/${family.familyId}/timeline`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      expect(timelineBefore.ok()).toBeTruthy();
+      const tasksBefore = ((await timelineBefore.json()) as { entries: Array<{ entryType: string }> }).entries
+        .filter((entry) => entry.entryType === "Task").length;
+
+      await page.getByLabel("Message").fill("@dm What tasks are due?");
+      await page.getByRole("button", { name: "Send" }).click();
+      await expect(page.getByText("The household timeline includes Pay summer camp fee.")).toBeVisible();
+
+      await page.getByLabel("Message").fill("@dm create a task called assistant-created task");
+      await page.getByRole("button", { name: "Send" }).click();
+      const timelineAfter = await page.request.get(`/api/families/${family.familyId}/timeline`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      expect(timelineAfter.ok()).toBeTruthy();
+      const tasksAfter = ((await timelineAfter.json()) as { entries: Array<{ entryType: string }> }).entries
+        .filter((entry) => entry.entryType === "Task").length;
+      expect(tasksAfter).toBe(tasksBefore);
+
+      const threadListResponse = await page.request.get(`/api/chats?familyId=${family.familyId}`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      expect(threadListResponse.ok()).toBeTruthy();
+      const householdThreads = await threadListResponse.json() as Array<{ chatThreadId: string; title: string }>;
+      const householdThread = householdThreads.find((thread) => thread.title === `Household chat ${runKey.slice(0, 8)}`);
+      expect(householdThread).toBeTruthy();
+      const persistedMessagesResponse = await page.request.get(`/api/chats/${householdThread!.chatThreadId}/messages`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      expect(persistedMessagesResponse.ok()).toBeTruthy();
+      const persistedMessages = await persistedMessagesResponse.json() as Array<{
+        authorType: string; text: string; replyToMessageId: string | null;
+      }>;
+      expect(persistedMessages.filter((message) => message.authorType === "Assistant")).toHaveLength(2);
+      expect(persistedMessages.find((message) => message.authorType === "Assistant")?.replyToMessageId).toBeTruthy();
+
+      const privateThreadResponse = await page.request.post("/api/chats", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        data: {
+          familyId: family.familyId,
+          title: `Private group ${runKey.slice(0, 8)}`,
+          kind: "Private",
+          participantMemberIds: [excludedMember.memberId],
+        },
+      });
+      expect(privateThreadResponse.status()).toBe(201);
+      const privateThread = await privateThreadResponse.json() as { chatThreadId: string };
+      const memberAccessToken = await memberPage.evaluate(() => localStorage.getItem("dm_access_token"));
+      expect(memberAccessToken).toBeTruthy();
+      const memberThreadsResponse = await memberPage.request.get(`/api/chats?familyId=${family.familyId}`, {
+        headers: { Authorization: `Bearer ${memberAccessToken}` },
+      });
+      expect(memberThreadsResponse.ok()).toBeTruthy();
+      const visibleToMember = await memberThreadsResponse.json() as Array<{ title: string }>;
+      expect(visibleToMember.some((thread) => thread.title === `Household chat ${runKey.slice(0, 8)}`)).toBe(true);
+      expect(visibleToMember.some((thread) => thread.title === `Private group ${runKey.slice(0, 8)}`)).toBe(false);
+      const deniedMessages = await memberPage.request.get(`/api/chats/${privateThread.chatThreadId}/messages`, {
+        headers: { Authorization: `Bearer ${memberAccessToken}` },
+      });
+      expect(deniedMessages.status()).toBe(403);
+    });
+    await memberContext.close();
   });
 });

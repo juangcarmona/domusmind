@@ -1,5 +1,6 @@
 export default {
   areas: "Bereiche",
+  chats: "Chats",
   agenda: "Agenda",
   lists: "Listen",
   signOut: "Abmelden",

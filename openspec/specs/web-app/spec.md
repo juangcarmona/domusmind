@@ -4,13 +4,15 @@
 
 ## Purpose
 
-The DomusMind web app is the primary household operational interface. It presents one shared product shell containing multiple operational surfaces: Agenda, Lists, Areas, and Settings, with Meal Planning as an additional surface (see Notes).
+The DomusMind web app is the primary household operational interface. It presents one shared product shell containing multiple operational surfaces: Agenda, Lists, Areas, Chats, and Settings, with Meal Planning as an additional surface (see Notes).
 
 The web app makes the household understandable — what is happening, what needs attention, who owns what, and what should be remembered — without requiring members to coordinate across separate tools.
 
 All surfaces share the same shell, layout grammar, visual tone, and interaction model. The product must feel like one system, not a collection of disconnected screens.
 
 <!-- pdac:cite id="FR-WEB-APP-SHELL" digest="sha256:31085ec615794bf88151dee377bbfb2f5021f7a11dfbb4fbeb53ab6028cefadf" -->
+<!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:471f9fa8993fa17314d158ee599bfbe772b0b10251665aabcedb4f99ec16d486" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:95653d0b301c3381633aec1e024e3a3bd998d41971df29e3bb3aa5f112185500" -->
 
 <!-- pdac:cite id="UC-WEB-MOVE-BETWEEN-SURFACES" digest="sha256:644e9cb653039be248abe495399211a5757cec36a5e4296cdd494098705e05f1" -->
 
@@ -32,7 +34,7 @@ The shell has the following zones:
 
 On mobile, the left rail collapses into a compact navigation pattern (drawer or bottom strip). The main content fills the screen. Contextual detail is presented as a bottom sheet or pushed detail section.
 
-The navigation gives access to each primary surface. The current surface is indicated in the navigation.
+The navigation gives access to each primary surface, including Chats for household conversations and explicit @dm questions. The current surface is indicated in the navigation.
 
 <!-- pdac:cite id="FR-WEB-APP-SHELL" digest="sha256:31085ec615794bf88151dee377bbfb2f5021f7a11dfbb4fbeb53ab6028cefadf" -->
 

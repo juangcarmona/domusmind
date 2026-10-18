@@ -27,6 +27,13 @@ const IconLists = (
   </svg>
 );
 
+const IconChats = (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3 3.5h12a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5H8l-4.5 2v-3.5A1.5 1.5 0 0 1 2 10.5V5a1.5 1.5 0 0 1 1-1.5Z" />
+    <path d="M5.5 7h7M5.5 10h4" />
+  </svg>
+);
+
 const IconAreas = (
   <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <rect x="2" y="2" width="6" height="6" rx="1"/>
@@ -57,6 +64,7 @@ const IconRecipes = (
 const NAV_ITEMS: readonly NavRailItem[] = [
   { to: "/agenda", labelKey: "agenda", icon: IconAgenda },
   { to: "/inbox", labelKey: "inbox", icon: IconLists },
+  { to: "/chats", labelKey: "chats", icon: IconChats },
   { to: "/lists", labelKey: "lists", icon: IconLists },
   { to: "/meal-planning", labelKey: "mealPlanning", icon: IconMeals },
   { to: "/recipes", labelKey: "recipes", icon: IconRecipes },

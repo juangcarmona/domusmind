@@ -11,6 +11,8 @@ using DomusMind.Infrastructure.Languages;
 using DomusMind.Infrastructure.Messaging;
 using DomusMind.Infrastructure.Persistence;
 using DomusMind.Application.Features.Inbox;
+using DomusMind.Application.Features.Chats.Assistant;
+using DomusMind.Infrastructure.Chats;
 using DomusMind.Infrastructure.Inbox;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -38,6 +40,10 @@ public static class InfrastructureServices
             client.Timeout = TimeSpan.FromMinutes(2));
         services.AddHttpClient(nameof(OpenAiCompatibleInboxInterpreter)).ConfigureHttpClient(client =>
             client.Timeout = TimeSpan.FromMinutes(2));
+        services.AddHttpClient(nameof(OllamaChatAssistant)).ConfigureHttpClient(client =>
+            client.Timeout = TimeSpan.FromMinutes(2));
+        services.AddHttpClient(nameof(OpenAiCompatibleChatAssistant)).ConfigureHttpClient(client =>
+            client.Timeout = TimeSpan.FromMinutes(2));
         services.AddScoped<IInboxInterpreter>(sp =>
         {
             var provider = configuration["Inbox:Interpreter:Provider"] ?? "Ollama";
@@ -46,6 +52,16 @@ public static class InfrastructureServices
                 "Ollama" => ActivatorUtilities.CreateInstance<OllamaInboxInterpreter>(sp),
                 "OpenAICompatible" => ActivatorUtilities.CreateInstance<OpenAiCompatibleInboxInterpreter>(sp),
                 _ => throw new InvalidOperationException($"Unsupported Inbox interpreter provider '{provider}'.")
+            };
+        });
+        services.AddScoped<IChatAssistant>(sp =>
+        {
+            var provider = configuration["Inbox:Interpreter:Provider"] ?? "Ollama";
+            return provider switch
+            {
+                "Ollama" => ActivatorUtilities.CreateInstance<OllamaChatAssistant>(sp),
+                "OpenAICompatible" => ActivatorUtilities.CreateInstance<OpenAiCompatibleChatAssistant>(sp),
+                _ => throw new InvalidOperationException($"Unsupported Chats assistant provider '{provider}'.")
             };
         });
 

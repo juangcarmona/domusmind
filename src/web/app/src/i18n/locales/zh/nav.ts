@@ -1,5 +1,6 @@
 export default {
   areas: "区域",
+  chats: "聊天",
   agenda: "日程",
   lists: "清单",
   signOut: "退出",
