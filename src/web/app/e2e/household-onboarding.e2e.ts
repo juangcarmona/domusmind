@@ -1,7 +1,27 @@
 import { randomUUID } from "node:crypto";
 import { expect, test } from "@playwright/test";
 
+function getHouseholdWeekStart(firstDayOfWeek: string | null | undefined): string {
+  const dayIndexes: Record<string, number> = {
+    Sunday: 0,
+    Monday: 1,
+    Tuesday: 2,
+    Wednesday: 3,
+    Thursday: 4,
+    Friday: 5,
+    Saturday: 6,
+  };
+  const startDay = dayIndexes[firstDayOfWeek ?? "Monday"] ?? 1;
+  const date = new Date();
+  date.setDate(date.getDate() - ((date.getDay() - startDay + 7) % 7));
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 test("onboard a generated household, open today's Agenda, and navigate at desktop and phone widths", async ({ page, browser }, testInfo) => {
+  test.setTimeout(180_000);
   const runKey = randomUUID();
   const email = `e2e-${runKey}@example.test`;
   const password = `Dm-${runKey}-A9!`;
@@ -117,7 +137,7 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     expect(familyResponse.ok()).toBeTruthy();
-    const family = await familyResponse.json() as { familyId: string };
+    const family = await familyResponse.json() as { familyId: string; firstDayOfWeek?: string | null };
     const listResponse = await page.request.post("/api/shared-lists", {
       headers: { Authorization: `Bearer ${accessToken}` },
       data: { familyId: family.familyId, name: `Live list ${runKey.slice(0, 8)}`, kind: "General" },
@@ -182,8 +202,84 @@ test("onboard a generated household, open today's Agenda, and navigate at deskto
       const memberRow = memberPage.locator(".li-row").filter({ hasText: "Apples washed" });
       await memberRow.getByRole("button", { name: "Mark complete" }).click();
       await expect(page.getByRole("button", { name: /Show completed \(1\)/ })).toBeVisible();
+
+      await memberPage.getByRole("button", { name: /Show completed \(1\)/ }).click();
+      const checkedMemberRow = memberPage.locator(".li-row").filter({ hasText: "Apples washed" });
+      await checkedMemberRow.getByRole("button", { name: "Mark incomplete" }).click();
+      await expect(page.getByText("Apples washed", { exact: true })).toBeVisible();
+      await expect(page.getByRole("button", { name: /Show completed/ })).toHaveCount(0);
     });
 
     await memberContext.close();
+
+    await test.step("create and update a household plan using the phone Agenda interaction", async () => {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto("/agenda");
+      await page.getByRole("button", { name: "Add entry" }).click();
+      await expect(page.getByRole("heading", { name: "What are you adding?" })).toBeVisible();
+      await page.getByRole("button", { name: /^Plan/ }).click();
+      const planTitle = `E2E phone plan ${runKey.slice(0, 8)}`;
+      await page.getByLabel("Title").fill(planTitle);
+      await page.getByRole("button", { name: "Schedule" }).click();
+      const planEntry = page.getByRole("button", { name: new RegExp(planTitle) });
+      await expect(planEntry).toBeVisible();
+      await planEntry.click();
+      await expect(page.getByRole("dialog")).toBeVisible();
+      const editTitle = `${planTitle} updated`;
+      await page.getByLabel("Title").fill(editTitle);
+      await page.getByRole("button", { name: "Save" }).click();
+      await expect(page.locator(".wg-item").filter({ hasText: editTitle })).toBeVisible();
+    });
+
+    await test.step("plan a meal, request its shared shopping list, and see the meal in Agenda", async () => {
+      const weekStart = getHouseholdWeekStart(family.firstDayOfWeek);
+      const recipeName = `E2E dinner ${runKey.slice(0, 8)}`;
+      const recipeResponse = await page.request.post("/api/recipes", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        data: {
+          recipeId: randomUUID(),
+          familyId: family.familyId,
+          name: recipeName,
+          description: "Synthetic browser journey recipe",
+          prepTimeMinutes: 10,
+          cookTimeMinutes: 20,
+          servings: 2,
+          allowedMealTypes: ["Dinner"],
+          ingredients: [
+            { name: `E2E pasta ${runKey.slice(0, 8)}`, quantity: 1, unit: "pack" },
+            { name: `E2E tomato ${runKey.slice(0, 8)}`, quantity: 2, unit: "cans" },
+          ],
+        },
+      });
+      expect(recipeResponse.status()).toBe(201);
+
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto(`/meal-planning/${weekStart}`);
+      await page.getByRole("button", { name: "Start from scratch" }).click();
+      const mondayColumn = page.locator(".mp-week-grid-day-col").first();
+      await mondayColumn.getByRole("button", { name: "Dinner" }).click();
+      await page.getByRole("button", { name: "Recipe", exact: true }).click();
+      await page.getByRole("button", { name: recipeName }).click();
+      await page.getByRole("button", { name: "Save" }).click();
+      await expect(page.getByText(recipeName, { exact: true })).toBeVisible();
+      await page.getByRole("button", { name: "Shopping list", exact: true }).click();
+      await expect(page.getByText("Shopping list ready", { exact: true })).toBeVisible();
+
+      const mealPlanResponse = await page.request.get(
+        `/api/meal-plans/family/${family.familyId}/week/${weekStart}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } },
+      );
+      expect(mealPlanResponse.ok()).toBeTruthy();
+      const mealPlanResult = await mealPlanResponse.json() as {
+        mealPlan: { shoppingListId: string | null } | null;
+      };
+      expect(mealPlanResult.mealPlan?.shoppingListId).toBeTruthy();
+      await page.goto(`/lists/${mealPlanResult.mealPlan!.shoppingListId}`);
+      await expect(page.getByText(`E2E pasta ${runKey.slice(0, 8)}`, { exact: true })).toBeVisible();
+      await expect(page.getByText(`E2E tomato ${runKey.slice(0, 8)}`, { exact: true })).toBeVisible();
+
+      await page.goto(`/agenda?date=${weekStart}`);
+      await expect(page.getByText(new RegExp(`Dinner: ${recipeName}`))).toBeVisible();
+    });
   });
 });
