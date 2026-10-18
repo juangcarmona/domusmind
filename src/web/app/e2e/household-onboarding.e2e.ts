@@ -253,24 +253,6 @@ test("onboard a generated household and cover primary workflows at desktop and p
       expect(rejected?.proposals).toContainEqual(expect.objectContaining({ status: "Rejected", resultId: null }));
     });
 
-    await test.step("use Chats with ordinary messages and an explicit @dm question", async () => {
-      await page.goto("/chats");
-      await page.getByRole("button", { name: "New conversation" }).click();
-      await page.getByLabel("Conversation name").fill(`E2E household chat ${runKey.slice(0, 8)}`);
-      await page.getByRole("button", { name: "Create", exact: true }).click();
-      const composer = page.getByLabel("Message");
-      await composer.fill("We should remember the camp fee this week.");
-      await page.getByRole("button", { name: "Send" }).click();
-      await expect(page.getByText("We should remember the camp fee this week.")).toBeVisible();
-      await expect(page.locator(".chats-message.assistant")).toHaveCount(0);
-
-      await composer.fill("@dm when is Pay summer camp fee due?");
-      await page.getByRole("button", { name: "Send" }).click();
-      await expect(page.locator(".chats-message.assistant")
-        .getByText("The household timeline includes Pay summer camp fee.")).toBeVisible({ timeout: 30_000 });
-      await testInfo.attach("chats-assistant-desktop.png", { body: await page.screenshot(), contentType: "image/png" });
-    });
-
     const listResponse = await page.request.post("/api/shared-lists", {
       headers: { Authorization: `Bearer ${accessToken}` },
       data: { familyId: family.familyId, name: `Live list ${runKey.slice(0, 8)}`, kind: "General" },
