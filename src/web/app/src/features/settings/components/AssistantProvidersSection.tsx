@@ -6,7 +6,7 @@ type EditableTarget = AssistantProviderTargetInput & { hasCredential: boolean };
 
 const emptyTarget = (position: number): EditableTarget => ({
   id: crypto.randomUUID(), name: ["Primary", "Secondary", "Tertiary"][position],
-  hosting: "Local", protocol: "Ollama", endpoint: "http://localhost:11434",
+  hosting: "Local", protocol: "Ollama", endpoint: "",
   model: "llama3.2:3b", apiKey: "", hasCredential: false,
 });
 
@@ -65,7 +65,7 @@ export function AssistantProvidersSection() {
 
   return <section className="assistant-provider-settings">
     <h2>Assistant providers</h2>
-    <p>Targets are tried in order. Hosted targets receive the request text and household information available to the member. Local targets receive that information at the endpoint you configure.</p>
+    <p>Targets are tried in order. Hosted targets receive the request text and household information available to the member. Local targets receive that information at the endpoint you configure. The endpoint must be reachable from the DomusMind API; in Docker Compose, Ollama is available at <code>http://ollama:11434</code>.</p>
     {route?.isDeploymentDefault && <p role="note">This route uses the deployment's current provider until you save a household route.</p>}
     {error && <p role="alert" className="assistant-provider-error">{error}</p>}
     {success && <p role="status">{success}</p>}
