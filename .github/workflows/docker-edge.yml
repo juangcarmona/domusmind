@@ -53,6 +53,9 @@ jobs:
         with:
           context: .
           file: src/backend/DomusMind.Api/Dockerfile
+          build-args: |
+            DOMUSMIND_VERSION=edge
+            DOMUSMIND_COMMIT=${{ github.sha }}
           push: true
           tags: ${{ env.DOMUSMIND_IMAGE }}:edge
           labels: |

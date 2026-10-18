@@ -40,7 +40,8 @@ flowchart LR
 - **`domusmind`** is the only published service. Its image is built by [`src/backend/DomusMind.Api/Dockerfile`](../../src/backend/DomusMind.Api/Dockerfile): a Node stage builds the web app, a .NET SDK stage publishes the API with the web app's `dist` copied into `wwwroot`, and the runtime stage is `mcr.microsoft.com/dotnet/aspnet:10.0` listening on plain HTTP port 8080. The container maps to host port `APP_PORT` (default `24365`).
 - **`postgres`** (`postgres:17-alpine`) has no host port; only the app reaches it over the Compose network. The app waits for its `pg_isready` health check before starting.
 - **`postgres_data`** is the only persistent volume and holds all application state, including the append-only event log, authentication users and refresh tokens, and encrypted external-calendar token caches. It is the unit of backup (see [DevOps](../devops.md#backup-and-restore)).
-- **Reverse proxy** is not part of the stack. The container speaks HTTP only; HTTPS and external exposure are the operator's responsibility, following the pattern `https://domusmind.example.com -> http://host:24365`.
+- **Reverse proxy** is not part of the stack. The container speaks HTTP only; HTTPS and external exposure are the operator's responsibility, following the pattern `https://domusmind.example.com -> http://host:24365`. Forwarded scheme, host and client address are honored only from explicitly configured proxy IPs or networks; forwarded hosts can also be allowlisted. The proxy owns public HTTP-to-HTTPS redirection.
+- **Application diagnostics** use the image health check against `/api/system/ping`; Compose exposes its health status. The API logs the image version and commit at startup. Swagger is enabled in Development and disabled by default in Production, where an operator can enable it through configuration.
 - **Microsoft identity platform and Graph** are reached outbound only when a member connects an Outlook calendar; the Graph client and the periodic refresh worker run inside the `domusmind` process (see [ADR-0003](../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md)).
 
 On every start the application applies pending EF Core migrations, then runs the optional bootstrap-admin seed and the supported-language seed before serving requests ([`Program.cs`](../../src/backend/DomusMind.Api/Program.cs)). There is no separate migration job.
@@ -55,9 +56,9 @@ Keeping PostgreSQL off the host network makes the application the single entry p
 ### Quality and Performance Characteristics
 
 - **Single instance.** The stack runs one application replica. The external-calendar sync lease (a database-backed lease per connection) prevents overlapping syncs between the worker and user-triggered syncs. Shared-list change notices use an in-process notifier and server-sent events, so multiple application replicas would need a shared notification channel. The reverse proxy must pass `text/event-stream` responses through without buffering; clients reconnect and reload the list after a disconnect.
-- **Availability** relies on `restart: unless-stopped` for both services. Only PostgreSQL has a Compose health check; the application exposes `GET /api/system/ping` but the stack does not probe it.
+- **Availability** relies on `restart: unless-stopped` for both services. PostgreSQL and the application have health checks; the app probe calls `GET /api/system/ping` from inside the image.
 - **Upgrades** replace the image and restart; schema migration happens at startup, so an upgrade is a restart that may take longer while migrations run.
-- **Transport security** is outside the container. The pipeline calls `UseHttpsRedirection` but the container has no HTTPS listener, and forwarded-header processing is not configured, so the application sees the proxy as the client.
+- **Transport security** is outside the container. The container has no HTTPS listener. Forwarded-header middleware runs before HTTPS redirection and accepts headers only from configured proxy sources; direct local HTTP remains supported when no HTTPS port is configured.
 
 ### Building Block Mapping
 

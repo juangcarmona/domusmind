@@ -265,6 +265,9 @@ jobs:
         with:
           context: .
           file: src/backend/DomusMind.Api/Dockerfile
+          build-args: |
+            DOMUSMIND_VERSION=${{ needs.prepare.outputs.version }}
+            DOMUSMIND_COMMIT=${{ needs.prepare.outputs.short_sha }}
           push: true
           tags: ${{ needs.prepare.outputs.image_tags }}
           labels: |

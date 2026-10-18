@@ -81,6 +81,39 @@ docker compose up -d
 Migrations run automatically on app startup. Back up your `postgres_data`
 volume before upgrading.
 
+## HTTP and reverse proxy
+
+The app container listens on HTTP port 8080. Direct local access through
+`http://localhost:${APP_PORT}` remains available without a proxy. For public
+access, terminate TLS at your reverse proxy and forward `X-Forwarded-For`,
+`X-Forwarded-Proto`, and `X-Forwarded-Host` to DomusMind.
+
+Set `REVERSE_PROXY_KNOWN_PROXIES` to the proxy's source IP as seen by the app
+container, or `REVERSE_PROXY_KNOWN_IP_NETWORKS` to a narrowly scoped CIDR. Do
+not trust a network that includes untrusted clients. Set
+`REVERSE_PROXY_ALLOWED_HOSTS` to the public host name when you want to restrict
+forwarded host values. The proxy should redirect public HTTP traffic to HTTPS;
+DomusMind uses the forwarded scheme to build correct redirects and URLs. Keep
+the app port reachable only from the proxy and trusted local operators.
+
+For Nginx, the HTTPS virtual host can pass the request metadata like this. Keep
+the HTTP virtual host's redirect to HTTPS at the proxy:
+
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:24365;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Host $host;
+}
+```
+
+Swagger UI is off by default in Production. Set `SWAGGER_ENABLED=true` only
+when it is exposed to a trusted network. The app's Docker health status probes
+`/api/system/ping`; `docker compose ps` reports that status. Startup logs report
+the app version and commit when supplied by the published image.
+
 ## Volumes
 
 | Volume          | Contents             |

@@ -97,6 +97,9 @@ All installation-specific values live in a host-side `.env` next to the compose 
 | `JWT_SECRET` | Signing key of at least 32 characters, generated per installation (`openssl rand -hex 32`) |
 | `JWT_ISSUER`, `JWT_AUDIENCE` | Token issuer and audience (default `domusmind`; the audience defaults to the issuer) |
 | `APP_PORT` | Host port (default `24365`) |
+| `REVERSE_PROXY_KNOWN_PROXIES`, `REVERSE_PROXY_KNOWN_IP_NETWORKS` | Optional comma-separated trusted proxy IPs or CIDR networks, as seen by the app container |
+| `REVERSE_PROXY_ALLOWED_HOSTS` | Optional comma-separated allowlist for forwarded host names |
+| `SWAGGER_ENABLED` | Whether to expose Swagger in Production (default `false`) |
 | `BOOTSTRAP_ADMIN_EMAIL`, `BOOTSTRAP_ADMIN_PASSWORD` | Optional headless bootstrap only; disable it after first run |
 | `MICROSOFT_GRAPH_CLIENT_ID`, `MICROSOFT_GRAPH_CLIENT_SECRET`, `MICROSOFT_GRAPH_TOKEN_ENCRYPTION_KEY`, `MICROSOFT_GRAPH_REDIRECT_URI` | Optional Outlook connection. Set all values together; generate the key with `openssl rand -base64 32`, and register the exact HTTPS callback URI in the Microsoft Entra app |
 | `MICROSOFT_GRAPH_TENANT_ID` | Optional tenant ID or `common` (default) for Outlook authorization |

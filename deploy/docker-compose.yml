@@ -29,6 +29,10 @@ services:
       Jwt__SigningKey: ${JWT_SECRET}
       Jwt__Issuer:    ${JWT_ISSUER:-domusmind}
       Jwt__Audience:  ${JWT_AUDIENCE:-${JWT_ISSUER:-domusmind}}
+      Swagger__Enabled: ${SWAGGER_ENABLED:-false}
+      ReverseProxy__KnownProxies: ${REVERSE_PROXY_KNOWN_PROXIES:-}
+      ReverseProxy__KnownIPNetworks: ${REVERSE_PROXY_KNOWN_IP_NETWORKS:-}
+      ReverseProxy__AllowedHosts: ${REVERSE_PROXY_ALLOWED_HOSTS:-}
       MicrosoftGraph__ClientId: ${MICROSOFT_GRAPH_CLIENT_ID:-}
       MicrosoftGraph__ClientSecret: ${MICROSOFT_GRAPH_CLIENT_SECRET:-}
       MicrosoftGraph__TenantId: ${MICROSOFT_GRAPH_TENANT_ID:-common}
