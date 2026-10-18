@@ -59,7 +59,7 @@ There are deliberately no other partners. DomusMind sends no email, push
 notification or chat message, and has no messaging, voice, home-automation, AI or
 further calendar-provider integration: these are outside the current product scope.
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:5f3b2eacf39dd82ebe0c6616860f4f0d9edac9589d0f8889a7e093db12e9e239" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:45f1f39de62aeb90bc1e7c7f18f77f07d0f204fe3ab88e0d7e0c2d17b7aaa244" -->
 
 ## Technical Context
 
@@ -69,6 +69,7 @@ flowchart LR
     operator["Self-hosting operator"]
     msid["Microsoft identity platform<br/>login.microsoftonline.com"]
     msgraph["Microsoft Graph<br/>graph.microsoft.com"]
+    calendarClient["External calendar client"]
     ghcr["Container registry<br/>(GHCR)"]
     swa["Azure Static Web Apps"]
 
@@ -81,6 +82,7 @@ flowchart LR
 
     browser -- "HTTPS: SPA assets" --> web
     browser -- "HTTPS JSON /api,<br/>JWT bearer" --> api
+    calendarClient -- "HTTPS GET, private ICS URL" --> api
     browser -- "OAuth authorize redirect" --> msid
     api -- "auth-code exchange,<br/>token refresh (MSAL)" --> msid
     api -- "HTTPS REST, delegated token" --> msgraph
@@ -105,6 +107,8 @@ part of the deployment rather than an external partner; its topology belongs to 
 | Configuration | Operator | Environment variables: database connection, JWT signing settings, Microsoft app registration, bootstrap admin | In | [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml) |
 | Outlook authorization | Microsoft identity platform | OAuth 2.0 authorization code flow; the API builds the authorize URL, the browser is redirected, the API redeems the code through MSAL and keeps the token cache server-side (encryption depends on configuration, see [section 11](11-risks-and-technical-debt.md)) | Out | [`Integrations/Calendar/Microsoft/`](../../src/backend/DomusMind.Infrastructure/Integrations/Calendar/Microsoft/) |
 | Calendar ingestion | Microsoft Graph v1.0 | HTTPS REST: calendar list and `calendarView` delta queries with the delegated `Calendars.Read` scope; pull only, manual or scheduled | Out (read) | [ADR-0003](../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md) |
+| Calendar subscription feed | External calendar client | HTTPS GET using a private subscription URL; read-only ICS response, no household sign-in | In (read) | [`CalendarSubscriptionsController.cs`](../../src/backend/DomusMind.Api/Controllers/CalendarSubscriptionsController.cs) |
+<!-- pdac:cite id="ACT-EXTERNAL-CALENDAR-CLIENT" digest="sha256:b9169f1b4d986570cd4d5997733f53ddb2b71531189c787f57edcaf74c113a67" -->
 | Image distribution | Container registry | OCI image pulled by the operator | Out of band | [`docker-edge.yml`](../../.github/workflows/docker-edge.yml) |
 | Public site | Browser | Static HTML on Azure Static Web Apps; no call to the application | Out | [`src/web/public/`](../../src/web/public/) |
 | Email, push, messaging | none | Not implemented | — | No sender in `src/backend` |

@@ -224,6 +224,10 @@ Standard ASP.NET Core configuration with sections `ConnectionStrings:domusmind`,
 OAuth state is a cryptographically random opaque value. The API persists its hash with the initiating user, family, member, exact redirect URI, encrypted PKCE verifier and ten-minute expiry. It atomically consumes this record before exchanging the authorization code, so a callback cannot be replayed or moved to another signed-in user/member. PKCE uses S256. Serialized MSAL cache data and cached access tokens use versioned AES-GCM envelopes with the configured 256-bit key. The OAuth verifier uses the same authenticated encryption while pending.
 
 Only the delegated `Calendars.Read` Graph permission is accepted; write or other Graph scopes are rejected.
-<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:7c5c21e2aa317fb9e77b5e4feafe491cfd68b7506203b47bae37b46392d185cb" -->
+<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:a631bcb19c09716b7cbee7b25563b55eec7ca4287de67c84cb1081144d29deb9" -->
+
+Calendar subscription URLs are 256-bit random bearer secrets. Persistence contains only a SHA-256 verifier; the URL is returned only on creation, the feed route is public by design, and success responses disable HTTP caching. The route template prevents request telemetry from needing a raw token value. The Calendar aggregate records successful access time and count alongside its append-only domain events.
+<!-- pdac:cite id="QR-CALENDAR-SUBSCRIPTION-SECURITY" digest="sha256:e1d9579e065244b2ee489c776fe6a3cf2ffd3c586666b7f2b9127101d64bd62f" -->
+<!-- pdac:cite id="BR-CALENDAR-SUBSCRIPTION-ACCESS" digest="sha256:f23e6df00c9fa568487a80d9a9aabcbb42cad4892c2307a8925fe1ee4a786da3" -->
 
 The first migration under this policy clears legacy token-cache and access-token values that were previously stored without authenticated encryption. It retains calendar connections, feeds and imported entries. Members must authorize the same Microsoft account again; the connect handler replaces tokens on the existing connection. Changing the key later makes current caches unreadable and requires the same reconnect.

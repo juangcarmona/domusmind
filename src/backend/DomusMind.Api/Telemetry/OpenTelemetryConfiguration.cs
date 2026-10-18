@@ -1,5 +1,3 @@
-using Aspire.Npgsql.EntityFrameworkCore.PostgreSQL;
-using DomusMind.Infrastructure.Persistence;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
@@ -17,8 +15,6 @@ internal static class OpenTelemetryConfiguration
         }
 
         builder.Logging.AddFilter("System.Net.Http", LogLevel.None);
-        builder.EnrichNpgsqlDbContext<DomusMindDbContext>();
-
         builder.Services.AddOpenTelemetry()
             .WithMetrics(metrics => metrics
                 .AddAspNetCoreInstrumentation()

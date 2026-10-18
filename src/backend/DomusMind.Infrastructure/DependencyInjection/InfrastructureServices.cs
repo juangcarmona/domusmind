@@ -2,6 +2,8 @@ using DomusMind.Application.Abstractions.Languages;
 using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Persistence;
 using DomusMind.Application.Abstractions.Integrations.Calendar;
+using DomusMind.Application.Abstractions.Security;
+using DomusMind.Infrastructure.Auth;
 using DomusMind.Infrastructure.BackgroundJobs.Calendar;
 using DomusMind.Infrastructure.Events;
 using DomusMind.Infrastructure.Integrations.Calendar.Microsoft;
@@ -43,6 +45,10 @@ public static class InfrastructureServices
         services.AddScoped<IExternalCalendarAuthService, MicrosoftGraphCalendarAuthService>();
         services.AddScoped<IExternalCalendarProviderClient, MicrosoftGraphCalendarClient>();
         services.AddScoped<IExternalCalendarSyncLeaseService, ExternalCalendarConnectionLeaseService>();
+        services.AddScoped<ICalendarSubscriptionTokenGenerator, CalendarSubscriptionTokenGenerator>();
+        services.AddSingleton<TimeProvider>(TimeProvider.System);
+        services.AddScoped<ICalendarSubscriptionTokenGenerator, CalendarSubscriptionTokenGenerator>();
+        services.AddSingleton(TimeProvider.System);
         services.AddHttpClient("MicrosoftGraph")
             .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://graph.microsoft.com/"));
 
