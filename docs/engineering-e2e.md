@@ -15,13 +15,16 @@ database.
 | Navigate from Agenda to Lists with the shared shell retained | [App Shell and Navigation](../openspec/specs/web-app/spec.md#requirement-app-shell-and-navigation), scenario “User navigates from Agenda to Lists” | [`household-onboarding.e2e.ts`](../src/web/app/e2e/household-onboarding.e2e.ts) |
 | Create and update a household Plan on a phone and verify its Agenda projection | [What matters today?](product/model/journeys/jrn-product-what-matters-today.md); [Agenda](../openspec/specs/web-app/spec.md) | [`household-onboarding.e2e.ts`](../src/web/app/e2e/household-onboarding.e2e.ts) |
 | Assign a recipe to a meal slot, request the shared shopping list, and verify its ingredients and Agenda projection | [Plan the week](product/model/journeys/jrn-meals-plan-the-week.md) | [`household-onboarding.e2e.ts`](../src/web/app/e2e/household-onboarding.e2e.ts) |
+| Capture Inbox text, review proposals, verify that approval creates a Plan while rejection creates no timeline event, and ask an explicit `@dm` question in household Chat | [Capture and review Inbox items](product/model/use-cases/uc-inbox-capture-and-review.md); [Ask the assistant in Chat](product/model/use-cases/uc-chat-ask-assistant.md); [Inbox](../openspec/specs/inbox/spec.md); [Chats](../openspec/specs/chats/spec.md) | [`household-onboarding.e2e.ts`](../src/web/app/e2e/household-onboarding.e2e.ts) |
 | Capture a reusable list item, check and uncheck it, and observe a live item update across two browser sessions | [Reuse a list](product/model/journeys/jrn-lists-reuse-a-list.md) | [`household-onboarding.e2e.ts`](../src/web/app/e2e/household-onboarding.e2e.ts) |
 
 The browser scenario completes onboarding and desktop navigation, exercises
-Plan creation and editing at 390px phone width, then covers meal planning and
-shared list reuse. It also checks that the document does not overflow
-horizontally at phone width. The suite focuses on these accepted journeys and
-does not claim exhaustive behavior coverage of every surface or phone layout.
+Plan creation and editing at 390px phone width, then covers Inbox review,
+household Chat, meal planning and shared list reuse. It checks that ordinary
+Chat messages do not invoke the assistant and that an explicit `@dm` question
+does. It also checks that the document does not overflow horizontally at phone
+width. The suite focuses on these accepted journeys and does not claim
+exhaustive behavior coverage of every surface or phone layout.
 
 ## Published reports and recovery
 
