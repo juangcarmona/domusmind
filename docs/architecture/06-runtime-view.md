@@ -131,6 +131,36 @@ sequenceDiagram
 
 The originating MealPlan, `ShoppingListRequested` row, new `SharedList`, and its event rows commit together in PostgreSQL. If the Lists reaction fails, the transaction rolls back and the command can be retried without a partial list or a bumped derivation version. A plan with no recipe slots is rejected before anything is written.
 
+## Calendar subscription access
+
+Subscription management uses authenticated REST commands and queries. A feed request carries its bearer secret in the URL, resolves only a stored token hash, rejects revoked or expired subscriptions, projects scoped Plans into ICS, and records successful access metadata in the subscription aggregate and event log. The route uses a parameterized template so request telemetry identifies the endpoint without needing the token value.
+<!-- pdac:cite id="FR-CALENDAR-MANAGE-SUBSCRIPTIONS" digest="sha256:be31d2356bcd4166ed05806ff0acb55dd0fb3b610bc92c3857bd562b47b0d5b7" -->
+<!-- pdac:cite id="FR-CALENDAR-SERVE-SUBSCRIPTION-FEED" digest="sha256:99590c81c57bf55ed7f7fbfb9fa0ae8f00e6559176ef6c9d7aa8b4ed043f7a6c" -->
+
+```mermaid
+sequenceDiagram
+    participant O as Subscription owner
+    participant W as Web app
+    participant C as CalendarSubscriptionsController
+    participant H as Calendar application handler
+    participant D as PostgreSQL
+    participant X as External calendar client
+
+    O->>W: Create household or member subscription
+    W->>C: POST /api/calendar/subscriptions (JWT)
+    C->>H: Dispatch create command
+    H->>D: Persist subscription and token hash; append domain event
+    H-->>W: Return private URL once
+    X->>C: GET /calendar/subscriptions/{token}.ics
+    C->>H: Dispatch feed query
+    H->>D: Verify hash, load scoped Plans, record successful access
+    H-->>X: Read-only ICS (title and timing)
+```
+
+The application never persists the raw URL. Listing is owner-scoped and returns access metadata only; revocation changes the subscription and is appended to the event log. Feed URLs are bearer credentials and must not be included in application logs.
+<!-- pdac:cite id="BR-CALENDAR-SUBSCRIPTION-ACCESS" digest="sha256:f23e6df00c9fa568487a80d9a9aabcbb42cad4892c2307a8925fe1ee4a786da3" -->
+<!-- pdac:cite id="QR-CALENDAR-SUBSCRIPTION-SECURITY" digest="sha256:e1d9579e065244b2ee489c776fe6a3cf2ffd3c586666b7f2b9127101d64bd62f" -->
+
 ## Agenda read projection
 
 The Agenda is assembled at read time; it has no stored projection and no event subscribers. The web app's Agenda (household and member scope, day, week and month) is fed by one query, the weekly grid, which reads the aggregates of several modules directly through `IDomusMindDbContext`.
@@ -161,7 +191,7 @@ flowchart LR
 
 External calendars are ingested one way, from Microsoft Graph into Calendar-owned integration records, with delegated per-member access ([ADR-0003](../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md)).
 
-<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:7c5c21e2aa317fb9e77b5e4feafe491cfd68b7506203b47bae37b46392d185cb" -->
+<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:a631bcb19c09716b7cbee7b25563b55eec7ca4287de67c84cb1081144d29deb9" -->
 
 Two triggers converge on the same command: a member's manual sync from Settings, and the `ExternalCalendarRefreshWorker` hosted service, which wakes every 300 seconds and selects up to 10 due connections (scheduled refresh enabled, not disconnected or auth-expired, next sync time reached, no live lease). The worker selects the most overdue connections first; connections without a next-sync timestamp come first, and connection id breaks ties. It dispatches the sync for each with a small random delay. Each connection's next sync is scheduled from its own interval, 60 minutes by default.
 

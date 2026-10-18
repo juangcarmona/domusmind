@@ -7,6 +7,7 @@
 Calendar is the temporal structure of household life. It owns the **Event** aggregate: time-bound commitments that affect one or more household participants.
 
 Calendar answers:
+
 - what is happening in this household
 - when it happens
 - who is involved
@@ -15,15 +16,19 @@ Calendar is the source of truth for time-based planning. It owns event schedules
 
 Calendar also manages **external calendar connections** — member-scoped delegated integrations that import read-only entries from third-party providers (Phase 1: Microsoft Outlook) into the household's temporal read surfaces.
 
+Calendar also serves private, revocable ICS subscriptions for outbound read-only sharing of DomusMind Plans. This is separate from importing external calendars.
+
 Calendar does not own the Agenda or family timeline read models. It is one source for those projections. The Agenda and timeline are assembled from Calendar, Tasks, and Shared Lists.
 
 User interfaces may present Events as **Plans**, but the domain model remains centered on the **Event** aggregate.
 
 Imported external calendar data is read-only integration state. It must never be treated as native household planning state.
 
-<!-- pdac:cite id="BC-CALENDAR" digest="sha256:672274e54e0fbc3961c16ed85b7c8a6db31b7ff828ca0a88304a049be3389c0f" -->
+<!-- pdac:cite id="BC-CALENDAR" digest="sha256:cbbc009517c547a73acd5bcd9d96ffb678911eed01f38327ce28396f7ed724c1" -->
 
 <!-- pdac:cite id="TERM-PLAN" digest="sha256:f06fe7678136c535cf5f55e815f161d73562165b17c565f9496386dbd8395ac3" -->
+
+<!-- pdac:cite id="TERM-CALENDAR-SUBSCRIPTION" digest="sha256:ef668c1ca67896c5423bb06458d9ea44192a904779ab92f37af9e38b2c7b8205" -->
 
 <!-- pdac:cite id="TERM-AGENDA" digest="sha256:816f1a2f6d4e87da6b928b3c6d68433adab2c5467f4c02667e00fdb9b86387f0" -->
 
@@ -653,27 +658,69 @@ The projection assembles entries from five sources: Calendar Events where the me
 
 <!-- pdac-drift ids="TERM-PLAN" summary="Note says the spec captures a recurrence-rule invariant; the model (Q-0044) has no current recurrence behaviour and plans recurring-plan management for V2" -->
 
-2. **Event completion** — `CompleteEvent` is listed as a future command in the context document. No feature spec exists. The context document notes "completed events cannot change schedule" as an invariant, which implies the state exists but its behavioral lifecycle is unspecified. This spec does not include a Completion requirement; the invariant is noted here only.
+1. **Event completion** — `CompleteEvent` is listed as a future command in the context document. No feature spec exists. The context document notes "completed events cannot change schedule" as an invariant, which implies the state exists but its behavioral lifecycle is unspecified. This spec does not include a Completion requirement; the invariant is noted here only.
 
-3. **RenameEvent** — `RenameEvent` is listed as an active command in the context document but has no feature spec. Behavior is unspecified beyond identity stability.
+2. **RenameEvent** — `RenameEvent` is listed as an active command in the context document but has no feature spec. Behavior is unspecified beyond identity stability.
 
 <!-- pdac-drift ids="FR-CALENDAR-EDIT-PLAN-DETAILS, UC-CALENDAR-EDIT-PLAN-DETAILS" summary="Note says renaming is unspecified; the model defines editing a plan's title, description and colour as current product" -->
 
-4. **Reminder scheduling vs. delivery** — Reminders are defined as time offsets on the event. Delivery (notification infrastructure) is explicitly out of Calendar's scope. Whether reminders auto-remove when an event is cancelled is not specified in any source.
+1. **Reminder scheduling vs. delivery** — Reminders are defined as time offsets on the event. Delivery (notification infrastructure) is explicitly out of Calendar's scope. Whether reminders auto-remove when an event is cancelled is not specified in any source.
 
-5. **Participant removal from cancelled events** — `cancel-event.md` says cancelled events cannot add participants, but neither it nor `remove-event-participant.md` explicitly states whether removing a participant from a cancelled event is permitted. Not specified.
+2. **Participant removal from cancelled events** — `cancel-event.md` says cancelled events cannot add participants, but neither it nor `remove-event-participant.md` explicitly states whether removing a participant from a cancelled event is permitted. Not specified.
 
 <!-- pdac-drift ids="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED, TERM-REMINDER" summary="Notes 4-5 leave reminders and participant removal on cancelled events unspecified; the model (Q-0043) keeps reminders as they are and rejects any participant or reminder change on a cancelled plan" -->
 
-6. **Phase 1 sync: pull only** — External calendar synchronization is pull-based only. Webhook subscriptions are explicitly out of scope for Phase 1.
+1. **Phase 1 sync: pull only** — External calendar synchronization is pull-based only. Webhook subscriptions are explicitly out of scope for Phase 1.
 
-<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:7c5c21e2aa317fb9e77b5e4feafe491cfd68b7506203b47bae37b46392d185cb" -->
+<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:a631bcb19c09716b7cbee7b25563b55eec7ca4287de67c84cb1081144d29deb9" -->
 
-7. **`pausedUntil` for connections** — No equivalent time-bounded pause exists in the Calendar external connection model (unlike Routine Pause in Tasks). Connections are either active or disconnected.
+1. **`pausedUntil` for connections** — No equivalent time-bounded pause exists in the Calendar external connection model (unlike Routine Pause in Tasks). Connections are either active or disconnected.
 
-8. **Background refresh triggers** — Catch-up triggers fire on login and when Agenda opens in Member scope. The exact staleness threshold (distinct from the 60-minute scheduled interval) is not specified in the source documents.
+2. **Background refresh triggers** — Catch-up triggers fire on login and when Agenda opens in Member scope. The exact staleness threshold (distinct from the 60-minute scheduled interval) is not specified in the source documents.
 
 ---
+
+### Requirement: Calendar Subscriptions
+
+Household members with access to the household timeline can create and manage private read-only ICS subscriptions. A subscription is scoped to either all household Plans or the Plans of one household member. It expires 12 months after creation; renewal creates a new subscription. The owner can see access metadata and revoke a subscription.
+
+<!-- pdac:cite id="FR-CALENDAR-MANAGE-SUBSCRIPTIONS" digest="sha256:be31d2356bcd4166ed05806ff0acb55dd0fb3b610bc92c3857bd562b47b0d5b7" -->
+
+#### Scenario: Member creates a household subscription
+
+- **WHEN** a member with timeline access creates a labeled household subscription
+- **THEN** DomusMind returns a private ICS URL once
+- **AND** the subscription expires 12 months after creation
+- **AND** the owner can see its label, scope, expiry, last successful access and access count
+
+#### Scenario: Member creates a single-member subscription
+
+- **WHEN** a member with timeline access selects one current household member
+- **THEN** the feed contains only Plans that include that member
+
+#### Scenario: Owner revokes a subscription
+
+- **WHEN** the owner revokes an active subscription
+- **THEN** later feed requests using its URL are denied
+
+### Requirement: Read-only ICS Subscription Feed
+
+An active subscription provides a read-only ICS feed of DomusMind Plans within its scope. The feed includes Plan title and timing only. Imported Outlook entries, descriptions, locations and participants are excluded. External clients cannot change DomusMind Plans.
+
+<!-- pdac:cite id="FR-CALENDAR-SERVE-SUBSCRIPTION-FEED" digest="sha256:99590c81c57bf55ed7f7fbfb9fa0ae8f00e6559176ef6c9d7aa8b4ed043f7a6c" -->
+
+<!-- pdac:cite id="BR-CALENDAR-SUBSCRIPTION-ACCESS" digest="sha256:f23e6df00c9fa568487a80d9a9aabcbb42cad4892c2307a8925fe1ee4a786da3" -->
+
+#### Scenario: External client reads an active feed
+
+- **WHEN** a client requests an active subscription
+- **THEN** DomusMind returns an ICS feed with only Plan title and timing within the chosen scope
+- **AND** successful access time and count are updated
+
+#### Scenario: Inactive subscription is requested
+
+- **WHEN** a client requests an invalid, revoked or expired subscription
+- **THEN** DomusMind denies the request without returning calendar information
 
 ## Source References
 

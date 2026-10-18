@@ -85,6 +85,14 @@
   max-width: 440px;
 }
 
+.calendar-subscription-form { display: grid; gap: 0.75rem; margin: 1rem 0; }
+.calendar-subscription-form .settings-field { align-items: flex-start; flex-direction: column; }
+.calendar-subscription-form input, .calendar-subscription-form select,
+.calendar-subscription-url input { width: 100%; }
+.calendar-subscription-url { display: grid; gap: 0.5rem; margin: 1rem 0; }
+.calendar-subscription-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+.calendar-subscription-error { color: var(--danger, #b42318); }
+
 /* ---- Avatar picker ---- */
 .avatar-picker {
   border: 1px solid var(--border);

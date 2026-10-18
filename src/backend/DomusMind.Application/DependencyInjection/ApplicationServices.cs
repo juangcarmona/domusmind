@@ -6,6 +6,7 @@ using DomusMind.Application.Features.Auth.Logout;
 using DomusMind.Application.Features.Auth.RefreshToken;
 using DomusMind.Application.Features.Calendar.AddEventParticipant;
 using DomusMind.Application.Features.Calendar.AddReminder;
+using DomusMind.Application.Features.Calendar.CalendarSubscriptions;
 using DomusMind.Application.Features.Calendar.CancelEvent;
 using DomusMind.Application.Features.Calendar.ConfigureExternalCalendarConnection;
 using DomusMind.Application.Features.Calendar.ConnectOutlookAccount;
@@ -168,6 +169,14 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<UpdateResponsibilityDomainColorCommand, UpdateResponsibilityDomainColorResponse>, UpdateResponsibilityDomainColorCommandHandler>();
 
         // Calendar slices
+        services.AddScoped<ICommandHandler<CreateCalendarSubscriptionCommand, CreatedCalendarSubscription>, CreateCalendarSubscriptionCommandHandler>();
+        services.AddScoped<ICommandHandler<RevokeCalendarSubscriptionCommand, bool>, RevokeCalendarSubscriptionCommandHandler>();
+        services.AddScoped<IQueryHandler<ListCalendarSubscriptionsQuery, IReadOnlyCollection<CalendarSubscriptionSummary>>, ListCalendarSubscriptionsQueryHandler>();
+        services.AddScoped<IQueryHandler<ReadCalendarSubscriptionFeedQuery, CalendarSubscriptionFeed?>, ReadCalendarSubscriptionFeedQueryHandler>();
+        services.AddScoped<ICommandHandler<CreateCalendarSubscriptionCommand, CreatedCalendarSubscription>, CreateCalendarSubscriptionCommandHandler>();
+        services.AddScoped<ICommandHandler<RevokeCalendarSubscriptionCommand, bool>, RevokeCalendarSubscriptionCommandHandler>();
+        services.AddScoped<IQueryHandler<ListCalendarSubscriptionsQuery, IReadOnlyCollection<CalendarSubscriptionSummary>>, ListCalendarSubscriptionsQueryHandler>();
+        services.AddScoped<IQueryHandler<ReadCalendarSubscriptionFeedQuery, CalendarSubscriptionFeed?>, ReadCalendarSubscriptionFeedQueryHandler>();
         services.AddScoped<ICommandHandler<ScheduleEventCommand, ScheduleEventResponse>, ScheduleEventCommandHandler>();
         services.AddScoped<ICommandHandler<RescheduleEventCommand, RescheduleEventResponse>, RescheduleEventCommandHandler>();
         services.AddScoped<ICommandHandler<CancelEventCommand, CancelEventResponse>, CancelEventCommandHandler>();

@@ -8,6 +8,7 @@ import { HouseholdSettingsSection } from "../components/HouseholdSettingsSection
 import { MembersSettingsSection } from "../components/MembersSettingsSection";
 import { AboutSection } from "../components/AboutSection";
 import { ConnectedCalendarsSection } from "../components/ConnectedCalendarsSection";
+import { CalendarSubscriptionsSection } from "../components/CalendarSubscriptionsSection";
 import { AreasPage } from "../../areas/pages/AreasPage";
 
 export function SettingsPage({ defaultTab = "household" }: { defaultTab?: SettingsTab }) {
@@ -31,7 +32,7 @@ export function SettingsPage({ defaultTab = "household" }: { defaultTab?: Settin
         {activeTab === "people" && <MembersSettingsSection />}
         {activeTab === "areas" && <AreasPage />}
         {activeTab === "account" && <AccountSettingsSection />}
-        {activeTab === "connectedCalendars" && <ConnectedCalendarsSection />}
+        {activeTab === "connectedCalendars" && <><ConnectedCalendarsSection /><CalendarSubscriptionsSection /></>}
         {activeTab === "about" && <AboutSection />}
       </div>
     </div>
