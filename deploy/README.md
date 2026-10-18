@@ -1,11 +1,12 @@
 # DomusMind - Self-hosted Installation
 
-DomusMind runs as a Docker Compose stack: **postgres** and **domusmind**.
+DomusMind runs as a Docker Compose stack: **postgres**, **ollama**, the one-shot **ollama-model** downloader, and **domusmind**.
 
 ## Prerequisites
 
 - Docker Engine 24+ with the Compose plugin (`docker compose version`)
 - A GitHub Container Registry token or access to the GHCR namespace where images are published
+- Enough memory and disk space for the local `llama3.2:3b` model (downloaded on first start)
 
 ## Quick start
 
@@ -32,6 +33,8 @@ docker compose up -d
 #    Create the initial administrator account through the UI.
 #    The setup endpoint is permanently server-gated: it cannot be called twice.
 ````
+
+By default, Inbox uses the local Ollama model, whose first download can take several minutes. Set `INBOX_INTERPRETER_PROVIDER=OpenAICompatible`, `INBOX_INTERPRETER_ENDPOINT`, `INBOX_INTERPRETER_MODEL`, and optionally `INBOX_INTERPRETER_API_KEY` in `.env` to select an OpenAI-compatible provider. Start that mode with `docker compose -f docker-compose.yml -f docker-compose.external-interpreter.yml up -d`; this skips Ollama and its model download. The Inbox discloses when text is sent outside the deployment. Ollama is not published on a host port.
 
 ## Headless / recovery bootstrap (optional)
 

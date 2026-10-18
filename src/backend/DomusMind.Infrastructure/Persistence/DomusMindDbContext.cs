@@ -30,8 +30,12 @@ public sealed class DomusMindDbContext : DbContext, IDomusMindDbContext
     public DbSet<Domain.Calendar.CalendarEvent> CalendarEvents
         => Set<Domain.Calendar.CalendarEvent>();
 
+    public DbSet<Domain.Calendar.TimelineNote> TimelineNotes => Set<Domain.Calendar.TimelineNote>();
+
     public DbSet<Domain.Calendar.CalendarSubscription> CalendarSubscriptions
         => Set<Domain.Calendar.CalendarSubscription>();
+
+    public DbSet<Domain.Inbox.InboxItem> InboxItems => Set<Domain.Inbox.InboxItem>();
 
     public DbSet<Domain.Tasks.HouseholdTask> Tasks
         => Set<Domain.Tasks.HouseholdTask>();

@@ -25,6 +25,9 @@ public sealed record FamilyTimelineListItem(
     bool Checked,
     bool Importance);
 
+public sealed record FamilyTimelineNoteItem(Guid TimelineNoteId, string Text, string Date, DateTime CreatedAtUtc);
+
 public sealed record FamilyTimelineResponse(
     IReadOnlyCollection<FamilyTimelineEventItem> Events,
-    IReadOnlyCollection<FamilyTimelineListItem> ListItems);
+    IReadOnlyCollection<FamilyTimelineListItem> ListItems,
+    IReadOnlyCollection<FamilyTimelineNoteItem> Notes);

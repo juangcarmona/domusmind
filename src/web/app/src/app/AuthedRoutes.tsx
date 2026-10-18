@@ -13,6 +13,7 @@ import { AgendaPage } from "../features/agenda/pages/AgendaPage";
 import { ListsPage } from "../features/lists/pages/ListsPage";
 import { MealPlanningPage } from "../features/meal-planning/pages/MealPlanningPage";
 import { RecipesPage } from "../features/recipe-library/pages/RecipesPage";
+import { InboxPage } from "../features/inbox/pages/InboxPage";
 
 /**
  * Manages household bootstrap and i18n sync, then renders the shell-wrapped route tree.
@@ -55,6 +56,7 @@ export function AuthedRoutes() {
       <Routes>
         {/* Primary surfaces */}
         <Route path="/agenda" element={<AgendaPage />} />
+        <Route path="/inbox" element={<InboxPage />} />
         <Route path="/agenda/members/:memberId" element={<AgendaPage />} />
         <Route path="/lists" element={<ListsPage />} />
         <Route path="/lists/:listId" element={<ListsPage />} />

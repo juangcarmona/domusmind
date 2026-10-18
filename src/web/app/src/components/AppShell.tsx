@@ -56,6 +56,7 @@ const IconRecipes = (
 
 const NAV_ITEMS: readonly NavRailItem[] = [
   { to: "/agenda", labelKey: "agenda", icon: IconAgenda },
+  { to: "/inbox", labelKey: "inbox", icon: IconLists },
   { to: "/lists", labelKey: "lists", icon: IconLists },
   { to: "/meal-planning", labelKey: "mealPlanning", icon: IconMeals },
   { to: "/recipes", labelKey: "recipes", icon: IconRecipes },

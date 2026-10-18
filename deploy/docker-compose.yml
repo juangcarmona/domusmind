@@ -17,15 +17,39 @@ services:
     # Postgres is intentionally not exposed on a host port.
     # Access through the domusmind service only.
 
+  ollama:
+    image: ollama/ollama:0.40.6
+    restart: unless-stopped
+    volumes:
+      - ollama_data:/root/.ollama
+
+  ollama-model:
+    image: ollama/ollama:0.40.6
+    depends_on:
+      ollama:
+        condition: service_started
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["/bin/sh", "-c", "until ollama list >/dev/null 2>&1; do sleep 2; done; ollama pull llama3.2:3b"]
+    restart: "no"
+
   domusmind:
     image: ${IMAGE_REGISTRY:-ghcr.io}/${IMAGE_OWNER:-juangcarmona}/domusmind:${VERSION:-edge}
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
+      ollama-model:
+        condition: service_completed_successfully
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__domusmind: "Host=postgres;Database=domusmind;Username=${DB_USER};Password=${DB_PASSWORD}"
+      Inbox__Interpreter__Provider: ${INBOX_INTERPRETER_PROVIDER:-Ollama}
+      Inbox__Interpreter__Endpoint: ${INBOX_INTERPRETER_ENDPOINT:-}
+      Inbox__Interpreter__Model: ${INBOX_INTERPRETER_MODEL:-}
+      Inbox__Interpreter__ApiKey: ${INBOX_INTERPRETER_API_KEY:-}
+      OLLAMA_LLAMA3_2_URI: http://ollama:11434
+      OLLAMA_LLAMA3_2_MODEL: llama3.2:3b
       Jwt__SigningKey: ${JWT_SECRET}
       Jwt__Issuer:    ${JWT_ISSUER:-domusmind}
       Jwt__Audience:  ${JWT_AUDIENCE:-${JWT_ISSUER:-domusmind}}
@@ -47,3 +71,4 @@ services:
 
 volumes:
   postgres_data:
+  ollama_data:

@@ -136,6 +136,6 @@ PostgreSQL holds all persistent state, in the `postgres_data` volume. Two approa
 - Releases come only from `release.yml` on `main`. Release tags are never reused or moved.
 - Every release has release notes, plus migration notes when it changes the schema.
 - Back up before every upgrade.
-- Keep the runtime to one application instance and one database. Aspire is for development only.
+- Keep the runtime to one application instance and one database. Inbox interpretation selects `Ollama` or `OpenAICompatible` through `Inbox:Interpreter:Provider`; Aspire is for development only.
 - Secrets live only in the host `.env`, GitHub Actions secrets or local user secrets.
 - Put an HTTPS reverse proxy in front of any installation that is reachable beyond the local network.

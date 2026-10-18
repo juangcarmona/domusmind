@@ -461,6 +461,37 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.ToTable("external_calendar_feeds", (string)null);
                 });
 
+            modelBuilder.Entity("DomusMind.Domain.Calendar.TimelineNote", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date")
+                        .HasColumnName("date");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId", "Date");
+
+                    b.ToTable("calendar_timeline_notes", (string)null);
+                });
+
             modelBuilder.Entity("DomusMind.Domain.Family.Family", b =>
                 {
                     b.Property<Guid>("Id")
@@ -570,6 +601,42 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.HasIndex("FamilyId");
 
                     b.ToTable("family_members", (string)null);
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.Inbox.InboxItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at_utc");
+
+                    b.Property<Guid>("CreatedByUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by_user_id");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<string>("RawText")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)")
+                        .HasColumnName("raw_text");
+
+                    b.Property<Guid>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid")
+                        .HasColumnName("version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId", "CreatedAtUtc");
+
+                    b.ToTable("inbox_items", (string)null);
                 });
 
             modelBuilder.Entity("DomusMind.Domain.Lists.ListItem", b =>
@@ -1522,6 +1589,95 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.Inbox.InboxItem", b =>
+                {
+                    b.OwnsMany("DomusMind.Domain.Inbox.InboxProposal", "Proposals", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Date")
+                                .HasColumnType("text")
+                                .HasColumnName("date");
+
+                            b1.Property<string>("Description")
+                                .HasMaxLength(2000)
+                                .HasColumnType("character varying(2000)")
+                                .HasColumnName("description");
+
+                            b1.Property<string>("DueDate")
+                                .HasColumnType("text")
+                                .HasColumnName("due_date");
+
+                            b1.Property<string>("EndDate")
+                                .HasColumnType("text")
+                                .HasColumnName("end_date");
+
+                            b1.Property<string>("EndTime")
+                                .HasColumnType("text")
+                                .HasColumnName("end_time");
+
+                            b1.Property<int?>("ReminderMinutesBefore")
+                                .HasColumnType("integer")
+                                .HasColumnName("reminder_minutes_before");
+
+                            b1.Property<Guid?>("ResultId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("result_id");
+
+                            b1.Property<string>("Status")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("character varying(20)")
+                                .HasColumnName("status");
+
+                            b1.Property<Guid?>("TargetPlanId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("target_plan_id");
+
+                            b1.Property<string>("TargetPlanTitle")
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("target_plan_title");
+
+                            b1.Property<string>("Time")
+                                .HasColumnType("text")
+                                .HasColumnName("time");
+
+                            b1.Property<string>("Title")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("title");
+
+                            b1.Property<string>("Type")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("character varying(20)")
+                                .HasColumnName("type");
+
+                            b1.Property<string>("UnresolvedDetails")
+                                .HasMaxLength(500)
+                                .HasColumnType("character varying(500)")
+                                .HasColumnName("unresolved_details");
+
+                            b1.Property<Guid>("inbox_item_id")
+                                .HasColumnType("uuid");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("inbox_item_id");
+
+                            b1.ToTable("inbox_proposals", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("inbox_item_id");
+                        });
+
+                    b.Navigation("Proposals");
                 });
 
             modelBuilder.Entity("DomusMind.Domain.Lists.ListItem", b =>

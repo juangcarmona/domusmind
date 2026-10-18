@@ -59,7 +59,7 @@ There are deliberately no other partners. DomusMind sends no email, push
 notification or chat message, and has no messaging, voice, home-automation, AI or
 further calendar-provider integration: these are outside the current product scope.
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:45f1f39de62aeb90bc1e7c7f18f77f07d0f204fe3ab88e0d7e0c2d17b7aaa244" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:e15c25852c199d0df3faf9577a99856fd533d983e101c646149c85d10308ae64" -->
 
 ## Technical Context
 

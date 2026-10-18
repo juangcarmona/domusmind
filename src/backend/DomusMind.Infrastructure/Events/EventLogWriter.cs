@@ -51,7 +51,14 @@ public sealed class EventLogWriter : IEventLogWriter
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             if (_domainEventDispatcher is not null)
+            {
+                // Clear this persisted batch before dispatch: handlers can write new events
+                // for the same tracked aggregate, and must not redispatch this batch.
+                foreach (var aggregate in aggregates)
+                    aggregate.ClearDomainEvents();
+
                 await _domainEventDispatcher.Dispatch(domainEvents, cancellationToken);
+            }
 
             if (transaction is not null)
                 await transaction.CommitAsync(cancellationToken);

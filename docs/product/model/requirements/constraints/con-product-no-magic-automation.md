@@ -33,5 +33,5 @@ Trust in a shared household system depends on the household recognising every it
 ## Consequences
 
 - Corroborated per area: tasks are created explicitly and never from plans or meals automatically; imported external calendar entries never become plans; list items never become tasks; routines are shown, not turned into tasks (observed across the area rules BR-TASKS-TASKS-CREATED-EXPLICITLY, BR-MEALS-NO-AUTOMATIC-TASKS, BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS, BR-LISTS-ITEM-IS-NOT-A-TASK, BR-TASKS-ROUTINES-PROJECTED).
-- Suggestions and AI-assisted interpretation are future (V3) capabilities and must still leave the decision to a person (observed: docs/_legacy/09_roadmap/roadmap.md, V3; planned, see CHG-ROADMAP).
+- AI-assisted interpretation may propose changes through Inbox, but every household record still requires a person's explicit decision. Automatic execution remains out of scope (proposed by CHG-INBOX-ASSISTED-CAPTURE; consistent with docs/_legacy/09_roadmap/roadmap.md, V3 Rule).
 - The one sanctioned derivation, a shopping list generated from a meal plan, happens only when the household asks for it (observed: the Meal Planning area's shopping-list rules).

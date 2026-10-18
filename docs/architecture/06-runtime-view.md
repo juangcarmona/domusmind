@@ -86,6 +86,37 @@ sequenceDiagram
 
 `ListChangeNotifier` is in-memory and supports the one-application-instance self-hosted topology. The controller rechecks subscription access on its keep-alive interval, while every mutation handler performs its own household authorization. On reconnect, the stream sends another refresh event so the browser reloads current state. The product does not define a latency target; the browser journey checks eventual visibility without a manual refresh.
 
+## Capture and interpret an Inbox note
+
+The authenticated capture request stores the raw note in the Inbox aggregate first. A separate command invokes the configured interpreter so an unavailable provider never loses the captured note. The provider-neutral application port returns structured proposals; the Inbox handler persists them as pending. Infrastructure selects Ollama or an OpenAI-compatible endpoint from configuration, and the Inbox tells the member when text is sent outside the deployment.
+
+```mermaid
+sequenceDiagram
+    participant Web as Web app
+    participant C as InboxController
+    participant H as Inbox handlers
+    participant Auth as FamilyAuthorizationService
+    participant DB as DomusMind database
+    participant O as Configured interpreter
+    participant EL as EventLogWriter
+    Web->>C: POST /api/inbox with text and family id
+    C->>H: Dispatch(CaptureInboxItemCommand, current user)
+    H->>Auth: Check household access
+    H->>DB: Save raw Inbox item and capture event
+    C-->>Web: 201 captured item
+    Web->>C: POST /api/inbox/{id}/interpret
+    C->>H: Dispatch(InterpretInboxItemCommand, current user)
+    H->>Auth: Check household access
+    H->>DB: Read raw note
+    H->>O: Structured interpretation request
+    O-->>H: Proposal fields
+    H->>EL: Save pending proposals and interpretation event
+    H-->>C: Inbox response model
+    C-->>Web: 200 proposals for review
+```
+
+The member's approval command changes one Inbox aggregate and emits `InboxProposalApproved`. Its synchronous domain-event reaction dispatches the normal Calendar or Tasks command, then marks the proposal applied. The owning area handler repeats household authorization and input validation. The event writer keeps all aggregate and event-log writes in one PostgreSQL transaction, so a failed action leaves the proposal pending and creates no Plan or Task. Rejected proposals update only Inbox state. <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:a0b5a7a703274aa651f59d2b20d2c200d249892473aa0bb06a9d40995073e1bd" -->
+
 ### Failure Behavior
 
 Handlers throw a module-specific exception (for example `CalendarException` with an error code); controllers translate those into 400, 403 or 404 responses. A missing handler registration raises `HandlerResolutionException`, which the global exception handler maps to a 500 response with a `handler_resolution_failed` code; any other unhandled exception becomes a generic 500 with a trace id.

@@ -1,0 +1,15 @@
+.inbox-page { max-width: 860px; margin: 0 auto; padding: 2rem; color: var(--color-text-primary); }
+.inbox-page header p { color: var(--color-text-muted); }
+.inbox-capture, .inbox-item { display: grid; gap: .8rem; padding: 1.2rem; margin: 1rem 0; border: 1px solid var(--color-border-default); border-radius: 12px; background: var(--color-bg-surface); }
+.inbox-capture textarea { min-height: 110px; resize: vertical; padding: .8rem; font: inherit; }
+.inbox-capture div, .inbox-actions { display: flex; justify-content: flex-end; gap: .5rem; align-items: center; }
+.inbox-capture div span { margin-right: auto; color: var(--color-text-muted); font-size: .85rem; }
+.inbox-page button { cursor: pointer; padding: .55rem .8rem; }
+.inbox-raw-note { white-space: pre-wrap; margin: 0; }
+.inbox-item time, .inbox-empty { color: var(--color-text-muted); font-size: .9rem; }
+.inbox-proposal { display: grid; gap: .6rem; margin-top: .5rem; padding: 1rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--surface) 85%, var(--bg)); }
+.inbox-proposal h3, .inbox-proposal p { margin: 0; }
+.inbox-refine { display: grid; gap: .6rem; }
+.inbox-refine label { display: grid; gap: .3rem; }
+.inbox-refine input { font: inherit; padding: .45rem; }
+.inbox-error { color: var(--color-danger, #b42318); }

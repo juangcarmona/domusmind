@@ -10,13 +10,14 @@ description: Static decomposition of DomusMind into deployable parts, backend pr
 
 ### Overview
 
-DomusMind is one backend process, one relational database and two browser front ends. The household-facing web app is the only client of the HTTP API; the public site is a separate static marketing site with no runtime dependency on the backend. The AppHost composes the backend, the database and the web app for local development only.
+DomusMind is one backend process, one relational database and two browser front ends. The household-facing web app is the only client of the HTTP API; the public site is a separate static marketing site with no runtime dependency on the backend. The AppHost composes the backend, database, configured text interpreter and web app for local development only.
 
 ```mermaid
 flowchart LR
     person([Household member])
     visitor([Site visitor])
     msgraph[(Microsoft Graph)]
+    interpreter["Configured text interpreter<br/>Ollama or OpenAI-compatible"]
 
     subgraph domusmind [DomusMind]
         web["Web app<br/>React + Vite SPA"]
@@ -32,9 +33,11 @@ flowchart LR
     web -- "HTTPS/JSON, JWT bearer" --> api
     api -- "EF Core / Npgsql" --> db
     api -- "delegated OAuth, delta queries" --> msgraph
+    api -- "structured interpretation" --> interpreter
     apphost -. "starts and wires" .-> api
     apphost -. "starts and wires" .-> web
     apphost -. "provisions" .-> db
+    apphost -. "provisions local mode" .-> interpreter
 ```
 
 ### Decomposition Rationale
@@ -45,8 +48,9 @@ The backend is a single deployable modular monolith rather than a set of service
 
 | Building block | Responsibility | Interfaces | Source location |
 | --- | --- | --- | --- |
-| Web app | Household-facing single-page application: Agenda, Lists, Areas, Meal Planning, Settings; holds the session tokens client-side | Consumes the REST API; browser routes | [`src/web/app`](../../src/web/app) |
-| DomusMind API | All product behaviour: authentication, authorization, commands, queries, domain model, persistence, external calendar ingestion and its background worker | REST API documented with Swagger ([ADR-0005](../adr/0005-expose-a-rest-api-through-aspnet-core-controllers.md)); serves the web app bundle in production | [`src/backend`](../../src/backend) |
+| Web app | Household-facing single-page application: Agenda, Inbox, Lists, Areas, Meal Planning, Settings; holds the session tokens client-side | Consumes the REST API; browser routes | [`src/web/app`](../../src/web/app) |
+| DomusMind API | All product behaviour: authentication, authorization, commands, queries, domain model, persistence, configured Inbox interpretation client, external calendar ingestion and its background worker | REST API documented with Swagger ([ADR-0005](../adr/0005-expose-a-rest-api-through-aspnet-core-controllers.md)); serves the web app bundle in production | [`src/backend`](../../src/backend) |
+| Text interpreter | Structured interpretation of Inbox notes; selected by deployment configuration | Ollama local API or configured OpenAI-compatible chat-completions endpoint | Infrastructure adapters |
 | DomusMind database | Operational state of every aggregate, authentication records, user-to-household access grants and the append-only event log, in one schema | PostgreSQL connection string `domusmind` | EF Core migrations in [`DomusMind.Infrastructure/Persistence`](../../src/backend/DomusMind.Infrastructure/Persistence) |
 | Public site | Static product and marketing pages | Static hosting only; no API calls | [`src/web/public`](../../src/web/public) |
 | AppHost | Local orchestration: PostgreSQL with pgAdmin, the API and the Vite dev server, wired by references | .NET Aspire app model | [`src/backend/DomusMind.AppHost`](../../src/backend/DomusMind.AppHost) |
@@ -55,6 +59,7 @@ The backend is a single deployable modular monolith rather than a set of service
 
 - **Web app to API**: JSON over HTTPS under `/api`, authenticated with a bearer access token issued by the API itself ([ADR-0002](../adr/0002-keep-authentication-local-and-separate-from-member-identity.md)). The web app keeps hand-written typed wrappers under [`src/web/app/src/api`](../../src/web/app/src/api); the OpenAPI document is the contract.
 - **API to Microsoft Graph**: outbound only, delegated per connected member, read-only calendar scope ([ADR-0003](../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md)). The external interface itself is owned by [section 03](03-context-and-scope.md).
+- **API to text interpreter**: Inbox text is sent to the configured provider for structured proposals. The Inbox identifies whether the selected provider is outside the deployment. <!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:f52f383ec2b4c06033c30d4ff1864e663f25410b6772d5d12f90343df933e7d0" -->
 
 ## Level 2
 
@@ -135,7 +140,7 @@ The product responsibility of each module is owned by its bounded-context artifa
 
 <!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
 <!-- pdac:cite id="BC-RESPONSIBILITIES" digest="sha256:288de55e6b2023b73e2a4c9992f9390250c4a7690500cd4d6a207c432f324cc5" -->
-<!-- pdac:cite id="BC-CALENDAR" digest="sha256:cbbc009517c547a73acd5bcd9d96ffb678911eed01f38327ce28396f7ed724c1" -->
+<!-- pdac:cite id="BC-CALENDAR" digest="sha256:f6a45688be328163ec27e0ce9ac3c1c0127301dc99843f810520d08065bc9288" -->
 <!-- pdac:cite id="BC-TASKS" digest="sha256:7a1a64e2267e7795b9766611ab9d65af92e80600a128617a728d4bff899a032d" -->
 <!-- pdac:cite id="BC-LISTS" digest="sha256:278bab0e63c76bf592a652d1a53fcaf99a6a79cf52153a4d566d26dfcd1bf0e0" -->
 <!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:3e2d211a42325e9e719480512210f6ec9c5255f4fa647518cae3598e2bd6e835" -->
