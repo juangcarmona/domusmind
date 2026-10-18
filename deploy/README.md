@@ -20,7 +20,7 @@ cp .env.example .env
 #    IMAGE_OWNER  - GitHub username or org that published the release
 #    DB_PASSWORD  - a strong random password for the database
 #    JWT_SECRET   - at least 32 random characters (openssl rand -hex 32)
-#    VERSION      - the release tag without the leading v, e.g. 1.0.0
+#    VERSION      - an exact stable release version without the leading v
 
 # 4. Start the stack
 docker compose up -d
@@ -61,15 +61,35 @@ docker compose up -d
 # is already marked as initialized.
 ```
 
+## Authentication settings
+
+`JWT_ISSUER` defaults to `domusmind`. `JWT_AUDIENCE` is optional and Compose
+defaults it to the issuer. If you override either value, keep the API and web
+app configured with the same issuer and audience.
+
+## Outlook calendar integration (optional)
+
+The Compose file passes these optional values to the API:
+`MICROSOFT_GRAPH_CLIENT_ID`, `MICROSOFT_GRAPH_CLIENT_SECRET`,
+`MICROSOFT_GRAPH_TOKEN_ENCRYPTION_KEY`, and `MICROSOFT_GRAPH_REDIRECT_URI`.
+Set these four values to enable Outlook, register the exact redirect URI in the
+Microsoft Entra app, and keep the Base64 encryption key stable across restarts.
+`MICROSOFT_GRAPH_TENANT_ID` is optional and defaults to `common`. The example
+environment file lists each setting and the callback URI shape.
+
 ## Image tags
 
-| Tag             | Source                                   |
-| --------------- | ---------------------------------------- |
-| `edge`          | Latest successful `main` build           |
-| `1.0.0` (exact) | Stable release                           |
-| `1.0` (minor)   | Latest patch in the 1.0 line             |
-| `latest`        | Latest stable release                    |
-| `1.1.0-alpha.1` | Prerelease - not suitable for production |
+The release workflow publishes these exact image tags:
+
+| Tag | Meaning | Guidance |
+| --- | --- | --- |
+| `1.2.3` | Exact stable release version; the same image also has `v1.2.3` and `sha-<shortsha>` tags | Use an exact stable version for persistent household installations |
+| `1.2.3-beta.1`, `1.2.3-rc.1` | Exact prerelease versions; also tagged `v<version>` and `sha-<shortsha>` | Testing only; not a stable installation target |
+| `edge` | Latest successful image build from `main` | Short-lived testing only; moves on each build |
+
+The project does not publish `latest`, `MAJOR.MINOR`, or `alpha` tags. Set
+`VERSION` to the exact stable version from the release you intend to install;
+do not leave the template placeholder or use `edge` for a persistent install.
 
 ## Updates
 
