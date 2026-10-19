@@ -50,7 +50,8 @@
         "npx -y @prodshape/cli@0.22.0 validate exited 0 with 0 errors and 59 existing PRODUCT111 low-confidence draft warnings across 598 artifacts.",
         "npm exec --yes --package=@fission-ai/openspec@1 --package=@prodshape/cli@0.22.0 -- prodshape citations verify --provider openspec exited 0: 14 current docs, 816 current citations, no stale/tampered/unresolved citations.",
         "npx -y @prodshape/cli@0.22.0 citations verify docs/architecture --format json exited 0: 81 current citations, no stale/tampered/unresolved citations.",
-        "No backend/web tests run: assessment-only documentation change. PR #267 targets the feature branch and has no status checks; CI pass is not claimed."
+        "No backend/web tests run: assessment-only documentation change. PR #267 targets the feature branch and has no status checks; CI pass is not claimed.",
+        "Independent gpt-6.1-sol assessment review requested four documentation corrections: record the GetMemberAgenda cross-family member-ID exposure risk and gate #230; add Streamable HTTP Origin/DNS-rebinding validation; correct #229/#230/#231 delivery mapping; distinguish private MCP tunnel reachability from authorization-server reachability. Correction round 1 updates the assessment accordingly."
       ]
     }
   ],
@@ -89,6 +90,19 @@
         "No other blocking plan flaw found; owner-only review gates remain explicit."
       ],
       "readOnly": true
+    },
+    {
+      "stage": "implement-review",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "bdeeff6daffeb657c8c600f742e0893620d53ae6",
+      "decision": "request-changes",
+      "findings": [
+        "GetMemberAgendaQueryHandler authorizes a supplied family ID but selects external calendar connections by an independent member ID and returns entries without verifying member-family ownership; record as a source-level finding and gate MCP exposure until fixed and negatively tested.",
+        "Current Streamable HTTP requires Origin validation against DNS rebinding and HTTP 403 for present invalid Origin; add explicit implementation and verification criteria.",
+        "Align child dependencies with current tracker: #229 OAuth with no writes, #230 authorized read-only with no write tools, #231 first write pilot.",
+        "OpenAI Secure MCP Tunnel carries MCP discovery/tool path but does not automatically tunnel the authorization server; document separate AS reachability."
+      ],
+      "readOnly": true
     }
   ],
   "corrections": [
@@ -108,6 +122,17 @@
         "Replaced the failing bare OpenSpec citation command with a reproducible npm exec supplying @fission-ai/openspec@1 and @prodshape/cli@0.22.0, matching CI's OpenSpec major version; requires successful exit and preserves no repository dependency changes."
       ],
       "validation": "The exact npm exec command completed with exit code 0; ProductShape validation and architecture citations also completed with exit code 0."
+    },
+    {
+      "round": 1,
+      "gate": "implement",
+      "changes": [
+        "Recorded the concrete GetMemberAgenda cross-family member-ID source risk and required a negative isolation test before #230 exposure.",
+        "Added normative Streamable HTTP Origin/DNS-rebinding validation and 403 test expectations, separate from forwarded-host trust.",
+        "Corrected #229 OAuth, #230 read-only release, and #231 write pilot dependencies and boundaries.",
+        "Separated private MCP tunnel path from authorization-server discovery/browser/token endpoint reachability using current OpenAI guidance."
+      ],
+      "validation": "jq empty, git diff --check, and assessment-specific markdownlint passed; ProductShape validation, OpenSpec citations, and architecture citations all exited 0. Existing ProductShape warnings remain unchanged at 59 PRODUCT111 warnings."
     }
   ],
   "stopReason": null,
