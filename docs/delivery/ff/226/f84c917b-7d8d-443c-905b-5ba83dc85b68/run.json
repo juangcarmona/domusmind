@@ -51,7 +51,7 @@
         "npm exec --yes --package=@fission-ai/openspec@1 --package=@prodshape/cli@0.22.0 -- prodshape citations verify --provider openspec exited 0: 14 current docs, 816 current citations, no stale/tampered/unresolved citations.",
         "npx -y @prodshape/cli@0.22.0 citations verify docs/architecture --format json exited 0: 81 current citations, no stale/tampered/unresolved citations.",
         "No backend/web tests run: assessment-only documentation change. PR #267 targets the feature branch and has no status checks; CI pass is not claimed.",
-        "Independent gpt-6.1-sol assessment review requested four documentation corrections: record the GetMemberAgenda cross-family member-ID exposure risk and gate #230; add Streamable HTTP Origin/DNS-rebinding validation; correct #229/#230/#231 delivery mapping; distinguish private MCP tunnel reachability from authorization-server reachability. Correction round 1 updates the assessment accordingly."
+        "Independent gpt-6.1-sol assessment review requested four documentation corrections: record the GetMemberAgenda cross-family member-ID exposure risk and gate #230; add Streamable HTTP Origin/DNS-rebinding validation; correct #229/#230/#231 delivery mapping; distinguish private MCP tunnel reachability from authorization-server reachability. Correction round 1 updates the assessment accordingly. A second review approved the first three and found the tunnel wording overstated public reachability; correction round 2 now says verify endpoint reachability from the components performing each OAuth step, without assuming public exposure."
       ]
     }
   ],
@@ -103,6 +103,16 @@
         "OpenAI Secure MCP Tunnel carries MCP discovery/tool path but does not automatically tunnel the authorization server; document separate AS reachability."
       ],
       "readOnly": true
+    },
+    {
+      "stage": "implement-correction-1-review",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "3acfbd5b9169482e1321b66097e5b935c84f967c",
+      "decision": "request-changes",
+      "findings": [
+        "The OpenAI tunnel assessment overstates public authorization-server reachability; current evidence only establishes that the AS is not automatically tunneled and the components conducting authorization/discovery/token steps need a reachable route. Avoid a blanket public exposure recommendation."
+      ],
+      "readOnly": true
     }
   ],
   "corrections": [
@@ -133,6 +143,14 @@
         "Separated private MCP tunnel path from authorization-server discovery/browser/token endpoint reachability using current OpenAI guidance."
       ],
       "validation": "jq empty, git diff --check, and assessment-specific markdownlint passed; ProductShape validation, OpenSpec citations, and architecture citations all exited 0. Existing ProductShape warnings remain unchanged at 59 PRODUCT111 warnings."
+    },
+    {
+      "round": 2,
+      "gate": "implement",
+      "changes": [
+        "Reworded the private tunnel caveat: the authorization server is not automatically tunneled; require per-client verification of browser authorization and discovery/token endpoint routes from the components performing those steps; do not assume public AS exposure. Added an official OpenAI explanation link."
+      ],
+      "validation": "jq empty, git diff --check, assessment-specific markdownlint, ProductShape validation, OpenSpec citation verification, and architecture citation verification all passed; ProductShape continues to emit 59 existing PRODUCT111 warnings."
     }
   ],
   "stopReason": null,
