@@ -1,0 +1,206 @@
+# MCP hosting, identity, authorization, and client assessment
+
+- Work item: [#226](https://github.com/juangcarmona/domusmind/issues/226), child of [Epic #224](https://github.com/juangcarmona/domusmind/issues/224)
+- Product intent: draft [CHG-MCP-HOUSEHOLD-INTEGRATION-001](../../product/changes/active/chg-mcp-household-integration/change.md), currently carried by Draft [PR #225](https://github.com/juangcarmona/domusmind/pull/225)
+- Assessment date: 2026-10-19
+- State: recommendation, not an accepted architecture decision
+
+## Executive assessment
+
+DomusMind has a workable application seam and a simple self-hosted deployment, but it does not currently implement an OAuth authorization server or the MCP OAuth resource-server contract. Existing local JWTs are for the DomusMind API audience (`domusmind` by default), have no OAuth scopes, and must not be accepted or forwarded as MCP access tokens. The current authorization seam checks a user's grant to a family; it does not itself express MCP scopes or member-level capabilities. Every exposed operation must continue to enforce its owning application handler's authorization and domain rules.
+
+Recommended starting direction for owner consideration:
+
+1. Host an MCP endpoint inside the existing `DomusMind.Api` process using the official .NET SDK and Streamable HTTP. This fits the accepted modular-monolith and one-container self-hosted architecture, while keeping calls inside the application layer. Keep tools thin and dispatch existing application queries/commands; do not access EF Core or persistence directly. Extract a separate deployable only if measured isolation, availability, or scale needs justify the added API, identity, network, and operations boundaries.
+2. Use OAuth 2.1 Authorization Code with PKCE and OIDC for member sign-in as the remote authorization direction. Select neither an identity provider nor an authorization-server implementation in this assessment. The current password-login/JWT module is not an OAuth/OIDC provider. A standards-capable external provider or a separately accepted, standards-based authorization-server addition to the existing host must be evaluated before implementation.
+3. Issue access tokens specifically for the canonical MCP resource URI, with short lifetime and least-privilege scopes. At each call, resolve the authenticated DomusMind user server-side and re-check current household/domain authorization through application capabilities. Never trust a model-supplied user, member, or household identity and never pass a client token through to an internal or third-party service.
+4. Treat `stdio` as a separate, optional local-agent integration profile using process-level credentials. Do not make it the primary remote integration or imply that the HTTP OAuth flow applies to it.
+
+These are recommendations, not approval of host topology, identity provider, token policy, or client support. Owner decisions are listed below and gate downstream architecture work.
+
+## Scope and evidence method
+
+Repository findings were checked against source, tests, accepted ADRs, deployment documentation, and the active MCP Product Change. External requirements and client behavior were checked against current official sources on 2026-10-19. In this document:
+
+- **Normative** means an explicit MUST/SHOULD/MAY in the cited protocol document; SHOULD is not a MUST.
+- **Client behavior** means support documented for a named product surface and can change independently of MCP.
+- **Repository fact** is directly visible in the cited checkout.
+- **Recommendation** is proposed direction requiring owner acceptance where it changes architecture or product scope.
+
+Relevant repository evidence:
+
+- [ADR-0002: Keep authentication local and separate from member identity](../../adr/0002-keep-authentication-local-and-separate-from-member-identity.md) and [ADR-0004: modular monolith](../../adr/0004-build-a-domain-centric-modular-monolith.md).
+- [Building block view](../../architecture/05-building-block-view.md), [crosscutting concepts](../../architecture/08-crosscutting-concepts.md), and [deployment view](../../architecture/07-deployment-view.md).
+- API composition and middleware in `src/backend/DomusMind.Api/Program.cs`; JWT setup in `src/backend/DomusMind.Infrastructure/Auth/AuthInfrastructureExtensions.cs`; token issue/refresh in `AccessTokenGenerator.cs` and `RefreshTokenStore.cs`.
+- Family grants in `FamilyAuthorizationService.cs`, `FamilyAccessGranter.cs`, `UserFamilyAccessReader.cs`, `UserFamilyAccess.cs`, and `UserFamilyAccessConfiguration.cs`; user/member linkage in `AuthUser.cs`, `FamilyMember.cs`, and their persistence configurations.
+- Application handlers under `src/backend/DomusMind.Application/Features/` and `ICommandDispatcher`/`IQueryDispatcher` under `Application/Abstractions/Messaging/`.
+- Current MCP direction in [the draft Product Change](../../product/changes/active/chg-mcp-household-integration/change.md) and its proposed requirements; these remain draft product intent.
+
+## Existing identity and authorization
+
+| Concern | Verified current behavior | Consequence for MCP |
+| --- | --- | --- |
+| Authentication | Local email/password authentication is implemented in the API's auth module. ADR-0002 keeps `User` distinct from household `Member`; a member may have no account. | Reuse the distinction, not the existing login protocol as an OAuth authorization flow. OIDC identity must resolve to an existing DomusMind user and must not manufacture a household member. |
+| Access token | `AccessTokenGenerator` creates an HMAC-SHA256 JWT with `sub`/name identifier, email, optional roles, issuer, audience, `jti`, and expiry. It does not issue OAuth scopes or a resource-specific audience. `AuthInfrastructureExtensions` validates issuer, audience, lifetime, signature, with zero clock skew. `JwtOptions` defaults to 60 minutes access-token lifetime. | Do not accept a locally issued API JWT at `/mcp`, reuse its audience for a new resource, or treat `roles` as consented MCP scopes. Use a distinct issuer/resource contract and strict audience validation. |
+| Refresh and revocation | Refresh tokens are random opaque values persisted as SHA-256 hashes, expire after the configured period (default 30 days), and rotate on use. Logout revokes a refresh token; account disable revokes all refresh tokens. | This is useful implementation experience, not an OAuth server contract. Add correct OAuth refresh-token rotation, client/grant binding, revocation semantics, and storage protections if an AS is selected. |
+| Immediate disable | A disabled account is refused at login. Disabling an account revokes refresh tokens, but existing stateless access JWTs are not checked against account state by bearer validation and can remain accepted until their expiry (currently up to 60 minutes). | Define access-token lifetime/revocation and membership-change behavior explicitly; do not promise immediate revocation from existing behavior. Consider short-lived access tokens plus introspection or a revocation/version mechanism if immediate cutoff is required. |
+| Family access | `FamilyAuthorizationService` checks for a `(UserId, FamilyId)` row in `user_family_access`. `FamilyAccessGranter` creates that grant. Numerous application handlers call `IFamilyAuthorizationService`; some operations additionally check manager status or target membership. This is a family-level grant, not a scope evaluator. | Token scopes restrict the kinds of MCP operation consented to; they do not replace current family authorization, role checks, target-member checks, or aggregate invariants in the invoked application handler. |
+| Identity-to-member link | `AuthUser.MemberId` and `FamilyMember.AuthUserId` are optional fields. The JWT does not include a member identifier. `ICurrentUser` exposes user ID, email, authenticated state, and roles only. | Resolve identity and household context from trusted server-side records. Never accept an LLM-provided member ID as proof of identity or authority. Determine the selected household explicitly. |
+| Household cardinality | `user_family_access` has a composite `(user_id, family_id)` key and a user index, so storage permits multiple family grants. `UserFamilyAccessReader.GetFamilyIdForUserAsync` uses `FirstOrDefault` and returns one unspecified grant. | The current “my family” helper is not a safe household-selection contract for integrations if a user can have multiple grants. Resolve one household explicitly and reauthorize each operation. Confirm intended multi-household product behavior with the owner. |
+| Interface comments | `IFamilyAuthorizationService` XML comments say it always denies until membership is modeled; its current implementation instead checks persisted grants. | The comments are stale and should be corrected by their owning work, not silently treated as current behavior. This assessment does not edit them. |
+| Authorization test evidence | Handler tests commonly verify denied-family behavior using stubs; production family grant/authorization implementation and DI wiring exist. The inspected test set does not establish a complete MCP-specific scope/member-boundary policy because MCP is not implemented. | Add integration and contract tests that exercise the real auth middleware, audience/scope validation, family isolation, manager/target checks, membership removal/disable, and representative reads/writes before exposure. |
+| Application boundary | Controllers dispatch through `IQueryDispatcher`/`ICommandDispatcher`; application handlers own validation/authorization and some writes use the event-log abstraction. Persistence is in `Infrastructure`. | In-host MCP tools should call application dispatchers or an explicit application-facing facade. A separately deployable MCP adapter must call an authenticated application API/facade, not reference database tables or bypass handlers. |
+| Audit | Domain `event_log` stores domain event type, aggregate, module, timestamps, payload and trace correlation/causation IDs; it has no standard actor-user or OAuth-client/grant field. Read queries are not represented by those domain events. | Do not assume the current event log is a complete AI-client audit trail. Define separate structured operation audit metadata (actor, client, household, tool, decision/result, correlation, timestamp) while excluding bearer/refresh tokens and unnecessary household content. |
+
+These facts establish a useful authorization seam, not proof that every existing feature has a complete per-member privacy policy. The future MCP slice must audit each candidate handler's access semantics before publishing it.
+
+## Hosting and trust-boundary options
+
+| Option | Benefits | Costs and risks | Assessment |
+| --- | --- | --- | --- |
+| MCP endpoint inside `DomusMind.Api` | Reuses ASP.NET Core middleware, dependency injection, API application layer, database transaction boundary, current-user abstraction, single image, and operator reverse proxy. No service-to-service token or duplicated application interface. | Adds externally reachable protocol surface to the existing process; a tool or middleware defect shares process privileges. OAuth provider duties and MCP route need independent tests, limits, logging, and threat review. | **Preferred starting option, subject to owner acceptance.** It aligns with ADR-0002/0004 and the current one-process Compose stack. Limit public exposure to deliberate operator configuration and an explicit HTTPS origin. |
+| Separate MCP deployable | Can isolate process privileges/resources and deploy/release/scale independently; can be useful if MCP attack surface or load needs separate control. | No current product deployment pattern for a separate application service. Requires a stable authenticated application API/facade, service identity, network/TLS/secrets/health/upgrade topology, and careful user-context delegation. Direct DB access would violate domain ownership and duplicate/bypass application logic. | **Not recommended for first delivery without a demonstrated need.** Reconsider on measured operational/security requirements, not as a default “microservice” split. |
+| Separate external authorization server/provider | Mature OAuth/OIDC features and potentially less custom identity protocol code; may support registration, consent, PKCE, refresh, revocation, discovery, and user federation. | Adds a deployment/provider dependency, account linking and outage/support concerns, self-hosting burden, provider-specific setup, and a mapping between external subject and local `AuthUser`. Provider feature compatibility with CIMD, resource indicators, consent, and home-network clients must be proven. | **Viable option; provider and identity ownership are open.** Do not assume a social login provider can represent household membership or authorize DomusMind scopes by itself. |
+| Standards AS hosted within current API | Could reuse local accounts while exposing OAuth/OIDC and MCP metadata in one container. | Requires a carefully selected maintained framework, authorization-code/PKCE, client registration/metadata, consent UI, resource indicators, key rotation, token lifecycle, security review, migrations and ongoing AS operations. This is not a small extension of the current password/JWT endpoints. | **Viable but high responsibility.** No implementation library or AS design is accepted by this assessment. Evaluate against an external AS before choosing. |
+
+Current runtime facts constrain remote access: self-hosted deployment publishes one API container on host port 24365 by default; the container listens on HTTP only. The operator supplies DNS/TLS reverse proxy and can configure trusted proxy IP/CIDR and forwarded-host allowlist. Thus remote OAuth redirect/discovery requires a stable externally reachable HTTPS origin in a given setup, unless the selected client has a private-network tunnel route. The local AppHost is development orchestration, not the production deployment model. A separate deployable would change documented topology and create operational work.
+
+### Proposed call path
+
+`MCP HTTP endpoint + bearer validation → authenticated DomusMind subject → selected household context → required MCP scope check → existing query/command dispatcher or explicit application facade → owning handler authorization/domain validation → response`
+
+The model supplies operation arguments only. Server code derives the user from validated claims, checks that the selected household is currently granted, performs operation-level/domain authorization, and validates all member/resource identifiers through the owning application handler. It must not use a caller-supplied `userId`, provider token passthrough, or direct persistence query from MCP tool code. Scope approval is necessary but not sufficient authorization.
+
+## OAuth 2.1, OIDC, and MCP authorization assessment
+
+The current MCP spec is revision **2026-07-28**. Its authorization text cites OAuth 2.1 draft -13, while the current IETF OAuth 2.1 Internet-Draft retrieved on 2026-10-19 is draft -16 (last updated 2026-09-02). Treat MCP's published normative requirements as the MCP contract and the newer draft as evolving OAuth guidance; do not claim the MCP spec normatively incorporates later draft changes.
+
+| Requirement / responsibility | Current state | Proposed direction / acceptance test |
+| --- | --- | --- |
+| Authentication vs grant vs domain authorization | Local login authenticates a DomusMind user; it is not an OAuth consent/grant workflow. `UserFamilyAccess` plus handler checks decide household/domain authority. | Keep three decisions distinct: OIDC authenticates the person, OAuth consent grants client + resource + scopes, and each DomusMind handler rechecks current household/domain authority. An ID token is not an MCP bearer access token. |
+| Protected resource metadata | No MCP endpoint or RFC 9728 metadata found. | MCP resource server MUST publish RFC 9728 metadata and advertise the correct AS. Test discovery from each supported client and reject missing/invalid metadata rather than silently accepting API JWTs. |
+| AS discovery | No RFC 8414 / OIDC provider metadata for DomusMind local auth found. | Selected AS MUST expose RFC 8414 or OIDC discovery, including authorization/token endpoints and S256 PKCE support. MCP clients are required to handle both discovery mechanisms. |
+| Authorization flow | Current API has email/password login and bearer JWT endpoints, not Authorization Code. | Remote member flow uses Authorization Code + PKCE S256, with state/redirect/issuer validation and a user-visible consent screen. No password grant or implicit flow. |
+| Client registration | No OAuth client registration system found. | Prefer current MCP Client ID Metadata Documents where supported and operationally safe; support pre-registration for controlled first-party clients. Consider DCR only for compatibility clients that require it; protect registration against arbitrary redirect URIs, unbounded registrations, spoofed client identity and abuse. |
+| Resource/audience binding | Existing JWT `aud` is configurable and defaults to `domusmind`; no OAuth `resource` handling. | MCP client MUST send canonical resource URI in authorization and token requests under current MCP protocol. AS must bind it to the issued token; resource server validates exact expected issuer, audience/resource, signature, lifetime and scopes on every request. A token minted for the API or another service is rejected. |
+| Scopes | Existing local JWT has no OAuth scopes; `roles` are not equivalent. | Define a small semantically coherent read/write scope set only after each tool is prioritized. Examples might separate household read from state changes and sensitive/member-specific access; do not commit names in this assessment. Enforce scopes server-side per tool and use step-up consent where a client supports it. Scopes never override handler authorization. |
+| Consent | No per-client OAuth consent. | Consent must identify client, DomusMind resource, requested read/write scope, household context, and material data/action types. Store consent per user/client/resource and permit revoke. AI-client approval UI is an additional control, not a substitute for DomusMind consent or auth. |
+| Expiry, refresh, revoke | Local access tokens default 60 minutes; refresh token default 30 days, hashed at rest and rotated. Existing logout/disable revokes refresh, not in-flight access JWTs. | Choose short MCP access-token lifetime; bind refresh tokens to grant/client/resource and rotate/reuse-detect. Implement grant/client/user revocation and specify membership/account-change response. Verify behavior end to end. Do not infer RFC 7009 endpoint support from current logout. |
+| Token issuer and keys | Local HMAC signing key is installation secret. | Prefer asymmetric signing and published/rotatable JWKS if ecosystem/provider support warrants it; require key rotation, secure storage, issuer stability, aud/iss validation, secure clock/lifetime, TLS and no secret logging. The mechanism is a decision for AS selection. |
+| Confused deputy and passthrough | No MCP proxy. | MCP server accepts only tokens issued for its resource and never forwards them. When acting on other services, obtain a separate, purpose-bound credential and preserve the acting user/consent. If the MCP server itself becomes an OAuth proxy, require per-client consent before any downstream authorization. Validate redirect URIs exactly and bind state/PKCE/issuer to the initiating client. |
+| Revocation and current authorization | Family grant can change independently of token issuance; current handlers perform runtime family checks. | Preserve runtime authorization checks on every tool call so a still-valid access token cannot retain a removed family grant. Do not encode long-lived family permission as sole authority in token claims. |
+| Errors and step-up | No MCP HTTP auth challenge. | Follow Bearer 401/403 semantics; advertise `resource_metadata` and minimum required scopes, avoid sensitive detail in errors, support a bounded step-up flow where clients support it. |
+| PAT option | No DomusMind scoped PAT mechanism identified. Existing JWT/refresh pair is not a PAT. | Optional later-only PAT for trusted local `stdio` agents/development: random opaque, hash at rest, one-time display, narrow resource/tool scopes, expiry, owner-visible revocation, rate limit, audit, never reuse account password or broad API token. Do not position as remote OAuth compatibility or production default. |
+
+### Authorization responsibilities
+
+- **Identity provider / OIDC OP:** authenticates the household member and returns an ID token to the OAuth client for client-side sign-in. The OP's `sub` must have a securely maintained mapping to `AuthUser.UserId`; changing email alone must not relink identities.
+- **OAuth authorization server:** owns client identity/registration, redirect URI validation, consent/grant lifecycle, PKCE, resource indicator, scope issuance, access/refresh token issuance, expiry, revocation, issuer metadata, and signing keys. It may be the same deployment as the API, but it is a distinct protocol responsibility.
+- **MCP protected resource:** publishes RFC 9728 metadata, validates bearer token issuer/audience/lifetime/signature/scope, applies rate limits and protocol-level errors, and provides only documented tools. The access token audience identifies the MCP resource, not an arbitrary API base.
+- **DomusMind application/domain:** resolves current user and household authority, checks member/manager/resource rules, validates command invariants, and owns reads/writes. OAuth grant does not make a user a household member or manager.
+- **MCP client / model:** proposes tool calls and arguments; is untrusted with respect to user/member/household authority. Client confirmation prompts add UX safety but can be disabled, absent, or inconsistent across products.
+
+## Client interoperability snapshot (2026-10-19)
+
+Client claims below are surface-specific. This is a documentation compatibility assessment, not an end-to-end compatibility test.
+
+| Client surface | Transport / reachability | Authentication / registration | Approval and limitations | Implication |
+| --- | --- | --- | --- | --- |
+| ChatGPT custom MCP integration (consumer product surface) | Remote HTTPS connector. Current custom-server connection availability is plan/workspace/product-surface dependent; ChatGPT web supports custom connections on specified Business/Enterprise/Edu workspaces and supports a Secure MCP Tunnel route for private servers where enabled. | OAuth Authorization Code + PKCE S256, protected-resource/AS discovery, resource parameter, token audience/scopes. Current builder docs document CIMD, DCR, and preconfigured OAuth client options; provider must support the chosen registration/auth method. | Connector administration and workspace policy are product controlled; users authorize the connection. Do not infer API machine grants from this surface. Keep a live plan check before product launch. | Requires HTTPS/discovery and compatible OAuth. Private tunneling is an optional client-specific deployment route, not an MCP guarantee. |
+| OpenAI API / Responses MCP (separate surface) | Remote public internet `server_url`, or a private/on-prem endpoint through OpenAI Secure MCP Tunnel where supported. Current Responses MCP documents Streamable HTTP or legacy HTTP/SSE. | Caller/application config supplies an OAuth bearer token when needed. OAuth client registration and end-user authorization are handled by the integrating application; API usage is not the same as ChatGPT's interactive connector setup. | Tool approvals default to approval before data sharing in documented flows; per-tool/all-call approval may be configured by the API developer. The API developer must decide, log, and enforce the policy; API model invocation is not itself household consent. | Test ChatGPT connector and API independently. Avoid coupling authorization-server behavior to an undocumented assumption that API callers share ChatGPT's callback or registration flow. |
+| Claude.ai / Claude Desktop custom remote connectors | Remote HTTP transport, with HTTPS public reachability for hosted connector flows; mobile limitations and ability to add versus use an existing connection vary by product/client release. | Current Anthropic docs describe OAuth, DCR and preconfigured client credentials; refresh-token support is expected for a durable experience. Supported authorization spec versions and exact client registration behavior can lag the latest MCP revision. | Availability is plan/workspace-role controlled; team/enterprise administrators may manage connector availability and each user authorizes individually. Tools, prompts, and resources are documented; resource subscriptions/sampling and advanced/draft features have limitations. | Validate its actual supported auth revision, DCR/pre-registration path, callback URL and refresh behavior against a deployed test issuer before claiming support. |
+| Claude Code | Remote HTTP is the recommended cloud/remote option; local `stdio` is also supported. Remote servers need routing from the developer's machine; local `stdio` runs on that machine. | HTTP supports OAuth discovery, RFC 9728 then RFC 8414, DCR and CIMD, with manual OAuth client credentials as fallback. Local `stdio` uses process config/environment, not MCP HTTP OAuth. | Interactive browser sign-in is available; headless/noninteractive use can lack the interactive auth context. Local process permissions, configuration scope, secrets and project trust are operator concerns. | Cover remote and local modes separately. Keep local credentials minimal and avoid treating a project-supplied command or `.env` as inherently trusted. |
+| Generic local `stdio` clients | Child process on the user's machine; no remote HTTPS route to DomusMind is implied. | MCP authorization specification says `stdio` implementations SHOULD NOT use its HTTP OAuth flow and SHOULD obtain credentials from environment. The process may need a separate local API identity or narrowly scoped token. | No common client consent or security model; inherited environment, process launch configuration and local filesystem access vary. | Optional developer/local-agent path only. Document explicit install/config/trust boundaries and never expose a broad household token by default. |
+| Custom remote or self-hosted agents | Streamable HTTP over HTTPS if client can reach a public endpoint; private network/overlay/tunnel if both agent and household instance cannot accept inbound internet. | Client determines OAuth client registration support. Use generic discovery and Authorization Code + PKCE for member-delegated interactive use; unattended machine identity is a separate policy and client-auth grant decision, not assumed. | Self-hosted operator controls ingress, TLS, DNS, firewall, upgrades, keys, and logs. A server reachable only on LAN is not reachable to a cloud-hosted agent without a secure route. | Publish deployment-specific network prerequisites. Never recommend opening a household host directly to the internet as the only integration option. |
+
+The OpenAI Responses API has its own MCP interaction, approval and tunnel configuration and must not be collapsed into the ChatGPT custom connector profile. Anthropic and OpenAI feature matrices change frequently; repeat this check at implementation and release. Client support is not a substitute for protocol conformance or server authorization.
+
+## Optional MCP Resources and Prompts
+
+No current need justifies making Resources or Prompts part of the first capability slice. Tools map naturally to authenticated application queries/commands and provide clearer input/output authorization and mutation controls. MCP Resources can be reconsidered for a stable, read-only household reference that a client demonstrably consumes; resource URI access must use the same household/member authorization as tools. Prompts are client UX templates, not a security boundary and not a source of business rules. Avoid exposing broad household snapshots, private notes, or raw persistence-backed resources by default.
+
+## Threats, quality, and operational requirements
+
+1. **Household/member isolation:** derive user from validated subject; explicitly select household; verify live family grant and handler-level constraints; ignore model-provided identity claims. Test cross-household IDs and member-level/manager-only operations.
+2. **OAuth protocol:** Authorization Code + PKCE S256; exact redirect URI checks; validate `state`, selected AS issuer and authorization response issuer; safe CIMD document fetch and DCR limits; token audience bound to canonical resource; no query-string tokens; TLS-only remote deployment.
+3. **Confused deputy/token exfiltration:** do not passthrough MCP bearer tokens; do not act as a proxy to another AS without per-client consent; do not follow untrusted resource URLs or client metadata URLs without SSRF protections. Keep tool output scoped and avoid feeding private untrusted content as instructions.
+4. **Tool safety:** validate bounded structured inputs; use typed operations, never arbitrary SQL/HTTP/code tools; make state changes explicit; return confirmation-required outcomes for consequential or ambiguous actions; enforce idempotency for retries; distinguish read and write scopes. A client-side confirmation prompt may supplement, never replace, server checks.
+5. **Privacy/logging:** record actor user, OAuth client, selected household, tool, operation/result, scope/authorization decision, timestamp and correlation ID. Exclude raw access/refresh tokens, passwords, full private payloads and sensitive model prompts. Audit reads as well as writes where household data exposure is material.
+6. **Availability/abuse:** rate limit by user, client, household and operation; cap input/output size, call duration and concurrent requests; propagate cancellation; return stable structured protocol errors without stack traces; protect expensive queries and avoid tool-list overload.
+7. **Observability:** use current .NET/OpenTelemetry conventions for request spans, tool name, decision/result category and correlation. Redact resource arguments/results and credentials. Track auth failures, rate limits, latency and errors without creating a second sensitive data lake.
+8. **Testing:** contract tests for MCP tool schema/results and protocol errors; integration tests through actual ASP.NET authentication/discovery/token validation and handlers; tests for audience/scope confusion, household isolation, stale grant, disabled account, replay/refresh revocation, consent revocation, idempotency, client compatibility, and reverse-proxy forwarded-host behavior. No app test is appropriate for this assessment-only issue.
+
+## Recommendation matrix and delivery dependencies
+
+| Decision area | Recommended working direction | Owner decision / downstream impact |
+| --- | --- | --- |
+| Host boundary | In-process API endpoint for first delivery; separate process only with an explicit extraction case. | Accept/reject before #227 foundation and #228–#234 implementation slices. |
+| Remote transport | Official .NET MCP SDK, Streamable HTTP; do not start with legacy SSE. Use SDK behavior compatible with selected MCP revision and a compatible release. | Confirm supported target MCP revision and package version at #227/#228. |
+| Authorization server | OAuth 2.1/OIDC as remote direction; compare external provider with a maintained in-process AS framework. Neither selected. | Owner chooses identity ownership/provider and whether local accounts are retained/linked; this is a hard gate for OAuth implementation. |
+| Authentication | Authorization Code + PKCE S256 for user-delegated remote clients; OIDC for user authentication. | Decide account mapping, recovery, consent UX, and provider lock-in implications. |
+| Authorization | Small read/write scopes + live family/domain handler authorization. | Define scopes and member-sensitive data/action policies before first tools. Existing handlers need capability-by-capability review. |
+| Token lifetime | Short-lived audience-bound MCP access token; refresh/revocation tied to grant/client/user; continue live authorization checks. | Define concrete access/refresh lifetimes and revocation SLA; current 60-minute JWT is not accepted as the policy. |
+| Household context | Server-side household selection and explicit validation on every operation. | Confirm whether one user may join multiple households; current storage permits it, singular lookup does not safely select. |
+| Client support | Prioritize one interactive remote profile for the proof of concept, then verify other client profiles independently. Keep local stdio optional. | Product owner selects launch clients and plan tiers; #233 must demonstrate each rather than claim universal compatibility. |
+| Private access | Keep public HTTPS behind operator-configured TLS proxy as baseline; evaluate private tunnel/overlay for hosted agents. | Decide supported self-hosted connection story and support burden; do not open ports automatically. |
+| Local PAT | Defer until a real local-agent need is validated; if needed, scoped opaque tokens for `stdio` only. | Decide whether local-agent support is MVP or later; do not repurpose JWT. |
+| Audit/operations | Add MCP-specific structured audit and redacted telemetry; do not treat domain event log as actor audit. | Security/observability child work must define retention and privacy budget before external beta. |
+
+Suggested dependencies: #227 should convert owner-approved host/auth/authorization choices into a scoped architecture foundation. #228 can build the MCP SDK endpoint and protocol contract without enabling public access or exposing real household data. #229 should remain read-only and behind test identity/auth boundaries until OAuth and current domain checks are proved. #230+ should add mutations only after explicit write scope, consent/confirmation policy, and audit decisions. #233 validates client-specific OAuth/reachability. #234 closes security, test, telemetry and operator-documentation evidence before production exposure. This sequence does not silently accept any draft Product Change decision.
+
+## Open owner decisions
+
+1. Keep local DomusMind accounts as the primary user identity and add a standards authorization server, or delegate login to a supported external OIDC provider? If external, who operates it for self-hosted households and what is the account-linking/recovery policy?
+2. If hosting an AS in the API, is the owner willing to accept long-term security, key-management, consent and OAuth maintenance responsibility? Which maintained .NET AS framework/provider is acceptable after compatibility and threat evaluation?
+3. Can a DomusMind user belong to multiple households? If yes, what explicit household selection/consent and switching rules apply, and how are grants invalidated after household removal?
+4. Which member data is private to a member versus shared with other authorized household members? Current family-level access must not be misrepresented as a finer privacy model.
+5. What access-token lifetime and revocation SLA are required when an account is disabled, household access is removed, OAuth consent is revoked, or a member relationship changes?
+6. Which interactive clients are launch-critical: ChatGPT custom connector, OpenAI Responses API, Claude.ai, Claude Code, or a defined custom agent? Which plan/workspace tiers are in scope?
+7. Is cloud-hosted remote access acceptable for self-hosted households, or must a private tunnel/overlay be supported? Who is responsible for DNS, TLS, proxy and firewall configuration?
+8. Is local `stdio`/PAT support a product requirement for initial delivery, or a later convenience for trusted operators?
+9. Which writes require explicit second confirmation independent of model/client approval, and what is the audit retention policy for tool calls and sensitive reads?
+
+## Risks and gaps
+
+- Existing local JWT acceptance at the API could become an accidental token-passthrough pattern unless `/mcp` has distinct issuer/audience validation.
+- Adding OAuth/OIDC can substantially change authentication and deployment responsibility; a “just accept JWT” shortcut would not meet MCP's current HTTP authorization direction.
+- Broad household scopes could reveal children's/member-sensitive information. Existing family authorization alone does not demonstrate fine-grained member privacy.
+- Current family lookup returns an arbitrary single family although access rows permit multiple grants; household choice must be resolved before MCP consent.
+- Account disable revokes refresh tokens, not current access tokens; token revocation expectations need a decision and tests.
+- A separate deployable can tempt direct database access or token forwarding; both violate the application/domain boundary and MCP security guidance.
+- Public HTTP reachability relies on each self-hosting operator's TLS proxy configuration. Incorrect forwarded host/proxy trust can undermine canonical issuer/resource URLs and redirects.
+- AI approval behavior differs across ChatGPT, Responses API, Claude products, and local clients. Server-side authorization and confirmation policy must stand independently.
+- MCP specification/client requirements are evolving. Pin an implementation revision/package version for delivery and refresh this matrix before launch.
+
+## References
+
+All client/product links below were accessed 2026-10-19; client availability and behavior must be rechecked before launch.
+
+### MCP and .NET
+
+- [Current MCP specification](https://modelcontextprotocol.io/specification/2026-07-28)
+- [MCP authorization (revision 2026-07-28)](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
+- [MCP Streamable HTTP transport](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
+- [MCP security best practices](https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices)
+- [Official .NET MCP SDK](https://github.com/modelcontextprotocol/csharp-sdk) and [ASP.NET Core transport concepts](https://github.com/modelcontextprotocol/csharp-sdk/blob/main/docs/concepts/transports/transports.md)
+- [MCP .NET SDK identity propagation](https://github.com/modelcontextprotocol/csharp-sdk/blob/main/docs/concepts/identity/identity.md)
+
+### OAuth and OIDC
+
+- [Current OAuth 2.1 Internet-Draft](https://datatracker.ietf.org/doc/draft-ietf-oauth-v2-1/) (draft -16 on assessment date; draft status, not an RFC)
+- [OpenID Connect Core 1.0](https://openid.net/specs/openid-connect-core-1_0.html)
+- [RFC 9728: OAuth Protected Resource Metadata](https://www.rfc-editor.org/rfc/rfc9728.html)
+- [RFC 8414: OAuth Authorization Server Metadata](https://www.rfc-editor.org/rfc/rfc8414.html)
+- [RFC 7636: PKCE](https://www.rfc-editor.org/rfc/rfc7636.html)
+- [RFC 8707: Resource Indicators for OAuth 2.0](https://www.rfc-editor.org/rfc/rfc8707.html)
+- [RFC 9207: Authorization Server Issuer Identification](https://www.rfc-editor.org/rfc/rfc9207.html)
+- [OAuth Client ID Metadata Documents draft](https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/)
+
+### Client integration behavior
+
+- [OpenAI ChatGPT custom MCP authentication](https://developers.openai.com/plugins/build/auth)
+- [OpenAI Responses API MCP servers and Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/tools-connectors-mcp)
+- [OpenAI custom MCP server connection availability](https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt)
+- [Anthropic remote MCP custom integrations](https://support.anthropic.com/en/articles/11503834-building-custom-integrations-via-remote-mcp-servers)
+- [Anthropic custom connector access and controls](https://support.anthropic.com/en/articles/11175166-about-custom-integrations-using-remote-mcp)
+- [Claude Code MCP transports and OAuth](https://code.claude.com/docs/en/mcp)
