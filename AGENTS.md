@@ -20,6 +20,8 @@ Before changing code:
 
 ## Source of truth
 
+Read [docs/engineering-lifecycle.md](docs/engineering-lifecycle.md) before handling issues, changing lifecycle status, preparing a pull request, invoking Fast Forward, or deciding whether a change is ready to merge. It defines the shared issue, retrospective, PR, and `/ff` defaults alongside DomusMind's existing gates.
+
 `docs/README.md` maps where each kind of truth lives. Read these first:
 
 ### CodeGraph for fast, targeted code navigation

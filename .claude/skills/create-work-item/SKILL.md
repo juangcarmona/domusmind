@@ -1,39 +1,44 @@
 ---
 name: create-work-item
-description: "Create one validated GitHub issue after checking for duplicates. Use when an agreed follow-up or defect needs tracking."
+description: "Create a work item from structured input, returning its identifier and URL. Use when a shaped idea, a follow-up, or a discovered defect must become trackable."
 ---
 
-One responsibility: create one GitHub issue and return its number and URL.
+> **Template.** The `adopt` capability adapts this into a role capability the project owns. Adapt *how* the role is performed; never change *what* it guarantees to its callers.
+
+One responsibility: create one work item and return how to find it again.
 
 ## Contract
 
 | | |
 | --- | --- |
-| **Input** | A work type when known, title, description, and required issue fields. |
-| **Output** | Issue number and URL. |
-| **Writes** | Creates one GitHub issue. |
-| **Confirmation** | Required. Show the completed issue and labels, then confirm before creation. |
+| **Input** | The item's type, title, description, and the fields the project requires at creation. |
+| **Output** | The new item's identifier and URL. |
+| **Writes** | Creates a work item in the tracker. |
+| **Confirmation** | **Required.** Show the content and confirm before creating. |
 
-## Required content
+**Guarantees to the caller**
 
-Check the draft against the Definition of Ready in `docs/engineering-lifecycle.md`. Include title, description/context, actor or stakeholder, dependencies (including `None`), acceptance criteria, scope, product rules (or `N/A` with reason), affected behavior (or `N/A`), quality expectations, existing decisions, and unknowns/risks. Keep acceptance criteria under `## Acceptance Criteria`. Mark inapplicable dimensions `N/A` with a short reason. Do not invent missing values; report them and ask the caller.
+- Every field the project requires at creation is set, or the creation is refused with the missing fields named.
+- The identifier and URL are returned, so the caller never has to search for what it just made.
 
-## Labels
+**Never**
 
-- Work type labels are `bug`, `enhancement`, and `documentation`. Apply at most one, and only when the type is clear.
-- Validate every requested label against `gh label list -R juangcarmona/domusmind`. Do not silently drop or invent labels.
-- Do not apply a `status:` label during creation. A new issue without one is in Backlog. Classification and lifecycle transition are separate acts.
-- Other labels may be applied only when requested and present in the repository.
+- Create several items in one invocation.
+- Transition the new item; that is a separate role.
+- Invent a value for a required field the caller did not supply.
 
-## How to create
+## Adapting this template
 
-1. Search likely duplicates using the issue title and distinctive terms, for example `gh issue list -R juangcarmona/domusmind --state all --search "<distinctive terms>"`. Inspect likely matches and report them. Do not create a duplicate silently.
-2. Validate required content and requested labels. If a required field or requested label is absent/invalid, stop and state what needs correction.
-3. Show the full title, body, and exact label list for confirmation. Creation does not transition lifecycle state.
-4. After confirmation, create one issue with the approved content and labels, then return the number and URL.
+1. Pick the reference below matching this project's tooling.
+2. Replace every `<placeholder>` with a value **resolved from live tooling in the adoption session**: an identifier transcribed from a diagram or from memory breaks the loop a month later.
+3. Keep the contract above intact. A command calling `create-work-item` must get the same shape back on every stack.
+4. No reference matches → author against the contract and **record that it was authored, not adapted**. A fabricated reference is worse than a missing one, because everything downstream trusts it.
 
-```bash
-gh issue create -R juangcarmona/domusmind --title "<title>" --body-file <body-file> --label "<type-label>"
-```
+## References
 
-Omit `--label` when no type or other label is appropriate. Never chain creation with `transition-work-item`.
+- [`references/jira.md`](references/jira.md): Jira
+- [`references/github-issues.md`](references/github-issues.md): GitHub Issues
+
+## Fast Forward authorization
+
+When called inside an enabled Fast Forward run, the invocation authorizes this role's routine lifecycle write without per-write confirmation. Re-read the configured state immediately before writing and verify the result afterward. Stop at a human-only decision, required human approval, protected forge rule, deployment, or repository red line.
