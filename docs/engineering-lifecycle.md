@@ -1,22 +1,6 @@
 # Engineering lifecycle
 
-**Project**: DomusMind · **Adopted**: 2026-09-08 · **Last amended**: 2026-09-08
-
-## Fast feedback loop
-
-Use `/ff <work-item-id> [work-item-id ...]` to carry one or more existing work items through the lifecycle in sequence. It is an orchestration path over the same `refine`, `plan`, `implement`, `integrate` and `review` gates, not a shortcut around them. A single item can resume from its actual state; a batch advances to the next item only after the current item is merged and its post-merge result is checked.
-
-The loop keeps handoffs short and explicit:
-
-1. **Refine** the problem and acceptance criteria. If the item is not ready, show the missing dimensions and stop for input.
-2. **Plan** the solution, small implementation slices, tests and affected documentation. Show the proposed plan and wait for the developer's approval before implementation.
-3. **Implement** one verifiable slice at a time. Run focused checks after each slice, then the full applicable Definition of Done checks. Keep the plan aligned with the diff.
-4. **Review before merge**: inspect the final diff, acceptance criteria and check evidence. The agent may self-review, but the developer makes the human-review decision and explicitly approves merge. The post-merge `/review` capability is a separate retrospective and remains optional.
-5. **Integrate** only after that approval; verify merge status and post-merge CI before advancing to the next supplied item.
-
-The invocation authorizes local investigation and implementation work required by the item. It does not grant approval to change the plan, widen product scope, or merge. Existing confirmation requirements for tracker, pull request, push and merge writes still apply. Stop and surface a proposed adjustment if the product model, an accepted decision, or the approved plan does not cover what implementation requires. Never continue a batch past a failed check, an unresolved blocker, a missing approval, or an unsuccessful merge. Report the completed item, evidence, and the next item or next required decision at each stop.
-
-The individual commands remain available for work that should stop at a single stage. `/ff` is the short path when the developer wants the whole loop handled in one continuous workflow.
+**Project**: DomusMind · **Adopted**: 2026-09-08 · **Last amended**: 2026-10-19
 
 ## Definition of Ready
 
@@ -51,11 +35,11 @@ GitHub labels carry two independent facts:
 | Label family | Allowed values | Meaning |
 | --- | --- | --- |
 | Work type | `bug`, `enhancement`, `documentation` | What kind of work the issue describes |
-| Lifecycle | `status:refined`, `status:planned`, `status:in-progress`, `status:in-review`, `status:done` | Where the issue is in DomusMind's delivery lifecycle |
+| Lifecycle | `status:backlog`, `status:ready`, `status:proposed`, `status:in-progress`, `status:in-review`, `status:done` | Where the issue is in DomusMind's delivery lifecycle |
 
-An issue has at most one work-type label and at most one `status:` label. An issue with no `status:` label is in Backlog. Work type is optional until classification is clear; do not invent a type to satisfy a transition. These labels do not replace GitHub's independent open/closed state, and labels such as `duplicate`, `good first issue`, and `help wanted` remain separate metadata.
+An open issue has exactly one canonical `status:*` label. Work type is optional until classification is clear; do not invent a type to satisfy a transition. These labels do not replace GitHub's independent open/closed state, and labels such as `duplicate`, `good first issue`, and `help wanted` remain separate metadata. `blocked` and `owner-review` are optional overlays and never replace lifecycle status.
 
-When creating an issue, validate the required Ready dimensions below (mark inapplicable dimensions `N/A` with a reason), check for likely duplicates using the title and distinctive terms, and request no more than one existing work-type label. Creation does not advance lifecycle state: omit `status:` so the new issue starts in Backlog, then use the transition workflow as a separate act if a lifecycle transition is valid.
+When creating an issue, validate the required Ready dimensions below (mark inapplicable dimensions `N/A` with a reason), check for likely duplicates using the title and distinctive terms, set `status:backlog`, and request no more than one existing work-type label.
 
 ## Definition of Done
 
@@ -103,19 +87,19 @@ The commands that produce the deterministic lane's evidence. `verify-like-ci` de
 
 ## Lifecycle stages and states
 
-How the loop's stages map onto this project's work-item states. The lifecycle state is carried as a `status:<state>` label on each GitHub Issue.
+How the loop's stages map onto this project's work-item states. GitHub issue state remains separate; one canonical `status:*` label records lifecycle status.
 
 | Stage | State on entry | State on exit | Transition | Fired by |
 | --- | --- | --- | --- | --- |
-| `/refine` | Backlog (no `status:` label) | Refined | add `status:refined` | agent, human-confirmed |
-| `/plan` | Refined | Planned | swap `status:refined` → `status:planned` | `/plan` |
-| `/implement` | Planned | In Review | swap `status:planned` → `status:in-progress` on start; `status:in-progress` → `status:in-review` on PR open | `/implement` |
-| `/integrate` | In Review | Done | swap `status:in-review` → `status:done`; close issue | `/integrate` |
-| `/review` | Done | — | — | — |
+| `refine` | `status:backlog` | `status:ready` | Set Ready after the gate passes | `refine` |
+| `propose` (`/plan` alias) | `status:ready` | `status:proposed` | Set after the plan passes review | `propose` |
+| `implement` | `status:proposed` | `status:in-progress` → `status:in-review` | Set in-progress on entry; set in-review when Done passes and the PR is ready | `implement` |
+| `integrate` | `status:in-review` | `status:done`, issue closed | Merge the linked PR; verify issue closure, then set done | `integrate` |
+| `review` | `status:done` | `status:done` | Create the per-item retrospective; no lifecycle transition | `review` |
 
-The transition skill reads this table before each write. It may apply only one listed transition per invocation, after confirming the exact source and target labels with the user. It rereads the issue immediately before writing and stops if GitHub open/closed state, lifecycle label, or type labels changed since confirmation. After the one-operation label swap it rereads and verifies that the requested lifecycle label is the only `status:` label and that type labels were preserved.
+The transition skill reads this table before each write. It rereads the issue immediately before writing and stops if GitHub open/closed state or lifecycle labels changed. After the one-operation label swap it rereads and verifies exactly one `status:*` label remains and that unrelated labels were preserved. An enabled `/ff` invocation authorizes routine transitions without per-write confirmation; other human-only transitions still stop.
 
-Pull requests are not work items for this lifecycle transition workflow. The issue API exposes an issue-shaped record for a pull request; the skill must inspect the `pull_request` field and refuse it. Reopen, block, and deprioritise remain human-only decisions and are never performed by the transition skill. If a work item is closed, that GitHub state is reported independently from its lifecycle label; `/integrate` keeps the existing behavior of setting `status:done` and closing the issue together.
+Pull requests are not work items for this lifecycle transition workflow. The issue API exposes an issue-shaped record for a pull request; the skill must inspect the `pull_request` field and refuse it. Reopen, block, and deprioritise remain human-only decisions and are never performed by the transition skill. If a work item is closed, that GitHub state is reported independently from its lifecycle label.
 
 ### Transitions no command ever fires
 
@@ -131,10 +115,31 @@ Fields a transition's screen requires. GitHub Issues has no transition screens; 
 
 | Field | Identifier | Required by | Notes |
 | --- | --- | --- | --- |
-| Lifecycle state | `status:<state>` label | every transition | One `status:` label per issue; remove the old label when adding the new one |
+| Lifecycle state | one canonical `status:*` label | every transition | Exactly one on each open issue; replace the old status in the same update |
 | Work type | one of `bug`, `enhancement`, `documentation` | issue creation / classification | Optional; at most one, and independent of lifecycle |
 | Acceptance criteria | `## Acceptance Criteria` section in issue body | `/refine` (Ready gate) | Markdown heading in the issue body |
 | Work item link | `Closes #<number>` in PR body | `/implement` | Placed in the PR body, not the title |
+
+## Label conventions
+
+Use the shared lifecycle labels `status:backlog`, `status:ready`, `status:proposed`, `status:in-progress`, `status:in-review`, and `status:done`. Keep type and other metadata labels independent. `blocked` and `owner-review` are optional overlays. New issues start at `status:backlog`.
+
+Post-merge retrospectives use one file per item at `docs/reviews/issue-<number>.md`. The baseline date is 2026-10-19; earlier merges are historical and excluded from review debt. The existing PR history remains available. No separate process ledger is used.
+
+## Fast Forward
+
+Invoke `/agentic-sdlc:ff <work-item-id>` in Claude Code or `ff <work-item-id>` in a portable skill host. It composes the existing lifecycle stages, creates durable run evidence, and uses a different reviewer model. An enabled invocation authorizes routine lifecycle-owned writes; it stops at every owner-only decision, required human approval, deployment, failed check, or repository red line.
+
+| Setting | This project requires |
+| --- | --- |
+| Enabled | Yes when the active harness can attest a distinct reviewer model |
+| Executor and reviewer | Resolve at run time; reviewer must be a different model |
+| Maximum correction rounds | 3 per gate |
+| Substitutable judgement items | None by default; owner remains responsible for every Definition of Done judgement item |
+| Durable evidence | `docs/delivery/ff/<work-item-id>/<run-id>/run.json` and `summary.md` |
+| Human-only or protected gates | Product-scope and accepted-decision changes, owner-only judgements, required forge approvals, deployment, and repository red lines |
+
+`/ff` may prepare and update a PR, push its branch, and merge only when every configured gate passes and the forge permits it. The routine PR review can be performed by the configured independent reviewer; owner-only decisions and deployment still stop automation.
 
 ## Work in progress
 
@@ -150,40 +155,24 @@ Who decides the judgement items above. A role is a person, a team, or a named re
 
 ## Installed roles
 
-Role skills maintained in `.claude/skills/`, the single copy that both Claude Code and GitHub Copilot read. Some were installed by `adopt`; `create-work-item` was authored for this repository. Re-running adopt reconciles against this list rather than overwriting blind.
+The `.agents/skills/` files are the project-owned sources; `.claude/skills/` contains generated copies. These defaults were reset from Agentic SDLC 0.2.2 on 2026-10-19.
 
-| Role skill | Origin | Added | Location |
+| Role skill | Adapted from | Installed | Projected to |
 | --- | --- | --- | --- |
-| `read-work-item` | `references/github-issues.md` | 2026-09-08 | `.claude/skills/` |
-| `transition-work-item` | `references/github-issues.md` | 2026-09-08 | `.claude/skills/` |
-| `create-work-item` | Authored for GitHub Issues | 2026-10-16 | `.claude/skills/` |
-| `open-pull-request` | `references/github.md` | 2026-09-08 | `.claude/skills/` |
-| `inspect-ci-result` | `references/github.md` | 2026-09-08 | `.claude/skills/` |
-| `merge-pull-request` | `references/github.md` | 2026-09-08 | `.claude/skills/` |
-| `wip-query` | `references/github-projects.md` | 2026-09-08 | `.claude/skills/` |
-
-### Roles not installed and why
-
-| Role | Reason |
-| --- | --- |
-| `commit-to-sprint` | No sprints |
-| `create-branch` | Not required; implement creates branches directly |
-| `comment-work-item` | Solo developer; progress recorded in PR, not issue comments |
-| `update-work-item` | Items updated manually |
-| `read-work-item-attachments` | No attachments used |
-| `read-work-item-links` | No linking used |
-| `read-kb-page` | No specification tool; docs are hand-authored Markdown in-repo |
-| `search-kb` | No specification tool |
-| `sync-doc-to-kb` | No specification tool |
-| `discover-related-docs` | No specification tool |
-| `classify-doc-drift` | No specification tool |
-| `sync-specs` | No specification tool |
-| `propose-change` | No specification tool |
-| `apply-change` | No specification tool |
-| `archive-change` | No specification tool |
-| `inspect-pull-request` | Covered by `open-pull-request` and `merge-pull-request` |
-| `update-pull-request` | Covered by `open-pull-request` and `merge-pull-request` |
-| `checkout-branch` | Not required; covered by direct git commands |
+| `read-work-item` | Agentic SDLC GitHub Issues template | 2026-10-19 | Codex, Claude Code |
+| `read-work-item-links` | Agentic SDLC GitHub Issues template | 2026-10-19 | Codex, Claude Code |
+| `create-work-item` | Agentic SDLC GitHub Issues template | 2026-10-19 | Codex, Claude Code |
+| `update-work-item` | Agentic SDLC GitHub Issues template | 2026-10-19 | Codex, Claude Code |
+| `transition-work-item` | Agentic SDLC GitHub Issues template | 2026-10-19 | Codex, Claude Code |
+| `comment-work-item` | Agentic SDLC GitHub Issues template | 2026-10-19 | Codex, Claude Code |
+| `create-branch` | Agentic SDLC branch template | 2026-10-19 | Codex, Claude Code |
+| `checkout-branch` | Agentic SDLC branch template | 2026-10-19 | Codex, Claude Code |
+| `open-pull-request` | Agentic SDLC GitHub template | 2026-10-19 | Codex, Claude Code |
+| `inspect-pull-request` | Agentic SDLC GitHub template | 2026-10-19 | Codex, Claude Code |
+| `update-pull-request` | Agentic SDLC GitHub template | 2026-10-19 | Codex, Claude Code |
+| `merge-pull-request` | Agentic SDLC GitHub template | 2026-10-19 | Codex, Claude Code |
+| `inspect-ci-result` | Agentic SDLC GitHub Actions template | 2026-10-19 | Codex, Claude Code |
+| `wip-query` | Agentic SDLC GitHub Projects template | 2026-10-19 | Codex, Claude Code |
 
 ## Amendment log
 
@@ -194,3 +183,4 @@ The `review` capability proposes changes to this file from delivery evidence. Ev
 | 2026-09-08 | All | Initial adoption | First run of the `adopt` capability |
 | 2026-10-13 | Fast feedback loop | Added `/ff` orchestration with plan, review and merge checkpoints and sequential batch handling | Reduce stage handoffs while preserving lifecycle gates |
 | 2026-10-16 | GitHub issue classification and transitions | Defined type labels separately from lifecycle labels; added issue creation guidance and guarded, verified transitions | Make issue classification consistent and lifecycle changes auditable |
+| 2026-10-19 | Lifecycle defaults | Adopted canonical `status:*` labels, per-item retrospectives, and the shared Fast Forward contract | Align issue handling and bounded PR integration across repositories while retaining Owner-only decisions |

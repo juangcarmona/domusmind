@@ -1,7 +1,9 @@
 ---
 name: inspect-ci-result
-description: "Return the GitHub Actions CI result for a branch or pull request: outcome, failing job, and log excerpts. Use when checking whether CI passed or diagnosing why it did not."
+description: "Return the continuous integration result for a branch or pull request: outcome, failing job, and log excerpts. Use when checking whether CI passed or diagnosing why it did not."
 ---
+
+> **Template.** The `adopt` capability adapts this into a role capability the project owns. Adapt *how* the role is performed; never change *what* it guarantees to its callers.
 
 One responsibility: report what CI actually did for a branch or pull request.
 
@@ -9,8 +11,8 @@ One responsibility: report what CI actually did for a branch or pull request.
 
 | | |
 | --- | --- |
-| **Input** | A branch name or a pull request number. |
-| **Output** | Per required check: its name, conclusion, and where it failed: the failing job and a log excerpt. Plus one overall verdict. |
+| **Input** | A branch name or a pull request identifier. |
+| **Output** | Per required check: its name, conclusion, and: where it failed: the failing job and a log excerpt. Plus one overall verdict. |
 | **Writes** | Nothing. Read-only. |
 | **Confirmation** | Not required, no external write. |
 
@@ -23,48 +25,17 @@ One responsibility: report what CI actually did for a branch or pull request.
 **Never**
 
 - Treat a queued or in-progress run as a passing one.
-- Report an empty result set as success: no checks having run is not the same as nothing failing.
+- Report an empty result set as success, no checks having run is not the same as nothing failing.
 - Re-run or cancel anything.
 
-## How to perform
+## Adapting this template
 
-### Check rollup for a PR
+1. Pick the reference below matching this project's tooling.
+2. Replace every `<placeholder>` with a value **resolved from live tooling in the adoption session**: an identifier transcribed from a diagram or from memory breaks the loop a month later.
+3. Keep the contract above intact. A command calling `inspect-ci-result` must get the same shape back on every stack.
+4. No reference matches → author against the contract and **record that it was authored, not adapted**. A fabricated reference is worse than a missing one, because everything downstream trusts it.
 
-```bash
-gh pr view <number> --json statusCheckRollup
-```
+## References
 
-### List recent runs for a branch
-
-```bash
-gh run list --branch <branch> --limit 5
-```
-
-### View failed run logs
-
-```bash
-gh run view <run-id> --log-failed
-```
-
-### What gates the merge
-
-```bash
-gh api repos/juangcarmona/domusmind/branches/main/protection \
-  --jq '.required_status_checks.contexts'
-```
-
-A `403` means protection is not readable: on some plans it is not configured at all. Report that, rather than assuming either answer.
-
-## The empty-rollup trap
-
-A head commit with **no check runs** returns an empty rollup, which reads as "nothing failing" while proving nothing. This happens after a push whose commit message carries a CI-skip marker. An empty rollup is *no result*, never a pass.
-
-## Required checks for this project
-
-| Check | Workflow | Runs on |
-| --- | --- | --- |
-| Backend build + test | `backend-ci` | PRs touching `src/backend/**` or `tests/backend/**` |
-| Web app build | `webapp-ci` | PRs touching `src/web/app/**` |
-| Public site build | `public-site-ci` | PRs touching `src/web/public/**` |
-
-The repository is `juangcarmona/domusmind`.
+- [`references/azure-devops.md`](references/azure-devops.md): Azure Pipelines
+- [`references/github.md`](references/github.md): GitHub Actions
