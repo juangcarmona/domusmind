@@ -23,7 +23,7 @@ Create one reviewable assessment document under `docs/delivery/assessments/` wit
 3. A trust-boundary and responsibility map distinguishing user authentication, OAuth grant/consent, MCP resource-server token validation, household/member domain authorization, and application command/query authorization.
 4. Options for integrating an OAuth 2.1/OIDC authorization server with current identity, including a standards-based external provider and any bounded local development alternative. Do not implement an authorization server or decide the provider.
 5. Explicit analysis of authorization-code flow with PKCE, MCP protected-resource and authorization-server metadata discovery, client registration approaches, audience/resource binding, read/write scopes, token expiry/refresh/revocation, current membership checks, no token passthrough, confused-deputy defenses, audit, and narrow optional PATs for trusted local development.
-6. A client compatibility matrix for ChatGPT custom MCP integrations, Claude.ai, Claude Code, generic local STDIO clients, and private self-hosted remote clients. Record tested/documented product surfaces and date, distinguish normative protocol behavior from client-specific support, and avoid claiming unsupported paths.
+6. A client compatibility matrix with separate profiles for ChatGPT custom MCP integrations and OpenAI API/Responses remote MCP, plus Claude.ai, Claude Code, generic local STDIO clients, and private self-hosted remote clients. For each profile, record authentication, endpoint reachability, approval behavior, documented product surface, and access date. Distinguish normative protocol behavior from client-specific support and avoid claiming unsupported paths.
 7. A recommendation matrix with benefits, costs, risks, dependencies, migration risks, and the owner decision needed. Recommendations remain proposals; do not author an Accepted ADR or modify accepted architecture docs.
 
 Use current official MCP, OAuth/OIDC, .NET SDK, OpenAI, and Anthropic documentation. Where client/product requirements are volatile, record the access date and source URL. Explain unresolved choices rather than picking defaults silently. Initial live lookup on 2026-10-19 confirms that the unversioned MCP specification resolves to revision `2026-07-28` and the OAuth 2.1 Internet-Draft is revision `-16` (last updated 2026-09-02); verify both again when producing the assessment.
@@ -43,14 +43,16 @@ Use current official MCP, OAuth/OIDC, .NET SDK, OpenAI, and Anthropic documentat
 2. Trace self-hosted Compose, reverse-proxy forwarded-header trust/host allowlisting, local AppHost, API composition, and current single-container exposure constraints.
 3. Check the current MCP specification and official .NET SDK for remote transport, OAuth resource-server duties, metadata discovery, client registration, and security requirements; distinguish normative statements from guidance.
 4. Check current OAuth 2.1/OIDC and RFC 9728/RFC 8414/PKCE requirements, then compare provider/authorization-server options without choosing one.
-5. Check current OpenAI and Anthropic client documentation and build the client/profile compatibility matrix; explicitly record plan, reachability, and local-vs-remote constraints.
+5. Check current OpenAI and Anthropic client documentation and build the client/profile compatibility matrix; treat ChatGPT custom integrations and OpenAI API/Responses MCP as separate profiles, and explicitly record plan, reachability, approval, and local-vs-remote constraints.
 6. Synthesize trust boundaries, options, gaps, migration/security risks, recommendations, required owner decisions, and implications for children #227–#234 and Product Change `CHG-MCP-HOUSEHOLD-INTEGRATION-001`.
-7. Validate links, citations, Markdown, product/architecture integrity as applicable, and confirm the diff contains documentation only.
+7. Validate links, citations, Markdown, product/architecture integrity, and confirm the diff contains documentation only.
 
 ## Test and verification impact
 
-- Documentation-only change: no application tests are added. Confirm the configured backend, web, and documentation CI workflows run on the PR and pass; report code-test suites as not applicable to changed behavior, not as unrun local passes.
-- Run the repository’s applicable Markdown and ProductShape/citation/architecture validation commands as derived from current CI and documented tooling.
+- Documentation-only change: no application tests are added. This PR is intentionally stacked on `feat/224-mcp-household-assistants`; current GitHub Actions PR workflows target `main`, so the stacked PR may have no CI checks. Do not report absent checks as passing. Run the applicable checks locally and preserve command, exit code, and concise output in the FF evidence record. Before claiming GitHub validation, inspect the live PR checks and branch rules again.
+- Run `npx -y markdownlint-cli2@0.23.3 docs/delivery/assessments/issue-226-mcp-architecture-assessment.md` explicitly because the existing docs workflow does not lint this delivery path.
+- Run `npx -y @prodshape/cli@0.22.0 validate`, `npx -y @prodshape/cli@0.22.0 citations verify --provider openspec`, and `npx -y @prodshape/cli@0.22.0 citations verify docs/architecture --format json`, as required by repository guidance. Record if any command proves inapplicable or unavailable; do not silently omit it.
+- Backend, web, and application test suites are not applicable because this slice changes no application behavior. Do not claim them as executed or passing.
 - Review every statement against a repository path or an authoritative linked source. Check links and the final diff for credentials, private tokens, and unsupported claims.
 - Compare the branch with its actual base before verification; rerun all applicable checks after any correction.
 
@@ -59,7 +61,7 @@ Use current official MCP, OAuth/OIDC, .NET SDK, OpenAI, and Anthropic documentat
 - Issue #226 acceptance criteria are demonstrated by the assessment and evidence links.
 - No application behavior or unrelated initiative is changed.
 - Documentation findings distinguish verified code behavior, canonical intent, external normative requirements, client-specific behavior, recommendations, and owner decisions.
-- Applicable repository documentation/product integrity checks and the PR CI checks pass; no unavailable check is reported as passing.
+- Explicit Markdown, ProductShape, and citation checks pass. Report the actual PR check state; if workflows do not run on this stacked base, say so and retain local check evidence instead of implying CI passed.
 - Security/privacy risks, limitations, and remaining decisions are explicit.
 - The named developer/owner reviews the resulting assessment and decides whether to accept, reject, or defer its recommendations. This judgement is not substitutable in the current lifecycle configuration.
 

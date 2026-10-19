@@ -28,17 +28,40 @@
       "endedAt": "2026-10-19T23:12:54Z",
       "inputCommit": "09c17acdd9d6ecb20daf7f4cc14648015b86a1d8",
       "outputCommit": "9b855c1388406b7b6b87304506600fd5881d48ed",
-      "result": "awaiting-independent-review",
+      "result": "correction-required",
       "evidence": [
         "Plan artifact: docs/delivery/plans/issue-226-mcp-architecture-assessment.md",
         "Draft stacked PR #267 targets feat/224-mcp-household-assistants; umbrella PR #225 remains the main-target draft.",
         "Markdownlint checked one plan file with zero issues; JSON and git diff checks passed.",
-        "Plan awaits an isolated review using gpt-6.1-sol before issue promotion or assessment implementation."
+        "Independent gpt-6.1-sol review requested three bounded corrections: define an executable local verification path for a stacked PR with no CI checks; explicitly lint the assessment and name ProductShape/citation checks; include OpenAI API/Responses MCP separately from ChatGPT custom integrations."
       ]
     }
   ],
-  "reviews": [],
-  "corrections": [],
+  "reviews": [
+    {
+      "stage": "propose",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "9b855c1388406b7b6b87304506600fd5881d48ed",
+      "decision": "request-changes",
+      "findings": [
+        "Stacked PR #267 has no CI checks because workflows target main; plan must define executable local checks and retain evidence.",
+        "Assessment output path is not covered by default Markdown lint; add explicit lint and name all repository-mandated ProductShape/citation commands.",
+        "Issue #226 requires OpenAI API MCP as a separate profile from ChatGPT custom integrations, with authentication, reachability, and approval constraints."
+      ],
+      "readOnly": true
+    }
+  ],
+  "corrections": [
+    {
+      "round": 1,
+      "gate": "propose",
+      "changes": [
+        "Added explicit local lint, ProductShape validation, OpenSpec citation verification, and architecture citation verification commands; clarified absent stacked-PR CI must not be reported as passing.",
+        "Added separate OpenAI API/Responses MCP client profile and required authentication, reachability, and approval dimensions."
+      ],
+      "validation": "git diff --check and markdownlint on the plan passed."
+    }
+  ],
   "stopReason": null,
   "pullRequest": {
     "number": 267,
