@@ -21,12 +21,32 @@
         "Definition of Ready dimensions: title, description, stakeholders, dependencies, criteria, scope, product rules, affected behavior, quality expectations, existing decisions, risks are satisfied; priority is N/A because formal prioritization is disabled; test impact belongs to Plan.",
         "Review debt reported: issue #205 closed on 2026-10-19; no docs/reviews/issue-205.md found. The lifecycle baseline date makes its debt classification uncertain; non-blocking."
       ]
+    },
+    {
+      "name": "propose",
+      "startedAt": "2026-10-19T23:09:44Z",
+      "endedAt": "2026-10-19T23:12:54Z",
+      "inputCommit": "09c17acdd9d6ecb20daf7f4cc14648015b86a1d8",
+      "outputCommit": "9b855c1388406b7b6b87304506600fd5881d48ed",
+      "result": "awaiting-independent-review",
+      "evidence": [
+        "Plan artifact: docs/delivery/plans/issue-226-mcp-architecture-assessment.md",
+        "Draft stacked PR #267 targets feat/224-mcp-household-assistants; umbrella PR #225 remains the main-target draft.",
+        "Markdownlint checked one plan file with zero issues; JSON and git diff checks passed.",
+        "Plan awaits an isolated review using gpt-6.1-sol before issue promotion or assessment implementation."
+      ]
     }
   ],
   "reviews": [],
   "corrections": [],
   "stopReason": null,
-  "pullRequest": null,
+  "pullRequest": {
+    "number": 267,
+    "url": "https://github.com/juangcarmona/domusmind/pull/267",
+    "draft": true,
+    "base": "feat/224-mcp-household-assistants",
+    "head": "feat/226-assess-mcp-hosting-identity-authorization-clients"
+  },
   "links": [
     "https://github.com/juangcarmona/domusmind/issues/224",
     "https://github.com/juangcarmona/domusmind/issues/226",
