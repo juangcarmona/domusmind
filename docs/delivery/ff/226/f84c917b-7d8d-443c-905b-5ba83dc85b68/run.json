@@ -33,7 +33,7 @@
         "Plan artifact: docs/delivery/plans/issue-226-mcp-architecture-assessment.md",
         "Draft stacked PR #267 targets feat/224-mcp-household-assistants; umbrella PR #225 remains the main-target draft.",
         "Markdownlint checked one plan file with zero issues; JSON and git diff checks passed.",
-        "Independent gpt-6.1-sol review requested three bounded corrections: define an executable local verification path for a stacked PR with no CI checks; explicitly lint the assessment and name ProductShape/citation checks; include OpenAI API/Responses MCP separately from ChatGPT custom integrations."
+        "Independent gpt-6.1-sol review requested three bounded corrections: define an executable local verification path for a stacked PR with no CI checks; explicitly lint the assessment and name ProductShape/citation checks; include OpenAI API/Responses MCP separately from ChatGPT custom integrations. Re-review verified those corrections but found the bare OpenSpec citation command fails without OpenSpec CLI on PATH; added a reproducible npm exec prerequisite and confirmed it exits 0."
       ]
     }
   ],
@@ -49,6 +49,17 @@
         "Issue #226 requires OpenAI API MCP as a separate profile from ChatGPT custom integrations, with authentication, reachability, and approval constraints."
       ],
       "readOnly": true
+    },
+    {
+      "stage": "propose-correction-1-review",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "fbf887bf460660834bb806b4437048dc4626ec77",
+      "decision": "request-changes",
+      "findings": [
+        "The bare OpenSpec citations command exits 1 with PRODUCT069 because OpenSpec CLI is not on PATH; provide and successfully run an explicit installation/PATH setup consistent with product CI.",
+        "Confirmed assessment lint and named checks, and separate OpenAI API/Responses client profile are otherwise corrected."
+      ],
+      "readOnly": true
     }
   ],
   "corrections": [
@@ -60,6 +71,14 @@
         "Added separate OpenAI API/Responses MCP client profile and required authentication, reachability, and approval dimensions."
       ],
       "validation": "git diff --check and markdownlint on the plan passed."
+    },
+    {
+      "round": 2,
+      "gate": "propose",
+      "changes": [
+        "Replaced the failing bare OpenSpec citation command with a reproducible npm exec supplying @fission-ai/openspec@1 and @prodshape/cli@0.22.0, matching CI's OpenSpec major version; requires successful exit and preserves no repository dependency changes."
+      ],
+      "validation": "The exact npm exec command completed with exit code 0; ProductShape validation and architecture citations also completed with exit code 0."
     }
   ],
   "stopReason": null,
