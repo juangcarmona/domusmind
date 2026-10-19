@@ -79,7 +79,7 @@ DomusMind already has the right household authorization and review-first assista
 - Which message amendments are allowed, who can perform them, and what trace is visible to other household members?
 - Which notification channels are required for the first delivery slice, and what are the member-level mute and preference rules?
 - Is the assistant available in every group by default, only when added, or through a dedicated assistant participant that a member can start explicitly?
-- Are drafts session-local and discarded on sign-out/app restart, as in CHEW ME!, or should DomusMind synchronize them across sessions or devices?
+- Are drafts session-local and discarded on sign-out/app restart, or should DomusMind synchronize them across sessions or devices?
 - Does each conversation have one shared pinned message, and may any participant pin or unpin it?
 - Should family chat show typing indicators and online presence to all participants, and what privacy controls apply?
 - What is the exact image policy: accepted image types, thumbnail generation, album grouping window, and behavior for older images without miniatures?
@@ -105,4 +105,4 @@ A human can inspect the proposed model and confirm that:
 
 ## Out of Scope
 
-This Product Change does not approve, apply or merge itself; create implementation branches; select a framework, storage design or deployment shape; or start an FF loop. It does not authorize autonomous background agents, direct household mutations outside the approved product boundary, end-to-end encryption, a public social network, non-family participants or external messaging integrations. CHEW ME!'s DS3D/client out-of-hours auto-reply is deliberately not carried into family-only Chats.
+This Product Change does not approve, apply or merge itself; create implementation branches; select a framework, storage design or deployment shape; or start an FF loop. It does not authorize autonomous background agents, direct household mutations outside the approved product boundary, end-to-end encryption, a public social network, non-family participants or external messaging integrations. Client-specific out-of-hours auto-replies and non-family workflows are deliberately outside family-only Chats.
