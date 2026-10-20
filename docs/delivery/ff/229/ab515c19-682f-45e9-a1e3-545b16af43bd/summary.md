@@ -1,7 +1,7 @@
 # Fast Forward run: issue #229
 
 - Run ID: `ab515c19-682f-45e9-a1e3-545b16af43bd`
-- Status: running; refinement and proposal passed; implementation is complete pending independent Done audit and owner judgement
+- Status: running; refinement and proposal passed; implementation correction round 1 is complete pending independent Done audit and owner judgement
 - Branch: `feat/229-oauth-oidc-mcp-authorization`
 - Starting commit: `3e3501e7127618d2ecd48e95608917e03c5a421b`
 - Executor: GPT-5 (active Codex model)
@@ -24,15 +24,15 @@ Independent proposal review round 2 approved exact corrected plan head `000ae397
 
 ## Implementation
 
-Commits `524ee88`, `986f27e`, and `2789e92` add the in-process OpenIddict 7.7.2 server/validation boundary, EF Core authorization/token migration, proposed ADR-0012, protected-resource and OIDC discovery endpoints, exact resource registration, Authorization Code + PKCE configuration, household-bound authorization claims, an explicit antiforgery-protected consent form, complete authorization-code and refresh-token endpoints, consent/token revocation, current household checks, exact audience enforcement, and MCP bearer enforcement. The existing local API JWT remains separate; no production MCP tools or writes are enabled.
+Commits `524ee88`, `986f27e`, `2789e92`, `03ac001`, and `f6fb11d` add the in-process OpenIddict 7.7.2 server/validation boundary, EF Core authorization/token migration, proposed ADR-0012, protected-resource and OIDC discovery endpoints, exact resource registration, Authorization Code + PKCE configuration, household-bound authorization claims, an explicit antiforgery-protected consent form, complete authorization-code and refresh-token endpoints, grant-specific consent/token revocation, current household checks, exact audience enforcement, structured security audit events, MCP rate limiting, and MCP bearer enforcement. The existing local API JWT remains separate; no production MCP tools or writes are enabled.
 
 Verification evidence:
 
 - `dotnet restore DomusMind.slnx`: passed with inherited Kiota and MessagePack advisories.
 - `dotnet build DomusMind.slnx --no-restore --configuration Release`: passed, 0 errors.
-- `dotnet test DomusMind.slnx --no-build --configuration Release`: passed, 875 passed and 3 pre-existing PostgreSQL integration tests skipped.
-- Focused OAuth contract suite: 8 passed, including end-to-end login, explicit consent, PKCE exchange, refresh, MCP authorization, and revocation.
+- `dotnet test DomusMind.slnx --no-build --configuration Release`: passed, 878 passed and 3 pre-existing PostgreSQL integration tests skipped.
+- Focused OAuth contract suite: 14 passed, including end-to-end login, explicit consent, PKCE exchange, refresh rotation/reuse, real Streamable HTTP MCP transport, resource/audience, expiry, insufficient scope, current account/membership denial, replay, rate limiting, and revocation.
 - Markdown lint for ADRs and the #229 plan: passed.
 - Product citation verification: 0 errors; 59 pre-existing low-confidence draft warnings.
 
-The independent Done audit and owner-only Done judgement remain before the branch can be merged into the Epic branch.
+The independent Done audit and owner-only Done judgement remain before the branch can be merged into the Epic branch. GitHub has no workflow check runs configured for this child head; local final-head evidence is recorded above.
