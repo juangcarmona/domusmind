@@ -111,16 +111,14 @@ public sealed class McpReadOnlyProofTests
     }
 
     [Fact]
-    public async Task Official_client_reads_bounded_synthetic_timeline_and_minimal_member_directory()
+    public async Task Official_client_reads_bounded_production_timeline_and_minimal_member_directory()
     {
-        await using var host = await ReadOnlyProofHost.StartAsync();
+        await using var host = await ReadOnlyProofHost.StartAsync(registerProductionTools: true);
         await using var client = await host.CreateClientAsync();
 
         var tools = await client.ListToolsAsync();
         var agendaTool = Assert.Single(tools, tool => tool.Name == "agenda_get");
         var membersTool = Assert.Single(tools, tool => tool.Name == "household_members_list");
-        Assert.Contains("synthetic household timeline", agendaTool.Description!, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("members of the synthetic household", membersTool.Description!, StringComparison.OrdinalIgnoreCase);
         AssertSchemaProperties(agendaTool.ProtocolTool.InputSchema, "from", "to");
         AssertSchemaProperties(membersTool.ProtocolTool.InputSchema);
         var agendaSchema = agendaTool.ProtocolTool.OutputSchema!.Value;
@@ -184,9 +182,17 @@ public sealed class McpReadOnlyProofTests
         AssertJsonProperties(agenda.GetProperty("events")[0].GetProperty("participants")[0], "displayName");
         Assert.Equal("Family A note", agenda.GetProperty("notes")[0].GetProperty("text").GetString());
         AssertJsonProperties(agenda.GetProperty("notes")[0], "text", "date", "createdAtUtc");
-        Assert.Equal("Household list", agenda.GetProperty("listItems")[0].GetProperty("listName").GetString());
-        Assert.Equal("2026-10-25", agenda.GetProperty("listItems")[0].GetProperty("dueDate").GetString());
-        AssertJsonProperties(agenda.GetProperty("listItems")[0], "listName", "itemName", "dueDate", "reminder", "checked", "importance");
+        var listItemNames = agenda.GetProperty("listItems").EnumerateArray()
+            .Select(item => item.GetProperty("itemName").GetString()).ToArray();
+        var scheduledItem = Assert.Single(agenda.GetProperty("listItems").EnumerateArray(),
+            item => item.GetProperty("itemName").GetString() == "Synthetic item");
+        Assert.Equal("Household list", scheduledItem.GetProperty("listName").GetString());
+        Assert.Equal("2026-10-25", scheduledItem.GetProperty("dueDate").GetString());
+        AssertJsonProperties(scheduledItem, "listName", "itemName", "dueDate", "reminder", "checked", "importance");
+        Assert.Contains("Reminder at window start", listItemNames);
+        Assert.Contains("Reminder at window end", listItemNames);
+        Assert.DoesNotContain("Reminder before window", listItemNames);
+        Assert.DoesNotContain("Reminder after window", listItemNames);
         Assert.DoesNotContain("Family B secret", agenda.GetRawText(), StringComparison.Ordinal);
         Assert.DoesNotContain("calendarEventId", agenda.GetRawText(), StringComparison.Ordinal);
         Assert.DoesNotContain("areaId", agenda.GetRawText(), StringComparison.Ordinal);
@@ -229,7 +235,7 @@ public sealed class McpReadOnlyProofTests
     [InlineData("2026-10-01", "2026-11-01")]
     public async Task Agenda_rejects_ambiguous_invalid_reversed_and_overlong_ranges_safely(string from, string to)
     {
-        await using var host = await ReadOnlyProofHost.StartAsync();
+        await using var host = await ReadOnlyProofHost.StartAsync(registerProductionTools: true);
         await using var client = await host.CreateClientAsync();
 
         var result = await client.CallToolAsync("agenda_get", new Dictionary<string, object?>
@@ -249,7 +255,7 @@ public sealed class McpReadOnlyProofTests
     [Fact]
     public async Task MCP_argument_binding_errors_for_missing_partial_null_and_wrong_type_inputs_are_safe()
     {
-        await using var host = await ReadOnlyProofHost.StartAsync();
+        await using var host = await ReadOnlyProofHost.StartAsync(registerProductionTools: true);
         await using var client = await host.CreateClientAsync();
         Dictionary<string, object?>[] invalidArguments =
         [
@@ -281,7 +287,7 @@ public sealed class McpReadOnlyProofTests
     [Fact]
     public async Task Agenda_propagates_cancellation_from_the_MCP_client_to_the_application_query()
     {
-        await using var host = await ReadOnlyProofHost.StartAsync();
+        await using var host = await ReadOnlyProofHost.StartAsync(registerProductionTools: true);
         await using var client = await host.CreateClientAsync();
         using var cancellation = new CancellationTokenSource();
         host.Authorization.BlockForCancellation = true;
@@ -301,7 +307,7 @@ public sealed class McpReadOnlyProofTests
     [Fact]
     public async Task Unexpected_handler_failure_returns_a_safe_structured_error()
     {
-        await using var host = await ReadOnlyProofHost.StartAsync();
+        await using var host = await ReadOnlyProofHost.StartAsync(registerProductionTools: true);
         await using var client = await host.CreateClientAsync();
         host.Authorization.ThrowUnexpectedFailure = true;
 
@@ -321,7 +327,7 @@ public sealed class McpReadOnlyProofTests
     [Fact]
     public async Task Direct_query_for_other_synthetic_household_is_denied_and_identity_never_comes_from_tool_input()
     {
-        await using var host = await ReadOnlyProofHost.StartAsync();
+        await using var host = await ReadOnlyProofHost.StartAsync(registerProductionTools: true);
         await using var client = await host.CreateClientAsync();
 
         var tools = await client.ListToolsAsync();
@@ -587,6 +593,14 @@ public sealed class McpReadOnlyProofTests
                 ListKind.Create("Shopping"), null, null, null, now);
             var item = list.AddItem(ListItemId.New(), ListItemName.Create("Synthetic item"), null, null, now);
             list.SetItemTemporal(item.Id, new DateOnly(2026, 10, 25), null, null, now);
+            AddReminderOnlyItem(list, "Reminder before window",
+                new DateTimeOffset(2026, 10, 20, 0, 0, 0, TimeSpan.Zero).AddTicks(-1), now);
+            AddReminderOnlyItem(list, "Reminder at window start",
+                new DateTimeOffset(2026, 10, 20, 0, 0, 0, TimeSpan.Zero), now);
+            AddReminderOnlyItem(list, "Reminder at window end",
+                new DateTimeOffset(2026, 10, 31, 23, 59, 59, TimeSpan.Zero).AddTicks(9_999_999), now);
+            AddReminderOnlyItem(list, "Reminder after window",
+                new DateTimeOffset(2026, 10, 31, 23, 59, 59, TimeSpan.Zero).AddTicks(10_000_000), now);
 
             database.Set<Domain.Family.Family>().AddRange(familyA, familyB);
             database.Set<Domain.Calendar.CalendarEvent>().AddRange(eventA, eventAEnd, eventAOutside, eventAAtMaxRange, eventB);
@@ -608,6 +622,12 @@ public sealed class McpReadOnlyProofTests
                 HexColor.From("#3B82F6"));
             calendarEvent.AddParticipant(participant);
             return calendarEvent;
+        }
+
+        private static void AddReminderOnlyItem(SharedList list, string name, DateTimeOffset reminder, DateTime now)
+        {
+            var item = list.AddItem(ListItemId.New(), ListItemName.Create(name), null, null, now);
+            list.SetItemTemporal(item.Id, null, reminder, null, now);
         }
 
         private sealed record Seed(Guid FamilyAId, Guid FamilyBId, Guid RequesterUserId);
