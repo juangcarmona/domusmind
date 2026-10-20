@@ -1,7 +1,7 @@
 # Fast Forward run: issue #230
 
 - Run ID: `9dc8d0df-31bc-4923-b826-dba85d57134e`
-- Status: running; refinement, proposal, and corrected implementation passed; final independent Done review is next
+- Status: running; refinement, proposal, and corrected implementation passed; final evidence-head CI is pending before the last independent Done review
 - Branch: `feat/230-release-readonly-mcp-workflows`
 - Starting commit: `629a9431685d82770cb5b7e268845f78029c7d0c`
 - Executor: GPT-5 (active Codex model)

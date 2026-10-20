@@ -105,6 +105,17 @@
         "The final evidence commit had not been validated by CI or CodeQL."
       ],
       "evidence": "Independent read-only Done review against the evidence-update head; no files or GitHub state changed."
+    },
+    {
+      "gate": "done",
+      "round": 3,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "b53e9a0d60510f87dd9c0a9e213ff7d984756e9c",
+      "verdict": "request-changes",
+      "findings": [
+        "The evidence-update head had not itself been validated by the required CI and CodeQL workflows; the linked runs covered the preceding source/test head only."
+      ],
+      "evidence": "Independent read-only Done review against b53e9a0; no files or GitHub state changed."
     }
   ],
   "corrections": [
@@ -145,6 +156,17 @@
       ],
       "resultingCommit": "3cda401",
       "validation": "Focused MCP/OAuth/composition suite: 26 passed. Full backend suite: 881 passed, 3 expected PostgreSQL skips. Backend, docs, web app, public site, and CodeQL workflows all succeeded against 3cda401."
+    },
+    {
+      "gate": "done",
+      "round": 3,
+      "addressesReviewRound": 3,
+      "changes": [
+        "Recorded the final-head validation finding and prepared the final FF evidence state without changing application behavior.",
+        "The required workflows will be dispatched against the resulting exact evidence head; no further branch changes are planned after that validation."
+      ],
+      "resultingCommit": "b53e9a0",
+      "validation": "Final-head CI and CodeQL validation is the remaining bounded check; the source/test implementation and prior local validation remain unchanged."
     }
   ],
   "stopReason": null,
