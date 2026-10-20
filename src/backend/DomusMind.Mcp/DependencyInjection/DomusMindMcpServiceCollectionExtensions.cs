@@ -26,4 +26,7 @@ public static class DomusMindMcpServiceCollectionExtensions
 
     public static IApplicationBuilder UseDomusMindMcpOriginValidation(this IApplicationBuilder app) =>
         app.UseMiddleware<McpOriginValidationMiddleware>();
+
+    public static IApplicationBuilder UseDomusMindMcpOAuthResourceAuthorization(this IApplicationBuilder app) =>
+        app.UseMiddleware<McpOAuthResourceAuthorizationMiddleware>();
 }

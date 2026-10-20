@@ -15,3 +15,4 @@ This directory holds DomusMind's Architecture Decision Records: one file per sig
 | 0009 | [Use ULID-based strongly typed identifiers](0009-use-ulid-based-strongly-typed-identifiers.md) | Superseded by ADR-0010 | 2026-10-01 |
 | 0010 | [Use GUID-backed strongly typed identifiers](0010-use-guid-backed-strongly-typed-identifiers.md) | Accepted | 2026-10-01 |
 | 0011 | [Expose MCP through an in-process SDK endpoint](0011-expose-mcp-through-an-in-process-sdk-endpoint.md) | Accepted | 2026-10-20 |
+| 0012 | [Protect MCP with in-process OpenIddict](0012-protect-mcp-with-in-process-openiddict.md) | Proposed | 2026-10-20 |

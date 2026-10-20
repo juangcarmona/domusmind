@@ -2,10 +2,16 @@ using System.Text;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Abstractions.System;
 using DomusMind.Infrastructure.Initialization;
+using DomusMind.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using OpenIddict.Abstractions;
+using OpenIddict.Server.AspNetCore;
+using OpenIddict.Validation.AspNetCore;
 
 namespace DomusMind.Infrastructure.Auth;
 
@@ -66,6 +72,20 @@ public static class AuthInfrastructureExtensions
                     IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
                     ClockSkew = TimeSpan.Zero,
                 };
+            })
+            .AddCookie(McpOAuthConstants.CookieScheme, options =>
+            {
+                options.Cookie.Name = "domusmind.mcp.oauth";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                options.SlidingExpiration = false;
+                options.LoginPath = "/oauth/login";
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.Redirect(context.RedirectUri);
+                    return Task.CompletedTask;
+                };
             });
 
         services.AddHttpContextAccessor();
@@ -79,6 +99,77 @@ public static class AuthInfrastructureExtensions
         services.AddScoped<IFamilyAccessGranter, FamilyAccessGranter>();
         services.AddScoped<IUserFamilyAccessReader, UserFamilyAccessReader>();
         services.AddScoped<ISystemInitializationState, SystemInitializationRepository>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddDomusMindMcpOAuth(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IHostEnvironment environment)
+    {
+        services
+            .AddOptions<McpOAuthOptions>()
+            .Bind(configuration.GetSection(McpOAuthOptions.SectionName))
+            .Validate(
+                options => !options.Enabled || Uri.TryCreate(options.Issuer, UriKind.Absolute, out _),
+                "Mcp:OAuth:Issuer must be an absolute URI when MCP OAuth is enabled.")
+            .Validate(
+                options => !options.Enabled || Uri.TryCreate(options.Resource, UriKind.Absolute, out _),
+                "Mcp:OAuth:Resource must be an absolute URI when MCP OAuth is enabled.")
+            .Validate(
+                options => !options.Enabled || options.RedirectUris.Length > 0,
+                "Mcp:OAuth:RedirectUris must contain at least one URI when MCP OAuth is enabled.")
+            .Validate(
+                options => options.AccessTokenLifetimeSeconds is >= 60 and <= 900,
+                "Mcp:OAuth:AccessTokenLifetimeSeconds must be between 60 and 900 seconds.")
+            .Validate(
+                options => options.RefreshTokenLifetimeDays is >= 1 and <= 30,
+                "Mcp:OAuth:RefreshTokenLifetimeDays must be between 1 and 30 days.")
+            .ValidateOnStart();
+
+        var options = configuration.GetSection(McpOAuthOptions.SectionName).Get<McpOAuthOptions>()
+            ?? new McpOAuthOptions();
+
+        services.AddOpenIddict()
+            .AddCore(builder =>
+            {
+                builder.UseEntityFrameworkCore()
+                    .UseDbContext<DomusMindDbContext>();
+            })
+            .AddServer(builder =>
+            {
+                builder.SetAuthorizationEndpointUris("/oauth/authorize")
+                    .SetTokenEndpointUris("/oauth/token")
+                    .SetRevocationEndpointUris("/oauth/revoke")
+                    .AllowAuthorizationCodeFlow()
+                    .AllowRefreshTokenFlow()
+                    .RequireProofKeyForCodeExchange()
+                    .RegisterScopes(OpenIddictConstants.Scopes.OpenId, OpenIddictConstants.Scopes.Profile, McpOAuthConstants.ReadScope)
+                    .RegisterResources(options.Resource)
+                    .SetAccessTokenLifetime(TimeSpan.FromSeconds(options.AccessTokenLifetimeSeconds))
+                    .SetRefreshTokenLifetime(TimeSpan.FromDays(options.RefreshTokenLifetimeDays))
+                    .SetAuthorizationCodeLifetime(TimeSpan.FromSeconds(options.AuthorizationCodeLifetimeSeconds))
+                    .UseAspNetCore()
+                    .EnableAuthorizationEndpointPassthrough()
+                    .EnableTokenEndpointPassthrough();
+
+                if (Uri.TryCreate(options.Issuer, UriKind.Absolute, out var issuer))
+                    builder.SetIssuer(issuer);
+
+                if (environment.IsDevelopment())
+                {
+                    builder.AddDevelopmentEncryptionCertificate()
+                        .AddDevelopmentSigningCertificate();
+                }
+            })
+            .AddValidation(builder =>
+            {
+                builder.SetIssuer(options.Issuer);
+                builder.UseSystemNetHttp();
+                builder.UseAspNetCore();
+                builder.EnableTokenEntryValidation();
+            });
 
         return services;
     }

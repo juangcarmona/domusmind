@@ -40,7 +40,7 @@ This child establishes the authentication and authorization boundary for remote 
 
 ### Decision: in-process OpenIddict authorization server
 
-For this child, select an authorization server hosted in-process in `DomusMind.Api`, using OpenIddict's ASP.NET Core server and validation integrations with its Entity Framework Core stores. OpenIddict is a .NET OAuth 2.0/OpenID Connect server framework with documented Authorization Code + PKCE, token storage/revocation, and ASP.NET Core integration. The existing `AuthUser` remains the authenticated resource owner; OpenIddict authorization, token and consent records are infrastructure records and do not become domain aggregates.
+For this child, select an authorization server hosted in-process in `DomusMind.Api`, using OpenIddict 7.7.2's ASP.NET Core server and validation integrations with its Entity Framework Core stores. OpenIddict is a .NET OAuth 2.0/OpenID Connect server framework with documented Authorization Code + PKCE, token storage/revocation, and ASP.NET Core integration. The existing `AuthUser` remains the authenticated resource owner; OpenIddict authorization, token and consent records are infrastructure records and do not become domain aggregates. The durable decision is recorded as [ADR-0012](../../adr/0012-protect-mcp-with-in-process-openiddict.md), currently Proposed pending production security and interoperability acceptance.
 
 This decision keeps the first remote integration self-hostable, avoids a new identity-provider account-linking dependency, allows the resource server to validate token entries and current household grants in the same application boundary, and preserves the accepted in-process MCP hosting direction. It does add authorization-server security and operational responsibility to DomusMind, so production enablement requires threat review, key rotation, operator backup/recovery, and a separate ADR before credentials are used.
 
@@ -80,6 +80,10 @@ The implementation must pin a currently supported OpenIddict version after depen
 5. **Consent and household binding**: implement explicit household selection and consent records bound to the client/resource/scope tuple; prove that a user with access to households A and B cannot reuse an A grant for B, and prove next-request denial after consent, account, or membership revocation.
 6. **Client interoperability and metadata safety**: exercise at least one remote interactive client, one Claude-compatible client path, and a custom test client; use pre-registration as the default. If CIMD is enabled for a client, fetch only HTTPS metadata with bounded size/time, no credentials, no redirects, and DNS-resolution/connect checks that reject loopback, link-local, private, multicast, reserved and rebinding destinations; test every rejection. Keep STDIO separate.
 7. **Security, audit, and operational hardening**: implement redacted security logs/audit records, rate limiting, safe errors, replay/revocation checks, OpenTelemetry correlation, threat tests, and operator documentation.
+
+### Development configuration
+
+The OAuth server is disabled unless `Mcp:OAuth:Enabled` is true. When enabled, operators must set an HTTPS `Mcp:OAuth:Issuer`, the exact HTTPS `Mcp:OAuth:Resource` exposed at `/mcp`, and an explicit allowlist of `Mcp:OAuth:RedirectUris`. `Mcp:RequireOAuth` must also be true before any MCP capability is exposed. Development certificates are limited to the Development environment; production signing/encryption key management and rotation remain release gates.
 
 ## Test plan
 
@@ -144,4 +148,5 @@ Excluded: enabling write-capable tools, adding new business capabilities, changi
 - [OpenIddict ASP.NET Core integration](https://documentation.openiddict.com/integrations/aspnet-core)
 - [OpenIddict token storage and revocation](https://documentation.openiddict.com/configuration/token-storage.html)
 - [OpenIddict PKCE enforcement](https://documentation.openiddict.com/configuration/proof-key-for-code-exchange)
+- [Proposed ADR-0012](../../adr/0012-protect-mcp-with-in-process-openiddict.md)
 - [ZITADEL resource indicator limitation](https://zitadel.com/docs/guides/integrate/token-exchange)
