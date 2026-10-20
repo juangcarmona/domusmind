@@ -24,16 +24,19 @@ Release the first externally useful DomusMind MCP read surface: an authenticated
 
 ### Tool registration and identity
 
-1. Add production tools under `src/backend/DomusMind.Mcp`, not under the API test project. Register them only when both `Mcp:OAuth:Enabled` and `Mcp:RequireOAuth` are true; the default/disabled production catalog remains empty and cannot accidentally expose household data without the #229 resource boundary.
+1. Add production tools under `src/backend/DomusMind.Mcp`, not under the API test project. Register them only when `Mcp:Capabilities:HouseholdReadOnly=true`, `Mcp:OAuth:Enabled=true`, and `Mcp:RequireOAuth=true`; the capability flag defaults to false and is a separate release gate from OAuth setup. The default/disabled production catalog remains empty, so upgrading #230 cannot automatically expose household data. Enabling the capability requires the owner-approved release checklist, accepted Product Change/ADR state, production key/configuration review, and the documented HTTPS deployment gate.
 2. Add a small MCP request-identity accessor that reads the validated `ClaimsPrincipal` from the current HTTP context and returns the trusted `AuthUser` subject plus the single household claim bound by #229. Reject missing or malformed context with a safe authorization error.
 3. Keep the tool methods thin. They validate tool-owned input, dispatch existing typed application queries, map to the production contract, and translate known application errors to stable structured MCP errors. They must not accept identity selectors or call persistence.
 4. Preserve `ReadOnly = true` metadata and stable descriptions. Do not register a pending-task placeholder or a generic query tool.
+
+The MCP adapter adds a call-tool filter for capability-level security audit events. It records only the fixed allowlisted capability name (`agenda_get` or `household_members_list`), trusted subject/client/household identifiers, correlation, result class (`success`, `tool_error`, `denied`, or `failed`), and status/reason category. It never records raw arguments, response content, headers, tokens, or arbitrary request names. This supplements the existing transport audit because MCP tool errors can be returned with HTTP 200 and must remain attributable.
 
 ### `agenda_get`
 
 - Required `from` and `to` fields use exact Gregorian `yyyy-MM-dd` date-only values, inclusive, with a maximum 31-calendar-day window.
 - The server supplies `FamilyId` and `RequestedByUserId` from the validated request identity. Tool input cannot override either value.
 - Dispatch `GetFamilyTimelineQuery` and map the result to events, temporally relevant list items, and notes using the production field allowlist in the contract. Preserve invariant Gregorian date formatting independent of server culture.
+- Date-only bounds use the existing handler's explicit semantics: calendar-event and note dates are compared as `DateOnly`; list-item reminders are compared against UTC start-of-day/end-of-day bounds because the current query contract stores reminder instants in UTC. No client timezone selector is accepted in this release. Tests cover reminders immediately before, at, and after the UTC boundaries so this limitation is visible rather than inferred.
 - Invalid/ambiguous/reversed/overlong ranges return the stable `INVALID_INPUT` error. Query authorization failures return `ACCESS_DENIED`; unexpected failures return `INTERNAL_ERROR` without exception, storage, token, or identity details.
 - The operation is cancellation-aware and must not write or mutate state.
 
@@ -55,7 +58,7 @@ This demonstrates the remote HTTPS contract without claiming ChatGPT or Claude c
 1. Add the production contract and tool result/error models, with exact input/output schema and field allowlists documented in `docs/delivery/contracts/issue-230-mcp-readonly-release.md`.
 2. Add the validated MCP request-identity accessor and safe structured error mapping inside the MCP adapter boundary.
 3. Implement `agenda_get` and `household_members_list` as production read-only tools using the existing application query dispatcher and handlers.
-4. Change MCP composition so the production catalog is populated only behind the OAuth-required configuration gate; retain an empty catalog when OAuth is disabled or incomplete.
+4. Change MCP composition so the production catalog is populated only behind the separate `Mcp:Capabilities:HouseholdReadOnly` release gate plus the OAuth-required configuration gate; retain an empty catalog when any gate is disabled or incomplete.
 5. Extend the OAuth integration host with isolated household fixtures, real application handlers, the production tools, and a Kestrel HTTPS official-SDK client journey. Do not use production data or credentials.
 6. Add contract and security tests for schemas, field minimization, identity non-overridability, cross-household denial, disabled/removed access, invalid dates, cancellation, safe errors, no writes, and the deliberate absence of `tasks_list` and member-specific agenda.
 7. Update the operator/client documentation and this plan with tested client/version, HTTPS assumptions, unsupported clients, and the Tasks/member-agenda limitations. Do not alter canonical domain specifications because this release reuses existing query ownership.
@@ -65,7 +68,7 @@ This demonstrates the remote HTTPS contract without claiming ChatGPT or Claude c
 ### Contract and tool tests
 
 - Tool discovery exposes exactly `agenda_get` and `household_members_list` when the protected release configuration is enabled.
-- Disabled OAuth or missing required protection leaves the production catalog empty.
+- Disabled capability release, disabled OAuth, or missing required protection leaves the production catalog empty.
 - Input schemas require exactly `from` and `to` for `agenda_get` and no fields for `household_members_list`; identity properties are absent.
 - Output schemas and successful responses contain exactly the documented allowlisted fields, including nullability and date formats.
 - `tasks_list`, member-specific agenda, write tools, resources, and prompts are absent.
@@ -84,6 +87,8 @@ This demonstrates the remote HTTPS contract without claiming ChatGPT or Claude c
 - Preserve cancellation through the query dispatcher and do not convert cancellation into a successful response.
 - Translate known authorization/validation failures into stable structured errors; unexpected failures do not leak exception or storage details.
 - Prove no writes occur through either read tool using a write guard and before/after state assertions.
+- Audit events identify only the two fixed capability names and distinguish success, tool-level error, denial, and failed execution without recording raw arguments or response content.
+- Reminder filtering is verified immediately before, at, and after the UTC date-window boundaries.
 
 ### Remote interoperability evidence
 

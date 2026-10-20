@@ -1,6 +1,6 @@
 # Production read-only MCP contract (#230)
 
-This contract defines the first production MCP capability release. It is available only when `Mcp:OAuth:Enabled=true` and `Mcp:RequireOAuth=true`, and every result is scoped to the validated OAuth subject and household. It is not a generic API gateway.
+This contract defines the first production MCP capability release. It is available only when the explicit release flag `Mcp:Capabilities:HouseholdReadOnly=true`, `Mcp:OAuth:Enabled=true`, and `Mcp:RequireOAuth=true`; the release flag defaults to false and is separate from OAuth setup. Every result is scoped to the validated OAuth subject and household. It is not a generic API gateway.
 
 ## `agenda_get`
 
@@ -78,7 +78,7 @@ Output schema:
 }
 ```
 
-The response omits calendar/list/note persistence IDs, area IDs, colors, participant IDs, account metadata, and authorization internals. Dates remain invariant Gregorian values regardless of server culture.
+The response omits calendar/list/note persistence IDs, area IDs, colors, participant IDs, account metadata, and authorization internals. Dates remain invariant Gregorian values regardless of server culture. Calendar-event and note dates use `DateOnly`; reminder instants are filtered using UTC start-of-day/end-of-day bounds because that is the current application query contract. No caller timezone selector is accepted.
 
 ## `household_members_list`
 
@@ -113,7 +113,7 @@ Output schema:
 
 ## Errors and exclusions
 
-Errors use a structured result with exactly `code` and `message`. Codes are `INVALID_INPUT`, `ACCESS_DENIED`, and `INTERNAL_ERROR`. Messages are safe summaries and contain no exception, storage, token, household, or account details. Cancellation propagates as cancellation.
+Tool-level errors returned after method binding use a structured result with exactly `code` and `message`. Codes are `INVALID_INPUT`, `ACCESS_DENIED`, and `INTERNAL_ERROR`. Messages are safe summaries and contain no exception, storage, token, household, or account details. The MCP SDK may reject missing, null, or wrong-type arguments during binding before the tool method runs; those failures remain `isError` binding responses and are tested for safe non-disclosure, but are not promised to have the structured `code`/`message` shape. Cancellation propagates as cancellation.
 
 The release does not expose `tasks_list`, member-specific agenda, write tools, resources, prompts, raw database access, or arbitrary API operations. A pending-task question must be reported as unsupported until the Tasks context supplies a complete owned query.
 
