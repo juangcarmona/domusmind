@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "runId": "9dc8d0df-31bc-4923-b826-dba85d57134e",
+  "workItem": "230",
+  "branch": "feat/230-release-readonly-mcp-workflows",
+  "startedAt": "2026-10-20T17:15:00Z",
+  "executorModel": "GPT-5 (active Codex model)",
+  "reviewerModel": "gpt-6.1-sol (available distinct model override)",
+  "maxCorrectionRounds": 3,
+  "status": "running",
+  "stages": [
+    {
+      "name": "refine",
+      "startedAt": "2026-10-20T17:15:00Z",
+      "endedAt": "2026-10-20T17:22:00Z",
+      "inputCommit": "629a9431685d82770cb5b7e268845f78029c7d0c",
+      "outputCommit": "629a9431685d82770cb5b7e268845f78029c7d0c",
+      "result": "ready",
+      "evidence": [
+        "Reviewed #230, Epic #224, the accepted #228 read-only proof contract and plan, the merged #229 OAuth/OIDC boundary, current MCP composition, and the existing Family/Calendar query handlers.",
+        "Confirmed the release scope is limited to authorized read-only agenda and household-member workflows over the protected MCP endpoint; no write tools, persistence access, or unsupported client guarantees are included.",
+        "Confirmed pending tasks remain deferred because no complete Tasks-owned read query exists, and member-specific agenda remains excluded until the existing member/family authorization gap is resolved and tested.",
+        "All applicable Definition of Ready dimensions are present in the issue: actor, dependencies, acceptance criteria, scope/exclusions, product rules, affected behavior, quality/security expectations, existing decisions, and risks. Issue transitioned from status:backlog to status:ready."
+      ]
+    }
+  ],
+  "reviews": [],
+  "corrections": [],
+  "stopReason": null,
+  "pullRequest": null,
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/224",
+    "https://github.com/juangcarmona/domusmind/issues/228",
+    "https://github.com/juangcarmona/domusmind/issues/229",
+    "https://github.com/juangcarmona/domusmind/issues/230",
+    "https://github.com/juangcarmona/domusmind/pull/225"
+  ]
+}
