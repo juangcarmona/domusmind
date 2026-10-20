@@ -1,7 +1,7 @@
 # Fast Forward run: issue #229
 
 - Run ID: `ab515c19-682f-45e9-a1e3-545b16af43bd`
-- Status: running; refinement and proposal passed; implementation correction round 3 is complete pending independent Done audit and owner judgement
+- Status: complete; refinement, proposal, implementation, independent Done audit, owner approval, and integration passed
 - Branch: `feat/229-oauth-oidc-mcp-authorization`
 - Starting commit: `3e3501e7127618d2ecd48e95608917e03c5a421b`
 - Executor: GPT-5 (active Codex model)
@@ -36,4 +36,4 @@ Verification evidence:
 - Markdown lint for ADRs and the #229 plan: passed.
 - Product citation verification: 0 errors; 59 pre-existing low-confidence draft warnings.
 
-The independent Done audit and owner-only Done judgement remain before the branch can be merged into the Epic branch. The stacked PR’s ordinary `main`-targeted checks are not automatic, so the workflow-dispatch runs above provide final-head CI evidence.
+The independent Done audit approved the exact final head after correction round 3. The owner approved #229 Done. PR #270 merged into the Epic branch as squash commit `50307149b6f2a472f0cbce87a16c773eecf6f8b7`, and issue #229 is closed with status:done.
