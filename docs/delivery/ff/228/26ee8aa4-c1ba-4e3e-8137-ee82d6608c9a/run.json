@@ -27,8 +27,8 @@
       "startedAt": "2026-10-20T15:02:58Z",
       "endedAt": "2026-10-20T15:04:07Z",
       "inputCommit": "1ce14ac910ec2ce6136c604eb699af74ef6e718b",
-      "outputCommit": "ccbf8d8c7dc1773c984ae500c81ffbc19337d00d",
-      "result": "correction-round-1-awaiting-independent-plan-review",
+      "outputCommit": "983a9a4",
+      "result": "corrected-draft-awaiting-independent-plan-review",
       "evidence": [
         "Plan artifact: docs/delivery/plans/issue-228-readonly-mcp-proof.md.",
         "Client-facing test contract: docs/delivery/contracts/issue-228-mcp-readonly-proof.md.",
@@ -63,7 +63,7 @@
         "Defined required exact yyyy-MM-dd inclusive date bounds, 31-calendar-day maximum, date-only semantics, and rejection cases; preserved duplicate names as distinct member IDs without name-based resolution.",
         "Added docs/delivery/contracts/issue-228-mcp-readonly-proof.md and required test parity for schemas/descriptions, minimized fields, safe structured errors, example journeys, and explicit exclusions."
       ],
-      "validation": "Pending plan checks and independent review at the corrected PR head."
+      "validation": "git diff --check and jq JSON validation passed. Independent plan review is pending at the corrected PR head."
     }
   ],
   "stopReason": null,
