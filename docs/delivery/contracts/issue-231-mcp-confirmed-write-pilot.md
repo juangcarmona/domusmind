@@ -93,7 +93,7 @@ The `CANCELLED` error variant is returned when cancellation is observed before t
 
 ```json
 {
-  "status": "CANCELLED",
+  "status": "ERROR",
   "error": {
     "code": "CANCELLED",
     "message": "The operation was cancelled before commit."
@@ -105,7 +105,7 @@ If commit succeeds while cancellation races, the server returns `COMPLETED` when
 
 ```json
 {
-  "status": "OPERATION_STATUS_UNKNOWN",
+  "status": "ERROR",
   "error": {
     "code": "OPERATION_STATUS_UNKNOWN",
     "message": "The operation outcome is unknown. Retry with the same idempotency key."
