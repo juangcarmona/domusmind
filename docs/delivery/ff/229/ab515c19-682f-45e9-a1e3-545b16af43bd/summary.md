@@ -24,7 +24,7 @@ Independent proposal review round 2 approved exact corrected plan head `000ae397
 
 ## Implementation
 
-Commit `524ee88` adds the in-process OpenIddict 7.7.2 server/validation boundary, EF Core authorization/token migration, proposed ADR-0012, protected-resource and OIDC discovery endpoints, exact resource registration, Authorization Code + PKCE configuration, household-bound authorization claims, and MCP bearer enforcement. The existing local API JWT remains separate; no production MCP tools or writes are enabled.
+Commits `524ee88` and `986f27e` add the in-process OpenIddict 7.7.2 server/validation boundary, EF Core authorization/token migration, proposed ADR-0012, protected-resource and OIDC discovery endpoints, exact resource registration, Authorization Code + PKCE configuration, household-bound authorization claims, an explicit antiforgery-protected consent form, and MCP bearer enforcement. The existing local API JWT remains separate; no production MCP tools or writes are enabled.
 
 Verification evidence:
 
