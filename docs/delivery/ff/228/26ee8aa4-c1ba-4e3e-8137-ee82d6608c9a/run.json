@@ -43,7 +43,7 @@
       "startedAt": "2026-10-20T15:04:07Z",
       "endedAt": "2026-10-20T15:47:50Z",
       "inputCommit": "62b975a93916a0c18904d6475e9541cb5d2231af",
-      "outputCommit": "713d100526a4ad22a891164b6a58400445e06d14",
+      "outputCommit": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
       "result": "implementation-review-approved-awaiting-owner-done-judgement",
       "evidence": [
         "Implemented test-host-only agenda_get and household_members_list over the actual timeline and member query handlers, isolated two-household EF Core InMemory data, and server-bound fixture identity; production MCP catalog remains empty.",
@@ -59,7 +59,7 @@
       "outputCommit": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
       "result": "evidence-complete-owner-judgement-pending",
       "evidence": [
-        "Separate independent DoD audit found all seven #228 acceptance criteria satisfied, but withheld Done certification pending current security/CI evidence and owner-only judgements. Audit identified stale plan-only wording in this summary; corrected before final review presentation.",
+        "Separate independent DoD audit found all seven #228 acceptance criteria satisfied. Its initial evidence gaps were closed by the linked backend CI/CodeQL runs and correction of stale plan-only wording; final Done certification remains pending owner-only judgements.",
         "GitHub backend CI workflow_dispatch run 39450868459 succeeded on code head 330568b0e9d5d3c679b83cbdd5712ed8b49e4efb, including disposable PostgreSQL, solution build/tests, and API publish: https://github.com/juangcarmona/domusmind/actions/runs/39450868459.",
         "GitHub CodeQL workflow_dispatch run 39450868200 succeeded on code head 330568b0e9d5d3c679b83cbdd5712ed8b49e4efb for C# and JavaScript/TypeScript: https://github.com/juangcarmona/domusmind/actions/runs/39450868200. No open code-scanning alerts and zero repository secret-scanning alerts at verification time.",
         "NuGet vulnerability audit found inherited Microsoft.Kiota.Abstractions 1.17.1 (high) and MessagePack 2.5.302 (moderate). GitHub Dependabot has inherited open http-cache-semantics (high) and KaTeX (low) alerts. These four advisory classes were explicitly accepted for deferral by the owner when approving #227; none was introduced by this issue's test-only dependency scope.",
