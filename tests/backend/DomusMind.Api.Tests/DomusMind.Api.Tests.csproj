@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\..\src\backend\DomusMind.Api\DomusMind.Api.csproj" />
     <ProjectReference Include="..\..\..\src\backend\DomusMind.Application\DomusMind.Application.csproj" />
     <ProjectReference Include="..\..\..\src\backend\DomusMind.Contracts\DomusMind.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\src\backend\DomusMind.Mcp\DomusMind.Mcp.csproj" />
   </ItemGroup>
 
 </Project>
