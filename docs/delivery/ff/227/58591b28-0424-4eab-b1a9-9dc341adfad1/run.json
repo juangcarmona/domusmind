@@ -54,7 +54,7 @@
         "After independent audit 1, fixed raw-Origin canonicality to reject normalized path-bearing values; added regression tests for trailing slash, dot segments, query, and untrusted origins. Configured SDK StatefulForInitializeClients mode so current clients remain stateless and 2025-11-25 initialization clients are supported; documented the session-affinity limitation. The test-only probe rejects blank and over-32-character inputs and proves actual in-flight cancellation reaches the query. Targeted MCP tests passed 8/8; full Release backend tests passed 858/858.",
         "Product/spec checks passed: OpenSpec 10/10; ProductShape 0 errors with 59 draft provenance warnings; integration consistency passed; OpenSpec citations 816 current and architecture citations 81 current, with no stale/tampered/unresolved citations; arc42 and Markdown lint passed.",
         "Workflow runs against application/test source commit 8ea7e1c (the later commits only amend FF evidence): backend-ci https://github.com/juangcarmona/domusmind/actions/runs/39375387977 succeeded (Release build, 858 tests, API publish); docs-ci https://github.com/juangcarmona/domusmind/actions/runs/39375388219 succeeded; CodeQL https://github.com/juangcarmona/domusmind/actions/runs/39375388182 succeeded for C# and JavaScript with zero results. At prior source commit 705c9ab, webapp-ci https://github.com/juangcarmona/domusmind/actions/runs/39374845795, public-site-ci https://github.com/juangcarmona/domusmind/actions/runs/39374845518, and product-ci https://github.com/juangcarmona/domusmind/actions/runs/39374845432 succeeded; later changes to affected app inputs are limited to MCP tests, while web and product inputs remained unchanged.",
-        "Independent audit 3 at 8ea7e1c found no implementation defect; its sole P2 was missing workflow links and stale pending status in this FF record. Those are reconciled in this evidence update. Owner-only DoD judgements and security disposition of baseline vulnerable dependencies remain unresolved; PR remains Draft and issue remains in-progress."
+        "Independent audit 3 at 8ea7e1c found no implementation defect; its sole P2 was missing workflow links and stale pending status in this FF record. Those are reconciled in this evidence update. On 2026-10-20, the product owner explicitly approved the remaining #227 Done judgements and accepted deferral of inherited advisories: Microsoft.Kiota.Abstractions 1.17.1 (high), MessagePack 2.5.302 (moderate), http-cache-semantics (high), and KaTeX (low). No finding is represented as fixed; no vulnerable dependency is introduced by DomusMind.Mcp. Awaiting fresh final-head Done audit and integration gates."
       ]
     }
   ],
@@ -166,6 +166,20 @@
     "decision": "request-changes",
     "readOnly": true
   },
+  "ownerDecisions": [
+    {
+      "date": "2026-10-20",
+      "role": "developer (Juan García Carmona)",
+      "decision": "Approved the remaining #227 Definition of Done judgements and accepted deferral of inherited dependency advisories.",
+      "advisories": [
+        "Microsoft.Kiota.Abstractions 1.17.1 (high; API/Infrastructure transitive)",
+        "MessagePack 2.5.302 (moderate; AppHost)",
+        "http-cache-semantics (high; public-site lockfile; Dependabot #98)",
+        "KaTeX (low; snapshot tooling lockfile; Dependabot #102)"
+      ],
+      "evidence": "Explicit owner response in this Codex conversation: Approve #227 and defer inherited advisories (Recommended)."
+    }
+  ],
   "stopReason": null,
   "pullRequest": {
     "number": 268,
