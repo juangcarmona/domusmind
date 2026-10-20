@@ -1,0 +1,79 @@
+# Issue #227: .NET MCP adapter foundation
+
+## Outcome
+
+Add a minimal, empty-capability MCP server endpoint to the existing `DomusMind.Api` process. Establish a testable protocol boundary that can later invoke application-owned operations without creating a second deployable, touching persistence from adapter code, or exposing household data before authorization and product gates pass.
+
+## Accepted constraints and repository evidence
+
+- Owner accepted the in-process `DomusMind.Api` host direction and OAuth 2.1 Authorization Code + PKCE/OIDC direction in issue #226. Authorization-server placement/provider remains open for #229 and is not part of this issue.
+- DomusMind is a .NET 10 API-first modular monolith. `DomusMind.Api` currently composes Application and Infrastructure; existing REST APIs remain ASP.NET Core Controllers.
+- To enforce the MCP adapter's dependency boundary, introduce a non-deployable `DomusMind.Mcp` class library referenced by the API host. It may reference `DomusMind.Application` and shared Contracts only; it must not reference Infrastructure, Domain, `DbContext`, or provider-specific persistence packages.
+- The SDK-owned `/mcp` route is a protocol endpoint, not a conversion of business REST endpoints to Minimal APIs. Existing REST endpoints and controller conventions remain unchanged.
+- The adapter has no registered household tools in this slice. No OAuth server, tokens, production user data, AI/LLM library, agent framework, or application write behavior is included.
+
+## Proposed design
+
+Use the official `ModelContextProtocol.AspNetCore` package, pinned initially to stable SDK `2.2.0`, in the `DomusMind.Mcp` library. The official SDK's current transport guidance uses `MapMcp` for ASP.NET Core Streamable HTTP and defaults to stateless HTTP; its 2.x line implements MCP `2026-07-28` while retaining down-level protocol compatibility. Re-check package compatibility and security advisories at implementation time. This is an adapter library hosted in-process, not a separate service.
+
+Expose narrowly scoped service-registration and endpoint-mapping extensions so `DomusMind.Api` explicitly opts in and mounts `/mcp`. The registration extension returns the SDK builder so future capability slices can register explicit tool types without a second registry. Do not create a generic tool framework, persistence abstraction, or placeholder application dispatcher. Production registers no tools in this issue. A test-only probe tool demonstrates bounded SDK input/output, cancellation propagation, and dispatch through the existing `IQueryDispatcher` seam; it is not included in the production assembly or tool catalog. Future production tools will use existing application queries/commands and their domain authorization.
+
+Verify the SDK's Streamable HTTP `Origin` handling against the current protocol. If the SDK does not enforce the required behavior, add a narrow middleware/endpoint guard: validate a present `Origin` against an explicit configured allowlist and return 403 for an invalid origin. Do not infer trust from forwarded-host headers. The endpoint remains data-free and tool-free until #229 authorization and #228 product/capability gates are satisfied.
+
+This creates no ProductShape or OpenSpec domain behavior. Existing domain specifications remain authoritative. Record the impact as adapter/architecture-only; do not edit accepted model artifacts or duplicate domain requirements.
+
+## Alternatives considered
+
+- **Put SDK setup directly in `DomusMind.Api`:** smallest file count, but the API already references Infrastructure, so it cannot structurally enforce the issue's adapter dependency boundary. Rejected in favor of a library project.
+- **Separate deployable MCP service:** rejected because the owner accepted in-process hosting and existing self-hosted deployment provides one API container; no evidence justifies a second service.
+- **Add sample household tools now:** rejected because #229 authorization and #228 capability/product gates have not passed. Tests may register test-only fixtures, but production exposes no tool.
+- **Add a generic mediator/tool framework:** rejected; existing application command/query contracts are sufficient for future capability slices.
+
+## Ordered tasks
+
+1. Add `src/backend/DomusMind.Mcp` as a class library with an explicit project-reference allowlist (Application and Contracts only) and official SDK ASP.NET Core package `2.2.0`.
+2. Add service-registration and `/mcp` endpoint-mapping extensions; configure Streamable HTTP using SDK-supported stateless behavior and leave production tool registration empty.
+3. Integrate the module into `DomusMind.Api` without changing existing REST controller routes or exposing any household capability.
+4. Add an isolated `DomusMind.Mcp.Tests` harness using the official SDK client/server contracts. A test-only probe tool verifies a bounded input/output schema, application-query dispatch, cancellation propagation, and that internal exception details do not leak in tool results; register it only in the test host.
+5. Add protocol transport tests for endpoint discovery/negotiation, an empty production tool catalog, malformed/unsupported request error mapping, and `Origin` validation (configured origin accepted; present invalid origin receives 403; absent Origin remains usable for non-browser clients).
+6. Prove the project dependency boundary with explicit project references and a deterministic project-graph check; `DomusMind.Mcp` must not reference Infrastructure, Domain, EF Core, or DbContext.
+7. Update solution/project documentation only where needed; identify ProductShape/OpenSpec impact as none and retain the cross-context domain specifications unchanged.
+
+## Test and verification plan
+
+- `dotnet build DomusMind.slnx --configuration Release`.
+- `dotnet test DomusMind.slnx --configuration Release`, including new MCP transport contract and dependency-boundary tests.
+- Inspect the final project graph and package tree to prove the MCP adapter cannot reach Infrastructure/EF Core.
+- Verify protocol behavior with the official SDK or wire-level contract tests against the selected `2026-07-28` revision and at least one supported down-level client negotiation path where the SDK supports it.
+- Verify no production tool/resource/prompt is registered and no household data is returned without a future authorization slice.
+- Check Origin behavior for allowed and invalid values and confirm 403 for an invalid present Origin.
+- Run applicable repository ProductShape/OpenSpec/architecture citation checks if documentation/spec artifacts are changed; do not claim these are application tests.
+- Inspect live PR checks and branch rules; zero checks are reported as absent, not passing.
+
+## Definition of Done impact
+
+- Issue acceptance criteria are demonstrated by code, tests, and project dependency evidence.
+- Implementation is complete with no placeholder capability behavior or silent scope loss.
+- Backend build and all relevant backend tests pass.
+- Security review confirms the endpoint contains no data-capable tool, enforces protocol Origin requirements, and cannot access persistence.
+- Architecture conforms to the accepted in-process host decision while preserving controller-based REST APIs and the adapter project boundary.
+- No domain/product behavior is introduced; ProductShape/OpenSpec impact is recorded and canonical specifications remain authoritative.
+- Documentation and limitations are explicit, including OAuth server and household tools remaining out of scope.
+- Independent reviewer approves the final head; owner-only Done judgements remain governed by the lifecycle.
+
+## Dependencies and follow-on gates
+
+- Parent Epic #224 and Product Change `CHG-MCP-HOUSEHOLD-INTEGRATION-001`.
+- #226 is integrated into the Epic branch and its in-process host recommendation is accepted.
+- #228 proves the initial read-only capability set with test identity; #229 establishes OAuth/OIDC resource protection before any production household data is exposed. This foundation adds neither capability nor OAuth server.
+- #230 must not expose `GetMemberAgenda` until the member-family ownership gap recorded in #226 is fixed and covered by a negative isolation test.
+
+## References
+
+- [Official .NET SDK repository](https://github.com/modelcontextprotocol/csharp-sdk)
+- [Official SDK v2.2.0 release](https://github.com/modelcontextprotocol/csharp-sdk/releases/tag/v2.2.0)
+- [Official SDK Streamable HTTP transport guidance](https://github.com/modelcontextprotocol/csharp-sdk/blob/main/docs/concepts/transports/transports.md)
+- [NuGet package metadata: ASP.NET Core SDK 2.2.0](https://www.nuget.org/packages/ModelContextProtocol.AspNetCore/2.2.0)
+- [MCP `2026-07-28` specification](https://modelcontextprotocol.io/specification/2026-07-28)
+- [MCP Streamable HTTP transport and Origin security](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports#streamable-http)
+- [Issue #227](https://github.com/juangcarmona/domusmind/issues/227), [Epic #224](https://github.com/juangcarmona/domusmind/issues/224), and [accepted assessment #226 / PR #267](https://github.com/juangcarmona/domusmind/pull/267)

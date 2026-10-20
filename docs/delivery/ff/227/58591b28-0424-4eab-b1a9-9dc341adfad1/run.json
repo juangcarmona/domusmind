@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "runId": "58591b28-0424-4eab-b1a9-9dc341adfad1",
+  "workItem": "227",
+  "branch": "feat/227-establish-dotnet-mcp-adapter-foundation",
+  "startedAt": "2026-10-20T04:49:19Z",
+  "executorModel": "GPT-5 (active Codex model)",
+  "reviewerModel": "gpt-6.1-sol (available distinct model override)",
+  "maxCorrectionRounds": 3,
+  "status": "running",
+  "stages": [
+    {
+      "name": "refine",
+      "startedAt": "2026-10-20T04:49:19Z",
+      "endedAt": "2026-10-20T04:49:19Z",
+      "inputCommit": "320526d4e3e49e5358d571e09ff50fe7a01e6086",
+      "outputCommit": "320526d4e3e49e5358d571e09ff50fe7a01e6086",
+      "result": "ready",
+      "evidence": [
+        "Issue #227 is status:ready and includes outcome, explicit household/product/maintainer/external-client stakeholders, bounded scope and exclusions, dependency on accepted #226 direction, and seven verifiable acceptance criteria.",
+        "The authorization-server placement/provider is explicitly deferred to #229 and is not necessary for this foundation slice.",
+        "WIP check at pickup: #226 is in review and no other open work items are in progress; cap 3 is respected."
+      ]
+    },
+    {
+      "name": "propose",
+      "startedAt": "2026-10-20T04:50:21Z",
+      "inputCommit": "320526d4e3e49e5358d571e09ff50fe7a01e6086",
+      "outputCommit": "320526d4e3e49e5358d571e09ff50fe7a01e6086",
+      "result": "running",
+      "evidence": [
+        "Plan artifact drafted at docs/delivery/plans/issue-227-dotnet-mcp-adapter-foundation.md; it remains documentation-only in the proposal stage.",
+        "Current official SDK research: ModelContextProtocol.AspNetCore 2.2.0 targets .NET 8.0 or higher, was released 2026-08-13, maps Streamable HTTP using MapMcp, and supports the 2026-07-28 protocol while retaining down-level compatibility.",
+        "Design proposes an in-process host with a separately enforceable DomusMind.Mcp project boundary, empty production capabilities, test-only dispatch probe, and explicit Origin-security tests."
+      ]
+    }
+  ],
+  "reviews": [],
+  "corrections": [],
+  "stopReason": null,
+  "pullRequest": null,
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/224",
+    "https://github.com/juangcarmona/domusmind/issues/226",
+    "https://github.com/juangcarmona/domusmind/issues/227",
+    "https://github.com/juangcarmona/domusmind/pull/225"
+  ]
+}
