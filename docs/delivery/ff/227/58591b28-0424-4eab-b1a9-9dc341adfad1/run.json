@@ -40,8 +40,8 @@
       "name": "implement",
       "startedAt": "2026-10-20T04:59:00Z",
       "inputCommit": "235e5e687b42f0f84344051e785312184483e375",
-      "outputCommit": "12f17b2",
-      "result": "running",
+      "outputCommit": "76a3fcc66b92896da0e6b496cb4dfd4f3354327c",
+      "result": "verified",
       "evidence": [
         "Issue #227 transitioned status:ready -> status:proposed -> status:in-progress after the independent proposal approval; WIP cap remains respected.",
         "Implementation commit 12f17b2 adds DomusMind.Mcp, official SDK Streamable HTTP registration, empty tools/list catalog, configured Origin validation, actual API route composition with /mcp SPA fallback exclusion, Docker/solution integration, and focused SDK-client and architecture tests.",
@@ -49,7 +49,8 @@
         "Architecture contract check passed; markdownlint passed across 31 docs; ProductShape architecture citation verification found 81 current citations, no stale/tampered/unresolved citations or errors, and 59 existing draft provenance warnings.",
         "NuGet advisories remain for pre-existing Microsoft.Kiota.Abstractions 1.17.1 (NU1903) and MessagePack 2.5.302 (NU1902). Docker build also reported its legacy builder deprecation and the frontend's existing large-chunk advisory; no check failed.",
         "Plan deviation recorded: the MCP contract and boundary tests are hosted in DomusMind.Api.Tests rather than a standalone DomusMind.Mcp.Tests project so they can exercise the real API composition and controller routes.",
-        "The proposed model remains unchanged: the host exposes no household capability; OAuth provider placement, household authorization, and production MCP tools remain deferred to their planned follow-on issues."
+        "The proposed model remains unchanged: the host exposes no household capability; OAuth provider placement, household authorization, and production MCP tools remain deferred to their planned follow-on issues.",
+        "Live runtime verification against the built Docker image passed at 2026-10-20 05:13 UTC. A current-protocol tools/list request with configured Origin returned 200 and an empty catalog; untrusted Origin returned 403; GET /mcp returned 404 without SPA content; existing REST ping returned 200. Sanitized evidence: docs/delivery/ff/227/58591b28-0424-4eab-b1a9-9dc341adfad1/runtime.md. Task-scoped runtime and PostgreSQL containers were stopped after capture."
       ]
     }
   ],
@@ -89,6 +90,12 @@
       "validation": "Plan Markdown lint and git diff --check passed; ProductShape/OpenSpec artifacts were not changed."
     }
   ],
+  "implementationAudit": {
+    "reviewerModel": "gpt-6.1-sol",
+    "reviewedCommit": "76a3fcc66b92896da0e6b496cb4dfd4f3354327c",
+    "decision": "pending",
+    "readOnly": true
+  },
   "stopReason": null,
   "pullRequest": {
     "number": 268,
