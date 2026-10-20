@@ -22,12 +22,70 @@
         "Confirmed pending tasks remain deferred because no complete Tasks-owned read query exists, and member-specific agenda remains excluded until the existing member/family authorization gap is resolved and tested.",
         "All applicable Definition of Ready dimensions are present in the issue: actor, dependencies, acceptance criteria, scope/exclusions, product rules, affected behavior, quality/security expectations, existing decisions, and risks. Issue transitioned from status:backlog to status:ready."
       ]
+    },
+    {
+      "name": "propose",
+      "startedAt": "2026-10-20T17:22:00Z",
+      "endedAt": "2026-10-20T17:39:00Z",
+      "inputCommit": "629a9431685d82770cb5b7e268845f78029c7d0c",
+      "outputCommit": "dbec35ebe025ab27677d8e859ba0f95f52ad9a20",
+      "result": "approved-plan",
+      "evidence": [
+        "Draft PR #271 opened for the documentation-only plan and production contract: https://github.com/juangcarmona/domusmind/pull/271.",
+        "Independent proposal review at exact head 19bb083 requested four bounded corrections: separate capability release gating, per-tool audit attribution, explicit UTC reminder semantics, and SDK binding-error contract distinction.",
+        "Correction round 1 applied all four findings at dbec35e; the corrected plan keeps the catalog default-off, uses fixed allowlisted capability names, documents UTC reminder boundaries, and distinguishes binding failures from post-binding structured errors.",
+        "Independent proposal review round 2 approved exact corrected plan head dbec35e. The reviewer explicitly confirmed this approves the design only; implementation and production enablement remain separate gates."
+      ]
     }
   ],
-  "reviews": [],
-  "corrections": [],
+  "reviews": [
+    {
+      "gate": "plan",
+      "round": 1,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "19bb083e901546a586095fe4e09240bdc93a9331",
+      "verdict": "request-changes",
+      "findings": [
+        "Separate OAuth setup from the default-off production capability release gate.",
+        "Add capability-level audit attribution for the two tools and HTTP-200 tool errors.",
+        "Define date-window timezone semantics and test UTC reminder boundaries.",
+        "Distinguish SDK argument-binding failures from post-binding structured tool errors."
+      ],
+      "evidence": "Independent read-only proposal review; no files or GitHub state changed."
+    },
+    {
+      "gate": "plan",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "dbec35ebe025ab27677d8e859ba0f95f52ad9a20",
+      "verdict": "approve",
+      "findings": [],
+      "evidence": "Independent read-only proposal review confirmed all four corrections closed; this approves the design only, not implementation or production enablement."
+    }
+  ],
+  "corrections": [
+    {
+      "gate": "plan",
+      "round": 1,
+      "addressesReviewRound": 1,
+      "changes": [
+        "Added default-off Mcp:Capabilities:HouseholdReadOnly release gating separate from OAuth configuration and documented owner/ADR/key/deployment prerequisites.",
+        "Added fixed allowlisted per-tool audit attribution with tool_error classification and redaction requirements.",
+        "Defined DateOnly calendar semantics and UTC reminder boundary behavior with explicit boundary tests.",
+        "Separated SDK argument-binding failures from post-binding structured tool errors in the production contract and test plan."
+      ],
+      "resultingCommit": "dbec35e",
+      "validation": "git diff --check and Markdown lint passed. Independent proposal review round 2 approved the corrected plan."
+    }
+  ],
   "stopReason": null,
-  "pullRequest": null,
+  "pullRequest": {
+    "number": 271,
+    "url": "https://github.com/juangcarmona/domusmind/pull/271",
+    "draft": true,
+    "base": "feat/224-mcp-household-assistants",
+    "head": "feat/230-release-readonly-mcp-workflows"
+  },
   "links": [
     "https://github.com/juangcarmona/domusmind/issues/224",
     "https://github.com/juangcarmona/domusmind/issues/228",
