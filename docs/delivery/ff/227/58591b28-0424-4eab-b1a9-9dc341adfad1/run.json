@@ -40,7 +40,7 @@
       "name": "implement",
       "startedAt": "2026-10-20T04:59:00Z",
       "inputCommit": "235e5e687b42f0f84344051e785312184483e375",
-      "outputCommit": "pending-evidence-commit",
+      "outputCommit": "8ea7e1caa30846cff35cc1ca2577b66a7dd95eea",
       "result": "verified-pending-owner-done-judgements",
       "evidence": [
         "Issue #227 transitioned status:ready -> status:proposed -> status:in-progress after the independent proposal approval; WIP cap remains respected.",
