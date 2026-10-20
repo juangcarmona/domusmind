@@ -42,14 +42,15 @@
       "startedAt": "2026-10-20T17:39:00Z",
       "endedAt": "2026-10-20T17:45:00Z",
       "inputCommit": "8b9b1836ef00e6c3ef77ec231a5e3c49e4672246",
-      "outputCommit": "1f7dab9",
-      "result": "implemented",
+      "outputCommit": "8d26128",
+      "result": "implemented-corrected",
       "evidence": [
         "Added the default-off HouseholdReadOnly capability gate, trusted request identity accessor, and two production read-only MCP tools: agenda_get and household_members_list.",
         "Tools dispatch the existing GetFamilyTimelineQuery and GetFamilyMembersQuery, project minimal allowlisted output, reject identity selectors, map safe structured errors, preserve cancellation, and emit fixed per-tool audit attribution without raw arguments or content.",
         "Added production-path synthetic application-query tests, protected OAuth release-catalog coverage, and a custom official .NET MCP client journey over loopback Kestrel HTTPS with protected-resource metadata discovery, PKCE, token exchange, tool discovery, and Streamable HTTP.",
-        "Full backend build passed; all 884 backend tests passed with the repository's 3 expected PostgreSQL skips. Web lint/test/build, public-site build, markdown validation, and git diff checks passed. Existing dependency advisories and web lint warnings remain documented inherited findings.",
-        "Implementation commit: 1f7dab9; branch pushed to the Draft PR #271 head."
+        "Full backend build passed; 881 backend tests passed with the repository's 3 expected PostgreSQL skips. Web lint/test/build, public-site build, markdown validation, and git diff checks passed. Existing dependency advisories and web lint warnings remain documented inherited findings.",
+        "Correction round fixed culture-dependent production date projection, moved the proof assertions onto production tool registration, added real application query handlers and fixtures to the HTTPS OAuth journey, and added cancellation/audit/no-write evidence.",
+        "Implementation correction commit: 8d26128; branch pushed to the Draft PR #271 head."
       ]
     }
   ],
@@ -76,6 +77,20 @@
       "verdict": "approve",
       "findings": [],
       "evidence": "Independent read-only proposal review confirmed all four corrections closed; this approves the design only, not implementation or production enablement."
+    },
+    {
+      "gate": "done",
+      "round": 1,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "55579ad1009f7f2d56208512fdd434b8a2123e54",
+      "verdict": "request-changes",
+      "findings": [
+        "Production date projection was culture-dependent; use invariant Gregorian formatting and test a non-Gregorian culture.",
+        "The HTTPS journey did not prove both production tools through real application handlers and fixtures, nor disabled/removed membership denial.",
+        "Most behavior evidence exercised proof-only tools rather than the production registration path.",
+        "Done evidence was incomplete for the corrected implementation and CI state."
+      ],
+      "evidence": "Independent read-only Done review against the first implementation head; no files or GitHub state changed."
     }
   ],
   "corrections": [
@@ -91,6 +106,19 @@
       ],
       "resultingCommit": "dbec35e",
       "validation": "git diff --check and Markdown lint passed. Independent proposal review round 2 approved the corrected plan."
+    },
+    {
+      "gate": "done",
+      "round": 1,
+      "addressesReviewRound": 1,
+      "changes": [
+        "Wrapped production query projection in invariant culture and added Thai-culture coverage for exact Gregorian dates.",
+        "Expanded the real Kestrel HTTPS OAuth journey with family/calendar fixtures, registered application query handlers, both production tool calls, disabled-account denial, and removed-membership denial.",
+        "Separated production and proof-only tool registration in tests and moved contract, error, cancellation, audit, and no-write assertions to the production path.",
+        "Reran focused and full backend validation and dispatched five workflows against the corrected implementation head."
+      ],
+      "resultingCommit": "8d26128",
+      "validation": "Focused MCP/OAuth/composition suite: 34 passed. Full backend suite: 881 passed, 3 expected PostgreSQL skips. Backend, docs, web app, public site, and CodeQL workflows succeeded at 8d26128."
     }
   ],
   "stopReason": null,
