@@ -35,6 +35,20 @@
         "Correction round 1 selected in-process OpenIddict in DomusMind.Api, defined a single household-bound grant tuple with immediate next-request revocation checks, made resource mandatory end-to-end, and added metadata-fetch security controls and tests.",
         "Independent proposal review round 2 approved exact corrected plan head 000ae3971a9e45c0204ef359631fb0e45689884d; implementation may begin."
       ]
+    },
+    {
+      "name": "implement",
+      "startedAt": "2026-10-20T16:25:00Z",
+      "inputCommit": "12457f0",
+      "outputCommit": "524ee88",
+      "result": "implemented",
+      "evidence": [
+        "Added OpenIddict 7.7.2 authorization-server and EF Core token/authorization persistence in DomusMind.Api's existing host; added migration and proposed ADR-0012.",
+        "Added protected-resource metadata, OIDC discovery, exact MCP resource registration, Authorization Code + PKCE configuration, short-lived access tokens, refresh-token configuration, and revocation-capable token validation.",
+        "Mapped the interactive authorization boundary to existing AuthUser records and FamilyAuthorizationService checks; household context is carried in the token and local API JWTs remain a separate scheme.",
+        "Added MCP bearer enforcement with safe 401 challenges and no production tools or writes; no token passthrough or persistence access from MCP middleware.",
+        "Focused OAuth contract tests pass: 7 passed. Full Release suite passes: 875 passed, 3 skipped. Build passes with 0 errors; inherited Kiota and MessagePack advisories remain documented exceptions."
+      ]
     }
   ],
   "reviews": [
