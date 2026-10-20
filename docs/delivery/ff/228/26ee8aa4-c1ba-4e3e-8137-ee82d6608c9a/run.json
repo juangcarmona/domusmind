@@ -7,7 +7,7 @@
   "executorModel": "GPT-5 (active Codex model)",
   "reviewerModel": "gpt-6.1-sol (available distinct model override)",
   "maxCorrectionRounds": 3,
-  "status": "awaiting-owner-done-judgement",
+  "status": "complete",
   "stages": [
     {
       "name": "refine",
@@ -44,7 +44,7 @@
       "endedAt": "2026-10-20T15:47:50Z",
       "inputCommit": "62b975a93916a0c18904d6475e9541cb5d2231af",
       "outputCommit": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
-      "result": "implementation-review-approved-awaiting-owner-done-judgement",
+      "result": "implementation-review-approved-owner-done-approved",
       "evidence": [
         "Implemented test-host-only agenda_get and household_members_list over the actual timeline and member query handlers, isolated two-household EF Core InMemory data, and server-bound fixture identity; production MCP catalog remains empty.",
         "Added a client contract, schema/response parity assertions, error/cancellation/isolation tests, and sanitized transcript evidence. Focused suite passed 9/9; full Release solution build passed; full Release tests passed: API 33, Application 525, Domain 250, Infrastructure 56 passed and 3 PostgreSQL tests skipped without DOMUSMIND_TEST_POSTGRES.",
@@ -57,14 +57,27 @@
       "endedAt": "2026-10-20T15:47:50Z",
       "inputCommit": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
       "outputCommit": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
-      "result": "evidence-complete-owner-judgement-pending",
+      "result": "evidence-complete-owner-approved",
       "evidence": [
-        "Separate independent DoD audit found all seven #228 acceptance criteria satisfied. Its initial evidence gaps were closed by the linked backend CI/CodeQL runs and correction of stale plan-only wording; final Done certification remains pending owner-only judgements.",
+        "Separate independent DoD audit found all seven #228 acceptance criteria satisfied. Its initial evidence gaps were closed by the linked backend CI/CodeQL runs and correction of stale plan-only wording; the owner approved the remaining Done judgements before integration.",
         "GitHub backend CI workflow_dispatch run 39450868459 succeeded on code head 330568b0e9d5d3c679b83cbdd5712ed8b49e4efb, including disposable PostgreSQL, solution build/tests, and API publish: https://github.com/juangcarmona/domusmind/actions/runs/39450868459.",
         "GitHub CodeQL workflow_dispatch run 39450868200 succeeded on code head 330568b0e9d5d3c679b83cbdd5712ed8b49e4efb for C# and JavaScript/TypeScript: https://github.com/juangcarmona/domusmind/actions/runs/39450868200. No open code-scanning alerts and zero repository secret-scanning alerts at verification time.",
         "NuGet vulnerability audit found inherited Microsoft.Kiota.Abstractions 1.17.1 (high) and MessagePack 2.5.302 (moderate). GitHub Dependabot has inherited open http-cache-semantics (high) and KaTeX (low) alerts. These four advisory classes were explicitly accepted for deferral by the owner when approving #227; none was introduced by this issue's test-only dependency scope.",
         "Full local Release verification passed: 864 tests passed, 3 PostgreSQL tests skipped without DOMUSMIND_TEST_POSTGRES; remote backend CI ran the PostgreSQL service and passed all tests and API publish. Targeted Markdown lint command exited successfully with no findings in the four explicit files; docs validation JSON and git diff whitespace checks passed.",
-        "Owner-only judgements remain required for acceptance/completeness, test adequacy, security exposure, architecture conformance, documentation/spec consistency, self-review, and known limitations. Do not mark Done, integrate PR #269 into the Epic branch, or start #229 until those judgements are approved."
+        "Owner-only judgements for acceptance/completeness, test adequacy, security exposure, architecture conformance, documentation/spec consistency, self-review, and known limitations were approved before integration."
+      ]
+    },
+    {
+      "name": "integrate",
+      "startedAt": "2026-10-20T15:56:13Z",
+      "endedAt": "2026-10-20T15:56:13Z",
+      "inputCommit": "1655067ae63a22d22bf6038fd3bc2dff000183c8",
+      "outputCommit": "b35d3c0f398098e1acde3c7f9335b6242cd637f0",
+      "result": "merged",
+      "evidence": [
+        "Owner approved #228 Done in the active Fast Forward loop.",
+        "PR #269 was marked ready, rechecked as mergeable, and merged into feat/224-mcp-household-assistants with an explicit implementation commit message.",
+        "Issue #228 was closed with the canonical status:done label."
       ]
     }
   ],
@@ -168,7 +181,7 @@
       "validation": "Focused MCP tests passed 9/9 after corrections. Release solution build passed with 6 inherited dependency warnings and no errors. Release tests passed: API 33, Application 525, Domain 250, Infrastructure 56; 3 PostgreSQL-only tests skipped because DOMUSMIND_TEST_POSTGRES is unset. git diff --check passed. Awaiting independent implementation review round 2."
     }
   ],
-  "stopReason": "Awaiting owner-only DoD judgements before integration of #228 and continuation to #229.",
+  "stopReason": "Completed after owner-only Done approval and integration of #228; continuation to #229 is now permitted.",
   "verificationRuns": [
     {
       "name": "backend-ci",
@@ -190,9 +203,11 @@
   "pullRequest": {
     "number": 269,
     "url": "https://github.com/juangcarmona/domusmind/pull/269",
-    "draft": true,
+    "draft": false,
     "base": "feat/224-mcp-household-assistants",
-    "head": "feat/228-prove-readonly-mcp-capabilities"
+    "head": "feat/228-prove-readonly-mcp-capabilities",
+    "mergedAt": "2026-10-20T15:56:13Z",
+    "mergeCommit": "b35d3c0f398098e1acde3c7f9335b6242cd637f0"
   },
   "links": [
     "https://github.com/juangcarmona/domusmind/issues/224",

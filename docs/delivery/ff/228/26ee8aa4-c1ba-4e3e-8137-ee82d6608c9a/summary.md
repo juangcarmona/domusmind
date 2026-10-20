@@ -1,7 +1,7 @@
 # Fast Forward run: issue #228
 
 - Run ID: `26ee8aa4-c1ba-4e3e-8137-ee82d6608c9a`
-- Status: awaiting Juan's owner-only Done judgements; do not integrate or start #229 yet
+- Status: complete; owner approved Done and #228 is integrated into the Epic branch
 - Branch: `feat/228-prove-readonly-mcp-capabilities`
 - Starting commit: `1ce14ac910ec2ce6136c604eb699af74ef6e718b`
 - Executor: GPT-5 (active Codex model)
@@ -24,7 +24,7 @@ The first independent plan audit requested changes at head `6fb3fe1ecd65db499dc2
 
 ## Implementation
 
-Draft PR #269 now contains the test-only MCP adapter, actual Application-handler integration over isolated synthetic persistence, and sanitized transcript evidence. Production registration remains empty. The focused suite passes 9/9; Release build passes; Release solution tests pass API 33, Application 525, Domain 250, and Infrastructure 56, with 3 PostgreSQL integration tests skipped because `DOMUSMIND_TEST_POSTGRES` is unset. Existing Kiota (high) and MessagePack (moderate) advisories remain deferred under the approved #227 exception.
+PR #269 contained the test-only MCP adapter, actual Application-handler integration over isolated synthetic persistence, and sanitized transcript evidence. Production registration remains empty. The focused suite passes 9/9; Release build passes; Release solution tests pass API 33, Application 525, Domain 250, and Infrastructure 56, with 3 PostgreSQL integration tests skipped because `DOMUSMIND_TEST_POSTGRES` is unset. Existing Kiota (high) and MessagePack (moderate) advisories remain deferred under the approved #227 exception.
 
 Independent implementation review round 1 at `713d100526a4ad22a891164b6a58400445e06d14` requested two P2 corrections: force invariant date formatting and prove it under a non-Gregorian server culture; prevent persistence writes after seeding, including committed writes. Correction round 1 added the invariant-culture scope, a `th-TH` request test with Gregorian output assertions, and a SaveChanges interceptor that rejects writes. Round 2 approved exact code head `330568b0e9d5d3c679b83cbdd5712ed8b49e4efb`; its decision is recorded in PR comment [#6294774341](https://github.com/juangcarmona/domusmind/pull/269#issuecomment-6294774341).
 
@@ -35,4 +35,8 @@ The separate criterion-by-criterion DoD audit found all seven issue acceptance c
 - Explicit Markdown lint of the four Product Change delivery artifacts succeeded with no findings; JSON evidence and `git diff --check` passed.
 - NuGet audit confirms inherited Kiota (high) and MessagePack (moderate) advisories. GitHub Dependabot still has inherited open http-cache-semantics (high) and KaTeX (low) alerts. Their deferral was explicitly accepted when the owner approved #227; this feature adds no production dependency.
 
-Local Release verification passed 864 tests; 3 PostgreSQL tests were skipped locally because `DOMUSMIND_TEST_POSTGRES` was unset, and all relevant PostgreSQL tests ran and passed in the linked backend CI run. The owner-only Done judgements remain: acceptance/completeness, test adequacy, security exposure, architecture conformance, documentation/spec consistency, self-review, and known limitations. PR #269 remains Draft pending those judgements. Do not integrate it into the Epic branch, mark #228 Done, or start #229 until the owner approves.
+Local Release verification passed 864 tests; 3 PostgreSQL tests were skipped locally because `DOMUSMIND_TEST_POSTGRES` was unset, and all relevant PostgreSQL tests ran and passed in the linked backend CI run. PR #269 merged as `b35d3c0f398098e1acde3c7f9335b6242cd637f0`, and issue #228 is closed with `status:done`. The next dependency, #229, may now begin.
+
+## Integration
+
+Owner approval was received for all remaining #228 Done judgements. PR #269 was marked ready and merged into the Epic branch at `b35d3c0f398098e1acde3c7f9335b6242cd637f0`; issue #228 was closed with `status:done`. No production MCP registration was introduced.
