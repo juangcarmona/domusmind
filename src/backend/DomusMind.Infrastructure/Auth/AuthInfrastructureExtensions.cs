@@ -163,7 +163,9 @@ public static class AuthInfrastructureExtensions
                     .RegisterAudiences(options.Resource)
                     .SetAccessTokenLifetime(TimeSpan.FromSeconds(options.AccessTokenLifetimeSeconds))
                     .SetRefreshTokenLifetime(TimeSpan.FromDays(options.RefreshTokenLifetimeDays))
+                    .SetRefreshTokenReuseLeeway(TimeSpan.Zero)
                     .SetAuthorizationCodeLifetime(TimeSpan.FromSeconds(options.AuthorizationCodeLifetimeSeconds))
+                    .UseReferenceAccessTokens()
                     .UseAspNetCore()
                     .EnableAuthorizationEndpointPassthrough()
                     .EnableTokenEndpointPassthrough();
