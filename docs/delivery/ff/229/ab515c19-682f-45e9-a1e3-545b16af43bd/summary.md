@@ -1,7 +1,7 @@
 # Fast Forward run: issue #229
 
 - Run ID: `ab515c19-682f-45e9-a1e3-545b16af43bd`
-- Status: running; refinement and proposal passed; implementation correction round 2 is complete pending independent Done audit and owner judgement
+- Status: running; refinement and proposal passed; implementation correction round 3 is complete pending independent Done audit and owner judgement
 - Branch: `feat/229-oauth-oidc-mcp-authorization`
 - Starting commit: `3e3501e7127618d2ecd48e95608917e03c5a421b`
 - Executor: GPT-5 (active Codex model)
@@ -24,7 +24,7 @@ Independent proposal review round 2 approved exact corrected plan head `000ae397
 
 ## Implementation
 
-Commits `524ee88`, `986f27e`, `2789e92`, `03ac001`, `f6fb11d`, and `ae4fa48` add the in-process OpenIddict 7.7.2 server/validation boundary, EF Core authorization/token migration, proposed ADR-0012, protected-resource and OIDC discovery endpoints, exact resource registration, Authorization Code + PKCE configuration, household-bound authorization claims, an explicit antiforgery-protected consent form, complete authorization-code and refresh-token endpoints, grant-specific consent/token revocation, authorization-entry and token-entry validation, current household checks, exact audience enforcement, structured security audit events, MCP rate limiting, and MCP bearer enforcement. The existing local API JWT remains separate; no production MCP tools or writes are enabled.
+Commits `524ee88`, `986f27e`, `2789e92`, `03ac001`, `f6fb11d`, `ae4fa48`, `4066905`, and `5338a58` add the in-process OpenIddict 7.7.2 server/validation boundary, EF Core authorization/token migration, proposed ADR-0012, protected-resource and OIDC discovery endpoints, exact resource registration, Authorization Code + PKCE configuration, household-bound authorization claims, an explicit antiforgery-protected consent form, complete authorization-code and refresh-token endpoints, grant-specific consent/token revocation, authorization-entry and token-entry validation, current household checks, exact audience enforcement, structured security audit events, MCP rate limiting, and MCP bearer enforcement. The existing local API JWT remains separate; no production MCP tools or writes are enabled. The final correction fixes CodeQL log-forging findings by using a fixed semantic operation identifier in audit events.
 
 Verification evidence:
 
@@ -32,7 +32,7 @@ Verification evidence:
 - `dotnet build DomusMind.slnx --no-restore --configuration Release`: passed, 0 errors.
 - `dotnet test DomusMind.slnx --no-build --configuration Release`: passed, 879 passed and 3 pre-existing PostgreSQL integration tests skipped.
 - Focused OAuth contract suite: 15 passed, including end-to-end login, explicit consent, PKCE exchange, refresh rotation/reuse in an isolated flow, real Streamable HTTP MCP transport, resource/audience, expiry, insufficient scope, current account/membership denial, replay, rate limiting, and revocation.
-- Final-head GitHub [backend CI run 39460851418](https://github.com/juangcarmona/domusmind/actions/runs/39460851418) passed build, PostgreSQL-backed tests and publish; [CodeQL run 39460856983](https://github.com/juangcarmona/domusmind/actions/runs/39460856983) passed C# and JavaScript analysis with no findings.
+- Final-head GitHub [backend CI run 39461961513](https://github.com/juangcarmona/domusmind/actions/runs/39461961513) passed build, 882 tests with zero skips, and publish; [CodeQL run 39461966335](https://github.com/juangcarmona/domusmind/actions/runs/39461966335) passed C# and JavaScript analysis, and no open code-scanning alerts remain.
 - Markdown lint for ADRs and the #229 plan: passed.
 - Product citation verification: 0 errors; 59 pre-existing low-confidence draft warnings.
 

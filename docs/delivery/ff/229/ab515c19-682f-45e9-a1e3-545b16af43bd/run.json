@@ -41,7 +41,7 @@
       "startedAt": "2026-10-20T16:25:00Z",
       "endedAt": "2026-10-20T16:32:00Z",
       "inputCommit": "12457f0",
-      "outputCommit": "ae4fa48",
+      "outputCommit": "5338a58",
       "result": "implemented",
       "evidence": [
         "Added OpenIddict 7.7.2 authorization-server and EF Core token/authorization persistence in DomusMind.Api's existing host; added migration and proposed ADR-0012.",
@@ -53,7 +53,8 @@
         "Closed the independent audit findings with production antiforgery registration, grant-specific consent withdrawal, rolling refresh-token reuse protection, isolated test databases, and a real Streamable HTTP MCP client test.",
         "Enabled authorization-entry validation so revoking a grant denies tokens created concurrently with withdrawal; isolated refresh-token reuse evidence from current account/membership scenarios.",
         "Focused OAuth contract tests pass: 15 passed, including login, explicit consent, PKCE exchange, refresh rotation/reuse, actual MCP transport, resource/audience, expiry, insufficient scope, current account/membership denial, authorization replay, rate limiting, and revocation. Full Release suite passes: 879 passed, 3 skipped. Build passes with 0 errors; inherited Kiota and MessagePack advisories remain documented exceptions.",
-        "Final-head GitHub backend CI run 39460851418 passed build, PostgreSQL-backed tests and publish; final-head CodeQL run 39460856983 passed C# and JavaScript analysis with no findings."
+        "Sanitized the structured audit operation to the fixed value MCP /mcp so request-controlled method/path values cannot reach logs and CodeQL log-forging findings are eliminated.",
+        "Final-head GitHub backend CI run 39461961513 passed build, 882 tests with zero skips, and publish; final-head CodeQL run 39461966335 passed C# and JavaScript analysis, and the repository has no open code-scanning alerts."
       ]
     }
   ],
@@ -80,6 +81,17 @@
       "verdict": "approve",
       "findings": [],
       "evidence": "Independent read-only proposal review confirmed all four correction findings closed; no runtime tests were run."
+    },
+    {
+      "gate": "done",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "40669054005a688c6bb9a6cd63ae26e72d8e03da",
+      "verdict": "request-changes",
+      "findings": [
+        "CodeQL reported four open cs/log-forging findings for request-controlled method/path values in MCP security audit logs; the FF metadata incorrectly claimed no findings."
+      ],
+      "evidence": "Independent final-head Done audit; backend CI passed 882 tests with zero skips, but CodeQL findings required correction."
     }
   ],
   "corrections": [
@@ -107,7 +119,18 @@
         "Separated authorization-code replay from refresh-token reuse evidence, enabled zero-leeway rolling refresh tokens, exercised the official Streamable HTTP MCP client, and added negative OAuth boundary tests."
       ],
       "resultingCommit": "ae4fa48",
-      "validation": "Focused OAuth suite 15/15; full Release suite 879 passed, 3 skipped; Release build 0 errors; backend CI and CodeQL passed on ae4fa48. Final independent Done audit pending."
+      "validation": "Focused OAuth suite 15/15; full Release suite 879 passed, 3 skipped; Release build 0 errors; backend CI and CodeQL passed on ae4fa48. Final independent Done audit found four CodeQL log-forging alerts, corrected in round 3."
+    },
+    {
+      "gate": "done",
+      "round": 3,
+      "addressesReviewRound": 2,
+      "changes": [
+        "Replaced request-controlled method/path interpolation in MCP security audit events with the fixed semantic operation identifier MCP /mcp, including rate-limit audit events.",
+        "Re-ran the focused OAuth suite, full Release suite, Release build, backend CI, and CodeQL; no open code-scanning alerts remain."
+      ],
+      "resultingCommit": "5338a58",
+      "validation": "Focused OAuth suite 15/15; full Release suite 879 passed, 3 skipped; Release build 0 errors; backend CI run 39461961513 passed 882 tests with zero skips and publish; CodeQL run 39461966335 passed both analyses with no open alerts. Final independent Done audit pending."
     }
   ],
   "stopReason": null,
