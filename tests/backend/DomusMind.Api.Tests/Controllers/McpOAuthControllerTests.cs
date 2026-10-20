@@ -260,15 +260,6 @@ public sealed class McpOAuthControllerTests
         });
         Assert.Empty(await mcpClient.ListToolsAsync());
 
-        using var reusedRefreshBeforeRevocation = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
-        {
-            ["grant_type"] = "refresh_token",
-            ["client_id"] = "test-client",
-            ["refresh_token"] = refreshToken!,
-            ["resource"] = "https://domusmind.test/mcp",
-        }));
-        Assert.Equal(HttpStatusCode.BadRequest, reusedRefreshBeforeRevocation.StatusCode);
-
         await host.DisableTestUserAsync();
         using var disabledUserRequest = new HttpRequestMessage(HttpMethod.Get, "/mcp");
         disabledUserRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -307,14 +298,6 @@ public sealed class McpOAuthControllerTests
         using var revokedMcpResponse = await client.SendAsync(revokedMcpRequest);
         Assert.Equal(HttpStatusCode.Unauthorized, revokedMcpResponse.StatusCode);
 
-        using var reusedRefreshResponse = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
-        {
-            ["grant_type"] = "refresh_token",
-            ["client_id"] = "test-client",
-            ["refresh_token"] = refreshToken!,
-            ["resource"] = "https://domusmind.test/mcp",
-        }));
-        Assert.Equal(HttpStatusCode.BadRequest, reusedRefreshResponse.StatusCode);
     }
 
     [Fact]
@@ -346,6 +329,47 @@ public sealed class McpOAuthControllerTests
             ["resource"] = "https://domusmind.test/mcp",
         }));
         Assert.Equal(HttpStatusCode.BadRequest, replay.StatusCode);
+    }
+
+    [Fact]
+    public async Task Refresh_tokens_are_single_use_in_an_isolated_flow()
+    {
+        await using var host = await TestHost.CreateAsync(enabled: true);
+        using var client = host.CreateClient();
+        var (_, code, verifier) = await host.IssueAuthorizationCodeAsync(client);
+        Assert.NotNull(code);
+
+        using var firstExchange = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["grant_type"] = "authorization_code",
+            ["client_id"] = "test-client",
+            ["code"] = code!,
+            ["redirect_uri"] = "https://client.test/callback",
+            ["code_verifier"] = verifier,
+            ["resource"] = "https://domusmind.test/mcp",
+        }));
+        Assert.Equal(HttpStatusCode.OK, firstExchange.StatusCode);
+        using var firstJson = JsonDocument.Parse(await firstExchange.Content.ReadAsStringAsync());
+        var refreshToken = firstJson.RootElement.GetProperty("refresh_token").GetString();
+        Assert.False(string.IsNullOrWhiteSpace(refreshToken));
+
+        using var rotated = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["grant_type"] = "refresh_token",
+            ["client_id"] = "test-client",
+            ["refresh_token"] = refreshToken!,
+            ["resource"] = "https://domusmind.test/mcp",
+        }));
+        Assert.Equal(HttpStatusCode.OK, rotated.StatusCode);
+
+        using var reused = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["grant_type"] = "refresh_token",
+            ["client_id"] = "test-client",
+            ["refresh_token"] = refreshToken!,
+            ["resource"] = "https://domusmind.test/mcp",
+        }));
+        Assert.Equal(HttpStatusCode.BadRequest, reused.StatusCode);
     }
 
     [Fact]
@@ -601,7 +625,7 @@ public sealed class McpOAuthControllerTests
 
         public async Task<(HttpStatusCode ConsentStatus, string? Code, string Verifier)> IssueAuthorizationCodeAsync(
             HttpClient client,
-            string scope = "openid mcp.read")
+            string scope = "openid offline_access mcp.read")
         {
             const string verifier = "test-code-verifier-012345678901234567890123456789";
             var challenge = Convert.ToBase64String(SHA256.HashData(Encoding.ASCII.GetBytes(verifier)))
@@ -646,7 +670,7 @@ public sealed class McpOAuthControllerTests
                     ["client_id"] = "test-client",
                     ["response_type"] = "code",
                     ["redirect_uri"] = "https://client.test/callback",
-                    ["scope"] = "openid mcp.read",
+                    ["scope"] = scope,
                     ["resource"] = "https://domusmind.test/mcp",
                     ["code_challenge"] = challenge,
                     ["code_challenge_method"] = "S256",

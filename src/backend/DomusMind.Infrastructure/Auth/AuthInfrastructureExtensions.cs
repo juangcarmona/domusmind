@@ -198,6 +198,7 @@ public static class AuthInfrastructureExtensions
                 builder.SetIssuer(options.Issuer);
                 builder.UseLocalServer();
                 builder.UseAspNetCore();
+                builder.EnableAuthorizationEntryValidation();
                 builder.EnableTokenEntryValidation();
             });
 
