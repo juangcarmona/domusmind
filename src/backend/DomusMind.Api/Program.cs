@@ -60,10 +60,12 @@ var swaggerEnabled = builder.Configuration.GetValue<bool?>("Swagger:Enabled")
     ?? builder.Environment.IsDevelopment();
 
 builder.Services.AddControllers();
+builder.Services.AddAntiforgery();
 builder.Services.AddSingleton<IListChangeNotifier, ListChangeNotifier>();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddDomusMindAuthentication(builder.Configuration);
+builder.Services.AddDomusMindMcpOAuth(builder.Configuration, builder.Environment);
 builder.Services.AddDomusMindAuthorization();
 builder.Services.AddDomusMindOpenApi();
 builder.Services.AddDomusMindMcp(builder.Configuration);
@@ -133,6 +135,7 @@ app.UseExceptionHandler(errorApp =>
 app.UseForwardedHeaders();
 
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 
 if (swaggerEnabled)
 {
@@ -142,6 +145,7 @@ if (swaggerEnabled)
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseDomusMindMcpOAuthResourceAuthorization();
 app.UseDomusMindMcpOriginValidation();
 
 var webRootPath = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
@@ -159,6 +163,10 @@ using (var scope = app.Services.CreateScope())
     await dbContext.Database.MigrateAsync();
 }
 await AuthSeedService.SeedAdminAsync(app.Services, CancellationToken.None);
+using (var scope = app.Services.CreateScope())
+{
+    await McpOAuthSeedService.SeedClientAsync(scope.ServiceProvider, CancellationToken.None);
+}
 await LanguageSeedService.SeedAsync(app.Services, CancellationToken.None);
 
 app.Run();

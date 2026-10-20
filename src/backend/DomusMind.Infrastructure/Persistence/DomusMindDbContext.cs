@@ -4,6 +4,7 @@ using DomusMind.Infrastructure.Auth;
 using DomusMind.Infrastructure.Initialization;
 using DomusMind.Infrastructure.Languages;
 using Microsoft.EntityFrameworkCore;
+using OpenIddict.EntityFrameworkCore;
 
 namespace DomusMind.Infrastructure.Persistence;
 
@@ -72,6 +73,7 @@ public sealed class DomusMindDbContext : DbContext, IDomusMindDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseOpenIddict();
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DomusMindDbContext).Assembly);
     }
 
