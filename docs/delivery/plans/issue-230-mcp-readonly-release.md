@@ -17,6 +17,7 @@ Release the first externally useful DomusMind MCP read surface: an authenticated
 - Application query handlers remain responsible for household authorization. Tools dispatch `GetFamilyTimelineQuery` and `GetFamilyMembersQuery`; they do not access EF Core, persistence, or domain entities directly.
 - `agenda_get` is a bounded date-range read of the existing unified family timeline projection. It deliberately returns only the fields in the production contract and omits persistence IDs, account metadata, and internal authorization fields.
 - `household_members_list` returns only stable member ID, effective display name, and household role. It never returns email, account IDs, birth dates, invitation/access state, or management flags.
+- Private-list safety is explicitly deferred for this release. The current Lists model has no privacy or owner field, so private lists cannot exist in the authorized application query or be meaningfully denied by an MCP-specific test. `agenda_get` exposes only the existing household-shared list projection. Any future Lists privacy implementation must define its member scope and add MCP denial/visibility tests before list data is exposed through this capability.
 - `tasks_list` is not exposed because the Tasks context has no complete, owned pending-task query suitable for this release. The list/meal/routines expansion and member-specific agenda remain later children.
 - Write tools, prompt injection defenses for action-taking, destructive actions, arbitrary CRUD, raw chat history, and MCP resources/prompts are out of scope.
 
@@ -80,6 +81,7 @@ This demonstrates the remote HTTPS contract without claiming ChatGPT or Claude c
 - Disabled accounts, revoked consent/tokens, and removed household membership fail before tool execution completes.
 - Member output excludes account IDs, emails, birth dates, access status, manager/edit flags, and avatar metadata; agenda output excludes persistence and internal authorization IDs.
 - Duplicate member display names remain distinct by stable member ID.
+- The private-list acceptance criterion is N/A for this release by owner-approved deferral: private lists are not implemented in the current product model, and the exposed list projection contains only household-shared list data. The future Lists privacy change owns the required MCP visibility and denial tests.
 
 ### Input, reliability, and side-effect tests
 
@@ -108,6 +110,7 @@ This demonstrates the remote HTTPS contract without claiming ChatGPT or Claude c
 
 - Pending Tasks requires a complete Tasks-owned query and is deferred to a later capability child.
 - Member-specific agenda requires a handler-level proof that the requested member belongs to the authorized household and remains deferred.
+- Private-list visibility requires the Lists context to implement privacy ownership and scope; it is explicitly deferred from #230 and must be reassessed before future MCP list exposure.
 - The custom HTTPS client proves the protocol boundary but does not certify hosted ChatGPT, Claude, Claude Code, or self-hosted-agent behavior.
 - Durable audit retention, production key management/rotation, and remote deployment are operational release gates owned by later children.
 

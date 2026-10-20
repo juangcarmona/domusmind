@@ -2,6 +2,10 @@
 
 This contract defines the first production MCP capability release. It is available only when the explicit release flag `Mcp:Capabilities:HouseholdReadOnly=true`, `Mcp:OAuth:Enabled=true`, and `Mcp:RequireOAuth=true`; the release flag defaults to false and is separate from OAuth setup. Every result is scoped to the validated OAuth subject and household. It is not a generic API gateway.
 
+## List privacy applicability
+
+The current Lists model has no privacy or owner field; private lists are therefore not representable in this release. The `listItems` projection is limited to the existing household-shared list query and does not claim to implement private-list authorization. The corresponding #230 private-list acceptance criterion is owner-approved as deferred/N/A. A future Lists privacy implementation must define visibility semantics and add MCP-specific positive and denial tests before this contract is expanded.
+
 ## `agenda_get`
 
 Description: Read the authorized household agenda for an explicit bounded Gregorian calendar-date range.
