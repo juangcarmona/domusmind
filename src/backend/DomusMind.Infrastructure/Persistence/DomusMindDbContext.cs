@@ -3,6 +3,7 @@ using DomusMind.Domain.Calendar.ExternalConnections;
 using DomusMind.Infrastructure.Auth;
 using DomusMind.Infrastructure.Initialization;
 using DomusMind.Infrastructure.Languages;
+using DomusMind.Infrastructure.Persistence.Mcp;
 using Microsoft.EntityFrameworkCore;
 using OpenIddict.EntityFrameworkCore;
 
@@ -70,6 +71,10 @@ public sealed class DomusMindDbContext : DbContext, IDomusMindDbContext
 
     public DbSet<ExternalCalendarOAuthTransaction> ExternalCalendarOAuthTransactions
         => Set<ExternalCalendarOAuthTransaction>();
+
+    public DbSet<McpWriteApprovalRecord> McpWriteApprovals => Set<McpWriteApprovalRecord>();
+
+    public DbSet<McpIdempotencyRecord> McpIdempotency => Set<McpIdempotencyRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

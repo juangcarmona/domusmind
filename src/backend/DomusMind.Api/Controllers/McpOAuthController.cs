@@ -18,6 +18,7 @@ public sealed class McpOAuthController : ControllerBase
     private readonly IPasswordHasher _passwords;
     private readonly IFamilyAuthorizationService _familyAuthorization;
     private readonly IOptions<McpOAuthOptions> _options;
+    private readonly IConfiguration _configuration;
     private readonly IOpenIddictApplicationManager _applications;
     private readonly IOpenIddictAuthorizationManager _authorizations;
     private readonly IOpenIddictTokenManager _tokens;
@@ -27,6 +28,7 @@ public sealed class McpOAuthController : ControllerBase
         IPasswordHasher passwords,
         IFamilyAuthorizationService familyAuthorization,
         IOptions<McpOAuthOptions> options,
+        IConfiguration configuration,
         IOpenIddictApplicationManager applications,
         IOpenIddictAuthorizationManager authorizations,
         IOpenIddictTokenManager tokens)
@@ -35,6 +37,7 @@ public sealed class McpOAuthController : ControllerBase
         _passwords = passwords;
         _familyAuthorization = familyAuthorization;
         _options = options;
+        _configuration = configuration;
         _applications = applications;
         _authorizations = authorizations;
         _tokens = tokens;
@@ -51,7 +54,9 @@ public sealed class McpOAuthController : ControllerBase
         {
             resource = _options.Value.Resource,
             authorization_servers = new[] { _options.Value.Issuer },
-            scopes_supported = new[] { McpOAuthConstants.ReadScope },
+            scopes_supported = _configuration.GetValue<bool>("Mcp:Capabilities:HouseholdWrites")
+                ? new[] { McpOAuthConstants.ReadScope, McpOAuthConstants.WriteScope }
+                : new[] { McpOAuthConstants.ReadScope },
             bearer_methods_supported = new[] { "header" },
         });
     }
@@ -100,6 +105,9 @@ public sealed class McpOAuthController : ControllerBase
         var requestedScopes = request.GetScopes().ToHashSet(StringComparer.Ordinal);
         if (!requestedScopes.Contains(McpOAuthConstants.ReadScope))
             return BadRequest(new { error = "mcp_read_scope_required" });
+        if (requestedScopes.Contains(McpOAuthConstants.WriteScope) &&
+            !_configuration.GetValue<bool>("Mcp:Capabilities:HouseholdWrites"))
+            return BadRequest(new { error = "mcp_write_scope_unavailable" });
 
         var user = await _users.FindByIdAsync(userId, cancellationToken);
         if (user is null || user.IsDisabled)
@@ -109,7 +117,10 @@ public sealed class McpOAuthController : ControllerBase
             return Forbid();
 
         if (!HttpMethods.IsPost(Request.Method))
-            return ConsentPage(request.ClientId ?? "unknown-client", householdId);
+            return ConsentPage(
+                request.ClientId ?? "unknown-client",
+                householdId,
+                requestedScopes.Contains(McpOAuthConstants.WriteScope));
 
         if (!string.Equals(Request.Form["consent"], "allow", StringComparison.Ordinal))
             return BadRequest(new { error = "consent_required" });
@@ -304,7 +315,7 @@ public sealed class McpOAuthController : ControllerBase
         return cookie.Succeeded ? cookie.Principal : null;
     }
 
-    private IActionResult ConsentPage(string clientId, Guid householdId)
+    private IActionResult ConsentPage(string clientId, Guid householdId, bool writeRequested)
     {
         var encodedClientId = System.Net.WebUtility.HtmlEncode(clientId);
         var encodedHouseholdId = System.Net.WebUtility.HtmlEncode(householdId.ToString());
@@ -337,7 +348,7 @@ public sealed class McpOAuthController : ControllerBase
             <body>
               <main>
                 <h1>Allow MCP access to DomusMind?</h1>
-                <p>Client <strong>{encodedClientId}</strong> requests read-only access to household <strong>{encodedHouseholdId}</strong>.</p>
+                <p>Client <strong>{encodedClientId}</strong> requests {(writeRequested ? "read and confirmed-write" : "read-only")} access to household <strong>{encodedHouseholdId}</strong>.</p>
                 <form method="post" action="{action}">
                   <input type="hidden" name="__RequestVerificationToken" value="{encodedToken}">
                   {hiddenFields}

@@ -1,3 +1,4 @@
+using DomusMind.Application.Abstractions.Notifications;
 using System.Threading.Channels;
 
 namespace DomusMind.Api.Realtime;
@@ -28,7 +29,7 @@ public sealed class ListChangeSubscription : IDisposable
     }
 }
 
-public sealed class ListChangeNotifier : IListChangeNotifier
+public sealed class ListChangeNotifier : IListChangeNotifier, IListChangePublisher
 {
     private readonly object _gate = new();
     private readonly Dictionary<Guid, Dictionary<Guid, Channel<bool>>> _subscribers = [];

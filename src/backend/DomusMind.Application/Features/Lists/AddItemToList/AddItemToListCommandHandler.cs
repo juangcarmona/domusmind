@@ -41,6 +41,12 @@ public sealed class AddItemToListCommandHandler
         if (list is null)
             throw new ListException(ListErrorCode.ListNotFound, "Shared list not found.");
 
+        if (command.ExpectedFamilyId.HasValue &&
+            list.FamilyId.Value != command.ExpectedFamilyId.Value)
+        {
+            throw new ListException(ListErrorCode.AccessDenied, "Access to this family is denied.");
+        }
+
         var canAccess = await _authorizationService.CanAccessFamilyAsync(
             command.RequestedByUserId, list.FamilyId.Value, cancellationToken);
 

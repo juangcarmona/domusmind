@@ -23,6 +23,9 @@ internal sealed class DomusMindMcpOptionsValidator : IValidateOptions<DomusMindM
         if (options.Capabilities.HouseholdReadOnly && !options.RequireOAuth)
             return ValidateOptionsResult.Fail("Mcp:Capabilities:HouseholdReadOnly requires MCP OAuth protection.");
 
+        if (options.Capabilities.HouseholdWrites && !options.RequireOAuth)
+            return ValidateOptionsResult.Fail("Mcp:Capabilities:HouseholdWrites requires MCP OAuth protection.");
+
         if (options.RequestsPerMinute is < 1 or > 600)
             return ValidateOptionsResult.Fail("Mcp:RequestsPerMinute must be between 1 and 600.");
 

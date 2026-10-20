@@ -1,0 +1,71 @@
+using DomusMind.Contracts.Lists;
+
+namespace DomusMind.Application.Abstractions.Integrations.Mcp;
+
+public static class McpWriteStatuses
+{
+    public const string ConfirmationRequired = "CONFIRMATION_REQUIRED";
+    public const string ApprovalPending = "APPROVAL_PENDING";
+    public const string Completed = "COMPLETED";
+    public const string Error = "ERROR";
+}
+
+public sealed record McpListItemAddRequest(
+    Guid UserId,
+    Guid HouseholdId,
+    string ClientId,
+    Guid ListId,
+    string Name,
+    string? Quantity,
+    string? Note,
+    string IdempotencyKey,
+    Guid? ApprovalRequestId,
+    string TraceId);
+
+public sealed record McpListItemAddAction(
+    Guid ListId,
+    string Name,
+    string? Quantity,
+    string? Note);
+
+public sealed record McpConfirmedWriteOutcome(
+    string Status,
+    string? Code = null,
+    string? Message = null,
+    Guid? ApprovalRequestId = null,
+    DateTime? ExpiresAtUtc = null,
+    McpListItemAddAction? Action = null,
+    AddItemToListResponse? Result = null);
+
+public sealed record McpWriteApprovalView(
+    Guid ApprovalRequestId,
+    Guid HouseholdId,
+    Guid ListId,
+    string Name,
+    string? Quantity,
+    string? Note,
+    string Status,
+    DateTime CreatedAtUtc,
+    DateTime ExpiresAtUtc);
+
+public interface IMcpConfirmedWriteCoordinator
+{
+    Task<McpConfirmedWriteOutcome> ExecuteListItemAddAsync(
+        McpListItemAddRequest request,
+        CancellationToken cancellationToken = default);
+
+    Task<McpWriteApprovalView?> GetApprovalAsync(
+        Guid approvalRequestId,
+        Guid userId,
+        CancellationToken cancellationToken = default);
+
+    Task<McpConfirmedWriteOutcome> ApproveAsync(
+        Guid approvalRequestId,
+        Guid userId,
+        CancellationToken cancellationToken = default);
+
+    Task<McpConfirmedWriteOutcome> CancelAsync(
+        Guid approvalRequestId,
+        Guid userId,
+        CancellationToken cancellationToken = default);
+}

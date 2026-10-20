@@ -135,6 +135,28 @@ public sealed class AddItemToListCommandHandlerTests
     }
 
     [Fact]
+    public async Task Handle_WhenExpectedFamilyDoesNotMatchListFamily_ThrowsBeforeMembershipCheck()
+    {
+        var (db, list) = await SeedListAsync();
+        var auth = new StubListAuthorizationService { CanAccess = true };
+        var handler = BuildHandler(db: db, auth: auth);
+
+        var act = () => handler.Handle(
+            new AddItemToListCommand(
+                list.Id.Value,
+                "Item",
+                null,
+                null,
+                null,
+                Guid.NewGuid(),
+                Guid.NewGuid()),
+            CancellationToken.None);
+
+        await act.Should().ThrowAsync<ListException>()
+            .Where(e => e.Code == ListErrorCode.AccessDenied);
+    }
+
+    [Fact]
     public async Task Handle_WritesListItemAddedEventToLog()
     {
         var (db, list) = await SeedListAsync();

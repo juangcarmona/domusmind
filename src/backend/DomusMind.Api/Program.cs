@@ -7,6 +7,7 @@ using DomusMind.Infrastructure.Messaging;
 using DomusMind.Infrastructure.Persistence;
 using DomusMind.Infrastructure.Integrations.Calendar.Microsoft;
 using DomusMind.Api.Realtime;
+using DomusMind.Application.Abstractions.Notifications;
 using DomusMind.Api.Telemetry;
 using DomusMind.Api.Mcp;
 using DomusMind.Mcp.DependencyInjection;
@@ -61,7 +62,9 @@ var swaggerEnabled = builder.Configuration.GetValue<bool?>("Swagger:Enabled")
 
 builder.Services.AddControllers();
 builder.Services.AddAntiforgery();
-builder.Services.AddSingleton<IListChangeNotifier, ListChangeNotifier>();
+builder.Services.AddSingleton<ListChangeNotifier>();
+builder.Services.AddSingleton<IListChangeNotifier>(sp => sp.GetRequiredService<ListChangeNotifier>());
+builder.Services.AddSingleton<IListChangePublisher>(sp => sp.GetRequiredService<ListChangeNotifier>());
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddDomusMindAuthentication(builder.Configuration);
