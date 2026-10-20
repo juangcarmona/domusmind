@@ -63,7 +63,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         {
             throw;
         }
-        catch (DbUpdateException)
+        catch (McpCommitUncertainException)
         {
             return Error("OPERATION_STATUS_UNKNOWN", "The operation outcome is unknown. Retry with the same idempotency key.");
         }
@@ -172,9 +172,9 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
             result = await _commands.Dispatch(
                 new AddItemToListCommand(
                     request.ListId,
-                    request.Name,
-                    request.Quantity,
-                    request.Note,
+                    request.Name.Trim(),
+                    NormalizeOptional(request.Quantity),
+                    NormalizeOptional(request.Note),
                     null,
                     request.UserId,
                     request.HouseholdId),
@@ -333,7 +333,19 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         }
 
         if (idempotency.Status is McpIdempotencyStatuses.Cancelled or McpIdempotencyStatuses.Tombstone)
+        {
+            if (idempotency.ApprovalRequestId is Guid closedApprovalId)
+            {
+                var closedApproval = await _db.McpWriteApprovals
+                    .SingleOrDefaultAsync(x => x.Id == closedApprovalId, cancellationToken);
+                if (closedApproval?.Status == McpWriteApprovalStatuses.Expired)
+                    return Error("CONFIRMATION_INVALID", "The approval request is no longer valid.");
+                if (closedApproval?.Status == McpWriteApprovalStatuses.Cancelled)
+                    return Error("CANCELLED", "The operation was cancelled before commit.");
+            }
+
             return Error("IDEMPOTENCY_REPLAYED", "The operation was already cancelled or completed and cannot be replayed.");
+        }
 
         if (idempotency.Status == McpIdempotencyStatuses.Executing)
             return Error("OPERATION_IN_PROGRESS", "The operation is already being executed.");
@@ -345,14 +357,6 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
             .SingleOrDefaultAsync(x => x.Id == approvalId, cancellationToken);
         if (approval is null)
             return Error("CONFIRMATION_UNKNOWN", "The approval request was not found.");
-        if (request.ApprovalRequestId is null)
-            return new McpConfirmedWriteOutcome(
-                McpWriteStatuses.ConfirmationRequired,
-                ApprovalRequestId: approvalId,
-                ExpiresAtUtc: approval.ExpiresAtUtc,
-                Action: ToAction(request));
-        if (request.ApprovalRequestId != approvalId)
-            return Error("CONFIRMATION_INVALID", "The approval request does not match the pending operation.");
         if (approval.ExpiresAtUtc <= now)
         {
             approval.Status = McpWriteApprovalStatuses.Expired;
@@ -361,6 +365,14 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
             await _db.SaveChangesAsync(cancellationToken);
             return Error("CONFIRMATION_INVALID", "The approval request is no longer valid.");
         }
+        if (request.ApprovalRequestId is null)
+            return new McpConfirmedWriteOutcome(
+                McpWriteStatuses.ConfirmationRequired,
+                ApprovalRequestId: approvalId,
+                ExpiresAtUtc: approval.ExpiresAtUtc,
+                Action: ToAction(request));
+        if (request.ApprovalRequestId != approvalId)
+            return Error("CONFIRMATION_INVALID", "The approval request does not match the pending operation.");
 
         if (approval.Status == McpWriteApprovalStatuses.Pending)
             return new McpConfirmedWriteOutcome(
@@ -411,7 +423,9 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
     {
         var now = UtcNow();
         var expiredApprovals = await _db.McpWriteApprovals
-            .Where(x => x.Status == McpWriteApprovalStatuses.Pending && x.ExpiresAtUtc <= now)
+            .Where(x => (x.Status == McpWriteApprovalStatuses.Pending ||
+                         x.Status == McpWriteApprovalStatuses.Approved) &&
+                        x.ExpiresAtUtc <= now)
             .ToListAsync(cancellationToken);
         foreach (var approval in expiredApprovals)
         {
@@ -487,8 +501,28 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
     private static Task CommitAsync(
         IDbContextTransaction? transaction,
         CancellationToken cancellationToken) =>
-        transaction is null ? Task.CompletedTask : transaction.CommitAsync(cancellationToken);
+        CommitCoreAsync(transaction, cancellationToken);
+
+    private static async Task CommitCoreAsync(
+        IDbContextTransaction? transaction,
+        CancellationToken cancellationToken)
+    {
+        if (transaction is null)
+            return;
+
+        try
+        {
+            await transaction.CommitAsync(cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            throw new McpCommitUncertainException(exception);
+        }
+    }
 
     private static McpConfirmedWriteOutcome Error(string code, string message) =>
         new(McpWriteStatuses.Error, code, message);
+
+    private sealed class McpCommitUncertainException(Exception inner)
+        : Exception("The transaction commit outcome could not be determined.", inner);
 }

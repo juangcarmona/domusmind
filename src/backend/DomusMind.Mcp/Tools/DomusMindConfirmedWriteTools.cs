@@ -36,12 +36,12 @@ public sealed class DomusMindConfirmedWriteTools
         if (!identityAccessor.TryGet(out var identity))
             return Error("ACCESS_DENIED", "Access to this household is denied.");
         if (!identity.HasScope("mcp.write"))
-            return Error("INSUFFICIENT_SCOPE", "The mcp.write scope is required for this operation.");
+            return Error("ACCESS_DENIED", "The mcp.write scope is required for this operation.");
         if (!Guid.TryParse(listId, out var parsedListId) || parsedListId == Guid.Empty)
             return Error("INVALID_INPUT", "listId must be a valid identifier.");
         if (!string.IsNullOrWhiteSpace(approvalRequestId) &&
             (!Guid.TryParse(approvalRequestId, out var parsedApprovalId) || parsedApprovalId == Guid.Empty))
-            return Error("INVALID_INPUT", "approvalRequestId must be a valid identifier when supplied.");
+            return Error("CONFIRMATION_INVALID", "The approval request is not valid.");
 
         var request = new McpListItemAddRequest(
             identity.UserId,
