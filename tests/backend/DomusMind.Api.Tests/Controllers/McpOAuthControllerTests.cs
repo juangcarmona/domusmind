@@ -4,9 +4,20 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
+using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Persistence;
+using DomusMind.Application.Features.Calendar.GetFamilyTimeline;
+using DomusMind.Application.Features.Family.GetFamilyMembers;
 using DomusMind.Api.Controllers;
+using DomusMind.Contracts.Calendar;
+using DomusMind.Contracts.Family;
+using DomusMind.Domain.Calendar;
+using DomusMind.Domain.Calendar.ValueObjects;
+using DomusMind.Domain.Family;
+using DomusMind.Domain.Family.ValueObjects;
+using DomusMind.Domain.Shared;
 using DomusMind.Infrastructure.Auth;
+using DomusMind.Infrastructure.Messaging;
 using DomusMind.Infrastructure.Persistence;
 using DomusMind.Mcp.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -75,6 +86,31 @@ public sealed class McpOAuthControllerTests
         var tools = await mcpClient.ListToolsAsync();
         Assert.Equal(["agenda_get", "household_members_list"], tools.Select(tool => tool.Name).OrderBy(name => name));
         Assert.DoesNotContain(tools, tool => tool.Name is "tasks_list" or "plan_create" or "list_item_add");
+
+        var agendaResult = await mcpClient.CallToolAsync("agenda_get", new Dictionary<string, object?>
+        {
+            ["from"] = "2026-10-20",
+            ["to"] = "2026-10-31",
+        });
+        Assert.NotEqual(true, agendaResult.IsError);
+        Assert.Contains(agendaResult.StructuredContent!.Value.GetProperty("events").EnumerateArray(),
+            item => item.GetProperty("title").GetString() == "OAuth household appointment"
+                && item.GetProperty("date").GetString() == "2026-10-20");
+
+        var membersResult = await mcpClient.CallToolAsync("household_members_list", new Dictionary<string, object?>());
+        Assert.NotEqual(true, membersResult.IsError);
+        Assert.Contains(membersResult.StructuredContent!.Value.GetProperty("members").EnumerateArray(),
+            member => member.GetProperty("name").GetString() == "OAuth Test Member");
+
+        await host.DisableTestUserAsync();
+        using var disabledUserResponse = await mcpHttpClient.GetAsync("/mcp");
+        Assert.Equal(HttpStatusCode.Forbidden, disabledUserResponse.StatusCode);
+
+        await host.EnableTestUserAndRemoveHouseholdAccessAsync();
+        using var removedMembershipResponse = await mcpHttpClient.GetAsync("/mcp");
+        Assert.Equal(HttpStatusCode.Forbidden, removedMembershipResponse.StatusCode);
+
+        await host.RestoreTestHouseholdAccessAsync();
     }
 
     [Fact]
@@ -185,7 +221,7 @@ public sealed class McpOAuthControllerTests
     [Fact]
     public async Task Authorization_code_exchange_and_mcp_request_use_the_bound_household()
     {
-        await using var host = await TestHost.CreateAsync(enabled: true);
+        await using var host = await TestHost.CreateAsync(enabled: true, householdReadOnlyEnabled: true);
         using var client = host.CreateClient();
         const string verifier = "test-code-verifier-012345678901234567890123456789";
         var challenge = Convert.ToBase64String(SHA256.HashData(Encoding.ASCII.GetBytes(verifier)))
@@ -310,7 +346,8 @@ public sealed class McpOAuthControllerTests
             ClientInfo = new Implementation { Name = "DomusMind.Api.Tests", Version = "1.0" },
             ProtocolVersion = "2026-07-28",
         });
-        Assert.Empty(await mcpClient.ListToolsAsync());
+        Assert.Equal(["agenda_get", "household_members_list"],
+            (await mcpClient.ListToolsAsync()).Select(tool => tool.Name).OrderBy(name => name));
 
         await host.DisableTestUserAsync();
         using var disabledUserRequest = new HttpRequestMessage(HttpMethod.Get, "/mcp");
@@ -657,6 +694,13 @@ public sealed class McpOAuthControllerTests
 
             builder.Services.AddControllers()
                 .AddApplicationPart(typeof(McpOAuthController).Assembly);
+            builder.Services.AddScoped<IQueryDispatcher, QueryDispatcher>();
+            builder.Services.AddScoped<
+                IQueryHandler<GetFamilyTimelineQuery, FamilyTimelineResponse>,
+                GetFamilyTimelineQueryHandler>();
+            builder.Services.AddScoped<
+                IQueryHandler<GetFamilyMembersQuery, IReadOnlyCollection<MemberDirectoryItemResponse>>,
+                GetFamilyMembersQueryHandler>();
             builder.Services.AddAntiforgery();
             builder.Services.AddDbContext<DomusMindDbContext>(options =>
                 options.UseInMemoryDatabase(databaseName, databaseRoot));
@@ -700,6 +744,35 @@ public sealed class McpOAuthControllerTests
                         FamilyId = TestHouseholdId,
                         GrantedAtUtc = DateTime.UtcNow,
                     });
+                }
+
+                if (!await database.Set<Domain.Family.Family>().AnyAsync(family => family.Id == FamilyId.From(TestHouseholdId)))
+                {
+                    var now = new DateTime(2026, 10, 1, 0, 0, 0, DateTimeKind.Utc);
+                    var family = Domain.Family.Family.Create(
+                        FamilyId.From(TestHouseholdId),
+                        FamilyName.Create("OAuth Household"),
+                        null,
+                        now);
+                    var member = family.AddMember(
+                        MemberId.New(),
+                        MemberName.Create("OAuth Test Member"),
+                        MemberRole.Adult,
+                        isManager: true,
+                        birthDate: null,
+                        now,
+                        authUserId: TestUserId);
+                    var calendarEvent = Domain.Calendar.CalendarEvent.Create(
+                        CalendarEventId.New(),
+                        family.Id,
+                        EventTitle.Create("OAuth household appointment"),
+                        null,
+                        EventTime.Moment(new DateOnly(2026, 10, 20), new TimeOnly(10, 0)),
+                        HexColor.From("#3B82F6"),
+                        createdAtUtc: now);
+                    calendarEvent.AddParticipant(member.Id);
+                    database.Set<Domain.Family.Family>().Add(family);
+                    database.Set<Domain.Calendar.CalendarEvent>().Add(calendarEvent);
                 }
                 await database.SaveChangesAsync();
                 await McpOAuthSeedService.SeedClientAsync(scope.ServiceProvider, CancellationToken.None);

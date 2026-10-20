@@ -48,6 +48,7 @@ public sealed class DomusMindReadOnlyTools
 
         try
         {
+            using var culture = new InvariantCultureScope();
             var response = await dispatcher.Dispatch(new GetFamilyTimelineQuery(
                 identity.HouseholdId,
                 fromDate,
@@ -111,6 +112,7 @@ public sealed class DomusMindReadOnlyTools
 
         try
         {
+            using var culture = new InvariantCultureScope();
             var response = await dispatcher.Dispatch(new GetFamilyMembersQuery(
                 identity.HouseholdId,
                 identity.UserId), cancellationToken);
@@ -179,6 +181,24 @@ public sealed class DomusMindReadOnlyTools
 
     private static DateTimeOffset? ParseOptionalInstant(string? value)
         => value is null ? null : DateTimeOffset.ParseExact(value, "O", CultureInfo.InvariantCulture);
+
+    private sealed class InvariantCultureScope : IDisposable
+    {
+        private readonly CultureInfo _culture = CultureInfo.CurrentCulture;
+        private readonly CultureInfo _uiCulture = CultureInfo.CurrentUICulture;
+
+        public InvariantCultureScope()
+        {
+            CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+        }
+
+        public void Dispose()
+        {
+            CultureInfo.CurrentCulture = _culture;
+            CultureInfo.CurrentUICulture = _uiCulture;
+        }
+    }
 }
 
 public sealed record AgendaOutput(

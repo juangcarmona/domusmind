@@ -49,7 +49,7 @@ The MCP adapter records capability-level security audit events. It records only 
 
 ### HTTPS client evidence
 
-Use a custom C# MCP client built on the official .NET SDK as the release evidence client. Run the API with Kestrel on a loopback HTTPS endpoint and a test certificate, complete protected-resource discovery and OAuth Authorization Code + PKCE against the test authorization user, exchange the code for a resource-bound access token, then call both tools through Streamable HTTP. The client test must prove the token's household scope is enforced and that a revoked/disabled/member-removed identity cannot continue.
+Use a custom C# MCP client built on the official .NET SDK as the release evidence client. Run the API with Kestrel on a loopback HTTPS endpoint and a test certificate, complete protected-resource discovery and OAuth Authorization Code + PKCE against the test authorization user, exchange the code for a resource-bound access token, then call both production tools through Streamable HTTP against real family, member, and calendar fixtures. The client tests prove invariant dates and minimal outputs, and prove that disabled accounts and removed household membership are denied; the existing OAuth integration journey also proves revoked consent denies the same protected endpoint.
 
 This demonstrates the remote HTTPS contract without claiming ChatGPT or Claude compatibility. Hosted-client interoperability, local STDIO, private-network deployment, and client-specific UI behavior remain follow-up release gates.
 
@@ -59,8 +59,8 @@ This demonstrates the remote HTTPS contract without claiming ChatGPT or Claude c
 2. Add the validated MCP request-identity accessor and safe structured error mapping inside the MCP adapter boundary.
 3. Implement `agenda_get` and `household_members_list` as production read-only tools using the existing application query dispatcher and handlers.
 4. Change MCP composition so the production catalog is populated only behind the separate `Mcp:Capabilities:HouseholdReadOnly` release gate plus the OAuth-required configuration gate; retain an empty catalog when any gate is disabled or incomplete.
-5. Extend the OAuth integration host with isolated household fixtures, real application handlers, the production tools, and a Kestrel HTTPS official-SDK client journey. Do not use production data or credentials.
-6. Add contract and security tests for schemas, field minimization, identity non-overridability, cross-household denial, disabled/removed access, invalid dates, cancellation, safe errors, no writes, and the deliberate absence of `tasks_list` and member-specific agenda.
+5. Extend the OAuth integration host with isolated household/member/calendar fixtures, the real application query handlers, the production tools, and a Kestrel HTTPS official-SDK client journey. Do not use production data or credentials.
+6. Add production-path contract and security tests for schemas, field minimization, identity non-overridability, disabled/removed/revoked access, invalid dates, invariant culture, cancellation, safe errors, audit redaction, no writes, and the deliberate absence of `tasks_list` and member-specific agenda. Keep the synthetic proof-tool tests separate from production registration.
 7. Update the operator/client documentation and this plan with tested client/version, HTTPS assumptions, unsupported clients, and the Tasks/member-agenda limitations. Do not alter canonical domain specifications because this release reuses existing query ownership.
 
 ## Test plan

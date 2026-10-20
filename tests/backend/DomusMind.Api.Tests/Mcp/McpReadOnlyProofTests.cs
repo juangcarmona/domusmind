@@ -44,8 +44,13 @@ public sealed class McpReadOnlyProofTests
         await using var client = await host.CreateClientAsync();
 
         var tools = await client.ListToolsAsync();
-        Assert.Contains(tools, tool => tool.Name == "agenda_get");
-        Assert.Contains(tools, tool => tool.Name == "household_members_list");
+        Assert.Equal(["agenda_get", "household_members_list"],
+            tools.Select(tool => tool.Name).OrderBy(name => name));
+        var agendaTool = Assert.Single(tools, tool => tool.Name == "agenda_get");
+        AssertSchemaProperties(agendaTool.ProtocolTool.InputSchema, "from", "to");
+        Assert.DoesNotContain("familyId", agendaTool.ProtocolTool.InputSchema.GetRawText(), StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("userId", agendaTool.ProtocolTool.InputSchema.GetRawText(), StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("memberId", agendaTool.ProtocolTool.InputSchema.GetRawText(), StringComparison.OrdinalIgnoreCase);
 
         var agendaResult = await client.CallToolAsync("agenda_get", new Dictionary<string, object?>
         {
@@ -55,12 +60,51 @@ public sealed class McpReadOnlyProofTests
         Assert.NotEqual(true, agendaResult.IsError);
         Assert.Contains(agendaResult.StructuredContent!.Value.GetProperty("events").EnumerateArray(),
             item => item.GetProperty("title").GetString() == "Family A appointment");
+        Assert.Equal("2026-10-20", agendaResult.StructuredContent.Value.GetProperty("events")[0].GetProperty("date").GetString());
         Assert.DoesNotContain("Family B secret", agendaResult.StructuredContent.Value.GetRawText(), StringComparison.Ordinal);
 
         var membersResult = await client.CallToolAsync("household_members_list", new Dictionary<string, object?>());
         Assert.NotEqual(true, membersResult.IsError);
         Assert.Contains(membersResult.StructuredContent!.Value.GetProperty("members").EnumerateArray(),
             member => member.GetProperty("name").GetString() == "Preferred Alex");
+
+        var invalidResult = await client.CallToolAsync("agenda_get", new Dictionary<string, object?>
+        {
+            ["from"] = "20/10/2026",
+            ["to"] = "2026-10-31",
+        });
+        Assert.True(invalidResult.IsError);
+        Assert.Equal("INVALID_INPUT", invalidResult.StructuredContent!.Value.GetProperty("code").GetString());
+
+        host.Authorization.ThrowUnexpectedFailure = true;
+        var failureResult = await client.CallToolAsync("agenda_get", new Dictionary<string, object?>
+        {
+            ["from"] = From.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            ["to"] = To.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+        });
+        Assert.True(failureResult.IsError);
+        Assert.Equal("INTERNAL_ERROR", failureResult.StructuredContent!.Value.GetProperty("code").GetString());
+        Assert.DoesNotContain("test-only-secret", failureResult.StructuredContent.Value.GetRawText(), StringComparison.Ordinal);
+        Assert.Contains(host.AuditMessages, message =>
+            message.Contains("MCP capability audit", StringComparison.Ordinal) &&
+            message.Contains("capability=agenda_get", StringComparison.Ordinal) &&
+            message.Contains("tool_error", StringComparison.Ordinal));
+        Assert.DoesNotContain(host.AuditMessages, message =>
+            message.Contains("2026-10-20", StringComparison.Ordinal) ||
+            message.Contains("Family A appointment", StringComparison.Ordinal));
+
+        host.Authorization.ThrowUnexpectedFailure = false;
+        host.Authorization.BlockForCancellation = true;
+        using var cancellation = new CancellationTokenSource();
+        var pending = client.CallToolAsync("agenda_get", new Dictionary<string, object?>
+        {
+            ["from"] = From.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            ["to"] = To.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+        }, cancellationToken: cancellation.Token);
+        await host.Authorization.WaitUntilStartedAsync();
+        cancellation.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await pending);
+        await host.Authorization.WaitUntilCancellationObservedAsync();
 
         Assert.Equal(0, host.Database.ChangeTracker.Entries().Count(entry =>
             entry.State is EntityState.Added or EntityState.Modified or EntityState.Deleted));
@@ -385,7 +429,7 @@ public sealed class McpReadOnlyProofTests
 
         private ReadOnlyProofHost(WebApplication app, string webRoot, DomusMindDbContext database,
             TestQueryDispatcher dispatcher, TestFamilyAuthorizationService authorization,
-            Guid familyAId, Guid familyBId, Guid requesterUserId)
+            Guid familyAId, Guid familyBId, Guid requesterUserId, List<string> auditMessages)
         {
             _app = app;
             _webRoot = webRoot;
@@ -395,6 +439,7 @@ public sealed class McpReadOnlyProofTests
             FamilyAId = familyAId;
             FamilyBId = familyBId;
             RequesterUserId = requesterUserId;
+            AuditMessages = auditMessages;
         }
 
         public DomusMindDbContext Database { get; }
@@ -403,6 +448,7 @@ public sealed class McpReadOnlyProofTests
         public Guid FamilyAId { get; }
         public Guid FamilyBId { get; }
         public Guid RequesterUserId { get; }
+        public IReadOnlyCollection<string> AuditMessages { get; }
 
         public static async Task<ReadOnlyProofHost> StartAsync(bool registerProductionTools = false)
         {
@@ -429,6 +475,8 @@ public sealed class McpReadOnlyProofTests
             });
             builder.WebHost.UseTestServer();
             builder.Logging.ClearProviders();
+            var auditMessages = new List<string>();
+            builder.Logging.AddProvider(new CapturingLoggerProvider(auditMessages));
             builder.Services.AddControllers().AddApplicationPart(typeof(SystemController).Assembly);
             var config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
             {
@@ -444,9 +492,11 @@ public sealed class McpReadOnlyProofTests
             builder.Services.AddSingleton<IAuthUserRepository>(users);
             builder.Services.AddSingleton<IQueryDispatcher>(dispatcher);
             builder.Services.AddSingleton(new ReadOnlyMcpTestIdentity(seed.FamilyAId, seed.RequesterUserId));
-            var mcpBuilder = builder.Services.AddDomusMindMcp(config).WithTools([typeof(ReadOnlyMcpProofTools)]);
+            var mcpBuilder = builder.Services.AddDomusMindMcp(config);
             if (registerProductionTools)
                 mcpBuilder.WithTools([typeof(DomusMind.Mcp.Tools.DomusMindReadOnlyTools)]);
+            else
+                mcpBuilder.WithTools([typeof(ReadOnlyMcpProofTools)]);
 
             var app = builder.Build();
             app.Use(async (context, next) =>
@@ -486,7 +536,7 @@ public sealed class McpReadOnlyProofTests
             app.MapDomusMindEndpoints(webRoot);
             await app.StartAsync();
             return new ReadOnlyProofHost(app, webRoot, database, dispatcher, authorization,
-                seed.FamilyAId, seed.FamilyBId, seed.RequesterUserId);
+                seed.FamilyAId, seed.FamilyBId, seed.RequesterUserId, auditMessages);
         }
 
         public async Task<McpClient> CreateClientAsync()
@@ -581,6 +631,29 @@ public sealed class McpReadOnlyProofTests
             if (RejectWrites)
                 throw new InvalidOperationException("The read-only MCP proof rejects all persistence writes.");
             return base.SavingChangesAsync(eventData, result, cancellationToken);
+        }
+    }
+
+    private sealed class CapturingLoggerProvider(ICollection<string> messages) : ILoggerProvider
+    {
+        public ILogger CreateLogger(string categoryName) => new CapturingLogger(messages);
+        public void Dispose() { }
+    }
+
+    private sealed class CapturingLogger(ICollection<string> messages) : ILogger
+    {
+        public IDisposable BeginScope<TState>(TState state) where TState : notnull => NullScope.Instance;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter)
+            => messages.Add(formatter(state, exception));
+
+        private sealed class NullScope : IDisposable
+        {
+            public static readonly NullScope Instance = new();
+            public void Dispose() { }
         }
     }
 
