@@ -58,6 +58,18 @@
   ],
   "reviews": [
     {
+      "stage": "implement-audit-2",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "705c9ab3befe961393a4a6941a642c7bcd6c70bb",
+      "decision": "request-changes",
+      "findings": [
+        "Add a whitespace-only input SDK test and assert rejection occurs before application dispatch.",
+        "Pin and assert successful current 2026-07-28 protocol negotiation instead of inferring the negotiated version from SDK defaults.",
+        "Reconcile API test counts and attach runtime image/source identity and response transcript; add completed workflow links to durable evidence."
+      ],
+      "readOnly": true
+    },
+    {
       "stage": "implement-audit-1",
       "reviewerModel": "gpt-6.1-sol",
       "reviewedCommit": "76a3fcc66b92896da0e6b496cb4dfd4f3354327c",
@@ -102,6 +114,16 @@
         "Test current-protocol GET /mcp as 405 with no SPA content and update live runtime evidence."
       ],
       "validation": "Targeted MCP tests passed 8/8; Release solution build and backend tests passed 858/858; web lint/tests/build and public-site build passed; OpenSpec validation passed 10/10, ProductShape validation had 0 errors, integration and citation checks, arc42 and Markdown lint passed. Branch CI and fresh independent audit remain pending."
+    },
+    {
+      "round": 2,
+      "gate": "implement-audit-2",
+      "changes": [
+        "Add an SDK contract call with whitespace-only input and prove the application dispatcher is not invoked.",
+        "Set and assert current protocol version 2026-07-28, alongside the existing 2025-11-25 assertion.",
+        "Update plan test totals and runtime evidence with local image ID, source revision, and sanitized request/response excerpts."
+      ],
+      "validation": "Targeted MCP tests passed 8/8. A new backend/CodeQL run for the final test changes is pending; existing exact-head workflow evidence is recorded in the FF summary."
     }
   ],
   "corrections": [

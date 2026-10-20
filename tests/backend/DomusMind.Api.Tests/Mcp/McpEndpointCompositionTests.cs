@@ -69,10 +69,20 @@ public sealed class McpEndpointCompositionTests
         await using var mcpClient = await McpClient.CreateAsync(transport, new McpClientOptions
         {
             ClientInfo = new Implementation { Name = "DomusMind.Api.Tests", Version = "1.0" },
+            ProtocolVersion = "2026-07-28",
         });
 
         var tools = await mcpClient.ListToolsAsync();
         Assert.Contains(tools, tool => tool.Name == "test_query_probe");
+        Assert.Equal("2026-07-28", mcpClient.NegotiatedProtocolVersion);
+
+        var dispatchCount = host.QueryDispatcher.DispatchCount;
+        var blankInput = await mcpClient.CallToolAsync("test_query_probe", new Dictionary<string, object?>
+        {
+            ["value"] = " ",
+        });
+        Assert.True(blankInput.IsError);
+        Assert.Equal(dispatchCount, host.QueryDispatcher.DispatchCount);
 
         var invalidInput = await mcpClient.CallToolAsync("test_query_probe", new Dictionary<string, object?>
         {
@@ -235,13 +245,16 @@ public sealed class McpEndpointCompositionTests
     public sealed class TestQueryDispatcher : IQueryDispatcher
     {
         private readonly TaskCompletionSource _started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _dispatchCount;
 
         public CancellationToken LastCancellationToken { get; private set; }
+        public int DispatchCount => Volatile.Read(ref _dispatchCount);
 
         public Task WaitUntilStartedAsync() => _started.Task.WaitAsync(TimeSpan.FromSeconds(5));
 
         public async Task<TResponse> Dispatch<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
         {
+            Interlocked.Increment(ref _dispatchCount);
             LastCancellationToken = cancellationToken;
             if (query is ProbeQuery { Value: "wait-for-cancellation" })
             {
