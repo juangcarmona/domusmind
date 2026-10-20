@@ -41,15 +41,16 @@
       "startedAt": "2026-10-20T16:25:00Z",
       "endedAt": "2026-10-20T16:32:00Z",
       "inputCommit": "12457f0",
-      "outputCommit": "986f27e",
+      "outputCommit": "2789e92",
       "result": "implemented",
       "evidence": [
         "Added OpenIddict 7.7.2 authorization-server and EF Core token/authorization persistence in DomusMind.Api's existing host; added migration and proposed ADR-0012.",
         "Added protected-resource metadata, OIDC discovery, exact MCP resource registration, Authorization Code + PKCE configuration, short-lived access tokens, refresh-token configuration, and revocation-capable token validation.",
         "Mapped the interactive authorization boundary to existing AuthUser records and FamilyAuthorizationService checks; household context is carried in the token and local API JWTs remain a separate scheme.",
         "Added an explicit antiforgery-protected OAuth consent form; only an explicit allow submission can issue an authorization code.",
-        "Added MCP bearer enforcement with safe 401 challenges and no production tools or writes; no token passthrough or persistence access from MCP middleware.",
-        "Focused OAuth contract tests pass: 7 passed. Full Release suite passes: 875 passed, 3 skipped. Build passes with 0 errors; inherited Kiota and MessagePack advisories remain documented exceptions."
+        "Added a token endpoint for authorization-code and refresh-token grants with exact resource checks, local OpenIddict validation, audience enforcement, current user/household checks, and consent/token revocation.",
+        "Added MCP bearer enforcement with safe 401 challenges, exact audience checks, current AuthUser and household access checks, structured authorization logs, and no production tools or writes; no token passthrough or persistence access from MCP middleware.",
+        "Focused OAuth contract tests pass: 8 passed, including end-to-end login, consent, PKCE exchange, refresh, MCP authorization, and revocation. Full Release suite passes: 875 passed, 3 skipped. Build passes with 0 errors; inherited Kiota and MessagePack advisories remain documented exceptions."
       ]
     }
   ],
