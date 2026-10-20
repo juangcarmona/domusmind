@@ -61,7 +61,7 @@ The initial implementation must choose concrete retention values through configu
 
 ## MCP contract
 
-The independently testable request/result schemas, normalization, error codes, approval states, idempotency rules, audit fields, and notification obligations are defined in [the production contract](../contracts/issue-231-mcp-confirmed-write-pilot.md).
+The independently testable request/result schemas, normalization, MCP `isError` mapping, error codes, approval states, idempotency precedence, audit fields, and notification obligations are defined in [the production contract](../contracts/issue-231-mcp-confirmed-write-pilot.md).
 
 ## Architecture and boundaries
 
@@ -109,7 +109,7 @@ The independently testable request/result schemas, normalization, error codes, a
 
 - The first valid request returns `CONFIRMATION_REQUIRED`, creates only a pending approval record, and leaves lists, domain state, and event log unchanged.
 - A client possessing only the OAuth credential and pending approval reference cannot approve or execute the operation; the trusted authenticated approval surface must transition the record first.
-- Pending, cancelled, expired, malformed, unknown, mismatched, and already-consumed approval references return their specified errors and do not create a fresh challenge implicitly, except that a matching completed idempotency record is resolved first for safe response-loss retry.
+- Pending, cancelled, expired, malformed, unknown, mismatched, and already-consumed approval references return their specified errors and do not create a fresh challenge implicitly, except that a matching completed idempotency record is resolved first for safe response-loss retry. A matching pending idempotency record with no reference returns the original `CONFIRMATION_REQUIRED` summary; with its bound pending reference it returns `APPROVAL_PENDING`; after the trusted surface marks that reference approved it enters the one transactional execution path.
 - A valid trusted approval produces one list item through `AddItemToListCommand`.
 - A changed payload, actor, client, household, list, or idempotency key invalidates the approval.
 - Concurrent confirmations have one transaction winner; crash/failure before commit rolls back all domain changes; response loss after commit returns the stored result on retry even though the approval record is consumed.

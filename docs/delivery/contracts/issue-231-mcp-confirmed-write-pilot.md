@@ -55,7 +55,7 @@ The action summary is the exact canonical operation to be shown by the trusted D
 
 The trusted surface authenticates the same OAuth-grant subject for this pilot, applies normal session/CSRF protections, displays the summary, and records an explicit approve or cancel transition. A second MCP call, model-produced confirmation text, client UI, or possession of the OAuth credential plus `approvalRequestId` cannot transition the record.
 
-When a follow-up request supplies an approved reference and the exact same payload, the operation executes. A pending reference returns `APPROVAL_PENDING`; it does not create a new approval. A cancelled, expired, unknown, malformed, mismatched, or consumed reference returns `CONFIRMATION_INVALID` when no completed idempotent operation exists; it does not create a fresh approval.
+When a follow-up request supplies an approved reference and the exact same payload, the operation executes. A pending reference returns the `ERROR` variant with `APPROVAL_PENDING`; it does not create a new approval. A cancelled, expired, unknown, malformed, mismatched, or consumed reference returns the `ERROR` variant with `CONFIRMATION_INVALID` when no completed idempotent operation exists; it does not create a fresh approval.
 
 ### Completed result schema
 
@@ -75,7 +75,7 @@ When a follow-up request supplies an approved reference and the exact same paylo
 
 ## Result and error variants
 
-The tool returns one of these closed structured-content variants. `CONFIRMATION_REQUIRED`, `APPROVAL_PENDING`, and `COMPLETED` are operation results, not protocol failures. All rejected operations use the `ERROR` variant with the exact `error.code` vocabulary below.
+The tool returns one of these closed structured-content variants. `CONFIRMATION_REQUIRED` and `COMPLETED` are successful operation results and have MCP `isError=false`. Every rejected or unresolved operation uses the `ERROR` variant and has MCP `isError=true`; its `error.code` is the exact vocabulary below. `APPROVAL_PENDING` is only an error code, never a successful operation status.
 
 ```json
 {
@@ -87,7 +87,9 @@ The tool returns one of these closed structured-content variants. `CONFIRMATION_
 }
 ```
 
-The `CANCELLED` result is returned when cancellation is observed before the execution transaction commits:
+The mapping is fixed: `CONFIRMATION_REQUIRED` returns `isError=false` with the approval reference and action summary; `COMPLETED` returns `isError=false` with the completed result; `APPROVAL_PENDING`, `CONFIRMATION_INVALID`, `ACCESS_DENIED`, `INVALID_INPUT`, `IDEMPOTENCY_CONFLICT`, `OPERATION_IN_PROGRESS`, `DUPLICATE_OPERATION`, `CANCELLED`, `OPERATION_STATUS_UNKNOWN`, and `INTERNAL_ERROR` return `isError=true` with `status=ERROR` and `{code,message}`. SDK transport/protocol errors are not remapped into a business result; tool input binding failures are mapped to `INVALID_INPUT` before any approval or domain write.
+
+The `CANCELLED` error variant is returned when cancellation is observed before the execution transaction commits:
 
 ```json
 {
@@ -122,7 +124,8 @@ This status never authorizes a new execution; the durable idempotency record res
 - The Lists application boundary receives the expected granted household and rejects a target list in another household before the existing membership authorization check.
 - The durable idempotency namespace is `mcp:list_item_add:v1`, unique by actor/client/granted household/key. The canonical payload hash is stored with the key.
 - After current token/audience/scope/account/household validation and canonical payload validation, idempotency lookup has precedence over approval-reference state: a completed key with the same payload returns its stored minimized result even if the supplied approval reference is now consumed or expired; a same-payload tombstone returns `DUPLICATE_OPERATION`; an in-progress key returns `OPERATION_IN_PROGRESS`; and a different payload returns `IDEMPOTENCY_CONFLICT`. These outcomes are bound to the current actor, client, granted household, namespace, and key, so they do not disclose another principal's result.
-- Only when no completed, tombstoned, in-progress, or pending record matches does the adapter evaluate the approval reference: no reference creates/reuses the documented pending approval, and an approved reference permits execution; cancelled, expired, unknown, malformed, mismatched, or consumed references return `CONFIRMATION_INVALID`.
+- When a pending idempotency record matches the actor, client, granted household, key, and payload hash, the adapter routes to its bound approval record: no approval reference returns the same `CONFIRMATION_REQUIRED` summary and reference; the matching reference in `Pending` state returns `ERROR/APPROVAL_PENDING`; the matching reference in `Approved` state enters the transactional execution path; and a different, malformed, cancelled, expired, unknown, mismatched, or consumed reference returns `ERROR/CONFIRMATION_INVALID`. It never creates a second approval for the same pending identity.
+- Only when no completed, tombstoned, in-progress, or pending record matches does the adapter evaluate a supplied approval reference as a new execution candidate; an approved reference may create the pending execution claim, while invalid states return `ERROR/CONFIRMATION_INVALID`.
 - No case creates a second item. Response-loss retries therefore return `COMPLETED` from durable state rather than failing merely because the approval was consumed.
 - Approval consumption, idempotency claim/completion, list mutation, Lists event log entry, and the completion result commit in one relational transaction. The shared post-commit list notification is published only after commit.
 - Cancellation before commit rolls back the transaction and returns the `CANCELLED` variant when the response channel is available. Cancellation after commit returns `COMPLETED` when possible; a disconnected client retries the same key. An infrastructure-unknown commit outcome returns `OPERATION_STATUS_UNKNOWN` and never permits a new execution.
@@ -134,7 +137,6 @@ Structured tool errors contain `code` and a safe `message`, plus only the explic
 
 - `INVALID_INPUT` — malformed schema, unknown field, invalid GUID, blank/oversized field, or SDK binding failure.
 - `ACCESS_DENIED` — invalid audience, missing `mcp.write`, disabled subject, revoked grant, removed membership, or target-list/granted-household mismatch.
-- `CONFIRMATION_REQUIRED` — valid request created or reused a pending approval; this is an operation-result status, not an `ERROR` code.
 - `APPROVAL_PENDING` — the supplied approval is still awaiting the trusted human transition.
 - `CONFIRMATION_INVALID` — unknown, malformed, expired, cancelled, consumed, or mismatched approval reference when no completed idempotent operation takes precedence. The initial request with no reference is the documented `CONFIRMATION_REQUIRED` path.
 - `IDEMPOTENCY_CONFLICT` — key is already bound to a different canonical payload.
