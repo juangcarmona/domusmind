@@ -18,13 +18,13 @@ DomusMind's business-facing HTTP API is REST, with controllers as its transport 
 
 ## Decision
 
-We will host MCP Streamable HTTP through the official .NET MCP SDK at `/mcp` inside the existing `DomusMind.Api` process. Business REST routes remain ASP.NET Core controllers under ADR-0005. The MCP adapter remains a thin protocol boundary and does not access persistence or define domain behavior. Until the separate authorization and capability gates pass, the production server exposes no tools, resources, or prompts and returns an empty tools catalog.
+We will host MCP Streamable HTTP through the official .NET MCP SDK at `/mcp` inside the existing `DomusMind.Api` process. Business REST routes remain ASP.NET Core controllers under ADR-0005. The MCP adapter remains a thin protocol boundary and does not access persistence or define domain behavior. Until the separate authorization and capability gates pass, the production server exposes no tools, resources, or prompts and returns an empty tools catalog. Configure the SDK to serve the current protocol statelessly while retaining its initialization-handshake compatibility path for down-level clients.
 
 ## Consequences
 
 - **Positive:** MCP clients use a standards-based endpoint without adding a deployable component or changing the established REST/controller convention.
 - **Negative:** MCP shares the API process, release and operational lifecycle; protocol middleware and route behavior must be tested alongside the SPA fallback.
-- **Neutral:** The `/mcp` endpoint is not authenticated in this foundation slice, but exposes no household data or callable capabilities. OAuth/OIDC resource protection and household authorization must be completed before tools are introduced. Host and forwarded-host validation remain distinct from Origin validation.
+- **Neutral:** The `/mcp` endpoint is not authenticated in this foundation slice, but exposes no household data or callable capabilities. OAuth/OIDC resource protection and household authorization must be completed before tools are introduced. Current protocol clients are served statelessly; the SDK's compatibility path for initialization-handshake clients uses session state and needs session affinity when horizontally scaled. Host and forwarded-host validation remain distinct from Origin validation.
 
 ## Alternatives considered
 

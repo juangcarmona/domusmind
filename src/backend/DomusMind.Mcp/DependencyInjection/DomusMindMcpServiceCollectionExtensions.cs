@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using ModelContextProtocol.AspNetCore;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 
@@ -18,7 +19,8 @@ public static class DomusMindMcpServiceCollectionExtensions
             .ValidateOnStart();
         services.AddSingleton<IValidateOptions<DomusMindMcpOptions>, DomusMindMcpOptionsValidator>();
         return services.AddMcpServer()
-            .WithHttpTransport()
+            .WithHttpTransport(options =>
+                options.SessionMode = HttpServerSessionMode.StatefulForInitializeClients)
             .WithListToolsHandler((_, _) => new ValueTask<ListToolsResult>(new ListToolsResult { Tools = [] }));
     }
 

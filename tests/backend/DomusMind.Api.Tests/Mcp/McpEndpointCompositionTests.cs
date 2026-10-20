@@ -27,20 +27,28 @@ public sealed class McpEndpointCompositionTests
         using var restResponse = await client.GetAsync("/api/system/ping");
         Assert.Equal(HttpStatusCode.OK, restResponse.StatusCode);
 
-        using var mcpGetResponse = await client.GetAsync("/mcp");
-        Assert.Equal(HttpStatusCode.NotFound, mcpGetResponse.StatusCode);
+        using var getRequest = new HttpRequestMessage(HttpMethod.Get, "/mcp");
+        getRequest.Headers.TryAddWithoutValidation("MCP-Protocol-Version", "2026-07-28");
+        getRequest.Headers.Accept.ParseAdd("application/json, text/event-stream");
+        using var mcpGetResponse = await client.SendAsync(getRequest);
+        Assert.Equal(HttpStatusCode.MethodNotAllowed, mcpGetResponse.StatusCode);
+        Assert.NotEqual("text/html", mcpGetResponse.Content.Headers.ContentType?.MediaType);
         Assert.DoesNotContain("spa-marker", await mcpGetResponse.Content.ReadAsStringAsync(), StringComparison.Ordinal);
     }
 
-    [Fact]
-    public async Task Present_invalid_origin_is_rejected_with_forbidden()
+    [Theory]
+    [InlineData("https://untrusted.example")]
+    [InlineData("https://trusted.example/")]
+    [InlineData("https://trusted.example/a/..")]
+    [InlineData("https://trusted.example?unexpected=query")]
+    public async Task Present_invalid_origin_is_rejected_with_forbidden(string origin)
     {
         await using var host = await ApiTestHost.StartAsync();
         using var request = new HttpRequestMessage(HttpMethod.Post, "/mcp")
         {
             Content = JsonContent.Create(new { jsonrpc = "2.0", id = 1, method = "tools/list" }),
         };
-        request.Headers.TryAddWithoutValidation("Origin", "https://untrusted.example");
+        request.Headers.TryAddWithoutValidation("Origin", origin);
 
         using var response = await host.Client.SendAsync(request);
 
@@ -66,6 +74,16 @@ public sealed class McpEndpointCompositionTests
         var tools = await mcpClient.ListToolsAsync();
         Assert.Contains(tools, tool => tool.Name == "test_query_probe");
 
+        var invalidInput = await mcpClient.CallToolAsync("test_query_probe", new Dictionary<string, object?>
+        {
+            ["value"] = new string('x', TestOnlyMcpTools.MaximumValueLength + 1),
+        });
+        Assert.True(invalidInput.IsError);
+        Assert.DoesNotContain(
+            "sensitive-internal-detail",
+            string.Join(" ", invalidInput.Content.OfType<TextContentBlock>().Select(block => block.Text)),
+            StringComparison.Ordinal);
+
         var result = await mcpClient.CallToolAsync("test_query_probe", new Dictionary<string, object?>
         {
             ["value"] = "bounded-input",
@@ -74,6 +92,16 @@ public sealed class McpEndpointCompositionTests
         Assert.NotEqual(true, result.IsError);
         Assert.Contains(result.Content, block => block is TextContentBlock text && text.Text == "safe:bounded-input");
         Assert.True(host.QueryDispatcher.LastCancellationToken.CanBeCanceled);
+
+        using var cancellation = new CancellationTokenSource();
+        var pendingCall = mcpClient.CallToolAsync("test_query_probe", new Dictionary<string, object?>
+        {
+            ["value"] = "wait-for-cancellation",
+        }, cancellationToken: cancellation.Token);
+        await host.QueryDispatcher.WaitUntilStartedAsync();
+        cancellation.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await pendingCall);
+        Assert.True(host.QueryDispatcher.LastCancellationToken.IsCancellationRequested);
 
         var error = await mcpClient.CallToolAsync("test_query_probe", new Dictionary<string, object?>
         {
@@ -99,9 +127,11 @@ public sealed class McpEndpointCompositionTests
         await using var mcpClient = await McpClient.CreateAsync(transport, new McpClientOptions
         {
             ClientInfo = new Implementation { Name = "DomusMind.Api.Tests", Version = "1.0" },
+            ProtocolVersion = "2025-11-25",
         });
 
         Assert.Empty(await mcpClient.ListToolsAsync());
+        Assert.Equal("2025-11-25", mcpClient.NegotiatedProtocolVersion);
     }
 
     [Fact]
@@ -182,23 +212,43 @@ public sealed class McpEndpointCompositionTests
     [McpServerToolType]
     private static class TestOnlyMcpTools
     {
+        public const int MaximumValueLength = 32;
+
         [McpServerTool(Name = "test_query_probe", ReadOnly = true)]
         public static Task<string> QueryProbe(
             string value,
             IQueryDispatcher dispatcher,
-            CancellationToken cancellationToken) =>
-            dispatcher.Dispatch(new ProbeQuery(value), cancellationToken);
+            CancellationToken cancellationToken)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(value);
+            if (value.Length > MaximumValueLength)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), $"Value must not exceed {MaximumValueLength} characters.");
+            }
+
+            return dispatcher.Dispatch(new ProbeQuery(value), cancellationToken);
+        }
     }
 
     private sealed record ProbeQuery(string Value) : IQuery<string>;
 
     public sealed class TestQueryDispatcher : IQueryDispatcher
     {
+        private readonly TaskCompletionSource _started = new(TaskCreationOptions.RunContinuationsAsynchronously);
+
         public CancellationToken LastCancellationToken { get; private set; }
 
-        public Task<TResponse> Dispatch<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
+        public Task WaitUntilStartedAsync() => _started.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+        public async Task<TResponse> Dispatch<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
         {
             LastCancellationToken = cancellationToken;
+            if (query is ProbeQuery { Value: "wait-for-cancellation" })
+            {
+                _started.TrySetResult();
+                await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            }
+
             if (query is ProbeQuery { Value: "trigger-secret" })
             {
                 throw new InvalidOperationException("sensitive-internal-detail");
@@ -207,7 +257,7 @@ public sealed class McpEndpointCompositionTests
             var result = query is ProbeQuery probe
                 ? $"safe:{probe.Value}"
                 : throw new InvalidOperationException("Unexpected test query type.");
-            return Task.FromResult((TResponse)(object)result);
+            return (TResponse)(object)result;
         }
     }
 }
