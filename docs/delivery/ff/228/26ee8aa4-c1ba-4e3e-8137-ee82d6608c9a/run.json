@@ -28,14 +28,14 @@
       "endedAt": "2026-10-20T15:04:07Z",
       "inputCommit": "1ce14ac910ec2ce6136c604eb699af74ef6e718b",
       "outputCommit": "983a9a4",
-      "result": "corrected-draft-awaiting-independent-plan-review",
+      "result": "correction-round-2-awaiting-independent-plan-review",
       "evidence": [
         "Plan artifact: docs/delivery/plans/issue-228-readonly-mcp-proof.md.",
         "Client-facing test contract: docs/delivery/contracts/issue-228-mcp-readonly-proof.md.",
         "Worktree: /srv/workspaces/juangcarmona/domusmind/issue-228-readonly-mcp-proof; branch created from the current Epic branch after #227 merge.",
         "No implementation started; only the plan, client contract, and FF evidence are included in Draft PR #269.",
         "Independent plan review requested changes at PR head 6fb3fe1ecd65db499dc23198f0c6eedbbc13dec8; correction round 1 addresses all three findings.",
-        "Correction plan and contract are being committed before the second independent review; review will target the resulting exact PR head."
+        "Second independent review at 7103b8c4c6589793205e4b39ca4c001845dc0f5e closed two findings and requested fully explicit input/output schemas and an exact timeline field allowlist; correction round 2 addresses that remaining finding."
       ]
     }
   ],
@@ -52,6 +52,18 @@
         "Name a client-facing contract artifact and verify tool descriptions/schemas, allowed output fields, structured errors, representative journeys, and explicit Tasks/member-agenda exclusions."
       ],
       "evidence": "Independent reviewer agent 01a159d7-c330-74d0-b783-872f4b9388ac; read-only plan audit; no tests run."
+    },
+    {
+      "gate": "plan",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "7103b8c4c6589793205e4b39ca4c001845dc0f5e",
+      "verdict": "request-changes",
+      "findings": [
+        "The timeline projection remained unspecified and the tool input was prose/example rather than a complete schema; define complete input and output schemas for both tools, including required/nullable fields and an explicit timeline field allowlist.",
+        "Require output-schema parity and successful-response validation in addition to tool input schema checks."
+      ],
+      "evidence": "Independent reviewer agent 01a159d7-c330-74d0-b783-872f4b9388ac; verified worktree HEAD and PR #269 head; read-only inspection; no tests run."
     }
   ],
   "corrections": [
@@ -64,6 +76,16 @@
         "Added docs/delivery/contracts/issue-228-mcp-readonly-proof.md and required test parity for schemas/descriptions, minimized fields, safe structured errors, example journeys, and explicit exclusions."
       ],
       "validation": "git diff --check and jq JSON validation passed. Independent plan review is pending at the corrected PR head."
+    },
+    {
+      "round": 2,
+      "addressesReviewRound": 2,
+      "changes": [
+        "Added complete JSON input/output schemas for both tools, explicit required and nullable fields, additional-property restrictions, and the exact minimal timeline field allowlist grounded in the existing DTOs.",
+        "Specified effective member display-name projection and stable member ID semantics, plus structured error code/message shape.",
+        "Required input/output schema parity, successful response validation, and rejection of unexpected fields in contract tests."
+      ],
+      "validation": "git diff --check and jq empty passed. markdownlint-cli2 was invoked on the changed Markdown paths and reported zero issues, but also zero linted files; this is recorded as inconclusive rather than a file-level lint pass. Independent plan review is pending at the corrected PR head."
     }
   ],
   "stopReason": null,
