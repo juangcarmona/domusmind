@@ -7,7 +7,7 @@
   "executorModel": "GPT-5 (active Codex model)",
   "reviewerModel": "gpt-6.1-sol (available distinct model override)",
   "maxCorrectionRounds": 3,
-  "status": "running",
+  "status": "awaiting-owner-done-judgement",
   "stages": [
     {
       "name": "refine",
@@ -41,14 +41,30 @@
     {
       "name": "implement",
       "startedAt": "2026-10-20T15:04:07Z",
-      "endedAt": null,
+      "endedAt": "2026-10-20T15:47:50Z",
       "inputCommit": "62b975a93916a0c18904d6475e9541cb5d2231af",
       "outputCommit": "713d100526a4ad22a891164b6a58400445e06d14",
-      "result": "implementation-review-correction-round-1",
+      "result": "implementation-review-approved-awaiting-owner-done-judgement",
       "evidence": [
         "Implemented test-host-only agenda_get and household_members_list over the actual timeline and member query handlers, isolated two-household EF Core InMemory data, and server-bound fixture identity; production MCP catalog remains empty.",
         "Added a client contract, schema/response parity assertions, error/cancellation/isolation tests, and sanitized transcript evidence. Focused suite passed 9/9; full Release solution build passed; full Release tests passed: API 33, Application 525, Domain 250, Infrastructure 56 passed and 3 PostgreSQL tests skipped without DOMUSMIND_TEST_POSTGRES.",
-        "Independent implementation review round 1 at exact head 713d100526a4ad22a891164b6a58400445e06d14 requested changes: P2 culture-sensitive timeline date formatting and no-write evidence did not detect already-committed SaveChanges mutations."
+        "Independent implementation review round 1 at exact head 713d100526a4ad22a891164b6a58400445e06d14 requested changes: P2 culture-sensitive timeline date formatting and no-write evidence did not detect already-committed SaveChanges mutations. Round 2 approved exact code head 330568b0e9d5d3c679b83cbdd5712ed8b49e4efb; approval comment #6294774341."
+      ]
+    },
+    {
+      "name": "verify-done",
+      "startedAt": "2026-10-20T15:30:00Z",
+      "endedAt": "2026-10-20T15:47:50Z",
+      "inputCommit": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "outputCommit": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "result": "evidence-complete-owner-judgement-pending",
+      "evidence": [
+        "Separate independent DoD audit found all seven #228 acceptance criteria satisfied, but withheld Done certification pending current security/CI evidence and owner-only judgements. Audit identified stale plan-only wording in this summary; corrected before final review presentation.",
+        "GitHub backend CI workflow_dispatch run 39450868459 succeeded on code head 330568b0e9d5d3c679b83cbdd5712ed8b49e4efb, including disposable PostgreSQL, solution build/tests, and API publish: https://github.com/juangcarmona/domusmind/actions/runs/39450868459.",
+        "GitHub CodeQL workflow_dispatch run 39450868200 succeeded on code head 330568b0e9d5d3c679b83cbdd5712ed8b49e4efb for C# and JavaScript/TypeScript: https://github.com/juangcarmona/domusmind/actions/runs/39450868200. No open code-scanning alerts and zero repository secret-scanning alerts at verification time.",
+        "NuGet vulnerability audit found inherited Microsoft.Kiota.Abstractions 1.17.1 (high) and MessagePack 2.5.302 (moderate). GitHub Dependabot has inherited open http-cache-semantics (high) and KaTeX (low) alerts. These four advisory classes were explicitly accepted for deferral by the owner when approving #227; none was introduced by this issue's test-only dependency scope.",
+        "Full local Release verification passed: 864 tests passed, 3 PostgreSQL tests skipped without DOMUSMIND_TEST_POSTGRES; remote backend CI ran the PostgreSQL service and passed all tests and API publish. Targeted Markdown lint command exited successfully with no findings in the four explicit files; docs validation JSON and git diff whitespace checks passed.",
+        "Owner-only judgements remain required for acceptance/completeness, test adequacy, security exposure, architecture conformance, documentation/spec consistency, self-review, and known limitations. Do not mark Done, integrate PR #269 into the Epic branch, or start #229 until those judgements are approved."
       ]
     }
   ],
@@ -98,6 +114,26 @@
         "[P2] ChangeTracker state inspection misses changes already persisted by SaveChanges. Reject persistence writes after fixture seeding or compare persisted state before and after tool calls."
       ],
       "evidence": "Independent read-only audit of exact pushed PR head; reviewer verified Thai-culture date behavior and found no write rejection guard; focused/Thai culture tests ran; no files or GitHub state changed."
+    },
+    {
+      "gate": "implementation",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "verdict": "approve",
+      "findings": [],
+      "evidence": "Independent review approved exact implementation head; PR comment #6294774341. Reviewer ran MCP 19/19, Thai-locale proof 9/9, and handler tests 26/26; full workflow verification was run separately by executor."
+    },
+    {
+      "gate": "done-audit",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "verdict": "evidence-complete-owner-judgement-pending",
+      "findings": [
+        "All seven issue acceptance criteria pass evidence review.",
+        "Repository DoD awaits owner judgements; initial verification gaps were closed with backend CI including PostgreSQL, CodeQL C#/JavaScript, zero secret-scanning alerts, and corrected/linted FF summary."
+      ],
+      "evidence": "Independent criterion-by-criterion audit agent 01a159f7-8f7d-72b3-a852-eec7a273a164. Owner approval is still outstanding; no merge or Done transition occurred."
     }
   ],
   "corrections": [
@@ -132,7 +168,25 @@
       "validation": "Focused MCP tests passed 9/9 after corrections. Release solution build passed with 6 inherited dependency warnings and no errors. Release tests passed: API 33, Application 525, Domain 250, Infrastructure 56; 3 PostgreSQL-only tests skipped because DOMUSMIND_TEST_POSTGRES is unset. git diff --check passed. Awaiting independent implementation review round 2."
     }
   ],
-  "stopReason": null,
+  "stopReason": "Awaiting owner-only DoD judgements before integration of #228 and continuation to #229.",
+  "verificationRuns": [
+    {
+      "name": "backend-ci",
+      "head": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "runId": 39450868459,
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/39450868459",
+      "result": "success",
+      "details": "Build, complete tests with PostgreSQL service, API publish."
+    },
+    {
+      "name": "codeql",
+      "head": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "runId": 39450868200,
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/39450868200",
+      "result": "success",
+      "details": "C# and JavaScript/TypeScript analyses succeeded; no open code-scanning alerts observed."
+    }
+  ],
   "pullRequest": {
     "number": 269,
     "url": "https://github.com/juangcarmona/domusmind/pull/269",
