@@ -13,7 +13,7 @@
 ## Stage evidence
 
 - `refine`: Ready. Issue #227 names affected household members, product owner/maintainers, and external MCP client users; records accepted #226 host direction; defines exclusions and six verifiable criteria.
-- `propose`: In progress. The plan uses an isolated `DomusMind.Mcp` library hosted inside `DomusMind.Api`, with no tools or household data in this slice. Owner-accepted OAuth/OIDC direction is retained; authorization-server placement remains open for #229.
+- `propose`: In progress. Independent review requested two bounded fixes: explicitly handle Application's transitive EF/Domain graph with assembly/type dependency tests, and test actual API route composition so unsupported `/mcp` methods cannot fall through to the SPA. Both corrections are now reflected in the plan. The plan uses a `DomusMind.Mcp` library hosted inside `DomusMind.Api`, with no production tools or household data in this slice. Authorization-server placement remains open for #229.
 - Worktree setup: dedicated worktree created from the updated Epic branch `feat/224-mcp-household-assistants` at `320526d`; `dotnet restore DomusMind.slnx` passed with pre-existing NU1902/NU1903 advisories. No local secrets or untracked configuration were needed.
 
 ## Scope boundary

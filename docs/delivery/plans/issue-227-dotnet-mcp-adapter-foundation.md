@@ -8,7 +8,7 @@ Add a minimal, empty-capability MCP server endpoint to the existing `DomusMind.A
 
 - Owner accepted the in-process `DomusMind.Api` host direction and OAuth 2.1 Authorization Code + PKCE/OIDC direction in issue #226. Authorization-server placement/provider remains open for #229 and is not part of this issue.
 - DomusMind is a .NET 10 API-first modular monolith. `DomusMind.Api` currently composes Application and Infrastructure; existing REST APIs remain ASP.NET Core Controllers.
-- To enforce the MCP adapter's dependency boundary, introduce a non-deployable `DomusMind.Mcp` class library referenced by the API host. It may reference `DomusMind.Application` and shared Contracts only; it must not reference Infrastructure, Domain, `DbContext`, or provider-specific persistence packages.
+- Introduce a non-deployable `DomusMind.Mcp` class library referenced by the API host. The existing `DomusMind.Application` project itself references EF Core, transitively exposes Domain, and publicly exposes `IDomusMindDbContext`, so a project-reference allowlist alone is not an isolation boundary. The MCP project may directly reference Application and shared Contracts only; add deterministic architecture tests for both direct project/package references and compiled assembly/type references, failing if the adapter uses Infrastructure, Domain, EF Core, `IDomusMindDbContext`, or persistence namespaces. The transitive Application dependency graph includes EF Core and Domain; disclose that fact, while ensuring the compiled MCP adapter has no reference to or usage of those persistence/domain types.
 - The SDK-owned `/mcp` route is a protocol endpoint, not a conversion of business REST endpoints to Minimal APIs. Existing REST endpoints and controller conventions remain unchanged.
 - The adapter has no registered household tools in this slice. No OAuth server, tokens, production user data, AI/LLM library, agent framework, or application write behavior is included.
 
@@ -17,6 +17,8 @@ Add a minimal, empty-capability MCP server endpoint to the existing `DomusMind.A
 Use the official `ModelContextProtocol.AspNetCore` package, pinned initially to stable SDK `2.2.0`, in the `DomusMind.Mcp` library. The official SDK's current transport guidance uses `MapMcp` for ASP.NET Core Streamable HTTP and defaults to stateless HTTP; its 2.x line implements MCP `2026-07-28` while retaining down-level protocol compatibility. Re-check package compatibility and security advisories at implementation time. This is an adapter library hosted in-process, not a separate service.
 
 Expose narrowly scoped service-registration and endpoint-mapping extensions so `DomusMind.Api` explicitly opts in and mounts `/mcp`. The registration extension returns the SDK builder so future capability slices can register explicit tool types without a second registry. Do not create a generic tool framework, persistence abstraction, or placeholder application dispatcher. Production registers no tools in this issue. A test-only probe tool demonstrates bounded SDK input/output, cancellation propagation, and dispatch through the existing `IQueryDispatcher` seam; it is not included in the production assembly or tool catalog. Future production tools will use existing application queries/commands and their domain authorization.
+
+The API's existing SPA fallback currently excludes `/api` and `/swagger`; it must also exclude `/mcp` so an unsupported MCP HTTP method cannot receive the SPA document instead of a protocol/HTTP response. Factor the actual endpoint composition into a testable API extension if needed, and exercise it with the SPA present rather than duplicating the route configuration in a test-only host.
 
 Verify the SDK's Streamable HTTP `Origin` handling against the current protocol. If the SDK does not enforce the required behavior, add a narrow middleware/endpoint guard: validate a present `Origin` against an explicit configured allowlist and return 403 for an invalid origin. Do not infer trust from forwarded-host headers. The endpoint remains data-free and tool-free until #229 authorization and #228 product/capability gates are satisfied.
 
@@ -36,17 +38,19 @@ This creates no ProductShape or OpenSpec domain behavior. Existing domain specif
 3. Integrate the module into `DomusMind.Api` without changing existing REST controller routes or exposing any household capability.
 4. Add an isolated `DomusMind.Mcp.Tests` harness using the official SDK client/server contracts. A test-only probe tool verifies a bounded input/output schema, application-query dispatch, cancellation propagation, and that internal exception details do not leak in tool results; register it only in the test host.
 5. Add protocol transport tests for endpoint discovery/negotiation, an empty production tool catalog, malformed/unsupported request error mapping, and `Origin` validation (configured origin accepted; present invalid origin receives 403; absent Origin remains usable for non-browser clients).
-6. Prove the project dependency boundary with explicit project references and a deterministic project-graph check; `DomusMind.Mcp` must not reference Infrastructure, Domain, EF Core, or DbContext.
-7. Update solution/project documentation only where needed; identify ProductShape/OpenSpec impact as none and retain the cross-context domain specifications unchanged.
+6. Prove the project dependency boundary with an explicit direct-reference allowlist and deterministic assembly/type architecture tests; the adapter must not reference Infrastructure, Domain, EF Core, `IDomusMindDbContext`, or persistence namespaces, even though EF Core exists transitively in the current Application package graph.
+7. Compose a test through the actual API endpoint-mapping path with static SPA files enabled. Verify an unsupported `/mcp` method cannot hit the SPA fallback, invalid Origin returns 403, MCP discovery advertises no production capability, structured errors do not leak internals, and an existing REST route remains mapped.
+8. Update architecture views to reflect the non-deployable adapter project and in-process endpoint after implementation evidence exists; identify ProductShape/OpenSpec impact as none and retain domain specifications unchanged. Assess whether ADR-0005 needs a narrow MCP-protocol exception; do not alter its accepted REST/controller decision silently.
 
 ## Test and verification plan
 
 - `dotnet build DomusMind.slnx --configuration Release`.
 - `dotnet test DomusMind.slnx --configuration Release`, including new MCP transport contract and dependency-boundary tests.
-- Inspect the final project graph and package tree to prove the MCP adapter cannot reach Infrastructure/EF Core.
+- Verify direct project/package references and compiled MCP assembly/type references; disclose EF Core and Domain as transitive dependencies of the existing Application project while proving no MCP adapter code/assembly uses them or Infrastructure persistence types.
 - Verify protocol behavior with the official SDK or wire-level contract tests against the selected `2026-07-28` revision and at least one supported down-level client negotiation path where the SDK supports it.
 - Verify no production tool/resource/prompt is registered and no household data is returned without a future authorization slice.
 - Check Origin behavior for allowed and invalid values and confirm 403 for an invalid present Origin.
+- Exercise the actual API route-composition path with the SPA fallback enabled; verify unsupported `/mcp` methods do not return `index.html` and existing REST controller routes remain reachable.
 - Run applicable repository ProductShape/OpenSpec/architecture citation checks if documentation/spec artifacts are changed; do not claim these are application tests.
 - Inspect live PR checks and branch rules; zero checks are reported as absent, not passing.
 

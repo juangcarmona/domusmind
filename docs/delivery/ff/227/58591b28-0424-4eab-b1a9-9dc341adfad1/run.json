@@ -31,18 +31,48 @@
       "evidence": [
         "Plan artifact drafted at docs/delivery/plans/issue-227-dotnet-mcp-adapter-foundation.md; it remains documentation-only in the proposal stage.",
         "Current official SDK research: ModelContextProtocol.AspNetCore 2.2.0 targets .NET 8.0 or higher, was released 2026-08-13, maps Streamable HTTP using MapMcp, and supports the 2026-07-28 protocol while retaining down-level compatibility.",
-        "Design proposes an in-process host with a separately enforceable DomusMind.Mcp project boundary, empty production capabilities, test-only dispatch probe, and explicit Origin-security tests."
+        "Design proposes an in-process host with a DomusMind.Mcp adapter library, empty production capabilities, test-only dispatch probe, and explicit Origin-security tests.",
+        "Independent plan review requested two corrections: the existing Application project exposes transitive EF/Domain and IDomusMindDbContext, so direct reference allowlisting alone is inadequate; the actual API SPA fallback also needs MCP route exclusion and composed-host testing."
       ]
     }
   ],
-  "reviews": [],
-  "corrections": [],
+  "reviews": [
+    {
+      "stage": "propose-review-1",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "f3b90c5dfa0a2dbabf8d72f2dfd32ee9695be530",
+      "decision": "request-changes",
+      "findings": [
+        "Application references EF Core, transitively exposes Domain, and publishes IDomusMindDbContext; add deterministic checks for both direct project/package references and compiled adapter assembly/type usage, and disclose transitive dependencies.",
+        "Stateless MCP endpoint methods interact with the API SPA fallback; test the actual API endpoint composition with static files enabled and ensure unsupported /mcp methods do not return the SPA document."
+      ],
+      "readOnly": true
+    }
+  ],
+  "corrections": [
+    {
+      "round": 1,
+      "gate": "propose",
+      "changes": [
+        "Replaced the claim that an Application/Contracts project allowlist alone isolates persistence with explicit documentation of transitive EF Core/Domain references and a deterministic compiled assembly/type architecture-test boundary.",
+        "Added actual API route-composition tests with SPA assets enabled and a required /mcp fallback exclusion for unsupported verbs, preserving REST route coverage."
+      ],
+      "validation": "Plan Markdown lint and git diff --check passed; ProductShape/OpenSpec artifacts were not changed."
+    }
+  ],
   "stopReason": null,
-  "pullRequest": null,
+  "pullRequest": {
+    "number": 268,
+    "url": "https://github.com/juangcarmona/domusmind/pull/268",
+    "draft": true,
+    "base": "feat/224-mcp-household-assistants",
+    "head": "feat/227-establish-dotnet-mcp-adapter-foundation"
+  },
   "links": [
     "https://github.com/juangcarmona/domusmind/issues/224",
     "https://github.com/juangcarmona/domusmind/issues/226",
     "https://github.com/juangcarmona/domusmind/issues/227",
-    "https://github.com/juangcarmona/domusmind/pull/225"
+    "https://github.com/juangcarmona/domusmind/pull/225",
+    "https://github.com/juangcarmona/domusmind/pull/268"
   ]
 }
