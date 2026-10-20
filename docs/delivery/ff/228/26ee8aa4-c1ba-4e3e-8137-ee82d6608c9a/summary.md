@@ -1,7 +1,7 @@
 # Fast Forward run: issue #228
 
 - Run ID: `26ee8aa4-c1ba-4e3e-8137-ee82d6608c9a`
-- Status: running — Draft PR #269 is awaiting independent plan review
+- Status: running — implementation correction round 1 is awaiting independent review
 - Branch: `feat/228-prove-readonly-mcp-capabilities`
 - Starting commit: `1ce14ac910ec2ce6136c604eb699af74ef6e718b`
 - Executor: GPT-5 (active Codex model)
@@ -20,4 +20,10 @@ Pickup WIP check: zero open `status:in-progress` and zero open `status:in-review
 
 Plan: [`issue-228-readonly-mcp-proof.md`](../../../plans/issue-228-readonly-mcp-proof.md). Client contract: [`issue-228-mcp-readonly-proof.md`](../../../contracts/issue-228-mcp-readonly-proof.md). They specify test-only `agenda_get` backed by `GetFamilyTimelineQuery` and a minimal `household_members_list` backed by `GetFamilyMembersQuery`, with synthetic fixture identity, no user-supplied household/member identity, and an empty production tool catalog. [Draft PR #269](https://github.com/juangcarmona/domusmind/pull/269) remains plan-only; no implementation has started.
 
-The first independent plan audit requested changes at head `6fb3fe1ecd65db499dc23198f0c6eedbbc13dec8`. Its three findings required actual handler integration with two-household synthetic isolation, exact date and duplicate-name behavior, and a named client-facing contract with schema parity tests. Correction round 1 added those constraints. The second audit at `7103b8c4c6589793205e4b39ca4c001845dc0f5e` closed the first two and requested complete schemas plus an explicit timeline field allowlist. Correction round 2 now defines both tools' full input/output schemas, minimized DTO-derived fields, and output validation/parity requirements. A third independent review must approve the corrected exact PR head before implementation.
+The first independent plan audit requested changes at head `6fb3fe1ecd65db499dc23198f0c6eedbbc13dec8`. Its three findings required actual handler integration with two-household synthetic isolation, exact date and duplicate-name behavior, and a named client-facing contract with schema parity tests. Correction round 1 added those constraints. The second audit at `7103b8c4c6589793205e4b39ca4c001845dc0f5e closed the first two and requested complete schemas plus an explicit timeline field allowlist. Correction round 2 defined both tools' full input/output schemas, minimized DTO-derived fields, and output validation/parity requirements. Independent plan review round 3 approved exact head `62b975a93916a0c18904d6475e9541cb5d2231af` before implementation.
+
+## Implementation
+
+Draft PR #269 now contains the test-only MCP adapter, actual Application-handler integration over isolated synthetic persistence, and sanitized transcript evidence. Production registration remains empty. The focused suite passes 9/9; Release build passes; Release solution tests pass API 33, Application 525, Domain 250, and Infrastructure 56, with 3 PostgreSQL integration tests skipped because `DOMUSMIND_TEST_POSTGRES` is unset. Existing Kiota (high) and MessagePack (moderate) advisories remain deferred under the approved #227 exception.
+
+Independent implementation review round 1 at `713d100526a4ad22a891164b6a58400445e06d14` requested two P2 corrections: force invariant date formatting and prove it under a non-Gregorian server culture; prevent persistence writes after seeding, including committed writes. Correction round 1 added the invariant-culture scope, a `th-TH` request test with Gregorian output assertions, and a SaveChanges interceptor that rejects writes. Focused and full Release verification passed again. Round 2 review is pending.

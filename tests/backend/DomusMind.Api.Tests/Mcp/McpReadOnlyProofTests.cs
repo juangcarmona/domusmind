@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -103,11 +104,14 @@ public sealed class McpReadOnlyProofTests
         Assert.Contains("Family A appointment", eventTitles);
         Assert.Contains("Family A end boundary", eventTitles);
         Assert.Equal(2, eventTitles.Length);
+        Assert.Equal("2026-10-20", agenda.GetProperty("events")[0].GetProperty("date").GetString());
+        Assert.Equal("2026-10-22", agenda.GetProperty("notes")[0].GetProperty("date").GetString());
         AssertJsonProperties(agenda.GetProperty("events")[0], "title", "date", "time", "endDate", "endTime", "status", "participants");
         AssertJsonProperties(agenda.GetProperty("events")[0].GetProperty("participants")[0], "displayName");
         Assert.Equal("Family A note", agenda.GetProperty("notes")[0].GetProperty("text").GetString());
         AssertJsonProperties(agenda.GetProperty("notes")[0], "text", "date", "createdAtUtc");
         Assert.Equal("Household list", agenda.GetProperty("listItems")[0].GetProperty("listName").GetString());
+        Assert.Equal("2026-10-25", agenda.GetProperty("listItems")[0].GetProperty("dueDate").GetString());
         AssertJsonProperties(agenda.GetProperty("listItems")[0], "listName", "itemName", "dueDate", "reminder", "checked", "importance");
         Assert.DoesNotContain("Family B secret", agenda.GetRawText(), StringComparison.Ordinal);
         Assert.DoesNotContain("calendarEventId", agenda.GetRawText(), StringComparison.Ordinal);
@@ -376,10 +380,13 @@ public sealed class McpReadOnlyProofTests
             Directory.CreateDirectory(webRoot);
             await File.WriteAllTextAsync(Path.Combine(webRoot, "index.html"), "synthetic-only");
 
+            var writeGuard = new RejectPersistenceWritesInterceptor();
             var database = new DomusMindDbContext(new DbContextOptionsBuilder<DomusMindDbContext>()
                 .UseInMemoryDatabase($"mcp-read-proof-{Guid.NewGuid():N}")
+                .AddInterceptors(writeGuard)
                 .Options);
             var seed = await SeedAsync(database);
+            writeGuard.RejectWrites = true;
             var authorization = new TestFamilyAuthorizationService(seed.RequesterUserId, seed.FamilyAId);
             var users = new EmptyAuthUserRepository();
             var dispatcher = new TestQueryDispatcher(database, authorization, users);
@@ -406,6 +413,22 @@ public sealed class McpReadOnlyProofTests
             builder.Services.AddDomusMindMcp(config).WithTools([typeof(ReadOnlyMcpProofTools)]);
 
             var app = builder.Build();
+            app.Use(async (context, next) =>
+            {
+                var originalCulture = CultureInfo.CurrentCulture;
+                var originalUiCulture = CultureInfo.CurrentUICulture;
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo("th-TH");
+                CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("th-TH");
+                try
+                {
+                    await next();
+                }
+                finally
+                {
+                    CultureInfo.CurrentCulture = originalCulture;
+                    CultureInfo.CurrentUICulture = originalUiCulture;
+                }
+            });
             app.UseStaticFiles();
             app.UseDomusMindMcpOriginValidation();
             app.MapDomusMindEndpoints(webRoot);
@@ -486,6 +509,27 @@ public sealed class McpReadOnlyProofTests
         }
 
         private sealed record Seed(Guid FamilyAId, Guid FamilyBId, Guid RequesterUserId);
+    }
+
+    private sealed class RejectPersistenceWritesInterceptor : SaveChangesInterceptor
+    {
+        public bool RejectWrites { get; set; }
+
+        public override InterceptionResult<int> SavingChanges(DbContextEventData eventData,
+            InterceptionResult<int> result)
+        {
+            if (RejectWrites)
+                throw new InvalidOperationException("The read-only MCP proof rejects all persistence writes.");
+            return base.SavingChanges(eventData, result);
+        }
+
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData,
+            InterceptionResult<int> result, CancellationToken cancellationToken = default)
+        {
+            if (RejectWrites)
+                throw new InvalidOperationException("The read-only MCP proof rejects all persistence writes.");
+            return base.SavingChangesAsync(eventData, result, cancellationToken);
+        }
     }
 
     private sealed class TestFamilyAuthorizationService(Guid allowedUserId, Guid allowedFamilyId)

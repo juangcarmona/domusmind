@@ -27,15 +27,28 @@
       "startedAt": "2026-10-20T15:02:58Z",
       "endedAt": "2026-10-20T15:04:07Z",
       "inputCommit": "1ce14ac910ec2ce6136c604eb699af74ef6e718b",
-      "outputCommit": "983a9a4",
-      "result": "correction-round-2-awaiting-independent-plan-review",
+      "outputCommit": "62b975a93916a0c18904d6475e9541cb5d2231af",
+      "result": "approved-plan",
       "evidence": [
         "Plan artifact: docs/delivery/plans/issue-228-readonly-mcp-proof.md.",
         "Client-facing test contract: docs/delivery/contracts/issue-228-mcp-readonly-proof.md.",
         "Worktree: /srv/workspaces/juangcarmona/domusmind/issue-228-readonly-mcp-proof; branch created from the current Epic branch after #227 merge.",
-        "No implementation started; only the plan, client contract, and FF evidence are included in Draft PR #269.",
+        "Independent plan review round 3 approved exact PR head 62b975a93916a0c18904d6475e9541cb5d2231af; implementation then began on the same dedicated child branch.",
         "Independent plan review requested changes at PR head 6fb3fe1ecd65db499dc23198f0c6eedbbc13dec8; correction round 1 addresses all three findings.",
-        "Second independent review at 7103b8c4c6589793205e4b39ca4c001845dc0f5e closed two findings and requested fully explicit input/output schemas and an exact timeline field allowlist; correction round 2 addresses that remaining finding."
+        "Second independent review at 7103b8c4c6589793205e4b39ca4c001845dc0f5e closed two findings and requested fully explicit input/output schemas and an exact timeline field allowlist; correction round 2 addressed that remaining finding."
+      ]
+    },
+    {
+      "name": "implement",
+      "startedAt": "2026-10-20T15:04:07Z",
+      "endedAt": null,
+      "inputCommit": "62b975a93916a0c18904d6475e9541cb5d2231af",
+      "outputCommit": "713d100526a4ad22a891164b6a58400445e06d14",
+      "result": "implementation-review-correction-round-1",
+      "evidence": [
+        "Implemented test-host-only agenda_get and household_members_list over the actual timeline and member query handlers, isolated two-household EF Core InMemory data, and server-bound fixture identity; production MCP catalog remains empty.",
+        "Added a client contract, schema/response parity assertions, error/cancellation/isolation tests, and sanitized transcript evidence. Focused suite passed 9/9; full Release solution build passed; full Release tests passed: API 33, Application 525, Domain 250, Infrastructure 56 passed and 3 PostgreSQL tests skipped without DOMUSMIND_TEST_POSTGRES.",
+        "Independent implementation review round 1 at exact head 713d100526a4ad22a891164b6a58400445e06d14 requested changes: P2 culture-sensitive timeline date formatting and no-write evidence did not detect already-committed SaveChanges mutations."
       ]
     }
   ],
@@ -64,6 +77,27 @@
         "Require output-schema parity and successful-response validation in addition to tool input schema checks."
       ],
       "evidence": "Independent reviewer agent 01a159d7-c330-74d0-b783-872f4b9388ac; verified worktree HEAD and PR #269 head; read-only inspection; no tests run."
+    },
+    {
+      "gate": "plan",
+      "round": 3,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "62b975a93916a0c18904d6475e9541cb5d2231af",
+      "verdict": "approve",
+      "findings": [],
+      "evidence": "Independent reviewer approved the exact plan head; review comment recorded on Draft PR #269."
+    },
+    {
+      "gate": "implementation",
+      "round": 1,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "713d100526a4ad22a891164b6a58400445e06d14",
+      "verdict": "request-changes",
+      "findings": [
+        "[P2] Handler date formatting follows current culture; under th-TH it can produce Buddhist year 2569 while the MCP adapter accepts the value as Gregorian. Apply invariant culture to the query-formatting proof and assert output under a non-Gregorian server culture.",
+        "[P2] ChangeTracker state inspection misses changes already persisted by SaveChanges. Reject persistence writes after fixture seeding or compare persisted state before and after tool calls."
+      ],
+      "evidence": "Independent read-only audit of exact pushed PR head; reviewer verified Thai-culture date behavior and found no write rejection guard; focused/Thai culture tests ran; no files or GitHub state changed."
     }
   ],
   "corrections": [
@@ -86,6 +120,16 @@
         "Required input/output schema parity, successful response validation, and rejection of unexpected fields in contract tests."
       ],
       "validation": "git diff --check and jq empty passed. markdownlint-cli2 was invoked on the changed Markdown paths and reported zero issues, but also zero linted files; this is recorded as inconclusive rather than a file-level lint pass. Independent plan review is pending at the corrected PR head."
+    },
+    {
+      "gate": "implementation",
+      "round": 1,
+      "addressesReviewRound": 1,
+      "changes": [
+        "The test-only agenda tool now scopes actual handler execution and projection to invariant culture. The in-process test server deliberately uses th-TH and the contract, tests, and transcript assert Gregorian date output.",
+        "Added an EF Core SaveChanges interceptor that rejects synchronous and asynchronous writes after fixture seeding; successful reads also continue to assert there are no tracked mutations."
+      ],
+      "validation": "Focused MCP tests passed 9/9 after corrections. Release solution build passed with 6 inherited dependency warnings and no errors. Release tests passed: API 33, Application 525, Domain 250, Infrastructure 56; 3 PostgreSQL-only tests skipped because DOMUSMIND_TEST_POSTGRES is unset. git diff --check passed. Awaiting independent implementation review round 2."
     }
   ],
   "stopReason": null,

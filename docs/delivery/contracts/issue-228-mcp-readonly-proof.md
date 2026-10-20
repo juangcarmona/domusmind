@@ -29,6 +29,7 @@ Input schema (the only declared parameters are `from` and `to`):
 ```
 
 - Both fields are required strings in exact `yyyy-MM-dd` form, representing Gregorian calendar dates. No locale-based parsing or timezone inference is permitted.
+- Date values returned by the tool remain Gregorian `yyyy-MM-dd` regardless of the server's current culture.
 - `from` and `to` are inclusive. The interval may cover no more than 31 calendar dates.
 - Missing/partial bounds fail MCP SDK argument binding safely. Invalid or ambiguous date strings, reversed ranges, and ranges longer than 31 dates return a structured application invalid-input error.
 - Household and requester identity come only from the synthetic test fixture, never from tool input.

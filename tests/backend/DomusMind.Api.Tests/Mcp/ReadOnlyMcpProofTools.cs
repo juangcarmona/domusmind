@@ -38,6 +38,7 @@ public static class ReadOnlyMcpProofTools
 
         try
         {
+            using var invariantCulture = new InvariantCultureScope();
             var response = await dispatcher.Dispatch(new GetFamilyTimelineQuery(
                 identity.FamilyId,
                 fromDate,
@@ -137,6 +138,24 @@ public static class ReadOnlyMcpProofTools
 
     private static DateTimeOffset? ParseOptionalInstant(string? value)
         => value is null ? null : DateTimeOffset.ParseExact(value, "O", CultureInfo.InvariantCulture);
+}
+
+internal sealed class InvariantCultureScope : IDisposable
+{
+    private readonly CultureInfo _originalCulture = CultureInfo.CurrentCulture;
+    private readonly CultureInfo _originalUiCulture = CultureInfo.CurrentUICulture;
+
+    public InvariantCultureScope()
+    {
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+        CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+    }
+
+    public void Dispose()
+    {
+        CultureInfo.CurrentCulture = _originalCulture;
+        CultureInfo.CurrentUICulture = _originalUiCulture;
+    }
 }
 
 public sealed record ReadOnlyMcpTestIdentity(Guid FamilyId, Guid RequesterUserId);

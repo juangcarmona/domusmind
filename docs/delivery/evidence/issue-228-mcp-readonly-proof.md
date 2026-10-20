@@ -63,6 +63,8 @@ Sanitized structured result (fixture member IDs and nonessential data omitted by
 
 The fixture also contains a Family B event/note, an out-of-range Family A event, and internal IDs/area data. Tests verify none appear in this response. A separate 31-calendar-date request succeeds and includes its final-day boundary event.
 
+The in-process test server deliberately runs requests with the Thai Buddhist calendar culture (`th-TH`). The test-only adapter runs the date-formatting query under invariant culture and the assertions confirm that event, note, and due dates remain Gregorian `yyyy-MM-dd` values.
+
 ## Minimal member directory
 
 Request: `{}`
@@ -92,4 +94,4 @@ For an invalid, reversed, or overlong date range, the structured tool result is:
 }
 ```
 
-The client also sends unrecognized `familyId` and `userId` values. They do not enter the tool schema or replace the fixture-bound identity. A direct Application query for the second synthetic household is denied by the test authorization service. The integration tests also verify sanitized unexpected errors, MCP cancellation propagation, exact response-field sets, and that query execution leaves no tracked state changes.
+The client also sends unrecognized `familyId` and `userId` values. They do not enter the tool schema or replace the fixture-bound identity. A direct Application query for the second synthetic household is denied by the test authorization service. A persistence interceptor rejects every `SaveChanges` call after fixture seeding, and the integration test also checks that no tracked changes remain after successful reads. Tests additionally verify sanitized unexpected errors, MCP cancellation propagation, and exact response-field sets.
