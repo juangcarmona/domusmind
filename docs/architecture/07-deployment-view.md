@@ -24,7 +24,7 @@ flowchart LR
 
     subgraph host["Docker host (one household)"]
         subgraph compose["Compose network"]
-            app["domusmind container<br/>ASP.NET Core :8080<br/>API + SPA + Swagger<br/>calendar refresh worker"]
+            app["domusmind container<br/>ASP.NET Core :8080<br/>REST + MCP + SPA + Swagger<br/>calendar refresh worker"]
             db[("postgres container<br/>PostgreSQL 17<br/>database domusmind")]
             ollama["ollama container<br/>llama3.2:3b (default)"]
         end
@@ -43,7 +43,7 @@ flowchart LR
     ghcr -. "docker compose pull" .-> app
 ```
 
-- **`domusmind`** is the only published service. Its image is built by [`src/backend/DomusMind.Api/Dockerfile`](../../src/backend/DomusMind.Api/Dockerfile): a Node stage builds the web app, a .NET SDK stage publishes the API with the web app's `dist` copied into `wwwroot`, and the runtime stage is `mcr.microsoft.com/dotnet/aspnet:10.0` listening on plain HTTP port 8080. The container maps to host port `APP_PORT` (default `24365`).
+- **`domusmind`** is the only published service. Its image is built by [`src/backend/DomusMind.Api/Dockerfile`](../../src/backend/DomusMind.Api/Dockerfile): a Node stage builds the web app, a .NET SDK stage publishes the API and in-process MCP adapter with the web app's `dist` copied into `wwwroot`, and the runtime stage is `mcr.microsoft.com/dotnet/aspnet:10.0` listening on plain HTTP port 8080. REST and MCP routes share this host; MCP does not add a deployment component. The container maps to host port `APP_PORT` (default `24365`).
 - **`postgres`** (`postgres:17-alpine`) has no host port; only the app reaches it over the Compose network. The app waits for its `pg_isready` health check before starting.
 - **`postgres_data`** holds application and event-log state. **`data_protection_keys`** persists the ASP.NET Core Data Protection key ring used to protect saved assistant provider credentials. **`ollama_data`** persists the optional local model download; model weights do not contain household notes. Preserve the Data Protection volume when moving or restoring an installation so saved credentials remain readable (see [DevOps](../devops.md#backup-and-restore)).
 - **`ollama`** is reachable only on the Compose network. The one-shot `ollama-model` resource downloads `llama3.2:3b` into `ollama_data` before the API starts in the default configuration. The external-interpreter override omits both resources and sends note text to the configured endpoint; the Inbox discloses that data flow. <!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:671602d6ae7cf237d2cc2c4c93dc385e7e6e6a8940206c5f2526872610c5e851" -->

@@ -14,3 +14,4 @@ This directory holds DomusMind's Architecture Decision Records: one file per sig
 | 0008 | [Collaborate across modules through persisted domain events](0008-collaborate-across-modules-through-persisted-domain-events.md) | Accepted | 2026-03-10 |
 | 0009 | [Use ULID-based strongly typed identifiers](0009-use-ulid-based-strongly-typed-identifiers.md) | Superseded by ADR-0010 | 2026-10-01 |
 | 0010 | [Use GUID-backed strongly typed identifiers](0010-use-guid-backed-strongly-typed-identifiers.md) | Accepted | 2026-10-01 |
+| 0011 | [Expose MCP through an in-process SDK endpoint](0011-expose-mcp-through-an-in-process-sdk-endpoint.md) | Accepted | 2026-10-20 |

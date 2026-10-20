@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "runId": "58591b28-0424-4eab-b1a9-9dc341adfad1",
+  "workItem": "227",
+  "branch": "feat/227-establish-dotnet-mcp-adapter-foundation",
+  "startedAt": "2026-10-20T04:49:19Z",
+  "executorModel": "GPT-5 (active Codex model)",
+  "reviewerModel": "gpt-6.1-sol (available distinct model override)",
+  "maxCorrectionRounds": 3,
+  "status": "running",
+  "stages": [
+    {
+      "name": "refine",
+      "startedAt": "2026-10-20T04:49:19Z",
+      "endedAt": "2026-10-20T04:49:19Z",
+      "inputCommit": "320526d4e3e49e5358d571e09ff50fe7a01e6086",
+      "outputCommit": "320526d4e3e49e5358d571e09ff50fe7a01e6086",
+      "result": "ready",
+      "evidence": [
+        "Issue #227 is status:ready and includes outcome, explicit household/product/maintainer/external-client stakeholders, bounded scope and exclusions, dependency on accepted #226 direction, and seven verifiable acceptance criteria.",
+        "The authorization-server placement/provider is explicitly deferred to #229 and is not necessary for this foundation slice.",
+        "WIP check at pickup: #226 is in review and no other open work items are in progress; cap 3 is respected."
+      ]
+    },
+    {
+      "name": "propose",
+      "startedAt": "2026-10-20T04:50:21Z",
+      "endedAt": "2026-10-20T04:58:00Z",
+      "inputCommit": "320526d4e3e49e5358d571e09ff50fe7a01e6086",
+      "outputCommit": "235e5e687b42f0f84344051e785312184483e375",
+      "result": "approved",
+      "evidence": [
+        "Plan artifact: docs/delivery/plans/issue-227-dotnet-mcp-adapter-foundation.md. Independent reviewer approved the corrected proposal at 235e5e687b42f0f84344051e785312184483e375.",
+        "Current official SDK research: ModelContextProtocol.AspNetCore 2.2.0 targets .NET 8.0 or higher, was released 2026-08-13, maps Streamable HTTP using MapMcp, and supports the 2026-07-28 protocol while retaining down-level compatibility.",
+        "Design proposes an in-process host with a DomusMind.Mcp adapter library, empty production capabilities, test-only dispatch probe, and explicit Origin-security tests.",
+        "Independent plan review requested two corrections: the existing Application project exposes transitive EF/Domain and IDomusMindDbContext, so direct reference allowlisting alone is inadequate; the actual API SPA fallback also needs MCP route exclusion and composed-host testing."
+      ]
+    },
+    {
+      "name": "implement",
+      "startedAt": "2026-10-20T04:59:00Z",
+      "inputCommit": "235e5e687b42f0f84344051e785312184483e375",
+      "outputCommit": "8ea7e1caa30846cff35cc1ca2577b66a7dd95eea",
+      "result": "verified-pending-owner-done-judgements",
+      "evidence": [
+        "Issue #227 transitioned status:ready -> status:proposed -> status:in-progress after the independent proposal approval; WIP cap remains respected.",
+        "Implementation commit 12f17b2 adds DomusMind.Mcp, official SDK Streamable HTTP registration, empty tools/list catalog, configured Origin validation, actual API route composition with /mcp SPA fallback exclusion, Docker/solution integration, and focused SDK-client and architecture tests.",
+        "CI-equivalent restore, Release solution build, complete Release solution test, API publish, and Docker image build passed. The API project run passed 24 tests including the MCP endpoint-composition and dependency-boundary tests; PostgreSQL-backed Infrastructure tests passed all 59 tests with the three integration tests enabled.",
+        "Architecture contract check passed; markdownlint passed across 31 docs; ProductShape architecture citation verification found 81 current citations, no stale/tampered/unresolved citations or errors, and 59 existing draft provenance warnings.",
+        "Dependency scans still report baseline advisories: Microsoft.Kiota.Abstractions 1.17.1 high (API/Infrastructure transitive), MessagePack 2.5.302 moderate (AppHost), http-cache-semantics high (public-site lockfile), and KaTeX low (ArcShape snapshot lockfile). DomusMind.Mcp itself has no vulnerable package; the remaining findings require explicit owner security disposition. Docker also reported legacy-builder deprecation and the existing large frontend bundle advisory.",
+        "Plan deviation recorded: the MCP contract and boundary tests are hosted in DomusMind.Api.Tests rather than a standalone DomusMind.Mcp.Tests project so they can exercise the real API composition and controller routes.",
+        "The proposed model remains unchanged: the host exposes no household capability; OAuth provider placement, household authorization, and production MCP tools remain deferred to their planned follow-on issues.",
+        "Live runtime verification against the built Docker image passed at 2026-10-20 05:23 UTC. A current-protocol tools/list request with configured Origin returned 200 and an empty catalog; a path-bearing dot-segment Origin returned 403; current-protocol GET /mcp returned 405 without SPA content; existing REST ping returned 200. Sanitized evidence: docs/delivery/ff/227/58591b28-0424-4eab-b1a9-9dc341adfad1/runtime.md. Task-scoped runtime and PostgreSQL containers were stopped after capture.",
+        "After independent audit 1, fixed raw-Origin canonicality to reject normalized path-bearing values; added regression tests for trailing slash, dot segments, query, and untrusted origins. Configured SDK StatefulForInitializeClients mode so current clients remain stateless and 2025-11-25 initialization clients are supported; documented the session-affinity limitation. The test-only probe rejects blank and over-32-character inputs and proves actual in-flight cancellation reaches the query. Targeted MCP tests passed 8/8; full Release backend tests passed 858/858.",
+        "Product/spec checks passed: OpenSpec 10/10; ProductShape 0 errors with 59 draft provenance warnings; integration consistency passed; OpenSpec citations 816 current and architecture citations 81 current, with no stale/tampered/unresolved citations; arc42 and Markdown lint passed.",
+        "Workflow runs against application/test source commit 8ea7e1c (the later commits only amend FF evidence): backend-ci https://github.com/juangcarmona/domusmind/actions/runs/39375387977 succeeded (Release build, 858 tests, API publish); docs-ci https://github.com/juangcarmona/domusmind/actions/runs/39375388219 succeeded; CodeQL https://github.com/juangcarmona/domusmind/actions/runs/39375388182 succeeded for C# and JavaScript with zero results. At prior source commit 705c9ab, webapp-ci https://github.com/juangcarmona/domusmind/actions/runs/39374845795, public-site-ci https://github.com/juangcarmona/domusmind/actions/runs/39374845518, and product-ci https://github.com/juangcarmona/domusmind/actions/runs/39374845432 succeeded; later changes to affected app inputs are limited to MCP tests, while web and product inputs remained unchanged.",
+        "Independent audit 3 at 8ea7e1c found no implementation defect; its sole P2 was missing workflow links and stale pending status in this FF record. Those are reconciled in this evidence update. On 2026-10-20, the product owner explicitly approved the remaining #227 Done judgements and accepted deferral of inherited advisories: Microsoft.Kiota.Abstractions 1.17.1 (high), MessagePack 2.5.302 (moderate), http-cache-semantics (high), and KaTeX (low). No finding is represented as fixed; no vulnerable dependency is introduced by DomusMind.Mcp. Awaiting fresh final-head Done audit and integration gates."
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "stage": "implement-audit-3",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "8ea7e1caa30846cff35cc1ca2577b66a7dd95eea",
+      "decision": "request-changes",
+      "findings": [
+        "The implementation fixes are verified and current-head workflows pass, but the FF run files do not include the workflow URLs while the plan claims those links exist.",
+        "Owner-only Done judgements remain pending, including dependency/security exposure disposition."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "implement-audit-2",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "705c9ab3befe961393a4a6941a642c7bcd6c70bb",
+      "decision": "request-changes",
+      "findings": [
+        "Add a whitespace-only input SDK test and assert rejection occurs before application dispatch.",
+        "Pin and assert successful current 2026-07-28 protocol negotiation instead of inferring the negotiated version from SDK defaults.",
+        "Reconcile API test counts and attach runtime image/source identity and response transcript; add completed workflow links to durable evidence."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "implement-audit-1",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "76a3fcc66b92896da0e6b496cb4dfd4f3354327c",
+      "decision": "request-changes",
+      "findings": [
+        "Malformed path-bearing Origin values normalize to the trusted authority and must be rejected with 403.",
+        "Planned cancellation, bounded-input, and down-level protocol negotiation checks were not actually proven.",
+        "No branch CI runs were linked and security/dependency findings need explicit disposition."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "propose-review-2",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "235e5e687b42f0f84344051e785312184483e375",
+      "decision": "approve",
+      "findings": [
+        "The direct-reference plus compiled metadata boundary addresses the Application transitive dependency concern at proposal level; it is a conformance guard, not a security sandbox.",
+        "The revised plan requires testing the actual API route composition with SPA assets and excludes /mcp from fallback; tests must assert protocol-appropriate status codes and no HTML.",
+        "No scope contradiction: in-process hosting accepted, authorization-server placement remains open, and no production capabilities are added."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "propose-review-1",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "f3b90c5dfa0a2dbabf8d72f2dfd32ee9695be530",
+      "decision": "request-changes",
+      "findings": [
+        "Application references EF Core, transitively exposes Domain, and publishes IDomusMindDbContext; add deterministic checks for both direct project/package references and compiled adapter assembly/type usage, and disclose transitive dependencies.",
+        "Stateless MCP endpoint methods interact with the API SPA fallback; test the actual API endpoint composition with static files enabled and ensure unsupported /mcp methods do not return the SPA document."
+      ],
+      "readOnly": true
+    },
+    {
+      "round": 1,
+      "gate": "implement-audit-1",
+      "changes": [
+        "Require raw Origin to match its parsed authority exactly; add regression cases for trailing slash, dot segments, query, and untrusted origins.",
+        "Use SDK StatefulForInitializeClients mode; current protocol remains stateless, while 2025-11-25 initialization clients use sessions. Record session affinity as a deployment consequence.",
+        "Prove the test-only probe rejects blank and over-limit inputs and propagates actual request cancellation; negotiate current and down-level protocols in SDK tests.",
+        "Test current-protocol GET /mcp as 405 with no SPA content and update live runtime evidence."
+      ],
+      "validation": "Targeted MCP tests passed 8/8; Release solution build and backend tests passed 858/858; web lint/tests/build and public-site build passed; OpenSpec validation passed 10/10, ProductShape validation had 0 errors, integration and citation checks, arc42 and Markdown lint passed. At the time of this correction, branch CI and follow-up audit were pending; both subsequently completed and are recorded in the implement stage."
+    },
+    {
+      "round": 2,
+      "gate": "implement-audit-2",
+      "changes": [
+        "Add an SDK contract call with whitespace-only input and prove the application dispatcher is not invoked.",
+        "Set and assert current protocol version 2026-07-28, alongside the existing 2025-11-25 assertion.",
+        "Update plan test totals and runtime evidence with local image ID, source revision, and sanitized request/response excerpts."
+      ],
+      "validation": "Targeted MCP tests passed 8/8. Current-head backend, docs and CodeQL workflows subsequently passed; workflow links are being reconciled in this third correction round."
+    },
+    {
+      "round": 3,
+      "gate": "implement-audit-3",
+      "changes": [
+        "Add backend, docs, CodeQL, web-app, public-site and ProductShape/OpenSpec workflow URLs to the durable FF summary and JSON run record.",
+        "Replace stale pending-CI statements with exact-head results and identify prior-head runs whose inputs were unaffected.",
+        "Record that automated gates passed while owner-only Done judgements and baseline dependency disposition remain pending."
+      ],
+      "validation": "Current-head backend/docs/CodeQL runs passed; prior-head unaffected webapp/public-site/product workflows passed; links and commit/head scope are recorded in both FF artifacts."
+    }
+  ],
+  "corrections": [
+    {
+      "round": 1,
+      "gate": "propose",
+      "changes": [
+        "Replaced the claim that an Application/Contracts project allowlist alone isolates persistence with explicit documentation of transitive EF Core/Domain references and a deterministic compiled assembly/type architecture-test boundary.",
+        "Added actual API route-composition tests with SPA assets enabled and a required /mcp fallback exclusion for unsupported verbs, preserving REST route coverage."
+      ],
+      "validation": "Plan Markdown lint and git diff --check passed; ProductShape/OpenSpec artifacts were not changed."
+    }
+  ],
+  "implementationAudit": {
+    "reviewerModel": "gpt-6.1-sol",
+    "reviewedCommit": "8ea7e1caa30846cff35cc1ca2577b66a7dd95eea",
+    "decision": "request-changes",
+    "readOnly": true
+  },
+  "ownerDecisions": [
+    {
+      "date": "2026-10-20",
+      "role": "developer (Juan García Carmona)",
+      "decision": "Approved the remaining #227 Definition of Done judgements and accepted deferral of inherited dependency advisories.",
+      "advisories": [
+        "Microsoft.Kiota.Abstractions 1.17.1 (high; API/Infrastructure transitive)",
+        "MessagePack 2.5.302 (moderate; AppHost)",
+        "http-cache-semantics (high; public-site lockfile; Dependabot #98)",
+        "KaTeX (low; snapshot tooling lockfile; Dependabot #102)"
+      ],
+      "evidence": "Explicit owner response in this Codex conversation: Approve #227 and defer inherited advisories (Recommended)."
+    }
+  ],
+  "stopReason": null,
+  "pullRequest": {
+    "number": 268,
+    "url": "https://github.com/juangcarmona/domusmind/pull/268",
+    "draft": true,
+    "base": "feat/224-mcp-household-assistants",
+    "head": "feat/227-establish-dotnet-mcp-adapter-foundation"
+  },
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/224",
+    "https://github.com/juangcarmona/domusmind/issues/226",
+    "https://github.com/juangcarmona/domusmind/issues/227",
+    "https://github.com/juangcarmona/domusmind/pull/225",
+    "https://github.com/juangcarmona/domusmind/pull/268",
+    "https://github.com/juangcarmona/domusmind/actions/runs/39375387977",
+    "https://github.com/juangcarmona/domusmind/actions/runs/39375388219",
+    "https://github.com/juangcarmona/domusmind/actions/runs/39375388182",
+    "https://github.com/juangcarmona/domusmind/actions/runs/39374845795",
+    "https://github.com/juangcarmona/domusmind/actions/runs/39374845518",
+    "https://github.com/juangcarmona/domusmind/actions/runs/39374845432"
+  ]
+}

@@ -10,18 +10,20 @@ description: Static decomposition of DomusMind into deployable parts, backend pr
 
 ### Overview
 
-DomusMind is one backend process, one relational database and two browser front ends. The household-facing web app is the only client of the HTTP API; the public site is a separate static marketing site with no runtime dependency on the backend. The AppHost composes the backend, database, configured text interpreter and web app for local development only.
+DomusMind is one backend process, one relational database, a browser front end, and an MCP protocol endpoint for remote AI clients. The public site is a separate static marketing site with no runtime dependency on the backend. The AppHost composes the backend, database, configured text interpreter and web app for local development only.
 
 ```mermaid
 flowchart LR
     person([Household member])
     visitor([Site visitor])
+    aiClient([Remote MCP client])
     msgraph[(Microsoft Graph)]
     interpreter["Configured text interpreter<br/>Ollama or OpenAI-compatible"]
 
     subgraph domusmind [DomusMind]
         web["Web app<br/>React + Vite SPA"]
         api["DomusMind API<br/>ASP.NET Core modular monolith"]
+        mcp["DomusMind.Mcp<br/>in-process SDK adapter"]
         db[("DomusMind database<br/>PostgreSQL")]
         apphost["AppHost<br/>.NET Aspire, development only"]
     end
@@ -31,6 +33,8 @@ flowchart LR
     person --> web
     visitor --> site
     web -- "HTTPS/JSON, JWT bearer" --> api
+    aiClient -- "MCP Streamable HTTP /mcp" --> mcp
+    mcp --> api
     api -- "EF Core / Npgsql" --> db
     api -- "delegated OAuth, delta queries" --> msgraph
     api -- "structured interpretation" --> interpreter
@@ -49,7 +53,8 @@ The backend is a single deployable modular monolith rather than a set of service
 | Building block | Responsibility | Interfaces | Source location |
 | --- | --- | --- | --- |
 | Web app | Household-facing single-page application: Agenda, Chats, Inbox, Lists, Areas, Meal Planning, Settings; holds the session tokens client-side | Consumes the REST API; browser routes | [`src/web/app`](../../src/web/app) |
-| DomusMind API | All product behaviour: authentication, authorization, commands, queries, domain model, persistence, configured Inbox interpreter and Chats assistant, external calendar ingestion and its background worker | REST API documented with Swagger ([ADR-0005](../adr/0005-expose-a-rest-api-through-aspnet-core-controllers.md)); serves the web app bundle in production | [`src/backend`](../../src/backend) |
+| DomusMind API | Product composition root: authentication, authorization, commands, queries, domain model, persistence, configured Inbox interpreter and Chats assistant, external calendar ingestion and its background worker | REST API documented with Swagger ([ADR-0005](../adr/0005-expose-a-rest-api-through-aspnet-core-controllers.md)); hosts MCP endpoint; serves web bundle in production | [`src/backend/DomusMind.Api`](../../src/backend/DomusMind.Api) |
+| DomusMind.Mcp | Thin MCP protocol adapter; maps Streamable HTTP and Origin checks; production capability catalog remains empty until authorization and product gates pass | `/mcp` through the official .NET MCP SDK; invokes only application-owned operations when future capabilities are added ([ADR-0011](../adr/0011-expose-mcp-through-an-in-process-sdk-endpoint.md)) | [`src/backend/DomusMind.Mcp`](../../src/backend/DomusMind.Mcp) |
 | Configured language-model providers | Inbox interpretation and explicitly invoked Chats answers or action proposals; each household can order one to three hosted or local targets, with a deployment default for existing households | Ollama local API or configured OpenAI-compatible endpoint; Infrastructure routes requests and protects saved credentials | Infrastructure adapters and `assistant_provider_routes` persistence |
 | DomusMind database | Operational state of every aggregate, authentication records, user-to-household access grants and the append-only event log, in one schema | PostgreSQL connection string `domusmind` | EF Core migrations in [`DomusMind.Infrastructure/Persistence`](../../src/backend/DomusMind.Infrastructure/Persistence) |
 | Public site | Static product and marketing pages | Static hosting only; no API calls | [`src/web/public`](../../src/web/public) |
@@ -59,17 +64,19 @@ The backend is a single deployable modular monolith rather than a set of service
 
 - **Web app to API**: JSON over HTTPS under `/api`, authenticated with a bearer access token issued by the API itself ([ADR-0002](../adr/0002-keep-authentication-local-and-separate-from-member-identity.md)). The web app keeps hand-written typed wrappers under [`src/web/app/src/api`](../../src/web/app/src/api); the OpenAPI document is the contract.
 - **API to Microsoft Graph**: outbound only, delegated per connected member, read-only calendar scope ([ADR-0003](../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md)). The external interface itself is owned by [section 03](03-context-and-scope.md).
+- **Remote MCP client to API host**: MCP Streamable HTTP at `/mcp`, implemented by the SDK-owned endpoint. A present Origin must match the configured origin allowlist; missing Origin remains valid for non-browser clients. This transport check is separate from Host/forwarded-host validation and OAuth/domain authorization. No household capabilities are registered in this foundation slice ([ADR-0011](../adr/0011-expose-mcp-through-an-in-process-sdk-endpoint.md)).
 - **API to assistant provider**: Inbox text and explicitly invoked Chat requests are routed through the household's ordered provider targets. The API protects saved credentials with ASP.NET Core Data Protection, and the web surfaces disclose target hosting and fallback. <!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:6f46b897ec17ba34fa6027cdfa95a01a41d176d06edb4e69daced913c924bdc8" -->
 
 ## Level 2
 
 ### Whitebox: DomusMind API
 
-The API container is split into five projects with a strict inward dependency direction. The domain project references nothing; every other project depends on it directly or transitively.
+The API container is split into six projects with a strict inward dependency direction. The domain project references nothing; every other project depends on it directly or transitively.
 
 ```mermaid
 flowchart TB
-    Api["DomusMind.Api<br/>controllers, auth and Swagger wiring, error mapping"]
+    Api["DomusMind.Api<br/>controllers, host composition and Swagger wiring"]
+    Mcp["DomusMind.Mcp<br/>SDK transport and Origin guard"]
     Infra["DomusMind.Infrastructure<br/>DbContext, migrations, dispatchers, event log, auth, Graph client, background worker"]
     App["DomusMind.Application<br/>slices: commands, queries, handlers; ports"]
     Contracts["DomusMind.Contracts<br/>request and response models"]
@@ -78,6 +85,9 @@ flowchart TB
     Api --> App
     Api --> Contracts
     Api --> Infra
+    Api --> Mcp
+    Mcp --> App
+    Mcp --> Contracts
     Infra --> App
     Infra --> Domain
     Infra --> Contracts
@@ -88,7 +98,8 @@ flowchart TB
 
 | Building block | Responsibility | Interfaces |
 | --- | --- | --- |
-| `DomusMind.Api` | Thin HTTP adapter: controllers map requests to commands or queries, read the current user, dispatch, map application exceptions to status codes, and expose an authenticated server-sent-events stream for shared-list invalidations; composition root for DI, JWT bearer authentication, Swagger and the SPA fallback | Uses `ICommandDispatcher` and `IQueryDispatcher`; `ListChangeNotifier` fans out in-process invalidation notices |
+| `DomusMind.Api` | REST controller adapter and composition root for DI, JWT bearer authentication, Swagger, MCP route composition and the SPA fallback | Uses `ICommandDispatcher` and `IQueryDispatcher`; `ListChangeNotifier` fans out in-process invalidation notices |
+| `DomusMind.Mcp` | SDK-owned Streamable HTTP adapter, Origin allowlist middleware and empty production tool catalog; it does not own domain behavior or persistence | Hosted by `DomusMind.Api`; future tools may dispatch through application-owned operations |
 | `DomusMind.Application` | One vertical slice per capability; defines the ports it needs (messaging contracts, `IDomusMindDbContext`, `IEventLogWriter`, security and integration abstractions) | Mediator contracts of [ADR-0001](../adr/0001-use-an-internal-application-mediator.md); uses EF Core directly through `IDomusMindDbContext` ([ADR-0007](../adr/0007-use-ef-core-directly-without-generic-repositories.md)) |
 | `DomusMind.Contracts` | Explicit API request and response models, grouped by module; handlers return them and controllers serialize them, so domain types never cross the HTTP boundary ([ADR-0006](../adr/0006-map-explicitly-without-automapper.md)) | Plain records |
 | `DomusMind.Domain` | Framework-free business model: aggregates, entities, value objects, strongly typed identifiers (GUID-backed record structs, [ADR-0010](../adr/0010-use-guid-backed-strongly-typed-identifiers.md)) and domain events | `AggregateRoot` raises `IDomainEvent`s; no outbound dependencies |

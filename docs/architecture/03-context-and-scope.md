@@ -55,9 +55,11 @@ outbound call to Microsoft Graph below.
 The public site visitor has no product-model actor; the site's content is governed by
 [`docs/design/public-site.md`](../design/public-site.md).
 
-There are deliberately no other partners. DomusMind sends no email, push
-notification or chat message, and has no messaging, voice, home-automation, AI or
-further calendar-provider integration: these are outside the current product scope.
+The currently accepted product scope includes no email, push notification, voice,
+home-automation or additional calendar-provider integration. The API now contains
+an MCP transport endpoint, but it has no production tools, resources or prompts and
+does not expose household information; its transport presence does not expand the
+accepted product capability baseline.
 
 <!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:dd3281f32dbc5b36618fc57d7cfb31e7fc36d89963250aabb97446a39e4b3a66" -->
 
@@ -70,12 +72,14 @@ flowchart LR
     msid["Microsoft identity platform<br/>login.microsoftonline.com"]
     msgraph["Microsoft Graph<br/>graph.microsoft.com"]
     calendarClient["External calendar client"]
+    mcpClient["External MCP client"]
     ghcr["Container registry<br/>(GHCR)"]
     swa["Azure Static Web Apps"]
 
     subgraph app["DomusMind application container"]
         web["Web app (SPA files)"]
         api["REST API"]
+        mcp["MCP endpoint /mcp"]
         worker["Calendar refresh worker"]
     end
     db[("PostgreSQL")]
@@ -83,6 +87,8 @@ flowchart LR
     browser -- "HTTPS: SPA assets" --> web
     browser -- "HTTPS JSON /api,<br/>JWT bearer" --> api
     calendarClient -- "HTTPS GET, private ICS URL" --> api
+    mcpClient -- "MCP Streamable HTTP" --> mcp
+    mcp --> api
     browser -- "OAuth authorize redirect" --> msid
     api -- "auth-code exchange,<br/>token refresh (MSAL)" --> msid
     api -- "HTTPS REST, delegated token" --> msgraph
@@ -94,15 +100,19 @@ flowchart LR
     browser -- "HTTPS: static pages" --> swa
 ```
 
-The browser is the only client. The SPA and the API are served by the same process
-and origin, so the web app calls the API with relative `/api` paths. PostgreSQL is
-part of the deployment rather than an external partner; its topology belongs to the
-[deployment view](07-deployment-view.md).
+The browser is the client of the household-facing SPA. The same API process now
+also maps the SDK-owned MCP protocol endpoint for external clients; it currently
+exposes no household capabilities. The SPA and API share an origin, so the web app
+calls the API with relative `/api` paths. PostgreSQL is part of the deployment
+rather than an external partner; its topology belongs to the
+[deployment view](07-deployment-view.md). The MCP boundary is recorded in
+[ADR-0011](../adr/0011-expose-mcp-through-an-in-process-sdk-endpoint.md).
 
 | Interface | Partner | Channel and protocol | Direction | Evidence |
 | --- | --- | --- | --- | --- |
 | Web app delivery | Browser | HTTP(S), static files with SPA fallback | Out | [`Program.cs`](../../src/backend/DomusMind.Api/Program.cs) |
 | Household API | Browser (web app) | REST over HTTP(S), JSON, JWT bearer access token with refresh token; OpenAPI at `/swagger` | In / out | [`Controllers/`](../../src/backend/DomusMind.Api/Controllers/), [conventions](08-crosscutting-concepts.md) |
+| MCP protocol | External MCP client | Streamable HTTP at `/mcp`; present Origin must be allowlisted; no household tools/resources/prompts in this foundation | In / out | [MCP endpoint mapping](../../src/backend/DomusMind.Mcp/DependencyInjection/DomusMindMcpEndpointRouteBuilderExtensions.cs), [Origin guard](../../src/backend/DomusMind.Mcp/DependencyInjection/McpOriginValidationMiddleware.cs), [ADR-0011](../adr/0011-expose-mcp-through-an-in-process-sdk-endpoint.md) |
 | First-run setup | Operator via browser | Setup endpoints used by the setup wizard; optional bootstrap admin from environment for headless installs | In | [`deploy/.env.example`](../../deploy/.env.example) |
 | Configuration | Operator | Environment variables: database connection, JWT signing settings, Microsoft app registration, bootstrap admin | In | [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml) |
 | Outlook authorization | Microsoft identity platform | OAuth 2.0 authorization code flow; the API builds the authorize URL, the browser is redirected, the API redeems the code through MSAL and keeps the token cache server-side (encryption depends on configuration, see [section 11](11-risks-and-technical-debt.md)) | Out | [`Integrations/Calendar/Microsoft/`](../../src/backend/DomusMind.Infrastructure/Integrations/Calendar/Microsoft/) |

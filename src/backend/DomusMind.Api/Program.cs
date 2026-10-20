@@ -8,6 +8,8 @@ using DomusMind.Infrastructure.Persistence;
 using DomusMind.Infrastructure.Integrations.Calendar.Microsoft;
 using DomusMind.Api.Realtime;
 using DomusMind.Api.Telemetry;
+using DomusMind.Api.Mcp;
+using DomusMind.Mcp.DependencyInjection;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -64,6 +66,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddDomusMindAuthentication(builder.Configuration);
 builder.Services.AddDomusMindAuthorization();
 builder.Services.AddDomusMindOpenApi();
+builder.Services.AddDomusMindMcp(builder.Configuration);
 builder.AddDevelopmentTelemetry();
 
 var app = builder.Build();
@@ -139,6 +142,7 @@ if (swaggerEnabled)
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseDomusMindMcpOriginValidation();
 
 var webRootPath = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
 if (Directory.Exists(webRootPath))
@@ -147,27 +151,7 @@ if (Directory.Exists(webRootPath))
     app.UseStaticFiles();
 }
 
-app.MapControllers();
-var spaIndexPath = Path.Combine(webRootPath, "index.html");
-if (File.Exists(spaIndexPath))
-{
-    app.MapFallback(async context =>
-    {
-        if (context.Request.Path.StartsWithSegments("/api", StringComparison.OrdinalIgnoreCase) ||
-            context.Request.Path.StartsWithSegments("/swagger", StringComparison.OrdinalIgnoreCase))
-        {
-            context.Response.StatusCode = StatusCodes.Status404NotFound;
-            return;
-        }
-
-        context.Response.ContentType = "text/html; charset=utf-8";
-        await context.Response.SendFileAsync(spaIndexPath);
-    });
-}
-else
-{
-    app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
-}
+app.MapDomusMindEndpoints(webRootPath);
 
 using (var scope = app.Services.CreateScope())
 {
