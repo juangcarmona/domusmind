@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "runId": "ab515c19-682f-45e9-a1e3-545b16af43bd",
+  "workItem": "229",
+  "branch": "feat/229-oauth-oidc-mcp-authorization",
+  "startedAt": "2026-10-20T16:00:00Z",
+  "executorModel": "GPT-5 (active Codex model)",
+  "reviewerModel": "gpt-6.1-sol (available distinct model override)",
+  "maxCorrectionRounds": 3,
+  "status": "running",
+  "stages": [
+    {
+      "name": "refine",
+      "startedAt": "2026-10-20T16:00:00Z",
+      "endedAt": "2026-10-20T16:04:00Z",
+      "inputCommit": "3e3501e7127618d2ecd48e95608917e03c5a421b",
+      "outputCommit": "3e3501e7127618d2ecd48e95608917e03c5a421b",
+      "result": "ready",
+      "evidence": [
+        "Reviewed #229, the MCP Product Change, the #226 architecture assessment, current identity/authorization architecture, and the merged #227/#228 delivery boundary.",
+        "Confirmed that the existing local JWT module is not an OAuth/OIDC provider and that application handlers remain the household authorization boundary.",
+        "Recorded explicit scope exclusions: no write tools, no token passthrough, no provider selection by assumption, and no production credentials during this planning stage."
+      ]
+    }
+  ],
+  "reviews": [],
+  "corrections": [],
+  "stopReason": null,
+  "pullRequest": null,
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/224",
+    "https://github.com/juangcarmona/domusmind/issues/226",
+    "https://github.com/juangcarmona/domusmind/issues/227",
+    "https://github.com/juangcarmona/domusmind/issues/228",
+    "https://github.com/juangcarmona/domusmind/issues/229",
+    "https://github.com/juangcarmona/domusmind/pull/225"
+  ]
+}
