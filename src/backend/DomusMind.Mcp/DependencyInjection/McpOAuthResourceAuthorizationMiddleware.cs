@@ -13,6 +13,8 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
     IOptions<DomusMindMcpOptions> options,
     ILogger<McpOAuthResourceAuthorizationMiddleware> logger)
 {
+    private const string McpOperation = "MCP /mcp";
+
     public async Task InvokeAsync(
         HttpContext context,
         IAuthUserRepository users,
@@ -77,7 +79,7 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
             logger.LogInformation(
                 "MCP security audit {Outcome} operation={Operation} user={UserId} household={HouseholdId} client={ClientId} scope={Scope} status={StatusCode} trace={TraceId}",
                 "completed",
-                $"{context.Request.Method} {context.Request.Path}",
+                McpOperation,
                 userId,
                 householdId,
                 result.Principal.FindFirst("client_id")?.Value ?? "unknown",
@@ -90,7 +92,7 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
             logger.LogWarning(
                 "MCP security audit {Outcome} operation={Operation} user={UserId} household={HouseholdId} client={ClientId} scope={Scope} status={StatusCode} trace={TraceId}",
                 "failed",
-                $"{context.Request.Method} {context.Request.Path}",
+                McpOperation,
                 userId,
                 householdId,
                 result.Principal.FindFirst("client_id")?.Value ?? "unknown",
@@ -115,7 +117,7 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
             "MCP security audit {Outcome} reason={Reason} operation={Operation} user={UserId} household={HouseholdId} client={ClientId} scope={Scope} status={StatusCode} trace={TraceId}",
             "denied",
             reason,
-            $"{context.Request.Method} {context.Request.Path}",
+            McpOperation,
             userId?.ToString() ?? principal?.FindFirst("sub")?.Value ?? "unknown",
             householdId?.ToString() ?? principal?.FindFirst("dm_household_id")?.Value ?? "unknown",
             principal?.FindFirst("client_id")?.Value ?? "unknown",

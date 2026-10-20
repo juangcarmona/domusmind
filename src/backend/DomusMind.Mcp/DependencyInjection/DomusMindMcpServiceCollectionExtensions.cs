@@ -14,6 +14,8 @@ namespace DomusMind.Mcp.DependencyInjection;
 
 public static class DomusMindMcpServiceCollectionExtensions
 {
+    private const string McpOperation = "MCP /mcp";
+
     public static IMcpServerBuilder AddDomusMindMcp(
         this IServiceCollection services,
         IConfiguration configuration)
@@ -38,7 +40,7 @@ public static class DomusMindMcpServiceCollectionExtensions
                     "MCP security audit {Outcome} reason={Reason} operation={Operation} trace={TraceId}",
                     "denied",
                     "rate_limited",
-                    $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}",
+                    McpOperation,
                     System.Diagnostics.Activity.Current?.TraceId.ToString() ?? context.HttpContext.TraceIdentifier);
                 return ValueTask.CompletedTask;
             };
