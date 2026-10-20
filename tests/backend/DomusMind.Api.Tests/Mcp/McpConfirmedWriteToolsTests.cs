@@ -3,12 +3,36 @@ using DomusMind.Contracts.Lists;
 using DomusMind.Mcp.Authorization;
 using DomusMind.Mcp.Tools;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace DomusMind.Api.Tests.Mcp;
 
 public sealed class McpConfirmedWriteToolsTests
 {
+    [Fact]
+    public void Production_tool_schema_keeps_services_out_of_client_arguments()
+    {
+        var services = new ServiceCollection()
+            .AddSingleton<IMcpRequestIdentityAccessor, StubIdentityAccessor>()
+            .AddSingleton<IMcpConfirmedWriteCoordinator>(new StubCoordinator(
+                new McpConfirmedWriteOutcome(McpWriteStatuses.Error, Code: "test", Message: "test")))
+            .AddSingleton<Microsoft.Extensions.Logging.ILogger<DomusMindConfirmedWriteTools>>(
+                NullLogger<DomusMindConfirmedWriteTools>.Instance)
+            .BuildServiceProvider();
+
+        var tool = DomusMindConfirmedWriteTools.CreateTool(services);
+        var inputSchema = tool.ProtocolTool.InputSchema.GetRawText();
+
+        inputSchema.Should().Contain("listId");
+        inputSchema.Should().Contain("idempotencyKey");
+        inputSchema.Should().NotContain("identityAccessor");
+        inputSchema.Should().NotContain("coordinator");
+        inputSchema.Should().NotContain("logger");
+        tool.ProtocolTool.OutputSchema.Should().NotBeNull();
+        tool.ProtocolTool.OutputSchema!.Value.GetRawText().Should().Contain("oneOf");
+    }
+
     [Fact]
     public async Task Confirmation_response_uses_the_closed_success_contract()
     {

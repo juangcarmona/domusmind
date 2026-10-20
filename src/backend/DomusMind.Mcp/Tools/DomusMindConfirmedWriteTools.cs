@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using System.Reflection;
 using DomusMind.Application.Abstractions.Integrations.Mcp;
 using DomusMind.Mcp.Authorization;
@@ -14,14 +15,15 @@ public sealed class DomusMindConfirmedWriteTools
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
-    public static McpServerTool CreateTool()
+    public static McpServerTool CreateTool(IServiceProvider services)
     {
         var method = typeof(DomusMindConfirmedWriteTools).GetMethod(
             nameof(ListItemAdd), BindingFlags.Public | BindingFlags.Static)
             ?? throw new InvalidOperationException("The list_item_add MCP tool method was not found.");
 
-        return McpServerTool.Create(method, new McpServerToolCreateOptions
+        return McpServerTool.Create(method, (object?)null, new McpServerToolCreateOptions
         {
+            Services = services,
             Name = "list_item_add",
             Description = "Request or execute a confirmed addition to an authorized household list.",
             ReadOnly = false,
@@ -29,6 +31,11 @@ public sealed class DomusMindConfirmedWriteTools
             Idempotent = true,
             UseStructuredContent = true,
             OutputSchema = JsonDocument.Parse(OutputSchemaJson).RootElement.Clone(),
+            SerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web)
+            {
+                TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+                UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+            },
             SchemaCreateOptions = new Microsoft.Extensions.AI.AIJsonSchemaCreateOptions
             {
                 TransformOptions = new Microsoft.Extensions.AI.AIJsonSchemaTransformOptions

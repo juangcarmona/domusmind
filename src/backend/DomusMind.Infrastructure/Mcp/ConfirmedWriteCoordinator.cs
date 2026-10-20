@@ -56,28 +56,49 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         McpListItemAddRequest request,
         CancellationToken cancellationToken = default)
     {
-        try
+        for (var attempt = 0; attempt < 2; attempt++)
         {
-            return await ExecuteListItemAddCoreAsync(request, cancellationToken);
+            try
+            {
+                var outcome = await ExecuteListItemAddCoreAsync(request, cancellationToken);
+                AuditDecision(request, outcome);
+                return outcome;
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (McpCommitUncertainException)
+            {
+                var outcome = Error("OPERATION_STATUS_UNKNOWN", "The operation outcome is unknown. Retry with the same idempotency key.");
+                AuditDecision(request, outcome);
+                return outcome;
+            }
+            catch (DbUpdateException) when (attempt == 0)
+            {
+                _db.ChangeTracker.Clear();
+            }
+            catch (DbUpdateException)
+            {
+                var outcome = Error("OPERATION_STATUS_UNKNOWN", "The operation outcome is unknown. Retry with the same idempotency key.");
+                AuditDecision(request, outcome);
+                return outcome;
+            }
+            catch (Exception)
+            {
+                _logger.LogWarning(
+                    "MCP confirmed write coordinator failed operation={Operation} user={UserId} household={HouseholdId} trace={TraceId}",
+                    OperationNamespace,
+                    request.UserId,
+                    request.HouseholdId,
+                    request.TraceId);
+                var outcome = Error("INTERNAL_ERROR", "The operation could not be completed.");
+                AuditDecision(request, outcome);
+                return outcome;
+            }
         }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-            throw;
-        }
-        catch (McpCommitUncertainException)
-        {
-            return Error("OPERATION_STATUS_UNKNOWN", "The operation outcome is unknown. Retry with the same idempotency key.");
-        }
-        catch (Exception)
-        {
-            _logger.LogWarning(
-                "MCP confirmed write coordinator failed operation={Operation} user={UserId} household={HouseholdId} trace={TraceId}",
-                OperationNamespace,
-                request.UserId,
-                request.HouseholdId,
-                request.TraceId);
-            return Error("INTERNAL_ERROR", "The operation could not be completed.");
-        }
+
+        return Error("OPERATION_STATUS_UNKNOWN", "The operation outcome is unknown. Retry with the same idempotency key.");
     }
 
     private async Task<McpConfirmedWriteOutcome> ExecuteListItemAddCoreAsync(
@@ -251,9 +272,10 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         if (approval is null ||
             !await _familyAuthorization.CanAccessFamilyAsync(userId, approval.FamilyId, cancellationToken))
             return Error("CONFIRMATION_UNKNOWN", "The approval request was not found.");
-        if (!context.HasWriteScope ||
-            !string.Equals(context.ClientId, approval.ClientId, StringComparison.Ordinal) ||
-            context.HouseholdId != approval.FamilyId)
+        if (!context.IsTrustedFirstParty &&
+            (!context.HasWriteScope ||
+             !string.Equals(context.ClientId, approval.ClientId, StringComparison.Ordinal) ||
+             context.HouseholdId != approval.FamilyId))
             return Error("AUTHORIZATION_DENIED", "The approval grant is no longer valid.");
         if (!await _db.Lists.AsNoTracking().AnyAsync(
                 x => x.Id == ListId.From(approval.ListId) && x.FamilyId == FamilyId.From(approval.FamilyId),
@@ -301,9 +323,10 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         if (approval is null ||
             !await _familyAuthorization.CanAccessFamilyAsync(userId, approval.FamilyId, cancellationToken))
             return Error("CONFIRMATION_UNKNOWN", "The approval request was not found.");
-        if (!context.HasWriteScope ||
-            !string.Equals(context.ClientId, approval.ClientId, StringComparison.Ordinal) ||
-            context.HouseholdId != approval.FamilyId)
+        if (!context.IsTrustedFirstParty &&
+            (!context.HasWriteScope ||
+             !string.Equals(context.ClientId, approval.ClientId, StringComparison.Ordinal) ||
+             context.HouseholdId != approval.FamilyId))
             return Error("AUTHORIZATION_DENIED", "The approval grant is no longer valid.");
         if (approval.Status != McpWriteApprovalStatuses.Pending)
             return Error("CONFIRMATION_INVALID", "The approval request is no longer pending.");
@@ -356,7 +379,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
                 if (closedApproval?.Status == McpWriteApprovalStatuses.Expired)
                     return Error("CONFIRMATION_INVALID", "The approval request is no longer valid.");
                 if (closedApproval?.Status == McpWriteApprovalStatuses.Cancelled)
-                    return Error("CANCELLED", "The operation was cancelled before commit.");
+                    return Error("CONFIRMATION_INVALID", "The approval request is no longer valid.");
             }
 
             return Error("IDEMPOTENCY_REPLAYED", "The operation was already cancelled or completed and cannot be replayed.");
@@ -441,6 +464,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
     public async Task PurgeExpiredAsync(CancellationToken cancellationToken = default)
     {
         var now = UtcNow();
+        await using var transaction = await BeginTransactionAsync(cancellationToken);
         var expiredApprovalIds = await _db.McpWriteApprovals
             .Where(x => (x.Status == McpWriteApprovalStatuses.Pending ||
                          x.Status == McpWriteApprovalStatuses.Approved) &&
@@ -513,6 +537,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         }
 
         await _db.SaveChangesAsync(cancellationToken);
+        await CommitAsync(transaction, cancellationToken);
     }
 
     private async Task<int> ExpireApprovalInMemoryAsync(
@@ -580,11 +605,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
 
         try
         {
-            await transaction.CommitAsync(cancellationToken);
-        }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-            throw;
+            await transaction.CommitAsync(CancellationToken.None);
         }
         catch (Exception exception)
         {
@@ -594,6 +615,19 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
 
     private static McpConfirmedWriteOutcome Error(string code, string message) =>
         new(McpWriteStatuses.Error, code, message);
+
+    private void AuditDecision(McpListItemAddRequest request, McpConfirmedWriteOutcome outcome)
+    {
+        _logger.LogInformation(
+            "MCP confirmed write audit operation={Operation} status={Status} code={Code} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
+            OperationNamespace,
+            outcome.Status,
+            outcome.Code ?? "none",
+            request.UserId,
+            request.HouseholdId,
+            request.ClientId,
+            request.TraceId);
+    }
 
     private static Guid? ParseApprovalReference(string? reference) =>
         Guid.TryParse(reference, out var approvalId) && approvalId != Guid.Empty

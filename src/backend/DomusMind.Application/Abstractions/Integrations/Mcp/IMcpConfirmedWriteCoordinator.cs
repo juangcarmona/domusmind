@@ -51,9 +51,13 @@ public sealed record McpWriteApprovalView(
     DateTime ExpiresAtUtc);
 
 public sealed record McpApprovalContext(
-    string ClientId,
-    Guid HouseholdId,
-    bool HasWriteScope);
+    string? ClientId,
+    Guid? HouseholdId,
+    bool HasWriteScope,
+    bool IsTrustedFirstParty = false)
+{
+    public static McpApprovalContext TrustedFirstParty { get; } = new(null, null, false, true);
+}
 
 public interface IMcpConfirmedWriteCoordinator
 {
