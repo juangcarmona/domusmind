@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "runId": "26ee8aa4-c1ba-4e3e-8137-ee82d6608c9a",
+  "workItem": "228",
+  "branch": "feat/228-prove-readonly-mcp-capabilities",
+  "startedAt": "2026-10-20T15:02:58Z",
+  "executorModel": "GPT-5 (active Codex model)",
+  "reviewerModel": "gpt-6.1-sol (available distinct model override)",
+  "maxCorrectionRounds": 3,
+  "status": "running",
+  "stages": [
+    {
+      "name": "refine",
+      "startedAt": "2026-10-20T15:00:20Z",
+      "endedAt": "2026-10-20T15:02:28Z",
+      "inputCommit": "1ce14ac910ec2ce6136c604eb699af74ef6e718b",
+      "outputCommit": "1ce14ac910ec2ce6136c604eb699af74ef6e718b",
+      "result": "ready",
+      "evidence": [
+        "Reviewed the Definition of Ready and revised #228 with stakeholders, bounded synthetic-only scope, explicit #227/#229 dependencies, seven verifiable criteria, and known authorization/task-query gaps.",
+        "Confirmed existing FamilyTimeline and FamilyMembers query handlers authorize family access. The GetMemberAgenda handler does not prove MemberId belongs to FamilyId; member-specific MCP agenda is excluded until fixed and verified.",
+        "Pickup WIP query returned zero open in-progress and zero open in-review work items against cap 3. Review debt noted for merged #226/#227; non-blocking."
+      ]
+    },
+    {
+      "name": "propose",
+      "startedAt": "2026-10-20T15:02:58Z",
+      "inputCommit": "1ce14ac910ec2ce6136c604eb699af74ef6e718b",
+      "result": "awaiting-independent-plan-review",
+      "evidence": [
+        "Plan artifact: docs/delivery/plans/issue-228-readonly-mcp-proof.md.",
+        "Worktree: /srv/workspaces/juangcarmona/domusmind/issue-228-readonly-mcp-proof; branch created from the current Epic branch after #227 merge.",
+        "No implementation started; only the plan and FF evidence are staged for proposal."
+      ]
+    }
+  ],
+  "reviews": [],
+  "corrections": [],
+  "stopReason": null,
+  "pullRequest": null,
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/224",
+    "https://github.com/juangcarmona/domusmind/issues/227",
+    "https://github.com/juangcarmona/domusmind/issues/228",
+    "https://github.com/juangcarmona/domusmind/issues/229",
+    "https://github.com/juangcarmona/domusmind/pull/225"
+  ]
+}
