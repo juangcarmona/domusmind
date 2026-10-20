@@ -1,5 +1,6 @@
 using DomusMind.Application.Abstractions.Integrations.Mcp;
 using DomusMind.Application.Abstractions.Security;
+using DomusMind.Mcp.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,13 +12,16 @@ namespace DomusMind.Api.Controllers;
 public sealed class McpWriteApprovalsController : ControllerBase
 {
     private readonly ICurrentUser _currentUser;
+    private readonly IMcpRequestIdentityAccessor _mcpIdentity;
     private readonly IMcpConfirmedWriteCoordinator _coordinator;
 
     public McpWriteApprovalsController(
         ICurrentUser currentUser,
+        IMcpRequestIdentityAccessor mcpIdentity,
         IMcpConfirmedWriteCoordinator coordinator)
     {
         _currentUser = currentUser;
+        _mcpIdentity = mcpIdentity;
         _coordinator = coordinator;
     }
 
@@ -40,8 +44,14 @@ public sealed class McpWriteApprovalsController : ControllerBase
     {
         if (_currentUser.UserId is not Guid userId)
             return Unauthorized();
+        if (!_mcpIdentity.TryGet(out var identity) || identity.UserId != userId)
+            return Forbid();
 
-        var outcome = await _coordinator.ApproveAsync(approvalRequestId, userId, cancellationToken);
+        var outcome = await _coordinator.ApproveAsync(
+            approvalRequestId,
+            userId,
+            new McpApprovalContext(identity.ClientId, identity.HouseholdId, identity.HasScope("mcp.write")),
+            cancellationToken);
         return ToActionResult(outcome);
     }
 
@@ -52,8 +62,14 @@ public sealed class McpWriteApprovalsController : ControllerBase
     {
         if (_currentUser.UserId is not Guid userId)
             return Unauthorized();
+        if (!_mcpIdentity.TryGet(out var identity) || identity.UserId != userId)
+            return Forbid();
 
-        var outcome = await _coordinator.CancelAsync(approvalRequestId, userId, cancellationToken);
+        var outcome = await _coordinator.CancelAsync(
+            approvalRequestId,
+            userId,
+            new McpApprovalContext(identity.ClientId, identity.HouseholdId, identity.HasScope("mcp.write")),
+            cancellationToken);
         return ToActionResult(outcome);
     }
 

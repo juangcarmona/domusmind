@@ -4,6 +4,9 @@ using DomusMind.Application.Abstractions.Notifications;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Features.Lists.AddItemToList;
 using DomusMind.Contracts.Lists;
+using DomusMind.Domain.Family;
+using DomusMind.Domain.Lists;
+using DomusMind.Domain.Lists.ValueObjects;
 using DomusMind.Infrastructure.Mcp;
 using DomusMind.Infrastructure.Persistence;
 using FluentAssertions;
@@ -26,6 +29,16 @@ public sealed class ConfirmedWriteCoordinatorTests
             .Options);
         var dispatcher = new RecordingDispatcher();
         var publisher = new RecordingPublisher();
+        db.Lists.Add(SharedList.Create(
+            ListId.From(listId),
+            FamilyId.From(householdId),
+            ListName.Create("Shopping"),
+            ListKind.Create("Shopping"),
+            null,
+            null,
+            null,
+            DateTime.UtcNow));
+        await db.SaveChangesAsync();
         var coordinator = CreateCoordinator(db, dispatcher, publisher);
         var request = new McpListItemAddRequest(
             userId, householdId, "client", listId, " Milk ", "2L", "whole", "key-1", null, "trace");
@@ -36,11 +49,14 @@ public sealed class ConfirmedWriteCoordinatorTests
         challenge.ApprovalRequestId.Should().NotBeNull();
         dispatcher.Calls.Should().Be(0);
 
-        var approval = await coordinator.ApproveAsync(challenge.ApprovalRequestId!.Value, userId);
+        var approval = await coordinator.ApproveAsync(
+            challenge.ApprovalRequestId!.Value,
+            userId,
+            new McpApprovalContext("client", householdId, true));
         approval.Code.Should().Be("APPROVED");
 
         var completed = await coordinator.ExecuteListItemAddAsync(
-            request with { ApprovalRequestId = challenge.ApprovalRequestId });
+            request with { ApprovalRequestId = challenge.ApprovalRequestId!.Value.ToString() });
 
         completed.Status.Should().Be(McpWriteStatuses.Completed);
         completed.Result!.Name.Should().Be("Milk");
@@ -48,7 +64,7 @@ public sealed class ConfirmedWriteCoordinatorTests
         publisher.Published.Should().ContainSingle().Which.Should().Be(listId);
 
         var replay = await coordinator.ExecuteListItemAddAsync(
-            request with { ApprovalRequestId = challenge.ApprovalRequestId });
+            request with { ApprovalRequestId = challenge.ApprovalRequestId!.Value.ToString() });
 
         replay.Status.Should().Be(McpWriteStatuses.Completed);
         replay.Result!.ItemId.Should().Be(completed.Result.ItemId);
@@ -66,7 +82,10 @@ public sealed class ConfirmedWriteCoordinatorTests
         var challenge = await coordinator.ExecuteListItemAddAsync(new McpListItemAddRequest(
             userId, Guid.NewGuid(), "client", Guid.NewGuid(), "Milk", null, null, "key-2", null, "trace"));
 
-        var result = await coordinator.ApproveAsync(challenge.ApprovalRequestId!.Value, Guid.NewGuid());
+        var result = await coordinator.ApproveAsync(
+            challenge.ApprovalRequestId!.Value,
+            Guid.NewGuid(),
+            new McpApprovalContext("client", Guid.NewGuid(), true));
 
         result.Code.Should().Be("CONFIRMATION_UNKNOWN");
         (await db.McpWriteApprovals.SingleAsync()).Status.Should().Be("PENDING");
@@ -100,15 +119,30 @@ public sealed class ConfirmedWriteCoordinatorTests
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options);
         var dispatcher = new RecordingDispatcher();
+        var householdId = Guid.NewGuid();
+        var listId = Guid.NewGuid();
+        db.Lists.Add(SharedList.Create(
+            ListId.From(listId),
+            FamilyId.From(householdId),
+            ListName.Create("Shopping"),
+            ListKind.Create("Shopping"),
+            null,
+            null,
+            null,
+            DateTime.UtcNow));
+        await db.SaveChangesAsync();
         var coordinator = CreateCoordinator(db, dispatcher, new RecordingPublisher(), clock);
         var request = new McpListItemAddRequest(
-            userId, Guid.NewGuid(), "client", Guid.NewGuid(), "Milk", null, null, "key-4", null, "trace");
+            userId, householdId, "client", listId, "Milk", null, null, "key-4", null, "trace");
         var challenge = await coordinator.ExecuteListItemAddAsync(request);
-        await coordinator.ApproveAsync(challenge.ApprovalRequestId!.Value, userId);
+        await coordinator.ApproveAsync(
+            challenge.ApprovalRequestId!.Value,
+            userId,
+            new McpApprovalContext("client", request.HouseholdId, true));
         clock.Advance(TimeSpan.FromMinutes(11));
 
         var result = await coordinator.ExecuteListItemAddAsync(
-            request with { ApprovalRequestId = challenge.ApprovalRequestId });
+            request with { ApprovalRequestId = challenge.ApprovalRequestId!.Value.ToString() });
 
         result.Code.Should().Be("CONFIRMATION_INVALID");
         dispatcher.Calls.Should().Be(0);

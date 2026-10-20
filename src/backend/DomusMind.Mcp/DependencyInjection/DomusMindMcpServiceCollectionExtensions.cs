@@ -81,7 +81,7 @@ public static class DomusMindMcpServiceCollectionExtensions
             configuration.GetValue<bool>("Mcp:OAuth:Enabled") &&
             configuration.GetValue<bool>("Mcp:RequireOAuth"))
         {
-            mcpBuilder.WithTools([typeof(DomusMindConfirmedWriteTools)]);
+            mcpBuilder.WithTools([DomusMindConfirmedWriteTools.CreateTool()]);
         }
 
         return mcpBuilder.WithListToolsHandler((_, _) => new ValueTask<ListToolsResult>(new ListToolsResult { Tools = [] }));

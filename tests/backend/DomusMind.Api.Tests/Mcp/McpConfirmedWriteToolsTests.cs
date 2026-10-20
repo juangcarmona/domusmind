@@ -23,14 +23,13 @@ public sealed class McpConfirmedWriteToolsTests
         var result = await DomusMindConfirmedWriteTools.ListItemAdd(
             listId.ToString(),
             "Milk",
-            "2",
-            "Whole",
             "key",
-            null,
             new StubIdentityAccessor(),
             coordinator,
             NullLogger<DomusMindConfirmedWriteTools>.Instance,
-            CancellationToken.None);
+            CancellationToken.None,
+            "2",
+            "Whole");
 
         result.IsError.Should().BeFalse();
         result.StructuredContent!.Value.GetProperty("status").GetString().Should().Be("CONFIRMATION_REQUIRED");
@@ -52,14 +51,12 @@ public sealed class McpConfirmedWriteToolsTests
         var result = await DomusMindConfirmedWriteTools.ListItemAdd(
             Guid.NewGuid().ToString(),
             "Milk",
-            null,
-            null,
             "key",
-            Guid.NewGuid().ToString(),
             new StubIdentityAccessor(),
             coordinator,
             NullLogger<DomusMindConfirmedWriteTools>.Instance,
-            CancellationToken.None);
+            CancellationToken.None,
+            approvalRequestId: Guid.NewGuid().ToString());
 
         result.IsError.Should().BeTrue();
         result.StructuredContent!.Value.GetProperty("status").GetString().Should().Be("ERROR");
@@ -90,10 +87,10 @@ public sealed class McpConfirmedWriteToolsTests
         public Task<McpWriteApprovalView?> GetApprovalAsync(Guid approvalRequestId, Guid userId, CancellationToken cancellationToken = default)
             => throw new NotSupportedException();
 
-        public Task<McpConfirmedWriteOutcome> ApproveAsync(Guid approvalRequestId, Guid userId, CancellationToken cancellationToken = default)
+        public Task<McpConfirmedWriteOutcome> ApproveAsync(Guid approvalRequestId, Guid userId, McpApprovalContext context, CancellationToken cancellationToken = default)
             => throw new NotSupportedException();
 
-        public Task<McpConfirmedWriteOutcome> CancelAsync(Guid approvalRequestId, Guid userId, CancellationToken cancellationToken = default)
+        public Task<McpConfirmedWriteOutcome> CancelAsync(Guid approvalRequestId, Guid userId, McpApprovalContext context, CancellationToken cancellationToken = default)
             => throw new NotSupportedException();
     }
 }

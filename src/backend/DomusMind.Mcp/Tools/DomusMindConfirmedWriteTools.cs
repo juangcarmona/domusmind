@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Reflection;
 using DomusMind.Application.Abstractions.Integrations.Mcp;
 using DomusMind.Mcp.Authorization;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,92 @@ public sealed class DomusMindConfirmedWriteTools
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
+    public static McpServerTool CreateTool()
+    {
+        var method = typeof(DomusMindConfirmedWriteTools).GetMethod(
+            nameof(ListItemAdd), BindingFlags.Public | BindingFlags.Static)
+            ?? throw new InvalidOperationException("The list_item_add MCP tool method was not found.");
+
+        return McpServerTool.Create(method, new McpServerToolCreateOptions
+        {
+            Name = "list_item_add",
+            Description = "Request or execute a confirmed addition to an authorized household list.",
+            ReadOnly = false,
+            Destructive = false,
+            Idempotent = true,
+            UseStructuredContent = true,
+            OutputSchema = JsonDocument.Parse(OutputSchemaJson).RootElement.Clone(),
+            SchemaCreateOptions = new Microsoft.Extensions.AI.AIJsonSchemaCreateOptions
+            {
+                TransformOptions = new Microsoft.Extensions.AI.AIJsonSchemaTransformOptions
+                {
+                    DisallowAdditionalProperties = true,
+                },
+            },
+        });
+    }
+
+    private const string OutputSchemaJson = """
+        {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "status": { "const": "CONFIRMATION_REQUIRED" },
+                "approvalRequestId": { "type": "string", "format": "uuid" },
+                "expiresAt": { "type": "string", "format": "date-time" },
+                "action": {
+                  "type": "object",
+                  "properties": {
+                    "operation": { "const": "list_item_add" },
+                    "listId": { "type": "string", "format": "uuid" },
+                    "itemName": { "type": "string" },
+                    "quantity": { "type": ["string", "null"] },
+                    "note": { "type": ["string", "null"] }
+                  },
+                  "required": ["operation", "listId", "itemName", "quantity", "note"],
+                  "additionalProperties": false
+                },
+                "idempotencyKey": { "type": "string" }
+              },
+              "required": ["status", "approvalRequestId", "expiresAt", "action", "idempotencyKey"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": { "const": "COMPLETED" },
+                "itemId": { "type": "string", "format": "uuid" },
+                "listId": { "type": "string", "format": "uuid" },
+                "name": { "type": "string" },
+                "checked": { "type": "boolean" },
+                "quantity": { "type": ["string", "null"] },
+                "note": { "type": ["string", "null"] }
+              },
+              "required": ["status", "itemId", "listId", "name", "checked", "quantity", "note"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": { "const": "ERROR" },
+                "error": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string" },
+                    "message": { "type": "string" }
+                  },
+                  "required": ["code", "message"],
+                  "additionalProperties": false
+                }
+              },
+              "required": ["status", "error"],
+              "additionalProperties": false
+            }
+          ]
+        }
+        """;
+
     [McpServerTool(
         Name = "list_item_add",
         ReadOnly = false,
@@ -24,24 +111,21 @@ public sealed class DomusMindConfirmedWriteTools
     public static async Task<CallToolResult> ListItemAdd(
         string listId,
         string name,
-        string? quantity,
-        string? note,
         string idempotencyKey,
-        string? approvalRequestId,
         IMcpRequestIdentityAccessor identityAccessor,
         IMcpConfirmedWriteCoordinator coordinator,
         ILogger<DomusMindConfirmedWriteTools> logger,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        string? quantity = null,
+        string? note = null,
+        string? approvalRequestId = null)
     {
         if (!identityAccessor.TryGet(out var identity))
-            return Error("ACCESS_DENIED", "Access to this household is denied.");
+            return Audited(logger, Error("ACCESS_DENIED", "Access to this household is denied."), identityAccessor);
         if (!identity.HasScope("mcp.write"))
-            return Error("ACCESS_DENIED", "The mcp.write scope is required for this operation.");
+            return Audited(logger, Error("ACCESS_DENIED", "The mcp.write scope is required for this operation."), identityAccessor, identity);
         if (!Guid.TryParse(listId, out var parsedListId) || parsedListId == Guid.Empty)
-            return Error("INVALID_INPUT", "listId must be a valid identifier.");
-        if (!string.IsNullOrWhiteSpace(approvalRequestId) &&
-            (!Guid.TryParse(approvalRequestId, out var parsedApprovalId) || parsedApprovalId == Guid.Empty))
-            return Error("CONFIRMATION_INVALID", "The approval request is not valid.");
+            return Audited(logger, Error("INVALID_INPUT", "listId must be a valid identifier."), identityAccessor, identity);
 
         var request = new McpListItemAddRequest(
             identity.UserId,
@@ -52,7 +136,7 @@ public sealed class DomusMindConfirmedWriteTools
             quantity,
             note,
             idempotencyKey,
-            string.IsNullOrWhiteSpace(approvalRequestId) ? null : Guid.Parse(approvalRequestId),
+            string.IsNullOrWhiteSpace(approvalRequestId) ? null : approvalRequestId.Trim(),
             identity.TraceId);
 
         try
@@ -68,29 +152,40 @@ public sealed class DomusMindConfirmedWriteTools
                 identity.TraceId,
                 outcome.Code ?? "none");
 
-            return outcome.Status switch
+            return Audited(logger, outcome.Status switch
             {
                 McpWriteStatuses.ConfirmationRequired => Confirmation(outcome, idempotencyKey),
                 McpWriteStatuses.Completed => Completed(outcome),
                 McpWriteStatuses.ApprovalPending => Error("APPROVAL_PENDING", "The requested operation is awaiting approval."),
                 _ => Error(MapErrorCode(outcome.Code), outcome.Message ?? "The operation could not be completed."),
-            };
+            }, identityAccessor, identity);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            return Error("CANCELLED", "The operation was cancelled before commit.");
+            return Audited(logger, Error("CANCELLED", "The operation was cancelled before commit."), identityAccessor, identity);
         }
         catch (Exception)
         {
-            logger.LogWarning(
-                "MCP capability audit outcome=internal_error capability={Capability} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
-                "list_item_add",
-                identity.UserId,
-                identity.HouseholdId,
-                identity.ClientId,
-                identity.TraceId);
-            return Error("INTERNAL_ERROR", "The operation could not be completed.");
+            return Audited(logger, Error("INTERNAL_ERROR", "The operation could not be completed."), identityAccessor, identity);
         }
+    }
+
+    private static CallToolResult Audited(
+        ILogger logger,
+        CallToolResult result,
+        IMcpRequestIdentityAccessor identityAccessor,
+        McpRequestIdentity? identity = null)
+    {
+        identity ??= identityAccessor.TryGet(out var current) ? current : null;
+        logger.LogInformation(
+            "MCP capability audit {Outcome} capability={Capability} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
+            result.IsError == true ? "tool_error" : "success",
+            "list_item_add",
+            identity?.UserId.ToString() ?? "unknown",
+            identity?.HouseholdId.ToString() ?? "unknown",
+            identity?.ClientId ?? "unknown",
+            identity?.TraceId ?? "unknown");
+        return result;
     }
 
     private static CallToolResult Confirmation(
@@ -151,14 +246,14 @@ public sealed class DomusMindConfirmedWriteTools
 
 public sealed record ListItemAddOutput(
     [property: JsonPropertyName("status")] string Status,
-    [property: JsonPropertyName("approvalRequestId")] Guid? ApprovalRequestId,
-    [property: JsonPropertyName("expiresAt")] DateTime? ExpiresAt,
-    [property: JsonPropertyName("action")] McpListItemAddAction? Action,
-    [property: JsonPropertyName("itemId")] Guid? ItemId,
-    [property: JsonPropertyName("listId")] Guid? ListId,
-    [property: JsonPropertyName("name")] string? Name,
-    [property: JsonPropertyName("checked")] bool? Checked,
-    [property: JsonPropertyName("quantity")] string? Quantity,
-    [property: JsonPropertyName("note")] string? Note,
-    [property: JsonPropertyName("idempotencyKey")] string? IdempotencyKey,
-    [property: JsonPropertyName("error")] McpErrorOutput? Error);
+    [property: JsonPropertyName("approvalRequestId")] Guid? ApprovalRequestId = null,
+    [property: JsonPropertyName("expiresAt")] DateTime? ExpiresAt = null,
+    [property: JsonPropertyName("action")] McpListItemAddAction? Action = null,
+    [property: JsonPropertyName("itemId")] Guid? ItemId = null,
+    [property: JsonPropertyName("listId")] Guid? ListId = null,
+    [property: JsonPropertyName("name")] string? Name = null,
+    [property: JsonPropertyName("checked")] bool? Checked = null,
+    [property: JsonPropertyName("quantity")] string? Quantity = null,
+    [property: JsonPropertyName("note")] string? Note = null,
+    [property: JsonPropertyName("idempotencyKey")] string? IdempotencyKey = null,
+    [property: JsonPropertyName("error")] McpErrorOutput? Error = null);

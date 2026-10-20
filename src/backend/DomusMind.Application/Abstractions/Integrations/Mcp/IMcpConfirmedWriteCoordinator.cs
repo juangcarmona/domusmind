@@ -20,7 +20,7 @@ public sealed record McpListItemAddRequest(
     string? Quantity,
     string? Note,
     string IdempotencyKey,
-    Guid? ApprovalRequestId,
+    string? ApprovalRequestId,
     string TraceId);
 
 public sealed record McpListItemAddAction(
@@ -50,6 +50,11 @@ public sealed record McpWriteApprovalView(
     DateTime CreatedAtUtc,
     DateTime ExpiresAtUtc);
 
+public sealed record McpApprovalContext(
+    string ClientId,
+    Guid HouseholdId,
+    bool HasWriteScope);
+
 public interface IMcpConfirmedWriteCoordinator
 {
     Task<McpConfirmedWriteOutcome> ExecuteListItemAddAsync(
@@ -64,11 +69,13 @@ public interface IMcpConfirmedWriteCoordinator
     Task<McpConfirmedWriteOutcome> ApproveAsync(
         Guid approvalRequestId,
         Guid userId,
+        McpApprovalContext context,
         CancellationToken cancellationToken = default);
 
     Task<McpConfirmedWriteOutcome> CancelAsync(
         Guid approvalRequestId,
         Guid userId,
+        McpApprovalContext context,
         CancellationToken cancellationToken = default);
 }
 

@@ -9,6 +9,7 @@ using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Features.Lists.AddItemToList;
 using DomusMind.Application.Features.Lists;
 using DomusMind.Contracts.Lists;
+using DomusMind.Domain.Family;
 using DomusMind.Domain.Lists;
 using DomusMind.Infrastructure.Persistence;
 using DomusMind.Infrastructure.Persistence.Mcp;
@@ -117,8 +118,8 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         }
         else
         {
-            if (request.ApprovalRequestId.HasValue)
-                return Error("CONFIRMATION_UNKNOWN", "The approval request was not found.");
+            if (!string.IsNullOrWhiteSpace(request.ApprovalRequestId))
+                return Error("CONFIRMATION_INVALID", "The approval request is not valid.");
 
             var approvalId = Guid.NewGuid();
             var expiresAt = now.AddSeconds(_options.ApprovalLifetimeSeconds);
@@ -237,6 +238,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
     public async Task<McpConfirmedWriteOutcome> ApproveAsync(
         Guid approvalRequestId,
         Guid userId,
+        McpApprovalContext context,
         CancellationToken cancellationToken = default)
     {
         var user = await _users.FindByIdAsync(userId, cancellationToken);
@@ -249,6 +251,14 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         if (approval is null ||
             !await _familyAuthorization.CanAccessFamilyAsync(userId, approval.FamilyId, cancellationToken))
             return Error("CONFIRMATION_UNKNOWN", "The approval request was not found.");
+        if (!context.HasWriteScope ||
+            !string.Equals(context.ClientId, approval.ClientId, StringComparison.Ordinal) ||
+            context.HouseholdId != approval.FamilyId)
+            return Error("AUTHORIZATION_DENIED", "The approval grant is no longer valid.");
+        if (!await _db.Lists.AsNoTracking().AnyAsync(
+                x => x.Id == ListId.From(approval.ListId) && x.FamilyId == FamilyId.From(approval.FamilyId),
+                cancellationToken))
+            return Error("AUTHORIZATION_DENIED", "The target list is outside the granted household.");
 
         var now = UtcNow();
         if (approval.Status != McpWriteApprovalStatuses.Pending)
@@ -278,6 +288,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
     public async Task<McpConfirmedWriteOutcome> CancelAsync(
         Guid approvalRequestId,
         Guid userId,
+        McpApprovalContext context,
         CancellationToken cancellationToken = default)
     {
         var user = await _users.FindByIdAsync(userId, cancellationToken);
@@ -290,6 +301,10 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         if (approval is null ||
             !await _familyAuthorization.CanAccessFamilyAsync(userId, approval.FamilyId, cancellationToken))
             return Error("CONFIRMATION_UNKNOWN", "The approval request was not found.");
+        if (!context.HasWriteScope ||
+            !string.Equals(context.ClientId, approval.ClientId, StringComparison.Ordinal) ||
+            context.HouseholdId != approval.FamilyId)
+            return Error("AUTHORIZATION_DENIED", "The approval grant is no longer valid.");
         if (approval.Status != McpWriteApprovalStatuses.Pending)
             return Error("CONFIRMATION_INVALID", "The approval request is no longer pending.");
 
@@ -353,6 +368,10 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         if (idempotency.ApprovalRequestId is not Guid approvalId)
             return Error("OPERATION_STATUS_UNKNOWN", "The pending operation has no approval request.");
 
+        var suppliedApprovalId = ParseApprovalReference(request.ApprovalRequestId);
+        if (!string.IsNullOrWhiteSpace(request.ApprovalRequestId) && suppliedApprovalId is null)
+            return Error("CONFIRMATION_INVALID", "The approval request is not valid.");
+
         var approval = await _db.McpWriteApprovals
             .SingleOrDefaultAsync(x => x.Id == approvalId, cancellationToken);
         if (approval is null)
@@ -365,13 +384,13 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
             await _db.SaveChangesAsync(cancellationToken);
             return Error("CONFIRMATION_INVALID", "The approval request is no longer valid.");
         }
-        if (request.ApprovalRequestId is null)
+        if (suppliedApprovalId is null)
             return new McpConfirmedWriteOutcome(
                 McpWriteStatuses.ConfirmationRequired,
                 ApprovalRequestId: approvalId,
                 ExpiresAtUtc: approval.ExpiresAtUtc,
                 Action: ToAction(request));
-        if (request.ApprovalRequestId != approvalId)
+        if (suppliedApprovalId != approvalId)
             return Error("CONFIRMATION_INVALID", "The approval request does not match the pending operation.");
 
         if (approval.Status == McpWriteApprovalStatuses.Pending)
@@ -422,15 +441,47 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
     public async Task PurgeExpiredAsync(CancellationToken cancellationToken = default)
     {
         var now = UtcNow();
-        var expiredApprovals = await _db.McpWriteApprovals
+        var expiredApprovalIds = await _db.McpWriteApprovals
             .Where(x => (x.Status == McpWriteApprovalStatuses.Pending ||
                          x.Status == McpWriteApprovalStatuses.Approved) &&
                         x.ExpiresAtUtc <= now)
+            .Select(x => x.Id)
             .ToListAsync(cancellationToken);
-        foreach (var approval in expiredApprovals)
+        foreach (var approvalId in expiredApprovalIds)
         {
-            approval.Status = McpWriteApprovalStatuses.Expired;
-            await MarkIdempotencyCancelledAsync(approval.Id, now, cancellationToken);
+            var approvalUpdated = _db.Database.IsRelational()
+                ? await _db.McpWriteApprovals
+                    .Where(x => x.Id == approvalId &&
+                                (x.Status == McpWriteApprovalStatuses.Pending ||
+                                 x.Status == McpWriteApprovalStatuses.Approved) &&
+                                x.ExpiresAtUtc <= now)
+                    .ExecuteUpdateAsync(setters => setters
+                        .SetProperty(x => x.Status, McpWriteApprovalStatuses.Expired), cancellationToken)
+                : await ExpireApprovalInMemoryAsync(approvalId, now, cancellationToken);
+            if (approvalUpdated == 0)
+                continue;
+
+            if (_db.Database.IsRelational())
+            {
+                await _db.McpIdempotency
+                    .Where(x => x.ApprovalRequestId == approvalId &&
+                                x.Status == McpIdempotencyStatuses.PendingApproval)
+                    .ExecuteUpdateAsync(setters => setters
+                        .SetProperty(x => x.Status, McpIdempotencyStatuses.Cancelled)
+                        .SetProperty(x => x.TombstoneUntilUtc, now.AddDays(_options.TombstoneRetentionDays)), cancellationToken);
+            }
+            else
+            {
+                var idempotency = await _db.McpIdempotency
+                    .SingleOrDefaultAsync(x => x.ApprovalRequestId == approvalId &&
+                                               x.Status == McpIdempotencyStatuses.PendingApproval,
+                        cancellationToken);
+                if (idempotency is not null)
+                {
+                    idempotency.Status = McpIdempotencyStatuses.Cancelled;
+                    idempotency.TombstoneUntilUtc = now.AddDays(_options.TombstoneRetentionDays);
+                }
+            }
         }
 
         var expiredResults = await _db.McpIdempotency
@@ -462,6 +513,23 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         }
 
         await _db.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task<int> ExpireApprovalInMemoryAsync(
+        Guid approvalId,
+        DateTime now,
+        CancellationToken cancellationToken)
+    {
+        var approval = await _db.McpWriteApprovals
+            .SingleOrDefaultAsync(x => x.Id == approvalId, cancellationToken);
+        if (approval is null ||
+            approval.ExpiresAtUtc > now ||
+            (approval.Status != McpWriteApprovalStatuses.Pending &&
+             approval.Status != McpWriteApprovalStatuses.Approved))
+            return 0;
+
+        approval.Status = McpWriteApprovalStatuses.Expired;
+        return 1;
     }
 
     private async Task MarkIdempotencyCancelledAsync(
@@ -514,6 +582,10 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         {
             await transaction.CommitAsync(cancellationToken);
         }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
         catch (Exception exception)
         {
             throw new McpCommitUncertainException(exception);
@@ -522,6 +594,11 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
 
     private static McpConfirmedWriteOutcome Error(string code, string message) =>
         new(McpWriteStatuses.Error, code, message);
+
+    private static Guid? ParseApprovalReference(string? reference) =>
+        Guid.TryParse(reference, out var approvalId) && approvalId != Guid.Empty
+            ? approvalId
+            : null;
 
     private sealed class McpCommitUncertainException(Exception inner)
         : Exception("The transaction commit outcome could not be determined.", inner);
