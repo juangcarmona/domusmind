@@ -41,7 +41,7 @@
       "startedAt": "2026-10-20T16:25:00Z",
       "endedAt": "2026-10-20T16:32:00Z",
       "inputCommit": "12457f0",
-      "outputCommit": "f6fb11d",
+      "outputCommit": "ae4fa48",
       "result": "implemented",
       "evidence": [
         "Added OpenIddict 7.7.2 authorization-server and EF Core token/authorization persistence in DomusMind.Api's existing host; added migration and proposed ADR-0012.",
@@ -51,7 +51,9 @@
         "Added a token endpoint for authorization-code and refresh-token grants with exact resource checks, local OpenIddict validation, audience enforcement, current user/household checks, and consent/token revocation.",
         "Added MCP bearer enforcement with safe 401 challenges, exact audience checks, current AuthUser and household access checks, structured post-execution security audit events, configurable rate limiting, and no production tools or writes; no token passthrough or persistence access from MCP middleware.",
         "Closed the independent audit findings with production antiforgery registration, grant-specific consent withdrawal, rolling refresh-token reuse protection, isolated test databases, and a real Streamable HTTP MCP client test.",
-        "Focused OAuth contract tests pass: 14 passed, including login, explicit consent, PKCE exchange, refresh rotation/reuse, actual MCP transport, resource/audience, expiry, insufficient scope, current account/membership denial, authorization replay, rate limiting, and revocation. Full Release suite passes: 878 passed, 3 skipped. Build passes with 0 errors; inherited Kiota and MessagePack advisories remain documented exceptions."
+        "Enabled authorization-entry validation so revoking a grant denies tokens created concurrently with withdrawal; isolated refresh-token reuse evidence from current account/membership scenarios.",
+        "Focused OAuth contract tests pass: 15 passed, including login, explicit consent, PKCE exchange, refresh rotation/reuse, actual MCP transport, resource/audience, expiry, insufficient scope, current account/membership denial, authorization replay, rate limiting, and revocation. Full Release suite passes: 879 passed, 3 skipped. Build passes with 0 errors; inherited Kiota and MessagePack advisories remain documented exceptions.",
+        "Final-head GitHub backend CI run 39460851418 passed build, PostgreSQL-backed tests and publish; final-head CodeQL run 39460856983 passed C# and JavaScript analysis with no findings."
       ]
     }
   ],
@@ -104,8 +106,8 @@
         "Added a structured redacted MCP security audit event around authorization denial and completed/failed transport execution, plus a bounded fixed-window rate limiter.",
         "Separated authorization-code replay from refresh-token reuse evidence, enabled zero-leeway rolling refresh tokens, exercised the official Streamable HTTP MCP client, and added negative OAuth boundary tests."
       ],
-      "resultingCommit": "f6fb11d",
-      "validation": "Focused OAuth suite 14/14; full Release suite 878 passed, 3 skipped; Release build 0 errors. Final independent Done audit pending."
+      "resultingCommit": "ae4fa48",
+      "validation": "Focused OAuth suite 15/15; full Release suite 879 passed, 3 skipped; Release build 0 errors; backend CI and CodeQL passed on ae4fa48. Final independent Done audit pending."
     }
   ],
   "stopReason": null,
