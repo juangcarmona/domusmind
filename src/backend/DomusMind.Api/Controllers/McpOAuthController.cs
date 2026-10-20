@@ -55,6 +55,13 @@ public sealed class McpOAuthController : ControllerBase
         if (!_options.Value.Enabled)
             return NotFound();
 
+        if (HttpMethods.IsPost(Request.Method))
+        {
+            await HttpContext.RequestServices
+                .GetRequiredService<Microsoft.AspNetCore.Antiforgery.IAntiforgery>()
+                .ValidateRequestAsync(HttpContext);
+        }
+
         var request = HttpContext.GetOpenIddictServerRequest()
             ?? throw new InvalidOperationException("The OpenIddict request cannot be resolved.");
 
@@ -91,6 +98,12 @@ public sealed class McpOAuthController : ControllerBase
 
         if (!await _familyAuthorization.CanAccessFamilyAsync(userId, householdId, cancellationToken))
             return Forbid();
+
+        if (!HttpMethods.IsPost(Request.Method))
+            return ConsentPage(request.ClientId ?? "unknown-client", householdId);
+
+        if (!string.Equals(Request.Form["consent"], "allow", StringComparison.Ordinal))
+            return BadRequest(new { error = "consent_required" });
 
         var identity = new ClaimsIdentity(
             OpenIddictServerAspNetCoreDefaults.AuthenticationScheme,
@@ -151,13 +164,16 @@ public sealed class McpOAuthController : ControllerBase
 
     [HttpPost("/oauth/login")]
     [AllowAnonymous]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(
         [FromForm] string email,
         [FromForm] string password,
         [FromForm] string returnUrl,
         CancellationToken cancellationToken)
     {
+        await HttpContext.RequestServices
+            .GetRequiredService<Microsoft.AspNetCore.Antiforgery.IAntiforgery>()
+            .ValidateRequestAsync(HttpContext);
+
         if (!Url.IsLocalUrl(returnUrl))
             return BadRequest(new { error = "invalid_return_url" });
 
@@ -184,5 +200,35 @@ public sealed class McpOAuthController : ControllerBase
 
         var cookie = await HttpContext.AuthenticateAsync(McpOAuthConstants.CookieScheme);
         return cookie.Succeeded ? cookie.Principal : null;
+    }
+
+    private IActionResult ConsentPage(string clientId, Guid householdId)
+    {
+        var encodedClientId = System.Net.WebUtility.HtmlEncode(clientId);
+        var encodedHouseholdId = System.Net.WebUtility.HtmlEncode(householdId.ToString());
+        var token = HttpContext.RequestServices
+            .GetRequiredService<Microsoft.AspNetCore.Antiforgery.IAntiforgery>()
+            .GetAndStoreTokens(HttpContext)
+            .RequestToken;
+        var encodedToken = System.Net.WebUtility.HtmlEncode(token);
+        var action = System.Net.WebUtility.HtmlEncode(Request.PathBase + Request.Path + Request.QueryString);
+
+        return Content($"""
+            <!doctype html>
+            <html lang="en">
+            <head><meta charset="utf-8"><title>DomusMind authorization</title></head>
+            <body>
+              <main>
+                <h1>Allow MCP access to DomusMind?</h1>
+                <p>Client <strong>{encodedClientId}</strong> requests read-only access to household <strong>{encodedHouseholdId}</strong>.</p>
+                <form method="post" action="{action}">
+                  <input type="hidden" name="__RequestVerificationToken" value="{encodedToken}">
+                  <button type="submit" name="consent" value="allow">Allow</button>
+                  <button type="submit" name="consent" value="deny">Deny</button>
+                </form>
+              </main>
+            </body>
+            </html>
+            """, "text/html");
     }
 }
