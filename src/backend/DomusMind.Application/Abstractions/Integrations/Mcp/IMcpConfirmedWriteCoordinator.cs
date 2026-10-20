@@ -1,4 +1,5 @@
 using DomusMind.Contracts.Lists;
+using System.Text.Json.Serialization;
 
 namespace DomusMind.Application.Abstractions.Integrations.Mcp;
 
@@ -23,10 +24,11 @@ public sealed record McpListItemAddRequest(
     string TraceId);
 
 public sealed record McpListItemAddAction(
-    Guid ListId,
-    string Name,
-    string? Quantity,
-    string? Note);
+    [property: JsonPropertyName("operation")] string Operation,
+    [property: JsonPropertyName("listId")] Guid ListId,
+    [property: JsonPropertyName("itemName")] string ItemName,
+    [property: JsonPropertyName("quantity")] string? Quantity,
+    [property: JsonPropertyName("note")] string? Note);
 
 public sealed record McpConfirmedWriteOutcome(
     string Status,
@@ -68,4 +70,9 @@ public interface IMcpConfirmedWriteCoordinator
         Guid approvalRequestId,
         Guid userId,
         CancellationToken cancellationToken = default);
+}
+
+public interface IMcpConfirmedWriteMaintenance
+{
+    Task PurgeExpiredAsync(CancellationToken cancellationToken = default);
 }

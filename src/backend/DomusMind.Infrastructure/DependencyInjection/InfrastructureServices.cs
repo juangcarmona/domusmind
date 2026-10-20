@@ -44,8 +44,12 @@ public static class InfrastructureServices
             .Validate(o => o.ApprovalLifetimeSeconds is >= 60 and <= 3600)
             .Validate(o => o.ResultRetentionDays is >= 1 and <= 90)
             .Validate(o => o.TombstoneRetentionDays is >= 1 and <= 365)
+            .Validate(o => o.TombstoneRetentionDays >= o.ResultRetentionDays)
             .ValidateOnStart();
         services.AddScoped<IMcpConfirmedWriteCoordinator, ConfirmedWriteCoordinator>();
+        services.AddScoped<IMcpConfirmedWriteMaintenance>(sp =>
+            (IMcpConfirmedWriteMaintenance)sp.GetRequiredService<IMcpConfirmedWriteCoordinator>());
+        services.AddHostedService<McpConfirmedWriteCleanupService>();
         services.AddHttpClient(nameof(OllamaInboxInterpreter)).ConfigureHttpClient(client =>
             client.Timeout = TimeSpan.FromMinutes(2));
         services.AddHttpClient(nameof(OpenAiCompatibleInboxInterpreter)).ConfigureHttpClient(client =>

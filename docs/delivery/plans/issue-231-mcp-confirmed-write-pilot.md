@@ -22,6 +22,7 @@ The pilot deliberately excludes calendar and task writes. It demonstrates the sa
 - The approval record binds the exact actor, OAuth client, household, target list, canonical payload, and idempotency identity. It is short-lived, single-use, and invalidated after successful execution or explicit cancellation.
 - The Lists application boundary must compare the target list household with the OAuth-granted household before invoking the existing membership check. A user who belongs to multiple households cannot use a grant for household A to target a list in household B.
 - A replay with the same idempotency identity must not create a second item. The server retains the completed result for the configured retry window and then retains a non-replayable tombstone for the agreed anti-replay window; a changed payload under the same key is a conflict.
+- The approved initial retention values are a 10-minute approval lifetime, 30-day minimized-result retention, and 180-day anti-replay tombstone lifetime. A hosted cleanup service clears result content after 30 days and removes expired tombstones and their approval payloads after 180 days.
 - The Lists application command remains authoritative for list ownership, household authorization, input validation, domain events, event logging, and persistence.
 
 ## Trusted approval protocol
@@ -57,7 +58,7 @@ Use an application-owned idempotent execution coordinator backed by the existing
 - Completed results are retained for the configured client retry window. After result expiry, retain an actor/client/household/key/payload-hash tombstone until the agreed anti-replay horizon; never reuse an expired key for a different payload. Cleanup must not remove live pending approvals or active tombstones.
 - Cancellation is honored before commit. After commit, cancellation cannot undo the mutation; return the completed result when possible, otherwise require retry of the same key. Only an infrastructure-unknown commit outcome uses `OPERATION_STATUS_UNKNOWN`.
 
-The initial implementation must choose concrete retention values through configuration and document them in operator guidance; the owner must approve those limits before enabling the capability.
+The initial implementation uses the owner-approved retention values above through Mcp:Write:ApprovalLifetimeSeconds, Mcp:Write:ResultRetentionDays, and Mcp:Write:TombstoneRetentionDays. The write capability remains disabled by default.
 
 ## MCP contract
 
@@ -133,7 +134,7 @@ The independently testable request/result schemas, normalization, MCP `isError` 
 - Approve the trusted first-party approval channel and same-OAuth-subject approval rule; MCP client possession alone is not accepted as human confirmation.
 - Approve `mcp.write` as the explicit write scope and separate consent from `mcp.read`.
 - Approve stable `listId` targeting for this child, with list discovery deferred.
-- Approve the initial challenge/result/tombstone retention limits after implementation proposes concrete configuration values.
+- Approved: 10-minute challenge lifetime, 30-day result retention, and 180-day anti-replay tombstone retention.
 
 ## Definition of Done for this plan
 

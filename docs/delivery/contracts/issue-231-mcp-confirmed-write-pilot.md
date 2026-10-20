@@ -130,6 +130,7 @@ This status never authorizes a new execution; the durable idempotency record res
 - Approval consumption, idempotency claim/completion, list mutation, Lists event log entry, and the completion result commit in one relational transaction. The shared post-commit list notification is published only after commit.
 - Cancellation before commit rolls back the transaction and returns the `CANCELLED` variant when the response channel is available. Cancellation after commit returns `COMPLETED` when possible; a disconnected client retries the same key. An infrastructure-unknown commit outcome returns `OPERATION_STATUS_UNKNOWN` and never permits a new execution.
 - Result retention and anti-replay tombstone retention are configured and documented before release. Cleanup never reuses a live key for a different payload.
+- The initial approved values are a 10-minute approval lifetime, 30-day minimized-result retention, and 180-day anti-replay tombstone lifetime. A hosted cleanup service clears retained result content after 30 days and removes expired tombstones and associated approval payloads after 180 days.
 
 ## Errors
 

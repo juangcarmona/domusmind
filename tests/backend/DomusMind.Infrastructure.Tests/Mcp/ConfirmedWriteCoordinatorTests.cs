@@ -72,10 +72,53 @@ public sealed class ConfirmedWriteCoordinatorTests
         (await db.McpWriteApprovals.SingleAsync()).Status.Should().Be("PENDING");
     }
 
+    [Fact]
+    public async Task Canonical_payload_binding_rejects_ambiguous_field_boundaries()
+    {
+        var userId = Guid.NewGuid();
+        var householdId = Guid.NewGuid();
+        var listId = Guid.NewGuid();
+        await using var db = new DomusMindDbContext(new DbContextOptionsBuilder<DomusMindDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options);
+        var coordinator = CreateCoordinator(db, new RecordingDispatcher(), new RecordingPublisher());
+
+        await coordinator.ExecuteListItemAddAsync(new McpListItemAddRequest(
+            userId, householdId, "client", listId, "Milk\n2", "3", null, "key-3", null, "trace"));
+        var collision = await coordinator.ExecuteListItemAddAsync(new McpListItemAddRequest(
+            userId, householdId, "client", listId, "Milk", "2\n3", null, "key-3", null, "trace"));
+
+        collision.Code.Should().Be("IDEMPOTENCY_KEY_REUSED");
+    }
+
+    [Fact]
+    public async Task Approved_request_expires_before_execution()
+    {
+        var clock = new TestTimeProvider(DateTimeOffset.UtcNow);
+        var userId = Guid.NewGuid();
+        await using var db = new DomusMindDbContext(new DbContextOptionsBuilder<DomusMindDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options);
+        var dispatcher = new RecordingDispatcher();
+        var coordinator = CreateCoordinator(db, dispatcher, new RecordingPublisher(), clock);
+        var request = new McpListItemAddRequest(
+            userId, Guid.NewGuid(), "client", Guid.NewGuid(), "Milk", null, null, "key-4", null, "trace");
+        var challenge = await coordinator.ExecuteListItemAddAsync(request);
+        await coordinator.ApproveAsync(challenge.ApprovalRequestId!.Value, userId);
+        clock.Advance(TimeSpan.FromMinutes(11));
+
+        var result = await coordinator.ExecuteListItemAddAsync(
+            request with { ApprovalRequestId = challenge.ApprovalRequestId });
+
+        result.Code.Should().Be("CONFIRMATION_INVALID");
+        dispatcher.Calls.Should().Be(0);
+    }
+
     private static ConfirmedWriteCoordinator CreateCoordinator(
         DomusMindDbContext db,
         RecordingDispatcher dispatcher,
-        RecordingPublisher publisher)
+        RecordingPublisher publisher,
+        TimeProvider? clock = null)
     {
         return new ConfirmedWriteCoordinator(
             db,
@@ -83,7 +126,7 @@ public sealed class ConfirmedWriteCoordinatorTests
             new AllowFamilyAuthorization(),
             new ActiveUserRepository(),
             publisher,
-            TimeProvider.System,
+            clock ?? TimeProvider.System,
             Options.Create(new McpConfirmedWriteOptions()),
             NullLogger<ConfirmedWriteCoordinator>.Instance);
     }
@@ -144,5 +187,12 @@ public sealed class ConfirmedWriteCoordinatorTests
         public Task UpdateLastLoginAtAsync(Guid userId, DateTime lastLoginAtUtc, CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task<bool> AnyUsersAsync(CancellationToken cancellationToken) => throw new NotSupportedException();
         public Task SaveChangesAsync(CancellationToken cancellationToken) => throw new NotSupportedException();
+    }
+
+    private sealed class TestTimeProvider(DateTimeOffset initial) : TimeProvider
+    {
+        private DateTimeOffset _now = initial;
+        public override DateTimeOffset GetUtcNow() => _now;
+        public void Advance(TimeSpan duration) => _now += duration;
     }
 }

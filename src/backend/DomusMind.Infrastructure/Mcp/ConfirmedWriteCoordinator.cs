@@ -7,6 +7,9 @@ using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Notifications;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Features.Lists.AddItemToList;
+using DomusMind.Application.Features.Lists;
+using DomusMind.Contracts.Lists;
+using DomusMind.Domain.Lists;
 using DomusMind.Infrastructure.Persistence;
 using DomusMind.Infrastructure.Persistence.Mcp;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +19,9 @@ using Microsoft.Extensions.Options;
 
 namespace DomusMind.Infrastructure.Mcp;
 
-public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
+public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, IMcpConfirmedWriteMaintenance
 {
-    private const string OperationNamespace = "list_item_add/v1";
+    private const string OperationNamespace = "mcp:list_item_add:v1";
     private readonly DomusMindDbContext _db;
     private readonly ICommandDispatcher _commands;
     private readonly IFamilyAuthorizationService _familyAuthorization;
@@ -52,11 +55,40 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
         McpListItemAddRequest request,
         CancellationToken cancellationToken = default)
     {
+        try
+        {
+            return await ExecuteListItemAddCoreAsync(request, cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (DbUpdateException)
+        {
+            return Error("OPERATION_STATUS_UNKNOWN", "The operation outcome is unknown. Retry with the same idempotency key.");
+        }
+        catch (Exception)
+        {
+            _logger.LogWarning(
+                "MCP confirmed write coordinator failed operation={Operation} user={UserId} household={HouseholdId} trace={TraceId}",
+                OperationNamespace,
+                request.UserId,
+                request.HouseholdId,
+                request.TraceId);
+            return Error("INTERNAL_ERROR", "The operation could not be completed.");
+        }
+    }
+
+    private async Task<McpConfirmedWriteOutcome> ExecuteListItemAddCoreAsync(
+        McpListItemAddRequest request,
+        CancellationToken cancellationToken)
+    {
         var validation = Validate(request);
         if (validation is not null)
             return validation;
 
         var now = UtcNow();
+        await PurgeExpiredAsync(cancellationToken);
         var hash = ComputePayloadHash(request);
         await using var transaction = await BeginTransactionAsync(cancellationToken);
 
@@ -74,7 +106,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
             if (!string.Equals(idempotency.PayloadHash, hash, StringComparison.Ordinal))
                 return Error("IDEMPOTENCY_KEY_REUSED", "The idempotency key was already used with a different request.");
 
-            var existing = await ContinueExistingAsync(idempotency, request, hash, now, cancellationToken);
+            var existing = await ContinueExistingAsync(idempotency, request, now, cancellationToken);
             if (existing is not null)
             {
                 await CommitAsync(transaction, cancellationToken);
@@ -134,16 +166,29 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
         if (idempotency.Status != McpIdempotencyStatuses.Executing)
             return Error("OPERATION_STATUS_UNKNOWN", "The write operation is not executable in its current state.");
 
-        var result = await _commands.Dispatch(
-            new AddItemToListCommand(
-                request.ListId,
-                request.Name,
-                request.Quantity,
-                request.Note,
-                null,
-                request.UserId,
-                request.HouseholdId),
-            cancellationToken);
+        AddItemToListResponse result;
+        try
+        {
+            result = await _commands.Dispatch(
+                new AddItemToListCommand(
+                    request.ListId,
+                    request.Name,
+                    request.Quantity,
+                    request.Note,
+                    null,
+                    request.UserId,
+                    request.HouseholdId),
+                cancellationToken);
+        }
+        catch (ListException exception)
+        {
+            var code = exception.Code == ListErrorCode.AccessDenied
+                ? "ACCESS_DENIED"
+                : "INVALID_INPUT";
+            return Error(code, code == "ACCESS_DENIED"
+                ? "Access to this household is denied."
+                : "The list item input is invalid.");
+        }
 
         idempotency.Status = McpIdempotencyStatuses.Completed;
         idempotency.ItemId = result.ItemId;
@@ -163,9 +208,8 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
         await _db.SaveChangesAsync(cancellationToken);
         await CommitAsync(transaction, cancellationToken);
         _logger.LogInformation(
-            "MCP confirmed write completed operation={Operation} approval={ApprovalRequestId} user={UserId} household={HouseholdId} list={ListId} item={ItemId} trace={TraceId}",
+            "MCP confirmed write completed operation={Operation} user={UserId} household={HouseholdId} list={ListId} item={ItemId} trace={TraceId}",
             OperationNamespace,
-            idempotency.ApprovalRequestId,
             request.UserId,
             request.HouseholdId,
             request.ListId,
@@ -212,6 +256,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
         if (approval.ExpiresAtUtc <= now)
         {
             approval.Status = McpWriteApprovalStatuses.Expired;
+            await MarkIdempotencyCancelledAsync(approvalRequestId, now, cancellationToken);
             await _db.SaveChangesAsync(cancellationToken);
             await CommitAsync(transaction, cancellationToken);
             return Error("CONFIRMATION_EXPIRED", "The approval request has expired.");
@@ -223,8 +268,8 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
         await _db.SaveChangesAsync(cancellationToken);
         await CommitAsync(transaction, cancellationToken);
         _logger.LogInformation(
-            "MCP confirmed write approved approval={ApprovalRequestId} user={UserId} household={HouseholdId}",
-            approvalRequestId,
+            "MCP confirmed write approved operation={Operation} user={UserId} household={HouseholdId}",
+            OperationNamespace,
             userId,
             approval.FamilyId);
         return new McpConfirmedWriteOutcome(McpWriteStatuses.ApprovalPending, Code: "APPROVED");
@@ -257,8 +302,8 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
         await _db.SaveChangesAsync(cancellationToken);
         await CommitAsync(transaction, cancellationToken);
         _logger.LogInformation(
-            "MCP confirmed write cancelled approval={ApprovalRequestId} user={UserId} household={HouseholdId}",
-            approvalRequestId,
+            "MCP confirmed write cancelled operation={Operation} user={UserId} household={HouseholdId}",
+            OperationNamespace,
             userId,
             approval.FamilyId);
         return new McpConfirmedWriteOutcome(McpWriteStatuses.Error, Code: "CANCELLED", Message: "The approval request was cancelled.");
@@ -267,7 +312,6 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
     private async Task<McpConfirmedWriteOutcome?> ContinueExistingAsync(
         McpIdempotencyRecord idempotency,
         McpListItemAddRequest request,
-        string hash,
         DateTime now,
         CancellationToken cancellationToken)
     {
@@ -301,19 +345,21 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
             .SingleOrDefaultAsync(x => x.Id == approvalId, cancellationToken);
         if (approval is null)
             return Error("CONFIRMATION_UNKNOWN", "The approval request was not found.");
-        if (request.ApprovalRequestId != approvalId)
+        if (request.ApprovalRequestId is null)
             return new McpConfirmedWriteOutcome(
                 McpWriteStatuses.ConfirmationRequired,
                 ApprovalRequestId: approvalId,
                 ExpiresAtUtc: approval.ExpiresAtUtc,
                 Action: ToAction(request));
-        if (approval.ExpiresAtUtc <= now && approval.Status == McpWriteApprovalStatuses.Pending)
+        if (request.ApprovalRequestId != approvalId)
+            return Error("CONFIRMATION_INVALID", "The approval request does not match the pending operation.");
+        if (approval.ExpiresAtUtc <= now)
         {
             approval.Status = McpWriteApprovalStatuses.Expired;
             idempotency.Status = McpIdempotencyStatuses.Cancelled;
             idempotency.TombstoneUntilUtc = now.AddDays(_options.TombstoneRetentionDays);
             await _db.SaveChangesAsync(cancellationToken);
-            return Error("CONFIRMATION_EXPIRED", "The approval request has expired.");
+            return Error("CONFIRMATION_INVALID", "The approval request is no longer valid.");
         }
 
         if (approval.Status == McpWriteApprovalStatuses.Pending)
@@ -351,17 +397,76 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
 
     private static string ComputePayloadHash(McpListItemAddRequest request)
     {
-        var canonical = string.Join(
-            "\n",
+        var canonical = JsonSerializer.Serialize(
+        new[]
+        {
             request.ListId.ToString("D"),
             request.Name.Trim(),
             NormalizeOptional(request.Quantity) ?? string.Empty,
-            NormalizeOptional(request.Note) ?? string.Empty);
+            NormalizeOptional(request.Note) ?? string.Empty });
         return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(canonical))).ToLowerInvariant();
     }
 
+    public async Task PurgeExpiredAsync(CancellationToken cancellationToken = default)
+    {
+        var now = UtcNow();
+        var expiredApprovals = await _db.McpWriteApprovals
+            .Where(x => x.Status == McpWriteApprovalStatuses.Pending && x.ExpiresAtUtc <= now)
+            .ToListAsync(cancellationToken);
+        foreach (var approval in expiredApprovals)
+        {
+            approval.Status = McpWriteApprovalStatuses.Expired;
+            await MarkIdempotencyCancelledAsync(approval.Id, now, cancellationToken);
+        }
+
+        var expiredResults = await _db.McpIdempotency
+            .Where(x => x.Status == McpIdempotencyStatuses.Completed &&
+                        x.ResultJson != null &&
+                        x.ResultExpiresAtUtc != null &&
+                        x.ResultExpiresAtUtc <= now)
+            .ToListAsync(cancellationToken);
+        foreach (var result in expiredResults)
+            result.ResultJson = null;
+
+        var expiredTombstones = await _db.McpIdempotency
+            .Where(x => x.TombstoneUntilUtc != null && x.TombstoneUntilUtc <= now)
+            .ToListAsync(cancellationToken);
+        if (expiredTombstones.Count > 0)
+        {
+            var approvalIds = expiredTombstones
+                .Where(x => x.ApprovalRequestId.HasValue)
+                .Select(x => x.ApprovalRequestId!.Value)
+                .ToArray();
+            _db.McpIdempotency.RemoveRange(expiredTombstones);
+            if (approvalIds.Length > 0)
+            {
+                var approvals = await _db.McpWriteApprovals
+                    .Where(x => approvalIds.Contains(x.Id))
+                    .ToListAsync(cancellationToken);
+                _db.McpWriteApprovals.RemoveRange(approvals);
+            }
+        }
+
+        await _db.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task MarkIdempotencyCancelledAsync(
+        Guid approvalRequestId,
+        DateTime now,
+        CancellationToken cancellationToken)
+    {
+        var idempotency = await _db.McpIdempotency
+            .SingleOrDefaultAsync(x => x.ApprovalRequestId == approvalRequestId, cancellationToken);
+        if (idempotency is not null &&
+            idempotency.Status == McpIdempotencyStatuses.PendingApproval)
+        {
+            idempotency.Status = McpIdempotencyStatuses.Cancelled;
+            idempotency.TombstoneUntilUtc = now.AddDays(_options.TombstoneRetentionDays);
+        }
+    }
+
     private static McpListItemAddAction ToAction(McpListItemAddRequest request) =>
-        new(request.ListId, request.Name.Trim(), NormalizeOptional(request.Quantity), NormalizeOptional(request.Note));
+        new("list_item_add", request.ListId, request.Name.Trim(), NormalizeOptional(request.Quantity), NormalizeOptional(request.Note));
 
     private static McpWriteApprovalView ToView(McpWriteApprovalRecord approval) =>
         new(approval.Id, approval.FamilyId, approval.ListId, approval.Name, approval.Quantity, approval.Note,
