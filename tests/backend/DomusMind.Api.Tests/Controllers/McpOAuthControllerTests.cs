@@ -1,11 +1,23 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
+using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Persistence;
+using DomusMind.Application.Features.Calendar.GetFamilyTimeline;
+using DomusMind.Application.Features.Family.GetFamilyMembers;
 using DomusMind.Api.Controllers;
+using DomusMind.Contracts.Calendar;
+using DomusMind.Contracts.Family;
+using DomusMind.Domain.Calendar;
+using DomusMind.Domain.Calendar.ValueObjects;
+using DomusMind.Domain.Family;
+using DomusMind.Domain.Family.ValueObjects;
+using DomusMind.Domain.Shared;
 using DomusMind.Infrastructure.Auth;
+using DomusMind.Infrastructure.Messaging;
 using DomusMind.Infrastructure.Persistence;
 using DomusMind.Mcp.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +37,82 @@ namespace DomusMind.Api.Tests.Controllers;
 
 public sealed class McpOAuthControllerTests
 {
+    [Fact]
+    public async Task Authorized_read_only_capability_registers_only_the_release_tools()
+    {
+        await using var host = await TestHost.CreateAsync(
+            enabled: true,
+            householdReadOnlyEnabled: true,
+            useKestrelHttps: true);
+        using var client = host.CreateClient();
+
+        using var metadataResponse = await client.GetAsync("/.well-known/oauth-protected-resource/mcp");
+        Assert.Equal(HttpStatusCode.OK, metadataResponse.StatusCode);
+        Assert.Contains("https://domusmind.test/mcp",
+            await metadataResponse.Content.ReadAsStringAsync(), StringComparison.Ordinal);
+
+        var (status, code, verifier) = await host.IssueAuthorizationCodeAsync(client);
+        Assert.Equal(HttpStatusCode.Redirect, status);
+        Assert.NotNull(code);
+
+        using var tokenResponse = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["grant_type"] = "authorization_code",
+            ["client_id"] = "test-client",
+            ["code"] = code!,
+            ["redirect_uri"] = "https://client.test/callback",
+            ["code_verifier"] = verifier,
+            ["resource"] = "https://domusmind.test/mcp",
+        }));
+        Assert.Equal(HttpStatusCode.OK, tokenResponse.StatusCode);
+        using var tokenJson = JsonDocument.Parse(await tokenResponse.Content.ReadAsStringAsync());
+        var accessToken = tokenJson.RootElement.GetProperty("access_token").GetString();
+        Assert.False(string.IsNullOrWhiteSpace(accessToken));
+
+        using var mcpHttpClient = host.CreateClient();
+        mcpHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        var transport = new HttpClientTransport(new HttpClientTransportOptions
+        {
+            Endpoint = new Uri(host.BaseAddress, "/mcp"),
+            TransportMode = HttpTransportMode.StreamableHttp,
+            EnableStandaloneGetStream = false,
+        }, mcpHttpClient, ownsHttpClient: false);
+        await using var mcpClient = await McpClient.CreateAsync(transport, new McpClientOptions
+        {
+            ClientInfo = new Implementation { Name = "DomusMind.Api.Tests", Version = "1.0" },
+            ProtocolVersion = "2026-07-28",
+        });
+
+        var tools = await mcpClient.ListToolsAsync();
+        Assert.Equal(["agenda_get", "household_members_list"], tools.Select(tool => tool.Name).OrderBy(name => name));
+        Assert.DoesNotContain(tools, tool => tool.Name is "tasks_list" or "plan_create" or "list_item_add");
+
+        var agendaResult = await mcpClient.CallToolAsync("agenda_get", new Dictionary<string, object?>
+        {
+            ["from"] = "2026-10-20",
+            ["to"] = "2026-10-31",
+        });
+        Assert.NotEqual(true, agendaResult.IsError);
+        Assert.Contains(agendaResult.StructuredContent!.Value.GetProperty("events").EnumerateArray(),
+            item => item.GetProperty("title").GetString() == "OAuth household appointment"
+                && item.GetProperty("date").GetString() == "2026-10-20");
+
+        var membersResult = await mcpClient.CallToolAsync("household_members_list", new Dictionary<string, object?>());
+        Assert.NotEqual(true, membersResult.IsError);
+        Assert.Contains(membersResult.StructuredContent!.Value.GetProperty("members").EnumerateArray(),
+            member => member.GetProperty("name").GetString() == "OAuth Test Member");
+
+        await host.DisableTestUserAsync();
+        using var disabledUserResponse = await mcpHttpClient.GetAsync("/mcp");
+        Assert.Equal(HttpStatusCode.Forbidden, disabledUserResponse.StatusCode);
+
+        await host.EnableTestUserAndRemoveHouseholdAccessAsync();
+        using var removedMembershipResponse = await mcpHttpClient.GetAsync("/mcp");
+        Assert.Equal(HttpStatusCode.Forbidden, removedMembershipResponse.StatusCode);
+
+        await host.RestoreTestHouseholdAccessAsync();
+    }
+
     [Fact]
     public async Task Protected_resource_metadata_advertises_the_configured_resource_and_authority()
     {
@@ -133,7 +221,7 @@ public sealed class McpOAuthControllerTests
     [Fact]
     public async Task Authorization_code_exchange_and_mcp_request_use_the_bound_household()
     {
-        await using var host = await TestHost.CreateAsync(enabled: true);
+        await using var host = await TestHost.CreateAsync(enabled: true, householdReadOnlyEnabled: true);
         using var client = host.CreateClient();
         const string verifier = "test-code-verifier-012345678901234567890123456789";
         var challenge = Convert.ToBase64String(SHA256.HashData(Encoding.ASCII.GetBytes(verifier)))
@@ -258,7 +346,8 @@ public sealed class McpOAuthControllerTests
             ClientInfo = new Implementation { Name = "DomusMind.Api.Tests", Version = "1.0" },
             ProtocolVersion = "2026-07-28",
         });
-        Assert.Empty(await mcpClient.ListToolsAsync());
+        Assert.Equal(["agenda_get", "household_members_list"],
+            (await mcpClient.ListToolsAsync()).Select(tool => tool.Name).OrderBy(name => name));
 
         await host.DisableTestUserAsync();
         using var disabledUserRequest = new HttpRequestMessage(HttpMethod.Get, "/mcp");
@@ -482,6 +571,14 @@ public sealed class McpOAuthControllerTests
         return await client.SendAsync(request);
     }
 
+    private static Uri ResolveForClient(HttpClient client, Uri location)
+    {
+        if (!location.IsAbsoluteUri || client.BaseAddress is null)
+            return location;
+
+        return new Uri(client.BaseAddress, location.PathAndQuery);
+    }
+
     private static string ExtractAntiforgeryToken(string body)
     {
         const string marker = "name=\"__RequestVerificationToken\" value=\"";
@@ -506,29 +603,56 @@ public sealed class McpOAuthControllerTests
     private sealed class TestHost : IAsyncDisposable
     {
         private readonly WebApplication _app;
+        private readonly bool _useKestrelHttps;
+        private readonly X509Certificate2? _testCertificate;
+        private readonly Uri _baseAddress;
 
         public static readonly Guid TestHouseholdId = Guid.Parse("00000000-0000-0000-0000-000000000001");
         public static readonly Guid TestUserId = Guid.Parse("00000000-0000-0000-0000-000000000002");
         public const string TestEmail = "mcp-test@domusmind.test";
         public const string TestPassword = "Mcp-Test-Password-123!";
 
-        private TestHost(WebApplication app)
+        private TestHost(
+            WebApplication app,
+            bool useKestrelHttps,
+            X509Certificate2? testCertificate,
+            Uri baseAddress)
         {
             _app = app;
+            _useKestrelHttps = useKestrelHttps;
+            _testCertificate = testCertificate;
+            _baseAddress = baseAddress;
         }
 
         public HttpClient CreateClient()
         {
-            var client = new HttpClient(_app.GetTestServer().CreateHandler());
-            client.BaseAddress = new Uri("https://domusmind.test");
-            return client;
+            if (_useKestrelHttps)
+            {
+                return new HttpClient(new HttpClientHandler
+                {
+                    AllowAutoRedirect = false,
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+                })
+                {
+                    BaseAddress = _baseAddress,
+                };
+            }
+
+            return new HttpClient(_app.GetTestServer().CreateHandler())
+            {
+                BaseAddress = new Uri("https://domusmind.test"),
+            };
         }
+
+        public Uri BaseAddress => _baseAddress;
 
         public static async Task<TestHost> CreateAsync(
             bool enabled,
             int requestsPerMinute = 60,
             string? expectedAudience = null,
-            TimeProvider? timeProvider = null)
+            TimeProvider? timeProvider = null,
+            bool householdReadOnlyEnabled = false,
+            bool useKestrelHttps = false)
         {
             var databaseRoot = new InMemoryDatabaseRoot();
             var databaseName = $"mcp-oauth-{Guid.NewGuid():N}";
@@ -537,7 +661,18 @@ public sealed class McpOAuthControllerTests
                 EnvironmentName = "Development",
                 ApplicationName = typeof(McpOAuthController).Assembly.GetName().Name,
             });
-            builder.WebHost.UseTestServer();
+            X509Certificate2? testCertificate = null;
+            if (useKestrelHttps)
+            {
+                testCertificate = CreateTestCertificate();
+                builder.WebHost.ConfigureKestrel(options =>
+                    options.Listen(System.Net.IPAddress.Loopback, 0,
+                        listenOptions => listenOptions.UseHttps(testCertificate)));
+            }
+            else
+            {
+                builder.WebHost.UseTestServer();
+            }
             builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["Jwt:SigningKey"] = "test-signing-key-that-is-at-least-32-characters",
@@ -549,6 +684,7 @@ public sealed class McpOAuthControllerTests
                 ["Mcp:OAuth:ClientId"] = "test-client",
                 ["Mcp:OAuth:RedirectUris:0"] = "https://client.test/callback",
                 ["Mcp:RequireOAuth"] = enabled.ToString(),
+                ["Mcp:Capabilities:HouseholdReadOnly"] = householdReadOnlyEnabled.ToString(),
                 ["Mcp:RequestsPerMinute"] = requestsPerMinute.ToString(),
             });
             if (expectedAudience is not null)
@@ -558,6 +694,13 @@ public sealed class McpOAuthControllerTests
 
             builder.Services.AddControllers()
                 .AddApplicationPart(typeof(McpOAuthController).Assembly);
+            builder.Services.AddScoped<IQueryDispatcher, QueryDispatcher>();
+            builder.Services.AddScoped<
+                IQueryHandler<GetFamilyTimelineQuery, FamilyTimelineResponse>,
+                GetFamilyTimelineQueryHandler>();
+            builder.Services.AddScoped<
+                IQueryHandler<GetFamilyMembersQuery, IReadOnlyCollection<MemberDirectoryItemResponse>>,
+                GetFamilyMembersQueryHandler>();
             builder.Services.AddAntiforgery();
             builder.Services.AddDbContext<DomusMindDbContext>(options =>
                 options.UseInMemoryDatabase(databaseName, databaseRoot));
@@ -602,11 +745,61 @@ public sealed class McpOAuthControllerTests
                         GrantedAtUtc = DateTime.UtcNow,
                     });
                 }
+
+                if (!await database.Set<Domain.Family.Family>().AnyAsync(family => family.Id == FamilyId.From(TestHouseholdId)))
+                {
+                    var now = new DateTime(2026, 10, 1, 0, 0, 0, DateTimeKind.Utc);
+                    var family = Domain.Family.Family.Create(
+                        FamilyId.From(TestHouseholdId),
+                        FamilyName.Create("OAuth Household"),
+                        null,
+                        now);
+                    var member = family.AddMember(
+                        MemberId.New(),
+                        MemberName.Create("OAuth Test Member"),
+                        MemberRole.Adult,
+                        isManager: true,
+                        birthDate: null,
+                        now,
+                        authUserId: TestUserId);
+                    var calendarEvent = Domain.Calendar.CalendarEvent.Create(
+                        CalendarEventId.New(),
+                        family.Id,
+                        EventTitle.Create("OAuth household appointment"),
+                        null,
+                        EventTime.Moment(new DateOnly(2026, 10, 20), new TimeOnly(10, 0)),
+                        HexColor.From("#3B82F6"),
+                        createdAtUtc: now);
+                    calendarEvent.AddParticipant(member.Id);
+                    database.Set<Domain.Family.Family>().Add(family);
+                    database.Set<Domain.Calendar.CalendarEvent>().Add(calendarEvent);
+                }
                 await database.SaveChangesAsync();
                 await McpOAuthSeedService.SeedClientAsync(scope.ServiceProvider, CancellationToken.None);
             }
             await app.StartAsync();
-            return new TestHost(app);
+            var baseAddress = useKestrelHttps
+                ? new Uri(app.Urls.Single(address => address.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+                : new Uri("https://domusmind.test");
+            return new TestHost(app, useKestrelHttps, testCertificate, baseAddress);
+        }
+
+        private static X509Certificate2 CreateTestCertificate()
+        {
+            using var rsa = RSA.Create(2048);
+            var request = new CertificateRequest(
+                "CN=localhost",
+                rsa,
+                HashAlgorithmName.SHA256,
+                RSASignaturePadding.Pkcs1);
+            request.CertificateExtensions.Add(new X509BasicConstraintsExtension(false, false, 0, false));
+            request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature, false));
+            request.CertificateExtensions.Add(new X509SubjectKeyIdentifierExtension(request.PublicKey, false));
+            var san = new SubjectAlternativeNameBuilder();
+            san.AddDnsName("localhost");
+            san.AddIpAddress(System.Net.IPAddress.Loopback);
+            request.CertificateExtensions.Add(san.Build());
+            return request.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-1), DateTimeOffset.UtcNow.AddHours(1));
         }
 
         public async Task<string> GetAuthorizationIdAsync()
@@ -642,8 +835,14 @@ public sealed class McpOAuthControllerTests
                 "state=replay-test");
 
             using var loginRedirect = await client.GetAsync(authorizeUrl);
-            var loginUrl = loginRedirect.Headers.Location!;
+            var loginRedirectBody = await loginRedirect.Content.ReadAsStringAsync();
+            Assert.True(loginRedirect.Headers.Location is not null,
+                $"Authorization did not redirect: {(int)loginRedirect.StatusCode} {loginRedirect.ReasonPhrase}: {loginRedirectBody}");
+            var loginUrl = ResolveForClient(client, loginRedirect.Headers.Location!);
             using var loginPage = await client.GetAsync(loginUrl);
+            var loginPageBody = await loginPage.Content.ReadAsStringAsync();
+            Assert.True(loginPage.IsSuccessStatusCode,
+                $"Login page was {(int)loginPage.StatusCode} {loginPage.ReasonPhrase}: {loginPageBody}");
             var loginCookies = GetCookieHeader(loginPage.Headers);
             using var loginRequest = new HttpRequestMessage(HttpMethod.Post, loginUrl)
             {
@@ -652,7 +851,7 @@ public sealed class McpOAuthControllerTests
                     ["email"] = TestEmail,
                     ["password"] = TestPassword,
                     ["returnUrl"] = authorizeUrl,
-                    ["__RequestVerificationToken"] = ExtractAntiforgeryToken(await loginPage.Content.ReadAsStringAsync()),
+                    ["__RequestVerificationToken"] = ExtractAntiforgeryToken(loginPageBody),
                 }),
             };
             loginRequest.Headers.TryAddWithoutValidation("Cookie", loginCookies);
@@ -729,6 +928,7 @@ public sealed class McpOAuthControllerTests
         {
             await _app.StopAsync();
             await _app.DisposeAsync();
+            _testCertificate?.Dispose();
         }
     }
 }

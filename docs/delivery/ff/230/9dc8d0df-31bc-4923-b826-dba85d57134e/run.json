@@ -1,0 +1,187 @@
+{
+  "schemaVersion": 1,
+  "runId": "9dc8d0df-31bc-4923-b826-dba85d57134e",
+  "workItem": "230",
+  "branch": "feat/230-release-readonly-mcp-workflows",
+  "startedAt": "2026-10-20T17:15:00Z",
+  "executorModel": "GPT-5 (active Codex model)",
+  "reviewerModel": "gpt-6.1-sol (available distinct model override)",
+  "maxCorrectionRounds": 3,
+  "status": "running",
+  "stages": [
+    {
+      "name": "refine",
+      "startedAt": "2026-10-20T17:15:00Z",
+      "endedAt": "2026-10-20T17:22:00Z",
+      "inputCommit": "629a9431685d82770cb5b7e268845f78029c7d0c",
+      "outputCommit": "629a9431685d82770cb5b7e268845f78029c7d0c",
+      "result": "ready",
+      "evidence": [
+        "Reviewed #230, Epic #224, the accepted #228 read-only proof contract and plan, the merged #229 OAuth/OIDC boundary, current MCP composition, and the existing Family/Calendar query handlers.",
+        "Confirmed the release scope is limited to authorized read-only agenda and household-member workflows over the protected MCP endpoint; no write tools, persistence access, or unsupported client guarantees are included.",
+        "Confirmed pending tasks remain deferred because no complete Tasks-owned read query exists, and member-specific agenda remains excluded until the existing member/family authorization gap is resolved and tested.",
+        "All applicable Definition of Ready dimensions are present in the issue: actor, dependencies, acceptance criteria, scope/exclusions, product rules, affected behavior, quality/security expectations, existing decisions, and risks. Issue transitioned from status:backlog to status:ready."
+      ]
+    },
+    {
+      "name": "propose",
+      "startedAt": "2026-10-20T17:22:00Z",
+      "endedAt": "2026-10-20T17:39:00Z",
+      "inputCommit": "629a9431685d82770cb5b7e268845f78029c7d0c",
+      "outputCommit": "dbec35ebe025ab27677d8e859ba0f95f52ad9a20",
+      "result": "approved-plan",
+      "evidence": [
+        "Draft PR #271 opened for the documentation-only plan and production contract: https://github.com/juangcarmona/domusmind/pull/271.",
+        "Independent proposal review at exact head 19bb083 requested four bounded corrections: separate capability release gating, per-tool audit attribution, explicit UTC reminder semantics, and SDK binding-error contract distinction.",
+        "Correction round 1 applied all four findings at dbec35e; the corrected plan keeps the catalog default-off, uses fixed allowlisted capability names, documents UTC reminder boundaries, and distinguishes binding failures from post-binding structured errors.",
+        "Independent proposal review round 2 approved exact corrected plan head dbec35e. The reviewer explicitly confirmed this approves the design only; implementation and production enablement remain separate gates."
+      ]
+    },
+    {
+      "name": "implement",
+      "startedAt": "2026-10-20T17:39:00Z",
+      "endedAt": "2026-10-20T17:45:00Z",
+      "inputCommit": "8b9b1836ef00e6c3ef77ec231a5e3c49e4672246",
+      "outputCommit": "3cda401",
+      "result": "implemented-corrected",
+      "evidence": [
+        "Added the default-off HouseholdReadOnly capability gate, trusted request identity accessor, and two production read-only MCP tools: agenda_get and household_members_list.",
+        "Tools dispatch the existing GetFamilyTimelineQuery and GetFamilyMembersQuery, project minimal allowlisted output, reject identity selectors, map safe structured errors, preserve cancellation, and emit fixed per-tool audit attribution without raw arguments or content.",
+        "Added production-path synthetic application-query tests, protected OAuth release-catalog coverage, and a custom official .NET MCP client journey over loopback Kestrel HTTPS with protected-resource metadata discovery, PKCE, token exchange, tool discovery, and Streamable HTTP.",
+        "Full backend build passed; 881 backend tests passed with the repository's 3 expected PostgreSQL skips. Web lint/test/build, public-site build, markdown validation, and git diff checks passed. Existing dependency advisories and web lint warnings remain documented inherited findings.",
+        "Correction round fixed culture-dependent production date projection, moved the proof assertions onto production tool registration, added real application query handlers and fixtures to the HTTPS OAuth journey, and added cancellation/audit/no-write evidence.",
+        "Second correction round moved the detailed schema/privacy/error/identity assertions to production registration and added before/start/end/after UTC reminder-boundary fixtures and assertions.",
+        "Implementation correction commit: 3cda401; branch pushed to the Draft PR #271 head."
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "gate": "plan",
+      "round": 1,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "19bb083e901546a586095fe4e09240bdc93a9331",
+      "verdict": "request-changes",
+      "findings": [
+        "Separate OAuth setup from the default-off production capability release gate.",
+        "Add capability-level audit attribution for the two tools and HTTP-200 tool errors.",
+        "Define date-window timezone semantics and test UTC reminder boundaries.",
+        "Distinguish SDK argument-binding failures from post-binding structured tool errors."
+      ],
+      "evidence": "Independent read-only proposal review; no files or GitHub state changed."
+    },
+    {
+      "gate": "plan",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "dbec35ebe025ab27677d8e859ba0f95f52ad9a20",
+      "verdict": "approve",
+      "findings": [],
+      "evidence": "Independent read-only proposal review confirmed all four corrections closed; this approves the design only, not implementation or production enablement."
+    },
+    {
+      "gate": "done",
+      "round": 1,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "55579ad1009f7f2d56208512fdd434b8a2123e54",
+      "verdict": "request-changes",
+      "findings": [
+        "Production date projection was culture-dependent; use invariant Gregorian formatting and test a non-Gregorian culture.",
+        "The HTTPS journey did not prove both production tools through real application handlers and fixtures, nor disabled/removed membership denial.",
+        "Most behavior evidence exercised proof-only tools rather than the production registration path.",
+        "Done evidence was incomplete for the corrected implementation and CI state."
+      ],
+      "evidence": "Independent read-only Done review against the first implementation head; no files or GitHub state changed."
+    },
+    {
+      "gate": "done",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "55b8021f8c6dfb158b59b12c5f4f4098bbd9d05b",
+      "verdict": "request-changes",
+      "findings": [
+        "Detailed schema, field-minimization, malformed-input, duplicate-name, and identity-override assertions still targeted the proof-only host instead of production tools.",
+        "The planned UTC reminder-boundary evidence was absent; fixtures had no reminder-only boundary cases.",
+        "The final evidence commit had not been validated by CI or CodeQL."
+      ],
+      "evidence": "Independent read-only Done review against the evidence-update head; no files or GitHub state changed."
+    },
+    {
+      "gate": "done",
+      "round": 3,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "b53e9a0d60510f87dd9c0a9e213ff7d984756e9c",
+      "verdict": "request-changes",
+      "findings": [
+        "The evidence-update head had not itself been validated by the required CI and CodeQL workflows; the linked runs covered the preceding source/test head only."
+      ],
+      "evidence": "Independent read-only Done review against b53e9a0; no files or GitHub state changed."
+    }
+  ],
+  "corrections": [
+    {
+      "gate": "plan",
+      "round": 1,
+      "addressesReviewRound": 1,
+      "changes": [
+        "Added default-off Mcp:Capabilities:HouseholdReadOnly release gating separate from OAuth configuration and documented owner/ADR/key/deployment prerequisites.",
+        "Added fixed allowlisted per-tool audit attribution with tool_error classification and redaction requirements.",
+        "Defined DateOnly calendar semantics and UTC reminder boundary behavior with explicit boundary tests.",
+        "Separated SDK argument-binding failures from post-binding structured tool errors in the production contract and test plan."
+      ],
+      "resultingCommit": "dbec35e",
+      "validation": "git diff --check and Markdown lint passed. Independent proposal review round 2 approved the corrected plan."
+    },
+    {
+      "gate": "done",
+      "round": 1,
+      "addressesReviewRound": 1,
+      "changes": [
+        "Wrapped production query projection in invariant culture and added Thai-culture coverage for exact Gregorian dates.",
+        "Expanded the real Kestrel HTTPS OAuth journey with family/calendar fixtures, registered application query handlers, both production tool calls, disabled-account denial, and removed-membership denial.",
+        "Separated production and proof-only tool registration in tests and moved contract, error, cancellation, audit, and no-write assertions to the production path.",
+        "Reran focused and full backend validation and dispatched five workflows against the corrected implementation head."
+      ],
+      "resultingCommit": "8d26128",
+      "validation": "Focused MCP/OAuth/composition suite: 34 passed. Full backend suite: 881 passed, 3 expected PostgreSQL skips. Backend, docs, web app, public site, and CodeQL workflows succeeded at 8d26128."
+    },
+    {
+      "gate": "done",
+      "round": 2,
+      "addressesReviewRound": 2,
+      "changes": [
+        "Moved the detailed production contract, minimization, malformed-input, duplicate-name, and identity non-overridability assertions to the production tool registration path.",
+        "Added reminder-only fixtures immediately before, at the start, at the end, and immediately after the inclusive UTC window, with inclusion/exclusion assertions through production agenda_get.",
+        "Reran the full backend build and tests and dispatched all required workflows against the final evidence head."
+      ],
+      "resultingCommit": "3cda401",
+      "validation": "Focused MCP/OAuth/composition suite: 26 passed. Full backend suite: 881 passed, 3 expected PostgreSQL skips. Backend, docs, web app, public site, and CodeQL workflows all succeeded against 3cda401."
+    },
+    {
+      "gate": "done",
+      "round": 3,
+      "addressesReviewRound": 3,
+      "changes": [
+        "Recorded the final-head validation finding and prepared the final FF evidence state without changing application behavior.",
+        "The required workflows will be dispatched against the resulting exact evidence head; no further branch changes are planned after that validation."
+      ],
+      "resultingCommit": "b53e9a0",
+      "validation": "Final-head CI and CodeQL validation is the remaining bounded check; the source/test implementation and prior local validation remain unchanged."
+    }
+  ],
+  "stopReason": null,
+  "pullRequest": {
+    "number": 271,
+    "url": "https://github.com/juangcarmona/domusmind/pull/271",
+    "draft": true,
+    "base": "feat/224-mcp-household-assistants",
+    "head": "feat/230-release-readonly-mcp-workflows"
+  },
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/224",
+    "https://github.com/juangcarmona/domusmind/issues/228",
+    "https://github.com/juangcarmona/domusmind/issues/229",
+    "https://github.com/juangcarmona/domusmind/issues/230",
+    "https://github.com/juangcarmona/domusmind/pull/225"
+  ]
+}

@@ -13,4 +13,11 @@ public sealed class DomusMindMcpOptions
     public string? ExpectedAudience { get; set; }
 
     public int RequestsPerMinute { get; set; } = 60;
+
+    public McpCapabilityOptions Capabilities { get; set; } = new();
+}
+
+public sealed class McpCapabilityOptions
+{
+    public bool HouseholdReadOnly { get; set; }
 }
