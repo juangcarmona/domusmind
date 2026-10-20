@@ -19,4 +19,12 @@ public sealed class McpOAuthOptions
     public int RefreshTokenLifetimeDays { get; set; } = 30;
 
     public int AuthorizationCodeLifetimeSeconds { get; set; } = 60;
+
+    public string? SigningCertificatePath { get; set; }
+
+    public string? SigningCertificatePassword { get; set; }
+
+    public string? EncryptionCertificatePath { get; set; }
+
+    public string? EncryptionCertificatePassword { get; set; }
 }

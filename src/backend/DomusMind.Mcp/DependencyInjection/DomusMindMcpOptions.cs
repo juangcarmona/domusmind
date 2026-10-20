@@ -9,4 +9,6 @@ public sealed class DomusMindMcpOptions
     public bool RequireOAuth { get; set; }
 
     public string ProtectedResourceMetadataPath { get; set; } = "/.well-known/oauth-protected-resource/mcp";
+
+    public string? ExpectedAudience { get; set; }
 }

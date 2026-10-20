@@ -16,6 +16,10 @@ public static class DomusMindMcpServiceCollectionExtensions
     {
         services.AddOptions<DomusMindMcpOptions>()
             .Bind(configuration.GetSection(DomusMindMcpOptions.SectionName))
+            .PostConfigure(options =>
+            {
+                options.ExpectedAudience ??= configuration["Mcp:OAuth:Resource"];
+            })
             .ValidateOnStart();
         services.AddSingleton<IValidateOptions<DomusMindMcpOptions>, DomusMindMcpOptionsValidator>();
         return services.AddMcpServer()

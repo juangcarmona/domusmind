@@ -83,7 +83,7 @@ The implementation must pin a currently supported OpenIddict version after depen
 
 ### Development configuration
 
-The OAuth server is disabled unless `Mcp:OAuth:Enabled` is true. When enabled, operators must set an HTTPS `Mcp:OAuth:Issuer`, the exact HTTPS `Mcp:OAuth:Resource` exposed at `/mcp`, and an explicit allowlist of `Mcp:OAuth:RedirectUris`. `Mcp:RequireOAuth` must also be true before any MCP capability is exposed. Development certificates are limited to the Development environment; production signing/encryption key management and rotation remain release gates.
+The OAuth server is disabled unless `Mcp:OAuth:Enabled` is true. When enabled, operators must set an HTTPS `Mcp:OAuth:Issuer`, the exact HTTPS `Mcp:OAuth:Resource` exposed at `/mcp`, and an explicit allowlist of `Mcp:OAuth:RedirectUris`. `Mcp:RequireOAuth` must also be true before any MCP capability is exposed. Development certificates are limited to the Development environment. Non-development deployments must provide separate signing and encryption certificate paths/passwords; certificate rotation, backup/recovery, and secret-manager integration remain operational release gates.
 
 ## Test plan
 

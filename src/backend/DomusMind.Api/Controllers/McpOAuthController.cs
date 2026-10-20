@@ -18,17 +18,23 @@ public sealed class McpOAuthController : ControllerBase
     private readonly IPasswordHasher _passwords;
     private readonly IFamilyAuthorizationService _familyAuthorization;
     private readonly IOptions<McpOAuthOptions> _options;
+    private readonly IOpenIddictAuthorizationManager _authorizations;
+    private readonly IOpenIddictTokenManager _tokens;
 
     public McpOAuthController(
         IAuthUserRepository users,
         IPasswordHasher passwords,
         IFamilyAuthorizationService familyAuthorization,
-        IOptions<McpOAuthOptions> options)
+        IOptions<McpOAuthOptions> options,
+        IOpenIddictAuthorizationManager authorizations,
+        IOpenIddictTokenManager tokens)
     {
         _users = users;
         _passwords = passwords;
         _familyAuthorization = familyAuthorization;
         _options = options;
+        _authorizations = authorizations;
+        _tokens = tokens;
     }
 
     [HttpGet("/.well-known/oauth-protected-resource/mcp")]
@@ -128,6 +134,82 @@ public sealed class McpOAuthController : ControllerBase
         return SignIn(tokenPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
 
+    [HttpPost("/oauth/token")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Token(CancellationToken cancellationToken)
+    {
+        if (!_options.Value.Enabled)
+            return NotFound();
+
+        var request = HttpContext.GetOpenIddictServerRequest()
+            ?? throw new InvalidOperationException("The OpenIddict request cannot be resolved.");
+
+        if (!HasExactResource(request))
+            return BadRequest(new { error = "invalid_resource" });
+
+        if (!request.IsAuthorizationCodeGrantType() && !request.IsRefreshTokenGrantType())
+            return BadRequest(new { error = "unsupported_grant_type" });
+
+        var result = await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+        if (!result.Succeeded || result.Principal is null)
+            return Forbid();
+
+        var subject = result.Principal.FindFirstValue(OpenIddictConstants.Claims.Subject);
+        var household = result.Principal.FindFirstValue(McpOAuthConstants.HouseholdClaim);
+        if (!Guid.TryParse(subject, out var userId) || !Guid.TryParse(household, out var householdId))
+            return Forbid();
+
+        var user = await _users.FindByIdAsync(userId, cancellationToken);
+        if (user is null || user.IsDisabled ||
+            !await _familyAuthorization.CanAccessFamilyAsync(userId, householdId, cancellationToken))
+        {
+            return Forbid();
+        }
+
+        result.Principal.SetResources(_options.Value.Resource);
+        return SignIn(result.Principal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
+    }
+
+    [HttpPost("/oauth/revoke-consent")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RevokeConsent(
+        [FromForm] string clientId,
+        CancellationToken cancellationToken)
+    {
+        await HttpContext.RequestServices
+            .GetRequiredService<Microsoft.AspNetCore.Antiforgery.IAntiforgery>()
+            .ValidateRequestAsync(HttpContext);
+
+        var cookie = await HttpContext.AuthenticateAsync(McpOAuthConstants.CookieScheme);
+        if (!cookie.Succeeded || cookie.Principal is null ||
+            !Guid.TryParse(cookie.Principal.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+        {
+            return Unauthorized();
+        }
+
+        if (!_options.Value.Enabled || string.IsNullOrWhiteSpace(clientId))
+            return BadRequest(new { error = "client_required" });
+
+        await foreach (var authorization in _authorizations.FindAsync(
+                           userId.ToString(),
+                           clientId.Trim(),
+                           OpenIddictConstants.Statuses.Valid,
+                           OpenIddictConstants.AuthorizationTypes.Permanent,
+                           scopes: null,
+                           cancellationToken))
+        {
+            await _authorizations.TryRevokeAsync(authorization, cancellationToken);
+        }
+
+        await foreach (var token in _tokens.FindBySubjectAsync(userId.ToString(), cancellationToken))
+        {
+            if (await _tokens.HasStatusAsync(token, OpenIddictConstants.Statuses.Valid, cancellationToken))
+                await _tokens.TryRevokeAsync(token, cancellationToken);
+        }
+
+        return NoContent();
+    }
+
     [HttpGet("/oauth/login")]
     [AllowAnonymous]
     public IActionResult LoginPage([FromQuery] string? returnUrl)
@@ -212,6 +294,21 @@ public sealed class McpOAuthController : ControllerBase
             .RequestToken;
         var encodedToken = System.Net.WebUtility.HtmlEncode(token);
         var action = System.Net.WebUtility.HtmlEncode(Request.PathBase + Request.Path + Request.QueryString);
+        var request = HttpContext.GetOpenIddictServerRequest()
+            ?? throw new InvalidOperationException("The OpenIddict request cannot be resolved.");
+        var hiddenFields = string.Join("\n                  ", new[]
+        {
+            HiddenInput("client_id", request.GetParameter("client_id")),
+            HiddenInput("response_type", request.GetParameter("response_type")),
+            HiddenInput("redirect_uri", request.GetParameter("redirect_uri")),
+            HiddenInput("scope", request.GetParameter("scope")),
+            HiddenInput("resource", request.GetParameter("resource")),
+            HiddenInput("code_challenge", request.GetParameter("code_challenge")),
+            HiddenInput("code_challenge_method", request.GetParameter("code_challenge_method")),
+            HiddenInput("nonce", request.GetParameter("nonce")),
+            HiddenInput("state", request.GetParameter("state")),
+            HiddenInput("household_id", request.GetParameter("household_id")),
+        }.Where(value => value is not null)!);
 
         return Content($"""
             <!doctype html>
@@ -223,6 +320,7 @@ public sealed class McpOAuthController : ControllerBase
                 <p>Client <strong>{encodedClientId}</strong> requests read-only access to household <strong>{encodedHouseholdId}</strong>.</p>
                 <form method="post" action="{action}">
                   <input type="hidden" name="__RequestVerificationToken" value="{encodedToken}">
+                  {hiddenFields}
                   <button type="submit" name="consent" value="allow">Allow</button>
                   <button type="submit" name="consent" value="deny">Deny</button>
                 </form>
@@ -230,5 +328,17 @@ public sealed class McpOAuthController : ControllerBase
             </body>
             </html>
             """, "text/html");
+    }
+
+    private bool HasExactResource(OpenIddictRequest request) =>
+        request.GetResources().Count() == 1 &&
+        string.Equals(request.GetResources().Single(), _options.Value.Resource, StringComparison.Ordinal);
+
+    private static string? HiddenInput(string name, OpenIddictParameter? value)
+    {
+        var text = value?.ToString();
+        return string.IsNullOrEmpty(text)
+            ? null
+            : $"<input type=\"hidden\" name=\"{name}\" value=\"{System.Net.WebUtility.HtmlEncode(text)}\">";
     }
 }

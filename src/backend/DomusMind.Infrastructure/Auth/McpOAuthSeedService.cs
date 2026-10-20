@@ -58,6 +58,7 @@ public static class McpOAuthSeedService
             OpenIddictConstants.Permissions.ResponseTypes.Code,
             OpenIddictConstants.Permissions.Prefixes.Scope + OpenIddictConstants.Scopes.OpenId,
             OpenIddictConstants.Permissions.Prefixes.Scope + OpenIddictConstants.Scopes.Profile,
+            OpenIddictConstants.Permissions.Prefixes.Scope + OpenIddictConstants.Scopes.OfflineAccess,
             OpenIddictConstants.Permissions.Prefixes.Scope + McpOAuthConstants.ReadScope,
         ]);
         descriptor.AddResourcePermissions(options.Resource);
