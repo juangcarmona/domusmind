@@ -7,7 +7,7 @@
   "executorModel": "GPT-5 (active Codex model)",
   "reviewerModel": "gpt-6.1-sol (available distinct model override)",
   "maxCorrectionRounds": 3,
-  "status": "running",
+  "status": "complete",
   "stages": [
     {
       "name": "refine",
@@ -41,7 +41,7 @@
       "startedAt": "2026-10-20T04:59:00Z",
       "inputCommit": "235e5e687b42f0f84344051e785312184483e375",
       "outputCommit": "8ea7e1caa30846cff35cc1ca2577b66a7dd95eea",
-      "result": "verified-pending-owner-done-judgements",
+      "result": "verified-and-owner-approved",
       "evidence": [
         "Issue #227 transitioned status:ready -> status:proposed -> status:in-progress after the independent proposal approval; WIP cap remains respected.",
         "Implementation commit 12f17b2 adds DomusMind.Mcp, official SDK Streamable HTTP registration, empty tools/list catalog, configured Origin validation, actual API route composition with /mcp SPA fallback exclusion, Docker/solution integration, and focused SDK-client and architecture tests.",
@@ -54,7 +54,21 @@
         "After independent audit 1, fixed raw-Origin canonicality to reject normalized path-bearing values; added regression tests for trailing slash, dot segments, query, and untrusted origins. Configured SDK StatefulForInitializeClients mode so current clients remain stateless and 2025-11-25 initialization clients are supported; documented the session-affinity limitation. The test-only probe rejects blank and over-32-character inputs and proves actual in-flight cancellation reaches the query. Targeted MCP tests passed 8/8; full Release backend tests passed 858/858.",
         "Product/spec checks passed: OpenSpec 10/10; ProductShape 0 errors with 59 draft provenance warnings; integration consistency passed; OpenSpec citations 816 current and architecture citations 81 current, with no stale/tampered/unresolved citations; arc42 and Markdown lint passed.",
         "Workflow runs against application/test source commit 8ea7e1c (the later commits only amend FF evidence): backend-ci https://github.com/juangcarmona/domusmind/actions/runs/39375387977 succeeded (Release build, 858 tests, API publish); docs-ci https://github.com/juangcarmona/domusmind/actions/runs/39375388219 succeeded; CodeQL https://github.com/juangcarmona/domusmind/actions/runs/39375388182 succeeded for C# and JavaScript with zero results. At prior source commit 705c9ab, webapp-ci https://github.com/juangcarmona/domusmind/actions/runs/39374845795, public-site-ci https://github.com/juangcarmona/domusmind/actions/runs/39374845518, and product-ci https://github.com/juangcarmona/domusmind/actions/runs/39374845432 succeeded; later changes to affected app inputs are limited to MCP tests, while web and product inputs remained unchanged.",
-        "Independent audit 3 at 8ea7e1c found no implementation defect; its sole P2 was missing workflow links and stale pending status in this FF record. Those are reconciled in this evidence update. On 2026-10-20, the product owner explicitly approved the remaining #227 Done judgements and accepted deferral of inherited advisories: Microsoft.Kiota.Abstractions 1.17.1 (high), MessagePack 2.5.302 (moderate), http-cache-semantics (high), and KaTeX (low). No finding is represented as fixed; no vulnerable dependency is introduced by DomusMind.Mcp. Awaiting fresh final-head Done audit and integration gates."
+        "Independent audit 3 at 8ea7e1c found no implementation defect; its sole P2 was missing workflow links and stale pending status in this FF record, corrected at 5782d90. On 2026-10-20, the product owner explicitly approved the remaining #227 Done judgements and accepted deferral of inherited advisories: Microsoft.Kiota.Abstractions 1.17.1 (high), MessagePack 2.5.302 (moderate), http-cache-semantics (high), and KaTeX (low). No finding is represented as fixed; no vulnerable dependency is introduced by DomusMind.Mcp."
+      ]
+    },
+    {
+      "name": "integrate",
+      "startedAt": "2026-10-20T14:59:00Z",
+      "endedAt": "2026-10-20T14:59:37Z",
+      "inputCommit": "5782d90fb45e38f128a4276135b78d556de494bf",
+      "outputCommit": "5dc83ecd56254c95ac52725a71b24083c4711ab7",
+      "result": "merged",
+      "evidence": [
+        "Final-head independent Done audit by gpt-6.1-sol approved exact PR head 5782d90fb45e38f128a4276135b78d556de494bf; no blocking findings. Durable PR audit comment: https://github.com/juangcarmona/domusmind/pull/268#issuecomment-6293890441.",
+        "PR #268 was re-read as open, non-draft and mergeable immediately before squash merge into feat/224-mcp-household-assistants. GitHub returned merge commit 5dc83ecd56254c95ac52725a71b24083c4711ab7.",
+        "The #227 implementation is architecture-only with no OpenSpec delta change. OpenSpec change discovery showed only unrelated recipe-management; no specifications were inferred, synced or archived. The MCP Product Change remains an active draft owned by Epic #224.",
+        "Owner decision and the four inherited advisory deferrals remain recorded as exceptions, not remediations. The PR is stacked on the Epic branch; no merge to main occurred."
       ]
     }
   ],
@@ -162,8 +176,9 @@
   ],
   "implementationAudit": {
     "reviewerModel": "gpt-6.1-sol",
-    "reviewedCommit": "8ea7e1caa30846cff35cc1ca2577b66a7dd95eea",
-    "decision": "request-changes",
+    "reviewedCommit": "5782d90fb45e38f128a4276135b78d556de494bf",
+    "decision": "approve",
+    "findings": [],
     "readOnly": true
   },
   "ownerDecisions": [
@@ -184,9 +199,10 @@
   "pullRequest": {
     "number": 268,
     "url": "https://github.com/juangcarmona/domusmind/pull/268",
-    "draft": true,
+    "draft": false,
     "base": "feat/224-mcp-household-assistants",
-    "head": "feat/227-establish-dotnet-mcp-adapter-foundation"
+    "head": "feat/227-establish-dotnet-mcp-adapter-foundation",
+    "mergedCommit": "5dc83ecd56254c95ac52725a71b24083c4711ab7"
   },
   "links": [
     "https://github.com/juangcarmona/domusmind/issues/224",

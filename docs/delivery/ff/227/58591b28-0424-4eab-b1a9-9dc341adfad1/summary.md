@@ -1,7 +1,7 @@
 # Fast Forward run: issue #227
 
 - Run ID: `58591b28-0424-4eab-b1a9-9dc341adfad1`
-- Status: running (owner Done/security judgement recorded; final-head audit and integration gates remain)
+- Status: complete
 - Branch: `feat/227-establish-dotnet-mcp-adapter-foundation`
 - Starting commit: `320526d4e3e49e5358d571e09ff50fe7a01e6086`
 - Executor: GPT-5 (active Codex model)
@@ -26,4 +26,11 @@ Production MCP still exposes no household data or tools. The adapter keeps direc
 
 - Audit 1: `gpt-6.1-sol` requested changes on `76a3fcc66b92896da0e6b496cb4dfd4f3354327c`; its Origin normalization and test coverage findings were fixed in `705c9ab`.
 - Audit 2: `gpt-6.1-sol` requested changes on `705c9ab3befe961393a4a6941a642c7bcd6c70bb`; its whitespace-input/current-protocol assertions and runtime evidence findings were fixed in `8ea7e1c`.
-- Audit 3: `gpt-6.1-sol` requested changes on `8ea7e1caa30846cff35cc1ca2577b66a7dd95eea`, finding the CI links were missing from this FF record. The links and status reconciliation are now added. It found no remaining implementation defect. Baseline dependency advisories and owner-only Done/security decisions remain open.
+- Audit 3: `gpt-6.1-sol` requested changes on `8ea7e1caa30846cff35cc1ca2577b66a7dd95eea`, finding the CI links were missing from this FF record. The links and status reconciliation were added at `5782d90`.
+- Final-head audit: `gpt-6.1-sol` approved PR #268 at `5782d90fb45e38f128a4276135b78d556de494bf`; no blocking findings. Review evidence is recorded in [the PR comment](https://github.com/juangcarmona/domusmind/pull/268#issuecomment-6293890441).
+
+## Integration
+
+- PR #268 was squash-merged into `feat/224-mcp-household-assistants` as `5dc83ecd56254c95ac52725a71b24083c4711ab7`.
+- No OpenSpec delta existed for #227, so no spec synchronization or archive operation applied. The separate MCP Product Change remains a draft under Epic #224.
+- The product owner approved the remaining #227 Done judgements and accepted deferral of inherited `Microsoft.Kiota.Abstractions` (high), `MessagePack` (moderate), `http-cache-semantics` (high), and `KaTeX` (low) findings. These remain visible, accepted exceptions—not remediations.
