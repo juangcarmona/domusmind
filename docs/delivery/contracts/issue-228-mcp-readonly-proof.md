@@ -15,25 +15,24 @@ Input:
 }
 ```
 
-Input schema (`additionalProperties: false`):
+Input schema (the only declared parameters are `from` and `to`):
 
 ```json
 {
   "type": "object",
   "properties": {
-    "from": { "type": "string", "format": "date" },
-    "to": { "type": "string", "format": "date" }
+    "from": { "type": "string" },
+    "to": { "type": "string" }
   },
-  "required": ["from", "to"],
-  "additionalProperties": false
+  "required": ["from", "to"]
 }
 ```
 
 - Both fields are required strings in exact `yyyy-MM-dd` form, representing Gregorian calendar dates. No locale-based parsing or timezone inference is permitted.
 - `from` and `to` are inclusive. The interval may cover no more than 31 calendar dates.
-- Missing/partial bounds, invalid or ambiguous dates, reversed ranges, and ranges longer than 31 dates return a structured invalid-input error.
+- Missing/partial bounds fail MCP SDK argument binding safely. Invalid or ambiguous date strings, reversed ranges, and ranges longer than 31 dates return a structured application invalid-input error.
 - Household and requester identity come only from the synthetic test fixture, never from tool input.
-- Structured result schema (`additionalProperties: false` at every object level):
+- Structured result schema. It advertises the exact projection properties; the SDK-generated schema does not include `additionalProperties`, so contract tests also assert that runtime responses contain exactly these fields:
 
 ```json
 {
@@ -55,13 +54,11 @@ Input schema (`additionalProperties: false`):
             "items": {
               "type": "object",
               "properties": { "displayName": { "type": "string" } },
-              "required": ["displayName"],
-              "additionalProperties": false
+              "required": ["displayName"]
             }
           }
         },
-        "required": ["title", "date", "time", "endDate", "endTime", "status", "participants"],
-        "additionalProperties": false
+        "required": ["title", "date", "time", "endDate", "endTime", "status", "participants"]
       }
     },
     "listItems": {
@@ -76,8 +73,7 @@ Input schema (`additionalProperties: false`):
           "checked": { "type": "boolean" },
           "importance": { "type": "boolean" }
         },
-        "required": ["listName", "itemName", "dueDate", "reminder", "checked", "importance"],
-        "additionalProperties": false
+        "required": ["listName", "itemName", "dueDate", "reminder", "checked", "importance"]
       }
     },
     "notes": {
@@ -89,13 +85,11 @@ Input schema (`additionalProperties: false`):
           "date": { "type": "string", "format": "date" },
           "createdAtUtc": { "type": "string", "format": "date-time" }
         },
-        "required": ["text", "date", "createdAtUtc"],
-        "additionalProperties": false
+        "required": ["text", "date", "createdAtUtc"]
       }
     }
   },
-  "required": ["events", "listItems", "notes"],
-  "additionalProperties": false
+  "required": ["events", "listItems", "notes"]
 }
 ```
 
@@ -107,7 +101,7 @@ Description: List the members of the synthetic household associated with the tes
 
 Input: no fields. Household and requester identity come only from the test fixture.
 
-Input schema: `{ "type": "object", "properties": {}, "required": [], "additionalProperties": false }`.
+Input schema: `{ "type": "object", "properties": {}, "required": [] }`. The tool has no caller-supplied identity or selector inputs.
 
 Each result contains only:
 
@@ -117,7 +111,7 @@ Each result contains only:
 
 Linked-account identifiers, email addresses, birth dates, invitation/access state, and other account metadata are excluded. Duplicate display names remain distinct; the tool does not accept a name as a selector or resolve a person by name.
 
-Structured result schema (`additionalProperties: false`):
+Structured result schema:
 
 ```json
 {
@@ -132,13 +126,11 @@ Structured result schema (`additionalProperties: false`):
           "name": { "type": "string" },
           "role": { "type": "string" }
         },
-        "required": ["memberId", "name", "role"],
-        "additionalProperties": false
+        "required": ["memberId", "name", "role"]
       }
     }
   },
-  "required": ["members"],
-  "additionalProperties": false
+  "required": ["members"]
 }
 ```
 
@@ -146,7 +138,7 @@ Structured result schema (`additionalProperties: false`):
 
 ## Errors and privacy
 
-Invalid input is reported with MCP `isError: true` and structured error content matching this schema:
+Invalid date/range input after both string parameters bind is reported with MCP `isError: true` and structured error content matching this schema:
 
 ```json
 {
@@ -155,12 +147,13 @@ Invalid input is reported with MCP `isError: true` and structured error content 
     "code": { "type": "string", "enum": ["INVALID_INPUT", "ACCESS_DENIED", "INTERNAL_ERROR"] },
     "message": { "type": "string" }
   },
-  "required": ["code", "message"],
-  "additionalProperties": false
+  "required": ["code", "message"]
 }
 ```
 
 Messages are safe, stable summaries and never include exception messages, stack traces, storage details, identifiers or fixture internals. Cancellation is propagated rather than converted into a successful result. Tool output and logs used as evidence contain synthetic data only.
+
+The MCP SDK performs argument binding before invoking the tool method. Missing required properties and JSON values that cannot be bound to the declared string parameters are therefore returned by the SDK as safe `isError` tool results, rather than the application `INVALID_INPUT` structured envelope. Tests exercise missing, partial, null, and wrong-type inputs through the endpoint and assert failure without leaking exception details. Once both string parameters bind, invalid date syntax and range semantics use the structured `INVALID_INPUT` shape above.
 
 ## Example journeys and exclusions
 
@@ -169,4 +162,4 @@ Messages are safe, stable summaries and never include exception messages, stack 
 - “What tasks are pending?” is not supported: no complete Tasks-owned read query is available for this proof.
 - “What does Juanito have scheduled?” is not supported: member-specific agenda access is excluded because the current query handler does not establish that the requested member belongs to the authorized household.
 
-Tests must compare both registered tool names and descriptions, input schemas, and output schemas with this contract. They must validate success response shapes and reject unexpected properties, exercise both example journeys, and verify output-field minimization and the exclusions above. The structured error envelope must expose only a stable error code and safe message; tests must assert it reveals no exception or storage details.
+Tests must compare both registered tool names and descriptions, input schema property/required sets, and complete nested output-schema property/required/nullability/format constraints with this contract. The MCP SDK's generated schemas do not advertise `additionalProperties: false`; tests must also submit an unrecognized household identity property and prove it cannot change fixture-bound identity, and assert successful runtime responses contain exactly the listed output fields. They exercise both example journeys and verify output minimization and the exclusions above. The structured error envelope exposes only a stable error code and safe message; tests assert it reveals no exception or storage details.
