@@ -42,7 +42,7 @@
       "startedAt": "2026-10-20T17:39:00Z",
       "endedAt": "2026-10-20T17:45:00Z",
       "inputCommit": "8b9b1836ef00e6c3ef77ec231a5e3c49e4672246",
-      "outputCommit": "8d26128",
+      "outputCommit": "3cda401",
       "result": "implemented-corrected",
       "evidence": [
         "Added the default-off HouseholdReadOnly capability gate, trusted request identity accessor, and two production read-only MCP tools: agenda_get and household_members_list.",
@@ -50,7 +50,8 @@
         "Added production-path synthetic application-query tests, protected OAuth release-catalog coverage, and a custom official .NET MCP client journey over loopback Kestrel HTTPS with protected-resource metadata discovery, PKCE, token exchange, tool discovery, and Streamable HTTP.",
         "Full backend build passed; 881 backend tests passed with the repository's 3 expected PostgreSQL skips. Web lint/test/build, public-site build, markdown validation, and git diff checks passed. Existing dependency advisories and web lint warnings remain documented inherited findings.",
         "Correction round fixed culture-dependent production date projection, moved the proof assertions onto production tool registration, added real application query handlers and fixtures to the HTTPS OAuth journey, and added cancellation/audit/no-write evidence.",
-        "Implementation correction commit: 8d26128; branch pushed to the Draft PR #271 head."
+        "Second correction round moved the detailed schema/privacy/error/identity assertions to production registration and added before/start/end/after UTC reminder-boundary fixtures and assertions.",
+        "Implementation correction commit: 3cda401; branch pushed to the Draft PR #271 head."
       ]
     }
   ],
@@ -91,6 +92,19 @@
         "Done evidence was incomplete for the corrected implementation and CI state."
       ],
       "evidence": "Independent read-only Done review against the first implementation head; no files or GitHub state changed."
+    },
+    {
+      "gate": "done",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "55b8021f8c6dfb158b59b12c5f4f4098bbd9d05b",
+      "verdict": "request-changes",
+      "findings": [
+        "Detailed schema, field-minimization, malformed-input, duplicate-name, and identity-override assertions still targeted the proof-only host instead of production tools.",
+        "The planned UTC reminder-boundary evidence was absent; fixtures had no reminder-only boundary cases.",
+        "The final evidence commit had not been validated by CI or CodeQL."
+      ],
+      "evidence": "Independent read-only Done review against the evidence-update head; no files or GitHub state changed."
     }
   ],
   "corrections": [
@@ -119,6 +133,18 @@
       ],
       "resultingCommit": "8d26128",
       "validation": "Focused MCP/OAuth/composition suite: 34 passed. Full backend suite: 881 passed, 3 expected PostgreSQL skips. Backend, docs, web app, public site, and CodeQL workflows succeeded at 8d26128."
+    },
+    {
+      "gate": "done",
+      "round": 2,
+      "addressesReviewRound": 2,
+      "changes": [
+        "Moved the detailed production contract, minimization, malformed-input, duplicate-name, and identity non-overridability assertions to the production tool registration path.",
+        "Added reminder-only fixtures immediately before, at the start, at the end, and immediately after the inclusive UTC window, with inclusion/exclusion assertions through production agenda_get.",
+        "Reran the full backend build and tests and dispatched all required workflows against the final evidence head."
+      ],
+      "resultingCommit": "3cda401",
+      "validation": "Focused MCP/OAuth/composition suite: 26 passed. Full backend suite: 881 passed, 3 expected PostgreSQL skips. Backend, docs, web app, public site, and CodeQL workflows all succeeded against 3cda401."
     }
   ],
   "stopReason": null,

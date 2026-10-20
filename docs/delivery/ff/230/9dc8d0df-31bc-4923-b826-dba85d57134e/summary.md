@@ -1,7 +1,7 @@
 # Fast Forward run: issue #230
 
 - Run ID: `9dc8d0df-31bc-4923-b826-dba85d57134e`
-- Status: running; refinement, proposal, and corrected implementation passed; independent Done review is next
+- Status: running; refinement, proposal, and corrected implementation passed; final independent Done review is next
 - Branch: `feat/230-release-readonly-mcp-workflows`
 - Starting commit: `629a9431685d82770cb5b7e268845f78029c7d0c`
 - Executor: GPT-5 (active Codex model)
@@ -14,10 +14,10 @@ The run is isolated in the dedicated issue-230 worktree. Refinement passed again
 
 ## Implementation evidence
 
-- Implementation correction commit: `8d26128`.
+- Implementation correction commit: `3cda401`.
 - Production release is gated by `Mcp:Capabilities:HouseholdReadOnly=true` in addition to enabled OAuth and required OAuth protection; the default catalog remains empty.
 - Production tools are `agenda_get` and `household_members_list` only. They dispatch existing application queries and return minimized structured contracts.
-- Focused MCP/OAuth/composition suite: 34 passed.
+- Focused MCP/OAuth/composition suite: 26 passed.
 - Full backend suite: 881 passed, 3 expected PostgreSQL integration tests skipped.
 - Web app lint/test/build passed with 0 errors and inherited warnings; public-site build passed; Markdown validation passed.
 - Live loopback Kestrel HTTPS test completed protected-resource metadata discovery, OAuth PKCE, resource-bound token exchange, official .NET MCP client discovery, and Streamable HTTP tool discovery.
@@ -30,3 +30,11 @@ The first independent Done review requested four bounded corrections: invariant 
 - [Web app CI](https://github.com/juangcarmona/domusmind/actions/runs/39466842174)
 - [Public site CI](https://github.com/juangcarmona/domusmind/actions/runs/39466842238)
 - [CodeQL](https://github.com/juangcarmona/domusmind/actions/runs/39466842243)
+
+The second independent Done review requested production-path coverage for the detailed contract/privacy/error assertions, explicit UTC reminder-boundary fixtures, and validation of the final evidence head. Those corrections were applied in `3cda401`; the final-head workflows succeeded:
+
+- [Backend CI](https://github.com/juangcarmona/domusmind/actions/runs/39468472179)
+- [Docs CI](https://github.com/juangcarmona/domusmind/actions/runs/39468472441)
+- [Web app CI](https://github.com/juangcarmona/domusmind/actions/runs/39468472339)
+- [Public site CI](https://github.com/juangcarmona/domusmind/actions/runs/39468472319)
+- [CodeQL](https://github.com/juangcarmona/domusmind/actions/runs/39468472592)
