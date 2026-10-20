@@ -7,7 +7,7 @@
   "executorModel": "GPT-5 (active Codex model)",
   "reviewerModel": "gpt-6.1-sol (available distinct model override)",
   "maxCorrectionRounds": 3,
-  "status": "awaiting-owner-judgement",
+  "status": "awaiting-integration",
   "stages": [
     {
       "name": "refine",
@@ -42,7 +42,7 @@
       "inputCommit": "560288de103d86fa3cb305239aabf70b3fa117e8",
       "endedAt": "2026-10-19T23:30:20Z",
       "outputCommit": "6fd554a32f106d62863fdf2a11811af98320958b",
-      "result": "awaiting-owner-judgement",
+      "result": "done-awaiting-integration",
       "evidence": [
         "Plan gate approved by independent gpt-6.1-sol reviewer; issue #226 transitioned status:ready -> status:proposed -> status:in-progress. Implementation scope limited to issue #226 assessment documentation and FF run evidence.",
         "Created docs/delivery/assessments/issue-226-mcp-architecture-assessment.md; no product/architecture canonical artifacts or application functionality changed.",
@@ -55,11 +55,22 @@
         "No backend/web tests run: assessment-only documentation change. PR #267 targets the feature branch and has no status checks; CI pass is not claimed.",
         "Independent gpt-6.1-sol assessment review requested four documentation corrections: record the GetMemberAgenda cross-family member-ID exposure risk and gate #230; add Streamable HTTP Origin/DNS-rebinding validation; correct #229/#230/#231 delivery mapping; distinguish private MCP tunnel reachability from authorization-server reachability. Correction round 1 updates the assessment accordingly. A second review approved the first three and found the tunnel wording overstated public reachability; correction round 2 now says verify endpoint reachability from the components performing each OAuth step, without assuming public exposure.",
         "Final independent review approved commit 6fd554a32f106d62863fdf2a11811af98320958b; no blocking accuracy, reference, security-boundary, or issue-scope findings remain.",
-        "Owner-only Definition-of-Done judgement is pending. Added owner-review label and posted the required decisions to issue comment https://github.com/juangcarmona/domusmind/issues/226#issuecomment-6279649837. Issue remains status:in-progress. PR #267 remains Draft with zero CI checks; do not mark issue in-review, make PR ready, or integrate until the owner accepts/rejects/defers the assessment recommendations and chooses the needed architecture direction."
+        "Owner response received in conversation on 2026-10-20: accepts in-process hosting in DomusMind.Api and OAuth 2.1 Authorization Code + PKCE/OIDC direction. Authorization-server placement/provider remains explicitly undecided and is a gate before OAuth implementation, not before completing this assessment or #227. The assessment DoD and architecture disposition are accepted; decision recorded at https://github.com/juangcarmona/domusmind/issues/226#issuecomment-6283565601.",
+        "PR #267 marked ready for review; issue #226 transitioned to status:in-review and owner-review overlay removed after verifying the owner gate."
       ]
     }
   ],
   "reviews": [
+    {
+      "stage": "owner-disposition-review",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "5a3c4ffee8cd43d6b5585ae408efbbf59531d0a8",
+      "decision": "stop",
+      "findings": [
+        "Assessment content and owner decision gate are satisfied; integration was not yet ready because the run record, issue, and PR still reported the owner decision as pending and the PR remained Draft."
+      ],
+      "readOnly": true
+    },
     {
       "stage": "propose",
       "reviewerModel": "gpt-6.1-sol",
@@ -169,11 +180,11 @@
       "validation": "jq empty, git diff --check, assessment-specific markdownlint, ProductShape validation, OpenSpec citation verification, and architecture citation verification all passed; ProductShape continues to emit 59 existing PRODUCT111 warnings."
     }
   ],
-  "stopReason": "Awaiting named owner decision on assessment DoD and architecture recommendations; human judgement is non-substitutable. PR #267 remains Draft and unmerged.",
+  "stopReason": null,
   "pullRequest": {
     "number": 267,
     "url": "https://github.com/juangcarmona/domusmind/pull/267",
-    "draft": true,
+    "draft": false,
     "base": "feat/224-mcp-household-assistants",
     "head": "feat/226-assess-mcp-hosting-identity-authorization-clients"
   },
