@@ -25,18 +25,47 @@
     {
       "name": "propose",
       "startedAt": "2026-10-20T04:50:21Z",
+      "endedAt": "2026-10-20T04:58:00Z",
       "inputCommit": "320526d4e3e49e5358d571e09ff50fe7a01e6086",
-      "outputCommit": "320526d4e3e49e5358d571e09ff50fe7a01e6086",
-      "result": "running",
+      "outputCommit": "235e5e687b42f0f84344051e785312184483e375",
+      "result": "approved",
       "evidence": [
-        "Plan artifact drafted at docs/delivery/plans/issue-227-dotnet-mcp-adapter-foundation.md; it remains documentation-only in the proposal stage.",
+        "Plan artifact: docs/delivery/plans/issue-227-dotnet-mcp-adapter-foundation.md. Independent reviewer approved the corrected proposal at 235e5e687b42f0f84344051e785312184483e375.",
         "Current official SDK research: ModelContextProtocol.AspNetCore 2.2.0 targets .NET 8.0 or higher, was released 2026-08-13, maps Streamable HTTP using MapMcp, and supports the 2026-07-28 protocol while retaining down-level compatibility.",
         "Design proposes an in-process host with a DomusMind.Mcp adapter library, empty production capabilities, test-only dispatch probe, and explicit Origin-security tests.",
         "Independent plan review requested two corrections: the existing Application project exposes transitive EF/Domain and IDomusMindDbContext, so direct reference allowlisting alone is inadequate; the actual API SPA fallback also needs MCP route exclusion and composed-host testing."
       ]
+    },
+    {
+      "name": "implement",
+      "startedAt": "2026-10-20T04:59:00Z",
+      "inputCommit": "235e5e687b42f0f84344051e785312184483e375",
+      "outputCommit": "12f17b2",
+      "result": "running",
+      "evidence": [
+        "Issue #227 transitioned status:ready -> status:proposed -> status:in-progress after the independent proposal approval; WIP cap remains respected.",
+        "Implementation commit 12f17b2 adds DomusMind.Mcp, official SDK Streamable HTTP registration, empty tools/list catalog, configured Origin validation, actual API route composition with /mcp SPA fallback exclusion, Docker/solution integration, and focused SDK-client and architecture tests.",
+        "CI-equivalent restore, Release solution build, complete Release solution test, API publish, and Docker image build passed. The API project run passed 21 tests including the new MCP endpoint-composition and dependency-boundary tests; PostgreSQL-backed Infrastructure tests passed all 59 tests with the three integration tests enabled.",
+        "Architecture contract check passed; markdownlint passed across 31 docs; ProductShape architecture citation verification found 81 current citations, no stale/tampered/unresolved citations or errors, and 59 existing draft provenance warnings.",
+        "NuGet advisories remain for pre-existing Microsoft.Kiota.Abstractions 1.17.1 (NU1903) and MessagePack 2.5.302 (NU1902). Docker build also reported its legacy builder deprecation and the frontend's existing large-chunk advisory; no check failed.",
+        "Plan deviation recorded: the MCP contract and boundary tests are hosted in DomusMind.Api.Tests rather than a standalone DomusMind.Mcp.Tests project so they can exercise the real API composition and controller routes.",
+        "The proposed model remains unchanged: the host exposes no household capability; OAuth provider placement, household authorization, and production MCP tools remain deferred to their planned follow-on issues."
+      ]
     }
   ],
   "reviews": [
+    {
+      "stage": "propose-review-2",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "235e5e687b42f0f84344051e785312184483e375",
+      "decision": "approve",
+      "findings": [
+        "The direct-reference plus compiled metadata boundary addresses the Application transitive dependency concern at proposal level; it is a conformance guard, not a security sandbox.",
+        "The revised plan requires testing the actual API route composition with SPA assets and excludes /mcp from fallback; tests must assert protocol-appropriate status codes and no HTML.",
+        "No scope contradiction: in-process hosting accepted, authorization-server placement remains open, and no production capabilities are added."
+      ],
+      "readOnly": true
+    },
     {
       "stage": "propose-review-1",
       "reviewerModel": "gpt-6.1-sol",

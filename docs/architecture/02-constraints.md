@@ -55,7 +55,8 @@ Team decisions that every change must respect. They are stated as rules in
 | --- | --- |
 | Domain-centric modular monolith; the domain stays framework-agnostic; projects are not collapsed | [ADR-0004](../adr/0004-build-a-domain-centric-modular-monolith.md) |
 | Internal application mediator; no MediatR or similar | [ADR-0001](../adr/0001-use-an-internal-application-mediator.md) |
-| REST API through ASP.NET Core controllers, documented with OpenAPI; no Minimal APIs | [ADR-0005](../adr/0005-expose-a-rest-api-through-aspnet-core-controllers.md) |
+| Business REST API through ASP.NET Core controllers, documented with OpenAPI; no Minimal APIs for business REST routes | [ADR-0005](../adr/0005-expose-a-rest-api-through-aspnet-core-controllers.md) |
+| MCP protocol endpoints are mapped by the official SDK in the existing API host; this is not a REST endpoint-style exception | [ADR-0011](../adr/0011-expose-mcp-through-an-in-process-sdk-endpoint.md) |
 | Explicit mapping to API contract models; no AutoMapper; domain entities never exposed | [ADR-0006](../adr/0006-map-explicitly-without-automapper.md) |
 | EF Core used directly; no generic repositories | [ADR-0007](../adr/0007-use-ef-core-directly-without-generic-repositories.md) |
 | One command modifies one aggregate; cross-module collaboration through persisted domain events | [ADR-0008](../adr/0008-collaborate-across-modules-through-persisted-domain-events.md) |

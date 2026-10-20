@@ -33,14 +33,14 @@ This creates no ProductShape or OpenSpec domain behavior. Existing domain specif
 
 ## Ordered tasks
 
-1. Add `src/backend/DomusMind.Mcp` as a class library with an explicit project-reference allowlist (Application and Contracts only) and official SDK ASP.NET Core package `2.2.0`.
-2. Add service-registration and `/mcp` endpoint-mapping extensions; configure Streamable HTTP using SDK-supported stateless behavior and leave production tool registration empty.
-3. Integrate the module into `DomusMind.Api` without changing existing REST controller routes or exposing any household capability.
-4. Add an isolated `DomusMind.Mcp.Tests` harness using the official SDK client/server contracts. A test-only probe tool verifies a bounded input/output schema, application-query dispatch, cancellation propagation, and that internal exception details do not leak in tool results; register it only in the test host.
-5. Add protocol transport tests for endpoint discovery/negotiation, an empty production tool catalog, malformed/unsupported request error mapping, and `Origin` validation (configured origin accepted; present invalid origin receives 403; absent Origin remains usable for non-browser clients).
-6. Prove the project dependency boundary with an explicit direct-reference allowlist and deterministic assembly/type architecture tests; the adapter must not reference Infrastructure, Domain, EF Core, `IDomusMindDbContext`, or persistence namespaces, even though EF Core exists transitively in the current Application package graph.
-7. Compose a test through the actual API endpoint-mapping path with static SPA files enabled. Verify an unsupported `/mcp` method cannot hit the SPA fallback, invalid Origin returns 403, MCP discovery advertises no production capability, structured errors do not leak internals, and an existing REST route remains mapped.
-8. Update architecture views to reflect the non-deployable adapter project and in-process endpoint after implementation evidence exists; identify ProductShape/OpenSpec impact as none and retain domain specifications unchanged. Assess whether ADR-0005 needs a narrow MCP-protocol exception; do not alter its accepted REST/controller decision silently.
+1. [x] Add `src/backend/DomusMind.Mcp` as a class library with an explicit project-reference allowlist (Application and Contracts only) and official SDK ASP.NET Core package `2.2.0`.
+2. [x] Add service-registration and `/mcp` endpoint-mapping extensions; configure SDK Streamable HTTP with its stateless default and leave production capabilities empty.
+3. [x] Integrate the module into `DomusMind.Api` without changing existing REST controller routes or exposing any household capability; update solution and container build inputs.
+4. [x] Add an official SDK client/server contract harness. The test-only probe verifies a bounded input, dispatches through `IQueryDispatcher`, receives cancellation, and does not leak internal exception details; register it only in the test host. **Plan deviation:** tests live in `DomusMind.Api.Tests` instead of a separate `DomusMind.Mcp.Tests` project so the same harness can exercise actual API endpoint composition, existing REST controllers, and the SPA fallback. Focused architecture checks and SDK-client protocol tests remain isolated under the `Mcp` test namespace.
+5. [x] Add protocol transport tests for Streamable HTTP discovery, the empty production tools catalog, structured errors, unsupported methods, and `Origin` validation (configured origin accepted; present invalid origin receives 403; absent Origin remains usable for non-browser clients).
+6. [x] Prove the project dependency boundary with an explicit direct-reference allowlist and deterministic compiled assembly/type checks; the adapter does not reference Infrastructure, Domain, EF Core, `IDomusMindDbContext`, or persistence namespaces. The existing Application project has a transitive EF Core/Domain graph, which is disclosed above; the adapter has no production Application dispatch implementation or placeholder framework.
+7. [x] Exercise the actual API endpoint-mapping path with static SPA files enabled. An unsupported `/mcp` method does not return the SPA document, invalid Origin returns 403, discovery returns no production tools, error results do not leak internals, and `/api/system/ping` remains reachable.
+8. [x] Update the architecture views to reflect the non-deployable adapter and in-process endpoint. Add ADR-0011 for the transport boundary; ADR-0005 remains unchanged and governs business REST/controller endpoints. ProductShape/OpenSpec impact is none; existing domain specifications remain unchanged.
 
 ## Test and verification plan
 
@@ -53,6 +53,16 @@ This creates no ProductShape or OpenSpec domain behavior. Existing domain specif
 - Exercise the actual API route-composition path with the SPA fallback enabled; verify unsupported `/mcp` methods do not return `index.html` and existing REST controller routes remain reachable.
 - Run applicable repository ProductShape/OpenSpec/architecture citation checks if documentation/spec artifacts are changed; do not claim these are application tests.
 - Inspect live PR checks and branch rules; zero checks are reported as absent, not passing.
+
+## Implementation evidence (issue 227)
+
+- The production registration exposes an explicit empty `tools/list` result rather than omitting the method; the SDK otherwise returned “method unavailable” when no tools or list handler were registered.
+- Origin allowlist values are validated at host startup. Requests without Origin are allowed for non-browser clients; malformed, multiple, or non-allowlisted Origin values are rejected with 403. This middleware does not replace trusted-proxy/Host checks.
+- The API test host invokes the same `MapDomusMindEndpoints` route composition as production with a temporary SPA index file and a real controller discovery part.
+- Verification: CI-equivalent `dotnet restore DomusMind.slnx`, Release solution build, full solution test with PostgreSQL-backed tests enabled, and API publish all passed. The API test project reports 21 passing tests (including both new MCP test classes); the infrastructure project reports 59 passing tests, including all three PostgreSQL tests. The Dockerfile image build also passed.
+- Documentation checks: arc42 frontmatter check passed; markdownlint passed for all 31 selected architecture, ADR, plan and FF summary files; citation verification reported 81 current citations, zero stale/tampered/unresolved/errors, and 59 pre-existing draft provenance warnings.
+- Existing dependency warnings remain: NU1903 for `Microsoft.Kiota.Abstractions` 1.17.1 and NU1902 for MessagePack 2.5.302. Docker emitted its legacy-builder deprecation and the existing web build's large-chunk advisory. None were introduced by this change.
+- No production tools, resources, prompts, authorization server, household data access, or ProductShape/OpenSpec behavior was added.
 
 ## Definition of Done impact
 

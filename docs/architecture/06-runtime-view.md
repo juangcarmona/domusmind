@@ -8,6 +8,31 @@ description: Architecturally significant runtime scenarios of DomusMind and how 
 
 Participants are the building blocks of [section 05](05-building-block-view.md). Each scenario describes the code as it runs today; where it differs from the intended design the difference is stated and tracked in [section 11](11-risks-and-technical-debt.md).
 
+## MCP transport with an empty capability catalog
+
+The SDK-owned Streamable HTTP endpoint is hosted in the existing API process. This foundation accepts protocol requests but exposes no household data or callable production capability; authentication and household authorization are a separate prerequisite ([ADR-0011](../adr/0011-expose-mcp-through-an-in-process-sdk-endpoint.md)).
+
+```mermaid
+sequenceDiagram
+    participant Client as MCP client
+    participant Proxy as Operator TLS proxy
+    participant Api as DomusMind.Api
+    participant Origin as MCP Origin guard
+    participant Sdk as DomusMind.Mcp / SDK
+
+    Client->>Proxy: Streamable HTTP request to /mcp
+    Proxy->>Api: Forward request and validated proxy metadata
+    Api->>Origin: Validate present Origin against configured allowlist
+    alt Origin present but not allowed
+        Origin-->>Client: 403 Forbidden
+    else Origin absent or allowed
+        Origin->>Sdk: Forward tools/list request
+        Sdk-->>Client: Empty tool catalog
+    end
+```
+
+The Origin guard does not replace Host or forwarded-host validation, OAuth authentication, or domain authorization. The route is intentionally data-free until the follow-on authorization and capability issues are complete.
+
 ## Command through the internal dispatcher
 
 Every state change follows the same path through the internal mediator ([ADR-0001](../adr/0001-use-an-internal-application-mediator.md)). Scheduling a plan is representative.
