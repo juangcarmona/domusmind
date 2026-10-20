@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "runId": "f278a0fe-0014-45ff-884b-a996021b1d34",
+  "workItem": "231",
+  "branch": "feat/231-confirmed-mcp-household-writes",
+  "startedAt": "2026-10-20T22:56:49Z",
+  "executorModel": "gpt-5",
+  "reviewerModel": "gpt-6.1-sol",
+  "maxCorrectionRounds": 3,
+  "status": "awaiting-integration",
+  "stages": [
+    {
+      "name": "refine",
+      "result": "ready",
+      "inputCommit": "87432a0c04381a56b4ff63cd579207248c5bcb82",
+      "outputCommit": "87432a0c04381a56b4ff63cd579207248c5bcb82",
+      "evidence": ["github:issue/231"]
+    },
+    {
+      "name": "propose",
+      "result": "approved",
+      "inputCommit": "87432a0c04381a56b4ff63cd579207248c5bcb82",
+      "outputCommit": "9cafa64e45eaa747c357d4a3277072abf1afaeaa",
+      "evidence": [
+        "docs/delivery/plans/issue-231-mcp-confirmed-write-pilot.md",
+        "docs/delivery/contracts/issue-231-mcp-confirmed-write-pilot.md",
+        "github:pull/272"
+      ]
+    }
+  ],
+  "reviews": [
+    {"reviewerModel": "gpt-6.1-sol", "kind": "proposal", "commit": "9c68ed9ecdd7b92159277028632af6b77dc402e5", "decision": "request-changes", "correction": 1},
+    {"reviewerModel": "gpt-6.1-sol", "kind": "proposal", "commit": "99e9612d3c171d1dc266f6e1325aae1749336a45", "decision": "request-changes", "correction": 2},
+    {"reviewerModel": "gpt-6.1-sol", "kind": "proposal", "commit": "2d18b2387579fa5caf839c11bbf7859cfffce5ae", "decision": "request-changes", "correction": 3},
+    {"reviewerModel": "gpt-6.1-sol", "kind": "proposal", "commit": "9cafa64e45eaa747c357d4a3277072abf1afaeaa", "decision": "approve"}
+  ],
+  "corrections": [
+    {"gate": "propose", "round": 1, "requestedChanges": "Trusted approval, granted-household binding, mcp.write scope, atomic idempotency, exact contract bounds, and post-commit notification.", "resultingCommit": "9c68ed9ecdd7b92159277028632af6b77dc402e5"},
+    {"gate": "propose", "round": 2, "requestedChanges": "Completed-retry precedence and exact cancellation/error result variants.", "resultingCommit": "99e9612d3c171d1dc266f6e1325aae1749336a45"},
+    {"gate": "propose", "round": 3, "requestedChanges": "Consistent MCP error envelopes and explicit pending-record routing.", "resultingCommit": "9cafa64e45eaa747c357d4a3277072abf1afaeaa"}
+  ],
+  "stopReason": "Owner-only product and accepted-architecture decisions are required before implementation: trusted first-party approval channel, same-OAuth-subject approval rule, mcp.write scope, stable listId targeting, and retention limits.",
+  "pullRequest": "https://github.com/juangcarmona/domusmind/pull/272",
+  "links": {
+    "issue": "https://github.com/juangcarmona/domusmind/issues/231",
+    "epic": "https://github.com/juangcarmona/domusmind/issues/224",
+    "proposalHead": "9cafa64e45eaa747c357d4a3277072abf1afaeaa"
+  }
+}
