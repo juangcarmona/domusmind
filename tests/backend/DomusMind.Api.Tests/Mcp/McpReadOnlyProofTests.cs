@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Net;
+using System.Security.Claims;
 using DomusMind.Api.Controllers;
 using DomusMind.Api.Mcp;
 using DomusMind.Application.Abstractions.Messaging;
@@ -35,6 +36,35 @@ public sealed class McpReadOnlyProofTests
 {
     private static readonly DateOnly From = new(2026, 10, 20);
     private static readonly DateOnly To = new(2026, 10, 31);
+
+    [Fact]
+    public async Task Production_tools_dispatch_authorized_reads_through_application_queries()
+    {
+        await using var host = await ReadOnlyProofHost.StartAsync(registerProductionTools: true);
+        await using var client = await host.CreateClientAsync();
+
+        var tools = await client.ListToolsAsync();
+        Assert.Contains(tools, tool => tool.Name == "agenda_get");
+        Assert.Contains(tools, tool => tool.Name == "household_members_list");
+
+        var agendaResult = await client.CallToolAsync("agenda_get", new Dictionary<string, object?>
+        {
+            ["from"] = From.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+            ["to"] = To.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+        });
+        Assert.NotEqual(true, agendaResult.IsError);
+        Assert.Contains(agendaResult.StructuredContent!.Value.GetProperty("events").EnumerateArray(),
+            item => item.GetProperty("title").GetString() == "Family A appointment");
+        Assert.DoesNotContain("Family B secret", agendaResult.StructuredContent.Value.GetRawText(), StringComparison.Ordinal);
+
+        var membersResult = await client.CallToolAsync("household_members_list", new Dictionary<string, object?>());
+        Assert.NotEqual(true, membersResult.IsError);
+        Assert.Contains(membersResult.StructuredContent!.Value.GetProperty("members").EnumerateArray(),
+            member => member.GetProperty("name").GetString() == "Preferred Alex");
+
+        Assert.Equal(0, host.Database.ChangeTracker.Entries().Count(entry =>
+            entry.State is EntityState.Added or EntityState.Modified or EntityState.Deleted));
+    }
 
     [Fact]
     public async Task Official_client_reads_bounded_synthetic_timeline_and_minimal_member_directory()
@@ -374,7 +404,7 @@ public sealed class McpReadOnlyProofTests
         public Guid FamilyBId { get; }
         public Guid RequesterUserId { get; }
 
-        public static async Task<ReadOnlyProofHost> StartAsync()
+        public static async Task<ReadOnlyProofHost> StartAsync(bool registerProductionTools = false)
         {
             var webRoot = Path.Combine(Path.GetTempPath(), $"domusmind-mcp-read-test-{Guid.NewGuid():N}");
             Directory.CreateDirectory(webRoot);
@@ -403,6 +433,10 @@ public sealed class McpReadOnlyProofTests
             var config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
             {
                 ["Mcp:AllowedOrigins:0"] = "https://trusted.example",
+                ["Mcp:OAuth:Enabled"] = registerProductionTools.ToString(),
+                ["Mcp:OAuth:Resource"] = "https://domusmind.test/mcp",
+                ["Mcp:RequireOAuth"] = registerProductionTools.ToString(),
+                ["Mcp:Capabilities:HouseholdReadOnly"] = registerProductionTools.ToString(),
             }).Build();
             builder.Services.AddSingleton<IDomusMindDbContext>(database);
             builder.Services.AddSingleton(authorization);
@@ -410,7 +444,9 @@ public sealed class McpReadOnlyProofTests
             builder.Services.AddSingleton<IAuthUserRepository>(users);
             builder.Services.AddSingleton<IQueryDispatcher>(dispatcher);
             builder.Services.AddSingleton(new ReadOnlyMcpTestIdentity(seed.FamilyAId, seed.RequesterUserId));
-            builder.Services.AddDomusMindMcp(config).WithTools([typeof(ReadOnlyMcpProofTools)]);
+            var mcpBuilder = builder.Services.AddDomusMindMcp(config).WithTools([typeof(ReadOnlyMcpProofTools)]);
+            if (registerProductionTools)
+                mcpBuilder.WithTools([typeof(DomusMind.Mcp.Tools.DomusMindReadOnlyTools)]);
 
             var app = builder.Build();
             app.Use(async (context, next) =>
@@ -431,6 +467,22 @@ public sealed class McpReadOnlyProofTests
             });
             app.UseStaticFiles();
             app.UseDomusMindMcpOriginValidation();
+            if (registerProductionTools)
+            {
+                app.Use(async (context, next) =>
+                {
+                    var seedIdentity = $"{seed.RequesterUserId}";
+                    var seedHousehold = $"{seed.FamilyAId}";
+                    var identity = new ClaimsIdentity(
+                    [
+                        new Claim("sub", seedIdentity),
+                        new Claim("dm_household_id", seedHousehold),
+                        new Claim("client_id", "synthetic-proof-client"),
+                    ], "SyntheticProof");
+                    context.User = new ClaimsPrincipal(identity);
+                    await next();
+                });
+            }
             app.MapDomusMindEndpoints(webRoot);
             await app.StartAsync();
             return new ReadOnlyProofHost(app, webRoot, database, dispatcher, authorization,

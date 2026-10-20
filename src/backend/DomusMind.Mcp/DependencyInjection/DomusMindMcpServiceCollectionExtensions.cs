@@ -9,6 +9,8 @@ using System.Threading.RateLimiting;
 using ModelContextProtocol.AspNetCore;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
+using DomusMind.Mcp.Authorization;
+using DomusMind.Mcp.Tools;
 
 namespace DomusMind.Mcp.DependencyInjection;
 
@@ -28,6 +30,8 @@ public static class DomusMindMcpServiceCollectionExtensions
             })
             .ValidateOnStart();
         services.AddSingleton<IValidateOptions<DomusMindMcpOptions>, DomusMindMcpOptionsValidator>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<IMcpRequestIdentityAccessor, HttpContextMcpRequestIdentityAccessor>();
         services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -61,10 +65,18 @@ public static class DomusMindMcpServiceCollectionExtensions
                     });
             });
         });
-        return services.AddMcpServer()
+        var mcpBuilder = services.AddMcpServer()
             .WithHttpTransport(options =>
-                options.SessionMode = HttpServerSessionMode.StatefulForInitializeClients)
-            .WithListToolsHandler((_, _) => new ValueTask<ListToolsResult>(new ListToolsResult { Tools = [] }));
+                options.SessionMode = HttpServerSessionMode.StatefulForInitializeClients);
+
+        if (configuration.GetValue<bool>("Mcp:Capabilities:HouseholdReadOnly") &&
+            configuration.GetValue<bool>("Mcp:OAuth:Enabled") &&
+            configuration.GetValue<bool>("Mcp:RequireOAuth"))
+        {
+            mcpBuilder.WithTools([typeof(DomusMindReadOnlyTools)]);
+        }
+
+        return mcpBuilder.WithListToolsHandler((_, _) => new ValueTask<ListToolsResult>(new ListToolsResult { Tools = [] }));
     }
 
     public static IApplicationBuilder UseDomusMindMcpOriginValidation(this IApplicationBuilder app) =>
