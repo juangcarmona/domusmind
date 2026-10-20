@@ -25,24 +25,34 @@
     {
       "name": "propose",
       "startedAt": "2026-10-20T15:02:58Z",
+      "endedAt": "2026-10-20T15:04:07Z",
       "inputCommit": "1ce14ac910ec2ce6136c604eb699af74ef6e718b",
-      "result": "awaiting-independent-plan-review",
+      "outputCommit": "ccbf8d8c7dc1773c984ae500c81ffbc19337d00d",
+      "result": "draft-open-awaiting-independent-plan-review",
       "evidence": [
         "Plan artifact: docs/delivery/plans/issue-228-readonly-mcp-proof.md.",
         "Worktree: /srv/workspaces/juangcarmona/domusmind/issue-228-readonly-mcp-proof; branch created from the current Epic branch after #227 merge.",
-        "No implementation started; only the plan and FF evidence are staged for proposal."
+        "No implementation started; only the plan and FF evidence are included in Draft PR #269.",
+        "The plan was committed and pushed at ccbf8d8; any final plan review will be run against the updated PR head after the run record links the PR."
       ]
     }
   ],
   "reviews": [],
   "corrections": [],
   "stopReason": null,
-  "pullRequest": null,
+  "pullRequest": {
+    "number": 269,
+    "url": "https://github.com/juangcarmona/domusmind/pull/269",
+    "draft": true,
+    "base": "feat/224-mcp-household-assistants",
+    "head": "feat/228-prove-readonly-mcp-capabilities"
+  },
   "links": [
     "https://github.com/juangcarmona/domusmind/issues/224",
     "https://github.com/juangcarmona/domusmind/issues/227",
     "https://github.com/juangcarmona/domusmind/issues/228",
     "https://github.com/juangcarmona/domusmind/issues/229",
-    "https://github.com/juangcarmona/domusmind/pull/225"
+    "https://github.com/juangcarmona/domusmind/pull/225",
+    "https://github.com/juangcarmona/domusmind/pull/269"
   ]
 }
