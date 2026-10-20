@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using System.Threading.RateLimiting;
 using ModelContextProtocol.AspNetCore;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
@@ -22,6 +26,39 @@ public static class DomusMindMcpServiceCollectionExtensions
             })
             .ValidateOnStart();
         services.AddSingleton<IValidateOptions<DomusMindMcpOptions>, DomusMindMcpOptionsValidator>();
+        services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+            options.OnRejected = (context, _) =>
+            {
+                var logger = context.HttpContext.RequestServices
+                    .GetRequiredService<ILoggerFactory>()
+                    .CreateLogger("DomusMind.Mcp.SecurityAudit");
+                logger.LogWarning(
+                    "MCP security audit {Outcome} reason={Reason} operation={Operation} trace={TraceId}",
+                    "denied",
+                    "rate_limited",
+                    $"{context.HttpContext.Request.Method} {context.HttpContext.Request.Path}",
+                    System.Diagnostics.Activity.Current?.TraceId.ToString() ?? context.HttpContext.TraceIdentifier);
+                return ValueTask.CompletedTask;
+            };
+            options.AddPolicy("mcp", context =>
+            {
+                var configured = context.RequestServices
+                    .GetRequiredService<IOptions<DomusMindMcpOptions>>()
+                    .Value;
+                var partition = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+                return RateLimitPartition.GetFixedWindowLimiter(
+                    partition,
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = configured.RequestsPerMinute,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueLimit = 0,
+                        AutoReplenishment = true,
+                    });
+            });
+        });
         return services.AddMcpServer()
             .WithHttpTransport(options =>
                 options.SessionMode = HttpServerSessionMode.StatefulForInitializeClients)

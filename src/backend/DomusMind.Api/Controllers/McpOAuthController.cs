@@ -18,6 +18,7 @@ public sealed class McpOAuthController : ControllerBase
     private readonly IPasswordHasher _passwords;
     private readonly IFamilyAuthorizationService _familyAuthorization;
     private readonly IOptions<McpOAuthOptions> _options;
+    private readonly IOpenIddictApplicationManager _applications;
     private readonly IOpenIddictAuthorizationManager _authorizations;
     private readonly IOpenIddictTokenManager _tokens;
 
@@ -26,6 +27,7 @@ public sealed class McpOAuthController : ControllerBase
         IPasswordHasher passwords,
         IFamilyAuthorizationService familyAuthorization,
         IOptions<McpOAuthOptions> options,
+        IOpenIddictApplicationManager applications,
         IOpenIddictAuthorizationManager authorizations,
         IOpenIddictTokenManager tokens)
     {
@@ -33,6 +35,7 @@ public sealed class McpOAuthController : ControllerBase
         _passwords = passwords;
         _familyAuthorization = familyAuthorization;
         _options = options;
+        _applications = applications;
         _authorizations = authorizations;
         _tokens = tokens;
     }
@@ -173,7 +176,7 @@ public sealed class McpOAuthController : ControllerBase
     [HttpPost("/oauth/revoke-consent")]
     [AllowAnonymous]
     public async Task<IActionResult> RevokeConsent(
-        [FromForm] string clientId,
+        [FromForm] string authorizationId,
         CancellationToken cancellationToken)
     {
         await HttpContext.RequestServices
@@ -187,25 +190,42 @@ public sealed class McpOAuthController : ControllerBase
             return Unauthorized();
         }
 
-        if (!_options.Value.Enabled || string.IsNullOrWhiteSpace(clientId))
-            return BadRequest(new { error = "client_required" });
+        if (!_options.Value.Enabled || string.IsNullOrWhiteSpace(authorizationId))
+            return BadRequest(new { error = "authorization_required" });
 
-        await foreach (var authorization in _authorizations.FindAsync(
-                           userId.ToString(),
-                           clientId.Trim(),
-                           OpenIddictConstants.Statuses.Valid,
-                           OpenIddictConstants.AuthorizationTypes.Permanent,
-                           scopes: null,
-                           cancellationToken))
+        var application = await _applications.FindByClientIdAsync(_options.Value.ClientId, cancellationToken);
+        var authorization = await _authorizations.FindByIdAsync(authorizationId.Trim(), cancellationToken);
+        if (application is null || authorization is null ||
+            !string.Equals(
+                await _authorizations.GetApplicationIdAsync(authorization, cancellationToken),
+                await _applications.GetIdAsync(application, cancellationToken),
+                StringComparison.Ordinal) ||
+            !string.Equals(
+                await _authorizations.GetSubjectAsync(authorization, cancellationToken),
+                userId.ToString(),
+                StringComparison.Ordinal) ||
+            !string.Equals(
+                await _authorizations.GetStatusAsync(authorization, cancellationToken),
+                OpenIddictConstants.Statuses.Valid,
+                StringComparison.Ordinal) ||
+            !string.Equals(
+                await _authorizations.GetTypeAsync(authorization, cancellationToken),
+                OpenIddictConstants.AuthorizationTypes.AdHoc,
+                StringComparison.Ordinal) ||
+            !await _authorizations.HasScopesAsync(
+                authorization,
+                [McpOAuthConstants.ReadScope],
+                cancellationToken))
         {
-            await _authorizations.TryRevokeAsync(authorization, cancellationToken);
+            return NotFound();
         }
 
-        await foreach (var token in _tokens.FindBySubjectAsync(userId.ToString(), cancellationToken))
+        await foreach (var token in _tokens.FindByAuthorizationIdAsync(authorizationId.Trim(), cancellationToken))
         {
             if (await _tokens.HasStatusAsync(token, OpenIddictConstants.Statuses.Valid, cancellationToken))
                 await _tokens.TryRevokeAsync(token, cancellationToken);
         }
+        await _authorizations.TryRevokeAsync(authorization, cancellationToken);
 
         return NoContent();
     }

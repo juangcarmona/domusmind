@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenIddict.Abstractions;
 using Xunit;
 
 namespace DomusMind.Api.Tests.Controllers;
@@ -202,6 +203,17 @@ public sealed class McpOAuthControllerTests
         Assert.False(string.IsNullOrWhiteSpace(code));
         Assert.Equal("test-state", callbackQuery["state"].ToString());
 
+        using var wrongResourceResponse = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["grant_type"] = "authorization_code",
+            ["client_id"] = "test-client",
+            ["code"] = code,
+            ["redirect_uri"] = "https://client.test/callback",
+            ["code_verifier"] = verifier,
+            ["resource"] = "https://other.test/mcp",
+        }));
+        Assert.Equal(HttpStatusCode.BadRequest, wrongResourceResponse.StatusCode);
+
         using var tokenResponse = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
         {
             ["grant_type"] = "authorization_code",
@@ -219,6 +231,17 @@ public sealed class McpOAuthControllerTests
         var refreshToken = tokenJson.RootElement.GetProperty("refresh_token").GetString();
         Assert.False(string.IsNullOrWhiteSpace(refreshToken));
 
+        using var replayedCodeResponse = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["grant_type"] = "authorization_code",
+            ["client_id"] = "test-client",
+            ["code"] = code,
+            ["redirect_uri"] = "https://client.test/callback",
+            ["code_verifier"] = verifier,
+            ["resource"] = "https://domusmind.test/mcp",
+        }));
+        Assert.Equal(HttpStatusCode.BadRequest, replayedCodeResponse.StatusCode);
+
         using var refreshResponse = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
         {
             ["grant_type"] = "refresh_token",
@@ -233,11 +256,23 @@ public sealed class McpOAuthControllerTests
         using var mcpResponse = await client.SendAsync(mcpRequest);
         Assert.Equal(HttpStatusCode.OK, mcpResponse.StatusCode);
 
+        await host.DisableTestUserAsync();
+        using var disabledUserRequest = new HttpRequestMessage(HttpMethod.Get, "/mcp");
+        disabledUserRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        using var disabledUserResponse = await client.SendAsync(disabledUserRequest);
+        Assert.Equal(HttpStatusCode.Forbidden, disabledUserResponse.StatusCode);
+
+        await host.EnableTestUserAndRemoveHouseholdAccessAsync();
+        using var removedMembershipRequest = new HttpRequestMessage(HttpMethod.Get, "/mcp");
+        removedMembershipRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        using var removedMembershipResponse = await client.SendAsync(removedMembershipRequest);
+        Assert.Equal(HttpStatusCode.Forbidden, removedMembershipResponse.StatusCode);
+
         using var revokeRequest = new HttpRequestMessage(HttpMethod.Post, "/oauth/revoke-consent")
         {
             Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
-                ["clientId"] = "test-client",
+                ["authorizationId"] = await host.GetAuthorizationIdAsync(),
                 ["__RequestVerificationToken"] = ExtractAntiforgeryToken(consentBody),
             }),
         };
@@ -251,6 +286,42 @@ public sealed class McpOAuthControllerTests
         revokedMcpRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         using var revokedMcpResponse = await client.SendAsync(revokedMcpRequest);
         Assert.Equal(HttpStatusCode.Unauthorized, revokedMcpResponse.StatusCode);
+
+        using var reusedRefreshResponse = await client.PostAsync("/oauth/token", new FormUrlEncodedContent(new Dictionary<string, string>
+        {
+            ["grant_type"] = "refresh_token",
+            ["client_id"] = "test-client",
+            ["refresh_token"] = refreshToken!,
+            ["resource"] = "https://domusmind.test/mcp",
+        }));
+        Assert.Equal(HttpStatusCode.BadRequest, reusedRefreshResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task Invalid_bearer_tokens_fail_closed_without_disclosing_data()
+    {
+        await using var host = await TestHost.CreateAsync(enabled: true);
+        using var client = host.CreateClient();
+        using var request = new HttpRequestMessage(HttpMethod.Get, "/mcp");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", "not-a-domusmind-token");
+
+        using var response = await client.SendAsync(request);
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.DoesNotContain("household", await response.Content.ReadAsStringAsync(), StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task Mcp_requests_are_rate_limited()
+    {
+        await using var host = await TestHost.CreateAsync(enabled: true, requestsPerMinute: 1);
+        using var client = host.CreateClient();
+
+        using var first = await client.GetAsync("/mcp");
+        using var second = await client.GetAsync("/mcp");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, first.StatusCode);
+        Assert.Equal((HttpStatusCode)429, second.StatusCode);
     }
 
     private static async Task<HttpResponseMessage> SendWithCookiesAsync(HttpClient client, HttpMethod method, string url, string cookies)
@@ -303,7 +374,7 @@ public sealed class McpOAuthControllerTests
             return client;
         }
 
-        public static async Task<TestHost> CreateAsync(bool enabled)
+        public static async Task<TestHost> CreateAsync(bool enabled, int requestsPerMinute = 60)
         {
             var builder = WebApplication.CreateBuilder(new WebApplicationOptions
             {
@@ -322,6 +393,7 @@ public sealed class McpOAuthControllerTests
                 ["Mcp:OAuth:ClientId"] = "test-client",
                 ["Mcp:OAuth:RedirectUris:0"] = "https://client.test/callback",
                 ["Mcp:RequireOAuth"] = enabled.ToString(),
+                ["Mcp:RequestsPerMinute"] = requestsPerMinute.ToString(),
             });
 
             builder.Services.AddControllers()
@@ -338,11 +410,12 @@ public sealed class McpOAuthControllerTests
 
             var app = builder.Build();
             app.UseRouting();
+            app.UseRateLimiter();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseDomusMindMcpOAuthResourceAuthorization();
             app.MapControllers();
-            app.MapGet("/mcp", () => Results.Ok());
+            app.MapGet("/mcp", () => Results.Ok()).RequireRateLimiting("mcp");
             using (var scope = app.Services.CreateScope())
             {
                 var database = scope.ServiceProvider.GetRequiredService<DomusMindDbContext>();
@@ -374,6 +447,41 @@ public sealed class McpOAuthControllerTests
             }
             await app.StartAsync();
             return new TestHost(app);
+        }
+
+        public async Task<string> GetAuthorizationIdAsync()
+        {
+            using var scope = _app.Services.CreateScope();
+            var tokens = scope.ServiceProvider.GetRequiredService<IOpenIddictTokenManager>();
+            await foreach (var token in tokens.FindBySubjectAsync(TestUserId.ToString(), CancellationToken.None))
+            {
+                var authorizationId = await tokens.GetAuthorizationIdAsync(token, CancellationToken.None);
+                if (!string.IsNullOrWhiteSpace(authorizationId))
+                    return authorizationId;
+            }
+
+            throw new InvalidOperationException("The test flow did not create an OAuth authorization.");
+        }
+
+        public async Task DisableTestUserAsync()
+        {
+            using var scope = _app.Services.CreateScope();
+            var database = scope.ServiceProvider.GetRequiredService<DomusMindDbContext>();
+            var user = await database.AuthUsers.SingleAsync(user => user.UserId == TestUserId);
+            user.IsDisabled = true;
+            await database.SaveChangesAsync();
+        }
+
+        public async Task EnableTestUserAndRemoveHouseholdAccessAsync()
+        {
+            using var scope = _app.Services.CreateScope();
+            var database = scope.ServiceProvider.GetRequiredService<DomusMindDbContext>();
+            var user = await database.AuthUsers.SingleAsync(user => user.UserId == TestUserId);
+            user.IsDisabled = false;
+            var access = await database.UserFamilyAccesses.SingleAsync(access =>
+                access.UserId == TestUserId && access.FamilyId == TestHouseholdId);
+            database.UserFamilyAccesses.Remove(access);
+            await database.SaveChangesAsync();
         }
 
         public async ValueTask DisposeAsync()

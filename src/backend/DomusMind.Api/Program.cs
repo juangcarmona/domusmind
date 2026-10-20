@@ -60,6 +60,7 @@ var swaggerEnabled = builder.Configuration.GetValue<bool?>("Swagger:Enabled")
     ?? builder.Environment.IsDevelopment();
 
 builder.Services.AddControllers();
+builder.Services.AddAntiforgery();
 builder.Services.AddSingleton<IListChangeNotifier, ListChangeNotifier>();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -134,6 +135,7 @@ app.UseExceptionHandler(errorApp =>
 app.UseForwardedHeaders();
 
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 
 if (swaggerEnabled)
 {

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using DomusMind.Application.Abstractions.Security;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace DomusMind.Mcp.DependencyInjection;
 
@@ -26,8 +28,7 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
         var result = await context.AuthenticateAsync("OpenIddict.Validation.AspNetCore");
         if (!result.Succeeded || result.Principal is null)
         {
-            logger.LogInformation("Rejected unauthenticated MCP request");
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await RejectAsync(context, logger, StatusCodes.Status401Unauthorized, "unauthenticated");
             context.Response.Headers.WWWAuthenticate =
                 $"Bearer resource_metadata=\"{options.Value.ProtectedResourceMetadataPath}\", scope=\"mcp.read\"";
             return;
@@ -38,8 +39,7 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
             .ToHashSet(StringComparer.Ordinal);
         if (!scopes.Contains("mcp.read"))
         {
-            logger.LogInformation("Rejected MCP request without read scope");
-            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await RejectAsync(context, logger, StatusCodes.Status403Forbidden, "insufficient_scope", result.Principal);
             return;
         }
 
@@ -49,8 +49,7 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
         if (string.IsNullOrWhiteSpace(options.Value.ExpectedAudience) ||
             !audiences.Contains(options.Value.ExpectedAudience))
         {
-            logger.LogInformation("Rejected MCP request with an invalid resource audience");
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            await RejectAsync(context, logger, StatusCodes.Status401Unauthorized, "invalid_audience", result.Principal);
             context.Response.Headers.WWWAuthenticate =
                 $"Bearer resource_metadata=\"{options.Value.ProtectedResourceMetadataPath}\"";
             return;
@@ -59,8 +58,7 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
         if (!Guid.TryParse(result.Principal.FindFirst("sub")?.Value, out var userId) ||
             !Guid.TryParse(result.Principal.FindFirst("dm_household_id")?.Value, out var householdId))
         {
-            logger.LogInformation("Rejected MCP request without a valid user and household binding");
-            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await RejectAsync(context, logger, StatusCodes.Status403Forbidden, "invalid_subject_binding", result.Principal);
             return;
         }
 
@@ -68,18 +66,62 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
         if (user is null || user.IsDisabled ||
             !await familyAuthorization.CanAccessFamilyAsync(userId, householdId, context.RequestAborted))
         {
-            logger.LogInformation("Rejected MCP request after current household authorization check for user {UserId}", userId);
-            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            await RejectAsync(context, logger, StatusCodes.Status403Forbidden, "current_authorization_denied", result.Principal, userId, householdId);
             return;
         }
 
-        logger.LogInformation(
-            "Authorized MCP request for user {UserId}, household {HouseholdId}, client {ClientId}, path {Path}",
-            userId,
-            householdId,
-            result.Principal.FindFirst("client_id")?.Value ?? "unknown",
-            context.Request.Path);
         context.User = result.Principal;
-        await next(context);
+        try
+        {
+            await next(context);
+            logger.LogInformation(
+                "MCP security audit {Outcome} operation={Operation} user={UserId} household={HouseholdId} client={ClientId} scope={Scope} status={StatusCode} trace={TraceId}",
+                "completed",
+                $"{context.Request.Method} {context.Request.Path}",
+                userId,
+                householdId,
+                result.Principal.FindFirst("client_id")?.Value ?? "unknown",
+                "mcp.read",
+                context.Response.StatusCode,
+                Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier);
+        }
+        catch
+        {
+            logger.LogWarning(
+                "MCP security audit {Outcome} operation={Operation} user={UserId} household={HouseholdId} client={ClientId} scope={Scope} status={StatusCode} trace={TraceId}",
+                "failed",
+                $"{context.Request.Method} {context.Request.Path}",
+                userId,
+                householdId,
+                result.Principal.FindFirst("client_id")?.Value ?? "unknown",
+                "mcp.read",
+                StatusCodes.Status500InternalServerError,
+                Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier);
+            throw;
+        }
+    }
+
+    private static Task RejectAsync(
+        HttpContext context,
+        ILogger logger,
+        int statusCode,
+        string reason,
+        ClaimsPrincipal? principal = null,
+        Guid? userId = null,
+        Guid? householdId = null)
+    {
+        context.Response.StatusCode = statusCode;
+        logger.LogWarning(
+            "MCP security audit {Outcome} reason={Reason} operation={Operation} user={UserId} household={HouseholdId} client={ClientId} scope={Scope} status={StatusCode} trace={TraceId}",
+            "denied",
+            reason,
+            $"{context.Request.Method} {context.Request.Path}",
+            userId?.ToString() ?? principal?.FindFirst("sub")?.Value ?? "unknown",
+            householdId?.ToString() ?? principal?.FindFirst("dm_household_id")?.Value ?? "unknown",
+            principal?.FindFirst("client_id")?.Value ?? "unknown",
+            principal?.FindFirst("scope")?.Value ?? "unknown",
+            statusCode,
+            Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier);
+        return Task.CompletedTask;
     }
 }

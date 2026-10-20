@@ -20,6 +20,9 @@ internal sealed class DomusMindMcpOptionsValidator : IValidateOptions<DomusMindM
         if (options.RequireOAuth && string.IsNullOrWhiteSpace(options.ExpectedAudience))
             return ValidateOptionsResult.Fail("Mcp:OAuth:Resource must be configured when MCP OAuth protection is required.");
 
+        if (options.RequestsPerMinute is < 1 or > 600)
+            return ValidateOptionsResult.Fail("Mcp:RequestsPerMinute must be between 1 and 600.");
+
         return ValidateOptionsResult.Success;
     }
 }

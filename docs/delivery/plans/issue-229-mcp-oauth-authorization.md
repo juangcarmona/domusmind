@@ -66,8 +66,8 @@ The implementation must pin a currently supported OpenIddict version after depen
 - Never accept or forward an access token intended for another resource.
 - Never emit bearer tokens, refresh tokens, authorization codes, PKCE verifiers, client secrets, or raw authorization headers in logs, traces, errors, or audit payloads.
 - Return safe `401`/`403` challenges that do not disclose whether another household or member exists.
-- Add rate limits and bounded request sizes at the MCP boundary; preserve cancellation and timeouts.
-- Record an operation audit entry with timestamp, correlation, authenticated user, client identifier, household context, requested operation/scope, authorization decision, result class, and failure reason category. Keep payload and secret minimization explicit.
+- Add a bounded fixed-window rate limit at the MCP boundary; preserve cancellation and timeouts. The production limit remains operator-configurable.
+- Emit a structured, redacted security audit event with correlation, authenticated user, client identifier, household context, requested operation/scope, authorization decision, result class, status and failure reason category. Durable audit retention is a separate release-gated follow-up until its storage contract is approved.
 - Use OpenTelemetry correlation without treating traces as the durable audit store.
 - Threat-model phishing/redirect abuse, confused deputy, token substitution, audience confusion, prompt injection through untrusted household content, replay, enumeration, consent fixation, and authorization changes after token issuance.
 
@@ -78,7 +78,7 @@ The implementation must pin a currently supported OpenIddict version after depen
 3. **Resource-server validation**: add isolated token validation for MCP requests, with issuer/audience/resource and scope checks distinct from local API JWT validation. Keep the existing API authentication behavior unchanged.
 4. **User and household authorization bridge**: map trusted OIDC subjects to `AuthUser`, resolve household access server-side, preserve handler authorization, distinguish read/write scopes, and test membership/role revocation without token passthrough.
 5. **Consent and household binding**: implement explicit household selection and consent records bound to the client/resource/scope tuple; prove that a user with access to households A and B cannot reuse an A grant for B, and prove next-request denial after consent, account, or membership revocation.
-6. **Client interoperability and metadata safety**: exercise at least one remote interactive client, one Claude-compatible client path, and a custom test client; use pre-registration as the default. If CIMD is enabled for a client, fetch only HTTPS metadata with bounded size/time, no credentials, no redirects, and DNS-resolution/connect checks that reject loopback, link-local, private, multicast, reserved and rebinding destinations; test every rejection. Keep STDIO separate.
+6. **Client interoperability and metadata safety**: this child verifies a standards-compliant custom HTTPS client; hosted-client and STDIO interoperability remain explicit follow-up release gates because no external client credentials or deployment are available in the repository test environment. Use pre-registration as the default. If CIMD is enabled later, fetch only HTTPS metadata with bounded size/time, no credentials, no redirects, and DNS-resolution/connect checks that reject loopback, link-local, private, multicast, reserved and rebinding destinations; test every rejection. Keep STDIO separate.
 7. **Security, audit, and operational hardening**: implement redacted security logs/audit records, rate limiting, safe errors, replay/revocation checks, OpenTelemetry correlation, threat tests, and operator documentation.
 
 ### Development configuration
@@ -131,7 +131,7 @@ Excluded: enabling write-capable tools, adding new business capabilities, changi
 - No production write tool is enabled by this child.
 - Security review explicitly covers confused deputy, audience/resource binding, revocation, cross-household access, prompt injection, and audit redaction.
 - The selected provider/authorization-server direction is documented in an ADR, with unresolved risks and client limitations visible.
-- CI, security analysis, contract/integration tests, and documentation validation pass on the final head.
+- CI, security analysis, contract/integration tests, and documentation validation pass on the final head. Hosted-client interoperability, durable audit retention, and production key operations remain visible release gates rather than claims of this child.
 
 ## References
 

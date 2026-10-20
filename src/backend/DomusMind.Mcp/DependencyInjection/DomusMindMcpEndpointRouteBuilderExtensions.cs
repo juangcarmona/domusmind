@@ -7,5 +7,5 @@ namespace DomusMind.Mcp.DependencyInjection;
 public static class DomusMindMcpEndpointRouteBuilderExtensions
 {
     public static IEndpointConventionBuilder MapDomusMindMcp(this IEndpointRouteBuilder endpoints) =>
-        endpoints.MapMcp("/mcp");
+        endpoints.MapMcp("/mcp").RequireRateLimiting("mcp");
 }
