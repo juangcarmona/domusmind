@@ -7,7 +7,7 @@
   "executorModel": "GPT-5 (active Codex model)",
   "reviewerModel": "gpt-6.1-sol (available distinct model override)",
   "maxCorrectionRounds": 3,
-  "status": "awaiting-integration",
+  "status": "complete",
   "stages": [
     {
       "name": "refine",
@@ -58,9 +58,34 @@
         "Owner response received in conversation on 2026-10-20: accepts in-process hosting in DomusMind.Api and OAuth 2.1 Authorization Code + PKCE/OIDC direction. Authorization-server placement/provider remains explicitly undecided and is a gate before OAuth implementation, not before completing this assessment or #227. The assessment DoD and architecture disposition are accepted; decision recorded at https://github.com/juangcarmona/domusmind/issues/226#issuecomment-6283565601.",
         "PR #267 marked ready for review; issue #226 transitioned to status:in-review and owner-review overlay removed after verifying the owner gate."
       ]
+    },
+    {
+      "name": "integrate",
+      "startedAt": "2026-10-20T04:47:30Z",
+      "endedAt": "2026-10-20T04:47:51Z",
+      "inputCommit": "d2437fe423935fb8a98badb13a6f3b0483b05d66",
+      "outputCommit": "2fcde0b251e96ebfc5b735e2710439fa36b09604",
+      "result": "merged",
+      "evidence": [
+        "Final independent gpt-6.1-sol integration audit approved exact PR head d2437fe423935fb8a98badb13a6f3b0483b05d66 after checking owner acceptance, lifecycle/PR state, local validation, and live forge requirements.",
+        "PR #267 merged by squash into feat/224-mcp-household-assistants as 2fcde0b251e96ebfc5b735e2710439fa36b09604. No required forge checks or approvals were unmet; zero checks were disclosed and not treated as passing.",
+        "Issue #226 is being closed as status:done after verifying the merged PR and retaining its accepted architecture disposition and open authorization-server decision."
+      ]
     }
   ],
   "reviews": [
+    {
+      "stage": "integrate-final-head",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "d2437fe423935fb8a98badb13a6f3b0483b05d66",
+      "decision": "approve",
+      "findings": [
+        "Owner gate and lifecycle records agree; the accepted in-process API and OAuth/OIDC directions are explicit while authorization-server placement remains open for #229.",
+        "Issue #226 is status:in-review, PR #267 is ready and mergeable, and the branch is unprotected with no required reviews or checks.",
+        "All applicable documentation/ProductShape/citation verification passed; absent CI and backend/web tests were accurately disclosed as not run/not applicable. No blocking DoD or scope findings remain."
+      ],
+      "readOnly": true
+    },
     {
       "stage": "owner-disposition-review",
       "reviewerModel": "gpt-6.1-sol",
@@ -185,6 +210,9 @@
     "number": 267,
     "url": "https://github.com/juangcarmona/domusmind/pull/267",
     "draft": false,
+    "merged": true,
+    "mergedAt": "2026-10-20T04:47:30Z",
+    "mergeCommit": "2fcde0b251e96ebfc5b735e2710439fa36b09604",
     "base": "feat/224-mcp-household-assistants",
     "head": "feat/226-assess-mcp-hosting-identity-authorization-clients"
   },
@@ -192,7 +220,9 @@
     "https://github.com/juangcarmona/domusmind/issues/224",
     "https://github.com/juangcarmona/domusmind/issues/226",
     "https://github.com/juangcarmona/domusmind/issues/226#issuecomment-6279649837",
+    "https://github.com/juangcarmona/domusmind/issues/226#issuecomment-6283565601",
     "https://github.com/juangcarmona/domusmind/pull/267",
+    "https://github.com/juangcarmona/domusmind/pull/267/commits/2fcde0b251e96ebfc5b735e2710439fa36b09604",
     "https://github.com/juangcarmona/domusmind/pull/225"
   ]
 }

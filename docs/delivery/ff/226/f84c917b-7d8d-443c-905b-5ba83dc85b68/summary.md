@@ -1,7 +1,7 @@
 # Fast Forward run: issue #226
 
 - Run ID: `f84c917b-7d8d-443c-905b-5ba83dc85b68`
-- Status: awaiting integration
+- Status: complete
 - Branch: `feat/226-assess-mcp-hosting-identity-authorization-clients`
 - Starting commit: `09c17acdd9d6ecb20daf7f4cc14648015b86a1d8`
 - Executor: GPT-5 (active Codex model)
@@ -20,3 +20,4 @@ Owner acceptance received 2026-10-20: begin in-process in `DomusMind.Api` and us
 - `implement`: issue #226 transitioned through `status:proposed` to `status:in-progress`. Two bounded correction rounds addressed independent review findings: the `GetMemberAgenda` cross-family member-ID risk blocks #230 exposure until fixed/tested; Streamable HTTP Origin validation is explicit; #229/#230/#231 scopes are aligned; and private MCP tunneling is distinct from authorization-server endpoint reachability. Final independent review approved assessment commit `6fd554a`; no blocking findings remain.
 - Owner gate: the owner accepted the in-process `DomusMind.Api` host and OAuth 2.1 Authorization Code + PKCE/OIDC direction in conversation on 2026-10-20. Authorization-server placement/provider remains undecided; this is a prerequisite for #229, not #227. Independent reviewer confirmed the assessment and owner disposition satisfy #226; a follow-up audit is required after lifecycle/PR state is reconciled. PR #267 has zero CI checks; no CI pass is claimed.
 - Verification: `dotnet restore DomusMind.slnx` passed with existing NU1902/NU1903 vulnerability advisories; `git diff --check`, assessment-specific markdownlint, ProductShape validation, OpenSpec citation verification with temporary CLI packages, and architecture citation verification passed. ProductShape emitted 59 existing PRODUCT111 warnings; OpenSpec reports 14 current docs and 816 current citations; architecture has 81 current citations. Application tests are not applicable to this documentation-only issue. Ready-for-review PR #267 has zero CI checks; no CI pass is claimed.
+- `integrate`: final independent reviewer `gpt-6.1-sol` approved exact head `d2437fe423935fb8a98badb13a6f3b0483b05d66`. Stacked PR [#267](https://github.com/juangcarmona/domusmind/pull/267) was squash-merged into `feat/224-mcp-household-assistants` as `2fcde0b251e96ebfc5b735e2710439fa36b09604`. No CI checks or forge-required approvals existed; zero CI checks are not reported as passing. Umbrella PR #225 remains Draft.
