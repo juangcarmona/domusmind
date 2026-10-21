@@ -21,7 +21,7 @@ public sealed class DomusMindConfirmedWriteTools
             nameof(ListItemAdd), BindingFlags.Public | BindingFlags.Static)
             ?? throw new InvalidOperationException("The list_item_add MCP tool method was not found.");
 
-        return McpServerTool.Create(method, (object?)null, new McpServerToolCreateOptions
+        var innerTool = McpServerTool.Create(method, (object?)null, new McpServerToolCreateOptions
         {
             Services = services,
             Name = "list_item_add",
@@ -44,6 +44,8 @@ public sealed class DomusMindConfirmedWriteTools
                 },
             },
         });
+
+        return new ValidatingTool(innerTool);
     }
 
     private const string OutputSchemaJson = """
@@ -249,6 +251,60 @@ public sealed class DomusMindConfirmedWriteTools
         "CONFIRMATION_UNKNOWN" or "CONFIRMATION_EXPIRED" => "CONFIRMATION_INVALID",
         _ => code ?? "INTERNAL_ERROR",
     };
+
+    private sealed class ValidatingTool(McpServerTool innerTool)
+        : DelegatingMcpServerTool(innerTool)
+    {
+        private static readonly HashSet<string> AllowedArguments =
+        ["listId", "name", "idempotencyKey", "quantity", "note", "approvalRequestId"];
+
+        public override async ValueTask<CallToolResult> InvokeAsync(
+            RequestContext<CallToolRequestParams> request,
+            CancellationToken cancellationToken)
+        {
+            var arguments = request.Params.Arguments;
+            var validationError = ValidateArguments(arguments);
+            if (validationError is not null)
+                return validationError;
+
+            return await base.InvokeAsync(request, cancellationToken);
+        }
+
+        private static CallToolResult? ValidateArguments(
+            IDictionary<string, JsonElement>? arguments)
+        {
+            if (arguments is null)
+                return Error("INVALID_INPUT", "Tool arguments are required.");
+
+            var unknown = arguments.Keys.FirstOrDefault(key => !AllowedArguments.Contains(key));
+            if (unknown is not null)
+                return Error("INVALID_INPUT", $"The argument '{unknown}' is not supported.");
+
+            foreach (var required in new[] { "listId", "name", "idempotencyKey" })
+            {
+                if (!arguments.TryGetValue(required, out var value) || !IsString(value))
+                    return Error("INVALID_INPUT", $"{required} must be a string.");
+            }
+
+            foreach (var optional in new[] { "quantity", "note", "approvalRequestId" })
+            {
+                if (arguments.TryGetValue(optional, out var value) && !IsString(value, allowNull: true))
+                    return Error("INVALID_INPUT", $"{optional} must be a string or null.");
+            }
+
+            return null;
+        }
+
+        private static bool IsString(object? value, bool allowNull = false) =>
+            value switch
+            {
+                string => true,
+                JsonElement { ValueKind: JsonValueKind.String } => true,
+                null when allowNull => true,
+                JsonElement { ValueKind: JsonValueKind.Null } when allowNull => true,
+                _ => false,
+            };
+    }
 }
 
 public sealed record ListItemAddOutput(

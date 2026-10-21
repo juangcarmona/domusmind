@@ -262,6 +262,17 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         McpApprovalContext context,
         CancellationToken cancellationToken = default)
     {
+        var outcome = await ApproveCoreAsync(approvalRequestId, userId, context, cancellationToken);
+        AuditApprovalDecision("approve", approvalRequestId, userId, context, outcome);
+        return outcome;
+    }
+
+    private async Task<McpConfirmedWriteOutcome> ApproveCoreAsync(
+        Guid approvalRequestId,
+        Guid userId,
+        McpApprovalContext context,
+        CancellationToken cancellationToken)
+    {
         var user = await _users.FindByIdAsync(userId, cancellationToken);
         if (user is null || user.IsDisabled)
             return Error("AUTHORIZATION_DENIED", "The approving member is not active.");
@@ -300,10 +311,12 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         await _db.SaveChangesAsync(cancellationToken);
         await CommitAsync(transaction, cancellationToken);
         _logger.LogInformation(
-            "MCP confirmed write approved operation={Operation} user={UserId} household={HouseholdId}",
+            "MCP confirmed write approved operation={Operation} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
             OperationNamespace,
             userId,
-            approval.FamilyId);
+            approval.FamilyId,
+            context.ClientId ?? "first-party",
+            context.TraceId ?? "unknown");
         return new McpConfirmedWriteOutcome(McpWriteStatuses.ApprovalPending, Code: "APPROVED");
     }
 
@@ -312,6 +325,17 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         Guid userId,
         McpApprovalContext context,
         CancellationToken cancellationToken = default)
+    {
+        var outcome = await CancelCoreAsync(approvalRequestId, userId, context, cancellationToken);
+        AuditApprovalDecision("cancel", approvalRequestId, userId, context, outcome);
+        return outcome;
+    }
+
+    private async Task<McpConfirmedWriteOutcome> CancelCoreAsync(
+        Guid approvalRequestId,
+        Guid userId,
+        McpApprovalContext context,
+        CancellationToken cancellationToken)
     {
         var user = await _users.FindByIdAsync(userId, cancellationToken);
         if (user is null || user.IsDisabled)
@@ -340,10 +364,12 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         await _db.SaveChangesAsync(cancellationToken);
         await CommitAsync(transaction, cancellationToken);
         _logger.LogInformation(
-            "MCP confirmed write cancelled operation={Operation} user={UserId} household={HouseholdId}",
+            "MCP confirmed write cancelled operation={Operation} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
             OperationNamespace,
             userId,
-            approval.FamilyId);
+            approval.FamilyId,
+            context.ClientId ?? "first-party",
+            context.TraceId ?? "unknown");
         return new McpConfirmedWriteOutcome(McpWriteStatuses.Error, Code: "CANCELLED", Message: "The approval request was cancelled.");
     }
 
@@ -619,15 +645,47 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
     private void AuditDecision(McpListItemAddRequest request, McpConfirmedWriteOutcome outcome)
     {
         _logger.LogInformation(
-            "MCP confirmed write audit operation={Operation} status={Status} code={Code} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
+            "MCP confirmed write audit operation={Operation} status={Status} code={Code} idempotencyOutcome={IdempotencyOutcome} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
             OperationNamespace,
             outcome.Status,
             outcome.Code ?? "none",
+            IdempotencyOutcome(outcome),
             request.UserId,
             request.HouseholdId,
             request.ClientId,
             request.TraceId);
     }
+
+    private void AuditApprovalDecision(
+        string decision,
+        Guid approvalRequestId,
+        Guid userId,
+        McpApprovalContext context,
+        McpConfirmedWriteOutcome outcome)
+    {
+        _logger.LogInformation(
+            "MCP confirmed write approval audit operation={Operation} decision={Decision} approvalRequestId={ApprovalRequestId} status={Status} code={Code} user={UserId} client={ClientId} trace={TraceId}",
+            OperationNamespace,
+            decision,
+            approvalRequestId,
+            outcome.Status,
+            outcome.Code ?? "none",
+            userId,
+            context.ClientId ?? "first-party",
+            context.TraceId ?? "unknown");
+    }
+
+    private static string IdempotencyOutcome(McpConfirmedWriteOutcome outcome) =>
+        outcome.Code switch
+        {
+            "IDEMPOTENCY_KEY_REUSED" => "conflict",
+            "IDEMPOTENCY_REPLAYED" or "IDEMPOTENCY_RESULT_EXPIRED" => "replay_rejected",
+            "OPERATION_IN_PROGRESS" => "in_progress",
+            "OPERATION_STATUS_UNKNOWN" => "unknown",
+            _ when outcome.Status == McpWriteStatuses.Completed => "completed",
+            _ when outcome.Status == McpWriteStatuses.ConfirmationRequired => "pending_approval",
+            _ => "not_applicable",
+        };
 
     private static Guid? ParseApprovalReference(string? reference) =>
         Guid.TryParse(reference, out var approvalId) && approvalId != Guid.Empty

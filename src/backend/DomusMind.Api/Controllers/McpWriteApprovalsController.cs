@@ -45,7 +45,7 @@ public sealed class McpWriteApprovalsController : ControllerBase
         var outcome = await _coordinator.ApproveAsync(
             approvalRequestId,
             userId,
-            McpApprovalContext.TrustedFirstParty,
+            McpApprovalContext.TrustedFirstParty with { TraceId = HttpContext.TraceIdentifier },
             cancellationToken);
         return ToActionResult(outcome);
     }
@@ -61,7 +61,7 @@ public sealed class McpWriteApprovalsController : ControllerBase
         var outcome = await _coordinator.CancelAsync(
             approvalRequestId,
             userId,
-            McpApprovalContext.TrustedFirstParty,
+            McpApprovalContext.TrustedFirstParty with { TraceId = HttpContext.TraceIdentifier },
             cancellationToken);
         return ToActionResult(outcome);
     }

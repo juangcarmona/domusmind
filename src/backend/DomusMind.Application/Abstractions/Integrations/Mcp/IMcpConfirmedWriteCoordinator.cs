@@ -54,7 +54,8 @@ public sealed record McpApprovalContext(
     string? ClientId,
     Guid? HouseholdId,
     bool HasWriteScope,
-    bool IsTrustedFirstParty = false)
+    bool IsTrustedFirstParty = false,
+    string? TraceId = null)
 {
     public static McpApprovalContext TrustedFirstParty { get; } = new(null, null, false, true);
 }
