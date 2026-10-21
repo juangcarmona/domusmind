@@ -18,12 +18,22 @@
         "github:issue/232",
         "docs/delivery/ff/232/9894243e-10bd-4ec4-a255-4d986214b8e9/refined-issue-body.md"
       ]
+    },
+    {
+      "name": "propose",
+      "result": "in-review",
+      "inputCommit": "ed07c711768f68399320a24e5a98c8be826cb244",
+      "outputCommit": "8123193b756c3d95844074f3e99e9eac105be0f0",
+      "evidence": [
+        "docs/delivery/plans/issue-232-mcp-capability-expansion.md",
+        "github:pull/273"
+      ]
     }
   ],
   "reviews": [],
   "corrections": [],
-  "stopReason": "Ready gate passed: actors, scope, dependencies, acceptance criteria, quality expectations, exclusions, and unknowns are explicit. Proceeding to propose.",
-  "pullRequest": null,
+  "stopReason": "Draft PR #273 contains the reviewed proposal and is awaiting the independent plan review before implementation.",
+  "pullRequest": "https://github.com/juangcarmona/domusmind/pull/273",
   "links": {
     "issue": "https://github.com/juangcarmona/domusmind/issues/232",
     "epic": "https://github.com/juangcarmona/domusmind/issues/224"
