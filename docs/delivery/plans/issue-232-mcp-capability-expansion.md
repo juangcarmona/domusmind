@@ -63,6 +63,17 @@ All four tools are read-only and derive `householdId` and `userId` from the auth
 
 `meal_plan_get` rejects an unset or invalid household first-day setting and a date that does not start that household's week. A valid week with no plan returns a successful `mealPlan: null`; an existing plan preserves the canonical 35-slot projection while rotating only the day presentation at the MCP boundary. `lists_get` does not invent private-list semantics, and a missing selected list returns `NOT_FOUND` without persistence or exception details.
 
+### Field-level output contracts
+
+The authoritative generated MCP schemas come from the output records in `src/backend/DomusMind.Mcp/Tools/DomusMindHouseholdReadTools.cs`. The following field contract is kept beside the proposal so client adapters can reason about required fields and nullability without reading implementation code:
+
+- `lists_get` returns required `lists: array` and nullable `list: object | null`. Each list summary requires `listId: UUID`, `name: string`, `kind: string`, `areaId: UUID | null`, `linkedPlanId: UUID | null`, and `uncheckedCount: integer`. A detail requires those identity fields plus `color: string | null`, `linkedPlanDisplayName: string | null`, and `items: array`. Each item requires `itemId: UUID`, `name: string`, `checked: boolean`, `quantity: string | null`, `note: string | null`, `order: integer`, `importance: boolean`, `dueDate: date | null`, `reminder: date-time | null`, and `targetMemberId: UUID | null`.
+- `meal_plan_get` returns required nullable `mealPlan: object | null`. A non-null plan requires `planId: UUID`, `weekStart: date`, `weekEnd: date`, `status: string`, and `slots: array`. Each slot requires `dayOfWeek`, `mealType`, and `mealSourceType` strings, nullable `recipeName`, `freeText`, and `notes` strings, and required `isOptional` and `isLocked` booleans. The output contains all 35 canonical slots when a plan exists.
+- `routines_get` returns required `routines: array`. Each routine requires `routineId: UUID`, `name`, `scope`, `kind`, `frequency`, `daysOfWeek: array`, `daysOfMonth: array`, nullable `monthOfYear`, nullable `time` and `endTime` strings in `HH:mm`, `targetMemberIds: array`, `status`, and nullable `areaId`.
+- `areas_get` returns required `areas: array`. Each area requires `areaId: UUID`, `name`, `color`, nullable `primaryOwnerId`, nullable `primaryOwnerName`, and `secondaryOwnerIds: array`. Archived areas are not returned by this initial contract.
+
+The error envelope is always `{ code: string, message: string }` with `isError=true`: messages are stable, non-sensitive summaries and never contain exception text, persistence details, or data from another household.
+
 ## Architecture impact
 
 The change is isolated to the MCP adapter and its contract/boundary tests. It reuses these canonical application queries and owning contexts:

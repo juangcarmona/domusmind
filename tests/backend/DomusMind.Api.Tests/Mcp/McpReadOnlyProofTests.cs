@@ -134,6 +134,14 @@ public sealed class McpReadOnlyProofTests
         await using var host = await ReadOnlyProofHost.StartAsync(registerProductionTools: true);
         await using var client = await host.CreateClientAsync();
 
+        var tools = await client.ListToolsAsync();
+        foreach (var name in new[] { "lists_get", "meal_plan_get", "routines_get", "areas_get" })
+        {
+            var tool = Assert.Single(tools, candidate => candidate.Name == name);
+            Assert.Equal(true, tool.ProtocolTool.Annotations?.ReadOnlyHint);
+            Assert.NotNull(tool.ProtocolTool.OutputSchema);
+        }
+
         var lists = await client.CallToolAsync("lists_get", new Dictionary<string, object?>());
         Assert.NotEqual(true, lists.IsError);
         var listId = lists.StructuredContent!.Value.GetProperty("lists")[0].GetProperty("listId").GetGuid();
@@ -159,6 +167,17 @@ public sealed class McpReadOnlyProofTests
         Assert.True(familyBList.IsError);
         Assert.Equal("ACCESS_DENIED", familyBList.StructuredContent!.Value.GetProperty("code").GetString());
         Assert.DoesNotContain("Family B", familyBList.StructuredContent.Value.GetRawText(), StringComparison.Ordinal);
+
+        host.Authorization.AdditionalAllowedFamilyIds.Add(host.FamilyBId);
+        var userCanReadFamilyB = await host.Dispatcher.Dispatch<GetListDetailResponse>(
+            new GetListDetailQuery(host.FamilyBListId, host.RequesterUserId, host.FamilyBId), CancellationToken.None);
+        Assert.Equal("Family B private list", userCanReadFamilyB.Name);
+        var tokenStillCannotReadFamilyB = await client.CallToolAsync("lists_get", new Dictionary<string, object?>
+        {
+            ["listId"] = host.FamilyBListId.ToString(),
+        });
+        Assert.True(tokenStillCannotReadFamilyB.IsError);
+        Assert.Equal("ACCESS_DENIED", tokenStillCannotReadFamilyB.StructuredContent!.Value.GetProperty("code").GetString());
 
         var meal = await client.CallToolAsync("meal_plan_get", new Dictionary<string, object?>
         {
@@ -189,6 +208,25 @@ public sealed class McpReadOnlyProofTests
         Assert.Contains(host.AuditMessages, message => message.Contains("capability=meal_plan_get", StringComparison.Ordinal));
         Assert.Contains(host.AuditMessages, message => message.Contains("capability=routines_get", StringComparison.Ordinal));
         Assert.Contains(host.AuditMessages, message => message.Contains("capability=areas_get", StringComparison.Ordinal));
+        Assert.Contains(host.AuditMessages, message => message.Contains($"user={host.RequesterUserId}", StringComparison.Ordinal)
+            && message.Contains($"household={host.FamilyAId}", StringComparison.Ordinal)
+            && message.Contains("client=synthetic-proof-client", StringComparison.Ordinal));
+
+        host.Authorization.ThrowUnexpectedFailure = true;
+        var safeFailure = await client.CallToolAsync("areas_get", new Dictionary<string, object?>());
+        Assert.True(safeFailure.IsError);
+        Assert.Equal("INTERNAL_ERROR", safeFailure.StructuredContent!.Value.GetProperty("code").GetString());
+        Assert.Contains(host.AuditMessages, message => message.Contains("capability=areas_get", StringComparison.Ordinal)
+            && message.Contains("tool_error", StringComparison.Ordinal));
+        host.Authorization.ThrowUnexpectedFailure = false;
+
+        host.Authorization.BlockForCancellation = true;
+        using var cancellation = new CancellationTokenSource();
+        var pending = client.CallToolAsync("routines_get", new Dictionary<string, object?>(), cancellationToken: cancellation.Token);
+        await host.Authorization.WaitUntilStartedAsync();
+        cancellation.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await pending);
+        await host.Authorization.WaitUntilCancellationObservedAsync();
         Assert.Equal(0, host.Database.ChangeTracker.Entries().Count(entry =>
             entry.State is EntityState.Added or EntityState.Modified or EntityState.Deleted));
     }
@@ -806,6 +844,7 @@ public sealed class McpReadOnlyProofTests
         public List<Guid> CheckedUserIds { get; } = [];
         public bool BlockForCancellation { get; set; }
         public bool ThrowUnexpectedFailure { get; set; }
+        public HashSet<Guid> AdditionalAllowedFamilyIds { get; } = [];
         public Task WaitUntilStartedAsync() => _started.Task.WaitAsync(TimeSpan.FromSeconds(5));
         public Task WaitUntilCancellationObservedAsync() => _cancellationObserved.Task.WaitAsync(TimeSpan.FromSeconds(5));
 
@@ -830,7 +869,7 @@ public sealed class McpReadOnlyProofTests
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            return userId == allowedUserId && familyId == allowedFamilyId;
+            return userId == allowedUserId && (familyId == allowedFamilyId || AdditionalAllowedFamilyIds.Contains(familyId));
         }
     }
 

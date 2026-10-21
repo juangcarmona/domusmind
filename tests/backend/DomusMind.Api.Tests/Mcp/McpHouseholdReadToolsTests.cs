@@ -87,7 +87,7 @@ public sealed class McpHouseholdReadToolsTests
         dispatcher.Family = dispatcher.Family with { FirstDayOfWeek = "monday" };
         dispatcher.MealSlots = Enumerable.Range(0, 35)
             .Select(index => new MealSlotDetail(
-                ((DomusMind.Domain.MealPlanning.Enums.DayOfWeek)((index / 5 + 1) % 7)).ToString(),
+                ((DomusMind.Domain.MealPlanning.Enums.DayOfWeek)(index / 5)).ToString(),
                 ((MealType)(index % 5)).ToString(),
                 "Unplanned", null, null, null, false, false))
             .ToArray();
