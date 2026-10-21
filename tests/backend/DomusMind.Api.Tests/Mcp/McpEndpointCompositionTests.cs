@@ -209,6 +209,10 @@ public sealed class McpEndpointCompositionTests
         }
 
         Assert.Equal(0, host.ConfirmedWriteCoordinator.Calls);
+        Assert.Equal(3, host.AuditMessages.Count(message =>
+            message.Contains("capability audit tool_error", StringComparison.Ordinal) &&
+            message.Contains("capability=list_item_add", StringComparison.Ordinal) &&
+            message.Contains("code=INVALID_INPUT", StringComparison.Ordinal)));
     }
 
     private sealed class ApiTestHost : IAsyncDisposable
@@ -220,18 +224,21 @@ public sealed class McpEndpointCompositionTests
             WebApplication app,
             HttpClient client,
             TestQueryDispatcher queryDispatcher,
-            TestConfirmedWriteCoordinator? confirmedWriteCoordinator)
+            TestConfirmedWriteCoordinator? confirmedWriteCoordinator,
+            ICollection<string> auditMessages)
         {
             _app = app;
             _webRoot = app.Environment.WebRootPath!;
             Client = client;
             QueryDispatcher = queryDispatcher;
             ConfirmedWriteCoordinator = confirmedWriteCoordinator ?? new TestConfirmedWriteCoordinator();
+            AuditMessages = auditMessages;
         }
 
         public HttpClient Client { get; }
         public TestQueryDispatcher QueryDispatcher { get; }
         public TestConfirmedWriteCoordinator ConfirmedWriteCoordinator { get; }
+        public ICollection<string> AuditMessages { get; }
 
         public static async Task<ApiTestHost> StartAsync(
             bool registerTestProbe = false,
@@ -255,6 +262,8 @@ public sealed class McpEndpointCompositionTests
                 ["Mcp:AllowedOrigins:0"] = "https://trusted.example",
             }).Build();
             var queryDispatcher = new TestQueryDispatcher();
+            var auditMessages = new List<string>();
+            builder.Logging.AddProvider(new CapturingLoggerProvider(auditMessages));
             builder.Services.AddSingleton<IQueryDispatcher>(queryDispatcher);
             var mcpBuilder = builder.Services.AddDomusMindMcp(config);
             if (registerTestProbe)
@@ -276,7 +285,7 @@ public sealed class McpEndpointCompositionTests
             app.UseDomusMindMcpOriginValidation();
             app.MapDomusMindEndpoints(webRoot);
             await app.StartAsync();
-            return new ApiTestHost(app, app.GetTestClient(), queryDispatcher, confirmedWriteCoordinator);
+            return new ApiTestHost(app, app.GetTestClient(), queryDispatcher, confirmedWriteCoordinator, auditMessages);
         }
 
         public async ValueTask DisposeAsync()
@@ -298,6 +307,26 @@ public sealed class McpEndpointCompositionTests
                 "test-trace",
                 new HashSet<string>(["mcp.write"]));
             return true;
+        }
+    }
+
+    private sealed class CapturingLoggerProvider(ICollection<string> messages) : ILoggerProvider
+    {
+        public ILogger CreateLogger(string categoryName) => new CapturingLogger(messages);
+        public void Dispose() { }
+    }
+
+    private sealed class CapturingLogger(ICollection<string> messages) : ILogger
+    {
+        public IDisposable BeginScope<TState>(TState state) where TState : notnull => NullScope.Instance;
+        public bool IsEnabled(LogLevel logLevel) => true;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter) => messages.Add(formatter(state, exception));
+
+        private sealed class NullScope : IDisposable
+        {
+            public static readonly NullScope Instance = new();
+            public void Dispose() { }
         }
     }
 

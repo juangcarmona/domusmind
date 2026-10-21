@@ -4,6 +4,7 @@ using System.Text.Json.Serialization.Metadata;
 using System.Reflection;
 using DomusMind.Application.Abstractions.Integrations.Mcp;
 using DomusMind.Mcp.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
@@ -45,7 +46,7 @@ public sealed class DomusMindConfirmedWriteTools
             },
         });
 
-        return new ValidatingTool(innerTool);
+        return new ValidatingTool(innerTool, services);
     }
 
     private const string OutputSchemaJson = """
@@ -186,10 +187,16 @@ public sealed class DomusMindConfirmedWriteTools
         McpRequestIdentity? identity = null)
     {
         identity ??= identityAccessor.TryGet(out var current) ? current : null;
+        var code = result.StructuredContent is { } structured &&
+                   structured.TryGetProperty("error", out var error) &&
+                   error.TryGetProperty("code", out var errorCode)
+            ? errorCode.GetString()
+            : null;
         logger.LogInformation(
-            "MCP capability audit {Outcome} capability={Capability} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
+            "MCP capability audit {Outcome} capability={Capability} code={Code} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
             result.IsError == true ? "tool_error" : "success",
             "list_item_add",
+            code ?? "none",
             identity?.UserId.ToString() ?? "unknown",
             identity?.HouseholdId.ToString() ?? "unknown",
             identity?.ClientId ?? "unknown",
@@ -252,7 +259,7 @@ public sealed class DomusMindConfirmedWriteTools
         _ => code ?? "INTERNAL_ERROR",
     };
 
-    private sealed class ValidatingTool(McpServerTool innerTool)
+    private sealed class ValidatingTool(McpServerTool innerTool, IServiceProvider services)
         : DelegatingMcpServerTool(innerTool)
     {
         private static readonly HashSet<string> AllowedArguments =
@@ -265,7 +272,11 @@ public sealed class DomusMindConfirmedWriteTools
             var arguments = request.Params.Arguments;
             var validationError = ValidateArguments(arguments);
             if (validationError is not null)
-                return validationError;
+            {
+                var identityAccessor = services.GetRequiredService<IMcpRequestIdentityAccessor>();
+                var logger = services.GetRequiredService<ILogger<DomusMindConfirmedWriteTools>>();
+                return Audited(logger, validationError, identityAccessor);
+            }
 
             return await base.InvokeAsync(request, cancellationToken);
         }
