@@ -32,11 +32,11 @@ public sealed class DomusMindHouseholdReadTools
         OutputSchemaType = typeof(HouseholdListsOutput))]
     [Description("Read the authorized household's shared lists, or one shared list and its ordered items when listId is supplied.")]
     public static async Task<CallToolResult> ListsGet(
-        string? listId,
         IMcpRequestIdentityAccessor identityAccessor,
         IQueryDispatcher dispatcher,
         ILogger<DomusMindHouseholdReadTools> logger,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        string? listId = null)
     {
         if (!identityAccessor.TryGet(out var identity))
             return Audited(logger, "lists_get", Error("ACCESS_DENIED", "Access to this household is denied."), identityAccessor);
@@ -95,8 +95,10 @@ public sealed class DomusMindHouseholdReadTools
         catch (Exception exception)
         {
             return Audited(logger, "lists_get", Error(
-                IsAccessDenied(exception) ? "ACCESS_DENIED" : "INTERNAL_ERROR",
-                IsAccessDenied(exception) ? "Access to this household is denied." : "Household lists could not be read."),
+                IsAccessDenied(exception) ? "ACCESS_DENIED" : IsNotFound(exception) ? "NOT_FOUND" : "INTERNAL_ERROR",
+                IsAccessDenied(exception) ? "Access to this household is denied." : IsNotFound(exception)
+                    ? "The requested household list was not found."
+                    : "Household lists could not be read."),
                 identityAccessor, identity);
         }
     }
@@ -143,6 +145,7 @@ public sealed class DomusMindHouseholdReadTools
                     detail.Status,
                     detail.Slots
                         .OrderBy(slot => DayOffset(ParseDay(slot.DayOfWeek), firstDay))
+                        .ThenBy(slot => MealTypeOffset(slot.MealType))
                         .ThenBy(slot => slot.MealType, StringComparer.Ordinal)
                         .Select(MapMealSlot)
                         .ToArray()));
@@ -253,6 +256,17 @@ public sealed class DomusMindHouseholdReadTools
     private static int DayOffset(System.DayOfWeek day, System.DayOfWeek firstDay)
         => ((int)day - (int)firstDay + 7) % 7;
 
+    private static int MealTypeOffset(string mealType)
+        => mealType switch
+        {
+            "Breakfast" => 0,
+            "MidMorningSnack" => 1,
+            "Lunch" => 2,
+            "AfternoonSnack" => 3,
+            "Dinner" => 4,
+            _ => int.MaxValue,
+        };
+
     private static CallToolResult Audited(ILogger logger, string capability, CallToolResult result, IMcpRequestIdentityAccessor identityAccessor, McpRequestIdentity? identity = null)
     {
         identity ??= identityAccessor.TryGet(out var current) ? current : null;
@@ -282,6 +296,9 @@ public sealed class DomusMindHouseholdReadTools
             || exception is ListException { Code: ListErrorCode.AccessDenied }
             || exception is TasksException { Code: TasksErrorCode.AccessDenied }
             || exception is ResponsibilitiesException { Code: ResponsibilitiesErrorCode.AccessDenied };
+
+    private static bool IsNotFound(Exception exception)
+        => exception is ListException { Code: ListErrorCode.ListNotFound };
 
     private sealed class InvariantCultureScope : IDisposable
     {

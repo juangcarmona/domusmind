@@ -50,6 +50,19 @@ The tools remain thin adapters. They resolve the authenticated MCP household ide
 - Cancellation propagates; retrying a read is safe. Read tools do not use confirmation or idempotency records because they do not change state.
 - Audits identify capability, authenticated user, household, client, trace, and outcome through the existing MCP audit path.
 
+### Selected MCP contracts
+
+All four tools are read-only and derive `householdId` and `userId` from the authenticated MCP request identity. The client cannot provide either value as an authorization input.
+
+| Tool | Inputs | Structured output | Safe errors | Permission boundary |
+| --- | --- | --- | --- | --- |
+| `lists_get` | Optional `listId` UUID; omitted means household-shared summaries | `lists` summaries, or `list` detail with ordered items | `INVALID_INPUT`, `ACCESS_DENIED`, `NOT_FOUND`, `INTERNAL_ERROR` | `GetFamilyListsQuery` or `GetListDetailQuery` with expected token household |
+| `meal_plan_get` | Required exact `weekStart` in `yyyy-MM-dd` | `mealPlan` or `null`; slots are ordered from the household first day and then Breakfast, MidMorningSnack, Lunch, AfternoonSnack, Dinner | `INVALID_INPUT`, `ACCESS_DENIED`, `INTERNAL_ERROR` | `GetFamilyQuery` validates the configured week boundary, then `GetMealPlanQuery` reads the same household |
+| `routines_get` | No client-supplied identity or household arguments | Active/paused routine identifiers, schedules, target member IDs, status, and area IDs | `ACCESS_DENIED`, `INTERNAL_ERROR` | `GetRoutinesByFamilyQuery` |
+| `areas_get` | No client-supplied identity or household arguments | Active responsibility area identifiers, names, colors, and owner context | `ACCESS_DENIED`, `INTERNAL_ERROR` | `GetHouseholdAreasQuery` with archived areas excluded by default |
+
+`meal_plan_get` rejects an unset or invalid household first-day setting and a date that does not start that household's week. A valid week with no plan returns a successful `mealPlan: null`; an existing plan preserves the canonical 35-slot projection while rotating only the day presentation at the MCP boundary. `lists_get` does not invent private-list semantics, and a missing selected list returns `NOT_FOUND` without persistence or exception details.
+
 ## Architecture impact
 
 The change is isolated to the MCP adapter and its contract/boundary tests. It reuses these canonical application queries and owning contexts:
