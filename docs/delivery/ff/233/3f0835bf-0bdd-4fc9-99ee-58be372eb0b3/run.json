@@ -68,6 +68,13 @@
       "commit": "c3c0131",
       "decision": "approve",
       "findings": "No remaining P0-P3 findings. External client/deployment evidence remains pending and is not claimed as verified compatibility."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "done",
+      "commit": "b2ba1ee",
+      "decision": "approve-external-gate-open",
+      "findings": "No remaining P0-P3 repository findings. The artifacts are safe to retain in progress, but named-client write approval and private deployment evidence remain open; Done and integration are not authorized."
     }
   ],
   "corrections": [
