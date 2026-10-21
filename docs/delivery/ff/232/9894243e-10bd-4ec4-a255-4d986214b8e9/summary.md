@@ -9,4 +9,6 @@
 
 Fast Forward started for the next dependency-ready MCP capability slice after confirmed household writes (#231). The scope must select a coherent, evidence-backed subset of list, meal, routine, recipe, responsibility-area, task and calendar capabilities; it must not mechanically expose every endpoint.
 
-The proposal selects household-shared list reads, one-week meal-plan reads, routine reads, and responsibility-area reads. Private-list reads, task queries, recipe operations, new writes, Resources, Prompts, and remote interoperability remain explicitly deferred.
+The proposal selects household-shared list reads, one-week meal-plan reads, routine reads, and responsibility-area reads. Private-list reads, task queries, recipe operations, new writes, Resources, Prompts, and remote interoperability remain explicitly deferred. The proposal correction binds list detail to the MCP household and validates meal weeks against household settings.
+
+Independent proposal review at `477154b` requested changes; those changes are present in `3c4dc6a`. A second proposal review is required before implementation.
