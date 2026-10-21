@@ -7,7 +7,7 @@
   "executorModel": "gpt-5",
   "reviewerModel": "gpt-6.1-sol",
   "maxCorrectionRounds": 3,
-  "status": "running",
+  "status": "awaiting-integration",
   "stages": [
     {
       "name": "refine",
@@ -29,9 +29,9 @@
     },
     {
       "name": "implement",
-      "result": "in-review",
+      "result": "done-awaiting-integration",
       "inputCommit": "9cafa64e45eaa747c357d4a3277072abf1afaeaa",
-      "outputCommit": "4983052cf6eb93c132b4f6dea53111ef959d53c4",
+      "outputCommit": "18b4acbdd682f813cdea097fa49e849716c226c8",
       "evidence": [
         "src/backend/DomusMind.Mcp/Tools/DomusMindConfirmedWriteTools.cs",
         "src/backend/DomusMind.Infrastructure/Mcp/ConfirmedWriteCoordinator.cs",
@@ -40,9 +40,9 @@
         "tests/backend/DomusMind.Infrastructure.Tests/Mcp/ConfirmedWriteCoordinatorPostgreSqlTests.cs",
         "docs/delivery/evidence/issue-231-codeql-triage.md",
         "github:pull/272",
-        "github:actions/backend-ci/39543474369",
+        "github:actions/backend-ci/39544619958",
         "github:actions/codeql/39543474327",
-        "github:actions/docs-ci/39543474100",
+        "github:actions/docs-ci/39544620588",
         "github:codeql-analysis/1993844069",
         "github:codeql-analysis/1993825060"
       ]
@@ -60,6 +60,7 @@
     {"reviewerModel": "gpt-6.1-sol", "kind": "implementation", "commit": "710465d", "decision": "request-changes", "correction": 5, "findings": "Final-head review found malformed tool calls bypassed capability audit logging and the stacked PR had no linked CI run at its non-main base; no P0/P1 defects."},
     {"reviewerModel": "gpt-6.1-sol", "kind": "done", "commit": "b32d831962f7b75025632aeec597d9ac83140c10", "decision": "approve", "findings": "Final independent Done-gate review found no P0/P1 defects. Approval, household authorization, transaction atomicity, idempotency, post-commit notification, and the hosted verification evidence remain consistent. Non-blocking P2s: scoped identity resolution can throw under a scoped accessor in malformed-call auditing, and the deployed HTTPS journey remains unexercised."},
     {"reviewerModel": "gpt-6.1-sol", "kind": "integration", "commit": "39ec02d668766b3a64d21fbe956c901917209725", "decision": "request-changes", "correction": 6, "findings": "Fresh integration audit identified a CodeQL open-alert gate without recorded disposition, missing production-path concurrency/cancellation and cookie/CSRF-boundary evidence, and a scoped identity resolution defect in malformed-call auditing."}
+    ,{"reviewerModel": "gpt-6.1-sol", "kind": "done", "commit": "18b4acbdd682f813cdea097fa49e849716c226c8", "decision": "approve", "findings": "Final independent Done-gate review found no P0/P1 defects. Hosted backend CI passed with 899 tests and zero skips; CodeQL disposition and zero open alerts were verified; scope-validation coverage is explicit. The previously stale PR verification text was corrected before integration."}
   ],
   "corrections": [
     {"gate": "propose", "round": 1, "requestedChanges": "Trusted approval, granted-household binding, mcp.write scope, atomic idempotency, exact contract bounds, and post-commit notification.", "resultingCommit": "9c68ed9ecdd7b92159277028632af6b77dc402e5"},
@@ -70,18 +71,19 @@
     {"gate": "implement", "round": 3, "requestedChanges": "Remove approval references from audit records, resolve approval household/client attribution from the stored binding, distinguish committed writes from retained-result replays, and normalize idempotency keys before validation and persistence.", "resultingCommit": "953181c"},
     {"gate": "implement", "round": 4, "requestedChanges": "Use stored client attribution consistently in approval transition logs, add a separate approval-channel field, and sanitize audit-binding lookup failure logging.", "resultingCommit": "710465d"},
     {"gate": "implement", "round": 5, "requestedChanges": "Audit malformed MCP tool calls through the fixed capability/error audit path and assert those events in the official-client HTTP boundary test.", "resultingCommit": "59af78e"},
-    {"gate": "integration", "round": 6, "requestedChanges": "Add production-path concurrency and cancellation tests, add cookie-authenticated approval CSRF and bearer-boundary tests, register antiforgery MVC filter services, resolve scoped identity through a child scope for malformed-call auditing, and record/disposition the inherited CodeQL findings.", "resultingCommit": "4983052cf6eb93c132b4f6dea53111ef959d53c4"}
+    {"gate": "integration", "round": 6, "requestedChanges": "Add production-path concurrency and cancellation tests, add cookie-authenticated approval CSRF and bearer-boundary tests, register antiforgery MVC filter services, resolve scoped identity through a child scope for malformed-call auditing, and record/disposition the inherited CodeQL findings.", "resultingCommit": "4983052cf6eb93c132b4f6dea53111ef959d53c4"},
+    {"gate": "integration", "round": 7, "requestedChanges": "Enable ValidateScopes in the MCP composition test host so the scoped identity regression test fails if production child-scope resolution is removed; correct stale final-gate wording in the FF evidence.", "resultingCommit": "18b4acbdd682f813cdea097fa49e849716c226c8"}
   ],
-  "stopReason": "Integration-audit corrections are complete on 4983052cf6eb93c132b4f6dea53111ef959d53c4; hosted gates are green and a fresh independent Done review is required before the protected integration gate.",
+  "stopReason": "Final independent Done-gate review approved 18b4acbdd682f813cdea097fa49e849716c226c8 with no P0/P1 findings. Awaiting the protected integration gate for Draft PR #272 into the Epic branch.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/272",
   "links": {
     "issue": "https://github.com/juangcarmona/domusmind/issues/231",
     "epic": "https://github.com/juangcarmona/domusmind/issues/224",
     "proposalHead": "9cafa64e45eaa747c357d4a3277072abf1afaeaa",
-    "implementationHead": "4983052cf6eb93c132b4f6dea53111ef959d53c4",
-    "backendCi": "https://github.com/juangcarmona/domusmind/actions/runs/39543474369",
+    "implementationHead": "18b4acbdd682f813cdea097fa49e849716c226c8",
+    "backendCi": "https://github.com/juangcarmona/domusmind/actions/runs/39544619958",
     "codeql": "https://github.com/juangcarmona/domusmind/actions/runs/39543474327",
-    "docsCi": "https://github.com/juangcarmona/domusmind/actions/runs/39543474100",
+    "docsCi": "https://github.com/juangcarmona/domusmind/actions/runs/39544620588",
     "codeqlCsharpAnalysis": "https://github.com/juangcarmona/domusmind/security/code-scanning/analyses/1993844069",
     "codeqlJavascriptAnalysis": "https://github.com/juangcarmona/domusmind/security/code-scanning/analyses/1993825060"
   }
