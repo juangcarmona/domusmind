@@ -60,7 +60,9 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 var swaggerEnabled = builder.Configuration.GetValue<bool?>("Swagger:Enabled")
     ?? builder.Environment.IsDevelopment();
 
-builder.Services.AddControllers();
+// Add the MVC filter services required by [ValidateAntiForgeryToken] on the
+// first-party MCP approval endpoints; the application remains controller/API based.
+builder.Services.AddControllersWithViews();
 builder.Services.AddAntiforgery();
 builder.Services.AddSingleton<ListChangeNotifier>();
 builder.Services.AddSingleton<IListChangeNotifier>(sp => sp.GetRequiredService<ListChangeNotifier>());

@@ -273,8 +273,9 @@ public sealed class DomusMindConfirmedWriteTools
             var validationError = ValidateArguments(arguments);
             if (validationError is not null)
             {
-                var identityAccessor = services.GetRequiredService<IMcpRequestIdentityAccessor>();
-                var logger = services.GetRequiredService<ILogger<DomusMindConfirmedWriteTools>>();
+                using var scope = services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+                var identityAccessor = scope.ServiceProvider.GetRequiredService<IMcpRequestIdentityAccessor>();
+                var logger = scope.ServiceProvider.GetRequiredService<ILogger<DomusMindConfirmedWriteTools>>();
                 return Audited(logger, validationError, identityAccessor);
             }
 

@@ -113,6 +113,134 @@ public sealed class ConfirmedWriteCoordinatorPostgreSqlTests
         (await verification.McpWriteApprovals.SingleAsync()).Status.Should().Be(McpWriteApprovalStatuses.Approved);
     }
 
+    [PostgreSqlFact]
+    public async Task Concurrent_confirmations_create_one_item_and_one_notification()
+    {
+        await using var database = await PostgreSqlDatabase.CreateAsync();
+        var userId = Guid.NewGuid();
+        var familyId = FamilyId.New();
+        var listId = ListId.New();
+        await database.SeedAsync(familyId, listId);
+
+        await using var approvalDb = new DomusMindDbContext(database.Options);
+        await using var approvalServices = CreateServices(approvalDb);
+        var approvalCoordinator = CreateCoordinator(approvalDb, approvalServices.GetRequiredService<ICommandDispatcher>());
+        var request = new McpListItemAddRequest(
+            userId,
+            familyId.Value,
+            "postgres-concurrency-client",
+            listId.Value,
+            "Milk",
+            null,
+            null,
+            "postgres-concurrency-key",
+            null,
+            "postgres-concurrency-trace");
+        var challenge = await approvalCoordinator.ExecuteListItemAddAsync(request);
+        await approvalCoordinator.ApproveAsync(
+            challenge.ApprovalRequestId!.Value,
+            userId,
+            new McpApprovalContext("postgres-concurrency-client", familyId.Value, true));
+
+        await using var firstDb = new DomusMindDbContext(database.Options);
+        await using var secondDb = new DomusMindDbContext(database.Options);
+        await using var firstServices = CreateServices(firstDb);
+        await using var secondServices = CreateServices(secondDb);
+        var firstPublisher = new RecordingPublisher();
+        var secondPublisher = new RecordingPublisher();
+        var first = CreateCoordinator(firstDb, firstServices.GetRequiredService<ICommandDispatcher>(), firstPublisher);
+        var second = CreateCoordinator(secondDb, secondServices.GetRequiredService<ICommandDispatcher>(), secondPublisher);
+        var confirmedRequest = request with { ApprovalRequestId = challenge.ApprovalRequestId.Value.ToString() };
+
+        var outcomes = await Task.WhenAll(
+            first.ExecuteListItemAddAsync(confirmedRequest),
+            second.ExecuteListItemAddAsync(confirmedRequest));
+
+        outcomes.Should().OnlyContain(outcome => outcome.Status == McpWriteStatuses.Completed);
+        outcomes.Select(outcome => outcome.Result!.ItemId).Distinct().Should().ContainSingle();
+        (firstPublisher.Published.Count + secondPublisher.Published.Count).Should().Be(1);
+
+        await using var verification = new DomusMindDbContext(database.Options);
+        var savedList = await verification.Lists
+            .Include(list => list.Items)
+            .SingleAsync(list => list.Id == listId);
+        savedList.Items.Should().ContainSingle(item => item.Name.Value == "Milk");
+        (await verification.EventLog.CountAsync()).Should().Be(1);
+        (await verification.McpIdempotency.SingleAsync()).Status.Should().Be(McpIdempotencyStatuses.Completed);
+    }
+
+    [PostgreSqlFact]
+    public async Task Cancellation_before_commit_rolls_back_and_allows_same_key_retry()
+    {
+        await using var database = await PostgreSqlDatabase.CreateAsync();
+        var userId = Guid.NewGuid();
+        var familyId = FamilyId.New();
+        var listId = ListId.New();
+        await database.SeedAsync(familyId, listId);
+
+        await using var setupDb = new DomusMindDbContext(database.Options);
+        await using var setupServices = CreateServices(setupDb);
+        var setupCoordinator = CreateCoordinator(setupDb, setupServices.GetRequiredService<ICommandDispatcher>());
+        var request = new McpListItemAddRequest(
+            userId,
+            familyId.Value,
+            "postgres-cancellation-client",
+            listId.Value,
+            "Eggs",
+            null,
+            null,
+            "postgres-cancellation-key",
+            null,
+            "postgres-cancellation-trace");
+        var challenge = await setupCoordinator.ExecuteListItemAddAsync(request);
+        await setupCoordinator.ApproveAsync(
+            challenge.ApprovalRequestId!.Value,
+            userId,
+            new McpApprovalContext("postgres-cancellation-client", familyId.Value, true));
+
+        await using var cancelledDb = new DomusMindDbContext(database.Options);
+        await using var cancelledServices = CreateServices(cancelledDb);
+        var innerDispatcher = cancelledServices.GetRequiredService<ICommandDispatcher>();
+        var entered = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var cancelledCoordinator = CreateCoordinator(
+            cancelledDb,
+            new BlockingDispatcher(innerDispatcher, entered, release));
+        using var cancellation = new CancellationTokenSource();
+        var execute = cancelledCoordinator.ExecuteListItemAddAsync(
+            request with { ApprovalRequestId = challenge.ApprovalRequestId.Value.ToString() },
+            cancellation.Token);
+
+        await entered.Task;
+        cancellation.Cancel();
+        release.SetResult();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await execute);
+
+        await using (var afterCancellation = new DomusMindDbContext(database.Options))
+        {
+            var savedList = await afterCancellation.Lists
+                .Include(list => list.Items)
+                .SingleAsync(list => list.Id == listId);
+            savedList.Items.Should().BeEmpty();
+            (await afterCancellation.EventLog.CountAsync()).Should().Be(0);
+            (await afterCancellation.McpIdempotency.SingleAsync()).Status.Should().Be(McpIdempotencyStatuses.PendingApproval);
+            (await afterCancellation.McpWriteApprovals.SingleAsync()).Status.Should().Be(McpWriteApprovalStatuses.Approved);
+        }
+
+        await using var retryDb = new DomusMindDbContext(database.Options);
+        await using var retryServices = CreateServices(retryDb);
+        var retryCoordinator = CreateCoordinator(retryDb, retryServices.GetRequiredService<ICommandDispatcher>());
+        var retried = await retryCoordinator.ExecuteListItemAddAsync(
+            request with { ApprovalRequestId = challenge.ApprovalRequestId.Value.ToString() });
+
+        retried.Status.Should().Be(McpWriteStatuses.Completed);
+        await using var finalVerification = new DomusMindDbContext(database.Options);
+        (await finalVerification.Lists
+            .Include(list => list.Items)
+            .SingleAsync(list => list.Id == listId)).Items.Should().ContainSingle();
+        (await finalVerification.EventLog.CountAsync()).Should().Be(1);
+    }
+
     private static ServiceProvider CreateServices(DomusMindDbContext db)
     {
         var services = new ServiceCollection();
@@ -126,14 +254,15 @@ public sealed class ConfirmedWriteCoordinatorPostgreSqlTests
 
     private static ConfirmedWriteCoordinator CreateCoordinator(
         DomusMindDbContext db,
-        ICommandDispatcher dispatcher)
+        ICommandDispatcher dispatcher,
+        IListChangePublisher? publisher = null)
     {
         return new ConfirmedWriteCoordinator(
             db,
             dispatcher,
             new AllowFamilyAuthorization(),
             new ActiveUserRepository(),
-            new RecordingPublisher(),
+            publisher ?? new RecordingPublisher(),
             TimeProvider.System,
             Options.Create(new McpConfirmedWriteOptions()),
             NullLogger<ConfirmedWriteCoordinator>.Instance);
@@ -147,6 +276,22 @@ public sealed class ConfirmedWriteCoordinatorPostgreSqlTests
         {
             _ = await inner.Dispatch(command, cancellationToken);
             throw new InvalidOperationException("simulated post-handler failure");
+        }
+    }
+
+    private sealed class BlockingDispatcher(
+        ICommandDispatcher inner,
+        TaskCompletionSource entered,
+        TaskCompletionSource release) : ICommandDispatcher
+    {
+        public async Task<TResponse> Dispatch<TResponse>(
+            ICommand<TResponse> command,
+            CancellationToken cancellationToken = default)
+        {
+            var response = await inner.Dispatch(command, cancellationToken);
+            entered.SetResult();
+            await release.Task;
+            return response;
         }
     }
 
@@ -189,9 +334,8 @@ public sealed class ConfirmedWriteCoordinatorPostgreSqlTests
 
     private sealed class RecordingPublisher : IListChangePublisher
     {
-        public void Publish(Guid listId)
-        {
-        }
+        public List<Guid> Published { get; } = [];
+        public void Publish(Guid listId) => Published.Add(listId);
     }
 
     private sealed class PostgreSqlFactAttribute : FactAttribute

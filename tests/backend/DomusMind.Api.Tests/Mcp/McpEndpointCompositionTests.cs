@@ -275,7 +275,7 @@ public sealed class McpEndpointCompositionTests
             if (registerConfirmedWriteTool)
             {
                 confirmedWriteCoordinator = new TestConfirmedWriteCoordinator();
-                builder.Services.AddSingleton<IMcpRequestIdentityAccessor, TestMcpRequestIdentityAccessor>();
+                builder.Services.AddScoped<IMcpRequestIdentityAccessor, TestMcpRequestIdentityAccessor>();
                 builder.Services.AddSingleton<IMcpConfirmedWriteCoordinator>(confirmedWriteCoordinator);
                 builder.Services.AddSingleton<McpServerTool>(sp => DomusMindConfirmedWriteTools.CreateTool(sp));
             }
