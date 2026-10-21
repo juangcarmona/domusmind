@@ -8,10 +8,21 @@
   "reviewerModel": "gpt-6.1-sol",
   "maxCorrectionRounds": 3,
   "status": "running",
-  "stages": [],
+  "stages": [
+    {
+      "name": "refine",
+      "result": "ready",
+      "inputCommit": "ae2d3754ffbd5ef3c1bc4cd554edfe2b432eecc5",
+      "outputCommit": "8364bf76cc6f2517627bb5de800a7d2eb3f1cf08",
+      "evidence": [
+        "github:issue/232",
+        "docs/delivery/ff/232/9894243e-10bd-4ec4-a255-4d986214b8e9/refined-issue-body.md"
+      ]
+    }
+  ],
   "reviews": [],
   "corrections": [],
-  "stopReason": "Fast Forward started from the Epic branch after issue #231 integration.",
+  "stopReason": "Ready gate passed: actors, scope, dependencies, acceptance criteria, quality expectations, exclusions, and unknowns are explicit. Proceeding to propose.",
   "pullRequest": null,
   "links": {
     "issue": "https://github.com/juangcarmona/domusmind/issues/232",
