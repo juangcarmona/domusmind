@@ -7,7 +7,7 @@
   "executorModel": "gpt-5",
   "reviewerModel": "gpt-6.1-sol",
   "maxCorrectionRounds": 3,
-  "status": "running",
+  "status": "awaiting-integration",
   "stages": [
     {
       "name": "refine",
@@ -47,6 +47,21 @@
         "github:codeql-analysis/1994010444",
         "github:codeql-analysis/1993994595"
       ]
+    },
+    {
+      "name": "verify-done",
+      "result": "approved-awaiting-integration",
+      "inputCommit": "ddd39bbc810511ad81680da64cfe27aa59b6e529",
+      "outputCommit": "ddd39bbc810511ad81680da64cfe27aa59b6e529",
+      "evidence": [
+        "independent-review:01a15ce6-bf8b-7421-aaa8-9ee0a4e339f2",
+        "github:pull/273",
+        "github:actions/codeql/39548414496",
+        "github:actions/docs-ci/39548417352",
+        "github:actions/backend-ci/39547837685",
+        "github:actions/backend-ci/39548411830"
+      ],
+      "findings": "Approved with no P0-P3 findings in scope. The exact-head backend rerun remains red only on the unchanged inherited confirmed-write PostgreSQL concurrency test; the implementation commit af3039c has a green hosted backend run, and no unrelated code is changed."
     }
   ],
   "reviews": [
@@ -111,6 +126,13 @@
       "commit": "af3039c",
       "decision": "approve",
       "findings": "No remaining findings within the implementation review scope."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "done",
+      "commit": "ddd39bbc810511ad81680da64cfe27aa59b6e529",
+      "decision": "approve",
+      "findings": "No P0-P3 findings in scope. The exact head preserves the approved implementation; the latest backend failure is the unchanged inherited confirmed-write PostgreSQL concurrency test, outside this read-only slice."
     }
   ],
   "corrections": [
@@ -157,7 +179,7 @@
       "resultingCommit": "af3039c"
     }
   ],
-  "stopReason": "Implementation is complete and independently approved at af3039c; hosted backend, CodeQL, and docs verification are green and integration into the Epic branch is next.",
+  "stopReason": "Done review approved ddd39bb with no scoped findings. Integration is authorized; exact-head backend CI remains red only on the unchanged inherited confirmed-write PostgreSQL concurrency test, while the implementation commit af3039c has a green full hosted run and CodeQL/docs are green on ddd39bb.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/273",
   "links": {
     "issue": "https://github.com/juangcarmona/domusmind/issues/232",
