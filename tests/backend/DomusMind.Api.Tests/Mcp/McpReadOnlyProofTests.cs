@@ -142,6 +142,41 @@ public sealed class McpReadOnlyProofTests
             Assert.NotNull(tool.ProtocolTool.OutputSchema);
         }
 
+        var listsSchema = Assert.Single(tools, tool => tool.Name == "lists_get").ProtocolTool.OutputSchema!.Value;
+        AssertSchemaObjectProperties(listsSchema, listsSchema, "lists", "list");
+        AssertSchemaRequired(listsSchema, listsSchema, "lists", "list");
+        AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listsSchema, "list"));
+        var listSummarySchema = SchemaProperty(listsSchema, SchemaProperty(listsSchema, listsSchema, "lists").GetProperty("items"), "listId");
+        AssertSchemaFormat(listsSchema, listSummarySchema, "uuid");
+
+        var mealSchema = Assert.Single(tools, tool => tool.Name == "meal_plan_get").ProtocolTool.OutputSchema!.Value;
+        AssertSchemaObjectProperties(mealSchema, mealSchema, "mealPlan");
+        AssertSchemaRequired(mealSchema, mealSchema, "mealPlan");
+        AssertSchemaAllowsNull(mealSchema, SchemaProperty(mealSchema, mealSchema, "mealPlan"));
+        var mealPlanSchema = ResolveSchema(mealSchema, SchemaProperty(mealSchema, mealSchema, "mealPlan"));
+        var mealPlanObject = mealPlanSchema.TryGetProperty("properties", out _)
+            ? mealPlanSchema
+            : (mealPlanSchema.TryGetProperty("anyOf", out var anyOf)
+                ? anyOf.EnumerateArray().Select(branch => ResolveSchema(mealSchema, branch))
+                    .First(branch => branch.TryGetProperty("properties", out _))
+                : mealPlanSchema.GetProperty("oneOf").EnumerateArray()
+                    .Select(branch => ResolveSchema(mealSchema, branch))
+                    .First(branch => branch.TryGetProperty("properties", out _)));
+        AssertSchemaRequired(mealSchema, mealPlanObject, "planId", "weekStart", "weekEnd", "status", "slots");
+        AssertSchemaFormat(mealSchema, SchemaProperty(mealSchema, mealPlanObject, "weekStart"), "date");
+
+        var routinesSchema = Assert.Single(tools, tool => tool.Name == "routines_get").ProtocolTool.OutputSchema!.Value;
+        AssertSchemaObjectProperties(routinesSchema, routinesSchema, "routines");
+        AssertSchemaRequired(routinesSchema, routinesSchema, "routines");
+        var routineSchema = SchemaProperty(routinesSchema, SchemaProperty(routinesSchema, routinesSchema, "routines").GetProperty("items"), "routineId");
+        AssertSchemaFormat(routinesSchema, routineSchema, "uuid");
+
+        var areasSchema = Assert.Single(tools, tool => tool.Name == "areas_get").ProtocolTool.OutputSchema!.Value;
+        AssertSchemaObjectProperties(areasSchema, areasSchema, "areas");
+        AssertSchemaRequired(areasSchema, areasSchema, "areas");
+        var areaSchema = SchemaProperty(areasSchema, SchemaProperty(areasSchema, areasSchema, "areas").GetProperty("items"), "areaId");
+        AssertSchemaFormat(areasSchema, areaSchema, "uuid");
+
         var lists = await client.CallToolAsync("lists_get", new Dictionary<string, object?>());
         Assert.NotEqual(true, lists.IsError);
         var listId = lists.StructuredContent!.Value.GetProperty("lists")[0].GetProperty("listId").GetGuid();
@@ -211,6 +246,16 @@ public sealed class McpReadOnlyProofTests
         Assert.Contains(host.AuditMessages, message => message.Contains($"user={host.RequesterUserId}", StringComparison.Ordinal)
             && message.Contains($"household={host.FamilyAId}", StringComparison.Ordinal)
             && message.Contains("client=synthetic-proof-client", StringComparison.Ordinal));
+        Assert.Contains(host.AuditMessages, message => message.Contains("MCP capability audit success capability=lists_get", StringComparison.Ordinal)
+            && message.Contains($"user={host.RequesterUserId}", StringComparison.Ordinal)
+            && message.Contains($"household={host.FamilyAId}", StringComparison.Ordinal)
+            && message.Contains("client=synthetic-proof-client", StringComparison.Ordinal)
+            && message.Contains("trace=", StringComparison.Ordinal));
+        Assert.Contains(host.AuditMessages, message => message.Contains("MCP capability audit tool_error capability=lists_get", StringComparison.Ordinal)
+            && message.Contains($"user={host.RequesterUserId}", StringComparison.Ordinal)
+            && message.Contains($"household={host.FamilyAId}", StringComparison.Ordinal)
+            && message.Contains("client=synthetic-proof-client", StringComparison.Ordinal)
+            && message.Contains("trace=", StringComparison.Ordinal));
 
         host.Authorization.ThrowUnexpectedFailure = true;
         var safeFailure = await client.CallToolAsync("areas_get", new Dictionary<string, object?>());

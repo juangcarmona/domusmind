@@ -72,7 +72,7 @@ The authoritative generated MCP schemas come from the output records in `src/bac
 - `routines_get` returns required `routines: array`. Each routine requires `routineId: UUID`, `name`, `scope`, `kind`, `frequency`, `daysOfWeek: array`, `daysOfMonth: array`, nullable `monthOfYear`, nullable `time` and `endTime` strings in `HH:mm`, `targetMemberIds: array`, `status`, and nullable `areaId`.
 - `areas_get` returns required `areas: array`. Each area requires `areaId: UUID`, `name`, `color`, nullable `primaryOwnerId`, nullable `primaryOwnerName`, and `secondaryOwnerIds: array`. Archived areas are not returned by this initial contract.
 
-The error envelope is always `{ code: string, message: string }` with `isError=true`: messages are stable, non-sensitive summaries and never contain exception text, persistence details, or data from another household.
+For tool-level errors after MCP argument binding, the structured error envelope is `{ code: string, message: string }` with `isError=true`: messages are stable, non-sensitive summaries and never contain exception text, persistence details, or data from another household. Transport failures and SDK argument-binding failures remain governed by the MCP SDK response contract and are not converted by these tool methods.
 
 ## Architecture impact
 

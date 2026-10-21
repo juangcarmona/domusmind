@@ -1,3 +1,4 @@
+using System.Text.Json;
 using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Features.Family.GetFamily;
 using DomusMind.Application.Features.Lists.GetFamilyLists;
@@ -64,7 +65,8 @@ public sealed class McpHouseholdReadToolsTests
     {
         var dispatcher = new HouseholdReadDispatcher
         {
-            Family = new FamilyResponse(HouseholdId, "Home", "en", DateTime.UtcNow, 2, "sunday", "yyyy-MM-dd")
+            Family = new FamilyResponse(HouseholdId, "Home", "en", DateTime.UtcNow, 2, "sunday", "yyyy-MM-dd"),
+            MealSlots = CreateMealSlots()
         };
 
         var invalid = await DomusMindHouseholdReadTools.MealPlanGet(
@@ -78,11 +80,7 @@ public sealed class McpHouseholdReadToolsTests
             NullLogger<DomusMindHouseholdReadTools>.Instance, CancellationToken.None);
         Assert.NotEqual(true, valid.IsError);
         var slots = valid.StructuredContent!.Value.GetProperty("mealPlan").GetProperty("slots");
-        Assert.Equal("Sunday", slots[0].GetProperty("dayOfWeek").GetString());
-        Assert.Equal("Breakfast", slots[0].GetProperty("mealType").GetString());
-        Assert.Equal("Lunch", slots[1].GetProperty("mealType").GetString());
-        Assert.Equal("Dinner", slots[2].GetProperty("mealType").GetString());
-        Assert.Equal("Monday", slots[3].GetProperty("dayOfWeek").GetString());
+        AssertMealSequence(slots, ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]);
 
         dispatcher.Family = dispatcher.Family with { FirstDayOfWeek = "monday" };
         dispatcher.MealSlots = Enumerable.Range(0, 35)
@@ -96,7 +94,8 @@ public sealed class McpHouseholdReadToolsTests
             NullLogger<DomusMindHouseholdReadTools>.Instance, CancellationToken.None);
         Assert.NotEqual(true, monday.IsError);
         Assert.Equal(35, monday.StructuredContent!.Value.GetProperty("mealPlan").GetProperty("slots").GetArrayLength());
-        Assert.Equal("Monday", monday.StructuredContent.Value.GetProperty("mealPlan").GetProperty("slots")[0].GetProperty("dayOfWeek").GetString());
+        AssertMealSequence(monday.StructuredContent.Value.GetProperty("mealPlan").GetProperty("slots"),
+            ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
 
         dispatcher.Family = dispatcher.Family with { FirstDayOfWeek = null };
         var unset = await DomusMindHouseholdReadTools.MealPlanGet(
@@ -105,6 +104,25 @@ public sealed class McpHouseholdReadToolsTests
         Assert.True(unset.IsError);
         Assert.Equal("INVALID_INPUT", unset.StructuredContent!.Value.GetProperty("code").GetString());
     }
+
+    private static void AssertMealSequence(JsonElement slots, IReadOnlyList<string> days)
+    {
+        Assert.Equal(35, slots.GetArrayLength());
+        var meals = new[] { "Breakfast", "MidMorningSnack", "Lunch", "AfternoonSnack", "Dinner" };
+        for (var index = 0; index < slots.GetArrayLength(); index++)
+        {
+            Assert.Equal(days[index / meals.Length], slots[index].GetProperty("dayOfWeek").GetString());
+            Assert.Equal(meals[index % meals.Length], slots[index].GetProperty("mealType").GetString());
+        }
+    }
+
+    private static IReadOnlyList<MealSlotDetail> CreateMealSlots()
+        => Enumerable.Range(0, 35)
+            .Select(index => new MealSlotDetail(
+                ((DomusMind.Domain.MealPlanning.Enums.DayOfWeek)(index / 5)).ToString(),
+                ((MealType)(index % 5)).ToString(),
+                "Unplanned", null, null, null, false, false))
+            .ToArray();
 
     [Fact]
     public async Task Routines_and_areas_get_return_domain_owned_read_models()
@@ -138,13 +156,7 @@ public sealed class McpHouseholdReadToolsTests
         public Guid? ExpectedDetailFamilyId { get; private set; }
         public bool MissingList { get; init; }
         public FamilyResponse Family { get; set; } = new(HouseholdId, "Home", "en", DateTime.UtcNow, 2, "monday", "yyyy-MM-dd");
-        public IReadOnlyList<MealSlotDetail> MealSlots { get; set; } =
-        [
-            new("Monday", "Dinner", "FreeText", null, "Pasta", null, false, false),
-            new("Sunday", "Dinner", "FreeText", null, "Soup", null, false, false),
-            new("Sunday", "Breakfast", "FreeText", null, "Toast", null, false, false),
-            new("Sunday", "Lunch", "FreeText", null, "Rice", null, false, false),
-        ];
+        public IReadOnlyList<MealSlotDetail> MealSlots { get; set; } = CreateMealSlots();
 
         public Task<TResponse> Dispatch<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken = default)
         {
