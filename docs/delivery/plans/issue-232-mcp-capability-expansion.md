@@ -66,7 +66,7 @@ The existing internal mediator, domain rules, `IFamilyAuthorizationService`, str
 
 1. Add MCP-specific contract/output records and a shared read-tool mapping/error helper where needed, preserving the existing `DomusMindReadOnlyTools` behavior.
 2. Implement `lists_get` with household-shared summary/detail behavior and explicit private-list exclusion.
-3. Implement `meal_plan_get` with bounded week input, `GetFamilyQuery` week-boundary validation, and existing full `GetMealPlanQuery` projection.
+3. Implement `meal_plan_get` with bounded week input, `GetFamilyQuery` week-boundary validation, and existing full `GetMealPlanQuery` projection. Map the returned domain-day slots into household-first order at the MCP boundary because the current domain enum/query projection is Monday-first; do not silently change the canonical application query ordering.
 4. Implement `routines_get` with authorized household scope and stable routine fields.
 5. Implement `areas_get` with authorized household scope, owner names, and archived filtering only if the MCP contract has a demonstrated need; otherwise default to active areas.
 6. Register or discover the tools through the existing MCP composition path without adding a second server or transport.
@@ -78,7 +78,7 @@ The existing internal mediator, domain rules, `IFamilyAuthorizationService`, str
 
 - Unit/contract: date/week validation, output schema shape, bounded list detail, enum/string serialization, empty results, and safe error envelopes.
 - Application integration: dispatch each existing query with the authenticated household/user; verify list detail rejects a list in another token household even when the user belongs to both households.
-- Meal-week contract: verify configured Sunday, configured Monday, mismatched dates, unset setting, missing plan, and full 35-slot/plan-status output behavior.
+- Meal-week contract: verify configured Sunday and Monday week starts, reject mismatched dates and unset settings, preserve missing-plan/full-35-slot/plan-status semantics, and assert Sunday-first and Monday-first output ordering with meal-type ordering within each day.
 - MCP composition: every selected tool is discoverable, marked read-only, and does not expose persistence services or unbounded arguments.
 - HTTP boundary: authorized client calls receive only their household data; unauthenticated, wrong-household, malformed, and cross-household identifiers fail safely and produce audit outcomes.
 - Regression: existing agenda, member, confirmed-write, OAuth, and MCP origin/transport tests remain green.
