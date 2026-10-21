@@ -108,7 +108,7 @@ For the OpenAI Responses API, the integrating application performs OAuth registr
 - The repository contains a repeatable standards-level HTTP/OAuth/read-only verification procedure and records its result.
 - ChatGPT and Claude paths are each either evidenced by a real client test or marked with the precise unavailable credential/deployment blocker and the exact next test required.
 - Local STDIO and self-hosted private paths are separate profiles; no credential is copied into source, committed configuration, logs, or evidence.
-- Write approval and server-side authorization are tested independently of client prompts; client approval never grants household authority.
+- Server-side authorization is tested independently of client prompts; client approval never grants household authority. Named-client write-approval evidence remains pending and is a release gate.
 - Public HTTPS, reverse-proxy, TLS, private-route, tunnel and reachability constraints are documented for operators.
 - The plan and evidence link back to the canonical Product Change and Epic without changing existing domain ownership.
 

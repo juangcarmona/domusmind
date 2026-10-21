@@ -27,7 +27,7 @@ These prove the server-side protocol and authorization contract. They do not pro
 | Claude remote connector | Protocol-supported / client unverified | Add the remote URL in Claude/Claude Desktop, complete OAuth/DCR, verify refresh, read, write confirmation and plan/workspace restrictions. |
 | Claude Code remote HTTP | Protocol-supported / client unverified | Exercise remote OAuth from an interactive client with the exact fixed-port loopback callback registered; separately record headless limitations. |
 | Local STDIO | Deferred / not supported by current server slice | Requires a separate local adapter and credential/trust decision; no broad PAT is inferred from the current OAuth resource. |
-| Custom/self-hosted agent | Conditional | Use the deployment runbook with a real HTTPS or private overlay path; retain the same OAuth and household authorization tests. |
+| Custom/self-hosted agent | Conditional, unverified and unsupported for release from this slice | No deliberate HTTPS/private-overlay topology is available here. Before release, provide the topology, TLS/proxy/tunnel reachability, OAuth and household authorization evidence from the deployment runbook. |
 
 ## Safety constraints
 
@@ -38,6 +38,8 @@ These prove the server-side protocol and authorization contract. They do not pro
 
 ## Release decision
 
-Until the external tests are run, DomusMind can claim MCP protocol compatibility and a tested server-side OAuth/read/write contract. It must not claim verified ChatGPT or Claude product compatibility, broad self-hosted remote support, or local STDIO support.
+Until the external tests are run, DomusMind can claim MCP protocol compatibility and a tested server-side OAuth/read/write contract. It must not claim verified ChatGPT or Claude product compatibility, broad self-hosted remote support, or local STDIO support. The self-hosted/private remote profile is explicitly unsupported for release from this slice until its deployment path is exercised.
 
 The current server's OAuth registration boundary is pre-registered public clients with exact configured redirect URIs. DCR and CIMD are not implemented by this delivery; a client requiring either remains conditional or blocked until a separate design and security review.
+
+Client-side write approval remains an open external gate. Existing server-side confirmation tests are necessary evidence, but they do not prove a named client's approval UI or policy behavior.

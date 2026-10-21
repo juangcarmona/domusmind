@@ -7,7 +7,7 @@
   "executorModel": "gpt-5",
   "reviewerModel": "gpt-6.1-sol",
   "maxCorrectionRounds": 3,
-  "status": "awaiting-integration",
+  "status": "running",
   "stages": [
     {
       "name": "refine",
@@ -30,12 +30,13 @@
     },
     {
       "name": "implement",
-      "result": "done-awaiting-integration",
+      "result": "evidence-incomplete-external-gate",
       "inputCommit": "c3c0131",
       "outputCommit": "c3c0131",
       "evidence": [
         "docs/delivery/plans/issue-233-mcp-client-interoperability.md",
         "docs/delivery/assessments/issue-233-mcp-client-interoperability.md",
+        "docs/delivery/evidence/issue-233-mcp-client-interoperability.md",
         "docs/delivery/ff/233/3f0835bf-0bdd-4fc9-99ee-58be372eb0b3/run.json",
         "local:dotnet-build-release",
         "local:dotnet-test-release-898-passed-7-skipped",
@@ -46,7 +47,7 @@
         "local:openspec-citations-816-current-0-stale-0-tampered-0-unresolved",
         "external-blocker:chatgpt-and-claude-account-deployment-access-unavailable"
       ],
-      "findings": "Standards-level and repository evidence is complete. Named hosted-client verification remains blocked and is explicitly not claimed as verified compatibility."
+      "findings": "Repository and standards-level evidence is complete. Named hosted-client write-approval verification and deliberate private deployment evidence remain open external gates and are explicitly not claimed as verified compatibility."
     }
   ],
   "reviews": [
@@ -74,7 +75,7 @@
       "resultingCommit": "c3c0131"
     }
   ],
-  "stopReason": "Implementation/evidence is complete and ready for Done review. External ChatGPT/Claude account and deployment evidence is explicitly blocked until eligible access is provided; no unsupported compatibility claim is made.",
+  "stopReason": "Repository evidence is complete, but Done/integration is held by the open external client write-approval and private deployment gates. No unsupported compatibility claim is made.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/274",
   "links": {
     "issue": "https://github.com/juangcarmona/domusmind/issues/233",
