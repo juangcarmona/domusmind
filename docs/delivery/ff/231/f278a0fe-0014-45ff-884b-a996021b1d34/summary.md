@@ -3,7 +3,7 @@
 - Work item: #231
 - Branch: `feat/231-confirmed-mcp-household-writes`
 - Proposal head: `9cafa64e45eaa747c357d4a3277072abf1afaeaa`
-- Implementation head: `53623d6`
+- Implementation/evidence head: `0823a68` (application/test head: `53623d6`)
 - Draft PR: [#272](https://github.com/juangcarmona/domusmind/pull/272)
 - Status: awaiting integration
 
@@ -23,4 +23,4 @@ The stacked Draft PR targets the Epic branch rather than `main`, so normal pull-
 
 The final independent Done-gate review approved `b32d831` with no P0/P1 findings. The run is awaiting the separate protected integration gate; PR #272 remains Draft and stacked on the Epic branch. Non-blocking P2s are retained: malformed-call audit identity resolution can throw when the accessor is scoped, and the deployed HTTPS approval/write journey remains unexercised.
 
-Known inherited warnings remain documented rather than silently treated as resolved: Kiota has a high-severity package advisory, MessagePack has a moderate-severity advisory, and the EF tool is older than the runtime. The next independent done-gate review is the next FF step; integration remains a separate protected gate.
+Known inherited warnings remain documented rather than silently treated as resolved: Kiota has a high-severity package advisory, MessagePack has a moderate-severity advisory, and the EF tool is older than the runtime. The independent Done gate has passed; integration remains a separate protected gate.
