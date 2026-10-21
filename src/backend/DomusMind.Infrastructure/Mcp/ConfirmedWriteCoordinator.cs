@@ -56,6 +56,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         McpListItemAddRequest request,
         CancellationToken cancellationToken = default)
     {
+        request = NormalizeRequest(request);
         for (var attempt = 0; attempt < 2; attempt++)
         {
             try
@@ -238,7 +239,10 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
             result.ItemId,
             request.TraceId);
         _listChanges.Publish(result.ListId);
-        return new McpConfirmedWriteOutcome(McpWriteStatuses.Completed, Result: result);
+        return new McpConfirmedWriteOutcome(
+            McpWriteStatuses.Completed,
+            Result: result,
+            IdempotencyOutcome: "committed");
     }
 
     public async Task<McpWriteApprovalView?> GetApprovalAsync(
@@ -263,7 +267,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         CancellationToken cancellationToken = default)
     {
         var outcome = await ApproveCoreAsync(approvalRequestId, userId, context, cancellationToken);
-        AuditApprovalDecision("approve", approvalRequestId, userId, context, outcome);
+        await AuditApprovalDecisionAsync("approve", approvalRequestId, userId, context, outcome);
         return outcome;
     }
 
@@ -327,7 +331,7 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         CancellationToken cancellationToken = default)
     {
         var outcome = await CancelCoreAsync(approvalRequestId, userId, context, cancellationToken);
-        AuditApprovalDecision("cancel", approvalRequestId, userId, context, outcome);
+        await AuditApprovalDecisionAsync("cancel", approvalRequestId, userId, context, outcome);
         return outcome;
     }
 
@@ -393,7 +397,10 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
                 : JsonSerializer.Deserialize<DomusMind.Contracts.Lists.AddItemToListResponse>(idempotency.ResultJson);
             return result is null
                 ? Error("OPERATION_STATUS_UNKNOWN", "The completed operation result is unavailable.")
-                : new McpConfirmedWriteOutcome(McpWriteStatuses.Completed, Result: result);
+                : new McpConfirmedWriteOutcome(
+                    McpWriteStatuses.Completed,
+                    Result: result,
+                    IdempotencyOutcome: "replayed");
         }
 
         if (idempotency.Status is McpIdempotencyStatuses.Cancelled or McpIdempotencyStatuses.Tombstone)
@@ -474,6 +481,16 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
             return Error("INVALID_INPUT", "clientId is too long.");
         return null;
     }
+
+    private static McpListItemAddRequest NormalizeRequest(McpListItemAddRequest request) =>
+        request with
+        {
+            Name = request.Name.Trim(),
+            IdempotencyKey = request.IdempotencyKey.Trim(),
+            ApprovalRequestId = string.IsNullOrWhiteSpace(request.ApprovalRequestId)
+                ? null
+                : request.ApprovalRequestId.Trim(),
+        };
 
     private static string ComputePayloadHash(McpListItemAddRequest request)
     {
@@ -656,27 +673,49 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
             request.TraceId);
     }
 
-    private void AuditApprovalDecision(
+    private async Task AuditApprovalDecisionAsync(
         string decision,
         Guid approvalRequestId,
         Guid userId,
         McpApprovalContext context,
         McpConfirmedWriteOutcome outcome)
     {
+        Guid? householdId = context.HouseholdId;
+        string? clientId = context.ClientId;
+        try
+        {
+            var binding = await _db.McpWriteApprovals
+                .AsNoTracking()
+                .Where(x => x.Id == approvalRequestId)
+                .Select(x => new ApprovalAuditBinding(x.FamilyId, x.ClientId))
+                .SingleOrDefaultAsync(CancellationToken.None);
+            if (binding is not null)
+            {
+                householdId = binding.HouseholdId;
+                clientId = binding.ClientId;
+            }
+        }
+        catch (Exception exception)
+        {
+            _logger.LogWarning(exception, "MCP confirmed write approval audit binding lookup failed");
+        }
+
         _logger.LogInformation(
-            "MCP confirmed write approval audit operation={Operation} decision={Decision} approvalRequestId={ApprovalRequestId} status={Status} code={Code} user={UserId} client={ClientId} trace={TraceId}",
+            "MCP confirmed write approval audit operation={Operation} decision={Decision} status={Status} code={Code} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
             OperationNamespace,
             decision,
-            approvalRequestId,
             outcome.Status,
             outcome.Code ?? "none",
             userId,
-            context.ClientId ?? "first-party",
+            householdId?.ToString() ?? "unknown",
+            clientId ?? "unknown",
             context.TraceId ?? "unknown");
     }
 
+    private sealed record ApprovalAuditBinding(Guid HouseholdId, string ClientId);
+
     private static string IdempotencyOutcome(McpConfirmedWriteOutcome outcome) =>
-        outcome.Code switch
+        outcome.IdempotencyOutcome ?? outcome.Code switch
         {
             "IDEMPOTENCY_KEY_REUSED" => "conflict",
             "IDEMPOTENCY_REPLAYED" or "IDEMPOTENCY_RESULT_EXPIRED" => "replay_rejected",

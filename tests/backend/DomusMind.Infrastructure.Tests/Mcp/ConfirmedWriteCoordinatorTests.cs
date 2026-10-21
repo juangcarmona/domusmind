@@ -60,6 +60,7 @@ public sealed class ConfirmedWriteCoordinatorTests
 
         completed.Status.Should().Be(McpWriteStatuses.Completed);
         completed.Result!.Name.Should().Be("Milk");
+        completed.IdempotencyOutcome.Should().Be("committed");
         dispatcher.Calls.Should().Be(1);
         publisher.Published.Should().ContainSingle().Which.Should().Be(listId);
 
@@ -68,6 +69,7 @@ public sealed class ConfirmedWriteCoordinatorTests
 
         replay.Status.Should().Be(McpWriteStatuses.Completed);
         replay.Result!.ItemId.Should().Be(completed.Result.ItemId);
+        replay.IdempotencyOutcome.Should().Be("replayed");
         dispatcher.Calls.Should().Be(1);
     }
 

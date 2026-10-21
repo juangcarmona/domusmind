@@ -194,6 +194,11 @@ public sealed class McpEndpointCompositionTests
                 ["name"] = "Milk",
                 ["idempotencyKey"] = "key",
             },
+            new()
+            {
+                ["listId"] = Guid.NewGuid().ToString(),
+                ["name"] = "Milk",
+            },
         })
         {
             var result = await mcpClient.CallToolAsync("list_item_add", arguments);

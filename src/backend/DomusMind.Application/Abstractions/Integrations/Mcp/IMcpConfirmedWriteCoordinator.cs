@@ -37,7 +37,8 @@ public sealed record McpConfirmedWriteOutcome(
     Guid? ApprovalRequestId = null,
     DateTime? ExpiresAtUtc = null,
     McpListItemAddAction? Action = null,
-    AddItemToListResponse? Result = null);
+    AddItemToListResponse? Result = null,
+    [property: JsonIgnore] string? IdempotencyOutcome = null);
 
 public sealed record McpWriteApprovalView(
     Guid ApprovalRequestId,
