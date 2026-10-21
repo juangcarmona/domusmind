@@ -3,13 +3,13 @@
 - Work item: #231
 - Branch: `feat/231-confirmed-mcp-household-writes`
 - Proposal head: `9cafa64e45eaa747c357d4a3277072abf1afaeaa`
-- Implementation head: `4033fff`
+- Implementation head: `953181c`
 - Draft PR: [#272](https://github.com/juangcarmona/domusmind/pull/272)
 - Status: implementation review
 
-The issue reached Ready, the proposal artifacts were created, and the independent proposal review approved the final head after three bounded correction rounds. The approved pilot is implemented on the child branch as a confirmed `list_item_add` MCP write. The implementation keeps MCP thin, reuses the existing list command, requires `mcp.write`, binds approval and execution to household/list authorization, supports explicit confirmation, idempotency, expiry, cancellation, bounded result retention, post-commit notification, structured outcomes, and an explicit production invocation boundary for untrusted tool arguments.
+The issue reached Ready, the proposal artifacts were created, and the independent proposal review approved the final head after three bounded correction rounds. The approved pilot is implemented on the child branch as a confirmed `list_item_add` MCP write. The implementation keeps MCP thin, reuses the existing list command, requires `mcp.write`, binds approval and execution to household/list authorization, supports explicit confirmation, idempotency, expiry, cancellation, bounded result retention, post-commit notification, structured outcomes, an explicit production invocation boundary for untrusted tool arguments, and attributable approval/idempotency audit outcomes.
 
-Verification on `4033fff`:
+Verification on `953181c`:
 
 - Release build: passed.
 - Release tests: 890 passed, 5 skipped PostgreSQL integration tests because `DOMUSMIND_TEST_POSTGRES` is not enabled in this environment. The two new skips are the real list-handler/event-log success and rollback transaction tests.
