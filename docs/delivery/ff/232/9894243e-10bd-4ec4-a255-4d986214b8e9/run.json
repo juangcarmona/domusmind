@@ -21,9 +21,9 @@
     },
     {
       "name": "propose",
-      "result": "in-review",
+      "result": "approved",
       "inputCommit": "ed07c711768f68399320a24e5a98c8be826cb244",
-      "outputCommit": "48bc1093998fef9bd5359e67ef645c3d8aeafa68",
+      "outputCommit": "90be0fcd644e7d83ec80b0f17fbd92c7dcd8ca3e",
       "evidence": [
         "docs/delivery/plans/issue-232-mcp-capability-expansion.md",
         "github:pull/273"
@@ -61,7 +61,7 @@
       "resultingCommit": "48bc1093998fef9bd5359e67ef645c3d8aeafa68"
     }
   ],
-  "stopReason": "Draft PR #273 contains the reviewed proposal and is awaiting the independent plan review before implementation.",
+  "stopReason": "The independent proposal review approved the plan; implementation is proceeding on the approved branch.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/273",
   "links": {
     "issue": "https://github.com/juangcarmona/domusmind/issues/232",

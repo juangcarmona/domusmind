@@ -5,4 +5,5 @@ namespace DomusMind.Application.Features.Lists.GetListDetail;
 
 public sealed record GetListDetailQuery(
     Guid ListId,
-    Guid RequestedByUserId) : IQuery<GetListDetailResponse>;
+    Guid RequestedByUserId,
+    Guid? ExpectedFamilyId = null) : IQuery<GetListDetailResponse>;

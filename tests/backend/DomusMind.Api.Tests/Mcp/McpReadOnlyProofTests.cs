@@ -44,7 +44,7 @@ public sealed class McpReadOnlyProofTests
         await using var client = await host.CreateClientAsync();
 
         var tools = await client.ListToolsAsync();
-        Assert.Equal(["agenda_get", "household_members_list"],
+        Assert.Equal(["agenda_get", "areas_get", "household_members_list", "lists_get", "meal_plan_get", "routines_get"],
             tools.Select(tool => tool.Name).OrderBy(name => name));
         var agendaTool = Assert.Single(tools, tool => tool.Name == "agenda_get");
         AssertSchemaProperties(agendaTool.ProtocolTool.InputSchema, "from", "to");

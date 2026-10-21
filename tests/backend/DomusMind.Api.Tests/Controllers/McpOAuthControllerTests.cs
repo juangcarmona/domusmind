@@ -84,7 +84,7 @@ public sealed class McpOAuthControllerTests
         });
 
         var tools = await mcpClient.ListToolsAsync();
-        Assert.Equal(["agenda_get", "household_members_list"], tools.Select(tool => tool.Name).OrderBy(name => name));
+        Assert.Equal(["agenda_get", "areas_get", "household_members_list", "lists_get", "meal_plan_get", "routines_get"], tools.Select(tool => tool.Name).OrderBy(name => name));
         Assert.DoesNotContain(tools, tool => tool.Name is "tasks_list" or "plan_create" or "list_item_add");
 
         var agendaResult = await mcpClient.CallToolAsync("agenda_get", new Dictionary<string, object?>
@@ -346,7 +346,7 @@ public sealed class McpOAuthControllerTests
             ClientInfo = new Implementation { Name = "DomusMind.Api.Tests", Version = "1.0" },
             ProtocolVersion = "2026-07-28",
         });
-        Assert.Equal(["agenda_get", "household_members_list"],
+        Assert.Equal(["agenda_get", "areas_get", "household_members_list", "lists_get", "meal_plan_get", "routines_get"],
             (await mcpClient.ListToolsAsync()).Select(tool => tool.Name).OrderBy(name => name));
 
         await host.DisableTestUserAsync();
