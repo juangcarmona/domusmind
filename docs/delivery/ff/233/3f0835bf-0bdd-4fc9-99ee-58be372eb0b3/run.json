@@ -20,7 +20,7 @@
       "name": "propose",
       "result": "approved",
       "inputCommit": "096d9344fa54376c3c41b5a5f74956de897c06b4",
-      "outputCommit": "c3c0131",
+      "outputCommit": "9844534",
       "evidence": [
         "docs/delivery/plans/issue-233-mcp-client-interoperability.md",
         "docs/delivery/assessments/issue-233-mcp-client-interoperability.md",
@@ -45,6 +45,9 @@
         "local:prodshape-validate-0-errors-59-warnings",
         "local:prodshape-integration-check-passed",
         "local:openspec-citations-816-current-0-stale-0-tampered-0-unresolved",
+        "github:actions/backend-ci/39550024773",
+        "github:actions/docs-ci/39550021799",
+        "github:actions/codeql/39550027364",
         "external-blocker:chatgpt-and-claude-account-deployment-access-unavailable"
       ],
       "findings": "Repository and standards-level evidence is complete. Named hosted-client write-approval verification and deliberate private deployment evidence remain open external gates and are explicitly not claimed as verified compatibility."

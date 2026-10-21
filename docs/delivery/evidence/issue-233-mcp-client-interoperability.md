@@ -1,6 +1,6 @@
 # MCP client interoperability verification evidence (#233)
 
-- Tested commit: `02343f8`
+- Repository evidence commit: `9844534` (the code under test is unchanged from `02343f8`)
 - Branch: `feat/233-mcp-client-interoperability`
 - Date: 2026-10-21
 - Scope: repository and standards-level verification only; no external account or private deployment credentials were available.
@@ -20,6 +20,16 @@
 | `dotnet restore DomusMind.slnx` | Passed; inherited Kiota/MessagePack advisories reported |
 | `dotnet build DomusMind.slnx -c Release --no-restore` | Passed, 0 errors; 6 inherited dependency warnings |
 | `dotnet test DomusMind.slnx -c Release --no-build` | Passed: Domain 250, Infrastructure 60, Application 527, API 61; 7 known PostgreSQL tests skipped |
+
+## Hosted checks
+
+All three hosted workflows passed for exact head `98445345bea4d5369726f59172d09df8dfb613d3`:
+
+- [backend CI run 39550024773](https://github.com/juangcarmona/domusmind/actions/runs/39550024773)
+- [docs CI run 39550021799](https://github.com/juangcarmona/domusmind/actions/runs/39550021799)
+- [CodeQL run 39550027364](https://github.com/juangcarmona/domusmind/actions/runs/39550027364)
+
+CodeQL reported only inherited workflow runtime deprecation annotations; no security finding was introduced by this documentation-only slice.
 
 ## Existing protocol evidence reused
 
