@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "runId": "9894243e-10bd-4ec4-a255-4d986214b8e9",
+  "workItem": "232",
+  "branch": "feat/232-expand-mcp-capabilities",
+  "startedAt": "2026-10-21T04:42:08Z",
+  "executorModel": "gpt-5",
+  "reviewerModel": "gpt-6.1-sol",
+  "maxCorrectionRounds": 3,
+  "status": "running",
+  "stages": [],
+  "reviews": [],
+  "corrections": [],
+  "stopReason": "Fast Forward started from the Epic branch after issue #231 integration.",
+  "pullRequest": null,
+  "links": {
+    "issue": "https://github.com/juangcarmona/domusmind/issues/232",
+    "epic": "https://github.com/juangcarmona/domusmind/issues/224"
+  }
+}
