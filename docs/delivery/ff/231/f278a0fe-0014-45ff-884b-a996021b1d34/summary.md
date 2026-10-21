@@ -19,6 +19,6 @@ Verification on `53623d6`:
 - EF pending-model check: no changes since the last migration.
 - Local production PostgreSQL and remote HTTPS write journey: not exercised; the environment has no enabled PostgreSQL integration gate or deployed MCP endpoint.
 
-The stacked Draft PR targets the Epic branch rather than `main`, so normal pull-request workflows do not auto-report checks. Manual backend and documentation workflow dispatches passed; the manually dispatched CodeQL run is still completing ([run 39521468558](https://github.com/juangcarmona/domusmind/actions/runs/39521468558)).
+The stacked Draft PR targets the Epic branch rather than `main`, so normal pull-request workflows do not auto-report checks. Manual backend, documentation, and CodeQL workflow dispatches passed ([backend run 39521465654](https://github.com/juangcarmona/domusmind/actions/runs/39521465654), [CodeQL run 39521468558](https://github.com/juangcarmona/domusmind/actions/runs/39521468558)).
 
 Known inherited warnings remain documented rather than silently treated as resolved: Kiota has a high-severity package advisory, MessagePack has a moderate-severity advisory, and the EF tool is older than the runtime. The next independent done-gate review is the next FF step; integration remains a separate protected gate.

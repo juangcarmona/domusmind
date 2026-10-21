@@ -61,7 +61,7 @@
     {"gate": "implement", "round": 4, "requestedChanges": "Use stored client attribution consistently in approval transition logs, add a separate approval-channel field, and sanitize audit-binding lookup failure logging.", "resultingCommit": "710465d"},
     {"gate": "implement", "round": 5, "requestedChanges": "Audit malformed MCP tool calls through the fixed capability/error audit path and assert those events in the official-client HTTP boundary test.", "resultingCommit": "59af78e"}
   ],
-  "stopReason": "Hosted backend CI passed on 53623d6; awaiting CodeQL completion and the final independent done-gate review before integration.",
+  "stopReason": "Hosted backend CI and CodeQL passed; awaiting the final independent done-gate review before integration.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/272",
   "links": {
     "issue": "https://github.com/juangcarmona/domusmind/issues/231",
