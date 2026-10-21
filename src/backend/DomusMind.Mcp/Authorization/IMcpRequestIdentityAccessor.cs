@@ -4,7 +4,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace DomusMind.Mcp.Authorization;
 
-public sealed record McpRequestIdentity(Guid UserId, Guid HouseholdId, string ClientId, string TraceId);
+public sealed record McpRequestIdentity(
+    Guid UserId,
+    Guid HouseholdId,
+    string ClientId,
+    string TraceId,
+    IReadOnlySet<string>? Scopes = null)
+{
+    public bool HasScope(string scope) => Scopes?.Contains(scope) == true;
+}
 
 public interface IMcpRequestIdentityAccessor
 {
@@ -29,7 +37,10 @@ internal sealed class HttpContextMcpRequestIdentityAccessor(IHttpContextAccessor
             userId,
             householdId,
             principal.FindFirst("client_id")?.Value ?? "unknown",
-            Activity.Current?.TraceId.ToString() ?? httpContextAccessor.HttpContext?.TraceIdentifier ?? "unknown");
+            Activity.Current?.TraceId.ToString() ?? httpContextAccessor.HttpContext?.TraceIdentifier ?? "unknown",
+            principal.FindAll("scope")
+                .SelectMany(claim => claim.Value.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                .ToHashSet(StringComparer.Ordinal));
         return true;
     }
 

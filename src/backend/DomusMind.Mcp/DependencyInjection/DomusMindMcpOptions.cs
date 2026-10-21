@@ -20,4 +20,6 @@ public sealed class DomusMindMcpOptions
 public sealed class McpCapabilityOptions
 {
     public bool HouseholdReadOnly { get; set; }
+
+    public bool HouseholdWrites { get; set; }
 }

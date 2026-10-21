@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using OpenIddict.Abstractions;
 using DomusMind.Infrastructure.Persistence;
 
@@ -10,6 +11,8 @@ public static class McpOAuthSeedService
     public static async Task SeedClientAsync(IServiceProvider services, CancellationToken cancellationToken)
     {
         var options = services.GetRequiredService<IOptions<McpOAuthOptions>>().Value;
+        var writesEnabled = services.GetRequiredService<IConfiguration>()
+            .GetValue<bool>("Mcp:Capabilities:HouseholdWrites");
         if (!options.Enabled)
             return;
 
@@ -27,8 +30,33 @@ public static class McpOAuthSeedService
             await scopeManager.CreateAsync(scopeDescriptor, cancellationToken);
         }
 
-        if (await manager.FindByClientIdAsync(options.ClientId, cancellationToken) is not null)
+        if (writesEnabled && await scopeManager.FindByNameAsync(McpOAuthConstants.WriteScope, cancellationToken) is null)
         {
+            var scopeDescriptor = new OpenIddictScopeDescriptor
+            {
+                Name = McpOAuthConstants.WriteScope,
+                DisplayName = "Write DomusMind household data after explicit confirmation",
+            };
+            scopeDescriptor.Resources.Add(options.Resource);
+            await scopeManager.CreateAsync(scopeDescriptor, cancellationToken);
+        }
+
+        var existingApplication = await manager.FindByClientIdAsync(options.ClientId, cancellationToken);
+        if (existingApplication is not null)
+        {
+            if (writesEnabled &&
+                !await manager.HasPermissionAsync(
+                    existingApplication,
+                    OpenIddictConstants.Permissions.Prefixes.Scope + McpOAuthConstants.WriteScope,
+                    cancellationToken))
+            {
+                var existingDescriptor = new OpenIddictApplicationDescriptor();
+                await manager.PopulateAsync(existingApplication, existingDescriptor, cancellationToken);
+                existingDescriptor.Permissions.Add(
+                    OpenIddictConstants.Permissions.Prefixes.Scope + McpOAuthConstants.WriteScope);
+                await manager.UpdateAsync(existingApplication, existingDescriptor, cancellationToken);
+            }
+
             await services.GetRequiredService<DomusMindDbContext>().SaveChangesAsync(cancellationToken);
             return;
         }
@@ -61,6 +89,8 @@ public static class McpOAuthSeedService
             OpenIddictConstants.Permissions.Prefixes.Scope + OpenIddictConstants.Scopes.OfflineAccess,
             OpenIddictConstants.Permissions.Prefixes.Scope + McpOAuthConstants.ReadScope,
         ]);
+        if (writesEnabled)
+            descriptor.Permissions.Add(OpenIddictConstants.Permissions.Prefixes.Scope + McpOAuthConstants.WriteScope);
         descriptor.AddResourcePermissions(options.Resource);
         descriptor.Requirements.Add(OpenIddictConstants.Requirements.Features.ProofKeyForCodeExchange);
 

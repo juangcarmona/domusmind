@@ -83,7 +83,7 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
                 userId,
                 householdId,
                 result.Principal.FindFirst("client_id")?.Value ?? "unknown",
-                "mcp.read",
+                string.Join(' ', scopes.Order(StringComparer.Ordinal)),
                 context.Response.StatusCode,
                 Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier);
         }
@@ -96,7 +96,7 @@ internal sealed class McpOAuthResourceAuthorizationMiddleware(
                 userId,
                 householdId,
                 result.Principal.FindFirst("client_id")?.Value ?? "unknown",
-                "mcp.read",
+                string.Join(' ', scopes.Order(StringComparer.Ordinal)),
                 StatusCodes.Status500InternalServerError,
                 Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier);
             throw;

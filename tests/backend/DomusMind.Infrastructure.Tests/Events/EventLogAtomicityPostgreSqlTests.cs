@@ -43,7 +43,7 @@ public sealed class EventLogAtomicityPostgreSqlTests
 
             await using (var setup = new DomusMindDbContext(options))
             {
-                await setup.Database.EnsureCreatedAsync();
+                await setup.Database.MigrateAsync();
                 setup.Families.Add(Family.Create(
                     familyId,
                     FamilyName.Create("Concurrent list test"),
@@ -118,7 +118,7 @@ public sealed class EventLogAtomicityPostgreSqlTests
 
             await using (var db = new DomusMindDbContext(options))
             {
-                await db.Database.EnsureCreatedAsync();
+                await db.Database.MigrateAsync();
                 var family = Family.Create(
                     FamilyId.New(),
                     FamilyName.Create("Reaction rollback test"),
@@ -176,7 +176,7 @@ public sealed class EventLogAtomicityPostgreSqlTests
 
             await using (var db = new DomusMindDbContext(options))
             {
-                await db.Database.EnsureCreatedAsync();
+                await db.Database.MigrateAsync();
                 await db.Database.ExecuteSqlRawAsync("""
                     CREATE FUNCTION reject_event_log_insert() RETURNS trigger
                     LANGUAGE plpgsql AS $$

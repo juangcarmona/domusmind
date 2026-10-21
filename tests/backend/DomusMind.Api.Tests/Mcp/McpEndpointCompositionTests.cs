@@ -1,9 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
+using DomusMind.Application.Abstractions.Integrations.Mcp;
 using DomusMind.Api.Controllers;
 using DomusMind.Api.Mcp;
 using DomusMind.Application.Abstractions.Messaging;
+using DomusMind.Mcp.Authorization;
 using DomusMind.Mcp.DependencyInjection;
+using DomusMind.Mcp.Tools;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -160,23 +163,86 @@ public sealed class McpEndpointCompositionTests
         Assert.NotEqual(HttpStatusCode.Forbidden, response.StatusCode);
     }
 
+    [Fact]
+    public async Task Confirmed_write_production_tool_rejects_unknown_and_wrong_typed_arguments_before_dispatch()
+    {
+        await using var host = await ApiTestHost.StartAsync(registerConfirmedWriteTool: true);
+        var transport = new HttpClientTransport(new HttpClientTransportOptions
+        {
+            Endpoint = new Uri("http://localhost/mcp"),
+            TransportMode = HttpTransportMode.StreamableHttp,
+            EnableStandaloneGetStream = false,
+        }, host.Client, ownsHttpClient: false);
+        await using var mcpClient = await McpClient.CreateAsync(transport, new McpClientOptions
+        {
+            ClientInfo = new Implementation { Name = "DomusMind.Api.Tests", Version = "1.0" },
+            ProtocolVersion = "2026-07-28",
+        });
+
+        foreach (var arguments in new Dictionary<string, object?>[]
+        {
+            new()
+            {
+                ["listId"] = Guid.NewGuid().ToString(),
+                ["name"] = "Milk",
+                ["idempotencyKey"] = "key",
+                ["unexpected"] = "must be rejected",
+            },
+            new()
+            {
+                ["listId"] = 42,
+                ["name"] = "Milk",
+                ["idempotencyKey"] = "key",
+            },
+            new()
+            {
+                ["listId"] = Guid.NewGuid().ToString(),
+                ["name"] = "Milk",
+            },
+        })
+        {
+            var result = await mcpClient.CallToolAsync("list_item_add", arguments);
+
+            Assert.True(result.IsError);
+            Assert.Equal("ERROR", result.StructuredContent!.Value.GetProperty("status").GetString());
+            Assert.Equal("INVALID_INPUT", result.StructuredContent.Value.GetProperty("error").GetProperty("code").GetString());
+        }
+
+        Assert.Equal(0, host.ConfirmedWriteCoordinator.Calls);
+        Assert.Equal(3, host.AuditMessages.Count(message =>
+            message.Contains("capability audit tool_error", StringComparison.Ordinal) &&
+            message.Contains("capability=list_item_add", StringComparison.Ordinal) &&
+            message.Contains("code=INVALID_INPUT", StringComparison.Ordinal)));
+    }
+
     private sealed class ApiTestHost : IAsyncDisposable
     {
         private readonly WebApplication _app;
         private readonly string _webRoot;
 
-        private ApiTestHost(WebApplication app, HttpClient client, TestQueryDispatcher queryDispatcher)
+        private ApiTestHost(
+            WebApplication app,
+            HttpClient client,
+            TestQueryDispatcher queryDispatcher,
+            TestConfirmedWriteCoordinator? confirmedWriteCoordinator,
+            ICollection<string> auditMessages)
         {
             _app = app;
             _webRoot = app.Environment.WebRootPath!;
             Client = client;
             QueryDispatcher = queryDispatcher;
+            ConfirmedWriteCoordinator = confirmedWriteCoordinator ?? new TestConfirmedWriteCoordinator();
+            AuditMessages = auditMessages;
         }
 
         public HttpClient Client { get; }
         public TestQueryDispatcher QueryDispatcher { get; }
+        public TestConfirmedWriteCoordinator ConfirmedWriteCoordinator { get; }
+        public ICollection<string> AuditMessages { get; }
 
-        public static async Task<ApiTestHost> StartAsync(bool registerTestProbe = false)
+        public static async Task<ApiTestHost> StartAsync(
+            bool registerTestProbe = false,
+            bool registerConfirmedWriteTool = false)
         {
             var webRoot = Path.Combine(Path.GetTempPath(), $"domusmind-mcp-test-{Guid.NewGuid():N}");
             Directory.CreateDirectory(webRoot);
@@ -188,6 +254,7 @@ public sealed class McpEndpointCompositionTests
                 ContentRootPath = webRoot,
                 WebRootPath = webRoot,
             });
+            builder.WebHost.UseDefaultServiceProvider(options => options.ValidateScopes = true);
             builder.WebHost.UseTestServer();
             builder.Logging.ClearProviders();
             builder.Services.AddControllers().AddApplicationPart(typeof(SystemController).Assembly);
@@ -196,6 +263,8 @@ public sealed class McpEndpointCompositionTests
                 ["Mcp:AllowedOrigins:0"] = "https://trusted.example",
             }).Build();
             var queryDispatcher = new TestQueryDispatcher();
+            var auditMessages = new List<string>();
+            builder.Logging.AddProvider(new CapturingLoggerProvider(auditMessages));
             builder.Services.AddSingleton<IQueryDispatcher>(queryDispatcher);
             var mcpBuilder = builder.Services.AddDomusMindMcp(config);
             if (registerTestProbe)
@@ -203,12 +272,21 @@ public sealed class McpEndpointCompositionTests
                 mcpBuilder.WithTools([typeof(TestOnlyMcpTools)]);
             }
 
+            TestConfirmedWriteCoordinator? confirmedWriteCoordinator = null;
+            if (registerConfirmedWriteTool)
+            {
+                confirmedWriteCoordinator = new TestConfirmedWriteCoordinator();
+                builder.Services.AddScoped<IMcpRequestIdentityAccessor, TestMcpRequestIdentityAccessor>();
+                builder.Services.AddSingleton<IMcpConfirmedWriteCoordinator>(confirmedWriteCoordinator);
+                builder.Services.AddSingleton<McpServerTool>(sp => DomusMindConfirmedWriteTools.CreateTool(sp));
+            }
+
             var app = builder.Build();
             app.UseStaticFiles();
             app.UseDomusMindMcpOriginValidation();
             app.MapDomusMindEndpoints(webRoot);
             await app.StartAsync();
-            return new ApiTestHost(app, app.GetTestClient(), queryDispatcher);
+            return new ApiTestHost(app, app.GetTestClient(), queryDispatcher, confirmedWriteCoordinator, auditMessages);
         }
 
         public async ValueTask DisposeAsync()
@@ -217,6 +295,76 @@ public sealed class McpEndpointCompositionTests
             await _app.DisposeAsync();
             Directory.Delete(_webRoot, recursive: true);
         }
+    }
+
+    private sealed class TestMcpRequestIdentityAccessor : IMcpRequestIdentityAccessor
+    {
+        public bool TryGet(out McpRequestIdentity identity)
+        {
+            identity = new McpRequestIdentity(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                "test-client",
+                "test-trace",
+                new HashSet<string>(["mcp.write"]));
+            return true;
+        }
+    }
+
+    private sealed class CapturingLoggerProvider(ICollection<string> messages) : ILoggerProvider
+    {
+        public ILogger CreateLogger(string categoryName) => new CapturingLogger(messages);
+        public void Dispose() { }
+    }
+
+    private sealed class CapturingLogger(ICollection<string> messages) : ILogger
+    {
+        public IDisposable BeginScope<TState>(TState state) where TState : notnull => NullScope.Instance;
+        public bool IsEnabled(LogLevel logLevel) => true;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception,
+            Func<TState, Exception?, string> formatter) => messages.Add(formatter(state, exception));
+
+        private sealed class NullScope : IDisposable
+        {
+            public static readonly NullScope Instance = new();
+            public void Dispose() { }
+        }
+    }
+
+    private sealed class TestConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator
+    {
+        public int Calls { get; private set; }
+
+        public Task<McpConfirmedWriteOutcome> ExecuteListItemAddAsync(
+            McpListItemAddRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            Calls++;
+            return Task.FromResult(new McpConfirmedWriteOutcome(
+                McpWriteStatuses.Error,
+                Code: "TEST_SHOULD_NOT_BE_CALLED",
+                Message: "The production boundary test should reject the request first."));
+        }
+
+        public Task<McpWriteApprovalView?> GetApprovalAsync(
+            Guid approvalRequestId,
+            Guid userId,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<McpConfirmedWriteOutcome> ApproveAsync(
+            Guid approvalRequestId,
+            Guid userId,
+            McpApprovalContext context,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<McpConfirmedWriteOutcome> CancelAsync(
+            Guid approvalRequestId,
+            Guid userId,
+            McpApprovalContext context,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 
     [McpServerToolType]

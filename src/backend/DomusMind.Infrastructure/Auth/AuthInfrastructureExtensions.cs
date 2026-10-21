@@ -158,7 +158,7 @@ public static class AuthInfrastructureExtensions
                     .AllowAuthorizationCodeFlow()
                     .AllowRefreshTokenFlow()
                     .RequireProofKeyForCodeExchange()
-                    .RegisterScopes(OpenIddictConstants.Scopes.OpenId, OpenIddictConstants.Scopes.Profile, OpenIddictConstants.Scopes.OfflineAccess, McpOAuthConstants.ReadScope)
+                    .RegisterScopes(OpenIddictConstants.Scopes.OpenId, OpenIddictConstants.Scopes.Profile, OpenIddictConstants.Scopes.OfflineAccess, McpOAuthConstants.ReadScope, McpOAuthConstants.WriteScope)
                     .RegisterResources(options.Resource)
                     .RegisterAudiences(options.Resource)
                     .SetAccessTokenLifetime(TimeSpan.FromSeconds(options.AccessTokenLifetimeSeconds))

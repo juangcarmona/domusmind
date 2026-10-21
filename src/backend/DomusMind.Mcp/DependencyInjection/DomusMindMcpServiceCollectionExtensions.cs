@@ -11,6 +11,7 @@ using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using DomusMind.Mcp.Authorization;
 using DomusMind.Mcp.Tools;
+using DomusMind.Application.Abstractions.Integrations.Mcp;
 
 namespace DomusMind.Mcp.DependencyInjection;
 
@@ -74,6 +75,13 @@ public static class DomusMindMcpServiceCollectionExtensions
             configuration.GetValue<bool>("Mcp:RequireOAuth"))
         {
             mcpBuilder.WithTools([typeof(DomusMindReadOnlyTools)]);
+        }
+
+        if (configuration.GetValue<bool>("Mcp:Capabilities:HouseholdWrites") &&
+            configuration.GetValue<bool>("Mcp:OAuth:Enabled") &&
+            configuration.GetValue<bool>("Mcp:RequireOAuth"))
+        {
+            services.AddSingleton<McpServerTool>(sp => DomusMindConfirmedWriteTools.CreateTool(sp));
         }
 
         return mcpBuilder.WithListToolsHandler((_, _) => new ValueTask<ListToolsResult>(new ListToolsResult { Tools = [] }));

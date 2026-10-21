@@ -1605,6 +1605,151 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.ToTable("external_calendar_oauth_transactions", (string)null);
                 });
 
+            modelBuilder.Entity("DomusMind.Infrastructure.Persistence.Mcp.McpIdempotencyRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ApprovalRequestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime?>("CompletedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ResultExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<Guid?>("ItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ListId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("OperationNamespace")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PayloadHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("ResultJson")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<DateTime?>("TombstoneUntilUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OperationNamespace", "UserId", "ClientId", "FamilyId", "IdempotencyKey")
+                        .IsUnique();
+
+                    b.ToTable("mcp_write_idempotency", (string)null);
+                });
+
+            modelBuilder.Entity("DomusMind.Infrastructure.Persistence.Mcp.McpWriteApprovalRecord", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ApprovedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("ApprovedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<DateTime?>("ConsumedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpiresAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<Guid>("ListId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("OperationNamespace")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PayloadHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("Quantity")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OperationNamespace", "UserId", "ClientId", "FamilyId", "IdempotencyKey")
+                        .IsUnique();
+
+                    b.ToTable("mcp_write_approvals", (string)null);
+                });
+
             modelBuilder.Entity("DomusMind.Infrastructure.Persistence.UserFamilyAccess", b =>
                 {
                     b.Property<Guid>("UserId")
