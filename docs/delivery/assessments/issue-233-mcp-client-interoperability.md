@@ -1,6 +1,6 @@
 # MCP client interoperability evidence (#233)
 
-Status: draft, pending external-client credentials and a deliberately reachable test deployment.
+Status: draft, assessed 2026-10-21, pending external-client credentials and a deliberately reachable test deployment.
 
 ## Environment boundary
 
@@ -23,9 +23,9 @@ These prove the server-side protocol and authorization contract. They do not pro
 | Profile | Evidence status | Blocker or next test |
 | --- | --- | --- |
 | ChatGPT custom MCP | Protocol-supported / client unverified | Run in an eligible Business or Enterprise/Edu workspace: create connection, scan tools, complete OAuth, refresh after expiry, invoke a read tool, and verify write approval. |
-| OpenAI Responses API MCP | Protocol-supported / client unverified | Run a Responses API request with `server_url` or an approved `tunnel_id`; provide the OAuth access token through the integrating application and verify approval policy separately. |
+| OpenAI Responses API MCP | Protocol-supported / client unverified | The integrating application performs registration, OAuth, token storage and refresh. Run a Responses API request with `server_url` or an approved `tunnel_id`, then verify approval policy separately. |
 | Claude remote connector | Protocol-supported / client unverified | Add the remote URL in Claude/Claude Desktop, complete OAuth/DCR, verify refresh, read, write confirmation and plan/workspace restrictions. |
-| Claude Code remote HTTP | Protocol-supported / client unverified | Exercise remote OAuth from an interactive client and separately record headless limitations. |
+| Claude Code remote HTTP | Protocol-supported / client unverified | Exercise remote OAuth from an interactive client with the exact fixed-port loopback callback registered; separately record headless limitations. |
 | Local STDIO | Deferred / not supported by current server slice | Requires a separate local adapter and credential/trust decision; no broad PAT is inferred from the current OAuth resource. |
 | Custom/self-hosted agent | Conditional | Use the deployment runbook with a real HTTPS or private overlay path; retain the same OAuth and household authorization tests. |
 
@@ -39,3 +39,5 @@ These prove the server-side protocol and authorization contract. They do not pro
 ## Release decision
 
 Until the external tests are run, DomusMind can claim MCP protocol compatibility and a tested server-side OAuth/read/write contract. It must not claim verified ChatGPT or Claude product compatibility, broad self-hosted remote support, or local STDIO support.
+
+The current server's OAuth registration boundary is pre-registered public clients with exact configured redirect URIs. DCR and CIMD are not implemented by this delivery; a client requiring either remains conditional or blocked until a separate design and security review.

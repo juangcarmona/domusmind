@@ -37,14 +37,16 @@ The status vocabulary is deliberate:
 - **Conditional**: support depends on a product plan, workspace policy, registration mode, network path, or operator configuration.
 - **Not supported**: the current DomusMind delivery does not provide the required transport or credential boundary.
 
+The current DomusMind server supports a pre-registered public OAuth client whose exact redirect URIs come from `Mcp:OAuth:RedirectUris`; it does not implement Dynamic Client Registration (DCR) or Client-Id Metadata Documents (CIMD). DCR/CIMD are client/provider interoperability options, not capabilities to imply from the MCP protocol. A client requiring one of them is **Conditional** or blocked until a separately approved registration capability exists.
+
 | Client/profile | Transport and reachability | Auth/registration expectations | Current disposition | Required evidence before release claim |
 | --- | --- | --- | --- | --- |
 | ChatGPT custom MCP connection | Remote HTTPS MCP URL; private Secure MCP Tunnel may be used where the target workspace/product supports it | OAuth discovery, PKCE, resource-bound access tokens; refresh tokens are needed for durable connectivity | Conditional; client-account test is unverified in this environment | Real connection creation/tool scan, OAuth consent, refresh, read call, and write approval in an eligible Business or Enterprise/Edu workspace |
-| OpenAI Responses API MCP | `server_url` for remote HTTPS or `tunnel_id` for supported private paths | The integrating application supplies the OAuth bearer token; this is separate from ChatGPT connector registration | Protocol-compatible; client-account path is unverified | Real Responses API request with the selected MCP tool, explicit approval policy, token audience, and tunnel/public reachability evidence |
+| OpenAI Responses API MCP | `server_url` for remote HTTPS or `tunnel_id` for supported private paths | The integrating application supplies the OAuth bearer token; this is separate from ChatGPT connector registration | Protocol-supported / client unverified | Real Responses API request with the selected MCP tool, explicit approval policy, token audience, and tunnel/public reachability evidence |
 | Claude remote connector | Streamable HTTP over HTTPS; remote public reachability or a supported private route | OAuth/DCR or a configured client path, refresh support, provider discovery and callback compatibility | Conditional; client-account test is unverified | Add connector, complete OAuth, refresh, invoke read-only tools, and document plan/workspace behavior |
-| Claude Code remote HTTP | Remote HTTP reachable from the developer machine | MCP OAuth discovery/DCR or manual configuration, depending on client capability | Protocol-compatible; client-account path is unverified | Run a remote `claude` connection through OAuth and record interactive/headless behavior |
+| Claude Code remote HTTP | Remote HTTP reachable from the developer machine | MCP OAuth discovery/DCR or pre-registered configuration, depending on client capability | Protocol-supported / client unverified | Run a remote `claude` connection through OAuth and record interactive/headless behavior |
 | Local STDIO client | Child process on the operator machine; no remote HTTPS implied | Environment/process credentials; HTTP OAuth is not the default STDIO boundary | Not supported by this server slice; deferred separate adapter | Separate product decision and local adapter with process/trust/secret tests |
-| Custom remote agent | Streamable HTTP over HTTPS, private overlay, or deliberate tunnel | Client-specific OAuth registration; interactive Authorization Code + PKCE preferred | Protocol-compatible; deployment-specific | Repeatable operator runbook, TLS/proxy checks, discovery/token/read/write tests, and security review |
+| Custom remote agent | Streamable HTTP over HTTPS, private overlay, or deliberate tunnel | Client-specific OAuth registration; interactive Authorization Code + PKCE preferred | Conditional | Repeatable operator runbook, TLS/proxy checks, discovery/token/read/write tests, and security review |
 | Self-hosted agent on private infrastructure | Private network or outbound tunnel; a cloud client cannot reach LAN-only MCP automatically | Client-specific OAuth or a separately approved local identity | Conditional; no automatic port exposure | Document topology, firewall, DNS, TLS, proxy trust, tunnel, backup, and revocation evidence |
 
 ## Verification protocol
@@ -62,13 +64,15 @@ Every client test records:
 
 The minimum standards-level test is an OAuth-protected read-only request through the actual MCP HTTP boundary, not a direct handler call. A client-specific claim requires the named client to complete the same flow.
 
+For the OpenAI Responses API, the integrating application performs OAuth registration, authorization, token storage and refresh; the Responses API request receives the resulting bearer token and does not turn a ChatGPT connector test into an API-client test. For clients that require a pre-registered public client, add the exact callback to `Mcp:OAuth:RedirectUris` in the disposable test environment. For Claude Code remote OAuth, distinguish the remote MCP and authorization endpoints, which require the deployment's HTTPS boundary, from the native client's loopback callback: use the documented fixed callback port, register the exact loopback URI, use PKCE, and reject every unregistered redirect.
+
 ## Deployment runbook contract
 
 ### Public HTTPS
 
 1. Publish the stable MCP resource URL and keep the resource identifier identical across protected-resource metadata, authorization requests, token audience/resource claims, reverse-proxy routing, and client configuration.
 2. Terminate TLS with a maintained certificate and forward only the headers explicitly trusted by the deployment.
-3. Configure the authorization server's redirect allow-list with exact HTTPS URIs; do not use wildcard or HTTP callbacks outside a local development profile.
+3. Configure the authorization server's redirect allow-list with exact URIs; remote MCP and authorization endpoints remain HTTPS-only. A native client loopback callback may use the client-documented local HTTP loopback address and fixed port, but it must be explicitly registered, protected by PKCE, and never generalized into a public callback.
 4. Verify `Origin`, host, forwarded-host, authorization, timeout, cancellation and rate-limit behavior at the public boundary.
 
 ### Private deployment
@@ -77,6 +81,26 @@ The minimum standards-level test is an OAuth-protected read-only request through
 2. For OpenAI Secure MCP Tunnel, the tunnel client must reach the private MCP server and make outbound HTTPS to the OpenAI control plane; the tunnel does not automatically make the OAuth authorization server reachable.
 3. Keep the MCP server and tunnel client inside the same trust boundary, use separate credentials, and record tunnel health without logging secrets.
 4. A private route is not evidence of client authorization. OAuth discovery, consent, token validation and current DomusMind household authorization remain required.
+
+## Ordered delivery and verification tasks
+
+1. Reconcile this matrix with the existing #226 and #229 assessment; record the current OAuth registration boundary and the client-specific status for the assessment date.
+2. Verify the standards-level path through the actual `/mcp` HTTP endpoint using the existing OAuth test flow, then exercise one read-only tool and one denied/expired/revoked case. Reuse the existing tests; do not add a parallel client harness unless a gap is demonstrated.
+3. Validate public-HTTPS and private-route prerequisites using a disposable reverse-proxy/tunnel configuration or document the unavailable deployment prerequisite precisely.
+4. Run ChatGPT and Claude product-account tests when the owner supplies eligible accounts/workspace access; otherwise record each as blocked with the exact next test, not as passed.
+5. Update the evidence assessment and operator-facing MCP documentation with the observed client version/plan, topology, registration mode, refresh, approval and failure behavior.
+6. Run `dotnet build DomusMind.slnx -c Release --no-restore`, `dotnet test DomusMind.slnx -c Release --no-build`, `npx -y markdownlint-cli2@0.23.3` for changed Markdown, and the repository's docs/product validation commands. Record actual outputs in the FF evidence.
+
+## Artifact and acceptance mapping
+
+| Issue acceptance criterion | Artifact/evidence | Passing condition |
+| --- | --- | --- |
+| Support matrix separates client surface/version from protocol requirements | This plan, `docs/delivery/assessments/issue-233-mcp-client-interoperability.md` | Every row has transport, auth/registration, disposition, and required evidence; unverified rows are not reported as supported. |
+| ChatGPT and Claude real path or precise blocker | Assessment client dispositions and linked external test evidence when available | Each product is **Verified** only after its named client completes the flow; absent accounts/deployment are recorded as explicit blockers. |
+| Local STDIO and self-hosted paths are separate | Support matrix and deployment runbook | STDIO is not inferred from HTTP OAuth; private routes document trust, TLS, tunnel and credential boundaries. |
+| External endpoint exposure is deliberate | Public/private deployment runbook | No public endpoint or credential is created by this issue; operator prerequisites are explicit. |
+| Server-side confirmation remains authoritative | #231 evidence plus client write-approval record | Client approval is supplementary; the DomusMind confirmation/authorization path is independently required. |
+| Client limitations appear in support docs | Matrix, assessment, and operator hand-off | Product/plan/version, registration, refresh, reachability and failure limitations are recorded with assessment date. |
 
 ## Acceptance evidence
 
@@ -104,7 +128,8 @@ If a client requires a server capability not currently supported, create a separ
 - [OpenAI: MCP servers and Responses API](https://developers.openai.com/api/docs/guides/tools-connectors-mcp)
 - [OpenAI: connecting custom MCP servers in ChatGPT](https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt)
 - [OpenAI: Secure MCP Tunnel](https://developers.openai.com/api/docs/guides/secure-mcp-tunnels)
-- [Anthropic: building custom connectors via remote MCP](https://support.anthropic.com/en/articles/11503834-building-custom-integrations-via-remote-mcp-servers)
+- [Anthropic: building connectors](https://claude.com/docs/connectors/building)
+- [Claude Code: MCP and fixed OAuth callback port](https://code.claude.com/docs/en/mcp#use-a-fixed-oauth-callback-port)
 - [Anthropic: custom connector security and setup](https://support.anthropic.com/en/articles/11175166-about-custom-integrations-using-remote-mcp)
 - [MCP authorization](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
 - [MCP transports](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
