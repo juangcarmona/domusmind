@@ -41,7 +41,7 @@ public sealed class ConfirmedWriteCoordinatorTests
         await db.SaveChangesAsync();
         var coordinator = CreateCoordinator(db, dispatcher, publisher);
         var request = new McpListItemAddRequest(
-            userId, householdId, "client", listId, " Milk ", "2L", "whole", "key-1", null, "trace");
+            userId, householdId, "client", listId, " Milk ", "2L", "whole", " key-1 ", null, "trace");
 
         var challenge = await coordinator.ExecuteListItemAddAsync(request);
 

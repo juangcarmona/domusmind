@@ -315,11 +315,12 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         await _db.SaveChangesAsync(cancellationToken);
         await CommitAsync(transaction, cancellationToken);
         _logger.LogInformation(
-            "MCP confirmed write approved operation={Operation} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
+            "MCP confirmed write approved operation={Operation} user={UserId} household={HouseholdId} client={ClientId} approvalChannel={ApprovalChannel} trace={TraceId}",
             OperationNamespace,
             userId,
             approval.FamilyId,
-            context.ClientId ?? "first-party",
+            approval.ClientId,
+            context.IsTrustedFirstParty ? "first-party" : "mcp-client",
             context.TraceId ?? "unknown");
         return new McpConfirmedWriteOutcome(McpWriteStatuses.ApprovalPending, Code: "APPROVED");
     }
@@ -368,11 +369,12 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
         await _db.SaveChangesAsync(cancellationToken);
         await CommitAsync(transaction, cancellationToken);
         _logger.LogInformation(
-            "MCP confirmed write cancelled operation={Operation} user={UserId} household={HouseholdId} client={ClientId} trace={TraceId}",
+            "MCP confirmed write cancelled operation={Operation} user={UserId} household={HouseholdId} client={ClientId} approvalChannel={ApprovalChannel} trace={TraceId}",
             OperationNamespace,
             userId,
             approval.FamilyId,
-            context.ClientId ?? "first-party",
+            approval.ClientId,
+            context.IsTrustedFirstParty ? "first-party" : "mcp-client",
             context.TraceId ?? "unknown");
         return new McpConfirmedWriteOutcome(McpWriteStatuses.Error, Code: "CANCELLED", Message: "The approval request was cancelled.");
     }
@@ -695,9 +697,13 @@ public sealed class ConfirmedWriteCoordinator : IMcpConfirmedWriteCoordinator, I
                 clientId = binding.ClientId;
             }
         }
-        catch (Exception exception)
+        catch (Exception)
         {
-            _logger.LogWarning(exception, "MCP confirmed write approval audit binding lookup failed");
+            _logger.LogWarning(
+                "MCP confirmed write approval audit binding lookup failed operation={Operation} decision={Decision} trace={TraceId}",
+                OperationNamespace,
+                decision,
+                context.TraceId ?? "unknown");
         }
 
         _logger.LogInformation(
