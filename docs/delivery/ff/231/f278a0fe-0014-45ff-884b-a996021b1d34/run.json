@@ -7,7 +7,7 @@
   "executorModel": "gpt-5",
   "reviewerModel": "gpt-6.1-sol",
   "maxCorrectionRounds": 3,
-  "status": "awaiting-integration",
+  "status": "complete",
   "stages": [
     {
       "name": "refine",
@@ -46,6 +46,17 @@
         "github:codeql-analysis/1993844069",
         "github:codeql-analysis/1993825060"
       ]
+    },
+    {
+      "name": "integrate",
+      "result": "complete",
+      "inputCommit": "8c77825e89731f53337b23e663b8e45459634f86",
+      "outputCommit": "ae2d3754ffbd5ef3c1bc4cd554edfe2b432eecc5",
+      "evidence": [
+        "github:pull/272",
+        "github:issue/231",
+        "github:commit/ae2d3754ffbd5ef3c1bc4cd554edfe2b432eecc5"
+      ]
     }
   ],
   "reviews": [
@@ -74,7 +85,7 @@
     {"gate": "integration", "round": 6, "requestedChanges": "Add production-path concurrency and cancellation tests, add cookie-authenticated approval CSRF and bearer-boundary tests, register antiforgery MVC filter services, resolve scoped identity through a child scope for malformed-call auditing, and record/disposition the inherited CodeQL findings.", "resultingCommit": "4983052cf6eb93c132b4f6dea53111ef959d53c4"},
     {"gate": "integration", "round": 7, "requestedChanges": "Enable ValidateScopes in the MCP composition test host so the scoped identity regression test fails if production child-scope resolution is removed; correct stale final-gate wording in the FF evidence.", "resultingCommit": "18b4acbdd682f813cdea097fa49e849716c226c8"}
   ],
-  "stopReason": "Final independent Done-gate review approved 18b4acbdd682f813cdea097fa49e849716c226c8 with no P0/P1 findings. Awaiting the protected integration gate for Draft PR #272 into the Epic branch.",
+  "stopReason": "PR #272 merged into the Epic branch as ae2d3754ffbd5ef3c1bc4cd554edfe2b432eecc5; issue #231 is closed with status:done.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/272",
   "links": {
     "issue": "https://github.com/juangcarmona/domusmind/issues/231",
