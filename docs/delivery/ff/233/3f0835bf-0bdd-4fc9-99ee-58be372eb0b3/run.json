@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "runId": "3f0835bf-0bdd-4fc9-99ee-58be372eb0b3",
+  "workItem": "233",
+  "branch": "feat/233-mcp-client-interoperability",
+  "startedAt": "2026-10-21T05:26:00Z",
+  "executorModel": "gpt-5",
+  "reviewerModel": "gpt-6.1-sol",
+  "maxCorrectionRounds": 3,
+  "status": "running",
+  "stages": [
+    {
+      "name": "refine",
+      "result": "ready",
+      "inputCommit": "096d9344fa54376c3c41b5a5f74956de897c06b4",
+      "outputCommit": "096d9344fa54376c3c41b5a5f74956de897c06b4",
+      "evidence": ["github:issue/233", "github:issue/224", "github:issue/232"]
+    },
+    {
+      "name": "propose",
+      "result": "approved",
+      "inputCommit": "096d9344fa54376c3c41b5a5f74956de897c06b4",
+      "outputCommit": "9844534",
+      "evidence": [
+        "docs/delivery/plans/issue-233-mcp-client-interoperability.md",
+        "docs/delivery/assessments/issue-233-mcp-client-interoperability.md",
+        "github:pull/274",
+        "independent-review:01a15cea-5e35-7c62-b8d9-fe4cc7679dce"
+      ]
+    },
+    {
+      "name": "implement",
+      "result": "evidence-incomplete-external-gate",
+      "inputCommit": "c3c0131",
+      "outputCommit": "c3c0131",
+      "evidence": [
+        "docs/delivery/plans/issue-233-mcp-client-interoperability.md",
+        "docs/delivery/assessments/issue-233-mcp-client-interoperability.md",
+        "docs/delivery/evidence/issue-233-mcp-client-interoperability.md",
+        "docs/delivery/ff/233/3f0835bf-0bdd-4fc9-99ee-58be372eb0b3/run.json",
+        "local:dotnet-build-release",
+        "local:dotnet-test-release-898-passed-7-skipped",
+        "local:markdownlint-0-issues",
+        "local:openspec-validate-10-passed-existing-warnings",
+        "local:prodshape-validate-0-errors-59-warnings",
+        "local:prodshape-integration-check-passed",
+        "local:openspec-citations-816-current-0-stale-0-tampered-0-unresolved",
+        "github:actions/backend-ci/39550024773",
+        "github:actions/docs-ci/39550021799",
+        "github:actions/codeql/39550027364",
+        "external-blocker:chatgpt-and-claude-account-deployment-access-unavailable"
+      ],
+      "findings": "Repository and standards-level evidence is complete. Named hosted-client write-approval verification and deliberate private deployment evidence remain open external gates and are explicitly not claimed as verified compatibility."
+    }
+  ],
+  "reviews": [
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "proposal",
+      "commit": "13f037b",
+      "decision": "request-changes",
+      "correction": 1,
+      "findings": "Clarify Claude Code loopback callbacks, the pre-registered-only OAuth boundary, ordered verification work, acceptance mapping, and current references."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "proposal",
+      "commit": "c3c0131",
+      "decision": "approve",
+      "findings": "No remaining P0-P3 findings. External client/deployment evidence remains pending and is not claimed as verified compatibility."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "done",
+      "commit": "b2ba1ee",
+      "decision": "approve-external-gate-open",
+      "findings": "No remaining P0-P3 repository findings. The artifacts are safe to retain in progress, but named-client write approval and private deployment evidence remain open; Done and integration are not authorized."
+    }
+  ],
+  "corrections": [
+    {
+      "gate": "propose",
+      "round": 1,
+      "requestedChanges": "Distinguish remote HTTPS from Claude Code loopback callbacks; state pre-registered public OAuth clients and unsupported DCR/CIMD; add ordered verification tasks and acceptance mapping; update references and assessment date.",
+      "resultingCommit": "c3c0131"
+    }
+  ],
+  "stopReason": "Repository evidence is complete, but Done/integration is held by the open external client write-approval and private deployment gates. No unsupported compatibility claim is made.",
+  "pullRequest": "https://github.com/juangcarmona/domusmind/pull/274",
+  "links": {
+    "issue": "https://github.com/juangcarmona/domusmind/issues/233",
+    "epic": "https://github.com/juangcarmona/domusmind/issues/224",
+    "proposalHead": "c3c0131"
+  }
+}
