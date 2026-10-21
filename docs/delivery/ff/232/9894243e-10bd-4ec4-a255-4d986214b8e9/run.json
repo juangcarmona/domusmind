@@ -28,6 +28,25 @@
         "docs/delivery/plans/issue-232-mcp-capability-expansion.md",
         "github:pull/273"
       ]
+    },
+    {
+      "name": "implement",
+      "result": "done-awaiting-integration",
+      "inputCommit": "90be0fcd644e7d83ec80b0f17fbd92c7dcd8ca3e",
+      "outputCommit": "af3039c4a19245536d9bf9a80dfb1ed7e4ba33b7",
+      "evidence": [
+        "src/backend/DomusMind.Mcp/Tools/DomusMindHouseholdReadTools.cs",
+        "src/backend/DomusMind.Application/Features/Lists/GetListDetail/GetListDetailQuery.cs",
+        "tests/backend/DomusMind.Api.Tests/Mcp/McpReadOnlyProofTests.cs",
+        "tests/backend/DomusMind.Api.Tests/Mcp/McpHouseholdReadToolsTests.cs",
+        "docs/delivery/plans/issue-232-mcp-capability-expansion.md",
+        "github:pull/273",
+        "github:actions/backend-ci/39547837685",
+        "github:actions/codeql/39547840674",
+        "github:actions/docs-ci/39547843410",
+        "github:codeql-analysis/1994010444",
+        "github:codeql-analysis/1993994595"
+      ]
     }
   ],
   "reviews": [
@@ -45,6 +64,53 @@
       "commit": "73239617856353efe1d73fc0417abaefd8d45b0c",
       "decision": "approve",
       "findings": "No P0/P1 findings. Non-blocking P2s requested refreshing PR text and making household-first meal ordering explicit in tasks/tests."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "ecf2ac8",
+      "decision": "request-changes",
+      "correction": 1,
+      "findings": "Add official-client HTTP coverage against real application handlers, canonical meal ordering, safe list-not-found mapping, and capability contract documentation."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "a6ed1a8",
+      "decision": "request-changes",
+      "correction": 2,
+      "findings": "Complete A+B household binding evidence, read-only schema and audit assertions, cancellation/safe-failure coverage, and field-level contract documentation."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "1199ded",
+      "decision": "request-changes",
+      "correction": 3,
+      "findings": "Compare complete meal sequences, strengthen nested schema and audit assertions, and qualify tool-level error-envelope documentation."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "6928648",
+      "decision": "request-changes",
+      "correction": 4,
+      "findings": "Add nested required/type/nullability checks for all selected output contracts."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "b73ecd8",
+      "decision": "request-changes",
+      "correction": 5,
+      "findings": "Make required primitive schema type checks exact and cover routine/area primitive and array-element types."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "af3039c",
+      "decision": "approve",
+      "findings": "No remaining findings within the implementation review scope."
     }
   ],
   "corrections": [
@@ -59,9 +125,39 @@
       "round": 2,
       "requestedChanges": "Refresh Draft PR description to the corrected proposal and explicitly specify MCP boundary rotation and Sunday-first/Monday-first tests for household meal ordering.",
       "resultingCommit": "48bc1093998fef9bd5359e67ef645c3d8aeafa68"
+    },
+    {
+      "gate": "implement",
+      "round": 1,
+      "requestedChanges": "Add official-client HTTP coverage against real application handlers, canonical meal ordering, safe list-not-found mapping, and capability contract documentation.",
+      "resultingCommit": "a6ed1a8"
+    },
+    {
+      "gate": "implement",
+      "round": 2,
+      "requestedChanges": "Complete A+B household binding evidence, read-only schema and audit assertions, cancellation/safe-failure coverage, and field-level contract documentation.",
+      "resultingCommit": "1199ded"
+    },
+    {
+      "gate": "implement",
+      "round": 3,
+      "requestedChanges": "Compare complete meal sequences, strengthen nested schema and audit assertions, and qualify tool-level error-envelope documentation.",
+      "resultingCommit": "6928648"
+    },
+    {
+      "gate": "implement",
+      "round": 4,
+      "requestedChanges": "Add nested required/type/nullability checks for all selected output contracts.",
+      "resultingCommit": "b73ecd8"
+    },
+    {
+      "gate": "implement",
+      "round": 5,
+      "requestedChanges": "Make required primitive schema type checks exact and cover routine/area primitive and array-element types.",
+      "resultingCommit": "af3039c"
     }
   ],
-  "stopReason": "The independent proposal review approved the plan; implementation is proceeding on the approved branch.",
+  "stopReason": "Implementation is complete and independently approved at af3039c; hosted backend, CodeQL, and docs verification are green and integration into the Epic branch is next.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/273",
   "links": {
     "issue": "https://github.com/juangcarmona/domusmind/issues/232",
