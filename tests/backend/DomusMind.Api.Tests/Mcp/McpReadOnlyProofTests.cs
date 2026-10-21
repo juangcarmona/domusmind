@@ -1,21 +1,39 @@
 using System.Globalization;
 using System.Net;
 using System.Security.Claims;
+using System.Text.Json;
 using DomusMind.Api.Controllers;
 using DomusMind.Api.Mcp;
 using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Abstractions.Persistence;
 using DomusMind.Application.Abstractions.Security;
 using DomusMind.Application.Features.Calendar.GetFamilyTimeline;
+using DomusMind.Application.Features.Family.GetFamily;
 using DomusMind.Application.Features.Family.GetFamilyMembers;
+using DomusMind.Application.Features.Lists.GetFamilyLists;
+using DomusMind.Application.Features.Lists.GetListDetail;
+using DomusMind.Application.Features.MealPlanning.GetMealPlan;
+using DomusMind.Application.Features.Responsibilities.GetHouseholdAreas;
+using DomusMind.Application.Features.Tasks.GetRoutinesByFamily;
 using DomusMind.Contracts.Calendar;
+using DomusMind.Contracts.Family;
+using DomusMind.Contracts.Lists;
+using DomusMind.Contracts.MealPlanning;
 using DomusMind.Domain.Calendar;
 using DomusMind.Domain.Calendar.ValueObjects;
 using DomusMind.Domain.Family;
 using DomusMind.Domain.Family.ValueObjects;
 using DomusMind.Domain.Lists;
 using DomusMind.Domain.Lists.ValueObjects;
+using DomusMind.Domain.MealPlanning.Entities;
+using DomusMind.Domain.MealPlanning.Enums;
+using DomusMind.Domain.MealPlanning.ValueObjects;
+using DomusMind.Domain.Responsibilities;
+using DomusMind.Domain.Responsibilities.ValueObjects;
 using DomusMind.Domain.Shared;
+using DomusMind.Domain.Tasks;
+using DomusMind.Domain.Tasks.Enums;
+using DomusMind.Domain.Tasks.ValueObjects;
 using DomusMind.Infrastructure.Persistence;
 using DomusMind.Mcp.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -44,7 +62,7 @@ public sealed class McpReadOnlyProofTests
         await using var client = await host.CreateClientAsync();
 
         var tools = await client.ListToolsAsync();
-        Assert.Equal(["agenda_get", "household_members_list"],
+        Assert.Equal(["agenda_get", "areas_get", "household_members_list", "lists_get", "meal_plan_get", "routines_get"],
             tools.Select(tool => tool.Name).OrderBy(name => name));
         var agendaTool = Assert.Single(tools, tool => tool.Name == "agenda_get");
         AssertSchemaProperties(agendaTool.ProtocolTool.InputSchema, "from", "to");
@@ -106,6 +124,217 @@ public sealed class McpReadOnlyProofTests
         await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await pending);
         await host.Authorization.WaitUntilCancellationObservedAsync();
 
+        Assert.Equal(0, host.Database.ChangeTracker.Entries().Count(entry =>
+            entry.State is EntityState.Added or EntityState.Modified or EntityState.Deleted));
+    }
+
+    [Fact]
+    public async Task Expanded_tools_use_the_official_client_and_real_application_handlers()
+    {
+        await using var host = await ReadOnlyProofHost.StartAsync(registerProductionTools: true);
+        await using var client = await host.CreateClientAsync();
+
+        var tools = await client.ListToolsAsync();
+        foreach (var name in new[] { "lists_get", "meal_plan_get", "routines_get", "areas_get" })
+        {
+            var tool = Assert.Single(tools, candidate => candidate.Name == name);
+            Assert.Equal(true, tool.ProtocolTool.Annotations?.ReadOnlyHint);
+            Assert.NotNull(tool.ProtocolTool.OutputSchema);
+        }
+
+        var listsSchema = Assert.Single(tools, tool => tool.Name == "lists_get").ProtocolTool.OutputSchema!.Value;
+        AssertSchemaObjectProperties(listsSchema, listsSchema, "lists", "list");
+        AssertSchemaRequired(listsSchema, listsSchema, "lists", "list");
+        AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listsSchema, "list"));
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listsSchema, "lists"), "array");
+        var listSummarySchema = SchemaProperty(listsSchema, listsSchema, "lists").GetProperty("items");
+        AssertSchemaObjectProperties(listsSchema, listSummarySchema, "listId", "name", "kind", "areaId", "linkedPlanId", "uncheckedCount");
+        AssertSchemaRequired(listsSchema, listSummarySchema, "listId", "name", "kind", "areaId", "linkedPlanId", "uncheckedCount");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "listId"), "string");
+        AssertSchemaFormat(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "listId"), "uuid");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "name"), "string");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "kind"), "string");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "uncheckedCount"), "integer");
+        AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "areaId"));
+        AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "linkedPlanId"));
+        var listDetailSchema = ResolveObjectSchema(listsSchema, SchemaProperty(listsSchema, listsSchema, "list"));
+        AssertSchemaRequired(listsSchema, listDetailSchema, "listId", "name", "kind", "color", "areaId", "linkedPlanId", "linkedPlanDisplayName", "uncheckedCount", "items");
+        AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listDetailSchema, "color"));
+        AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listDetailSchema, "linkedPlanDisplayName"));
+        var listItemSchema = SchemaProperty(listsSchema, listDetailSchema, "items").GetProperty("items");
+        AssertSchemaRequired(listsSchema, listItemSchema, "itemId", "name", "checked", "quantity", "note", "order", "importance", "dueDate", "reminder", "targetMemberId");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listItemSchema, "checked"), "boolean");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listItemSchema, "order"), "integer");
+        AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listItemSchema, "quantity"));
+        AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listItemSchema, "dueDate"));
+        AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listItemSchema, "reminder"));
+        AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listItemSchema, "targetMemberId"));
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listItemSchema, "itemId"), "string");
+        AssertSchemaFormat(listsSchema, SchemaProperty(listsSchema, listItemSchema, "itemId"), "uuid");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listItemSchema, "name"), "string");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listItemSchema, "importance"), "boolean");
+
+        var mealSchema = Assert.Single(tools, tool => tool.Name == "meal_plan_get").ProtocolTool.OutputSchema!.Value;
+        AssertSchemaObjectProperties(mealSchema, mealSchema, "mealPlan");
+        AssertSchemaRequired(mealSchema, mealSchema, "mealPlan");
+        AssertSchemaAllowsNull(mealSchema, SchemaProperty(mealSchema, mealSchema, "mealPlan"));
+        var mealPlanSchema = ResolveSchema(mealSchema, SchemaProperty(mealSchema, mealSchema, "mealPlan"));
+        var mealPlanObject = mealPlanSchema.TryGetProperty("properties", out _)
+            ? mealPlanSchema
+            : (mealPlanSchema.TryGetProperty("anyOf", out var anyOf)
+                ? anyOf.EnumerateArray().Select(branch => ResolveSchema(mealSchema, branch))
+                    .First(branch => branch.TryGetProperty("properties", out _))
+                : mealPlanSchema.GetProperty("oneOf").EnumerateArray()
+                    .Select(branch => ResolveSchema(mealSchema, branch))
+                    .First(branch => branch.TryGetProperty("properties", out _)));
+        AssertSchemaRequired(mealSchema, mealPlanObject, "planId", "weekStart", "weekEnd", "status", "slots");
+        AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealPlanObject, "planId"), "string");
+        AssertSchemaFormat(mealSchema, SchemaProperty(mealSchema, mealPlanObject, "planId"), "uuid");
+        AssertSchemaFormat(mealSchema, SchemaProperty(mealSchema, mealPlanObject, "weekStart"), "date");
+        AssertSchemaFormat(mealSchema, SchemaProperty(mealSchema, mealPlanObject, "weekEnd"), "date");
+        var mealSlotSchema = SchemaProperty(mealSchema, mealPlanObject, "slots").GetProperty("items");
+        AssertSchemaRequired(mealSchema, mealSlotSchema, "dayOfWeek", "mealType", "mealSourceType", "recipeName", "freeText", "notes", "isOptional", "isLocked");
+        AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "isOptional"), "boolean");
+        AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "isLocked"), "boolean");
+        AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "dayOfWeek"), "string");
+        AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "mealType"), "string");
+        AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "mealSourceType"), "string");
+        AssertSchemaAllowsNull(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "recipeName"));
+        AssertSchemaAllowsNull(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "freeText"));
+        AssertSchemaAllowsNull(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "notes"));
+
+        var routinesSchema = Assert.Single(tools, tool => tool.Name == "routines_get").ProtocolTool.OutputSchema!.Value;
+        AssertSchemaObjectProperties(routinesSchema, routinesSchema, "routines");
+        AssertSchemaRequired(routinesSchema, routinesSchema, "routines");
+        var routineSchema = SchemaProperty(routinesSchema, routinesSchema, "routines").GetProperty("items");
+        AssertSchemaRequired(routinesSchema, routineSchema, "routineId", "name", "scope", "kind", "frequency", "daysOfWeek", "daysOfMonth", "monthOfYear", "time", "endTime", "targetMemberIds", "status", "areaId");
+        AssertSchemaFormat(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "routineId"), "uuid");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "name"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "scope"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "kind"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "frequency"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "daysOfWeek"), "array");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "daysOfWeek").GetProperty("items"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "daysOfMonth"), "array");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "daysOfMonth").GetProperty("items"), "integer");
+        AssertSchemaAllowsNull(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "monthOfYear"));
+        AssertSchemaAllowsNull(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "time"));
+        AssertSchemaAllowsNull(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "endTime"));
+        AssertSchemaAllowsNull(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "areaId"));
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "status"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "targetMemberIds"), "array");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "targetMemberIds").GetProperty("items"), "string");
+        AssertSchemaFormat(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "targetMemberIds").GetProperty("items"), "uuid");
+
+        var areasSchema = Assert.Single(tools, tool => tool.Name == "areas_get").ProtocolTool.OutputSchema!.Value;
+        AssertSchemaObjectProperties(areasSchema, areasSchema, "areas");
+        AssertSchemaRequired(areasSchema, areasSchema, "areas");
+        var areaSchema = SchemaProperty(areasSchema, areasSchema, "areas").GetProperty("items");
+        AssertSchemaRequired(areasSchema, areaSchema, "areaId", "name", "color", "primaryOwnerId", "primaryOwnerName", "secondaryOwnerIds");
+        AssertSchemaFormat(areasSchema, SchemaProperty(areasSchema, areaSchema, "areaId"), "uuid");
+        AssertSchemaType(areasSchema, SchemaProperty(areasSchema, areaSchema, "name"), "string");
+        AssertSchemaType(areasSchema, SchemaProperty(areasSchema, areaSchema, "color"), "string");
+        AssertSchemaAllowsNull(areasSchema, SchemaProperty(areasSchema, areaSchema, "primaryOwnerId"));
+        AssertSchemaAllowsNull(areasSchema, SchemaProperty(areasSchema, areaSchema, "primaryOwnerName"));
+        AssertSchemaType(areasSchema, SchemaProperty(areasSchema, areaSchema, "secondaryOwnerIds"), "array");
+        AssertSchemaType(areasSchema, SchemaProperty(areasSchema, areaSchema, "secondaryOwnerIds").GetProperty("items"), "string");
+        AssertSchemaFormat(areasSchema, SchemaProperty(areasSchema, areaSchema, "secondaryOwnerIds").GetProperty("items"), "uuid");
+
+        var lists = await client.CallToolAsync("lists_get", new Dictionary<string, object?>());
+        Assert.NotEqual(true, lists.IsError);
+        var listId = lists.StructuredContent!.Value.GetProperty("lists")[0].GetProperty("listId").GetGuid();
+
+        var detail = await client.CallToolAsync("lists_get", new Dictionary<string, object?>
+        {
+            ["listId"] = listId.ToString(),
+        });
+        Assert.NotEqual(true, detail.IsError);
+        Assert.Equal("Synthetic item", detail.StructuredContent!.Value.GetProperty("list").GetProperty("items")[0].GetProperty("name").GetString());
+
+        var malformedList = await client.CallToolAsync("lists_get", new Dictionary<string, object?>
+        {
+            ["listId"] = "not-a-uuid",
+        });
+        Assert.True(malformedList.IsError);
+        Assert.Equal("INVALID_INPUT", malformedList.StructuredContent!.Value.GetProperty("code").GetString());
+
+        var familyBList = await client.CallToolAsync("lists_get", new Dictionary<string, object?>
+        {
+            ["listId"] = host.FamilyBListId.ToString(),
+        });
+        Assert.True(familyBList.IsError);
+        Assert.Equal("ACCESS_DENIED", familyBList.StructuredContent!.Value.GetProperty("code").GetString());
+        Assert.DoesNotContain("Family B", familyBList.StructuredContent.Value.GetRawText(), StringComparison.Ordinal);
+
+        host.Authorization.AdditionalAllowedFamilyIds.Add(host.FamilyBId);
+        var userCanReadFamilyB = await host.Dispatcher.Dispatch<GetListDetailResponse>(
+            new GetListDetailQuery(host.FamilyBListId, host.RequesterUserId, host.FamilyBId), CancellationToken.None);
+        Assert.Equal("Family B private list", userCanReadFamilyB.Name);
+        var tokenStillCannotReadFamilyB = await client.CallToolAsync("lists_get", new Dictionary<string, object?>
+        {
+            ["listId"] = host.FamilyBListId.ToString(),
+        });
+        Assert.True(tokenStillCannotReadFamilyB.IsError);
+        Assert.Equal("ACCESS_DENIED", tokenStillCannotReadFamilyB.StructuredContent!.Value.GetProperty("code").GetString());
+
+        var meal = await client.CallToolAsync("meal_plan_get", new Dictionary<string, object?>
+        {
+            ["weekStart"] = "2026-10-18",
+        });
+        Assert.NotEqual(true, meal.IsError);
+        Assert.Equal(35, meal.StructuredContent!.Value.GetProperty("mealPlan").GetProperty("slots").GetArrayLength());
+        Assert.Equal("Sunday", meal.StructuredContent.Value.GetProperty("mealPlan").GetProperty("slots")[0].GetProperty("dayOfWeek").GetString());
+
+        var emptyMeal = await client.CallToolAsync("meal_plan_get", new Dictionary<string, object?>
+        {
+            ["weekStart"] = "2026-10-25",
+        });
+        Assert.NotEqual(true, emptyMeal.IsError);
+        Assert.Equal(JsonValueKind.Null, emptyMeal.StructuredContent!.Value.GetProperty("mealPlan").ValueKind);
+
+        var routines = await client.CallToolAsync("routines_get", new Dictionary<string, object?>());
+        Assert.NotEqual(true, routines.IsError);
+        Assert.Contains(routines.StructuredContent!.Value.GetProperty("routines").EnumerateArray(),
+            item => item.GetProperty("name").GetString() == "Synthetic morning routine");
+
+        var areas = await client.CallToolAsync("areas_get", new Dictionary<string, object?>());
+        Assert.NotEqual(true, areas.IsError);
+        Assert.Contains(areas.StructuredContent!.Value.GetProperty("areas").EnumerateArray(),
+            item => item.GetProperty("name").GetString() == "Synthetic food area");
+
+        Assert.Contains(host.AuditMessages, message => message.Contains("capability=lists_get", StringComparison.Ordinal));
+        Assert.Contains(host.AuditMessages, message => message.Contains("capability=meal_plan_get", StringComparison.Ordinal));
+        Assert.Contains(host.AuditMessages, message => message.Contains("capability=routines_get", StringComparison.Ordinal));
+        Assert.Contains(host.AuditMessages, message => message.Contains("capability=areas_get", StringComparison.Ordinal));
+        Assert.Contains(host.AuditMessages, message => message.Contains($"user={host.RequesterUserId}", StringComparison.Ordinal)
+            && message.Contains($"household={host.FamilyAId}", StringComparison.Ordinal)
+            && message.Contains("client=synthetic-proof-client", StringComparison.Ordinal));
+        Assert.Contains(host.AuditMessages, message => message.Contains("MCP capability audit success capability=lists_get", StringComparison.Ordinal)
+            && message.Contains($"user={host.RequesterUserId}", StringComparison.Ordinal)
+            && message.Contains($"household={host.FamilyAId}", StringComparison.Ordinal)
+            && message.Contains("client=synthetic-proof-client", StringComparison.Ordinal)
+            && message.Contains("trace=", StringComparison.Ordinal));
+        Assert.Contains(host.AuditMessages, message => message.Contains("MCP capability audit tool_error capability=lists_get", StringComparison.Ordinal)
+            && message.Contains($"user={host.RequesterUserId}", StringComparison.Ordinal)
+            && message.Contains($"household={host.FamilyAId}", StringComparison.Ordinal)
+            && message.Contains("client=synthetic-proof-client", StringComparison.Ordinal)
+            && message.Contains("trace=", StringComparison.Ordinal));
+
+        host.Authorization.ThrowUnexpectedFailure = true;
+        var safeFailure = await client.CallToolAsync("areas_get", new Dictionary<string, object?>());
+        Assert.True(safeFailure.IsError);
+        Assert.Equal("INTERNAL_ERROR", safeFailure.StructuredContent!.Value.GetProperty("code").GetString());
+        Assert.Contains(host.AuditMessages, message => message.Contains("capability=areas_get", StringComparison.Ordinal)
+            && message.Contains("tool_error", StringComparison.Ordinal));
+        host.Authorization.ThrowUnexpectedFailure = false;
+
+        host.Authorization.BlockForCancellation = true;
+        using var cancellation = new CancellationTokenSource();
+        var pending = client.CallToolAsync("routines_get", new Dictionary<string, object?>(), cancellationToken: cancellation.Token);
+        await host.Authorization.WaitUntilStartedAsync();
+        cancellation.Cancel();
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(async () => await pending);
+        await host.Authorization.WaitUntilCancellationObservedAsync();
         Assert.Equal(0, host.Database.ChangeTracker.Entries().Count(entry =>
             entry.State is EntityState.Added or EntityState.Modified or EntityState.Deleted));
     }
@@ -388,6 +617,18 @@ public sealed class McpReadOnlyProofTests
         Assert.Equal(format, schema.GetProperty("format").GetString());
     }
 
+    private static void AssertSchemaType(System.Text.Json.JsonElement root,
+        System.Text.Json.JsonElement schema, string expectedType)
+    {
+        schema = ResolveSchema(root, schema);
+        if (schema.TryGetProperty("type", out var type))
+        {
+            if (type.ValueKind == System.Text.Json.JsonValueKind.String && type.GetString() == expectedType)
+                return;
+        }
+        Assert.Fail($"Expected schema type '{expectedType}': {schema.GetRawText()}");
+    }
+
     private static void AssertSchemaAllowsNull(System.Text.Json.JsonElement root,
         System.Text.Json.JsonElement schema)
     {
@@ -422,6 +663,27 @@ public sealed class McpReadOnlyProofTests
         return ResolveSchema(root, current);
     }
 
+    private static System.Text.Json.JsonElement ResolveObjectSchema(System.Text.Json.JsonElement root,
+        System.Text.Json.JsonElement schema)
+    {
+        schema = ResolveSchema(root, schema);
+        if (schema.TryGetProperty("properties", out _))
+            return schema;
+        foreach (var property in new[] { "anyOf", "oneOf" })
+        {
+            if (schema.TryGetProperty(property, out var branches))
+            {
+                var objectBranch = branches.EnumerateArray()
+                    .Select(branch => ResolveSchema(root, branch))
+                    .FirstOrDefault(branch => branch.TryGetProperty("properties", out _));
+                if (objectBranch.ValueKind != System.Text.Json.JsonValueKind.Undefined)
+                    return objectBranch;
+            }
+        }
+        Assert.Fail($"Expected object schema: {schema.GetRawText()}");
+        return default;
+    }
+
     private static void AssertJsonProperties(System.Text.Json.JsonElement value, params string[] properties)
     {
         var actual = value.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal).ToArray();
@@ -435,7 +697,7 @@ public sealed class McpReadOnlyProofTests
 
         private ReadOnlyProofHost(WebApplication app, string webRoot, DomusMindDbContext database,
             TestQueryDispatcher dispatcher, TestFamilyAuthorizationService authorization,
-            Guid familyAId, Guid familyBId, Guid requesterUserId, List<string> auditMessages)
+            Guid familyAId, Guid familyBId, Guid familyBListId, Guid requesterUserId, List<string> auditMessages)
         {
             _app = app;
             _webRoot = webRoot;
@@ -444,6 +706,7 @@ public sealed class McpReadOnlyProofTests
             Authorization = authorization;
             FamilyAId = familyAId;
             FamilyBId = familyBId;
+            FamilyBListId = familyBListId;
             RequesterUserId = requesterUserId;
             AuditMessages = auditMessages;
         }
@@ -453,6 +716,7 @@ public sealed class McpReadOnlyProofTests
         public TestFamilyAuthorizationService Authorization { get; }
         public Guid FamilyAId { get; }
         public Guid FamilyBId { get; }
+        public Guid FamilyBListId { get; }
         public Guid RequesterUserId { get; }
         public IReadOnlyCollection<string> AuditMessages { get; }
 
@@ -542,7 +806,7 @@ public sealed class McpReadOnlyProofTests
             app.MapDomusMindEndpoints(webRoot);
             await app.StartAsync();
             return new ReadOnlyProofHost(app, webRoot, database, dispatcher, authorization,
-                seed.FamilyAId, seed.FamilyBId, seed.RequesterUserId, auditMessages);
+                seed.FamilyAId, seed.FamilyBId, seed.FamilyBListId, seed.RequesterUserId, auditMessages);
         }
 
         public async Task<McpClient> CreateClientAsync()
@@ -572,6 +836,7 @@ public sealed class McpReadOnlyProofTests
             var now = new DateTime(2026, 10, 1, 0, 0, 0, DateTimeKind.Utc);
             var familyA = Domain.Family.Family.Create(FamilyId.New(), FamilyName.Create("Synthetic A"), null, now);
             var familyB = Domain.Family.Family.Create(FamilyId.New(), FamilyName.Create("Synthetic B"), null, now);
+            familyA.UpdateSettings(FamilyName.Create("Synthetic A"), "en", "sunday", "yyyy-MM-dd", now);
             var requesterUserId = Guid.NewGuid();
             var alexOne = MemberId.New();
             var alexTwo = MemberId.New();
@@ -591,6 +856,8 @@ public sealed class McpReadOnlyProofTests
             var eventB = CreateEvent(familyB.Id, "Family B secret", new DateOnly(2026, 10, 20), familyBMember.Id);
             var list = SharedList.Create(ListId.New(), familyA.Id, ListName.Create("Household list"),
                 ListKind.Create("Shopping"), null, null, null, now);
+            var familyBList = SharedList.Create(ListId.New(), familyB.Id, ListName.Create("Family B private list"),
+                ListKind.Create("Shopping"), null, null, null, now);
             var item = list.AddItem(ListItemId.New(), ListItemName.Create("Synthetic item"), null, null, now);
             list.SetItemTemporal(item.Id, new DateOnly(2026, 10, 25), null, null, now);
             AddReminderOnlyItem(list, "Reminder before window",
@@ -602,16 +869,48 @@ public sealed class McpReadOnlyProofTests
             AddReminderOnlyItem(list, "Reminder after window",
                 new DateTimeOffset(2026, 10, 31, 23, 59, 59, TimeSpan.Zero).AddTicks(10_000_000), now);
 
+            var mealPlan = MealPlan.Create(MealPlanId.New(), familyA.Id,
+                new DateOnly(2026, 10, 18), true, now);
+            mealPlan.UpdateSlot(
+                DomusMind.Domain.MealPlanning.Enums.DayOfWeek.Sunday,
+                MealType.Dinner,
+                MealSourceType.FreeText,
+                null,
+                "Sunday soup",
+                null,
+                false,
+                null,
+                now);
+
+            var area = ResponsibilityDomain.Create(
+                ResponsibilityDomainId.New(), familyA.Id,
+                ResponsibilityAreaName.Create("Synthetic food area"),
+                HexColor.From("#22C55E"), now);
+            area.AssignPrimaryOwner(alexOne);
+            var routine = Routine.Create(
+                RoutineId.New(), familyA.Id,
+                RoutineName.Create("Synthetic morning routine"),
+                RoutineScope.Household,
+                RoutineKind.Scheduled,
+                HexColor.From("#3B82F6"),
+                RoutineSchedule.Daily(new TimeOnly(7, 0)),
+                area.Id,
+                [],
+                now);
+
             database.Set<Domain.Family.Family>().AddRange(familyA, familyB);
             database.Set<Domain.Calendar.CalendarEvent>().AddRange(eventA, eventAEnd, eventAOutside, eventAAtMaxRange, eventB);
-            database.Set<SharedList>().Add(list);
+            database.Set<SharedList>().AddRange(list, familyBList);
+            database.Set<MealPlan>().Add(mealPlan);
+            database.Set<ResponsibilityDomain>().Add(area);
+            database.Set<Routine>().Add(routine);
             database.Set<TimelineNote>().Add(TimelineNote.Create(TimelineNoteId.New(), familyA.Id,
                 new DateOnly(2026, 10, 22), "Family A note", now));
             database.Set<TimelineNote>().Add(TimelineNote.Create(TimelineNoteId.New(), familyB.Id,
                 new DateOnly(2026, 10, 22), "Family B secret note", now));
             await database.SaveChangesAsync();
             database.ChangeTracker.Clear();
-            return new Seed(familyA.Id.Value, familyB.Id.Value, requesterUserId);
+            return new Seed(familyA.Id.Value, familyB.Id.Value, familyBList.Id.Value, requesterUserId);
         }
 
         private static Domain.Calendar.CalendarEvent CreateEvent(FamilyId familyId, string title, DateOnly date,
@@ -630,7 +929,7 @@ public sealed class McpReadOnlyProofTests
             list.SetItemTemporal(item.Id, null, reminder, null, now);
         }
 
-        private sealed record Seed(Guid FamilyAId, Guid FamilyBId, Guid RequesterUserId);
+        private sealed record Seed(Guid FamilyAId, Guid FamilyBId, Guid FamilyBListId, Guid RequesterUserId);
     }
 
     private sealed class RejectPersistenceWritesInterceptor : SaveChangesInterceptor
@@ -686,6 +985,7 @@ public sealed class McpReadOnlyProofTests
         public List<Guid> CheckedUserIds { get; } = [];
         public bool BlockForCancellation { get; set; }
         public bool ThrowUnexpectedFailure { get; set; }
+        public HashSet<Guid> AdditionalAllowedFamilyIds { get; } = [];
         public Task WaitUntilStartedAsync() => _started.Task.WaitAsync(TimeSpan.FromSeconds(5));
         public Task WaitUntilCancellationObservedAsync() => _cancellationObserved.Task.WaitAsync(TimeSpan.FromSeconds(5));
 
@@ -710,7 +1010,7 @@ public sealed class McpReadOnlyProofTests
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            return userId == allowedUserId && familyId == allowedFamilyId;
+            return userId == allowedUserId && (familyId == allowedFamilyId || AdditionalAllowedFamilyIds.Contains(familyId));
         }
     }
 
@@ -742,6 +1042,18 @@ public sealed class McpReadOnlyProofTests
                     .Handle(timeline, cancellationToken),
                 GetFamilyMembersQuery members => await new GetFamilyMembersQueryHandler(database, authorization, users)
                     .Handle(members, cancellationToken),
+                GetFamilyListsQuery lists => await new GetFamilyListsQueryHandler(database, authorization)
+                    .Handle(lists, cancellationToken),
+                GetListDetailQuery list => await new GetListDetailQueryHandler(database, authorization)
+                    .Handle(list, cancellationToken),
+                GetFamilyQuery family => await new GetFamilyQueryHandler(database, authorization)
+                    .Handle(family, cancellationToken),
+                GetMealPlanQuery mealPlan => await new GetMealPlanQueryHandler(database, authorization)
+                    .Handle(mealPlan, cancellationToken),
+                GetRoutinesByFamilyQuery routines => await new GetRoutinesByFamilyQueryHandler(database, authorization)
+                    .Handle(routines, cancellationToken),
+                GetHouseholdAreasQuery areas => await new GetHouseholdAreasQueryHandler(database, authorization)
+                    .Handle(areas, cancellationToken),
                 _ => throw new InvalidOperationException("Unsupported query in test-only MCP dispatcher."),
             };
             return (TResponse)response;

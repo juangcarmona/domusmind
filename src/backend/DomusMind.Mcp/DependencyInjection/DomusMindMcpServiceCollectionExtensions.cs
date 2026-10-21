@@ -74,7 +74,9 @@ public static class DomusMindMcpServiceCollectionExtensions
             configuration.GetValue<bool>("Mcp:OAuth:Enabled") &&
             configuration.GetValue<bool>("Mcp:RequireOAuth"))
         {
-            mcpBuilder.WithTools([typeof(DomusMindReadOnlyTools)]);
+            mcpBuilder.WithTools([
+                typeof(DomusMindReadOnlyTools),
+                typeof(DomusMindHouseholdReadTools)]);
         }
 
         if (configuration.GetValue<bool>("Mcp:Capabilities:HouseholdWrites") &&

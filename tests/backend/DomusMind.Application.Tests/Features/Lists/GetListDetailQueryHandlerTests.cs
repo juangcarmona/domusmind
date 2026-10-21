@@ -151,4 +151,18 @@ public sealed class GetListDetailQueryHandlerTests
         await act.Should().ThrowAsync<ListException>()
             .Where(e => e.Code == ListErrorCode.AccessDenied);
     }
+
+    [Fact]
+    public async Task Handle_WhenExpectedFamilyDoesNotMatch_ThrowsListExceptionBeforeUserMembershipLookup()
+    {
+        var (db, list) = await SeedListAsync();
+        var handler = BuildHandler(db: db);
+
+        var act = () => handler.Handle(
+            new GetListDetailQuery(list.Id.Value, Guid.NewGuid(), Guid.NewGuid()),
+            CancellationToken.None);
+
+        await act.Should().ThrowAsync<ListException>()
+            .Where(e => e.Code == ListErrorCode.AccessDenied);
+    }
 }

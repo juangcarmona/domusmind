@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "runId": "9894243e-10bd-4ec4-a255-4d986214b8e9",
+  "workItem": "232",
+  "branch": "feat/232-expand-mcp-capabilities",
+  "startedAt": "2026-10-21T04:42:08Z",
+  "executorModel": "gpt-5",
+  "reviewerModel": "gpt-6.1-sol",
+  "maxCorrectionRounds": 3,
+  "status": "awaiting-integration",
+  "stages": [
+    {
+      "name": "refine",
+      "result": "ready",
+      "inputCommit": "ae2d3754ffbd5ef3c1bc4cd554edfe2b432eecc5",
+      "outputCommit": "8364bf76cc6f2517627bb5de800a7d2eb3f1cf08",
+      "evidence": [
+        "github:issue/232",
+        "docs/delivery/ff/232/9894243e-10bd-4ec4-a255-4d986214b8e9/refined-issue-body.md"
+      ]
+    },
+    {
+      "name": "propose",
+      "result": "approved",
+      "inputCommit": "ed07c711768f68399320a24e5a98c8be826cb244",
+      "outputCommit": "90be0fcd644e7d83ec80b0f17fbd92c7dcd8ca3e",
+      "evidence": [
+        "docs/delivery/plans/issue-232-mcp-capability-expansion.md",
+        "github:pull/273"
+      ]
+    },
+    {
+      "name": "implement",
+      "result": "done-awaiting-integration",
+      "inputCommit": "90be0fcd644e7d83ec80b0f17fbd92c7dcd8ca3e",
+      "outputCommit": "af3039c4a19245536d9bf9a80dfb1ed7e4ba33b7",
+      "evidence": [
+        "src/backend/DomusMind.Mcp/Tools/DomusMindHouseholdReadTools.cs",
+        "src/backend/DomusMind.Application/Features/Lists/GetListDetail/GetListDetailQuery.cs",
+        "tests/backend/DomusMind.Api.Tests/Mcp/McpReadOnlyProofTests.cs",
+        "tests/backend/DomusMind.Api.Tests/Mcp/McpHouseholdReadToolsTests.cs",
+        "docs/delivery/plans/issue-232-mcp-capability-expansion.md",
+        "github:pull/273",
+        "github:actions/backend-ci/39547837685",
+        "github:actions/codeql/39547840674",
+        "github:actions/docs-ci/39547843410",
+        "github:codeql-analysis/1994010444",
+        "github:codeql-analysis/1993994595"
+      ]
+    },
+    {
+      "name": "verify-done",
+      "result": "approved-awaiting-integration",
+      "inputCommit": "ddd39bbc810511ad81680da64cfe27aa59b6e529",
+      "outputCommit": "ddd39bbc810511ad81680da64cfe27aa59b6e529",
+      "evidence": [
+        "independent-review:01a15ce6-bf8b-7421-aaa8-9ee0a4e339f2",
+        "github:pull/273",
+        "github:actions/codeql/39548414496",
+        "github:actions/docs-ci/39548417352",
+        "github:actions/backend-ci/39547837685",
+        "github:actions/backend-ci/39548411830"
+      ],
+      "findings": "Approved with no P0-P3 findings in scope. The exact-head backend rerun remains red only on the unchanged inherited confirmed-write PostgreSQL concurrency test; the implementation commit af3039c has a green hosted backend run, and no unrelated code is changed."
+    }
+  ],
+  "reviews": [
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "proposal",
+      "commit": "477154b811c82e9372dbeff97ed948b9e18b9481",
+      "decision": "request-changes",
+      "correction": 1,
+      "findings": "Bind list detail to the MCP token household; resolve household-configured week boundaries and unset-setting behavior; clarify meal projection limits; add representative interactions and value evidence."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "proposal",
+      "commit": "73239617856353efe1d73fc0417abaefd8d45b0c",
+      "decision": "approve",
+      "findings": "No P0/P1 findings. Non-blocking P2s requested refreshing PR text and making household-first meal ordering explicit in tasks/tests."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "ecf2ac8",
+      "decision": "request-changes",
+      "correction": 1,
+      "findings": "Add official-client HTTP coverage against real application handlers, canonical meal ordering, safe list-not-found mapping, and capability contract documentation."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "a6ed1a8",
+      "decision": "request-changes",
+      "correction": 2,
+      "findings": "Complete A+B household binding evidence, read-only schema and audit assertions, cancellation/safe-failure coverage, and field-level contract documentation."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "1199ded",
+      "decision": "request-changes",
+      "correction": 3,
+      "findings": "Compare complete meal sequences, strengthen nested schema and audit assertions, and qualify tool-level error-envelope documentation."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "6928648",
+      "decision": "request-changes",
+      "correction": 4,
+      "findings": "Add nested required/type/nullability checks for all selected output contracts."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "b73ecd8",
+      "decision": "request-changes",
+      "correction": 5,
+      "findings": "Make required primitive schema type checks exact and cover routine/area primitive and array-element types."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "implementation",
+      "commit": "af3039c",
+      "decision": "approve",
+      "findings": "No remaining findings within the implementation review scope."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "done",
+      "commit": "ddd39bbc810511ad81680da64cfe27aa59b6e529",
+      "decision": "approve",
+      "findings": "No P0-P3 findings in scope. The exact head preserves the approved implementation; the latest backend failure is the unchanged inherited confirmed-write PostgreSQL concurrency test, outside this read-only slice."
+    }
+  ],
+  "corrections": [
+    {
+      "gate": "propose",
+      "round": 1,
+      "requestedChanges": "Add an application-owned expected-family guard to list detail, use GetFamilyQuery and full GetMealPlanQuery with configured week-boundary validation, define unset-setting behavior, add meal output semantics, and document household interactions.",
+      "resultingCommit": "3c4dc6ad3dc17b617541f64dee63d6e4ecce6f1f"
+    },
+    {
+      "gate": "propose",
+      "round": 2,
+      "requestedChanges": "Refresh Draft PR description to the corrected proposal and explicitly specify MCP boundary rotation and Sunday-first/Monday-first tests for household meal ordering.",
+      "resultingCommit": "48bc1093998fef9bd5359e67ef645c3d8aeafa68"
+    },
+    {
+      "gate": "implement",
+      "round": 1,
+      "requestedChanges": "Add official-client HTTP coverage against real application handlers, canonical meal ordering, safe list-not-found mapping, and capability contract documentation.",
+      "resultingCommit": "a6ed1a8"
+    },
+    {
+      "gate": "implement",
+      "round": 2,
+      "requestedChanges": "Complete A+B household binding evidence, read-only schema and audit assertions, cancellation/safe-failure coverage, and field-level contract documentation.",
+      "resultingCommit": "1199ded"
+    },
+    {
+      "gate": "implement",
+      "round": 3,
+      "requestedChanges": "Compare complete meal sequences, strengthen nested schema and audit assertions, and qualify tool-level error-envelope documentation.",
+      "resultingCommit": "6928648"
+    },
+    {
+      "gate": "implement",
+      "round": 4,
+      "requestedChanges": "Add nested required/type/nullability checks for all selected output contracts.",
+      "resultingCommit": "b73ecd8"
+    },
+    {
+      "gate": "implement",
+      "round": 5,
+      "requestedChanges": "Make required primitive schema type checks exact and cover routine/area primitive and array-element types.",
+      "resultingCommit": "af3039c"
+    }
+  ],
+  "stopReason": "Done review approved ddd39bb with no scoped findings. Integration is authorized; exact-head backend CI remains red only on the unchanged inherited confirmed-write PostgreSQL concurrency test, while the implementation commit af3039c has a green full hosted run and CodeQL/docs are green on ddd39bb.",
+  "pullRequest": "https://github.com/juangcarmona/domusmind/pull/273",
+  "links": {
+    "issue": "https://github.com/juangcarmona/domusmind/issues/232",
+    "epic": "https://github.com/juangcarmona/domusmind/issues/224"
+  }
+}
