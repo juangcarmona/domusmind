@@ -108,4 +108,3 @@ If a client requires a server capability not currently supported, create a separ
 - [Anthropic: custom connector security and setup](https://support.anthropic.com/en/articles/11175166-about-custom-integrations-using-remote-mcp)
 - [MCP authorization](https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization)
 - [MCP transports](https://modelcontextprotocol.io/specification/2026-07-28/basic/transports)
-

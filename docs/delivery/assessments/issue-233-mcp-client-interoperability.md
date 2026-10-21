@@ -39,4 +39,3 @@ These prove the server-side protocol and authorization contract. They do not pro
 ## Release decision
 
 Until the external tests are run, DomusMind can claim MCP protocol compatibility and a tested server-side OAuth/read/write contract. It must not claim verified ChatGPT or Claude product compatibility, broad self-hosted remote support, or local STDIO support.
-
