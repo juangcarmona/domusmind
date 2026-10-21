@@ -152,6 +152,8 @@ public sealed class McpReadOnlyProofTests
         AssertSchemaRequired(listsSchema, listSummarySchema, "listId", "name", "kind", "areaId", "linkedPlanId", "uncheckedCount");
         AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "listId"), "string");
         AssertSchemaFormat(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "listId"), "uuid");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "name"), "string");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "kind"), "string");
         AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "uncheckedCount"), "integer");
         AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "areaId"));
         AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listSummarySchema, "linkedPlanId"));
@@ -167,6 +169,10 @@ public sealed class McpReadOnlyProofTests
         AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listItemSchema, "dueDate"));
         AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listItemSchema, "reminder"));
         AssertSchemaAllowsNull(listsSchema, SchemaProperty(listsSchema, listItemSchema, "targetMemberId"));
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listItemSchema, "itemId"), "string");
+        AssertSchemaFormat(listsSchema, SchemaProperty(listsSchema, listItemSchema, "itemId"), "uuid");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listItemSchema, "name"), "string");
+        AssertSchemaType(listsSchema, SchemaProperty(listsSchema, listItemSchema, "importance"), "boolean");
 
         var mealSchema = Assert.Single(tools, tool => tool.Name == "meal_plan_get").ProtocolTool.OutputSchema!.Value;
         AssertSchemaObjectProperties(mealSchema, mealSchema, "mealPlan");
@@ -190,6 +196,9 @@ public sealed class McpReadOnlyProofTests
         AssertSchemaRequired(mealSchema, mealSlotSchema, "dayOfWeek", "mealType", "mealSourceType", "recipeName", "freeText", "notes", "isOptional", "isLocked");
         AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "isOptional"), "boolean");
         AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "isLocked"), "boolean");
+        AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "dayOfWeek"), "string");
+        AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "mealType"), "string");
+        AssertSchemaType(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "mealSourceType"), "string");
         AssertSchemaAllowsNull(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "recipeName"));
         AssertSchemaAllowsNull(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "freeText"));
         AssertSchemaAllowsNull(mealSchema, SchemaProperty(mealSchema, mealSlotSchema, "notes"));
@@ -200,10 +209,22 @@ public sealed class McpReadOnlyProofTests
         var routineSchema = SchemaProperty(routinesSchema, routinesSchema, "routines").GetProperty("items");
         AssertSchemaRequired(routinesSchema, routineSchema, "routineId", "name", "scope", "kind", "frequency", "daysOfWeek", "daysOfMonth", "monthOfYear", "time", "endTime", "targetMemberIds", "status", "areaId");
         AssertSchemaFormat(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "routineId"), "uuid");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "name"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "scope"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "kind"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "frequency"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "daysOfWeek"), "array");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "daysOfWeek").GetProperty("items"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "daysOfMonth"), "array");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "daysOfMonth").GetProperty("items"), "integer");
         AssertSchemaAllowsNull(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "monthOfYear"));
         AssertSchemaAllowsNull(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "time"));
         AssertSchemaAllowsNull(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "endTime"));
         AssertSchemaAllowsNull(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "areaId"));
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "status"), "string");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "targetMemberIds"), "array");
+        AssertSchemaType(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "targetMemberIds").GetProperty("items"), "string");
+        AssertSchemaFormat(routinesSchema, SchemaProperty(routinesSchema, routineSchema, "targetMemberIds").GetProperty("items"), "uuid");
 
         var areasSchema = Assert.Single(tools, tool => tool.Name == "areas_get").ProtocolTool.OutputSchema!.Value;
         AssertSchemaObjectProperties(areasSchema, areasSchema, "areas");
@@ -211,8 +232,13 @@ public sealed class McpReadOnlyProofTests
         var areaSchema = SchemaProperty(areasSchema, areasSchema, "areas").GetProperty("items");
         AssertSchemaRequired(areasSchema, areaSchema, "areaId", "name", "color", "primaryOwnerId", "primaryOwnerName", "secondaryOwnerIds");
         AssertSchemaFormat(areasSchema, SchemaProperty(areasSchema, areaSchema, "areaId"), "uuid");
+        AssertSchemaType(areasSchema, SchemaProperty(areasSchema, areaSchema, "name"), "string");
+        AssertSchemaType(areasSchema, SchemaProperty(areasSchema, areaSchema, "color"), "string");
         AssertSchemaAllowsNull(areasSchema, SchemaProperty(areasSchema, areaSchema, "primaryOwnerId"));
         AssertSchemaAllowsNull(areasSchema, SchemaProperty(areasSchema, areaSchema, "primaryOwnerName"));
+        AssertSchemaType(areasSchema, SchemaProperty(areasSchema, areaSchema, "secondaryOwnerIds"), "array");
+        AssertSchemaType(areasSchema, SchemaProperty(areasSchema, areaSchema, "secondaryOwnerIds").GetProperty("items"), "string");
+        AssertSchemaFormat(areasSchema, SchemaProperty(areasSchema, areaSchema, "secondaryOwnerIds").GetProperty("items"), "uuid");
 
         var lists = await client.CallToolAsync("lists_get", new Dictionary<string, object?>());
         Assert.NotEqual(true, lists.IsError);
@@ -598,9 +624,6 @@ public sealed class McpReadOnlyProofTests
         if (schema.TryGetProperty("type", out var type))
         {
             if (type.ValueKind == System.Text.Json.JsonValueKind.String && type.GetString() == expectedType)
-                return;
-            if (type.ValueKind == System.Text.Json.JsonValueKind.Array && type.EnumerateArray()
-                    .Any(value => value.GetString() == expectedType))
                 return;
         }
         Assert.Fail($"Expected schema type '{expectedType}': {schema.GetRawText()}");
