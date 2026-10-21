@@ -254,6 +254,7 @@ public sealed class McpEndpointCompositionTests
                 ContentRootPath = webRoot,
                 WebRootPath = webRoot,
             });
+            builder.WebHost.UseDefaultServiceProvider(options => options.ValidateScopes = true);
             builder.WebHost.UseTestServer();
             builder.Logging.ClearProviders();
             builder.Services.AddControllers().AddApplicationPart(typeof(SystemController).Assembly);
