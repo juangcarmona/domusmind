@@ -17,6 +17,7 @@ COPY src/backend/DomusMind.Application/DomusMind.Application.csproj         src/
 COPY src/backend/DomusMind.Contracts/DomusMind.Contracts.csproj             src/backend/DomusMind.Contracts/
 COPY src/backend/DomusMind.Domain/DomusMind.Domain.csproj                   src/backend/DomusMind.Domain/
 COPY src/backend/DomusMind.Infrastructure/DomusMind.Infrastructure.csproj   src/backend/DomusMind.Infrastructure/
+COPY src/backend/DomusMind.Mcp/DomusMind.Mcp.csproj                         src/backend/DomusMind.Mcp/
 
 # Copy backend source and pre-built frontend dist for publish
 COPY src/backend/ src/backend/

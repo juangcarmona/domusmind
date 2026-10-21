@@ -31,6 +31,7 @@
     <ProjectReference Include="..\DomusMind.Application\DomusMind.Application.csproj" />
     <ProjectReference Include="..\DomusMind.Contracts\DomusMind.Contracts.csproj" />
     <ProjectReference Include="..\DomusMind.Infrastructure\DomusMind.Infrastructure.csproj" />
+    <ProjectReference Include="..\DomusMind.Mcp\DomusMind.Mcp.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="Exists('$(FrontendDistDir)')">

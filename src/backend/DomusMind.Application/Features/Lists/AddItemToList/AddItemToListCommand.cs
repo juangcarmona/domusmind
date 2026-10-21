@@ -9,4 +9,5 @@ public sealed record AddItemToListCommand(
     string? Quantity,
     string? Note,
     Guid? AddedByMemberId,
-    Guid RequestedByUserId) : ICommand<AddItemToListResponse>;
+    Guid RequestedByUserId,
+    Guid? ExpectedFamilyId = null) : ICommand<AddItemToListResponse>;

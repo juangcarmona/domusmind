@@ -1,0 +1,190 @@
+{
+  "schemaVersion": 1,
+  "runId": "ab515c19-682f-45e9-a1e3-545b16af43bd",
+  "workItem": "229",
+  "branch": "feat/229-oauth-oidc-mcp-authorization",
+  "startedAt": "2026-10-20T16:00:00Z",
+  "executorModel": "GPT-5 (active Codex model)",
+  "reviewerModel": "gpt-6.1-sol (available distinct model override)",
+  "maxCorrectionRounds": 3,
+  "status": "complete",
+  "stages": [
+    {
+      "name": "refine",
+      "startedAt": "2026-10-20T16:00:00Z",
+      "endedAt": "2026-10-20T16:04:00Z",
+      "inputCommit": "3e3501e7127618d2ecd48e95608917e03c5a421b",
+      "outputCommit": "3e3501e7127618d2ecd48e95608917e03c5a421b",
+      "result": "ready",
+      "evidence": [
+        "Reviewed #229, the MCP Product Change, the #226 architecture assessment, current identity/authorization architecture, and the merged #227/#228 delivery boundary.",
+        "Confirmed that the existing local JWT module is not an OAuth/OIDC provider and that application handlers remain the household authorization boundary.",
+        "Recorded explicit scope exclusions: no write tools, no token passthrough, no provider selection by assumption, and no production credentials during this planning stage."
+      ]
+    },
+    {
+      "name": "propose",
+      "startedAt": "2026-10-20T16:04:00Z",
+      "endedAt": "2026-10-20T16:18:00Z",
+      "inputCommit": "3e3501e7127618d2ecd48e95608917e03c5a421b",
+      "outputCommit": "000ae3971a9e45c0204ef359631fb0e45689884d",
+      "result": "approved-plan",
+      "evidence": [
+        "Draft PR #270 opened for the documentation-only proposal.",
+        "Independent proposal review at exact head c151e6a5ec1224e1c6019925e3b31d69d1ac44e0 requested four corrections: decide provider/placement, define household-bound consent and revocation contracts, require canonical resource binding, and specify CIMD SSRF/DNS-rebinding defenses.",
+        "Correction round 1 selected in-process OpenIddict in DomusMind.Api, defined a single household-bound grant tuple with immediate next-request revocation checks, made resource mandatory end-to-end, and added metadata-fetch security controls and tests.",
+        "Independent proposal review round 2 approved exact corrected plan head 000ae3971a9e45c0204ef359631fb0e45689884d; implementation may begin."
+      ]
+    },
+    {
+      "name": "implement",
+      "startedAt": "2026-10-20T16:25:00Z",
+      "endedAt": "2026-10-20T16:32:00Z",
+      "inputCommit": "12457f0",
+      "outputCommit": "5338a58",
+      "result": "implemented",
+      "evidence": [
+        "Added OpenIddict 7.7.2 authorization-server and EF Core token/authorization persistence in DomusMind.Api's existing host; added migration and proposed ADR-0012.",
+        "Added protected-resource metadata, OIDC discovery, exact MCP resource registration, Authorization Code + PKCE configuration, short-lived access tokens, refresh-token configuration, and revocation-capable token validation.",
+        "Mapped the interactive authorization boundary to existing AuthUser records and FamilyAuthorizationService checks; household context is carried in the token and local API JWTs remain a separate scheme.",
+        "Added an explicit antiforgery-protected OAuth consent form; only an explicit allow submission can issue an authorization code.",
+        "Added a token endpoint for authorization-code and refresh-token grants with exact resource checks, local OpenIddict validation, audience enforcement, current user/household checks, and consent/token revocation.",
+        "Added MCP bearer enforcement with safe 401 challenges, exact audience checks, current AuthUser and household access checks, structured post-execution security audit events, configurable rate limiting, and no production tools or writes; no token passthrough or persistence access from MCP middleware.",
+        "Closed the independent audit findings with production antiforgery registration, grant-specific consent withdrawal, rolling refresh-token reuse protection, isolated test databases, and a real Streamable HTTP MCP client test.",
+        "Enabled authorization-entry validation so revoking a grant denies tokens created concurrently with withdrawal; isolated refresh-token reuse evidence from current account/membership scenarios.",
+        "Focused OAuth contract tests pass: 15 passed, including login, explicit consent, PKCE exchange, refresh rotation/reuse, actual MCP transport, resource/audience, expiry, insufficient scope, current account/membership denial, authorization replay, rate limiting, and revocation. Full Release suite passes: 879 passed, 3 skipped. Build passes with 0 errors; inherited Kiota and MessagePack advisories remain documented exceptions.",
+        "Sanitized the structured audit operation to the fixed value MCP /mcp so request-controlled method/path values cannot reach logs and CodeQL log-forging findings are eliminated.",
+        "Final-head GitHub backend CI run 39461961513 passed build, 882 tests with zero skips, and publish; final-head CodeQL run 39461966335 passed C# and JavaScript analysis, and the repository has no open code-scanning alerts."
+      ]
+    },
+    {
+      "name": "verify-done",
+      "startedAt": "2026-10-20T16:55:00Z",
+      "endedAt": "2026-10-20T17:07:00Z",
+      "inputCommit": "6950e7d6db5f9d64c059951978476594637d8b30",
+      "outputCommit": "6950e7d6db5f9d64c059951978476594637d8b30",
+      "result": "evidence-complete-owner-approved",
+      "evidence": [
+        "The independent final-head Done audit approved the exact final implementation/documentation head after the CodeQL log-forging correction and its evidence-only metadata commit.",
+        "Owner approved #229 Done; the final audit verified fixed MCP audit operation logging, zero open code-scanning or secret-scanning alerts, backend CI 39461961513 with 882 tests and zero skips, and CodeQL 39461966335 for C# and JavaScript.",
+        "Inherited Kiota, MessagePack, http-cache-semantics, and KaTeX advisories remain accepted deferred exceptions from the prior owner approval; no new application functionality beyond this issue's OAuth/OIDC boundary was introduced."
+      ]
+    },
+    {
+      "name": "integrate",
+      "startedAt": "2026-10-20T17:08:42Z",
+      "endedAt": "2026-10-20T17:08:42Z",
+      "inputCommit": "6950e7d6db5f9d64c059951978476594637d8b30",
+      "outputCommit": "50307149b6f2a472f0cbce87a16c773eecf6f8b7",
+      "result": "merged",
+      "evidence": [
+        "Owner approved #229 Done in the active Fast Forward loop.",
+        "PR #270 was rechecked as open, non-draft, clean and mergeable, then squash-merged into feat/224-mcp-household-assistants with an explicit implementation commit message.",
+        "Issue #229 was closed with the canonical status:done label and the merge/evidence links were recorded in the issue."
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "gate": "plan",
+      "round": 1,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "c151e6a5ec1224e1c6019925e3b31d69d1ac44e0",
+      "verdict": "request-changes",
+      "findings": [
+        "Provider/placement was unresolved despite #226 assigning the decision to #229 planning.",
+        "Household-bound consent, multi-household switching, token lifetimes and revocation timing were not testable enough.",
+        "The plan allowed an equivalent audience contract instead of requiring the canonical MCP resource parameter and token binding.",
+        "CIMD metadata-fetch SSRF, redirects and DNS rebinding lacked explicit controls and negative tests."
+      ],
+      "evidence": "Independent read-only proposal review; no files or GitHub state changed."
+    },
+    {
+      "gate": "plan",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "000ae3971a9e45c0204ef359631fb0e45689884d",
+      "verdict": "approve",
+      "findings": [],
+      "evidence": "Independent read-only proposal review confirmed all four correction findings closed; no runtime tests were run."
+    },
+    {
+      "gate": "done",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "40669054005a688c6bb9a6cd63ae26e72d8e03da",
+      "verdict": "request-changes",
+      "findings": [
+        "CodeQL reported four open cs/log-forging findings for request-controlled method/path values in MCP security audit logs; the FF metadata incorrectly claimed no findings."
+      ],
+      "evidence": "Independent final-head Done audit; backend CI passed 882 tests with zero skips, but CodeQL findings required correction."
+    },
+    {
+      "gate": "done",
+      "round": 3,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "58d67ab30737278dde9e5832be0d853e38b19b4c",
+      "verdict": "approve",
+      "findings": [],
+      "evidence": "Independent final-head Done audit verified fixed audit operation, zero open code-scanning or secret-scanning alerts, backend CI 39461961513 with 882 tests and zero skips, and CodeQL 39461966335 for C# and JavaScript. No files or GitHub state changed."
+    }
+  ],
+  "corrections": [
+    {
+      "gate": "plan",
+      "round": 1,
+      "addressesReviewRound": 1,
+      "changes": [
+        "Selected in-process OpenIddict server/validation in DomusMind.Api, with AuthUser mapping and infrastructure token/consent records; documented rejected alternatives and ADR requirement.",
+        "Bound grants/tokens to AuthUser, client, resource, household and scopes; defined multi-household re-consent and five-minute access/rotating thirty-day refresh policy with immediate next-request token-entry validation and live authorization checks.",
+        "Required the exact canonical MCP resource in authorization and token requests and rejected missing/alternate/mismatched values.",
+        "Added pre-registration-first policy and CIMD HTTPS, bounded, no-redirect, no-private-address, DNS-rebinding and timeout/size controls with negative tests."
+      ],
+      "resultingCommit": "000ae3971a9e45c0204ef359631fb0e45689884d",
+      "validation": "git diff --check and Markdown lint passed. Independent proposal review round 2 approved the corrected plan."
+    },
+    {
+      "gate": "done",
+      "round": 1,
+      "addressesReviewRound": 1,
+      "changes": [
+        "Registered antiforgery in production composition and added production-safe certificate/disabled-mode coverage.",
+        "Changed consent withdrawal to validate one OpenIddict AdHoc authorization against the configured client and subject, then revoke only its tokens.",
+        "Added a structured redacted MCP security audit event around authorization denial and completed/failed transport execution, plus a bounded fixed-window rate limiter.",
+        "Separated authorization-code replay from refresh-token reuse evidence, enabled zero-leeway rolling refresh tokens, exercised the official Streamable HTTP MCP client, and added negative OAuth boundary tests."
+      ],
+      "resultingCommit": "ae4fa48",
+      "validation": "Focused OAuth suite 15/15; full Release suite 879 passed, 3 skipped; Release build 0 errors; backend CI and CodeQL passed on ae4fa48. Final independent Done audit found four CodeQL log-forging alerts, corrected in round 3."
+    },
+    {
+      "gate": "done",
+      "round": 3,
+      "addressesReviewRound": 2,
+      "changes": [
+        "Replaced request-controlled method/path interpolation in MCP security audit events with the fixed semantic operation identifier MCP /mcp, including rate-limit audit events.",
+        "Re-ran the focused OAuth suite, full Release suite, Release build, backend CI, and CodeQL; no open code-scanning alerts remain."
+      ],
+      "resultingCommit": "5338a58",
+      "validation": "Focused OAuth suite 15/15; full Release suite 879 passed, 3 skipped; Release build 0 errors; backend CI run 39461961513 passed 882 tests with zero skips and publish; CodeQL run 39461966335 passed both analyses with no open alerts. Final independent Done audit pending."
+    }
+  ],
+  "stopReason": "Completed after owner-only Done approval and integration of #229; continuation to the next child issue is now permitted.",
+  "pullRequest": {
+    "number": 270,
+    "url": "https://github.com/juangcarmona/domusmind/pull/270",
+    "draft": false,
+    "base": "feat/224-mcp-household-assistants",
+    "head": "feat/229-oauth-oidc-mcp-authorization",
+    "mergedAt": "2026-10-20T17:08:42Z",
+    "mergeCommit": "50307149b6f2a472f0cbce87a16c773eecf6f8b7"
+  },
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/224",
+    "https://github.com/juangcarmona/domusmind/issues/226",
+    "https://github.com/juangcarmona/domusmind/issues/227",
+    "https://github.com/juangcarmona/domusmind/issues/228",
+    "https://github.com/juangcarmona/domusmind/issues/229",
+    "https://github.com/juangcarmona/domusmind/pull/225",
+    "https://github.com/juangcarmona/domusmind/pull/270"
+  ]
+}

@@ -7,7 +7,10 @@ using DomusMind.Infrastructure.Messaging;
 using DomusMind.Infrastructure.Persistence;
 using DomusMind.Infrastructure.Integrations.Calendar.Microsoft;
 using DomusMind.Api.Realtime;
+using DomusMind.Application.Abstractions.Notifications;
 using DomusMind.Api.Telemetry;
+using DomusMind.Api.Mcp;
+using DomusMind.Mcp.DependencyInjection;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -57,13 +60,20 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 var swaggerEnabled = builder.Configuration.GetValue<bool?>("Swagger:Enabled")
     ?? builder.Environment.IsDevelopment();
 
-builder.Services.AddControllers();
-builder.Services.AddSingleton<IListChangeNotifier, ListChangeNotifier>();
+// Add the MVC filter services required by [ValidateAntiForgeryToken] on the
+// first-party MCP approval endpoints; the application remains controller/API based.
+builder.Services.AddControllersWithViews();
+builder.Services.AddAntiforgery();
+builder.Services.AddSingleton<ListChangeNotifier>();
+builder.Services.AddSingleton<IListChangeNotifier>(sp => sp.GetRequiredService<ListChangeNotifier>());
+builder.Services.AddSingleton<IListChangePublisher>(sp => sp.GetRequiredService<ListChangeNotifier>());
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddDomusMindAuthentication(builder.Configuration);
+builder.Services.AddDomusMindMcpOAuth(builder.Configuration, builder.Environment);
 builder.Services.AddDomusMindAuthorization();
 builder.Services.AddDomusMindOpenApi();
+builder.Services.AddDomusMindMcp(builder.Configuration);
 builder.AddDevelopmentTelemetry();
 
 var app = builder.Build();
@@ -130,6 +140,7 @@ app.UseExceptionHandler(errorApp =>
 app.UseForwardedHeaders();
 
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 
 if (swaggerEnabled)
 {
@@ -139,6 +150,8 @@ if (swaggerEnabled)
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseDomusMindMcpOAuthResourceAuthorization();
+app.UseDomusMindMcpOriginValidation();
 
 var webRootPath = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");
 if (Directory.Exists(webRootPath))
@@ -147,27 +160,7 @@ if (Directory.Exists(webRootPath))
     app.UseStaticFiles();
 }
 
-app.MapControllers();
-var spaIndexPath = Path.Combine(webRootPath, "index.html");
-if (File.Exists(spaIndexPath))
-{
-    app.MapFallback(async context =>
-    {
-        if (context.Request.Path.StartsWithSegments("/api", StringComparison.OrdinalIgnoreCase) ||
-            context.Request.Path.StartsWithSegments("/swagger", StringComparison.OrdinalIgnoreCase))
-        {
-            context.Response.StatusCode = StatusCodes.Status404NotFound;
-            return;
-        }
-
-        context.Response.ContentType = "text/html; charset=utf-8";
-        await context.Response.SendFileAsync(spaIndexPath);
-    });
-}
-else
-{
-    app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
-}
+app.MapDomusMindEndpoints(webRootPath);
 
 using (var scope = app.Services.CreateScope())
 {
@@ -175,6 +168,10 @@ using (var scope = app.Services.CreateScope())
     await dbContext.Database.MigrateAsync();
 }
 await AuthSeedService.SeedAdminAsync(app.Services, CancellationToken.None);
+using (var scope = app.Services.CreateScope())
+{
+    await McpOAuthSeedService.SeedClientAsync(scope.ServiceProvider, CancellationToken.None);
+}
 await LanguageSeedService.SeedAsync(app.Services, CancellationToken.None);
 
 app.Run();

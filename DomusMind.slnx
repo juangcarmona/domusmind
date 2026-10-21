@@ -7,6 +7,7 @@
     <Project Path="src/backend/DomusMind.Contracts/DomusMind.Contracts.csproj" />
     <Project Path="src/backend/DomusMind.Domain/DomusMind.Domain.csproj" />
     <Project Path="src/backend/DomusMind.Infrastructure/DomusMind.Infrastructure.csproj" />
+    <Project Path="src/backend/DomusMind.Mcp/DomusMind.Mcp.csproj" />
   </Folder>
   <Folder Name="/tests/" />
   <Folder Name="/tests/backend/">

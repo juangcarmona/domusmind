@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "runId": "f84c917b-7d8d-443c-905b-5ba83dc85b68",
+  "workItem": "226",
+  "branch": "feat/226-assess-mcp-hosting-identity-authorization-clients",
+  "startedAt": "2026-10-19T23:08:21Z",
+  "executorModel": "GPT-5 (active Codex model)",
+  "reviewerModel": "gpt-6.1-sol (available distinct model override)",
+  "maxCorrectionRounds": 3,
+  "status": "complete",
+  "stages": [
+    {
+      "name": "refine",
+      "startedAt": "2026-10-19T23:08:21Z",
+      "endedAt": "2026-10-19T23:09:44Z",
+      "inputCommit": "09c17acdd9d6ecb20daf7f4cc14648015b86a1d8",
+      "outputCommit": "09c17acdd9d6ecb20daf7f4cc14648015b86a1d8",
+      "result": "ready",
+      "evidence": [
+        "Issue #226 refined with outcome-oriented title and stakeholder context; status:ready label verified.",
+        "Definition of Ready dimensions: title, description, stakeholders, dependencies, criteria, scope, product rules, affected behavior, quality expectations, existing decisions, risks are satisfied; priority is N/A because formal prioritization is disabled; test impact belongs to Plan.",
+        "Review debt reported: issue #205 closed on 2026-10-19; no docs/reviews/issue-205.md found. The lifecycle baseline date makes its debt classification uncertain; non-blocking."
+      ]
+    },
+    {
+      "name": "propose",
+      "startedAt": "2026-10-19T23:09:44Z",
+      "endedAt": "2026-10-19T23:18:40Z",
+      "inputCommit": "09c17acdd9d6ecb20daf7f4cc14648015b86a1d8",
+      "outputCommit": "9b855c1388406b7b6b87304506600fd5881d48ed",
+      "result": "approved",
+      "evidence": [
+        "Plan artifact: docs/delivery/plans/issue-226-mcp-architecture-assessment.md",
+        "Draft stacked PR #267 targets feat/224-mcp-household-assistants; umbrella PR #225 remains the main-target draft.",
+        "Plan Markdown lint, JSON parsing, and git diff checks passed. ProductShape validation, architecture citation verification, and OpenSpec citation verification all exited 0; ProductShape validation reported 59 existing low-confidence draft warnings.",
+        "Two bounded correction rounds followed independent reviews; final review approved exact head 560288de103d86fa3cb305239aabf70b3fa117e8. Stacked PR #267 currently has no CI checks; no CI pass is claimed."
+      ]
+    },
+    {
+      "name": "implement",
+      "startedAt": "2026-10-19T23:18:40Z",
+      "inputCommit": "560288de103d86fa3cb305239aabf70b3fa117e8",
+      "endedAt": "2026-10-19T23:30:20Z",
+      "outputCommit": "6fd554a32f106d62863fdf2a11811af98320958b",
+      "result": "done-awaiting-integration",
+      "evidence": [
+        "Plan gate approved by independent gpt-6.1-sol reviewer; issue #226 transitioned status:ready -> status:proposed -> status:in-progress. Implementation scope limited to issue #226 assessment documentation and FF run evidence.",
+        "Created docs/delivery/assessments/issue-226-mcp-architecture-assessment.md; no product/architecture canonical artifacts or application functionality changed.",
+        "dotnet restore DomusMind.slnx exited 0; existing NU1902/NU1903 package vulnerability advisories were emitted for MessagePack and Microsoft.Kiota.Abstractions.",
+        "git diff --check exited 0.",
+        "npx -y markdownlint-cli2@0.23.3 docs/delivery/assessments/issue-226-mcp-architecture-assessment.md exited 0 with zero lint issues.",
+        "npx -y @prodshape/cli@0.22.0 validate exited 0 with 0 errors and 59 existing PRODUCT111 low-confidence draft warnings across 598 artifacts.",
+        "npm exec --yes --package=@fission-ai/openspec@1 --package=@prodshape/cli@0.22.0 -- prodshape citations verify --provider openspec exited 0: 14 current docs, 816 current citations, no stale/tampered/unresolved citations.",
+        "npx -y @prodshape/cli@0.22.0 citations verify docs/architecture --format json exited 0: 81 current citations, no stale/tampered/unresolved citations.",
+        "No backend/web tests run: assessment-only documentation change. PR #267 targets the feature branch and has no status checks; CI pass is not claimed.",
+        "Independent gpt-6.1-sol assessment review requested four documentation corrections: record the GetMemberAgenda cross-family member-ID exposure risk and gate #230; add Streamable HTTP Origin/DNS-rebinding validation; correct #229/#230/#231 delivery mapping; distinguish private MCP tunnel reachability from authorization-server reachability. Correction round 1 updates the assessment accordingly. A second review approved the first three and found the tunnel wording overstated public reachability; correction round 2 now says verify endpoint reachability from the components performing each OAuth step, without assuming public exposure.",
+        "Final independent review approved commit 6fd554a32f106d62863fdf2a11811af98320958b; no blocking accuracy, reference, security-boundary, or issue-scope findings remain.",
+        "Owner response received in conversation on 2026-10-20: accepts in-process hosting in DomusMind.Api and OAuth 2.1 Authorization Code + PKCE/OIDC direction. Authorization-server placement/provider remains explicitly undecided and is a gate before OAuth implementation, not before completing this assessment or #227. The assessment DoD and architecture disposition are accepted; decision recorded at https://github.com/juangcarmona/domusmind/issues/226#issuecomment-6283565601.",
+        "PR #267 marked ready for review; issue #226 transitioned to status:in-review and owner-review overlay removed after verifying the owner gate."
+      ]
+    },
+    {
+      "name": "integrate",
+      "startedAt": "2026-10-20T04:47:30Z",
+      "endedAt": "2026-10-20T04:47:51Z",
+      "inputCommit": "d2437fe423935fb8a98badb13a6f3b0483b05d66",
+      "outputCommit": "2fcde0b251e96ebfc5b735e2710439fa36b09604",
+      "result": "merged",
+      "evidence": [
+        "Final independent gpt-6.1-sol integration audit approved exact PR head d2437fe423935fb8a98badb13a6f3b0483b05d66 after checking owner acceptance, lifecycle/PR state, local validation, and live forge requirements.",
+        "PR #267 merged by squash into feat/224-mcp-household-assistants as 2fcde0b251e96ebfc5b735e2710439fa36b09604. No required forge checks or approvals were unmet; zero checks were disclosed and not treated as passing.",
+        "Issue #226 is being closed as status:done after verifying the merged PR and retaining its accepted architecture disposition and open authorization-server decision."
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "stage": "integrate-final-head",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "d2437fe423935fb8a98badb13a6f3b0483b05d66",
+      "decision": "approve",
+      "findings": [
+        "Owner gate and lifecycle records agree; the accepted in-process API and OAuth/OIDC directions are explicit while authorization-server placement remains open for #229.",
+        "Issue #226 is status:in-review, PR #267 is ready and mergeable, and the branch is unprotected with no required reviews or checks.",
+        "All applicable documentation/ProductShape/citation verification passed; absent CI and backend/web tests were accurately disclosed as not run/not applicable. No blocking DoD or scope findings remain."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "owner-disposition-review",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "5a3c4ffee8cd43d6b5585ae408efbbf59531d0a8",
+      "decision": "stop",
+      "findings": [
+        "Assessment content and owner decision gate are satisfied; integration was not yet ready because the run record, issue, and PR still reported the owner decision as pending and the PR remained Draft."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "propose",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "9b855c1388406b7b6b87304506600fd5881d48ed",
+      "decision": "request-changes",
+      "findings": [
+        "Stacked PR #267 has no CI checks because workflows target main; plan must define executable local checks and retain evidence.",
+        "Assessment output path is not covered by default Markdown lint; add explicit lint and name all repository-mandated ProductShape/citation commands.",
+        "Issue #226 requires OpenAI API MCP as a separate profile from ChatGPT custom integrations, with authentication, reachability, and approval constraints."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "propose-correction-1-review",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "fbf887bf460660834bb806b4437048dc4626ec77",
+      "decision": "request-changes",
+      "findings": [
+        "The bare OpenSpec citations command exits 1 with PRODUCT069 because OpenSpec CLI is not on PATH; provide and successfully run an explicit installation/PATH setup consistent with product CI.",
+        "Confirmed assessment lint and named checks, and separate OpenAI API/Responses client profile are otherwise corrected."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "propose-correction-2-review",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "560288de103d86fa3cb305239aabf70b3fa117e8",
+      "decision": "approve",
+      "findings": [
+        "Previous verification-path, citation command, and OpenAI API surface findings are corrected.",
+        "The named local commands and targets are accurate; OpenSpec citations passed using the documented npm exec invocation.",
+        "No other blocking plan flaw found; owner-only review gates remain explicit."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "implement-review",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "bdeeff6daffeb657c8c600f742e0893620d53ae6",
+      "decision": "request-changes",
+      "findings": [
+        "GetMemberAgendaQueryHandler authorizes a supplied family ID but selects external calendar connections by an independent member ID and returns entries without verifying member-family ownership; record as a source-level finding and gate MCP exposure until fixed and negatively tested.",
+        "Current Streamable HTTP requires Origin validation against DNS rebinding and HTTP 403 for present invalid Origin; add explicit implementation and verification criteria.",
+        "Align child dependencies with current tracker: #229 OAuth with no writes, #230 authorized read-only with no write tools, #231 first write pilot.",
+        "OpenAI Secure MCP Tunnel carries MCP discovery/tool path but does not automatically tunnel the authorization server; document separate AS reachability."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "implement-correction-1-review",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "3acfbd5b9169482e1321b66097e5b935c84f967c",
+      "decision": "request-changes",
+      "findings": [
+        "The OpenAI tunnel assessment overstates public authorization-server reachability; current evidence only establishes that the AS is not automatically tunneled and the components conducting authorization/discovery/token steps need a reachable route. Avoid a blanket public exposure recommendation."
+      ],
+      "readOnly": true
+    },
+    {
+      "stage": "implement-correction-2-review",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedCommit": "6fd554a32f106d62863fdf2a11811af98320958b",
+      "decision": "approve",
+      "findings": [
+        "Private MCP tunnel wording correctly requires per-client reachability verification from OAuth-performing components and does not assume public authorization-server exposure.",
+        "Cross-family GetMemberAgenda risk, Origin validation, and #229/#230/#231 sequence remain accurate and appropriately gated.",
+        "No blocking inaccuracies, broken internal links, or assessment-scope DoD omissions found. Owner-only assessment judgement remains pending."
+      ],
+      "readOnly": true
+    }
+  ],
+  "corrections": [
+    {
+      "round": 1,
+      "gate": "propose",
+      "changes": [
+        "Added explicit local lint, ProductShape validation, OpenSpec citation verification, and architecture citation verification commands; clarified absent stacked-PR CI must not be reported as passing.",
+        "Added separate OpenAI API/Responses MCP client profile and required authentication, reachability, and approval dimensions."
+      ],
+      "validation": "git diff --check and markdownlint on the plan passed."
+    },
+    {
+      "round": 2,
+      "gate": "propose",
+      "changes": [
+        "Replaced the failing bare OpenSpec citation command with a reproducible npm exec supplying @fission-ai/openspec@1 and @prodshape/cli@0.22.0, matching CI's OpenSpec major version; requires successful exit and preserves no repository dependency changes."
+      ],
+      "validation": "The exact npm exec command completed with exit code 0; ProductShape validation and architecture citations also completed with exit code 0."
+    },
+    {
+      "round": 1,
+      "gate": "implement",
+      "changes": [
+        "Recorded the concrete GetMemberAgenda cross-family member-ID source risk and required a negative isolation test before #230 exposure.",
+        "Added normative Streamable HTTP Origin/DNS-rebinding validation and 403 test expectations, separate from forwarded-host trust.",
+        "Corrected #229 OAuth, #230 read-only release, and #231 write pilot dependencies and boundaries.",
+        "Separated private MCP tunnel path from authorization-server discovery/browser/token endpoint reachability using current OpenAI guidance."
+      ],
+      "validation": "jq empty, git diff --check, and assessment-specific markdownlint passed; ProductShape validation, OpenSpec citations, and architecture citations all exited 0. Existing ProductShape warnings remain unchanged at 59 PRODUCT111 warnings."
+    },
+    {
+      "round": 2,
+      "gate": "implement",
+      "changes": [
+        "Reworded the private tunnel caveat: the authorization server is not automatically tunneled; require per-client verification of browser authorization and discovery/token endpoint routes from the components performing those steps; do not assume public AS exposure. Added an official OpenAI explanation link."
+      ],
+      "validation": "jq empty, git diff --check, assessment-specific markdownlint, ProductShape validation, OpenSpec citation verification, and architecture citation verification all passed; ProductShape continues to emit 59 existing PRODUCT111 warnings."
+    }
+  ],
+  "stopReason": null,
+  "pullRequest": {
+    "number": 267,
+    "url": "https://github.com/juangcarmona/domusmind/pull/267",
+    "draft": false,
+    "merged": true,
+    "mergedAt": "2026-10-20T04:47:30Z",
+    "mergeCommit": "2fcde0b251e96ebfc5b735e2710439fa36b09604",
+    "base": "feat/224-mcp-household-assistants",
+    "head": "feat/226-assess-mcp-hosting-identity-authorization-clients"
+  },
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/224",
+    "https://github.com/juangcarmona/domusmind/issues/226",
+    "https://github.com/juangcarmona/domusmind/issues/226#issuecomment-6279649837",
+    "https://github.com/juangcarmona/domusmind/issues/226#issuecomment-6283565601",
+    "https://github.com/juangcarmona/domusmind/pull/267",
+    "https://github.com/juangcarmona/domusmind/pull/267/commits/2fcde0b251e96ebfc5b735e2710439fa36b09604",
+    "https://github.com/juangcarmona/domusmind/pull/225"
+  ]
+}

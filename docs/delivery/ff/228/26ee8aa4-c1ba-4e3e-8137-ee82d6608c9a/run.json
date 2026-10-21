@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "runId": "26ee8aa4-c1ba-4e3e-8137-ee82d6608c9a",
+  "workItem": "228",
+  "branch": "feat/228-prove-readonly-mcp-capabilities",
+  "startedAt": "2026-10-20T15:02:58Z",
+  "executorModel": "GPT-5 (active Codex model)",
+  "reviewerModel": "gpt-6.1-sol (available distinct model override)",
+  "maxCorrectionRounds": 3,
+  "status": "complete",
+  "stages": [
+    {
+      "name": "refine",
+      "startedAt": "2026-10-20T15:00:20Z",
+      "endedAt": "2026-10-20T15:02:28Z",
+      "inputCommit": "1ce14ac910ec2ce6136c604eb699af74ef6e718b",
+      "outputCommit": "1ce14ac910ec2ce6136c604eb699af74ef6e718b",
+      "result": "ready",
+      "evidence": [
+        "Reviewed the Definition of Ready and revised #228 with stakeholders, bounded synthetic-only scope, explicit #227/#229 dependencies, seven verifiable criteria, and known authorization/task-query gaps.",
+        "Confirmed existing FamilyTimeline and FamilyMembers query handlers authorize family access. The GetMemberAgenda handler does not prove MemberId belongs to FamilyId; member-specific MCP agenda is excluded until fixed and verified.",
+        "Pickup WIP query returned zero open in-progress and zero open in-review work items against cap 3. Review debt noted for merged #226/#227; non-blocking."
+      ]
+    },
+    {
+      "name": "propose",
+      "startedAt": "2026-10-20T15:02:58Z",
+      "endedAt": "2026-10-20T15:04:07Z",
+      "inputCommit": "1ce14ac910ec2ce6136c604eb699af74ef6e718b",
+      "outputCommit": "62b975a93916a0c18904d6475e9541cb5d2231af",
+      "result": "approved-plan",
+      "evidence": [
+        "Plan artifact: docs/delivery/plans/issue-228-readonly-mcp-proof.md.",
+        "Client-facing test contract: docs/delivery/contracts/issue-228-mcp-readonly-proof.md.",
+        "Worktree: /srv/workspaces/juangcarmona/domusmind/issue-228-readonly-mcp-proof; branch created from the current Epic branch after #227 merge.",
+        "Independent plan review round 3 approved exact PR head 62b975a93916a0c18904d6475e9541cb5d2231af; implementation then began on the same dedicated child branch.",
+        "Independent plan review requested changes at PR head 6fb3fe1ecd65db499dc23198f0c6eedbbc13dec8; correction round 1 addresses all three findings.",
+        "Second independent review at 7103b8c4c6589793205e4b39ca4c001845dc0f5e closed two findings and requested fully explicit input/output schemas and an exact timeline field allowlist; correction round 2 addressed that remaining finding."
+      ]
+    },
+    {
+      "name": "implement",
+      "startedAt": "2026-10-20T15:04:07Z",
+      "endedAt": "2026-10-20T15:47:50Z",
+      "inputCommit": "62b975a93916a0c18904d6475e9541cb5d2231af",
+      "outputCommit": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "result": "implementation-review-approved-owner-done-approved",
+      "evidence": [
+        "Implemented test-host-only agenda_get and household_members_list over the actual timeline and member query handlers, isolated two-household EF Core InMemory data, and server-bound fixture identity; production MCP catalog remains empty.",
+        "Added a client contract, schema/response parity assertions, error/cancellation/isolation tests, and sanitized transcript evidence. Focused suite passed 9/9; full Release solution build passed; full Release tests passed: API 33, Application 525, Domain 250, Infrastructure 56 passed and 3 PostgreSQL tests skipped without DOMUSMIND_TEST_POSTGRES.",
+        "Independent implementation review round 1 at exact head 713d100526a4ad22a891164b6a58400445e06d14 requested changes: P2 culture-sensitive timeline date formatting and no-write evidence did not detect already-committed SaveChanges mutations. Round 2 approved exact code head 330568b0e9d5d3c679b83cbdd5712ed8b49e4efb; approval comment #6294774341."
+      ]
+    },
+    {
+      "name": "verify-done",
+      "startedAt": "2026-10-20T15:30:00Z",
+      "endedAt": "2026-10-20T15:47:50Z",
+      "inputCommit": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "outputCommit": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "result": "evidence-complete-owner-approved",
+      "evidence": [
+        "Separate independent DoD audit found all seven #228 acceptance criteria satisfied. Its initial evidence gaps were closed by the linked backend CI/CodeQL runs and correction of stale plan-only wording; the owner approved the remaining Done judgements before integration.",
+        "GitHub backend CI workflow_dispatch run 39450868459 succeeded on code head 330568b0e9d5d3c679b83cbdd5712ed8b49e4efb, including disposable PostgreSQL, solution build/tests, and API publish: https://github.com/juangcarmona/domusmind/actions/runs/39450868459.",
+        "GitHub CodeQL workflow_dispatch run 39450868200 succeeded on code head 330568b0e9d5d3c679b83cbdd5712ed8b49e4efb for C# and JavaScript/TypeScript: https://github.com/juangcarmona/domusmind/actions/runs/39450868200. No open code-scanning alerts and zero repository secret-scanning alerts at verification time.",
+        "NuGet vulnerability audit found inherited Microsoft.Kiota.Abstractions 1.17.1 (high) and MessagePack 2.5.302 (moderate). GitHub Dependabot has inherited open http-cache-semantics (high) and KaTeX (low) alerts. These four advisory classes were explicitly accepted for deferral by the owner when approving #227; none was introduced by this issue's test-only dependency scope.",
+        "Full local Release verification passed: 864 tests passed, 3 PostgreSQL tests skipped without DOMUSMIND_TEST_POSTGRES; remote backend CI ran the PostgreSQL service and passed all tests and API publish. Targeted Markdown lint command exited successfully with no findings in the four explicit files; docs validation JSON and git diff whitespace checks passed.",
+        "Owner-only judgements for acceptance/completeness, test adequacy, security exposure, architecture conformance, documentation/spec consistency, self-review, and known limitations were approved before integration."
+      ]
+    },
+    {
+      "name": "integrate",
+      "startedAt": "2026-10-20T15:56:13Z",
+      "endedAt": "2026-10-20T15:56:13Z",
+      "inputCommit": "1655067ae63a22d22bf6038fd3bc2dff000183c8",
+      "outputCommit": "b35d3c0f398098e1acde3c7f9335b6242cd637f0",
+      "result": "merged",
+      "evidence": [
+        "Owner approved #228 Done in the active Fast Forward loop.",
+        "PR #269 was marked ready, rechecked as mergeable, and merged into feat/224-mcp-household-assistants with an explicit implementation commit message.",
+        "Issue #228 was closed with the canonical status:done label."
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "gate": "plan",
+      "round": 1,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "6fb3fe1ecd65db499dc23198f0c6eedbbc13dec8",
+      "verdict": "request-changes",
+      "findings": [
+        "Require real query-handler integration over synthetic isolated persistence, two-household isolation/denial, and proof of test-only data/configuration; mocked dispatcher tests are insufficient.",
+        "Specify exact date-range bound requirements, inclusive semantics, timezone/locale handling, and reject partial or ambiguous input; retain duplicate member names as distinct identities and never resolve by display name.",
+        "Name a client-facing contract artifact and verify tool descriptions/schemas, allowed output fields, structured errors, representative journeys, and explicit Tasks/member-agenda exclusions."
+      ],
+      "evidence": "Independent reviewer agent 01a159d7-c330-74d0-b783-872f4b9388ac; read-only plan audit; no tests run."
+    },
+    {
+      "gate": "plan",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "7103b8c4c6589793205e4b39ca4c001845dc0f5e",
+      "verdict": "request-changes",
+      "findings": [
+        "The timeline projection remained unspecified and the tool input was prose/example rather than a complete schema; define complete input and output schemas for both tools, including required/nullable fields and an explicit timeline field allowlist.",
+        "Require output-schema parity and successful-response validation in addition to tool input schema checks."
+      ],
+      "evidence": "Independent reviewer agent 01a159d7-c330-74d0-b783-872f4b9388ac; verified worktree HEAD and PR #269 head; read-only inspection; no tests run."
+    },
+    {
+      "gate": "plan",
+      "round": 3,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "62b975a93916a0c18904d6475e9541cb5d2231af",
+      "verdict": "approve",
+      "findings": [],
+      "evidence": "Independent reviewer approved the exact plan head; review comment recorded on Draft PR #269."
+    },
+    {
+      "gate": "implementation",
+      "round": 1,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "713d100526a4ad22a891164b6a58400445e06d14",
+      "verdict": "request-changes",
+      "findings": [
+        "[P2] Handler date formatting follows current culture; under th-TH it can produce Buddhist year 2569 while the MCP adapter accepts the value as Gregorian. Apply invariant culture to the query-formatting proof and assert output under a non-Gregorian server culture.",
+        "[P2] ChangeTracker state inspection misses changes already persisted by SaveChanges. Reject persistence writes after fixture seeding or compare persisted state before and after tool calls."
+      ],
+      "evidence": "Independent read-only audit of exact pushed PR head; reviewer verified Thai-culture date behavior and found no write rejection guard; focused/Thai culture tests ran; no files or GitHub state changed."
+    },
+    {
+      "gate": "implementation",
+      "round": 2,
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "verdict": "approve",
+      "findings": [],
+      "evidence": "Independent review approved exact implementation head; PR comment #6294774341. Reviewer ran MCP 19/19, Thai-locale proof 9/9, and handler tests 26/26; full workflow verification was run separately by executor."
+    },
+    {
+      "gate": "done-audit",
+      "reviewerModel": "gpt-6.1-sol",
+      "reviewedHead": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "verdict": "evidence-complete-owner-judgement-pending",
+      "findings": [
+        "All seven issue acceptance criteria pass evidence review.",
+        "Repository DoD awaits owner judgements; initial verification gaps were closed with backend CI including PostgreSQL, CodeQL C#/JavaScript, zero secret-scanning alerts, and corrected/linted FF summary."
+      ],
+      "evidence": "Independent criterion-by-criterion audit agent 01a159f7-8f7d-72b3-a852-eec7a273a164. Owner approval is still outstanding; no merge or Done transition occurred."
+    }
+  ],
+  "corrections": [
+    {
+      "round": 1,
+      "addressesReviewRound": 1,
+      "changes": [
+        "Required actual GetFamilyTimelineQueryHandler and GetFamilyMembersQueryHandler execution through MCP using isolated EF Core in-memory storage and a test authorization service, with two-household isolation and denial evidence; prohibited mocked-dispatcher substitution.",
+        "Defined required exact yyyy-MM-dd inclusive date bounds, 31-calendar-day maximum, date-only semantics, and rejection cases; preserved duplicate names as distinct member IDs without name-based resolution.",
+        "Added docs/delivery/contracts/issue-228-mcp-readonly-proof.md and required test parity for schemas/descriptions, minimized fields, safe structured errors, example journeys, and explicit exclusions."
+      ],
+      "validation": "git diff --check and jq JSON validation passed. Independent plan review is pending at the corrected PR head."
+    },
+    {
+      "round": 2,
+      "addressesReviewRound": 2,
+      "changes": [
+        "Added complete JSON input/output schemas for both tools, explicit required and nullable fields, additional-property restrictions, and the exact minimal timeline field allowlist grounded in the existing DTOs.",
+        "Specified effective member display-name projection and stable member ID semantics, plus structured error code/message shape.",
+        "Required input/output schema parity, successful response validation, and rejection of unexpected fields in contract tests."
+      ],
+      "validation": "git diff --check and jq empty passed. markdownlint-cli2 was invoked on the changed Markdown paths and reported zero issues, but also zero linted files; this is recorded as inconclusive rather than a file-level lint pass. Independent plan review is pending at the corrected PR head."
+    },
+    {
+      "gate": "implementation",
+      "round": 1,
+      "addressesReviewRound": 1,
+      "changes": [
+        "The test-only agenda tool now scopes actual handler execution and projection to invariant culture. The in-process test server deliberately uses th-TH and the contract, tests, and transcript assert Gregorian date output.",
+        "Added an EF Core SaveChanges interceptor that rejects synchronous and asynchronous writes after fixture seeding; successful reads also continue to assert there are no tracked mutations."
+      ],
+      "validation": "Focused MCP tests passed 9/9 after corrections. Release solution build passed with 6 inherited dependency warnings and no errors. Release tests passed: API 33, Application 525, Domain 250, Infrastructure 56; 3 PostgreSQL-only tests skipped because DOMUSMIND_TEST_POSTGRES is unset. git diff --check passed. Awaiting independent implementation review round 2."
+    }
+  ],
+  "stopReason": "Completed after owner-only Done approval and integration of #228; continuation to #229 is now permitted.",
+  "verificationRuns": [
+    {
+      "name": "backend-ci",
+      "head": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "runId": 39450868459,
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/39450868459",
+      "result": "success",
+      "details": "Build, complete tests with PostgreSQL service, API publish."
+    },
+    {
+      "name": "codeql",
+      "head": "330568b0e9d5d3c679b83cbdd5712ed8b49e4efb",
+      "runId": 39450868200,
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/39450868200",
+      "result": "success",
+      "details": "C# and JavaScript/TypeScript analyses succeeded; no open code-scanning alerts observed."
+    }
+  ],
+  "pullRequest": {
+    "number": 269,
+    "url": "https://github.com/juangcarmona/domusmind/pull/269",
+    "draft": false,
+    "base": "feat/224-mcp-household-assistants",
+    "head": "feat/228-prove-readonly-mcp-capabilities",
+    "mergedAt": "2026-10-20T15:56:13Z",
+    "mergeCommit": "b35d3c0f398098e1acde3c7f9335b6242cd637f0"
+  },
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/224",
+    "https://github.com/juangcarmona/domusmind/issues/227",
+    "https://github.com/juangcarmona/domusmind/issues/228",
+    "https://github.com/juangcarmona/domusmind/issues/229",
+    "https://github.com/juangcarmona/domusmind/pull/225",
+    "https://github.com/juangcarmona/domusmind/pull/269"
+  ]
+}
