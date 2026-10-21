@@ -31,7 +31,7 @@
       "name": "implement",
       "result": "in-review",
       "inputCommit": "9cafa64e45eaa747c357d4a3277072abf1afaeaa",
-      "outputCommit": "39679f0",
+      "outputCommit": "4033fff",
       "evidence": [
         "src/backend/DomusMind.Mcp/Tools/DomusMindConfirmedWriteTools.cs",
         "src/backend/DomusMind.Infrastructure/Mcp/ConfirmedWriteCoordinator.cs",
@@ -45,13 +45,15 @@
     {"reviewerModel": "gpt-6.1-sol", "kind": "proposal", "commit": "99e9612d3c171d1dc266f6e1325aae1749336a45", "decision": "request-changes", "correction": 2},
     {"reviewerModel": "gpt-6.1-sol", "kind": "proposal", "commit": "2d18b2387579fa5caf839c11bbf7859cfffce5ae", "decision": "request-changes", "correction": 3},
     {"reviewerModel": "gpt-6.1-sol", "kind": "proposal", "commit": "9cafa64e45eaa747c357d4a3277072abf1afaeaa", "decision": "approve"},
-    {"reviewerModel": "gpt-6.1-sol", "kind": "implementation", "commit": "ec062ac", "decision": "request-changes", "correction": 1, "findings": "Independent review identified service-provider binding, approval endpoint authentication, commit-cancellation classification, cleanup concurrency, duplicate handling, cancellation semantics, audit coverage, and production-boundary test gaps; corrected through 39679f0."}
+    {"reviewerModel": "gpt-6.1-sol", "kind": "implementation", "commit": "ec062ac", "decision": "request-changes", "correction": 1, "findings": "Independent review identified service-provider binding, approval endpoint authentication, commit-cancellation classification, cleanup concurrency, duplicate handling, cancellation semantics, audit coverage, and production-boundary test gaps; corrected through 39679f0."},
+    {"reviewerModel": "gpt-6.1-sol", "kind": "implementation", "commit": "f980831", "decision": "request-changes", "correction": 2, "findings": "Final-head review identified that SDK custom binding still bypassed the closed input contract, real list/event-log transaction safety tests were absent, and approval audit attribution was incomplete."}
   ],
   "corrections": [
     {"gate": "propose", "round": 1, "requestedChanges": "Trusted approval, granted-household binding, mcp.write scope, atomic idempotency, exact contract bounds, and post-commit notification.", "resultingCommit": "9c68ed9ecdd7b92159277028632af6b77dc402e5"},
     {"gate": "propose", "round": 2, "requestedChanges": "Completed-retry precedence and exact cancellation/error result variants.", "resultingCommit": "99e9612d3c171d1dc266f6e1325aae1749336a45"},
     {"gate": "propose", "round": 3, "requestedChanges": "Consistent MCP error envelopes and explicit pending-record routing.", "resultingCommit": "9cafa64e45eaa747c357d4a3277072abf1afaeaa"},
-    {"gate": "implement", "round": 1, "requestedChanges": "Restore DI service binding for the production MCP tool, make the approval endpoint usable through the first-party OAuth session with CSRF protection, preserve commit acknowledgement semantics, make cleanup and duplicate execution concurrency-safe, map cancelled approvals correctly, strengthen audit coverage, and add a production-tool schema boundary test.", "resultingCommit": "39679f0"}
+    {"gate": "implement", "round": 1, "requestedChanges": "Restore DI service binding for the production MCP tool, make the approval endpoint usable through the first-party OAuth session with CSRF protection, preserve commit acknowledgement semantics, make cleanup and duplicate execution concurrency-safe, map cancelled approvals correctly, strengthen audit coverage, and add a production-tool schema boundary test.", "resultingCommit": "39679f0"},
+    {"gate": "implement", "round": 2, "requestedChanges": "Add an explicit production invocation argument guard for unknown and wrong-typed fields, add official-client HTTP boundary coverage, add PostgreSQL-backed real handler/event-log success and rollback tests, and add approval attribution plus explicit idempotency audit outcomes.", "resultingCommit": "4033fff"}
   ],
   "stopReason": "Awaiting the final independent done-gate review before integration.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/272",
@@ -59,6 +61,6 @@
     "issue": "https://github.com/juangcarmona/domusmind/issues/231",
     "epic": "https://github.com/juangcarmona/domusmind/issues/224",
     "proposalHead": "9cafa64e45eaa747c357d4a3277072abf1afaeaa",
-    "implementationHead": "39679f0"
+    "implementationHead": "4033fff"
   }
 }
