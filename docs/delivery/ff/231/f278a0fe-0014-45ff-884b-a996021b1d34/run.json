@@ -31,7 +31,7 @@
       "name": "implement",
       "result": "in-review",
       "inputCommit": "9cafa64e45eaa747c357d4a3277072abf1afaeaa",
-      "outputCommit": "59af78e",
+      "outputCommit": "53623d6",
       "evidence": [
         "src/backend/DomusMind.Mcp/Tools/DomusMindConfirmedWriteTools.cs",
         "src/backend/DomusMind.Infrastructure/Mcp/ConfirmedWriteCoordinator.cs",
@@ -61,12 +61,15 @@
     {"gate": "implement", "round": 4, "requestedChanges": "Use stored client attribution consistently in approval transition logs, add a separate approval-channel field, and sanitize audit-binding lookup failure logging.", "resultingCommit": "710465d"},
     {"gate": "implement", "round": 5, "requestedChanges": "Audit malformed MCP tool calls through the fixed capability/error audit path and assert those events in the official-client HTTP boundary test.", "resultingCommit": "59af78e"}
   ],
-  "stopReason": "Awaiting the final independent done-gate review before integration.",
+  "stopReason": "Hosted backend CI passed on 53623d6; awaiting CodeQL completion and the final independent done-gate review before integration.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/272",
   "links": {
     "issue": "https://github.com/juangcarmona/domusmind/issues/231",
     "epic": "https://github.com/juangcarmona/domusmind/issues/224",
     "proposalHead": "9cafa64e45eaa747c357d4a3277072abf1afaeaa",
-    "implementationHead": "59af78e"
+    "implementationHead": "53623d6",
+    "backendCi": "https://github.com/juangcarmona/domusmind/actions/runs/39521465654",
+    "codeql": "https://github.com/juangcarmona/domusmind/actions/runs/39521468558",
+    "docsCi": "https://github.com/juangcarmona/domusmind/actions/runs/39521121545"
   }
 }
