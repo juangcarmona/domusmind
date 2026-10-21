@@ -242,7 +242,7 @@ public sealed class ConfirmedWriteCoordinatorPostgreSqlTests
         public async Task SeedAsync(FamilyId familyId, ListId listId)
         {
             await using var db = new DomusMindDbContext(Options);
-            await db.Database.EnsureCreatedAsync();
+            await db.Database.MigrateAsync();
             db.Families.Add(Family.Create(
                 familyId,
                 FamilyName.Create("MCP confirmed writes"),
