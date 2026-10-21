@@ -23,7 +23,7 @@
       "name": "propose",
       "result": "in-review",
       "inputCommit": "ed07c711768f68399320a24e5a98c8be826cb244",
-      "outputCommit": "3c4dc6ad3dc17b617541f64dee63d6e4ecce6f1f",
+      "outputCommit": "48bc1093998fef9bd5359e67ef645c3d8aeafa68",
       "evidence": [
         "docs/delivery/plans/issue-232-mcp-capability-expansion.md",
         "github:pull/273"
@@ -38,6 +38,13 @@
       "decision": "request-changes",
       "correction": 1,
       "findings": "Bind list detail to the MCP token household; resolve household-configured week boundaries and unset-setting behavior; clarify meal projection limits; add representative interactions and value evidence."
+    },
+    {
+      "reviewerModel": "gpt-6.1-sol",
+      "kind": "proposal",
+      "commit": "73239617856353efe1d73fc0417abaefd8d45b0c",
+      "decision": "approve",
+      "findings": "No P0/P1 findings. Non-blocking P2s requested refreshing PR text and making household-first meal ordering explicit in tasks/tests."
     }
   ],
   "corrections": [
@@ -46,6 +53,12 @@
       "round": 1,
       "requestedChanges": "Add an application-owned expected-family guard to list detail, use GetFamilyQuery and full GetMealPlanQuery with configured week-boundary validation, define unset-setting behavior, add meal output semantics, and document household interactions.",
       "resultingCommit": "3c4dc6ad3dc17b617541f64dee63d6e4ecce6f1f"
+    },
+    {
+      "gate": "propose",
+      "round": 2,
+      "requestedChanges": "Refresh Draft PR description to the corrected proposal and explicitly specify MCP boundary rotation and Sunday-first/Monday-first tests for household meal ordering.",
+      "resultingCommit": "48bc1093998fef9bd5359e67ef645c3d8aeafa68"
     }
   ],
   "stopReason": "Draft PR #273 contains the reviewed proposal and is awaiting the independent plan review before implementation.",
