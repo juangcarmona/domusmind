@@ -5,6 +5,7 @@ title: "Start a household and reach a working Agenda"
 status: draft
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 steps:
+  - use-case: "UC-SIGN-IN-WITH-OIDC"
   - use-case: "UC-FAMILY-CREATE-HOUSEHOLD"
   - use-case: "UC-FAMILY-ADD-MEMBER"
   - use-case: "UC-CALENDAR-SCHEDULE-PLAN"
@@ -23,11 +24,11 @@ A new household has a useful shared system quickly: its people are in it, it can
 
 ## Entry Conditions
 
-- A person who does not yet belong to a household decides to start one (observed: experience.md, Onboarding step 1; public-site.md primary CTA "Start your household").
+- A person authorized to use the installation who does not yet belong to a household decides to start one. For the first household, the designated administrator has claimed access after the operator's separate setup.
 
 ## Journey Narrative
 
-1. The person starts a household and names it (observed: docs/_legacy/00_product/experience.md, Onboarding steps 1-2).
+1. The person signs in through the configured provider, then starts a household and names it.
 2. They add the other people of the household (observed: docs/_legacy/00_product/experience.md, Onboarding step 3).
 3. Optionally, they add first useful state, such as a plan, a routine or a list (decided: Q-0055; observed: docs/_legacy/00_product/experience.md, Onboarding step 4). The order among plans, routines and lists is free; the steps list shows one path (inferred).
 4. DomusMind shows the Agenda immediately in its default state: household scope, day mode, today (observed: docs/_legacy/00_product/experience.md, Onboarding step 5; openspec/specs/web-app/spec.md, Agenda Default Entry State).

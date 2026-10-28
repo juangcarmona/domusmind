@@ -43,7 +43,7 @@ flowchart LR
 The two human partners and Outlook are the product's actors:
 
 <!-- pdac:cite id="ACT-HOUSEHOLD-MEMBER" digest="sha256:18173726b69715b42a2c09ddd0c09876f486d1abefd93c3131e2cb0d6c4df860" -->
-<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:12dacff31d93a8b994bddadabce84831a7ba4c8bf06eb8a15710b673cd66349b" -->
+<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:d82d2bd934fc9835545ea9c22211213496ad48160b287fe1c750ee41a56d0108" -->
 <!-- pdac:cite id="ACT-MICROSOFT-OUTLOOK" digest="sha256:5f796b186efb4d164fd71462cce88157e4857e7e602f35acffee972881c33f54" -->
 
 The product model also names a calendar sync scheduler actor. Architecturally it is
@@ -55,11 +55,13 @@ outbound call to Microsoft Graph below.
 The public site visitor has no product-model actor; the site's content is governed by
 [`docs/design/public-site.md`](../design/public-site.md).
 
-There are deliberately no other partners. DomusMind sends no email, push
-notification or chat message, and has no messaging, voice, home-automation, AI or
-further calendar-provider integration: these are outside the current product scope.
+This diagram describes the current implementation. The approved product target adds
+an operator-configured OIDC provider as an authentication partner; it has not yet
+replaced the current local sign-in path. DomusMind does not send invitation email.
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:dd3281f32dbc5b36618fc57d7cfb31e7fc36d89963250aabb97446a39e4b3a66" -->
+<!-- pdac:cite id="CON-PRODUCTION-OIDC-SIGN-IN" digest="sha256:cdd9d1ae4655bdf9de6a2d57f7b27074acb10ab2ae300220fdf82f82e67c9ff7" -->
+
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:bbe8615d41428bc12d1a225306bd3b5b1fc4e4747dc80c9125220f483bc610a9" -->
 
 ## Technical Context
 

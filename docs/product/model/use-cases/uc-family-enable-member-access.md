@@ -19,7 +19,7 @@ provenance:
 
 ## Goal
 
-A person whose access was disabled can sign in again (observed: openspec/specs/family/spec.md, Member Access Provisioning).
+A person whose application access was disabled can use DomusMind again.
 
 ## Trigger
 
@@ -32,7 +32,7 @@ The person has Disabled access and the actor is a manager.
 ## Main Flow
 
 1. The manager chooses to enable the person's access.
-2. DomusMind re-enables the account; the person's access becomes Active.
+2. DomusMind re-enables application access for the existing bound provider identity; the person's access becomes Active.
 
 ## Alternative Flows
 

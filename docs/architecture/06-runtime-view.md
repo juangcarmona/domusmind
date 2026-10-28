@@ -348,7 +348,7 @@ sequenceDiagram
 ### Notable Interactions
 
 - The authenticated principal is an auth user, not a household member. Which households a user may act in is resolved per command or query from the user-to-household access table by `FamilyAuthorizationService`; a member is linked to an auth user only through an optional account id on the member.
-  <!-- pdac:cite id="TERM-MEMBER-ACCESS" digest="sha256:b7985c2011d508e2f15b31f8079b9dd54cd5c3603870e83324c4892601f1593b" -->
+  <!-- pdac:cite id="TERM-MEMBER-ACCESS" digest="sha256:215b756825d3f4cd80d0649ff4fd58d167e6de88cfab73d8534cd3d9a1c05e12" -->
 - On load, the web app validates its stored access token with `/api/auth/me`; if that fails it exchanges the refresh token once, which rotates it (the old one is revoked), and otherwise clears the session. There is no refresh on a 401 during normal use.
 
 ### Failure Behavior
