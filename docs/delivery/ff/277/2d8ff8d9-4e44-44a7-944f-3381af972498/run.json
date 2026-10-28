@@ -7,7 +7,7 @@
   "executorModel": "GPT-6 (Codex)",
   "reviewerModel": "gpt-6.1-terra",
   "maxCorrectionRounds": 3,
-  "status": "awaiting-integration",
+  "status": "failed",
   "stages": [
     {
       "name": "refine",
@@ -131,6 +131,22 @@
         "https://github.com/juangcarmona/domusmind/actions/runs/40649372172 (Lighthouse repository guardrails passed)",
         "https://github.com/juangcarmona/domusmind/actions/runs/40649372243 (engineering site built successfully)",
         "Conditional ProductShape snapshots, Astro validation, engineering-site publication, and wrapper jobs were skipped as configured."
+      ]
+    },
+    {
+      "name": "post-main-update-deterministic-rerun",
+      "startedAt": "2026-10-28T07:31:00Z",
+      "endedAt": "2026-10-28T07:36:13Z",
+      "inputCommit": "83c9265253d12f7314ed2c5e7de8916d57fc51f9",
+      "outputCommit": "83c9265253d12f7314ed2c5e7de8916d57fc51f9",
+      "result": "failed-bff-browser-response-read-timeout-after-correction-limit",
+      "evidence": [
+        "https://github.com/juangcarmona/domusmind/actions/runs/40650571859",
+        "BFF Playwright test exceeded its 150000ms test timeout while awaiting response.text() for a captured same-origin JSON response; run duration 5m13.",
+        "The failure occurs in the broad page response listener at src/web/app/e2e/development-bff.e2e.ts:38; a fresh clean local run of the journey had passed in 43.9s on code commit 7515755.",
+        "General browser journeys passed in 2m30; backend and web builds, image/Postgres smoke, architecture docs, Lighthouse guardrails and CodeQL C#/JavaScript passed on this head.",
+        "The latest main merge adds the approved production OIDC product contract separately tracked by #281 and documentation alignment; the development BFF scope remains unchanged.",
+        "All three configured correction rounds for this FF run have been used. No further code correction was made."
       ]
     }
   ],
@@ -315,7 +331,7 @@
       ]
     }
   ],
-  "stopReason": "Deterministic evidence and independent audit passed. Await the owner-only Done judgement and required forge approval. PR #278 remains draft and behind main; update/review the base branch before any authorized integration. Dedicated Bastion runner and operator isolation acceptance remain pending before enabling Lighthouse workers. No merge, worker enablement, release, or deployment performed.",
+  "stopReason": "The current-head BFF browser CI check failed because a captured same-origin JSON response.text() did not complete before the 150-second Playwright timeout. The configured maximum of three correction rounds has been reached. Resume with a new explicitly authorized FF run or a raised correction limit to narrow response capture and rerun the complete deterministic lane plus an independent audit. Do not treat the earlier green head as current-head Done evidence.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/278",
   "links": [
     "https://github.com/juangcarmona/domusmind/issues/277",
