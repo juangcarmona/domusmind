@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * generate.mjs — arc42 snapshot generator (portable, bundled with the architecture-docs skill).
+ * generate.mjs — arc42 snapshot generator used by the engineering site.
  *
  * Usage:
  *   node generate.mjs <docsDir> [--out <file>] [--title <name>]
  *
  * Reads an arc42 documentation folder (README.md + NN-*.md sections with the
- * architecture-docs skill's frontmatter contract) and writes exactly one
+ * engineering-site frontmatter contract) and writes exactly one
  * self-contained HTML file: inline styles, inline pre-rendered Mermaid SVGs,
  * inert JSON data, one ES5 router. No external resources; opens from file://.
  * Generation is deterministic and never modifies authored files.

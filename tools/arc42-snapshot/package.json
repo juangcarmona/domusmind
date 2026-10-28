@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Generate a self-contained, navigable HTML wiki page from an arc42 documentation folder. Bundled with the architecture-docs skill.",
+  "description": "Generate a self-contained, navigable HTML wiki page from an arc42 documentation folder for the engineering site.",
   "license": "MIT",
   "bin": {
     "arc42-snapshot": "./generate.mjs"

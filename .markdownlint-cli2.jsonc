@@ -10,8 +10,6 @@
   },
   "ignores": [
     "**/node_modules/**",
-    "apm_modules/**",
-    ".claude/**",
     ".product/**",
     "openspec/changes/archive/**"
   ]

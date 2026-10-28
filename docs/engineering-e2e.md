@@ -29,7 +29,7 @@ does not claim exhaustive behavior coverage of every surface or phone layout.
 
 ## Development BFF security journey
 
-The separate `development-bff-e2e.yml` workflow starts Aspire with a disposable PostgreSQL resource, the imported Keycloak development realm and the Vite proxy, then runs [`development-bff.e2e.ts`](../src/web/app/e2e/development-bff.e2e.ts). It verifies two mapped identities, session-cookie attributes, same-origin mutation, foreign-Origin rejection, logout revocation of a copied cookie and session expiry. It runs on GitHub-hosted infrastructure and does not use or enable the Lighthouse worker runner.
+The separate `development-bff-e2e.yml` workflow starts Aspire with a disposable PostgreSQL resource, the imported Keycloak development realm and the Vite proxy, then runs [`development-bff.e2e.ts`](../src/web/app/e2e/development-bff.e2e.ts). It verifies two mapped identities, session-cookie attributes, same-origin mutation, foreign-Origin rejection, logout revocation of a copied cookie and session expiry. It runs on GitHub-hosted infrastructure.
 
 For a local run, start the AppHost in one terminal with `ASPNETCORE_ENVIRONMENT=Development AppHost__PersistData=false Bff__SessionLifetimeSeconds=30 dotnet run --project src/backend/DomusMind.AppHost/DomusMind.AppHost.csproj --no-launch-profile`. In another terminal, run `E2E_BFF_ENABLED=true BFF_TEST_SESSION_LIFETIME_SECONDS=30 E2E_BASE_URL=http://localhost:61546 npm run test:e2e -- e2e/development-bff.e2e.ts` from `src/web/app`. The AppHost needs Docker and an empty disposable database; `AppHost__PersistData=false` avoids attaching a persistent PostgreSQL volume. The imported Keycloak users and seeded local test account are development-only.
 

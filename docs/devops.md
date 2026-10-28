@@ -1,14 +1,23 @@
 # DomusMind DevOps
 
-## Lighthouse workflow pilot
+## Contribution checks
 
-The repository pins `@juangcarmona/lighthouse` in the root `package-lock.json` and declares the `dotnet-backend`, `react-web-platform`, `web-bff`, and `visual-theme` profiles in `lighthouse.json`. Run `npm ci` at the repository root and `npm run verify:lighthouse` to check the installed Foundation. `LIGHTHOUSE.md` describes the generated artifacts. The canonical DomusMind lifecycle and its `status:*` labels remain in [engineering-lifecycle.md](engineering-lifecycle.md); Lighthouse capability labels are additional routing signals.
+Keep product intent in [`docs/product/model/`](product/README.md), behavior in `openspec/specs/`, architecture in [`docs/architecture/`](architecture/README.md), and significant decisions in [`docs/adr/`](adr/README.md). Change accepted product semantics through a validated and owner-approved Product Change; keep deployment and credentials under operator control.
 
-The installed SDLC projections cover `triage`, `refine`, `propose`, `implement`, and `apply-review`. Bastion has a dedicated repository runner, `bastion-domusmind-gh-aw`, labelled `lighthouse-workflow`, with a private operator-owned `LIGHTHOUSE_ENGINE_CONFIG` and the shared engine lock. The operator profile is the one used by Lighthouse and SoFa: the agent runs in a bounded, non-privileged Docker container without the host Docker socket, with an OpenCode authentication volume and outbound network. It does not provide AWF network filtering or credential proxy isolation. `LIGHTHOUSE_AUTOMATION_ENABLED=true` was enabled after integration and a supervised `refine #281` completed on the dedicated runner ([worker run 40657428095](https://github.com/juangcarmona/domusmind/actions/runs/40657428095)); check the current variable and runner state before relying on them. `integrate` and `review` are not enabled by this adoption; existing human and branch gates still apply.
+Before a change is integrated, run the applicable checks below and inspect the PR checks for its current commit. Describe scope, verification and known limitations in the PR, and obtain the repository owner's review. Preserve household isolation, existing authentication boundaries and the product design.
 
-The variable activates all selected stages, owner-triggered routing and scheduled PR-state checks. Before dispatching another route, verify that no unrelated owner stage request is in flight and watch the router for unexpected work. If a route fails or unexpected work starts, delete the variable while correcting the failure. The activation and rollback commands are `gh variable set LIGHTHOUSE_AUTOMATION_ENABLED --body true`, `gh workflow run "Lighthouse SDLC router" -f issue=<issue-number> -f stage=refine`, and `gh variable delete LIGHTHOUSE_AUTOMATION_ENABLED`.
+| Area | Local check |
+| --- | --- |
+| Backend | `dotnet build DomusMind.slnx -c Release` and `dotnet test DomusMind.slnx -c Release` |
+| Web app | `npm ci`, `npm run build`, `npm run lint` and `npm test` in `src/web/app` |
+| Public site | `npm ci` and `npm run build` in `src/web/public` |
+| Product and behavior | `npx -y @prodshape/cli@0.22.0 validate`, `npx -y @fission-ai/openspec@1 validate --all` and `npx -y @prodshape/cli@0.22.0 citations verify --provider openspec` |
+| Architecture | `node scripts/check-arc42-frontmatter.mjs`, the Markdown lint invocation in `docs-ci.yml`, and `npx -y @prodshape/cli@0.22.0 citations verify docs/architecture` |
+| Browser journeys | The existing browser checks documented in [`engineering-e2e.md`](engineering-e2e.md) |
 
-The Lighthouse checkout in each worker uses `.lighthouse-harness/` so it cannot replace DomusMind's tracked `tools/` files. This is a reviewed local correction to the pinned workflow templates; when updating the Lighthouse SDLC package, preserve that separate checkout path and regenerate the `.lock.yml` files with `gh aw compile` before enabling workers again.
+The OpenSpec CLI must be on `PATH` for authoritative citation population discovery. To run that check without a global installation, use `npx -y --package @fission-ai/openspec@1 --package @prodshape/cli@0.22.0 -c 'prodshape citations verify --provider openspec'`.
+
+CodeQL, dependency and secret scanning remain repository security controls. A skipped or missing expected security check does not prove the change has passed that check.
 
 ## Development OIDC BFF pilot
 

@@ -43,7 +43,7 @@ export function parseFrontmatter(raw, fileName) {
 /**
  * Load and validate an arc42 docs folder.
  *
- * Contract (from the architecture-docs skill):
+ * Engineering-site arc42 document contract:
  *  - README.md exists, optionally has title/description, never `arc42-section`.
  *  - Section files are named NN-slug.md with zero-padded numbers.
  *  - Each has exactly the keys: title, arc42-section, description.

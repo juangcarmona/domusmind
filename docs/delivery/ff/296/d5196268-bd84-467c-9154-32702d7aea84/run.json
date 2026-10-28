@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "runId": "d5196268-bd84-467c-9154-32702d7aea84",
+  "workItem": "https://github.com/juangcarmona/domusmind/issues/296",
+  "branch": "codex/296-clean-agent-install",
+  "startedAt": "2026-10-28T11:04:59.488156+00:00",
+  "executorModel": "gpt-6.1-sol",
+  "reviewerModel": "gpt-6.1-terra",
+  "maxCorrectionRounds": 3,
+  "status": "blocked",
+  "stages": [
+    {
+      "name": "refine",
+      "result": "passed",
+      "inputCommit": "617876cbc123e07f0bf4a1b300df1c9816b7afc7",
+      "evidence": [
+        "https://github.com/juangcarmona/domusmind/issues/296",
+        "inventory.json"
+      ],
+      "details": "Explicit stakeholder, dependencies, security and N/A dimensions added; status:ready verified. One active item (#233), below WIP cap 3."
+    },
+    {
+      "name": "propose",
+      "result": "passed",
+      "inputCommit": "617876cbc123e07f0bf4a1b300df1c9816b7afc7",
+      "evidence": [
+        "../../../plans/issue-296.md",
+        "inventory.json"
+      ],
+      "outputCommit": "722fb1029e4b0b781679510576a4479c96ada925",
+      "completedAt": "2026-10-28T11:15:16.354629+00:00"
+    },
+    {
+      "name": "implement",
+      "result": "blocked-at-done",
+      "startedAt": "2026-10-28T11:15:16.354629+00:00",
+      "inputCommit": "5e2c0f7ae0575a2a912592f247d77538c83211d0",
+      "evidence": [
+        "../../../plans/issue-296.md",
+        "checks.json",
+        "cleanup-scan.json",
+        "final-audit.json",
+        "ci-c95312a.json",
+        "ci-87cedff.json"
+      ],
+      "outputCommit": "87cedff16a0012861907bdbfb90da7ae23cfed06",
+      "checksCompletedAt": "2026-10-28T11:24:34.924283+00:00"
+    }
+  ],
+  "reviews": [
+    {
+      "reviewerModel": "gpt-6.1-terra",
+      "kind": "plan",
+      "reviewedCommit": "15d4fe1b8d0c42bbe71fe239e03614f0f7d166e2",
+      "decision": "request-changes",
+      "findings": [
+        "External label, setting and runner acceptance criteria were deferred until after merge, creating a circular dependency because Done must pass before merge."
+      ],
+      "evidence": [
+        "../../../plans/issue-296.md",
+        "https://github.com/juangcarmona/domusmind/issues/296"
+      ]
+    },
+    {
+      "reviewerModel": "gpt-6.1-terra",
+      "kind": "plan",
+      "reviewedCommit": "ea1db53b8abcf3e1c44d1d1971ddabe9fc34ecb9",
+      "decision": "request-changes",
+      "findings": [
+        "Deleting canonical lifecycle labels conflicts with the current requirement for one status per open issue and post-merge status:done unless the explicit owner-authorized retirement exception is recorded."
+      ],
+      "evidence": [
+        "../../../plans/issue-296.md",
+        "https://github.com/juangcarmona/domusmind/issues/296"
+      ]
+    },
+    {
+      "reviewerModel": "gpt-6.1-terra",
+      "kind": "plan",
+      "reviewedCommit": "722fb1029e4b0b781679510576a4479c96ada925",
+      "coveringHead": "5e2c0f7ae0575a2a912592f247d77538c83211d0",
+      "decision": "approve",
+      "findings": [
+        "Pre-merge external cleanup sequencing and owner-authorized canonical/legacy lifecycle retirement exception are explicit; implement within preserved product/credential boundaries."
+      ],
+      "evidence": [
+        "../../../plans/issue-296.md",
+        "summary.md",
+        "https://github.com/juangcarmona/domusmind/pull/298"
+      ]
+    },
+    {
+      "reviewerModel": "gpt-6.1-terra",
+      "kind": "done",
+      "reviewedCommit": "c95312a5f55242dfb9605c802eec12ccb9bd1f3c",
+      "decision": "stop",
+      "reportedBy": "Coordinator relayed independent Done audit.",
+      "findings": [
+        "No cleanup defect found.",
+        "Full Done is prevented solely by the inherited deterministic dependency-security gate requiring no known vulnerable dependencies; 15 Dependabot alerts remain open."
+      ],
+      "securitySnapshot": {
+        "dependabotOpen": 15,
+        "bySeverity": {
+          "critical": 1,
+          "high": 8,
+          "medium": 3,
+          "low": 3
+        },
+        "codeqlOpen": 0,
+        "secretScanningOpen": 0
+      },
+      "requiredResume": "Remediate the known vulnerable dependencies in separately authorized work, verify the dependency gate, then rerun Done and independent review against the resulting candidate.",
+      "evidence": [
+        "ci-87cedff.json",
+        "ci-c95312a.json",
+        "checks.json",
+        "cleanup-scan.json",
+        "https://github.com/juangcarmona/domusmind/security/dependabot"
+      ]
+    },
+    {
+      "reviewerModel": "gpt-6.1-terra",
+      "kind": "done-followup",
+      "reviewedCommit": "87cedff16a0012861907bdbfb90da7ae23cfed06",
+      "decision": "stop",
+      "reportedBy": "Independent exact-head follow-up review.",
+      "findings": [
+        "No cleanup defect found; the retained renderer is used by the engineering site.",
+        "The Done security gate remains blocked by 15 open Dependabot alerts."
+      ],
+      "evidence": [
+        "final-audit.json",
+        "ci-87cedff.json",
+        "cleanup-scan.json"
+      ]
+    }
+  ],
+  "corrections": [
+    {
+      "gate": "plan",
+      "round": 1,
+      "requestedChanges": "Sequence external cleanup after exact-head checks and owner PR review/approval as a required pre-merge integration gate; reconcile issue, plan, inventory, PR and run evidence.",
+      "result": "awaiting-independent-review",
+      "checks": [
+        "JSON evidence parses",
+        "git diff --check"
+      ],
+      "externalMutationsPerformed": false,
+      "resultingCommit": "5a2967e453f0b14256af00330637f33dcb321ffe"
+    },
+    {
+      "gate": "plan",
+      "round": 2,
+      "requestedChanges": "Record the owner-authorized one-time retirement of canonical/legacy statuses; snapshot all assignments, disable routing before catalogue deletion, preserve other issue content/states/labels, do not recreate statuses, and close #296 by issue state after merge without status:done.",
+      "result": "awaiting-independent-review",
+      "checks": [
+        "JSON evidence parses",
+        "git diff --check",
+        "Live read-only open-issue assignment snapshot: 48 open, 45 carrying lifecycle status"
+      ],
+      "externalMutationsPerformed": false,
+      "resultingCommit": "722fb1029e4b0b781679510576a4479c96ada925"
+    }
+  ],
+  "stopReason": "Independent exact-head follow-up on 87cedff16a0012861907bdbfb90da7ae23cfed06 found no cleanup defect. Done remains stopped because the inherited dependency-security gate requires no known vulnerable dependencies and 15 Dependabot alerts remain open (1 critical, 8 high, 3 medium, 3 low). Dependency remediation requires separate user direction. Keep PR draft and #296 in-progress; no external retirement or merge.",
+  "pullRequest": "https://github.com/juangcarmona/domusmind/pull/298",
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/296",
+    "https://github.com/juangcarmona/domusmind/pull/298"
+  ],
+  "constraints": [
+    "No implementation before independent plan approval.",
+    "Owner retains all Definition of Done judgement dimensions; no merge authorized in this executor task.",
+    "Repository label catalogue, activation settings and idle exclusive runner retirement require exact-head checks and owner PR review/approval, then live verification before Done and merge.",
+    "No new Lighthouse install, credential action, production deployment or shared infrastructure deletion."
+  ],
+  "retirementException": {
+    "authority": "Owner explicitly requested removing all AI/SDLC artifacts and labels from this repository before a later clean Lighthouse install.",
+    "appliesAt": "Approved pre-merge retirement gate after exact-head checks, owner PR review/approval, assignment snapshot and disabled Lighthouse activations.",
+    "oldLifecycleUntilRetirement": true,
+    "deleteExactInventoriedCatalogueIncludingStatuses": true,
+    "recreateLifecycleLabels": false,
+    "openIssuesAfterRetirement": "Preserve GitHub open/closed state, bodies/comments and retained labels; no lifecycle status until separately authorized installation.",
+    "issue296Completion": "Close GitHub issue after confirmed merge without status:done.",
+    "authorizedOtherStateChanges": [
+      "Close retired automation failure issues #287, #288, #289."
+    ],
+    "livePlanningCounts": {
+      "openIssues": 48,
+      "withLifecycleStatus": 45
+    },
+    "requireFreshSnapshotBeforeMutation": true
+  },
+  "lifecycleTransitions": [
+    {
+      "from": "status:ready",
+      "to": "status:proposed",
+      "verified": true,
+      "at": "2026-10-28T11:14:39Z"
+    },
+    {
+      "from": "status:proposed",
+      "to": "status:in-progress",
+      "verified": true,
+      "at": "2026-10-28T11:15:16.354629+00:00"
+    }
+  ],
+  "hostedVerification": {
+    "reviewedHead": "87cedff16a0012861907bdbfb90da7ae23cfed06",
+    "result": "all 23 checks completed: 20 succeeded and 3 expected skips; no failures or pending checks",
+    "evidence": "ci-87cedff.json",
+    "followupReview": "No cleanup defect found; Done remains stopped by the inherited dependency-security gate."
+  }
+}
