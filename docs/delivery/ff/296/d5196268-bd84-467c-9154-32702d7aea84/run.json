@@ -27,7 +27,7 @@
         "../../../plans/issue-296.md",
         "inventory.json"
       ],
-      "outputCommit": "5a2967e453f0b14256af00330637f33dcb321ffe"
+      "outputCommit": "722fb1029e4b0b781679510576a4479c96ada925"
     }
   ],
   "reviews": [
@@ -81,7 +81,8 @@
         "git diff --check",
         "Live read-only open-issue assignment snapshot: 48 open, 45 carrying lifecycle status"
       ],
-      "externalMutationsPerformed": false
+      "externalMutationsPerformed": false,
+      "resultingCommit": "722fb1029e4b0b781679510576a4479c96ada925"
     }
   ],
   "stopReason": null,
