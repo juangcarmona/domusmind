@@ -1,0 +1,29 @@
+{
+  "reviewerModel": "gpt-6.1-terra",
+  "kind": "done",
+  "reviewedCommit": "c95312a5f55242dfb9605c802eec12ccb9bd1f3c",
+  "decision": "stop",
+  "reportedBy": "Coordinator relayed independent Done audit.",
+  "findings": [
+    "No cleanup defect found.",
+    "Full Done is prevented solely by the inherited deterministic dependency-security gate requiring no known vulnerable dependencies; 15 Dependabot alerts remain open."
+  ],
+  "securitySnapshot": {
+    "dependabotOpen": 15,
+    "bySeverity": {
+      "critical": 1,
+      "high": 8,
+      "medium": 3,
+      "low": 3
+    },
+    "codeqlOpen": 0,
+    "secretScanningOpen": 0
+  },
+  "requiredResume": "Remediate the known vulnerable dependencies in separately authorized work, verify the dependency gate, then rerun Done and independent review against the resulting candidate.",
+  "evidence": [
+    "ci-c95312a.json",
+    "checks.json",
+    "cleanup-scan.json",
+    "https://github.com/juangcarmona/domusmind/security/dependabot"
+  ]
+}
