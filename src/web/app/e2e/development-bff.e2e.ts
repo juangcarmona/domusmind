@@ -129,22 +129,28 @@ test("development BFF enforces browser session and origin boundaries through Asp
             request.onsuccess = () => resolve(request.result);
             request.onerror = () => reject(request.error);
           });
-          const records = await Promise.all(
-            Array.from(
-              database.objectStoreNames,
-              (storeName) =>
-                new Promise<unknown>((resolve, reject) => {
-                  const request = database
-                    .transaction(storeName, "readonly")
-                    .objectStore(storeName)
-                    .getAll();
+          const storeContents = await Promise.all(
+            Array.from(database.objectStoreNames, async (storeName) => {
+              const store = database
+                .transaction(storeName, "readonly")
+                .objectStore(storeName);
+              const [keys, values] = await Promise.all([
+                new Promise<IDBValidKey[]>((resolve, reject) => {
+                  const request = store.getAllKeys();
                   request.onsuccess = () => resolve(request.result);
                   request.onerror = () => reject(request.error);
                 }),
-            ),
+                new Promise<unknown[]>((resolve, reject) => {
+                  const request = store.getAll();
+                  request.onsuccess = () => resolve(request.result);
+                  request.onerror = () => reject(request.error);
+                }),
+              ]);
+              return { keys, values };
+            }),
           );
           database.close();
-          return records;
+          return storeContents;
         }),
       );
       return {
