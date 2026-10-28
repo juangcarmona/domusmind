@@ -27,7 +27,7 @@
         "../../../plans/issue-296.md",
         "inventory.json"
       ],
-      "outputCommit": "2f301cc589b61dc09fd3d6f7cfdc4bc0ec89b437"
+      "outputCommit": "5a2967e453f0b14256af00330637f33dcb321ffe"
     }
   ],
   "reviews": [
@@ -55,7 +55,8 @@
         "JSON evidence parses",
         "git diff --check"
       ],
-      "externalMutationsPerformed": false
+      "externalMutationsPerformed": false,
+      "resultingCommit": "5a2967e453f0b14256af00330637f33dcb321ffe"
     }
   ],
   "stopReason": null,
