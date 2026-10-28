@@ -43,6 +43,19 @@
         "../../../plans/issue-296.md",
         "https://github.com/juangcarmona/domusmind/issues/296"
       ]
+    },
+    {
+      "reviewerModel": "gpt-6.1-terra",
+      "kind": "plan",
+      "reviewedCommit": "ea1db53b8abcf3e1c44d1d1971ddabe9fc34ecb9",
+      "decision": "request-changes",
+      "findings": [
+        "Deleting canonical lifecycle labels conflicts with the current requirement for one status per open issue and post-merge status:done unless the explicit owner-authorized retirement exception is recorded."
+      ],
+      "evidence": [
+        "../../../plans/issue-296.md",
+        "https://github.com/juangcarmona/domusmind/issues/296"
+      ]
     }
   ],
   "corrections": [
@@ -57,6 +70,18 @@
       ],
       "externalMutationsPerformed": false,
       "resultingCommit": "5a2967e453f0b14256af00330637f33dcb321ffe"
+    },
+    {
+      "gate": "plan",
+      "round": 2,
+      "requestedChanges": "Record the owner-authorized one-time retirement of canonical/legacy statuses; snapshot all assignments, disable routing before catalogue deletion, preserve other issue content/states/labels, do not recreate statuses, and close #296 by issue state after merge without status:done.",
+      "result": "awaiting-independent-review",
+      "checks": [
+        "JSON evidence parses",
+        "git diff --check",
+        "Live read-only open-issue assignment snapshot: 48 open, 45 carrying lifecycle status"
+      ],
+      "externalMutationsPerformed": false
     }
   ],
   "stopReason": null,
@@ -70,5 +95,22 @@
     "Owner retains all Definition of Done judgement dimensions; no merge authorized in this executor task.",
     "Repository label catalogue, activation settings and idle exclusive runner retirement require exact-head checks and owner PR review/approval, then live verification before Done and merge.",
     "No new Lighthouse install, credential action, production deployment or shared infrastructure deletion."
-  ]
+  ],
+  "retirementException": {
+    "authority": "Owner explicitly requested removing all AI/SDLC artifacts and labels from this repository before a later clean Lighthouse install.",
+    "appliesAt": "Approved pre-merge retirement gate after exact-head checks, owner PR review/approval, assignment snapshot and disabled Lighthouse activations.",
+    "oldLifecycleUntilRetirement": true,
+    "deleteExactInventoriedCatalogueIncludingStatuses": true,
+    "recreateLifecycleLabels": false,
+    "openIssuesAfterRetirement": "Preserve GitHub open/closed state, bodies/comments and retained labels; no lifecycle status until separately authorized installation.",
+    "issue296Completion": "Close GitHub issue after confirmed merge without status:done.",
+    "authorizedOtherStateChanges": [
+      "Close retired automation failure issues #287, #288, #289."
+    ],
+    "livePlanningCounts": {
+      "openIssues": 48,
+      "withLifecycleStatus": 45
+    },
+    "requireFreshSnapshotBeforeMutation": true
+  }
 }

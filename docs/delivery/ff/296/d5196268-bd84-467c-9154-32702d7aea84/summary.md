@@ -13,3 +13,9 @@ The exact file, workflow and external-setting inventory is in [inventory.json](i
 Current repository variables: none. The dedicated runner is online and idle. Only unrelated Azure/site secret names were observed; no secret values were read. No new automation run was in progress when inspected. Recheck live state after exact-head checks and owner PR review/approval, before any external cleanup and merge.
 
 Review debt: recent merged #277 and #279 have per-item records; older merged MCP deliveries may have historical review debt, outside this cleanup. No new review debt was created by this plan.
+
+## Plan correction round 2
+
+The reviewer requested changes on `ea1db53b8abcf3e1c44d1d1971ddabe9fc34ecb9` because canonical lifecycle-label deletion conflicted with the old lifecycle's status requirements. The issue, plan and PR now record the owner's explicit one-time authorization to retire all AI/SDLC labels, including canonical/legacy statuses. The old lifecycle governs until its reviewed retirement step. Snapshot all assignments and disable/verify Lighthouse routing before deleting the exact catalogue; do not recreate status labels. The read-only live snapshot has 48 open issues, 45 carrying lifecycle status; recheck before action. Other issue content, retained labels and GitHub states remain unchanged except the authorized failure closures; #281 stays open. Open issues have no lifecycle status until a future separately authorized installation. Close #296 through GitHub issue state after confirmed merge without `status:done`.
+
+No implementation or external configuration mutation was performed. Fresh independent Plan review remains pending.

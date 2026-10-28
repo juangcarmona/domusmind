@@ -371,6 +371,463 @@
     "Clean isolated worktree has no .cloud directory; user clarification applies to .claude.",
     "Dangling .claude skill symlinks are tracked install residue and will be removed.",
     "Runtime AI assistants, MCP, interpreter providers and BFF are product behavior and retained.",
-    "External cleanup is a required pre-merge integration gate after exact-head checks and owner PR review/approval; #296 cannot pass Done or merge while it remains pending."
-  ]
+    "External cleanup is a required pre-merge integration gate after exact-head checks and owner PR review/approval; #296 cannot pass Done or merge while it remains pending.",
+    "Owner-authorized one-time retirement includes canonical/legacy status labels: do not recreate them; preserve other issue content and states except the named closures, and close #296 after merge by GitHub issue state without status:done."
+  ],
+  "openIssueLabelSnapshot": {
+    "observedAt": "2026-10-28T11:13:15.812130+00:00",
+    "openIssueCount": 48,
+    "withLifecycleStatusCount": 45,
+    "withoutLifecycleStatusCount": 3,
+    "assignments": [
+      {
+        "number": 296,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "status:ready"
+        ]
+      },
+      {
+        "number": 289,
+        "state": "open",
+        "labels": [
+          "agentic-workflows"
+        ]
+      },
+      {
+        "number": 288,
+        "state": "open",
+        "labels": [
+          "agentic-workflows"
+        ]
+      },
+      {
+        "number": 287,
+        "state": "open",
+        "labels": [
+          "agentic-workflows"
+        ]
+      },
+      {
+        "number": 281,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "implement",
+          "status:ready",
+          "ready"
+        ]
+      },
+      {
+        "number": 266,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 265,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 264,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 263,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 262,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 261,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 260,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 259,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 258,
+        "state": "open",
+        "labels": [
+          "documentation",
+          "product-definition",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 256,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "product-definition",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 255,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 254,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 253,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 252,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 251,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 250,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 249,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 248,
+        "state": "open",
+        "labels": [
+          "documentation",
+          "product-definition",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 247,
+        "state": "open",
+        "labels": [
+          "documentation",
+          "product-definition",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 245,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "product-definition",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 244,
+        "state": "open",
+        "labels": [
+          "documentation",
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 243,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 242,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 241,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 240,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 239,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 238,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 237,
+        "state": "open",
+        "labels": [
+          "documentation",
+          "product",
+          "product-definition",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 235,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "product",
+          "product-definition",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 234,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 233,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "status:in-progress",
+          "priority",
+          "product"
+        ]
+      },
+      {
+        "number": 224,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "product-definition",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 223,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 222,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 221,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 220,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 219,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 218,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 217,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 216,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 215,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 213,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "product-definition",
+          "status:backlog"
+        ]
+      },
+      {
+        "number": 204,
+        "state": "open",
+        "labels": [
+          "enhancement",
+          "priority",
+          "product",
+          "status:backlog"
+        ]
+      }
+    ],
+    "requireFreshSnapshotBeforeMutation": true
+  }
 }
