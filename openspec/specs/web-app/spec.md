@@ -12,7 +12,7 @@ All surfaces share the same shell, layout grammar, visual tone, and interaction 
 
 <!-- pdac:cite id="FR-WEB-APP-SHELL" digest="sha256:31085ec615794bf88151dee377bbfb2f5021f7a11dfbb4fbeb53ab6028cefadf" -->
 <!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:471f9fa8993fa17314d158ee599bfbe772b0b10251665aabcedb4f99ec16d486" -->
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:dd3281f32dbc5b36618fc57d7cfb31e7fc36d89963250aabb97446a39e4b3a66" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:bbe8615d41428bc12d1a225306bd3b5b1fc4e4747dc80c9125220f483bc610a9" -->
 
 <!-- pdac:cite id="UC-WEB-MOVE-BETWEEN-SURFACES" digest="sha256:644e9cb653039be248abe495399211a5757cec36a5e4296cdd494098705e05f1" -->
 

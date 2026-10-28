@@ -9,9 +9,9 @@ applies-to:
   - UC-FAMILY-CONFIGURE-HOUSEHOLD-SETTINGS
   - UC-FAMILY-UPDATE-MEMBER-DETAILS
   - UC-FAMILY-PROVISION-MEMBER-ACCESS
+  - UC-FAMILY-MANAGE-INVITATION
   - UC-FAMILY-DISABLE-MEMBER-ACCESS
   - UC-FAMILY-ENABLE-MEMBER-ACCESS
-  - UC-FAMILY-RESET-MEMBER-ACCESS
 uses-terms:
   - TERM-MANAGER
   - TERM-MEMBER-ACCESS
@@ -30,7 +30,7 @@ Only a manager may:
 - add people and pets, remove them, and manage relationships between people (decided: Q-0024);
 - change the household settings: name, primary language, first day of week and date format (decided: Q-0025);
 - change another person's core details (name, role, birth date), and change any person's role (observed: openspec/specs/family/spec.md, Member Core Details Update; decided: Q-0023);
-- provision, disable, enable or reset another person's access (observed: openspec/specs/family/spec.md, Member Access Provisioning).
+- invite another person, replace or revoke a pending invitation link, and disable or re-enable another person's application access.
 
 Any household member may view the directory, and a person may edit their own profile (observed: family-member-management.md, Permission rules).
 

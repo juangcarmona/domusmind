@@ -5,9 +5,10 @@ title: "Managers control people's access"
 status: draft
 derived-from:
   - UC-FAMILY-PROVISION-MEMBER-ACCESS
+  - UC-FAMILY-ACCEPT-ACCESS-INVITATION
+  - UC-FAMILY-MANAGE-INVITATION
   - UC-FAMILY-DISABLE-MEMBER-ACCESS
   - UC-FAMILY-ENABLE-MEMBER-ACCESS
-  - UC-FAMILY-RESET-MEMBER-ACCESS
   - BR-FAMILY-MANAGERS-ADMINISTER
   - BR-FAMILY-MANAGER-KEEPS-OWN-ACCESS
 verification:
@@ -16,7 +17,9 @@ verification:
   - scenario-ref: "SB-FAMILY-MANAGER-ENABLES-ACCESS"
   - scenario-ref: "SB-FAMILY-PET-ACCESS-REJECTED"
   - scenario: "A manager tries to disable their own access and the product rejects it"
-  - scenario: "A manager resets another person's password and that person must change it at their next sign-in"
+  - scenario: "A manager replaces a pending invitation link, and the old link can no longer be accepted"
+  - scenario: "A manager revokes a pending invitation link and it can no longer be accepted"
+  - scenario: "An invited person with a mismatched or unverified provider email cannot accept"
 uses-terms:
   - TERM-MEMBER-ACCESS
   - TERM-MANAGER
@@ -28,7 +31,7 @@ provenance:
 
 ## Requirement
 
-The product MUST let a manager provision, disable, enable and reset access for people, and MUST show each person's access as one of No Access, Invited or Provisioned, Password Reset Required, Active or Disabled. It MUST reject these actions from non-managers, MUST reject provisioning for pets, and MUST NOT let a manager disable their own access (observed: openspec/specs/family/spec.md, Member Access Provisioning).
+The product MUST let a manager invite people with a copyable single-use link, replace or revoke pending links, and disable or re-enable their application access. It MUST show each person's access as No Access, Invited or Provisioned, Active or Disabled. It MUST reject these actions from non-managers, MUST reject invitations for pets, and MUST NOT let a manager disable their own access. It MUST leave provider credentials to the provider.
 
 ## Rationale
 
