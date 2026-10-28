@@ -2,7 +2,7 @@
 
 ## Outcome
 
-Adopt the pinned Lighthouse engineering baseline and its optional SDLC workflow projection while preserving DomusMind's product, architecture and lifecycle authorities. Prove a development-only OIDC browser session in the existing API host. Production authentication remains local JWT, and Lighthouse agent workers remain unavailable until their dedicated runner and isolation policy are verified.
+Adopt the pinned Lighthouse engineering baseline and its SDLC workflow projection while preserving DomusMind's product, architecture and lifecycle authorities. Prove a development-only OIDC browser session in the existing API host. Production authentication remains local JWT until issue #281 implements the approved OIDC product contract. Activate selected Lighthouse workers after runner acceptance and integration, then prove one supervised route.
 
 ## Architecture
 
@@ -10,7 +10,7 @@ Keep the modular monolith and its REST API. In Aspire Development only, the API 
 
 Keep the existing DomusMind surface system, palette, layout and responsive behavior. Map semantic Lighthouse token roles onto DomusMind's current tokens; adopt no Lighthouse visual component or palette by default.
 
-Keep Lighthouse workflows gated. The router must require an explicit repository setting, and agent execution must continue to require the dedicated self-hosted runner label. Do not configure the enable setting as part of this item. Runner and host-policy acceptance are separately reported evidence, not inferred from workflow compilation.
+Keep Lighthouse workflows gated. The router must require an explicit repository setting, and agent execution must continue to require the dedicated self-hosted runner label. Verify the runner and operator-owned execution profile before integration. After the workflows land on `main`, enable the repository setting and prove a supervised `refine` route through the actual runner. If that route fails, disable the setting and leave #277 open until corrected. `integrate` and `review` remain outside this adoption.
 
 ## Ordered tasks
 
@@ -18,8 +18,9 @@ Keep Lighthouse workflows gated. The router must require an explicit repository 
 2. Add BFF policy and integration coverage for OIDC callback validation, verified email and subject mapping, cookie flags, identity mapping, same-origin enforcement, CSRF, expiration, logout revocation and user switching.
 3. Exercise a real development sign-in through Aspire, Vite and the configured Keycloak realm, then prove an authenticated API query and mutation and capture browser evidence. Use two disposable Keycloak identities mapped to separate active local `AuthUser` records to prove account switching.
 4. Verify the DomusMind token mapping resolves through the design guide without replacing current surface guidance; check light/dark/system behavior, keyboard focus, reduced motion and narrow viewport behavior.
-5. Run the deterministic backend, web, product, architecture, image and Lighthouse checks derived from repository CI. Keep Lighthouse agent execution disabled and record the runner acceptance as pending unless its operator evidence is available.
+5. Run the deterministic backend, web, product, architecture, image and Lighthouse checks derived from repository CI. Record direct runner and operator-profile evidence, including the limits of its credential and network isolation.
 6. Update the existing PR with the evidence and remaining limits; do not create a second branch or PR.
+7. After the owner Done and forge gates pass, integrate the PR, enable `LIGHTHOUSE_AUTOMATION_ENABLED`, and run a supervised `refine` route through the dedicated runner. Verify its validated result and publication. If it fails, turn the setting off and keep the issue open.
 
 ## Test plan
 
@@ -28,7 +29,7 @@ Keep Lighthouse workflows gated. The router must require an explicit repository 
 - The browser journey verifies that the forwarded scheme and host seen by the BFF resolve to the configured same-origin UI/API boundary. It must prove a legitimate proxied mutation succeeds and a foreign `Origin` is rejected through that same path.
 - For session expiry, configure a short, bounded BFF lifetime only in the disposable development test environment; after the cookie expires, the browser must receive an unauthenticated response from the real API path. For account switching, retain a copy of identity A's session cookie, sign out A, sign in identity B, verify `/me` resolves to B, and prove the copied A cookie can no longer access authenticated routes after logout revokes its server-side ticket.
 - Existing backend and web test suites, lint, typecheck, builds, Lighthouse verification, product validation, OpenSpec citation verification, architecture checks and image smoke remain required.
-- The dedicated workflow runner and its operator-owned isolation policy require their own infrastructure acceptance evidence. A green hosted CI run does not satisfy that evidence.
+- The dedicated workflow runner and its operator-owned isolation policy require their own infrastructure acceptance evidence. A green hosted CI run does not satisfy that evidence. The selected operator profile matches Lighthouse and SoFa: an ephemeral Docker engine container with bounded resources and no Docker socket, but a mounted OpenCode authentication volume and unrestricted outbound network. Do not claim AWF egress filtering or credential proxy isolation.
 
 ## Definition of Done
 
@@ -42,7 +43,11 @@ Keep Lighthouse workflows gated. The router must require an explicit repository 
 - Product/spec consistency: no product behavior changes; citations and existing specs remain valid.
 - Evidence: CI and real browser evidence are linked to the PR.
 - Human review: the owner retains the non-substitutable Done judgement and required forge approval.
-- Limitations: production OIDC, production provisioning/recovery, workflow automation enablement and runner acceptance remain explicitly outside completion unless separately verified.
+- Limitations: production OIDC and production provisioning/recovery remain outside this item. Worker enablement and a supervised route are required after integration before #277 can be closed; `integrate` and `review` worker stages remain outside this adoption.
+
+## Owner scope amendment, 2026-10-28
+
+The owner required active Lighthouse workers in #278 and approved a staged integration: verify the dedicated runner first, merge only after the normal owner and forge gates, then enable the router on `main` and prove a supervised route. The owner selected the same operator execution profile used by Lighthouse and SoFa, accepting its mounted OpenCode authentication volume and outbound network for this adoption. This amendment replaces the earlier plan's disabled-worker completion boundary. It does not approve Done, merge, release, or deployment by itself.
 
 ## Known deviations and risks
 
