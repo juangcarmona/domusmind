@@ -36,7 +36,7 @@
       "endedAt": "2026-10-28T06:48:25Z",
       "inputCommit": "00dd8b8296020bd01d2b37541f24ee257ea3c6b4",
       "outputCommit": "9062cb92302c58234e50d34899defc48987c5142",
-      "result": "implemented-local-verified-ci-pending",
+      "result": "implemented; initial independent audit corrections applied",
       "evidence": [
         "src/backend/DomusMind.Api/Auth/DevelopmentBffTicketStore.cs",
         "src/backend/DomusMind.Api/Auth/DevelopmentBffIdentityMapper.cs",
@@ -49,6 +49,23 @@
         "markdownlint, arc42 frontmatter, ProductShape validate, Lighthouse verify, integration lock and OpenSpec citations passed",
         "dotnet format whitespace --verify-no-changes passed for changed C# files; solution-wide run reports existing violations in untouched files",
         "GitHub CI pending push"
+      ]
+    },
+    {
+      "name": "verify-correction-round-1",
+      "startedAt": "2026-10-28T06:55:15Z",
+      "endedAt": "2026-10-28T07:06:42Z",
+      "inputCommit": "83a087acd1121ffe362036e58ecfe6b693cdf5dd",
+      "outputCommit": "7dcbf760d25584fa31e43150ba0b3bd1ea2653de",
+      "result": "local-deterministic-lane-passed-ci-pending",
+      "evidence": [
+        "866 backend tests passed; 3 skipped",
+        "62 web unit tests, lint (44 existing warnings), and build passed",
+        "Aspire + Keycloak + Vite BFF Playwright journey passed locally (1 test, 41.1s)",
+        "Real antiforgery form-token and OIDC configuration tests passed",
+        "Lighthouse verify, ProductShape validate, integration lock, OpenSpec and architecture citation checks passed",
+        "Lighthouse-managed projection verification and targeted markdownlint passed",
+        "GitHub Actions and second independent done-gate audit pending for corrected head"
       ]
     }
   ],
@@ -82,6 +99,22 @@
         "The in-memory revocable ticket store fits the development-only boundary and existing API host; its single-process limit remains explicit.",
         "Update issue #277 so its acceptance criteria explicitly require revoking a copied pre-logout cookie."
       ]
+    },
+    {
+      "stage": "done-gate-audit",
+      "reviewerModel": "gpt-6.1-terra",
+      "reviewKind": "independent implementation and evidence audit",
+      "reviewedCommit": "83a087acd1121ffe362036e58ecfe6b693cdf5dd",
+      "decision": "request-changes",
+      "findings": [
+        "The approved plan required negative callback/state and PKCE coverage, real antiforgery form-token handling, and broader browser token-exposure checks.",
+        "The planned visual checks for light, dark, system, keyboard focus, reduced motion, and narrow viewport were not recorded as evidence.",
+        "The PR body was stale when first reviewed; it was updated with passing CI and browser artifact evidence before correction."
+      ],
+      "evidence": [
+        "https://github.com/juangcarmona/domusmind/actions/runs/40646147652",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40646147652/artifacts/12798220479"
+      ]
     }
   ],
   "corrections": [
@@ -105,6 +138,25 @@
         "Reviewer approved the amendment and requested the issue acceptance criteria align with the plan."
       ],
       "amendedPlanSha256": "5cb907bd039cfbfb7700d762d34414a0d21f1510808fa7f9ccbb1fe9d771513f"
+    },
+    {
+      "stage": "implement",
+      "round": 1,
+      "changes": [
+        "Added a forged-state OIDC callback rejection check, real authorization-code PKCE option assertions, and inspection of Keycloak PAR use in the browser journey.",
+        "Added a real antiforgery form-token middleware test using the configured antiforgery service.",
+        "Extended browser evidence to scan local/session storage keys and values, IndexedDB records, and same-origin JSON responses for provider tokens or JWTs.",
+        "Adapted system theme resolution to follow OS changes and honored reduced-motion preferences while keeping the existing palette.",
+        "Added real browser checks for light/dark/system appearance, visible keyboard focus, 390px viewport overflow, and reduced motion.",
+        "Restored the Lighthouse-managed DESIGN.md projection and clarified DomusMind visual authority in its own design index."
+      ],
+      "resultingCommit": "7dcbf760d25584fa31e43150ba0b3bd1ea2653de",
+      "rerunChecks": [
+        "Full backend suite: 866 passed, 3 skipped.",
+        "Web unit tests: 62 passed; lint and production build passed.",
+        "Aspire + Keycloak + Vite BFF Playwright journey: 1 passed in 41.1 seconds.",
+        "ProductShape validation/integration/OpenSpec citations, Lighthouse verification, arc42 contract, targeted markdownlint, and changed-file C# formatting passed."
+      ]
     }
   ],
   "stopReason": null,
