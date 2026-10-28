@@ -8,6 +8,7 @@ using DomusMind.Infrastructure.Persistence;
 using DomusMind.Infrastructure.Integrations.Calendar.Microsoft;
 using DomusMind.Api.Realtime;
 using DomusMind.Api.Telemetry;
+using DomusMind.Api.Auth;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,9 @@ builder.Services.AddSingleton<IListChangeNotifier, ListChangeNotifier>();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddDomusMindAuthentication(builder.Configuration);
+var developmentBff = BffAuthenticationExtensions.IsEnabled(builder.Environment, builder.Configuration);
+if (developmentBff)
+    builder.Services.AddDevelopmentBff(builder.Configuration);
 builder.Services.AddDomusMindAuthorization();
 builder.Services.AddDomusMindOpenApi();
 builder.AddDevelopmentTelemetry();
@@ -129,7 +133,8 @@ app.UseExceptionHandler(errorApp =>
 
 app.UseForwardedHeaders();
 
-app.UseHttpsRedirection();
+if (!developmentBff)
+    app.UseHttpsRedirection();
 
 if (swaggerEnabled)
 {
@@ -138,6 +143,8 @@ if (swaggerEnabled)
 }
 
 app.UseAuthentication();
+if (developmentBff)
+    app.UseMiddleware<BffRequestBoundary>();
 app.UseAuthorization();
 
 var webRootPath = app.Environment.WebRootPath ?? Path.Combine(app.Environment.ContentRootPath, "wwwroot");

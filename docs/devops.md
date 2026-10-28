@@ -1,5 +1,17 @@
 # DomusMind DevOps
 
+## Lighthouse workflow pilot
+
+The repository pins `@juangcarmona/lighthouse` in the root `package-lock.json` and declares the `dotnet-backend`, `react-web-platform`, `web-bff`, and `visual-theme` profiles in `lighthouse.json`. Run `npm ci` at the repository root and `npm run verify:lighthouse` to check the installed Foundation. `LIGHTHOUSE.md` describes the generated artifacts. The canonical DomusMind lifecycle and its `status:*` labels remain in [engineering-lifecycle.md](engineering-lifecycle.md); Lighthouse capability labels are additional routing signals.
+
+The installed SDLC projections cover `triage`, `refine`, `propose`, `implement`, and `apply-review`. Bastion has a dedicated repository runner, `bastion-domusmind-gh-aw`, labelled `lighthouse-workflow`, with a private operator-owned `LIGHTHOUSE_ENGINE_CONFIG` and the shared engine lock. `LIGHTHOUSE_AUTOMATION_ENABLED` remains unset until these workflows land on the default branch and a supervised route is chosen. `integrate` and `review` are not enabled by this pilot; existing human and branch gates still apply.
+
+## Development OIDC BFF pilot
+
+`DomusMind.AppHost` starts a local Keycloak container, imports `infra/keycloak-dev/domusmind-dev-realm.json`, and enables the BFF only for the API's Development environment. Open the Vite app at `http://localhost:61546`. The test identity is `developer` with password `DevelopmentOnly123!`; its verified email is `admin@domusmind.local`. On a fresh database, initialize the application administrator with that same email through the first-run screen before signing in. The local password is only an unused development fixture in BFF mode. This test identity has no production authority.
+
+The browser receives an HTTP-only, Secure session cookie. The API never returns OIDC tokens to the web app; unsafe API requests require a same-origin `Origin` and an antiforgery token. Local token endpoints return 404 in BFF mode. Logout invalidates the local session immediately and Keycloak asks the user to confirm its own logout because the BFF does not retain an ID token. Vite forwards its public host and scheme from loopback; any remote preview needs an HTTPS reverse proxy and an explicitly registered redirect URI. The existing local JWT flow remains the production mode while the production identity decision is pending; see [ADR 0011](adr/0011-pilot-oidc-bff-in-development.md).
+
 This document explains how DomusMind is versioned, built, validated, released and operated, which together form the application lifecycle. It does not cover where the software runs or how its parts map onto infrastructure; see the [Deployment View](architecture/07-deployment-view.md) for that. The installation guide shipped with every release is [`deploy/README.md`](../deploy/README.md).
 
 ## Versioning

@@ -1,0 +1,157 @@
+{
+  "$schema": "./node_modules/@juangcarmona/lighthouse/assets/schemas/lighthouse-upgrade.schema.json",
+  "schemaVersion": 1,
+  "package": {
+    "name": "@juangcarmona/lighthouse",
+    "version": "0.11.4"
+  },
+  "baseline": "0.1.0",
+  "capabilities": {
+    "harness": "1",
+    "sdlc": "1"
+  },
+  "adoption": {
+    "labels": {
+      "id": "labels",
+      "status": "adopted",
+      "selection": "selected-by-default",
+      "provider": "github",
+      "version": "1",
+      "catalogVersion": "0.5.0",
+      "nextAction": null,
+      "recordPath": ".lighthouse/reconciliation/labels.json"
+    },
+    "github-profile": {
+      "id": "github-profile",
+      "status": "available",
+      "selection": "opt-in",
+      "provider": "github",
+      "version": "1",
+      "catalogVersion": "0.5.0",
+      "nextAction": "lighthouse capabilities select --id github-profile --provider github"
+    }
+  },
+  "projections": {
+    "harness": "1",
+    "sdlc": "1"
+  },
+  "lastAppliedMigration": "foundation-init-1",
+  "files": {
+    "LIGHTHOUSE.md": {
+      "hash": "846bcff3ff18a0e7d2de2c8fa0cf1875c3d5815b301a41cd465672174f620adf",
+      "scope": "harness"
+    },
+    "scripts/lighthouse-guard.mjs": {
+      "hash": "08b66ddaaecab2fd5704b41f30a0bf4a5767dcb92cde30e74820b6e302cbc445",
+      "scope": "harness"
+    },
+    ".husky/commit-msg": {
+      "hash": "19543eb246c4fbfd7ca3f175ded3b0e536a74456eaac5ad4c2e7a2d1c3be0c90",
+      "scope": "harness"
+    },
+    ".husky/pre-push": {
+      "hash": "05ed0725b011c8f0f093c2525dd203b95ae37ccce8c87f3003643e3b74840e29",
+      "scope": "harness"
+    },
+    ".github/workflows/lighthouse.yml": {
+      "hash": "fa29fc3cff29b3d23ac39b3a6e76587d66717384e54858ddc1143c6f696983f2",
+      "scope": "harness"
+    },
+    ".agents/skills/lighthouse-init/SKILL.md": {
+      "hash": "48e1692c905934d9ddceb180ee8cfafda193683d3f21debb54d8287ada068ddc",
+      "scope": "harness"
+    },
+    "docs/design/DESIGN.md": {
+      "hash": "7aad6f6f307ee14ce32f86d676f70e32960a96362e23515f7363da09cd3752c2",
+      "scope": "harness"
+    },
+    ".agents/skills/lighthouse-ui/SKILL.md": {
+      "hash": "c43f923dcea56a311b5e508b957150bd72731a11babc76c613be92927f19a1b2",
+      "scope": "harness"
+    },
+    "docs/profiles/dotnet/README.md": {
+      "hash": "e9a63355d079aaabf23946d804c557da3dc8fca5c325fa2edbe3e964b37c74ea",
+      "scope": "harness"
+    },
+    "docs/profiles/dotnet/adoption.md": {
+      "hash": "712222b6cfcd0fba940c82c41cb25101e3635e1809794c6fa79805bb34a0eaac",
+      "scope": "harness"
+    },
+    "docs/profiles/dotnet/architecture.md": {
+      "hash": "0f33479da972187e4c7a04b8b676fa98964598ab50b0bab5113d9e5dfebe9e93",
+      "scope": "harness"
+    },
+    "docs/profiles/dotnet/guardrails.md": {
+      "hash": "8a18be44ddb3033d0323887552c91ed122593eea717a4d6dc749a052320bc276",
+      "scope": "harness"
+    },
+    "docs/profiles/dotnet/practices.md": {
+      "hash": "d1e0ea33c99a1f38403533df1160375259d534d13a028722928651e13c6279cb",
+      "scope": "harness"
+    },
+    "docs/profiles/dotnet/testing-and-development.md": {
+      "hash": "3c9769003b71e2620394cbf0329ea775632581091fe8a974c945c50ef825852f",
+      "scope": "harness"
+    },
+    "docs/profiles/dotnet/use-cases.md": {
+      "hash": "58b1490a3276f5827e71a3ac267fbfb6c38d57695e4260995adeae8dce68f957",
+      "scope": "harness"
+    },
+    ".agents/skills/lighthouse-dotnet/SKILL.md": {
+      "hash": "806a042c281f8898fd6405ff353180cc2da27cdba813c187c36afe37fb49705a",
+      "scope": "harness"
+    },
+    "docs/profiles/react-web-platform/README.md": {
+      "hash": "fd14f3d78ede718be61d0c053435ed121f298cc4df8e59a513da2e68e4b98b89",
+      "scope": "harness"
+    },
+    "docs/profiles/react-web-platform/adoption.md": {
+      "hash": "378fb97ca6792291d79f33f47058958d17c80f32895562c9c74c6a1eb4fc6d81",
+      "scope": "harness"
+    },
+    "docs/profiles/react-web-platform/structure.md": {
+      "hash": "16ca9d176766668d8a63b13ac803d5c3940e2d2017e11d7f10c87d8afb00896a",
+      "scope": "harness"
+    },
+    "docs/profiles/react-web-platform/guardrails.md": {
+      "hash": "b39e12d0dbaf30e08b7f38ba0674d8dfa8d31159237bd8841363a49856b0d39d",
+      "scope": "harness"
+    },
+    "docs/profiles/react-web-platform/testing.md": {
+      "hash": "7847291912e39b3a2e454925f0eac33dafa3404ba3e394f8242f36901bf1d951",
+      "scope": "harness"
+    },
+    ".agents/skills/lighthouse-react-web/SKILL.md": {
+      "hash": "b855f616445aedd9235d8f7c981f2ec1a15d12465bc9fa30a68eba7432f0b530",
+      "scope": "harness"
+    },
+    "docs/profiles/web-bff/README.md": {
+      "hash": "c6a63797d71f326aa756a63df4a4174e21eb6f01185323a529ad47eefc9d774a",
+      "scope": "harness"
+    },
+    "docs/profiles/web-bff/adoption.md": {
+      "hash": "4ee06a409675973b4344250a9901a6428c5ecab8b67e7341b5a1ab74675758ad",
+      "scope": "harness"
+    },
+    "docs/profiles/web-bff/security.md": {
+      "hash": "26a2aa191af9db916ce30e0d85558474ae2b21ed4bd95b04578df68758d25b7c",
+      "scope": "harness"
+    },
+    "docs/profiles/web-bff/testing.md": {
+      "hash": "0f8678265f6a4c4f3869324e6e764bfb6eae5bf8bc80fada7db70dfe69c74cbf",
+      "scope": "harness"
+    },
+    ".agents/skills/lighthouse-web-bff/SKILL.md": {
+      "hash": "5d5d72f7eeaad945eb7931c8964b7d334ebc2425dfae0757d0d95a692432ac84",
+      "scope": "harness"
+    },
+    ".lighthouse/sdlc.json": {
+      "hash": "427c6954b0c8117e07ef856413433726cbc374902d9f6783741e36e058817a15",
+      "scope": "sdlc"
+    },
+    ".lighthouse/commands.json": {
+      "hash": "ccd9a1f640707dfd85ab933aeff3accd1701020e1648cfba7cf33c3ab0228bdb",
+      "scope": "sdlc"
+    }
+  }
+}

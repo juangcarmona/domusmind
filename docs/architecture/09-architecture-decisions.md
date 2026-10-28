@@ -19,5 +19,6 @@ The ADRs in [`docs/adr/`](../adr/README.md) own the status, context, rationale, 
 | Use EF Core directly without generic repositories | [ADR-0007](../adr/0007-use-ef-core-directly-without-generic-repositories.md) | [05 Building block view](05-building-block-view.md), [08 Crosscutting concepts](08-crosscutting-concepts.md) |
 | Collaborate across modules through persisted domain events | [ADR-0008](../adr/0008-collaborate-across-modules-through-persisted-domain-events.md) | [05 Building block view](05-building-block-view.md), [06 Runtime view](06-runtime-view.md), [08 Crosscutting concepts](08-crosscutting-concepts.md), [11 Risks and technical debt](11-risks-and-technical-debt.md) |
 | Use GUID-backed strongly typed identifiers | [ADR-0010](../adr/0010-use-guid-backed-strongly-typed-identifiers.md) | [04 Solution strategy](04-solution-strategy.md), [05 Building block view](05-building-block-view.md), [08 Crosscutting concepts](08-crosscutting-concepts.md) |
+| Pilot an OIDC BFF in development | [ADR-0011](../adr/0011-pilot-oidc-bff-in-development.md) | [06 Runtime view](06-runtime-view.md), [07 Deployment view](07-deployment-view.md), [08 Crosscutting concepts](08-crosscutting-concepts.md) |
 
 [ADR-0009](../adr/0009-use-ulid-based-strongly-typed-identifiers.md) (ULID identifiers) is superseded by ADR-0010 and shapes no view; it was never implemented.

@@ -8,6 +8,10 @@ They are subordinate to the product model in `docs/product/model/`. What the pro
 does, its rules and its vocabulary live there; where a design document and the model
 disagree, the model wins and the design document is corrected.
 
+Lighthouse's generated [`DESIGN.md`](DESIGN.md) describes its optional visual profile.
+DomusMind maps its semantic roles to the existing tokens; this directory's surface
+guidance and the DomusMind product model govern the actual interface.
+
 | Document | Covers |
 | --- | --- |
 | [surface-system.md](surface-system.md) | The shared surface system: navigation, layout, patterns |

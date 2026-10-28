@@ -42,9 +42,16 @@ coverage/
 .claude/hooks/*
 !.claude/hooks/product-definition.json
 
-# Agent folders some IDE tools (Codex and others) generate from .claude/ on
-# workspace open; this repository keeps the single copy under .claude/.
-.agents/
+# Agent folders some IDE tools generate from .claude/ on workspace open.
+# Only Lighthouse's managed, package-projected skills are tracked here.
+.agents/*
+!.agents/skills/
+.agents/skills/*
+!.agents/skills/lighthouse-dotnet/
+!.agents/skills/lighthouse-init/
+!.agents/skills/lighthouse-react-web/
+!.agents/skills/lighthouse-ui/
+!.agents/skills/lighthouse-web-bff/
 .codex/
 
 # Product Definition as Code: regenerable outputs, never canonical.
