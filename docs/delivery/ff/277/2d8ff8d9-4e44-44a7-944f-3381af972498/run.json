@@ -67,6 +67,37 @@
         "Lighthouse-managed projection verification and targeted markdownlint passed",
         "GitHub Actions and second independent done-gate audit pending for corrected head"
       ]
+    },
+    {
+      "name": "verify-correction-round-2",
+      "startedAt": "2026-10-28T07:07:00Z",
+      "endedAt": "2026-10-28T07:14:21Z",
+      "inputCommit": "e3d37dfb003a3160eb19289d4d3d59c0ce312d9d",
+      "outputCommit": "39ea5e435b9e4bc5785959e8f74b5f6733551d42",
+      "result": "local-deterministic-lane-passed-ci-and-fresh-independent-audit-pending",
+      "evidence": [
+        "Corrected IndexedDB scan awaits database enumeration and every object-store record before checking token patterns.",
+        "Aspire + Keycloak + Vite BFF journey passed on a clean disposable environment: 1 passed in 43.4 seconds.",
+        "Web unit tests: 62 passed; lint passed with 44 existing warnings; production build passed.",
+        "The previous e3d37df CI BFF job exposed a navigated-away response body race; canceled response capture is now handled without weakening checks on readable JSON bodies.",
+        "The previous e3d37df general browser workflow failed the existing household chat assistant assertion (expected 2 assistant messages, received 1); needs rerun on corrected head.",
+        "GitHub checks and fresh independent audit pending for 39ea5e4."
+      ]
+    },
+    {
+      "name": "verify-correction-round-3",
+      "startedAt": "2026-10-28T07:14:21Z",
+      "endedAt": "2026-10-28T07:18:22Z",
+      "inputCommit": "39ea5e435b9e4bc5785959e8f74b5f6733551d42",
+      "outputCommit": "75157551156bcdd5e13e2567bfb336e471b6197b",
+      "result": "local-browser-and-web-lane-passed-ci-and-fresh-audit-pending",
+      "evidence": [
+        "IndexedDB token scan now awaits getAllKeys and getAll for every object store before serialization and pattern checks.",
+        "Clean Aspire + Keycloak + Vite BFF journey passed on this implementation (1 passed, 43.9 seconds).",
+        "Web unit tests: 62 passed; lint: 0 errors and 44 existing warnings; production build passed.",
+        "GitHub Actions on this exact head are still running; the PR reports BEHIND main, which is recorded for the later integration gate.",
+        "The prior exact-head audit stopped pending CI and asked for IndexedDB primary-key coverage; correction is recorded in round 3."
+      ]
     }
   ],
   "reviews": [
@@ -115,6 +146,29 @@
         "https://github.com/juangcarmona/domusmind/actions/runs/40646147652",
         "https://github.com/juangcarmona/domusmind/actions/runs/40646147652/artifacts/12798220479"
       ]
+    },
+    {
+      "stage": "done-gate-audit-correction-round-1",
+      "reviewerModel": "gpt-6.1-terra",
+      "reviewKind": "independent implementation and evidence audit",
+      "reviewedCommit": "e3d37dfb003a3160eb19289d4d3d59c0ce312d9d",
+      "decision": "request-changes",
+      "findings": [
+        "IndexedDB enumeration and record reads were returned as an unresolved Promise, so serialized browser evidence omitted its contents. Await the complete scan and rerun the journey.",
+        "At review time corrected-head BFF, backend, image, web and CodeQL checks were incomplete; dedicated runner acceptance remains pending."
+      ]
+    },
+    {
+      "stage": "done-gate-audit-correction-round-2",
+      "reviewerModel": "gpt-6.1-terra",
+      "reviewKind": "independent implementation and evidence audit",
+      "reviewedCommit": "39ea5e435b9e4bc5785959e8f74b5f6733551d42",
+      "decision": "stop",
+      "findings": [
+        "Done could not be approved while exact-head CI and the rerun general browser journey were incomplete.",
+        "IndexedDB scan covered values but not primary keys; add getAllKeys coverage before final audit.",
+        "The boundary review found no additional concrete security defect; runner acceptance and local-evidence provenance remain explicit."
+      ]
     }
   ],
   "corrections": [
@@ -156,6 +210,39 @@
         "Web unit tests: 62 passed; lint and production build passed.",
         "Aspire + Keycloak + Vite BFF Playwright journey: 1 passed in 41.1 seconds.",
         "ProductShape validation/integration/OpenSpec citations, Lighthouse verification, arc42 contract, targeted markdownlint, and changed-file C# formatting passed."
+      ]
+    },
+    {
+      "stage": "implement",
+      "round": 2,
+      "changes": [
+        "Await IndexedDB database enumeration and all object-store records inside page.evaluate before scanning for provider tokens/JWTs.",
+        "Handle Playwright response bodies that become unavailable when a subsequent navigation cancels the response; continue asserting against every readable same-origin JSON response.",
+        "Rerun the full BFF browser journey from clean disposable Aspire state and rerun web tests, lint and build."
+      ],
+      "resultingCommit": "39ea5e435b9e4bc5785959e8f74b5f6733551d42",
+      "rerunChecks": [
+        "Aspire + Keycloak + Vite BFF journey: 1 passed in 43.4 seconds.",
+        "Web unit tests: 62 passed.",
+        "Web lint passed with 44 existing warnings and no errors.",
+        "Web production build passed.",
+        "GitHub Actions on corrected head and fresh independent audit pending."
+      ]
+    },
+    {
+      "stage": "implement",
+      "round": 3,
+      "changes": [
+        "Extend IndexedDB token scanning to inspect every object store primary key as well as every value.",
+        "Repeat the clean Aspire + Keycloak + Vite browser journey and web unit/lint/build checks."
+      ],
+      "resultingCommit": "75157551156bcdd5e13e2567bfb336e471b6197b",
+      "rerunChecks": [
+        "Clean Aspire + Keycloak + Vite BFF journey: 1 passed in 43.9 seconds.",
+        "Web unit tests: 62 passed.",
+        "Web lint passed with 44 existing warnings and no errors.",
+        "Web production build passed.",
+        "GitHub Actions and fresh independent audit pending."
       ]
     }
   ],
