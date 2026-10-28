@@ -55,4 +55,4 @@ The owner also approved a one-item exception to the usual Done-before-merge orde
 
 ## Known deviations and risks
 
-Implementation commits `08b5dc3` and `e206b6b` predate this FF run and the independent plan review. The proposal review is therefore retrospective; it cannot change that sequence. The current CI browser journey does not exercise the Aspire + Keycloak BFF path. The only currently configured development subject is the local test administrator; the two-identity journey requires disposable test setup and must not add production users. No production identity decision is made here.
+Implementation commits `08b5dc3` and `e206b6b` predate this FF run and the independent plan review. The proposal review is therefore retrospective; it cannot change that sequence. At planning time, CI did not exercise the Aspire + Keycloak BFF path and only the local test administrator was configured. The implementation added a disposable two-identity browser workflow without production users. The production identity decision was subsequently approved in CHG-PRODUCTION-OIDC-001; its implementation belongs to #281.
