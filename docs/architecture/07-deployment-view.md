@@ -56,7 +56,7 @@ On every start the application applies pending EF Core migrations, then runs the
 ### Topology Rationale
 
 One household installs one instance, and the whole product ships as one image because the backend is a single modular monolith ([ADR-0004](../adr/0004-build-a-domain-centric-modular-monolith.md)) and the web app is served from that same process, so the browser always talks same-origin to `/api` and no CORS or second web server is needed. Multi-tenant hosting is not a driver of the topology.
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:dd3281f32dbc5b36618fc57d7cfb31e7fc36d89963250aabb97446a39e4b3a66" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:bbe8615d41428bc12d1a225306bd3b5b1fc4e4747dc80c9125220f483bc610a9" -->
 
 Keeping PostgreSQL off the host network makes the application the single entry point to household data; all authentication and family-scoped authorization happen in that process (see [Crosscutting Concepts](08-crosscutting-concepts.md#authentication-authorization-and-identity-separation)).
 
