@@ -14,6 +14,18 @@
       "credentials": [
         { "type": "password", "value": "DevelopmentOnly123!", "temporary": false }
       ]
+    },
+    {
+      "id": "00000000-0000-0000-0000-0000000000b2",
+      "username": "development-member",
+      "firstName": "Development",
+      "lastName": "Member",
+      "email": "member@domusmind.local",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        { "type": "password", "value": "DevelopmentOnly123!", "temporary": false }
+      ]
     }
   ],
   "clients": [

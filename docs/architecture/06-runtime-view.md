@@ -8,7 +8,7 @@ description: Architecturally significant runtime scenarios of DomusMind and how 
 
 ## Development browser session pilot
 
-With `Bff:Enabled` in development, the SPA opens `/api/session/login`; the API host challenges Keycloak through Authorization Code with PKCE. The callback accepts only a configured test subject whose verified email matches an active local `AuthUser`, then issues a Secure, HttpOnly cookie containing the local user identity. The SPA calls the same-origin controllers without bearer tokens. Unsafe `/api` requests must carry the CSRF request token and matching Origin; logout clears the cookie and invokes the OIDC sign-out route. Production still uses the local JWT flow described below.
+With `Bff:Enabled` in development, the SPA opens `/api/session/login`; the API host challenges Keycloak through Authorization Code with PKCE. The callback accepts only a configured test subject whose verified email matches an active local `AuthUser`, then issues a Secure, HttpOnly cookie referencing a server-side authentication ticket. The in-memory ticket store revokes that ticket on logout and is limited to one development API process. The SPA calls the same-origin controllers without bearer tokens. Unsafe `/api` requests must carry the CSRF request token and matching Origin; production still uses the local JWT flow described below.
 
 Participants are the building blocks of [section 05](05-building-block-view.md). Each scenario describes the code as it runs today; where it differs from the intended design the difference is stated and tracked in [section 11](11-risks-and-technical-debt.md).
 

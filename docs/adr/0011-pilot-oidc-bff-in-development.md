@@ -15,12 +15,12 @@ DomusMind's browser currently stores access and refresh tokens in `localStorage`
 
 ## Decision
 
-We will run a development-only OIDC BFF pilot in the existing ASP.NET Core host, using a Keycloak realm supplied by Aspire. The browser receives a Secure, HttpOnly session cookie; the host handles Authorization Code with PKCE. A configured issuer subject and email must resolve to an active local `AuthUser`, preserving its internal ID and the separate household `Member`. The pilot uses test identities and one authenticated read/write journey. Production stays on local JWT authentication until a Product Change decides identity lifecycle and deployment.
+We will run a development-only OIDC BFF pilot in the existing ASP.NET Core host, using a Keycloak realm supplied by Aspire. The browser receives a Secure, HttpOnly session cookie; the host handles Authorization Code with PKCE. A configured issuer subject and verified email must resolve to an active local `AuthUser`, preserving its internal ID and the separate household `Member`. Server-side cookie tickets are revoked on logout; the in-memory store is limited to one development process and does not decide production session storage. The pilot uses disposable test identities and an authenticated browser journey. Production stays on local JWT authentication until a Product Change decides identity lifecycle and deployment.
 
 ## Consequences
 
 - **Positive:** The browser can exercise the Lighthouse session boundary without replacing the household domain or production login.
-- **Negative:** Development gains a Keycloak container and a second authentication mode. The pilot does not implement member provisioning or password reset through Keycloak.
+- **Negative:** Development gains a Keycloak container and a second authentication mode. The pilot does not implement member provisioning or password reset through Keycloak. Its in-memory session ticket store cannot revoke sessions across multiple API processes or survive a restart.
 - **Neutral:** Existing local users are not migrated. A production OIDC decision must address first-run setup, member access states, credential recovery and operations before changing ADR-0002.
 
 ## Alternatives considered

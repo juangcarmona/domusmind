@@ -182,6 +182,8 @@ using (var scope = app.Services.CreateScope())
     await dbContext.Database.MigrateAsync();
 }
 await AuthSeedService.SeedAdminAsync(app.Services, CancellationToken.None);
+if (developmentBff)
+    await DevelopmentBffTestUserSeeder.SeedAsync(app.Services, app.Configuration, CancellationToken.None);
 await LanguageSeedService.SeedAsync(app.Services, CancellationToken.None);
 
 app.Run();

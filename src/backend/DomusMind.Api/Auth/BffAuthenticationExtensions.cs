@@ -27,6 +27,14 @@ public static class BffAuthenticationExtensions
         if (!authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase) && !localAuthority)
             throw new InvalidOperationException("The development BFF requires an HTTPS or loopback OIDC authority.");
 
+        var sessionLifetimeSeconds = configuration.GetValue("Bff:SessionLifetimeSeconds", 1800);
+        if (sessionLifetimeSeconds is < 30 or > 1800)
+            throw new InvalidOperationException("Bff:SessionLifetimeSeconds must be between 30 and 1800 seconds.");
+
+        services.AddSingleton<DevelopmentBffTicketStore>();
+        services.AddOptions<CookieAuthenticationOptions>(CookieScheme)
+            .Configure<DevelopmentBffTicketStore>((options, ticketStore) => options.SessionStore = ticketStore);
+
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = CookieScheme;
@@ -40,7 +48,7 @@ public static class BffAuthenticationExtensions
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             options.Cookie.SameSite = SameSiteMode.Lax;
             options.Cookie.Path = "/";
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+            options.ExpireTimeSpan = TimeSpan.FromSeconds(sessionLifetimeSeconds);
             options.SlidingExpiration = false;
             options.Events.OnRedirectToLogin = context =>
             {
@@ -83,28 +91,18 @@ public static class BffAuthenticationExtensions
             options.Scope.Add("email");
             options.Events.OnTokenValidated = async context =>
             {
-                var subject = context.Principal?.FindFirstValue("sub");
-                var email = subject is null ? null : configuration[$"Bff:TestUsers:{subject}"];
-                var assertedEmail = context.Principal?.FindFirstValue("email");
-                var verified = context.Principal?.FindFirstValue("email_verified");
-                if (string.IsNullOrWhiteSpace(email) || verified != "true" ||
-                    !string.Equals(email, assertedEmail, StringComparison.OrdinalIgnoreCase))
-                {
-                    context.Fail("OIDC identity is not an approved development user.");
-                    return;
-                }
-
                 var users = context.HttpContext.RequestServices.GetRequiredService<IAuthUserRepository>();
-                var user = await users.FindByEmailAsync(email, context.HttpContext.RequestAborted);
-                if (user is null || user.IsDisabled || user.MustChangePassword)
-                {
-                    context.Fail("The approved development user has no active local account.");
-                    return;
-                }
-
-                context.Principal = new ClaimsPrincipal(new ClaimsIdentity(
-                    [new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                     new Claim(ClaimTypes.Email, user.Email)], CookieScheme));
+                var mappedPrincipal = context.Principal is null
+                    ? null
+                    : await DevelopmentBffIdentityMapper.MapAsync(
+                        context.Principal,
+                        configuration,
+                        users,
+                        context.HttpContext.RequestAborted);
+                if (mappedPrincipal is null)
+                    context.Fail("OIDC identity is not an approved development user with an active local account.");
+                else
+                    context.Principal = mappedPrincipal;
             };
             options.Events.OnRedirectToIdentityProviderForSignOut = context =>
             {
