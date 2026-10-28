@@ -1,3 +1,3 @@
-# Infrastructure boundary
+# Development infrastructure
 
-DomusMind's self-hosted deployment remains under [`deploy/`](../deploy/). This directory records the Lighthouse infrastructure boundary without moving product-owned deployment files.
+[`keycloak-dev/`](keycloak-dev/) contains the disposable development realm used by Aspire and the BFF browser journey. Self-hosted deployment configuration remains under [`deploy/`](../deploy/).
