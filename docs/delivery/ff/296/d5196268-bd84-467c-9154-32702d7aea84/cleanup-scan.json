@@ -9,6 +9,11 @@
   "activeAgentReferenceMatches": [],
   "newBrokenLinksToDeletedFiles": [],
   "additionalInstructionSurfaceFiles": [],
+  "retainedFunctionalTool": {
+    "path": "tools/arc42-snapshot",
+    "reason": "The engineering-site workflow uses this renderer to publish the public architecture page.",
+    "removedSkillCoupling": "Replaced stale architecture-docs skill references in source comments and package metadata with the engineering-site contract."
+  },
   "historicalAllowances": [
     "This cleanup plan and run evidence",
     "Accepted ADR provenance with revision-pinned source links",
