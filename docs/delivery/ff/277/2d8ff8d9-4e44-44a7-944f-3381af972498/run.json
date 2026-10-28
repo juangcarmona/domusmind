@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "runId": "2d8ff8d9-4e44-44a7-944f-3381af972498",
+  "workItem": "juangcarmona/domusmind#277",
+  "branch": "feat/277-lighthouse-adoption",
+  "startedAt": "2026-10-28T06:25:09Z",
+  "executorModel": "GPT-6 (Codex)",
+  "reviewerModel": "gpt-6.1-terra",
+  "maxCorrectionRounds": 3,
+  "status": "running",
+  "stages": [
+    {
+      "name": "refine",
+      "startedAt": "2026-10-28T06:25:09Z",
+      "endedAt": "2026-10-28T06:27:14Z",
+      "inputCommit": "e206b6b511d8bedd4240e4598ee204bfc0e534ab",
+      "result": "ready",
+      "evidence": ["https://github.com/juangcarmona/domusmind/issues/277"]
+    },
+    {
+      "name": "propose",
+      "startedAt": "2026-10-28T06:28:00Z",
+      "inputCommit": "e206b6b511d8bedd4240e4598ee204bfc0e534ab",
+      "result": "correction-1-review-pending",
+      "evidence": ["docs/delivery/plans/issue-277.md"]
+    }
+  ],
+  "reviews": [
+    {
+      "stage": "propose",
+      "reviewerModel": "gpt-6.1-terra",
+      "reviewedCommit": "e206b6b511d8bedd4240e4598ee204bfc0e534ab",
+      "decision": "request-changes",
+      "reviewedPlanSha256": "f0c71e4a734e0c9eeb3e7c772decabb2107a54b7fa951fb854a54c394ebc3574",
+      "findings": [
+        "Cover session expiry and account switching through the actual Aspire + Vite + Keycloak browser path, including forwarded Origin/Host behavior.",
+        "Make verified email and configured subject-to-local-user identity matching explicit, including rejection cases."
+      ]
+    }
+  ],
+  "corrections": [
+    {
+      "stage": "propose",
+      "round": 1,
+      "changes": [
+        "Specified two disposable identities and active local AuthUser records for browser account switching.",
+        "Added real browser session-expiry assertion using a short bounded development test lifetime.",
+        "Added forwarded scheme/host and same-origin mutation/foreign-Origin assertions through the Aspire + Vite path.",
+        "Added verified email, configured subject mapping, and rejection of unverified or mismatched identities."
+      ],
+      "correctedPlanSha256": "d2a7a82ffe53dcd66ca32919fd7208721fa3467b54677ba748b48d25c8837b71"
+    }
+  ],
+  "stopReason": null,
+  "pullRequest": "https://github.com/juangcarmona/domusmind/pull/278",
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/277",
+    "https://github.com/juangcarmona/domusmind/pull/278"
+  ]
+}
