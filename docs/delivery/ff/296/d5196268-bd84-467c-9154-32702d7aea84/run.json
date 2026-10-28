@@ -26,15 +26,17 @@
       "evidence": [
         "../../../plans/issue-296.md",
         "inventory.json"
-      ]
+      ],
+      "outputCommit": "2f301cc589b61dc09fd3d6f7cfdc4bc0ec89b437"
     }
   ],
   "reviews": [],
   "corrections": [],
   "stopReason": null,
-  "pullRequest": null,
+  "pullRequest": "https://github.com/juangcarmona/domusmind/pull/298",
   "links": [
-    "https://github.com/juangcarmona/domusmind/issues/296"
+    "https://github.com/juangcarmona/domusmind/issues/296",
+    "https://github.com/juangcarmona/domusmind/pull/298"
   ],
   "constraints": [
     "No implementation before independent plan approval.",
