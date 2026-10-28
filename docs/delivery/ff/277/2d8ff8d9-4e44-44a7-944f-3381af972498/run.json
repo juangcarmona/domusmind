@@ -98,6 +98,20 @@
         "GitHub Actions on this exact head are still running; the PR reports BEHIND main, which is recorded for the later integration gate.",
         "The prior exact-head audit stopped pending CI and asked for IndexedDB primary-key coverage; correction is recorded in round 3."
       ]
+    },
+    {
+      "name": "final-done-gate-audit",
+      "startedAt": "2026-10-28T07:18:22Z",
+      "endedAt": "2026-10-28T07:20:00Z",
+      "inputCommit": "9848ba1a47d7dde1628f43da47e9a38fa93dfe1a",
+      "outputCommit": "9848ba1a47d7dde1628f43da47e9a38fa93dfe1a",
+      "result": "stop-pending-exact-head-ci-and-general-browser-rerun",
+      "evidence": [
+        "Fresh independent reviewer gpt-6.1-terra found no additional concrete security defect.",
+        "Exact-head BFF, backend, web, image, and CodeQL checks were still pending at review.",
+        "PR #278 was draft and behind main; PR body lifecycle closure reference was corrected to Closes #277 after review.",
+        "Dedicated Bastion runner/operator isolation acceptance and owner-only Done judgement remain pending."
+      ]
     }
   ],
   "reviews": [
@@ -168,6 +182,23 @@
         "Done could not be approved while exact-head CI and the rerun general browser journey were incomplete.",
         "IndexedDB scan covered values but not primary keys; add getAllKeys coverage before final audit.",
         "The boundary review found no additional concrete security defect; runner acceptance and local-evidence provenance remain explicit."
+      ]
+    },
+    {
+      "stage": "done-gate-audit-final",
+      "reviewerModel": "gpt-6.1-terra",
+      "reviewKind": "independent implementation and evidence audit",
+      "reviewedCommit": "9848ba1a47d7dde1628f43da47e9a38fa93dfe1a",
+      "decision": "stop",
+      "findings": [
+        "Exact-head BFF browser journey, backend, webapp, image smoke and CodeQL checks were still pending; prior general browser failure required a clean rerun.",
+        "PR was draft and behind main; the lifecycle requires Closes #277 in the PR body before integration. This was corrected in the PR body after the audit.",
+        "No additional concrete security defect was identified; the IndexedDB scan awaits database enumeration, keys and values for every object store.",
+        "Dedicated runner/operator isolation acceptance and owner-only Done judgement remain outstanding."
+      ],
+      "evidence": [
+        "https://github.com/juangcarmona/domusmind/pull/278",
+        "https://github.com/juangcarmona/domusmind/actions"
       ]
     }
   ],

@@ -40,3 +40,9 @@ The preceding `e3d37df` CI attempt exposed two failures: a Playwright response-b
 ### Independent audit correction round 3
 
 The independent review of `39ea5e435b9e4bc5785959e8f74b5f6733551d42` stopped pending exact-head CI and asked that IndexedDB keys be scanned in addition to values. Commit `75157551156bcdd5e13e2567bfb336e471b6197b` adds `getAllKeys()` checks for every object store. On this code, the clean Aspire + Keycloak + Vite BFF journey passed (1/1, 43.9s); web unit tests passed (62), lint passed (44 existing warnings, no errors), and build passed. The workflow's broader browser, backend, image, BFF and CodeQL checks are running on this head. GitHub currently reports the PR behind `main`, which remains an integration gate. A final independent audit is still required.
+
+### Final independent audit
+
+The final reviewer inspected exact head `9848ba1a47d7dde1628f43da47e9a38fa93dfe1a` and found no further concrete security defect. It stopped Done because BFF, backend, web, image and CodeQL checks were pending, the prior general browser failure still needed a clean rerun, and PR #278 was draft and behind `main`. The PR description now uses `Closes #277` per the lifecycle contract. Dedicated Bastion runner/operator isolation acceptance and owner-only Done judgement remain explicit gates.
+
+The final reviewer also caught that the PR description used `Refs #277` rather than the required `Closes #277`; the PR body is now corrected and verified. The run remains `running` until checks pass on the final pushed head; the human owner Done and forge gates remain protected.
