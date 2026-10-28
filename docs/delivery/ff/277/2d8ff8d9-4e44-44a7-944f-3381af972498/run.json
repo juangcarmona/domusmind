@@ -15,7 +15,9 @@
       "endedAt": "2026-10-28T06:27:14Z",
       "inputCommit": "e206b6b511d8bedd4240e4598ee204bfc0e534ab",
       "result": "ready",
-      "evidence": ["https://github.com/juangcarmona/domusmind/issues/277"]
+      "evidence": [
+        "https://github.com/juangcarmona/domusmind/issues/277"
+      ]
     },
     {
       "name": "propose",
@@ -26,6 +28,27 @@
       "evidence": [
         "docs/delivery/plans/issue-277.md",
         "9b775074f95536f38d4c993e7a9cafb4d84119f5"
+      ]
+    },
+    {
+      "name": "implement",
+      "startedAt": "2026-10-28T06:29:16Z",
+      "endedAt": "2026-10-28T06:48:25Z",
+      "inputCommit": "00dd8b8296020bd01d2b37541f24ee257ea3c6b4",
+      "outputCommit": "9062cb92302c58234e50d34899defc48987c5142",
+      "result": "implemented-local-verified-ci-pending",
+      "evidence": [
+        "src/backend/DomusMind.Api/Auth/DevelopmentBffTicketStore.cs",
+        "src/backend/DomusMind.Api/Auth/DevelopmentBffIdentityMapper.cs",
+        "src/backend/DomusMind.Api/Auth/DevelopmentBffTestUserSeeder.cs",
+        "src/web/app/e2e/development-bff.e2e.ts",
+        ".github/workflows/development-bff-e2e.yml",
+        "864 backend tests passed; 3 skipped",
+        "web build, 62 unit tests and lint passed",
+        "Aspire + Keycloak + Vite Playwright BFF journey passed (1 test, 38.5s)",
+        "markdownlint, arc42 frontmatter, ProductShape validate, Lighthouse verify, integration lock and OpenSpec citations passed",
+        "dotnet format whitespace --verify-no-changes passed for changed C# files; solution-wide run reports existing violations in untouched files",
+        "GitHub CI pending push"
       ]
     }
   ],
