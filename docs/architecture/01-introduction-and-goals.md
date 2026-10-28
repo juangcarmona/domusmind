@@ -19,7 +19,7 @@ module in the backend (Family, Responsibilities, Calendar, Tasks, Lists, Meal
 Planning), plus local authentication and first-run setup. Anything outside that
 scope has no building block today.
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:dd3281f32dbc5b36618fc57d7cfb31e7fc36d89963250aabb97446a39e4b3a66" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:bbe8615d41428bc12d1a225306bd3b5b1fc4e4747dc80c9125220f483bc610a9" -->
 
 The household, not the individual user, is the unit around which data and access are
 partitioned: every household-owned record carries its family identifier, and the API

@@ -23,7 +23,7 @@ A household member designated as manager, which grants authority over the househ
 - Adds people and pets, removes them and manages relationships (decided: Q-0024).
 - Changes the household settings (decided: Q-0025).
 - Updates other members' core details (name, role and birth date) and any member's role (observed: family spec, Update Member; decided: Q-0023).
-- Provisions, disables, enables and resets system access for members (observed: family spec, Member Access Management).
+- Invites people to use DomusMind with copyable single-use links, replaces or revokes pending links, and disables or re-enables their application access.
 - Does everything a Household Member does.
 
 ## Boundaries
