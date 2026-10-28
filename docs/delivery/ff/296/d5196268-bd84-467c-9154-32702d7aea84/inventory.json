@@ -266,7 +266,29 @@
     ".github/workflows/webapp-ci.yml"
   ],
   "labels": {
-    "removeAfterIntegration": [
+    "retain": [
+      "app-error",
+      "audit",
+      "blocked",
+      "bug",
+      "dependencies",
+      "documentation",
+      "duplicate",
+      "enhancement",
+      "error-accepted",
+      "future",
+      "good first issue",
+      "help wanted",
+      "invalid",
+      "javascript",
+      "mutation",
+      "priority",
+      "product",
+      "product-definition",
+      "question",
+      "wontfix"
+    ],
+    "removeBeforeMerge": [
       "agent-working",
       "agentic-workflows",
       "blast-radius-high",
@@ -319,28 +341,6 @@
       "urgency-normal",
       "urgency-now",
       "wip"
-    ],
-    "retain": [
-      "app-error",
-      "audit",
-      "blocked",
-      "bug",
-      "dependencies",
-      "documentation",
-      "duplicate",
-      "enhancement",
-      "error-accepted",
-      "future",
-      "good first issue",
-      "help wanted",
-      "invalid",
-      "javascript",
-      "mutation",
-      "priority",
-      "product",
-      "product-definition",
-      "question",
-      "wontfix"
     ]
   },
   "repositoryVariables": [],
@@ -371,6 +371,6 @@
     "Clean isolated worktree has no .cloud directory; user clarification applies to .claude.",
     "Dangling .claude skill symlinks are tracked install residue and will be removed.",
     "Runtime AI assistants, MCP, interpreter providers and BFF are product behavior and retained.",
-    "External cleanup is an integration action; #296 cannot be complete while it remains pending."
+    "External cleanup is a required pre-merge integration gate after exact-head checks and owner PR review/approval; #296 cannot pass Done or merge while it remains pending."
   ]
 }

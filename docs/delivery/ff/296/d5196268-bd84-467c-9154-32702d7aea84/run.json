@@ -30,8 +30,34 @@
       "outputCommit": "2f301cc589b61dc09fd3d6f7cfdc4bc0ec89b437"
     }
   ],
-  "reviews": [],
-  "corrections": [],
+  "reviews": [
+    {
+      "reviewerModel": "gpt-6.1-terra",
+      "kind": "plan",
+      "reviewedCommit": "15d4fe1b8d0c42bbe71fe239e03614f0f7d166e2",
+      "decision": "request-changes",
+      "findings": [
+        "External label, setting and runner acceptance criteria were deferred until after merge, creating a circular dependency because Done must pass before merge."
+      ],
+      "evidence": [
+        "../../../plans/issue-296.md",
+        "https://github.com/juangcarmona/domusmind/issues/296"
+      ]
+    }
+  ],
+  "corrections": [
+    {
+      "gate": "plan",
+      "round": 1,
+      "requestedChanges": "Sequence external cleanup after exact-head checks and owner PR review/approval as a required pre-merge integration gate; reconcile issue, plan, inventory, PR and run evidence.",
+      "result": "awaiting-independent-review",
+      "checks": [
+        "JSON evidence parses",
+        "git diff --check"
+      ],
+      "externalMutationsPerformed": false
+    }
+  ],
   "stopReason": null,
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/298",
   "links": [
@@ -41,7 +67,7 @@
   "constraints": [
     "No implementation before independent plan approval.",
     "Owner retains all Definition of Done judgement dimensions; no merge authorized in this executor task.",
-    "Repository label catalogue, activation settings and runner changes deferred until integrated cleanup.",
+    "Repository label catalogue, activation settings and idle exclusive runner retirement require exact-head checks and owner PR review/approval, then live verification before Done and merge.",
     "No new Lighthouse install, credential action, production deployment or shared infrastructure deletion."
   ]
 }
