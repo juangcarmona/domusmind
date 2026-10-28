@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "runId": "d5196268-bd84-467c-9154-32702d7aea84",
+  "workItem": "https://github.com/juangcarmona/domusmind/issues/296",
+  "branch": "codex/296-clean-agent-install",
+  "startedAt": "2026-10-28T11:04:59.488156+00:00",
+  "executorModel": "gpt-6.1-sol",
+  "reviewerModel": "gpt-6.1-terra",
+  "maxCorrectionRounds": 3,
+  "status": "running",
+  "stages": [
+    {
+      "name": "refine",
+      "result": "passed",
+      "inputCommit": "617876cbc123e07f0bf4a1b300df1c9816b7afc7",
+      "evidence": [
+        "https://github.com/juangcarmona/domusmind/issues/296",
+        "inventory.json"
+      ],
+      "details": "Explicit stakeholder, dependencies, security and N/A dimensions added; status:ready verified. One active item (#233), below WIP cap 3."
+    },
+    {
+      "name": "propose",
+      "result": "awaiting-independent-review",
+      "inputCommit": "617876cbc123e07f0bf4a1b300df1c9816b7afc7",
+      "evidence": [
+        "../../../plans/issue-296.md",
+        "inventory.json"
+      ]
+    }
+  ],
+  "reviews": [],
+  "corrections": [],
+  "stopReason": null,
+  "pullRequest": null,
+  "links": [
+    "https://github.com/juangcarmona/domusmind/issues/296"
+  ],
+  "constraints": [
+    "No implementation before independent plan approval.",
+    "Owner retains all Definition of Done judgement dimensions; no merge authorized in this executor task.",
+    "Repository label catalogue, activation settings and runner changes deferred until integrated cleanup.",
+    "No new Lighthouse install, credential action, production deployment or shared infrastructure deletion."
+  ]
+}
