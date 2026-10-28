@@ -18,57 +18,27 @@ test("development BFF enforces browser session and origin boundaries through Asp
   const baseURL = String(testInfo.project.use.baseURL);
   const baseOrigin = new URL(baseURL).origin;
   const tokenLikeResponseBodies: Promise<void>[] = [];
-  let navigationEpoch = 0;
   let authorizationUrl: URL | null = null;
-  page.on("framenavigated", (frame) => {
-    if (frame === page.mainFrame()) navigationEpoch++;
-  });
   page.on("request", (request) => {
     const url = new URL(request.url());
     if (url.pathname.endsWith("/protocol/openid-connect/auth")) {
       authorizationUrl = url;
     }
   });
-  page.on("response", (response) => {
-    const contentType = response.headers()["content-type"] ?? "";
-    if (
-      new URL(response.url()).origin !== baseOrigin ||
-      !contentType.includes("application/json")
-    )
-      return;
-    const responseEpoch = navigationEpoch;
+  page.on("requestfinished", (request) => {
+    // Only completed browser responses were exposed to JavaScript.
     tokenLikeResponseBodies.push(
       (async () => {
-        let timer: ReturnType<typeof setTimeout> | undefined;
-        try {
-          const unavailable = Symbol("response body unavailable");
-          const body = await Promise.race([
-            response.text(),
-            new Promise<typeof unavailable>((resolve) => {
-              timer = setTimeout(() => resolve(unavailable), 5_000);
-            }),
-          ]);
-          if (body === unavailable) {
-            if (response.request().failure() || navigationEpoch !== responseEpoch)
-              return;
-            throw new Error(`JSON response body did not settle: ${response.url()}`);
-          }
-          expect(body).not.toMatch(
-            /access[_-]?token|id[_-]?token|refresh[_-]?token|eyJ[\w-]{10,}\.[\w-]{10,}\./i,
-          );
-        } catch (error) {
-          // Responses canceled by a later navigation are not exposed to browser JavaScript.
-          if (
-            error instanceof Error &&
-            /No resource with given identifier found|Response body is not available for a response that was navigated away from/.test(
-              error.message,
-            )
-          )
-            return;
-          throw error;
-        } finally {
-          if (timer) clearTimeout(timer);
-        }
+        const response = await request.response();
+        if (!response) throw new Error(`Completed request has no response: ${request.url()}`);
+        const contentType = response.headers()["content-type"] ?? "";
+        if (
+          new URL(response.url()).origin !== baseOrigin ||
+          !contentType.includes("application/json")
+        ) return;
+        expect(await response.text()).not.toMatch(
+          /access[_-]?token|id[_-]?token|refresh[_-]?token|eyJ[\w-]{10,}\.[\w-]{10,}\./i,
+        );
       })(),
     );
   });
