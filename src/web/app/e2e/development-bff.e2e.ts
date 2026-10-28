@@ -33,11 +33,24 @@ test("development BFF enforces browser session and origin boundaries through Asp
     )
       return;
     tokenLikeResponseBodies.push(
-      response.text().then((body) => {
-        expect(body).not.toMatch(
-          /access[_-]?token|id[_-]?token|refresh[_-]?token|eyJ[\w-]{10,}\.[\w-]{10,}\./i,
-        );
-      }),
+      (async () => {
+        try {
+          const body = await response.text();
+          expect(body).not.toMatch(
+            /access[_-]?token|id[_-]?token|refresh[_-]?token|eyJ[\w-]{10,}\.[\w-]{10,}\./i,
+          );
+        } catch (error) {
+          // Responses canceled by a later navigation are not exposed to browser JavaScript.
+          if (
+            error instanceof Error &&
+            /No resource with given identifier found|Response body is not available for a response that was navigated away from/.test(
+              error.message,
+            )
+          )
+            return;
+          throw error;
+        }
+      })(),
     );
   });
   const csrf = async () => {
@@ -106,40 +119,40 @@ test("development BFF enforces browser session and origin boundaries through Asp
     expect(me.ok).toBeTruthy();
     expect(me.body).toMatchObject({ email: adminEmail });
 
-    const storage = await page.evaluate(() => ({
-      local: Object.entries(localStorage),
-      session: Object.entries(sessionStorage),
-      indexedDb: indexedDB.databases().then(async (databases) =>
-        Promise.all(
-          databases.map(async ({ name }) => {
-            if (!name) return [];
-            const database = await new Promise<IDBDatabase>(
-              (resolve, reject) => {
-                const request = indexedDB.open(name);
-                request.onsuccess = () => resolve(request.result);
-                request.onerror = () => reject(request.error);
-              },
-            );
-            const records = await Promise.all(
-              Array.from(
-                database.objectStoreNames,
-                (storeName) =>
-                  new Promise<unknown>((resolve, reject) => {
-                    const request = database
-                      .transaction(storeName, "readonly")
-                      .objectStore(storeName)
-                      .getAll();
-                    request.onsuccess = () => resolve(request.result);
-                    request.onerror = () => reject(request.error);
-                  }),
-              ),
-            );
-            database.close();
-            return records;
-          }),
-        ),
-      ),
-    }));
+    const storage = await page.evaluate(async () => {
+      const databases = await indexedDB.databases();
+      const indexedDb = await Promise.all(
+        databases.map(async ({ name }) => {
+          if (!name) return [];
+          const database = await new Promise<IDBDatabase>((resolve, reject) => {
+            const request = indexedDB.open(name);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+          });
+          const records = await Promise.all(
+            Array.from(
+              database.objectStoreNames,
+              (storeName) =>
+                new Promise<unknown>((resolve, reject) => {
+                  const request = database
+                    .transaction(storeName, "readonly")
+                    .objectStore(storeName)
+                    .getAll();
+                  request.onsuccess = () => resolve(request.result);
+                  request.onerror = () => reject(request.error);
+                }),
+            ),
+          );
+          database.close();
+          return records;
+        }),
+      );
+      return {
+        local: Object.entries(localStorage),
+        session: Object.entries(sessionStorage),
+        indexedDb,
+      };
+    });
     expect(JSON.stringify(storage)).not.toMatch(
       /access[_-]?token|id[_-]?token|refresh[_-]?token|eyJ[\w-]{10,}\.[\w-]{10,}\./i,
     );
@@ -242,7 +255,7 @@ test("development BFF enforces browser session and origin boundaries through Asp
       const active = document.activeElement;
       return Boolean(
         active?.matches(":focus-visible") &&
-          Number.parseFloat(getComputedStyle(active).outlineWidth) > 0,
+        Number.parseFloat(getComputedStyle(active).outlineWidth) > 0,
       );
     });
     expect(focusVisible).toBeTruthy();
