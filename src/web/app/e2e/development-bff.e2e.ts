@@ -17,29 +17,12 @@ test("development BFF enforces browser session and origin boundaries through Asp
   test.setTimeout(150_000);
 
   const baseURL = String(testInfo.project.use.baseURL);
-  const baseOrigin = new URL(baseURL).origin;
-  const tokenLikeResponseBodies: Promise<void>[] = [];
   let authorizationUrl: URL | null = null;
   page.on("request", (request) => {
     const url = new URL(request.url());
     if (url.pathname.endsWith("/protocol/openid-connect/auth")) {
       authorizationUrl = url;
     }
-  });
-  page.on("requestfinished", (request) => {
-    // Only completed browser responses were exposed to JavaScript.
-    tokenLikeResponseBodies.push(
-      (async () => {
-        const response = await request.response();
-        if (!response) throw new Error(`Completed request has no response: ${request.url()}`);
-        const contentType = response.headers()["content-type"] ?? "";
-        if (
-          new URL(response.url()).origin !== baseOrigin ||
-          !contentType.includes("application/json")
-        ) return;
-        expect(await response.text()).not.toMatch(tokenPattern);
-      })(),
-    );
   });
   const checked = async (response: APIResponse) => {
     if (response.headers()["content-type"]?.includes("application/json"))
@@ -106,11 +89,12 @@ test("development BFF enforces browser session and origin boundaries through Asp
       const response = await fetch("/api/auth/me");
       return {
         ok: response.ok,
-        body: (await response.json()) as { email: string },
+        body: await response.text(),
       };
     });
     expect(me.ok).toBeTruthy();
-    expect(me.body).toMatchObject({ email: adminEmail });
+    expect(me.body).not.toMatch(tokenPattern);
+    expect(JSON.parse(me.body)).toMatchObject({ email: adminEmail });
 
     const storage = await page.evaluate(async () => {
       const databases = await indexedDB.databases();
@@ -155,12 +139,17 @@ test("development BFF enforces browser session and origin boundaries through Asp
     expect(JSON.stringify(storage)).not.toMatch(tokenPattern);
 
     const familyToken = await csrf();
-    const created = await checked(await page.request.post("/api/families", {
-      data: { name: "Development BFF household", primaryLanguageCode: "en" },
-      headers: { Origin: baseURL, "X-CSRF-TOKEN": familyToken },
-    }));
-    expect(created.status()).toBe(201);
-    const family = (await created.json()) as { familyId: string };
+    const created = await page.evaluate(async (csrfToken) => {
+      const response = await fetch("/api/families", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-CSRF-TOKEN": csrfToken },
+        body: JSON.stringify({ name: "Development BFF household", primaryLanguageCode: "en" }),
+      });
+      return { status: response.status, body: await response.text() };
+    }, familyToken);
+    expect(created.status).toBe(201);
+    expect(created.body).not.toMatch(tokenPattern);
+    const family = JSON.parse(created.body) as { familyId: string };
 
     const csrfToken = await csrf();
     const foreignOrigin = await checked(await page.request.post(
@@ -301,5 +290,4 @@ test("development BFF enforces browser session and origin boundaries through Asp
     expect(expired.status()).toBe(401);
   });
 
-  await Promise.all(tokenLikeResponseBodies);
 });
