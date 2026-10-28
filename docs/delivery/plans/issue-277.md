@@ -12,6 +12,8 @@ Keep the existing DomusMind surface system, palette, layout and responsive behav
 
 Keep Lighthouse workflows gated. The router must require an explicit repository setting, and agent execution must continue to require the dedicated self-hosted runner label. Verify the runner and operator-owned execution profile before integration. After the workflows land on `main`, enable the repository setting and prove a supervised `refine` route through the actual runner. If that route fails, disable the setting and leave #277 open until corrected. `integrate` and `review` remain outside this adoption.
 
+Enabling the repository variable activates the selected `triage`, `refine`, `propose`, `implement`, and `apply-review` routes, including owner-triggered events and the router's scheduled PR-state check. The supervised test must begin with no unrelated owner stage request in flight. Monitor router and worker runs during it; if an unexpected stage starts, disable the variable and inspect that execution before resuming. A `refine` request on #281 is the intended first route, after its dependency on the integrated pilot is satisfied. Automatic implementation still requires the route's separate proposal and owner authorization checks.
+
 ## Ordered tasks
 
 1. Reconcile the installed Lighthouse manifest, package pins, generated projections and label mapping with DomusMind's lifecycle; keep ProductShape, ArcShape, OpenSpec and DomusMind lifecycle authoritative.
