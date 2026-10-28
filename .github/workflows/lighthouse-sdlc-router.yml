@@ -50,7 +50,7 @@ permissions:
   contents: read
 env:
   LIGHTHOUSE_ENABLED_STAGES: triage,refine,propose,implement
-  LIGHTHOUSE_AUTO_IMPLEMENT: true
+  LIGHTHOUSE_AUTO_IMPLEMENT: false
   LIGHTHOUSE_COMPLETION_ENABLED: false
 jobs:
   pr-state:
