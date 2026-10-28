@@ -1,6 +1,10 @@
 using DomusMind.Api.Auth;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DomusMind.Api.Tests.Auth;
 
@@ -35,6 +39,38 @@ public sealed class BffRequestBoundaryTests
         var context = Context("POST", "/api/families", "https://domusmind.test");
         await Boundary().InvokeAsync(context, new FakeAntiforgery(true));
         Assert.Equal(StatusCodes.Status204NoContent, context.Response.StatusCode);
+    }
+
+    [Fact]
+    public async Task MutationAcceptsAValidFormRequestToken()
+    {
+        var builder = WebApplication.CreateBuilder();
+        builder.WebHost.UseTestServer();
+        builder.Services.AddDataProtection();
+        builder.Services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
+
+        await using var app = builder.Build();
+        app.UseMiddleware<BffRequestBoundary>();
+        app.MapGet("/csrf", (HttpContext context, IAntiforgery antiforgery) =>
+            Results.Text(antiforgery.GetAndStoreTokens(context).RequestToken!));
+        app.MapPost("/api/families", () => Results.NoContent());
+        await app.StartAsync();
+
+        var client = app.GetTestClient();
+        var tokenResponse = await client.GetAsync("/csrf");
+        var requestToken = await tokenResponse.Content.ReadAsStringAsync();
+        var cookie = Assert.Single(tokenResponse.Headers.GetValues("Set-Cookie")).Split(';', 2)[0];
+        using var mutation = new HttpRequestMessage(HttpMethod.Post, "/api/families")
+        {
+            Content = new FormUrlEncodedContent(
+                [new KeyValuePair<string, string>("__RequestVerificationToken", requestToken)]),
+        };
+        mutation.Headers.Add("Origin", client.BaseAddress!.GetLeftPart(UriPartial.Authority));
+        mutation.Headers.Add("Cookie", cookie);
+
+        var response = await client.SendAsync(mutation);
+
+        Assert.Equal(StatusCodes.Status204NoContent, (int)response.StatusCode);
     }
 
     [Fact]
