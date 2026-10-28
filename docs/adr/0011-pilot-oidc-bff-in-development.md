@@ -32,5 +32,5 @@ We will run a development-only OIDC BFF pilot in the existing ASP.NET Core host,
 ## References
 
 - Related: [ADR-0002](0002-keep-authentication-local-and-separate-from-member-identity.md)
-- Contract: [`docs/profiles/web-bff/`](../profiles/web-bff/README.md)
+- Contract: [`docs/profiles/web-bff/`](https://github.com/juangcarmona/domusmind/blob/617876cbc123e07f0bf4a1b300df1c9816b7afc7/docs/profiles/web-bff/README.md)
 - Implementation: [`BffAuthenticationExtensions.cs`](../../src/backend/DomusMind.Api/Auth/BffAuthenticationExtensions.cs)

@@ -12,11 +12,6 @@ on:
       - 'docs/product/**'
       - '.product/**'
       - 'openspec/**'
-      - '.claude/skills/**'
-      - '.claude/commands/product/**'
-      - '.claude/hooks/**'
-      - '.github/prompts/product-*.prompt.md'
-      - '.github/skills/**'
       - '.github/workflows/product-ci.yml'
   workflow_dispatch:
 
@@ -49,7 +44,7 @@ jobs:
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
             --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(docs/product/|\.product/|openspec/|\.claude/(skills|commands/product|hooks)/|\.github/(prompts/product-.*\.prompt\.md|skills/)|\.github/workflows/product-ci\.yml$)'; then
+          if printf '%s\n' "$files" | grep -qE '^(docs/product/|\.product/|openspec/|\.github/workflows/product-ci\.yml$)'; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
@@ -69,8 +64,6 @@ jobs:
         with:
           node-version: 22
 
-      # `integration update --check` inspects the OpenSpec integration through
-      # the OpenSpec CLI, so it has to be on the path.
       - name: Install OpenSpec
         run: npm install -g @fission-ai/openspec@1
 
@@ -79,9 +72,6 @@ jobs:
 
       - name: Validate the product model
         run: npx -y @prodshape/cli@0.22.0 validate
-
-      - name: Verify the managed integration files
-        run: npx -y @prodshape/cli@0.22.0 integration update --check
 
       # Every current OpenSpec document must be bound to the model with current
       # citations, or exempt with a human-approved reason.

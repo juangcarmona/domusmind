@@ -69,13 +69,6 @@
   --z-bottom-sheet: 60;
   --z-modal: 100;
 
-  /* Lighthouse semantic roles resolve to DomusMind's existing palette. */
-  --lh-canvas: var(--bg);
-  --lh-surface: var(--surface);
-  --lh-text: var(--text);
-  --lh-action: var(--primary);
-  --lh-border: var(--border);
-  --lh-focus: var(--primary);
 }
 
 :root[data-theme="dark"] {

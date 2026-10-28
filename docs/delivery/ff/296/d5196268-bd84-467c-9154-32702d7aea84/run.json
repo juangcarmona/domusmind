@@ -21,13 +21,23 @@
     },
     {
       "name": "propose",
-      "result": "awaiting-independent-review",
+      "result": "passed",
       "inputCommit": "617876cbc123e07f0bf4a1b300df1c9816b7afc7",
       "evidence": [
         "../../../plans/issue-296.md",
         "inventory.json"
       ],
-      "outputCommit": "722fb1029e4b0b781679510576a4479c96ada925"
+      "outputCommit": "722fb1029e4b0b781679510576a4479c96ada925",
+      "completedAt": "2026-10-28T11:15:16.354629+00:00"
+    },
+    {
+      "name": "implement",
+      "result": "running",
+      "startedAt": "2026-10-28T11:15:16.354629+00:00",
+      "inputCommit": "5e2c0f7ae0575a2a912592f247d77538c83211d0",
+      "evidence": [
+        "../../../plans/issue-296.md"
+      ]
     }
   ],
   "reviews": [
@@ -55,6 +65,21 @@
       "evidence": [
         "../../../plans/issue-296.md",
         "https://github.com/juangcarmona/domusmind/issues/296"
+      ]
+    },
+    {
+      "reviewerModel": "gpt-6.1-terra",
+      "kind": "plan",
+      "reviewedCommit": "722fb1029e4b0b781679510576a4479c96ada925",
+      "coveringHead": "5e2c0f7ae0575a2a912592f247d77538c83211d0",
+      "decision": "approve",
+      "findings": [
+        "Pre-merge external cleanup sequencing and owner-authorized canonical/legacy lifecycle retirement exception are explicit; implement within preserved product/credential boundaries."
+      ],
+      "evidence": [
+        "../../../plans/issue-296.md",
+        "summary.md",
+        "https://github.com/juangcarmona/domusmind/pull/298"
       ]
     }
   ],
@@ -113,5 +138,19 @@
       "withLifecycleStatus": 45
     },
     "requireFreshSnapshotBeforeMutation": true
-  }
+  },
+  "lifecycleTransitions": [
+    {
+      "from": "status:ready",
+      "to": "status:proposed",
+      "verified": true,
+      "at": "2026-10-28T11:14:39Z"
+    },
+    {
+      "from": "status:proposed",
+      "to": "status:in-progress",
+      "verified": true,
+      "at": "2026-10-28T11:15:16.354629+00:00"
+    }
+  ]
 }

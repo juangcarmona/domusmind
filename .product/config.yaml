@@ -8,8 +8,7 @@ extensions:
       root: .product/generated
       commit: false
     integrations:
-      ai:
-        - claude
+      ai: []
       shorthand-commands: false
     citations:
       # Directories `prodshape citations verify` scans when no target is given.
