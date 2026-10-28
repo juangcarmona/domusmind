@@ -1,0 +1,80 @@
+name: Development BFF browser journey
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/development-bff-e2e.yml'
+      - 'infra/keycloak-dev/**'
+      - 'src/backend/DomusMind.Api/Auth/**'
+      - 'src/backend/DomusMind.Api/Controllers/SessionController.cs'
+      - 'src/backend/DomusMind.Api/Program.cs'
+      - 'src/backend/DomusMind.AppHost/**'
+      - 'src/backend/DomusMind.Api.Tests/Auth/**'
+      - 'src/web/app/e2e/**'
+      - 'src/web/app/package-lock.json'
+      - 'src/web/app/package.json'
+      - 'src/web/app/playwright.config.ts'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  development-bff:
+    name: Aspire, Keycloak and Vite browser security journey
+    runs-on: ubuntu-26.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: src/web/app/package-lock.json
+
+      - name: Install the pinned Aspire CLI
+        run: |
+          dotnet tool install --global Aspire.Cli --version 13.6.1
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+      - name: Install the web app and Chromium
+        working-directory: src/web/app
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Start Aspire with disposable test resources
+        run: |
+          nohup env ASPNETCORE_ENVIRONMENT=Development AppHost__PersistData=false Bff__SessionLifetimeSeconds=30 Inbox__Interpreter__Provider=OpenAICompatible Inbox__Interpreter__Endpoint=http://127.0.0.1:39002/v1/chat/completions Inbox__Interpreter__Model=domusmind-bff-e2e dotnet run --project src/backend/DomusMind.AppHost/DomusMind.AppHost.csproj --no-launch-profile > /tmp/domusmind-bff-aspire.log 2>&1 &
+          for attempt in $(seq 1 120); do
+            if curl --silent --fail http://localhost:61546/api/session/mode > /dev/null && curl --silent --fail http://localhost:8180/realms/domusmind-dev/.well-known/openid-configuration > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/domusmind-bff-aspire.log
+          exit 1
+
+      - name: Run the BFF browser journey
+        working-directory: src/web/app
+        env:
+          CI: 'true'
+          E2E_BFF_ENABLED: 'true'
+          BFF_TEST_SESSION_LIFETIME_SECONDS: '30'
+          E2E_BASE_URL: http://localhost:61546
+          PLAYWRIGHT_JSON: ${{ github.workspace }}/bff-playwright-results/results.json
+          PLAYWRIGHT_REPORT_DIR: ${{ github.workspace }}/bff-playwright-results/html
+          PLAYWRIGHT_OUTPUT_DIR: ${{ github.workspace }}/bff-playwright-results/evidence
+        run: npm run test:e2e -- e2e/development-bff.e2e.ts
+
+      - name: Preserve browser evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: development-bff-browser-evidence-${{ github.run_id }}
+          path: bff-playwright-results
+          if-no-files-found: warn
+          retention-days: 14

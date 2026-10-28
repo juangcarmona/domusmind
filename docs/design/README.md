@@ -1,12 +1,10 @@
 # Design
 
-User-interface guidance for DomusMind's surfaces: the surface system, one document per
-surface, and the public site's content. These documents describe how the product
-looks and behaves on screen — layout, density, mobile behaviour, visual tone and copy.
+User-interface guidance for DomusMind's surfaces: the surface system, one document per surface, and the public site's content. These documents describe how the product looks and behaves on screen — layout, density, mobile behaviour, visual tone and copy.
 
-They are subordinate to the product model in `docs/product/model/`. What the product
-does, its rules and its vocabulary live there; where a design document and the model
-disagree, the model wins and the design document is corrected.
+They are subordinate to the product model in `docs/product/model/`. What the product does, its rules and its vocabulary live there; where a design document and the model disagree, the model wins and the design document is corrected.
+
+[`DESIGN.md`](DESIGN.md) records the shared semantic token roles as mapped to DomusMind's existing tokens. This directory's surface guidance and the DomusMind product model govern the actual interface.
 
 | Document | Covers |
 | --- | --- |

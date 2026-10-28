@@ -1,0 +1,81 @@
+{
+  "$schema": "./node_modules/@juangcarmona/lighthouse/assets/schemas/lighthouse-manifest.schema.json",
+  "schemaVersion": 1,
+  "baseline": "0.1.0",
+  "product": "DomusMind",
+  "application": {
+    "shape": "full-stack",
+    "stacks": [
+      "dotnet",
+      "react",
+      "typescript"
+    ]
+  },
+  "profiles": [
+    "dotnet-backend",
+    "react-web-platform",
+    "web-bff",
+    "visual-theme"
+  ],
+  "integrations": {
+    "productShape": "0.23.0",
+    "arcShape": "0.1.6"
+  },
+  "packages": {
+    "sdlc": {
+      "name": "@juangcarmona/lighthouse-sdlc",
+      "version": "0.15.0"
+    },
+    "ui": {
+      "name": "@juangcarmona/lighthouse-ui",
+      "version": "0.2.0"
+    }
+  },
+  "managed": [
+    "LIGHTHOUSE.md",
+    "scripts/lighthouse-guard.mjs",
+    ".husky/commit-msg",
+    ".husky/pre-push",
+    ".github/workflows/lighthouse.yml",
+    ".lighthouse/sdlc.json",
+    ".agents/skills/lighthouse-init/SKILL.md",
+    ".lighthouse/upgrade.json",
+    ".lighthouse/commands.json",
+    "docs/profiles/dotnet/README.md",
+    "docs/profiles/dotnet/adoption.md",
+    "docs/profiles/dotnet/architecture.md",
+    "docs/profiles/dotnet/guardrails.md",
+    "docs/profiles/dotnet/practices.md",
+    "docs/profiles/dotnet/testing-and-development.md",
+    "docs/profiles/dotnet/use-cases.md",
+    ".agents/skills/lighthouse-dotnet/SKILL.md",
+    "docs/profiles/react-web-platform/README.md",
+    "docs/profiles/react-web-platform/adoption.md",
+    "docs/profiles/react-web-platform/structure.md",
+    "docs/profiles/react-web-platform/guardrails.md",
+    "docs/profiles/react-web-platform/testing.md",
+    ".agents/skills/lighthouse-react-web/SKILL.md",
+    "docs/profiles/web-bff/README.md",
+    "docs/profiles/web-bff/adoption.md",
+    "docs/profiles/web-bff/security.md",
+    "docs/profiles/web-bff/testing.md",
+    ".agents/skills/lighthouse-web-bff/SKILL.md",
+    "docs/design/DESIGN.md",
+    ".agents/skills/lighthouse-ui/SKILL.md"
+  ],
+  "repository": {
+    "layout": [
+      "src",
+      "docs",
+      "infra",
+      "scripts"
+    ],
+    "publicSite": {
+      "enabled": true
+    },
+    "conventions": {
+      "commits": "conventional",
+      "branchPattern": "^(feat|fix|docs|refactor|test|chore|build|ci|perf|revert)/[1-9]\\d*-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    }
+  }
+}

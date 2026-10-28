@@ -13,9 +13,12 @@ export default defineConfig({
         proxy: {
           "/api": {
             target: apiTarget,
-            changeOrigin: true,
+            changeOrigin: false,
             secure: false,
+            xfwd: true,
           },
+          "/signin-oidc": { target: apiTarget, changeOrigin: false, secure: false, xfwd: true },
+          "/signout-callback-oidc": { target: apiTarget, changeOrigin: false, secure: false, xfwd: true },
         },
       }
     : undefined,

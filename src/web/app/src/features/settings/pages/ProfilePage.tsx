@@ -7,6 +7,7 @@ interface Props {
 }
 
 export function ProfilePage({ onLogout }: Props) {
+  const bffMode = import.meta.env.VITE_AUTH_MODE === "oidc-bff";
   const { user, logout, refreshToken, changePassword } = useAuth();
 
   const [currentPw, setCurrentPw] = useState("");
@@ -45,7 +46,7 @@ export function ProfilePage({ onLogout }: Props) {
         <p><strong>User ID:</strong> {user?.userId}</p>
         <p><strong>Email:</strong> {user?.email ?? "—"}</p>
         <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={handleRefresh} style={styles.button}>Refresh token</button>
+          {!bffMode && <button onClick={handleRefresh} style={styles.button}>Refresh token</button>}
           <button
             onClick={async () => { await logout(); onLogout?.(); }}
             style={{ ...styles.button, background: "#e55" }}
@@ -55,7 +56,7 @@ export function ProfilePage({ onLogout }: Props) {
         </div>
       </section>
 
-      <section style={{ padding: 16, border: "1px solid #ccc", borderRadius: 8 }}>
+      {!bffMode && <section style={{ padding: 16, border: "1px solid #ccc", borderRadius: 8 }}>
         <h3>Change password</h3>
         <form onSubmit={handleChangePassword} style={styles.form}>
           <label>
@@ -85,7 +86,7 @@ export function ProfilePage({ onLogout }: Props) {
             {pwLoading ? "Changing…" : "Change password"}
           </button>
         </form>
-      </section>
+      </section>}
     </div>
   );
 }

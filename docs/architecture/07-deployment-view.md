@@ -105,6 +105,8 @@ and one-time Pages setup are documented in [Engineering site](../engineering-sit
 
 Development uses .NET Aspire through [`DomusMind.AppHost`](../../src/backend/DomusMind.AppHost/AppHost.cs); it is never used in production. Aspire provisions PostgreSQL and, when the selected provider is Ollama, the local model resource for Inbox interpretation. An OpenAI-compatible provider is configured through AppHost settings and does not start Ollama.
 
+The development BFF pilot adds a Keycloak container with a fixed test realm and configures the API and Vite web app for OIDC. Its `localhost` HTTP authority is for loopback testing only; a browser reached from another machine needs a trusted HTTPS reverse proxy, an issuer URL reachable by both browser and API, and matching exact Keycloak redirect and web-origin settings. The production Compose stack does not include Keycloak and retains local JWT authentication.
+
 ```mermaid
 flowchart LR
     dev["Developer browser"]

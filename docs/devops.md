@@ -1,5 +1,19 @@
 # DomusMind DevOps
 
+## Lighthouse workflow pilot
+
+The repository pins `@juangcarmona/lighthouse` in the root `package-lock.json` and declares the `dotnet-backend`, `react-web-platform`, `web-bff`, and `visual-theme` profiles in `lighthouse.json`. Run `npm ci` at the repository root and `npm run verify:lighthouse` to check the installed Foundation. `LIGHTHOUSE.md` describes the generated artifacts. The canonical DomusMind lifecycle and its `status:*` labels remain in [engineering-lifecycle.md](engineering-lifecycle.md); Lighthouse capability labels are additional routing signals.
+
+The installed SDLC projections cover `triage`, `refine`, `propose`, `implement`, and `apply-review`. Bastion has a dedicated repository runner, `bastion-domusmind-gh-aw`, labelled `lighthouse-workflow`, with a private operator-owned `LIGHTHOUSE_ENGINE_CONFIG` and the shared engine lock. The operator profile is the one used by Lighthouse and SoFa: the agent runs in a bounded, non-privileged Docker container without the host Docker socket, with an OpenCode authentication volume and outbound network. It does not provide AWF network filtering or credential proxy isolation. `LIGHTHOUSE_AUTOMATION_ENABLED` remains unset until the workflows land on the default branch, the runner profile is verified, and the owner and forge gates pass. `integrate` and `review` are not enabled by this adoption; existing human and branch gates still apply.
+
+After integration, enable the repository variable and dispatch one owner-supervised `refine` route on an eligible issue. The variable activates all selected stages, owner-triggered routing and scheduled PR-state checks; verify that no unrelated owner stage request is in flight and watch the router for unexpected work. Confirm that the router, dedicated runner, validated stage result and publisher all complete before closing the adoption issue. If the route fails or unexpected work starts, delete the variable and keep the issue open while correcting the failure. The activation and rollback commands are `gh variable set LIGHTHOUSE_AUTOMATION_ENABLED --body true`, `gh workflow run "Lighthouse SDLC router" -f issue=<issue-number> -f stage=refine`, and `gh variable delete LIGHTHOUSE_AUTOMATION_ENABLED`.
+
+## Development OIDC BFF pilot
+
+`DomusMind.AppHost` starts a local Keycloak container, imports `infra/keycloak-dev/domusmind-dev-realm.json`, and enables the BFF only for the API's Development environment. Open the Vite app at `http://localhost:61546`. The test identities are `developer` and `development-member`, each with the development-only password `DevelopmentOnly123!` and verified emails `admin@domusmind.local` and `member@domusmind.local`. On a fresh database, initialize the application administrator with the first email through the first-run screen before signing in; Aspire creates the second local test account with an unusable random password. Neither identity has production authority.
+
+The browser receives a Secure, HttpOnly, SameSite=Lax cookie that references an in-memory server-side ticket. The ticket store supports one development API process and revokes tickets on logout; this is not a production session-store decision. The API never returns OIDC tokens to the web app; unsafe API requests require a same-origin `Origin` and an antiforgery token. Local token endpoints return 404 in BFF mode. Keycloak asks the user to confirm its own logout because the BFF does not retain an ID token. Vite forwards its public host and scheme from loopback; any remote preview needs an HTTPS reverse proxy and an explicitly registered redirect URI. The current production runtime still uses local JWT; the approved OIDC product contract is tracked for implementation in [issue #281](https://github.com/juangcarmona/domusmind/issues/281). See [ADR 0011](adr/0011-pilot-oidc-bff-in-development.md) for the development pilot.
+
 This document explains how DomusMind is versioned, built, validated, released and operated, which together form the application lifecycle. It does not cover where the software runs or how its parts map onto infrastructure; see the [Deployment View](architecture/07-deployment-view.md) for that. The installation guide shipped with every release is [`deploy/README.md`](../deploy/README.md).
 
 ## Versioning
@@ -44,6 +58,7 @@ A release can be traced through the git tag, the GitHub Release, the immutable i
 | Workflow | Job (check context) | What it validates |
 | --- | --- | --- |
 | [`backend-ci.yml`](../.github/workflows/backend-ci.yml) | `backend build` | Restore, build, test `DomusMind.slnx`; publishes the API as a run artifact |
+| [`development-bff-e2e.yml`](../.github/workflows/development-bff-e2e.yml) | `Aspire, Keycloak and Vite browser security journey` | Runs the disposable two-identity OIDC BFF browser journey through Aspire and the Vite proxy, including forwarded Origin, CSRF, logout revocation and session expiry |
 | [`image-postgres-smoke.yml`](../.github/workflows/image-postgres-smoke.yml) | `image postgres smoke` | Builds the release Dockerfile and starts the image with a disposable PostgreSQL database; verifies startup migrations, first-run setup status, API ping and the built SPA, then removes the containers, network and volumes |
 | [`webapp-ci.yml`](../.github/workflows/webapp-ci.yml) | `webapp build` | `npm ci`, lint, test, build in `src/web/app` |
 | [`public-site-ci.yml`](../.github/workflows/public-site-ci.yml) | `Validate Astro site` | Lint, Astro check and build in `src/web/public`; pull requests only |
