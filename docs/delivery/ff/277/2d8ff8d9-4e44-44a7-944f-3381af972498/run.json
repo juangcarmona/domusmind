@@ -7,7 +7,7 @@
   "executorModel": "GPT-6 (Codex)",
   "reviewerModel": "gpt-6.1-terra",
   "maxCorrectionRounds": 3,
-  "status": "running",
+  "status": "awaiting-integration",
   "stages": [
     {
       "name": "refine",
@@ -112,6 +112,26 @@
         "PR #278 was draft and behind main; PR body lifecycle closure reference was corrected to Closes #277 after review.",
         "Dedicated Bastion runner/operator isolation acceptance and owner-only Done judgement remain pending."
       ]
+    },
+    {
+      "name": "deterministic-done-evidence",
+      "startedAt": "2026-10-28T07:19:57Z",
+      "endedAt": "2026-10-28T07:24:48Z",
+      "inputCommit": "1d92eaa01e9ede187999c2db3481a4e392c7517b",
+      "outputCommit": "1d92eaa01e9ede187999c2db3481a4e392c7517b",
+      "result": "all-applicable-github-workflows-passed",
+      "evidence": [
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372214 (BFF browser journey passed, 3m40; artifact 12798543384)",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372243 (general browser journeys passed, 1m41; artifact 12799585839)",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372238 (backend build passed)",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372185 (web build passed)",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372215 (image/Postgres smoke passed)",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372648 (CodeQL C# and JavaScript analyses passed)",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372171 (architecture docs passed)",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372172 (Lighthouse repository guardrails passed)",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372243 (engineering site built successfully)",
+        "Conditional ProductShape snapshots, Astro validation, engineering-site publication, and wrapper jobs were skipped as configured."
+      ]
     }
   ],
   "reviews": [
@@ -200,6 +220,24 @@
         "https://github.com/juangcarmona/domusmind/pull/278",
         "https://github.com/juangcarmona/domusmind/actions"
       ]
+    },
+    {
+      "stage": "done-gate-audit-final-head",
+      "reviewerModel": "gpt-6.1-terra",
+      "reviewKind": "independent implementation and evidence audit",
+      "reviewedCommit": "1d92eaa01e9ede187999c2db3481a4e392c7517b",
+      "decision": "approve",
+      "findings": [
+        "Independent reviewer approved deterministic evidence after verifying all 11 applicable GitHub workflows completed successfully on the exact head.",
+        "No additional concrete security defect identified; plan hash matches the approved amendment.",
+        "This approval does not substitute for the owner-only Done judgement or required forge approval.",
+        "PR remains draft and behind main. Dedicated runner/operator isolation acceptance remains pending before any agent execution is enabled."
+      ],
+      "evidence": [
+        "https://github.com/juangcarmona/domusmind/pull/278",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372214",
+        "https://github.com/juangcarmona/domusmind/actions/runs/40649372243"
+      ]
     }
   ],
   "corrections": [
@@ -277,7 +315,7 @@
       ]
     }
   ],
-  "stopReason": null,
+  "stopReason": "Deterministic evidence and independent audit passed. Await the owner-only Done judgement and required forge approval. PR #278 remains draft and behind main; update/review the base branch before any authorized integration. Dedicated Bastion runner and operator isolation acceptance remain pending before enabling Lighthouse workers. No merge, worker enablement, release, or deployment performed.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/278",
   "links": [
     "https://github.com/juangcarmona/domusmind/issues/277",

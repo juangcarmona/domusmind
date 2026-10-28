@@ -46,3 +46,9 @@ The independent review of `39ea5e435b9e4bc5785959e8f74b5f6733551d42` stopped pen
 The final reviewer inspected exact head `9848ba1a47d7dde1628f43da47e9a38fa93dfe1a` and found no further concrete security defect. It stopped Done because BFF, backend, web, image and CodeQL checks were pending, the prior general browser failure still needed a clean rerun, and PR #278 was draft and behind `main`. The PR description now uses `Closes #277` per the lifecycle contract. Dedicated Bastion runner/operator isolation acceptance and owner-only Done judgement remain explicit gates.
 
 The final reviewer also caught that the PR description used `Refs #277` rather than the required `Closes #277`; the PR body is now corrected and verified. The run remains `running` until checks pass on the final pushed head; the human owner Done and forge gates remain protected.
+
+### Deterministic Done evidence and stop point
+
+All 11 applicable GitHub workflows passed on `1d92eaa01e9ede187999c2db3481a4e392c7517b`, including both browser journeys, backend/web builds, image/Postgres, architecture docs, Lighthouse guardrails, engineering-site build, and CodeQL C#/JavaScript. Conditional ProductShape snapshot, Astro validation and engineering-site publication jobs were skipped as configured. The independent `gpt-6.1-terra` audit approved deterministic evidence on this exact head and confirmed the approved plan hash and security boundary.
+
+Fast Forward now awaits the owner-only Done judgement and required forge approval. PR #278 remains draft and behind `main`; the base must be refreshed and reviewed before any authorized integration. Dedicated Bastion runner/operator isolation acceptance remains pending before Lighthouse workers can execute. The run did not merge, enable workers, release, or deploy.
