@@ -56,3 +56,7 @@ The owner also approved a one-item exception to the usual Done-before-merge orde
 ## Known deviations and risks
 
 Implementation commits `08b5dc3` and `e206b6b` predate this FF run and the independent plan review. The proposal review is therefore retrospective; it cannot change that sequence. At planning time, CI did not exercise the Aspire + Keycloak BFF path and only the local test administrator was configured. The implementation added a disposable two-identity browser workflow without production users. The production identity decision was subsequently approved in CHG-PRODUCTION-OIDC-001; its implementation belongs to #281.
+
+## Post-merge runner correction
+
+The first two supervised router attempts failed before engine launch because no worker model profile was assigned. After that host profile was changed, the third attempt reached the runner and exposed the checkout collision: the project already owns a top-level `tools/` directory, and checking Lighthouse out there removes tracked project files from the runner workspace. All selected workers now use the separate `lighthouse-tools/` checkout path and invoke the pinned Lighthouse scripts from there. Regenerate each compiled lock from its workflow source; do not hand-edit the lock projections.

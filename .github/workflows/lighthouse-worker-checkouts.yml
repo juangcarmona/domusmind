@@ -1,0 +1,28 @@
+name: Lighthouse worker checkout isolation
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/lighthouse-sdlc-*"
+      - ".github/workflows/shared/lighthouse-opencode.md"
+      - "scripts/lighthouse-worker-checkouts.mjs"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/lighthouse-sdlc-*"
+      - ".github/workflows/shared/lighthouse-opencode.md"
+      - "scripts/lighthouse-worker-checkouts.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Check worker checkout paths
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - run: node scripts/lighthouse-worker-checkouts.mjs
