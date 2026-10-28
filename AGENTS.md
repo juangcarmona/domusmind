@@ -20,7 +20,7 @@ Before changing code:
 
 ## Source of truth
 
-Read [docs/engineering-lifecycle.md](docs/engineering-lifecycle.md) before handling issues, changing lifecycle status, preparing a pull request, invoking Fast Forward, or deciding whether a change is ready to merge. It defines the shared issue, retrospective, PR, and `/ff` defaults alongside DomusMind's existing gates.
+For issues, delivery stages, PRs and merge decisions, follow the pinned Lighthouse SDLC contract selected in [`.lighthouse/sdlc.json`](.lighthouse/sdlc.json) and its installed [workflows](.github/workflows/). [LIGHTHOUSE.md](LIGHTHOUSE.md) records ownership; [docs/devops.md](docs/devops.md) records this repository's checks and runner operation. A passed worker stage produces review evidence, not merge authorization. ProductShape, OpenSpec and accepted ADRs keep their own authority.
 
 `docs/README.md` maps where each kind of truth lives. Read these first:
 
@@ -233,10 +233,10 @@ Under Aspire, make sure the database is running before generating a migration.
 
 ## AI artifacts
 
-Claude Code and GitHub Copilot share one copy of every artifact; do not add per-tool copies.
+Keep one owned source for each artifact.
 
-- Skills: `.claude/skills/<name>/SKILL.md`, read by both tools.
-- Commands: `.claude/commands/` (Claude Code; Copilot uses the skills).
+- Lighthouse owns the packaged lifecycle skills and the installed workflow projections. Repository profile guidance lives under `.agents/skills/`.
+- Product and OpenSpec skills and commands under `.claude/` retain their respective tool ownership.
 - Agents: `.claude/agents/`. The GitHub cloud coding agent reads only `.github/agents/`, so `.github/agents/product-engineer.agent.md` mirrors `.claude/agents/product-engineer.md` and changes with it.
 - Instructions: this file. `CLAUDE.md` only imports it; path-scoped Copilot rules are in `.github/instructions/`.
 - ProductShape manages its skills, commands and hook under `.claude/` (listed in `.product/installation.lock.json`): regenerate them with `npx -y @prodshape/cli@0.22.0 integration update`, never edit them by hand. OpenSpec's `openspec-*` skills and `opsx` commands come from `openspec init --tools claude`.

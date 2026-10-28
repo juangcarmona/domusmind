@@ -1,0 +1,13 @@
+{
+  "defaults": {
+    "reviewRequired": true,
+    "scope": "Implement the issue and its acceptance criteria. Preserve accepted ProductShape rules and DomusMind's architecture; change product intent only through an approved Product Change.",
+    "paths": ["*"],
+    "checks": [
+      ["bash", "-c", "DOMUSMIND_TEST_POSTGRES=\"$SOFA_TEST_DATABASE\" dotnet test DomusMind.slnx --configuration Release"],
+      ["bash", "-c", "cd src/web/app && npm ci --ignore-scripts && npm run lint && npm run test && npm run build"],
+      ["bash", "-c", "npm ci --ignore-scripts && npm run verify:lighthouse"],
+      ["bash", "-c", "npm install --prefix /tmp/domusmind-check-cli --ignore-scripts --no-audit @fission-ai/openspec@1.15.0 @prodshape/cli@0.22.0 >/dev/null && export PATH=/tmp/domusmind-check-cli/node_modules/.bin:$PATH && prodshape validate && prodshape citations verify --provider openspec && prodshape citations verify docs/architecture"]
+    ]
+  }
+}
