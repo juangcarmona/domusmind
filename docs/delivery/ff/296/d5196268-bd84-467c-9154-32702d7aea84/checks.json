@@ -111,11 +111,10 @@
       "result": "passed"
     }
   ],
-  "sourceInvariance": "Canonical product/specs, backend, tests, public source and BFF source/tests are unchanged from the base commit. The only rendering-source edit removes unused --lh aliases. Builds/tests exercised this source tree; later commits only retire remaining docs/ignore references or record evidence.",
-  "securityLimit": "Known baseline dependency vulnerabilities remain; no package versions or product dependencies were changed. Exact-head hosted checks and owner security judgement remain required.",
+  "sourceInvariance": "Canonical product/specs, backend, tests, public source and BFF source/tests are unchanged from the base commit. Rendering changes remove six unused --lh aliases and stale skill attribution; renderer behavior is unchanged. Builds/tests exercised this source tree; later commits record evidence.",
+  "securityLimit": "Known baseline dependency vulnerabilities remain; no package versions or product dependencies were changed. Exact-head hosted checks passed; the Done gate still requires owner security judgement.",
   "pending": [
-    "Independent final review covering pushed head",
-    "Exact-head hosted checks",
+    "Done remains STOP at the inherited dependency-security gate: 15 known Dependabot alerts remain open",
     "Owner PR review/approval and Definition of Done judgements",
     "Pre-merge external retirement gate and verification",
     "Merge and #296 closure by GitHub state without status:done"

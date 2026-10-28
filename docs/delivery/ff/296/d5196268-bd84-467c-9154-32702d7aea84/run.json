@@ -40,9 +40,10 @@
         "checks.json",
         "cleanup-scan.json",
         "final-audit.json",
-        "ci-c95312a.json"
+        "ci-c95312a.json",
+        "ci-87cedff.json"
       ],
-      "outputCommit": "c95312a5f55242dfb9605c802eec12ccb9bd1f3c",
+      "outputCommit": "87cedff16a0012861907bdbfb90da7ae23cfed06",
       "checksCompletedAt": "2026-10-28T11:24:34.924283+00:00"
     }
   ],
@@ -111,10 +112,27 @@
       },
       "requiredResume": "Remediate the known vulnerable dependencies in separately authorized work, verify the dependency gate, then rerun Done and independent review against the resulting candidate.",
       "evidence": [
+        "ci-87cedff.json",
         "ci-c95312a.json",
         "checks.json",
         "cleanup-scan.json",
         "https://github.com/juangcarmona/domusmind/security/dependabot"
+      ]
+    },
+    {
+      "reviewerModel": "gpt-6.1-terra",
+      "kind": "done-followup",
+      "reviewedCommit": "87cedff16a0012861907bdbfb90da7ae23cfed06",
+      "decision": "stop",
+      "reportedBy": "Independent exact-head follow-up review.",
+      "findings": [
+        "No cleanup defect found; the retained renderer is used by the engineering site.",
+        "The Done security gate remains blocked by 15 open Dependabot alerts."
+      ],
+      "evidence": [
+        "final-audit.json",
+        "ci-87cedff.json",
+        "cleanup-scan.json"
       ]
     }
   ],
@@ -145,7 +163,7 @@
       "resultingCommit": "722fb1029e4b0b781679510576a4479c96ada925"
     }
   ],
-  "stopReason": "Independent Done audit STOP at c95312a5f55242dfb9605c802eec12ccb9bd1f3c: inherited deterministic dependency-security gate requires no known vulnerable dependencies, but 15 Dependabot alerts remain open (1 critical, 8 high, 3 medium, 3 low). Dependency remediation requires separate user direction, then a fresh dependency scan and Done review. Keep PR draft and #296 in-progress; no external retirement or merge.",
+  "stopReason": "Independent exact-head follow-up on 87cedff16a0012861907bdbfb90da7ae23cfed06 found no cleanup defect. Done remains stopped because the inherited dependency-security gate requires no known vulnerable dependencies and 15 Dependabot alerts remain open (1 critical, 8 high, 3 medium, 3 low). Dependency remediation requires separate user direction. Keep PR draft and #296 in-progress; no external retirement or merge.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/298",
   "links": [
     "https://github.com/juangcarmona/domusmind/issues/296",
@@ -189,9 +207,9 @@
     }
   ],
   "hostedVerification": {
-    "reviewedHead": "c95312a5f55242dfb9605c802eec12ccb9bd1f3c",
-    "result": "all 23 checks completed successfully or with existing expected skips",
-    "evidence": "ci-c95312a.json",
-    "nextEvidenceOnlyCommit": "Recheck exact-head hosted checks after pushing this audit-only update; publish the result in PR conversation without changing the reviewed cleanup candidate."
+    "reviewedHead": "87cedff16a0012861907bdbfb90da7ae23cfed06",
+    "result": "all 23 checks completed: 20 succeeded and 3 expected skips; no failures or pending checks",
+    "evidence": "ci-87cedff.json",
+    "followupReview": "No cleanup defect found; Done remains stopped by the inherited dependency-security gate."
   }
 }

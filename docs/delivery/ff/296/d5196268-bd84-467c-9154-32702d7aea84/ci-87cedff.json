@@ -1,0 +1,148 @@
+{
+  "head": "87cedff16a0012861907bdbfb90da7ae23cfed06",
+  "total": 23,
+  "counts": {
+    "skipped": 3,
+    "success": 20
+  },
+  "checks": [
+    {
+      "name": "Publish Engineering site",
+      "conclusion": "skipped",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231229/job/122793647496",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "Build Engineering site",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231229/job/122793262774",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "CodeQL",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/runs/122792491190",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "product snapshot",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231161/job/122792227757",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "webapp build",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231198/job/122792209890",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "product model",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231209/job/122792201611",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "image postgres smoke",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231188/job/122792199741",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "Analyze (csharp)",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231163/job/122792198424",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "Analyze (javascript-typescript)",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231163/job/122792198267",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "Validate Astro site",
+      "conclusion": "skipped",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231193/job/122792196627",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "architecture docs",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231159/job/122792191944",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "backend build",
+      "conclusion": "skipped",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231166/job/122792190912",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "Browser journeys",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231229/job/122792188018",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "product snapshot changes",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231161/job/122792141999",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "engineering site changes",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231229/job/122792140611",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "E2E run gate",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231229/job/122792140369",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "public site changes",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231193/job/122792140243",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "backend changes",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231166/job/122792140133",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "webapp changes",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231198/job/122792140030",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "product changes",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231209/job/122792139983",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "architecture docs changes",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231159/job/122792139826",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "codeql changes",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231163/job/122792139817",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    },
+    {
+      "name": "image smoke changes",
+      "conclusion": "success",
+      "url": "https://github.com/juangcarmona/domusmind/actions/runs/40681231188/job/122792139813",
+      "head": "87cedff16a0012861907bdbfb90da7ae23cfed06"
+    }
+  ]
+}
