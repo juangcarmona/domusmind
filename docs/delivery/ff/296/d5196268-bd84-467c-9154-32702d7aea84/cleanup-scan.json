@@ -1,0 +1,17 @@
+{
+  "candidateCommit": "bb7f9bd7bd931a5b267f368f5dd43b2f0430db5a",
+  "result": "passed",
+  "trackedRemovalCount": 230,
+  "remainingNormalWorkflowCount": 14,
+  "canonicalProductBackendTestsAndPublicSourceUnchanged": true,
+  "appTokenChange": "Only six unused --lh aliases and their comment removed; every original declaration unchanged.",
+  "metadataDigestsMatch": true,
+  "activeAgentReferenceMatches": [],
+  "newBrokenLinksToDeletedFiles": [],
+  "additionalInstructionSurfaceFiles": [],
+  "historicalAllowances": [
+    "This cleanup plan and run evidence",
+    "Accepted ADR provenance with revision-pinned source links",
+    "Architecture debt link to historical guidance"
+  ]
+}

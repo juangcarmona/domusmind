@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "candidateCommit": "bb7f9bd7bd931a5b267f368f5dd43b2f0430db5a",
+  "implementationCommit": "2c44235e1423d6f9716d612c44cd5771b0e5ca8f",
+  "observedAt": "2026-10-28T11:24:34.924283+00:00",
+  "results": [
+    {
+      "check": "Backend Release build",
+      "command": "dotnet build DomusMind.slnx -c Release",
+      "result": "passed",
+      "warnings": "12 pre-existing NuGet vulnerability warnings."
+    },
+    {
+      "check": "Backend tests",
+      "command": "dotnet test DomusMind.slnx -c Release --no-build",
+      "result": "passed",
+      "passed": 866,
+      "initiallySkipped": 3,
+      "followup": "All 3 PostgreSQL tests passed with DOMUSMIND_TEST_POSTGRES against a disposable PostgreSQL 17 container; container removed."
+    },
+    {
+      "check": "Web app",
+      "commands": [
+        "npm ci",
+        "npm run build",
+        "npm run lint",
+        "npm test"
+      ],
+      "result": "passed",
+      "testsPassed": 62,
+      "warnings": "44 lint warnings, zero errors; existing large bundle warning; npm reports 2 moderate and 1 high vulnerability."
+    },
+    {
+      "check": "Public site",
+      "commands": [
+        "npm ci",
+        "npm run build"
+      ],
+      "result": "passed",
+      "pages": 35,
+      "warnings": "npm reports 3 existing high vulnerabilities."
+    },
+    {
+      "check": "Product model",
+      "command": "npx -y @prodshape/cli@0.22.0 validate",
+      "result": "passed",
+      "warnings": "Existing low-confidence draft/provenance warnings remain."
+    },
+    {
+      "check": "OpenSpec",
+      "command": "npx -y @fission-ai/openspec@1 validate --all",
+      "result": "passed"
+    },
+    {
+      "check": "OpenSpec citations",
+      "command": "npx -y --package @fission-ai/openspec@1 --package @prodshape/cli@0.22.0 -c 'prodshape citations verify --provider openspec'",
+      "result": "passed",
+      "documents": 15,
+      "currentCitations": 823,
+      "note": "First attempt failed because OpenSpec was absent from PATH; both pinned CLIs on PATH resolved authoritative population discovery."
+    },
+    {
+      "check": "Architecture",
+      "commands": [
+        "node scripts/check-arc42-frontmatter.mjs",
+        "npx -y @prodshape/cli@0.22.0 citations verify docs/architecture --format json"
+      ],
+      "result": "passed"
+    },
+    {
+      "check": "Markdown",
+      "command": "npx -y markdownlint-cli2@0.23.3 \"docs/architecture/**/*.md\" \"docs/adr/**/*.md\" docs/devops.md docs/engineering-site.md docs/engineering-e2e.md infra/README.md",
+      "result": "passed",
+      "filesDiscovered": 29
+    },
+    {
+      "check": "Documentation renderer and site utilities",
+      "commands": [
+        "npm test (tools/arc42-snapshot under Node 24)",
+        "node tools/static-site/static-site.test.mjs",
+        "node tools/e2e-report/report.test.mjs"
+      ],
+      "result": "passed",
+      "testsPassed": 17
+    },
+    {
+      "check": "Development BFF browser journey",
+      "command": "npm --prefix src/web/app run test:e2e -- e2e/development-bff.e2e.ts",
+      "result": "passed",
+      "testsPassed": 1,
+      "skipped": 0,
+      "durationSeconds": 43.8,
+      "environment": "Disposable Aspire PostgreSQL/Keycloak and local Vite; resources stopped after test.",
+      "rawEvidence": "/tmp/domusmind-296-checks/bff/ (local only; session traces are deliberately not committed).",
+      "assertions": "Mapped identities, cookie attributes, token storage absence, same-origin/CSRF mutation, foreign Origin rejection, logout revocation and expiry."
+    },
+    {
+      "check": "Cleanup and preservation scan",
+      "result": "passed",
+      "evidence": "cleanup-scan.json"
+    },
+    {
+      "check": "Retained workflows",
+      "result": "passed",
+      "workflowCount": 14,
+      "details": "All YAML parses; original job names and check contexts preserved."
+    },
+    {
+      "check": "Diff whitespace",
+      "command": "git diff --check",
+      "result": "passed"
+    }
+  ],
+  "sourceInvariance": "Canonical product/specs, backend, tests, public source and BFF source/tests are unchanged from the base commit. The only rendering-source edit removes unused --lh aliases. Builds/tests exercised this source tree; later commits only retire remaining docs/ignore references or record evidence.",
+  "securityLimit": "Known baseline dependency vulnerabilities remain; no package versions or product dependencies were changed. Exact-head hosted checks and owner security judgement remain required.",
+  "pending": [
+    "Independent final review covering pushed head",
+    "Exact-head hosted checks",
+    "Owner PR review/approval and Definition of Done judgements",
+    "Pre-merge external retirement gate and verification",
+    "Merge and #296 closure by GitHub state without status:done"
+  ]
+}

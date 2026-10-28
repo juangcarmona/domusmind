@@ -32,12 +32,16 @@
     },
     {
       "name": "implement",
-      "result": "running",
+      "result": "awaiting-independent-review",
       "startedAt": "2026-10-28T11:15:16.354629+00:00",
       "inputCommit": "5e2c0f7ae0575a2a912592f247d77538c83211d0",
       "evidence": [
-        "../../../plans/issue-296.md"
-      ]
+        "../../../plans/issue-296.md",
+        "checks.json",
+        "cleanup-scan.json"
+      ],
+      "outputCommit": "bb7f9bd7bd931a5b267f368f5dd43b2f0430db5a",
+      "checksCompletedAt": "2026-10-28T11:24:34.924283+00:00"
     }
   ],
   "reviews": [
@@ -110,7 +114,7 @@
       "resultingCommit": "722fb1029e4b0b781679510576a4479c96ada925"
     }
   ],
-  "stopReason": null,
+  "stopReason": "Independent final review, exact-head hosted checks, owner Definition of Done/PR judgement and required pre-merge external retirement remain pending. No merge or external cleanup performed.",
   "pullRequest": "https://github.com/juangcarmona/domusmind/pull/298",
   "links": [
     "https://github.com/juangcarmona/domusmind/issues/296",

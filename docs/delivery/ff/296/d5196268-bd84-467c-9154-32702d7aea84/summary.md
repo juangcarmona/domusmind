@@ -23,3 +23,15 @@ No implementation or external configuration mutation was performed. Fresh indepe
 ## Plan approval and implementation
 
 Independent reviewer `gpt-6.1-terra` approved candidate `722fb1029e4b0b781679510576a4479c96ada925` covering head `5e2c0f7ae0575a2a912592f247d77538c83211d0`. Both lifecycle transitions were written and verified: Ready → Proposed → In progress. Implementation started on the same branch and draft PR. External cleanup remains pending exact-head checks and owner PR review/approval; no catalogue, workflow-registration or runner mutation is authorized at this stage.
+
+## Implemented cleanup and verification
+
+Implementation commit: `2c44235e1423d6f9716d612c44cd5771b0e5ca8f`; source candidate after final reference cleanup: `bb7f9bd7bd931a5b267f368f5dd43b2f0430db5a`.
+
+All 230 inventory deletion candidates are gone, including `.agents`, `.claude`, other instruction/skill/prompt surfaces, Lighthouse packages/workflows/configuration/hooks and old installation-only lifecycle material. ProductShape AI projection is explicitly disabled. OpenSpec authoring context/rules, optional schema instruction blocks and embedded refinement prompts were removed while retaining document structures, templates, deterministic scripts and refreshed exact metadata digests. The product CI managed-AI-file checker was retired; native OpenSpec, model and citation checks remain. All 14 normal workflows and original job/check names remain.
+
+Canonical product/specs, backend, tests, public source and BFF behavior are unchanged. Every original DomusMind token declaration is unchanged; only six unused aliases and their comment were removed. Accepted ADR rationale is intact and deleted-source provenance links are pinned to the pre-cleanup revision. The final scan found no active agent reference or new broken link to a deleted file outside explicitly retained history.
+
+Verification passed: Release backend build; 866 backend tests plus the 3 database-backed tests rerun without skips against disposable PostgreSQL; web app build, lint (44 warnings/zero errors) and 62 tests; public site build (35 pages); product model; native OpenSpec; all 823 OpenSpec citations across 15 documents; architecture citations/contract; Markdown over 29 files; renderer/site/report utilities (17 tests); all retained workflow YAML/job contexts; and whitespace checks. The real development BFF browser journey passed 1/1 in 43.8 seconds against disposable Aspire resources, which were stopped afterward. Raw session traces remain local rather than being committed. See [checks.json](checks.json) and [cleanup-scan.json](cleanup-scan.json).
+
+Existing dependency vulnerability warnings remain in NuGet and npm; no product dependency versions changed. These warnings and missing/required hosted security evidence remain subject to owner security judgement. No external workflow registration, label catalogue, repository variable/secret or runner was mutated. Final independent review, exact-head hosted checks, owner review/approval and the pre-merge external retirement gate remain pending; this run is not complete and #296 remains In progress.
