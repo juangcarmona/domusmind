@@ -1,0 +1,18 @@
+flowchart LR
+    accTitle: Business context of DomusMind
+    member["Household member"]
+    manager["Household manager"]
+    visitor["Public site visitor"]
+    outlook["Microsoft Outlook<br/>(via Microsoft Graph)"]
+
+    subgraph app["DomusMind application"]
+        core["Household state:<br/>people, areas, plans, tasks,<br/>lists, meals, Agenda"]
+    end
+
+    site["DomusMind public site<br/>(static content)"]
+
+    member -- "plans, tasks, list items, meals;<br/>reads Agenda" --> core
+    manager -- "household roster, access,<br/>settings" --> core
+    member -- "grants delegated calendar access" --> outlook
+    outlook -- "member's calendar entries<br/>(read-only)" --> core
+    visitor -- "reads product information" --> site

@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-This directory holds DomusMind's Architecture Decision Records: one file per significant decision, carrying its context, the decision, its consequences and the alternatives rejected. Records are numbered sequentially and never renumbered; a reversed decision gets a new record that supersedes the old one. The ADRs are authoritative for decision rationale and status, and they are indexed for architecture readers from [`docs/architecture/09-architecture-decisions.md`](../architecture/09-architecture-decisions.md), which maps each decision in effect to the architecture it affects.
+This directory holds DomusMind's Architecture Decision Records: one file per significant decision, carrying its context, the decision, its consequences and the alternatives rejected. Records are numbered sequentially and never renumbered; a reversed decision gets a new record that supersedes the old one. The ADRs are authoritative for decision rationale and status, and they are indexed for architecture readers from [`docs/architecture/09-architecture-decisions/README.md`](../architecture/09-architecture-decisions/README.md), which maps each decision in effect to the architecture it affects.
 
 | Number | Title | Status | Date |
 | --- | --- | --- | --- |

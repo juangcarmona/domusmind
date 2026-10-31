@@ -1,0 +1,19 @@
+flowchart LR
+    accTitle: Local development infrastructure
+    dev["Developer browser"]
+    subgraph aspire["Aspire AppHost (developer machine)"]
+        dashboard["Aspire Dashboard"]
+        vite["web-app<br/>Vite dev server :61546"]
+        api["api<br/>DomusMind.Api :52250"]
+        pg[("postgres + data volume<br/>database domusmind")]
+        pgadmin["pgAdmin :5050"]
+        model["Ollama<br/>llama3.2:3b (when selected)"]
+    end
+    external["OpenAI-compatible endpoint<br/>(when selected)"]
+    dev --> vite
+    vite -- "proxy /api" --> api
+    api --> pg
+    api -. "when selected" .-> model
+    api -. "when selected" .-> external
+    pgadmin --> pg
+    api -. "OpenTelemetry via OTLP" .-> dashboard

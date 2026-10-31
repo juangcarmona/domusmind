@@ -12,12 +12,20 @@ Before a change is integrated, run the applicable checks below and inspect the P
 | Web app | `npm ci`, `npm run build`, `npm run lint` and `npm test` in `src/web/app` |
 | Public site | `npm ci` and `npm run build` in `src/web/public` |
 | Product and behavior | `npx -y @prodshape/cli@0.22.0 validate`, `npx -y @fission-ai/openspec@1 validate --all` and `npx -y @prodshape/cli@0.22.0 citations verify --provider openspec` |
-| Architecture | `node scripts/check-arc42-frontmatter.mjs`, the Markdown lint invocation in `docs-ci.yml`, and `npx -y @prodshape/cli@0.22.0 citations verify docs/architecture` |
+| Architecture | `npx arcshape validate --links --citations`, the Markdown lint invocation in `docs-ci.yml`, and `npx prodshape citations verify docs/architecture` |
 | Browser journeys | The existing browser checks documented in [`engineering-e2e.md`](engineering-e2e.md) |
 
 The OpenSpec CLI must be on `PATH` for authoritative citation population discovery. To run that check without a global installation, use `npx -y --package @fission-ai/openspec@1 --package @prodshape/cli@0.22.0 -c 'prodshape citations verify --provider openspec'`.
 
 CodeQL, dependency and secret scanning remain repository security controls. A skipped or missing expected security check does not prove the change has passed that check.
+
+## Lighthouse adoption
+
+Lighthouse owns the delivery harness; DomusMind retains its product model, architecture, design, runtime, and approval decisions. The canonical design remains [surface-system.md](design/surface-system.md); the Lighthouse visual profile is integration guidance, not a replacement for product styling. ProductShape, OpenSpec, and ArcShape own their generated integration assets and their respective authorities.
+
+The repository pins Lighthouse 0.11.6, its SDLC 0.15.2, ArcShape 0.4.0, ProductShape 0.23.0, and OpenSpec 1.16.0. An npm override makes Lighthouse resolve the same ArcShape 0.4.0 as the repository; revalidate this override on every Lighthouse or ArcShape upgrade. Run `npm ci --ignore-scripts` and `npm run verify` from the repository root. The published Lighthouse manifest JSON Schema does not yet list the selected `react-web-platform` and `web-bff` profiles even though its catalog and CLI accept them; editors using that schema may report false errors. The projected Lighthouse visual guide describes its own token examples; DomusMind uses its existing [application tokens](../src/web/app/src/styles/tokens.css) and surface system.
+
+The SDLC workflow sources and compiled locks are prepared locally; they do not prove that a runner or automation is active. Workers check out the Lighthouse harness into `.lighthouse-harness/` because DomusMind owns `tools/`. Preserve this change when regenerating workflows and compile them with gh-aw 0.93.2. The label plan is a snapshot: regenerate and review it before any authorized provider write. Automation, runner registration, integration, merge, and deployment require explicit owner approval. The router disables automatic implementation continuation and completion until separately reviewed; inspect its exact triggers and permissions before setting any activation variable. The implementation policy requires human review, and the declared .NET environment requests disposable PostgreSQL for backend verification.
 
 ## Development OIDC BFF pilot
 
@@ -25,7 +33,7 @@ CodeQL, dependency and secret scanning remain repository security controls. A sk
 
 The browser receives a Secure, HttpOnly, SameSite=Lax cookie that references an in-memory server-side ticket. The ticket store supports one development API process and revokes tickets on logout; this is not a production session-store decision. The API never returns OIDC tokens to the web app; unsafe API requests require a same-origin `Origin` and an antiforgery token. Local token endpoints return 404 in BFF mode. Keycloak asks the user to confirm its own logout because the BFF does not retain an ID token. Vite forwards its public host and scheme from loopback; any remote preview needs an HTTPS reverse proxy and an explicitly registered redirect URI. The current production runtime still uses local JWT; the approved OIDC product contract is tracked for implementation in [issue #281](https://github.com/juangcarmona/domusmind/issues/281). See [ADR 0011](adr/0011-pilot-oidc-bff-in-development.md) for the development pilot.
 
-This document explains how DomusMind is versioned, built, validated, released and operated, which together form the application lifecycle. It does not cover where the software runs or how its parts map onto infrastructure; see the [Deployment View](architecture/07-deployment-view.md) for that. The installation guide shipped with every release is [`deploy/README.md`](../deploy/README.md).
+This document explains how DomusMind is versioned, built, validated, released and operated, which together form the application lifecycle. It does not cover where the software runs or how its parts map onto infrastructure; see the [Deployment View](architecture/07-deployment-view/README.md) for that. The installation guide shipped with every release is [`deploy/README.md`](../deploy/README.md).
 
 ## Versioning
 
@@ -76,7 +84,7 @@ A release can be traced through the git tag, the GitHub Release, the immutable i
 | [`codeql.yml`](../.github/workflows/codeql.yml) | `Analyze (csharp)`, `Analyze (javascript-typescript)` | CodeQL; also weekly on schedule |
 | [`product-ci.yml`](../.github/workflows/product-ci.yml) | `product model` | `prodshape validate`, `prodshape integration update --check` and `prodshape citations verify --provider openspec`, pinned to `@prodshape/cli@0.22.0` |
 | [`product-snapshot.yml`](../.github/workflows/product-snapshot.yml) | `product snapshot` | Builds the Product Snapshot (`prodshape graph --format html`) and keeps it for 30 days as the run artifact `domusmind-product-snapshot.html`, linked from the run summary. It runs on pushes to `main` that touch the model and on pull requests that do |
-| [`docs-ci.yml`](../.github/workflows/docs-ci.yml) | `architecture docs` | Checks the arc42 frontmatter contract (`scripts/check-arc42-frontmatter.mjs`), runs markdownlint over `docs/architecture` and `docs/adr`, and runs `prodshape citations verify docs/architecture`. Unresolved or tampered citations fail the job. Stale citations only warn |
+| [`docs-ci.yml`](../.github/workflows/docs-ci.yml) | `architecture docs` | Checks the ArcShape architecture, links, and citations (`arcshape validate --links --citations`), runs markdownlint over `docs/architecture` and `docs/adr`, and runs `prodshape citations verify docs/architecture`. Unresolved or tampered citations fail the job. Stale citations only warn |
 | [`engineering-site.yml`](../.github/workflows/engineering-site.yml) | `Browser journeys`, `Build Engineering site`, `Publish Engineering site` | Runs generated-data browser coverage against the composed API, web app and PostgreSQL; publishes nightly reports and bounded evidence alongside the landing page, arc42/ADR and ProductShape snapshots. The non-cancelling publisher restores the current site manifest before updating it; see [`docs/engineering-site.md`](engineering-site.md) and [`docs/engineering-e2e.md`](engineering-e2e.md) |
 
 [`public-site-cd.yml`](../.github/workflows/public-site-cd.yml) deploys the public site to Azure Static Web Apps on pushes to `main` that touch `src/web/public`. In short, CI validates, `docker-edge.yml` publishes edge images, and `release.yml` is the only publisher of release images.

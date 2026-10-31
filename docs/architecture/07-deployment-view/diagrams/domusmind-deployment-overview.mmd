@@ -1,0 +1,27 @@
+flowchart LR
+    accTitle: DomusMind deployment overview
+    browser["Household browser<br/>(web app SPA)"]
+    proxy["Reverse proxy<br/>(operator-provided, TLS)"]
+    ghcr[("GHCR<br/>ghcr.io/&lt;owner&gt;/domusmind")]
+    graphApi["Microsoft identity platform<br/>and Graph API"]
+    interpreterApi["Configured OpenAI-compatible<br/>interpreter (optional)"]
+
+    subgraph host["Docker host (one household)"]
+        subgraph compose["Compose network"]
+            app["domusmind container<br/>ASP.NET Core :8080<br/>API + SPA + Swagger<br/>calendar refresh worker"]
+            db[("postgres container<br/>PostgreSQL 17<br/>database domusmind")]
+            ollama["ollama container<br/>llama3.2:3b (default)"]
+        end
+        vol[["volume postgres_data"]]
+        dpvol[["volume data_protection_keys"]]
+    end
+
+    browser -- HTTPS --> proxy
+    proxy -- "HTTP host:APP_PORT (default 24365)" --> app
+    app -- "Npgsql, internal only" --> db
+    db --- vol
+    app --- dpvol
+    app -- "local inference (default)" --> ollama
+    app -. "HTTPS outbound (optional)" .-> interpreterApi
+    app -- "HTTPS outbound (optional)" --> graphApi
+    ghcr -. "docker compose pull" .-> app

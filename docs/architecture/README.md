@@ -23,7 +23,7 @@ that belongs to the product model.
 Architecture statements that depend on product intent carry a ProductShape citation,
 verified with `npx prodshape citations verify docs/architecture`. Where the
 architecture and the code disagree, the code is current and the gap is recorded in
-[section 11](11-risks-and-technical-debt.md).
+[section 11](11-risks-and-technical-debt/README.md).
 
 The **Product Snapshot** is generated from `docs/product` by the
 [`product-snapshot`](../../.github/workflows/product-snapshot.yml) workflow for
@@ -34,15 +34,15 @@ for its browsable GitHub Pages copy. The HTML is generated output, not committed
 
 | # | Section | Answers |
 | --- | --- | --- |
-| 01 | [Introduction and Goals](01-introduction-and-goals.md) | What drives the architecture and which quality goals matter most |
-| 02 | [Architecture Constraints](02-constraints.md) | What restricts design freedom |
-| 03 | [Context and Scope](03-context-and-scope.md) | Where the system boundary is and who talks to it |
-| 04 | [Solution Strategy](04-solution-strategy.md) | The fundamental approaches |
-| 05 | [Building Block View](05-building-block-view.md) | Static decomposition into projects and modules |
-| 06 | [Runtime View](06-runtime-view.md) | Important runtime interactions |
-| 07 | [Deployment View](07-deployment-view.md) | Mapping onto infrastructure |
-| 08 | [Crosscutting Concepts](08-crosscutting-concepts.md) | Reusable mechanisms and conventions |
-| 09 | [Architecture Decisions](09-architecture-decisions.md) | Index of the ADRs |
-| 10 | [Quality Requirements](10-quality-requirements.md) | How quality requirements are realised |
-| 11 | [Risks and Technical Debt](11-risks-and-technical-debt.md) | Known risks and debt |
-| 12 | [Glossary](12-glossary.md) | Architecture terminology |
+| 01 | [Introduction and Goals](01-introduction-and-goals/README.md) | What drives the architecture and which quality goals matter most |
+| 02 | [Architecture Constraints](02-constraints/README.md) | What restricts design freedom |
+| 03 | [Context and Scope](03-context-and-scope/README.md) | Where the system boundary is and who talks to it |
+| 04 | [Solution Strategy](04-solution-strategy/README.md) | The fundamental approaches |
+| 05 | [Building Block View](05-building-block-view/README.md) | Static decomposition into projects and modules |
+| 06 | [Runtime View](06-runtime-view/README.md) | Important runtime interactions |
+| 07 | [Deployment View](07-deployment-view/README.md) | Mapping onto infrastructure |
+| 08 | [Crosscutting Concepts](08-crosscutting-concepts/README.md) | Reusable mechanisms and conventions |
+| 09 | [Architecture Decisions](09-architecture-decisions/README.md) | Index of the ADRs |
+| 10 | [Quality Requirements](10-quality-requirements/README.md) | How quality requirements are realised |
+| 11 | [Risks and Technical Debt](11-risks-and-technical-debt/README.md) | Known risks and debt |
+| 12 | [Glossary](12-glossary/README.md) | Architecture terminology |

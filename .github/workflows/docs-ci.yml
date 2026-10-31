@@ -20,6 +20,8 @@ on:
       - 'docs/engineering-e2e.md'
       - '.product/config.yaml'
       - 'scripts/check-arc42-frontmatter.mjs'
+      - 'scripts/architecture-diagrams.mjs'
+      - 'scripts/architecture-diagrams.test.mjs'
       - '.markdownlint-cli2.jsonc'
       - '.github/workflows/docs-ci.yml'
   workflow_dispatch:
@@ -53,7 +55,7 @@ jobs:
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
             --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(docs/architecture/|docs/adr/|docs/product/|docs/(devops|engineering-site|engineering-e2e)\.md$|\.product/config\.yaml$|scripts/check-arc42-frontmatter\.mjs$|\.markdownlint-cli2\.jsonc$|\.github/workflows/docs-ci\.yml$)'; then
+          if printf '%s\n' "$files" | grep -qE '^(docs/architecture/|docs/adr/|docs/product/|docs/(devops|engineering-site|engineering-e2e)\.md$|\.product/config\.yaml$|scripts/(check-arc42-frontmatter|architecture-diagrams(\.test)?)\.mjs$|\.markdownlint-cli2\.jsonc$|\.github/workflows/docs-ci\.yml$)'; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
@@ -73,8 +75,14 @@ jobs:
         with:
           node-version: 22
 
-      - name: Verify the arc42 document contract
-        run: node scripts/check-arc42-frontmatter.mjs
+      - name: Install engineering tools
+        run: npm ci --ignore-scripts
+
+      - name: Verify ArcShape architecture, links, and citations
+        run: |
+          node scripts/architecture-diagrams.test.mjs
+          node scripts/architecture-diagrams.mjs --check
+          npx --no-install arcshape validate --links --citations
 
       - name: Lint the architecture and ADR docs
         run: npx -y markdownlint-cli2@0.23.3 "docs/architecture/**/*.md" "docs/adr/**/*.md" docs/devops.md docs/engineering-site.md docs/engineering-e2e.md

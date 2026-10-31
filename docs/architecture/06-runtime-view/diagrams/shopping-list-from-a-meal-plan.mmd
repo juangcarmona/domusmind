@@ -1,0 +1,25 @@
+sequenceDiagram
+    accTitle: Shopping list from a meal plan
+    participant Ctl as MealPlansController
+    participant H as RequestShoppingList handler
+    participant MP as MealPlan aggregate
+    participant DD as DomainEventDispatcher
+    participant LH as Lists reaction handler
+    participant SL as SharedList aggregate
+    participant ELW as EventLogWriter
+    participant DB as DomusMind database
+
+    Ctl->>H: Dispatch(RequestShoppingListCommand)
+    H->>DB: load MealPlan with slots and authorize family
+    H->>MP: Record list id, derivation version and ShoppingListRequested
+    H->>ELW: WriteAsync([MealPlan])
+    ELW->>DB: Begin transaction and save MealPlan plus event_log
+    ELW->>DD: Dispatch ShoppingListRequested
+    DD->>LH: invoke Lists-owned handler
+    LH->>DB: load MealPlan slots and recipes with ingredients
+    LH->>LH: consolidate ingredients by name and unit
+    LH->>SL: Create SharedList with event's stable list id and add items
+    LH->>ELW: WriteAsync([SharedList])
+    ELW->>DB: save SharedList and its event_log rows in same transaction
+    ELW->>DB: commit after reaction succeeds
+    H-->>Ctl: plan id, list id, item count
