@@ -1,1 +1,4 @@
 .github/workflows/*.lock.yml linguist-generated=true
+# ArcShape ships upstream reference examples unchanged, including Markdown spacing.
+.agents/skills/arc-architecture/references/** whitespace=-blank-at-eol
+.claude/skills/arc-architecture/references/** whitespace=-blank-at-eol

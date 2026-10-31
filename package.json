@@ -1,0 +1,25 @@
+{
+  "name": "domusmind-engineering",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@arcshape/cli": "0.4.0",
+    "@fission-ai/openspec": "1.16.0",
+    "@juangcarmona/lighthouse": "0.11.6",
+    "@prodshape/cli": "0.23.0"
+  },
+  "overrides": {
+    "@juangcarmona/lighthouse": {
+      "@arcshape/cli": "0.4.0"
+    },
+    "katex": "^0.18.2"
+  },
+  "scripts": {
+    "verify:foundation": "lighthouse verify && node scripts/architecture-diagrams.test.mjs && node scripts/architecture-diagrams.mjs --check && arcshape validate --links --citations",
+    "verify:dotnet": "dotnet build DomusMind.slnx --configuration Release && DOMUSMIND_TEST_POSTGRES=\"${DOMUSMIND_TEST_POSTGRES:-${SOFA_TEST_DATABASE:-}}\" dotnet test DomusMind.slnx",
+    "verify:web": "npm ci --ignore-scripts --prefix src/web/app && npm run build --prefix src/web/app && npm run lint --prefix src/web/app && npm test --prefix src/web/app",
+    "verify:public": "npm ci --ignore-scripts --prefix src/web/public && npm run build --prefix src/web/public",
+    "verify:product": "prodshape validate && openspec validate --all && prodshape citations verify --provider openspec && prodshape citations verify docs/architecture",
+    "verify": "npm run verify:foundation && npm run verify:dotnet && npm run verify:web && npm run verify:public && npm run verify:product"
+  }
+}

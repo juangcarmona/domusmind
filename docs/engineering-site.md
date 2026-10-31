@@ -10,10 +10,13 @@ Its source content is generated from the repository on every relevant push to
 - `/` is an engineering landing page using the public site's typography,
   lavender palette, brand mark and responsive spacing. It links to technical
   documentation and does not reuse marketing copy.
-- `/architecture/` is a self-contained arc42 snapshot generated from
+- `/architecture/` is a self-contained ArcShape snapshot generated from
   `docs/architecture/` and the records in `docs/adr/`. Mermaid diagrams are
   rendered to inline SVG; the output has no runtime dependency on the source
-  repository or external assets.
+  repository or external assets. Architecture Markdown displays PNG previews;
+  their editable Mermaid sources and content hashes are checked with
+  `node scripts/architecture-diagrams.mjs --check`. To regenerate previews, run
+  `node scripts/architecture-diagrams.mjs` in a browser-capable environment.
 - `/model/` is generated with the pinned ProductShape CLI version used by
   `product-snapshot.yml`.
 - `/e2e/` contains the browser journey report index, a stable latest URL, and

@@ -43,6 +43,6 @@ Strong typing is the part that carries the architectural weight: identifiers of 
 ## References
 
 - Supersedes: [ADR-0009](0009-use-ulid-based-strongly-typed-identifiers.md)
-- Mechanism: [`docs/architecture/08-crosscutting-concepts.md`](../architecture/08-crosscutting-concepts.md#identifiers)
+- Mechanism: [`docs/architecture/08-crosscutting-concepts/README.md`](../architecture/08-crosscutting-concepts/README.md#identifiers)
 - Evidence: [`src/backend/DomusMind.Domain/Family/FamilyId.cs`](../../src/backend/DomusMind.Domain/Family/FamilyId.cs), [`src/backend/DomusMind.Infrastructure/Persistence/Configurations/Family/FamilyConfiguration.cs`](../../src/backend/DomusMind.Infrastructure/Persistence/Configurations/Family/FamilyConfiguration.cs), [`src/backend/DomusMind.Application/Features/MealPlanning/CreateMealPlan/CreateMealPlanCommand.cs`](../../src/backend/DomusMind.Application/Features/MealPlanning/CreateMealPlan/CreateMealPlanCommand.cs), [`src/web/app/src/store/mealPlanningSlice.ts`](../../src/web/app/src/store/mealPlanningSlice.ts)
 - Related: [ADR-0007](0007-use-ef-core-directly-without-generic-repositories.md)

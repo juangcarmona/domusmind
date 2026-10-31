@@ -1,0 +1,31 @@
+sequenceDiagram
+    accTitle: Command through the internal dispatcher
+    participant Web as Web app
+    participant Ctl as Api controller
+    participant CD as CommandDispatcher
+    participant H as ScheduleEvent handler
+    participant Auth as FamilyAuthorizationService
+    participant Agg as CalendarEvent aggregate
+    participant ELW as EventLogWriter
+    participant DD as DomainEventDispatcher
+    participant EH as DomainEventHandler
+    participant DB as DomusMind database
+
+    Web->>Ctl: POST with bearer token
+    Ctl->>CD: Dispatch(ScheduleEventCommand incl. current user id)
+    CD->>H: resolve ICommandHandler from DI, invoke Handle
+    H->>Auth: CanAccessFamilyAsync(user, family)
+    Auth->>DB: read user-to-household access grant
+    H->>Agg: Create(...) raises EventScheduled
+    H->>H: stage aggregate in DbContext
+    H->>ELW: WriteAsync([aggregate])
+    ELW->>DB: Begin transaction, save aggregate and event-log rows
+    ELW->>DD: Dispatch the persisted domain events
+    opt matching event handler registered
+        DD->>EH: Resolve IDomainEventHandler from DI
+        EH->>DB: Save reaction aggregate and its event-log rows
+    end
+    ELW->>DB: Commit transaction after every reaction succeeds
+    H->>Agg: ClearDomainEvents
+    H-->>Ctl: Contracts response
+    Ctl-->>Web: 2xx JSON
