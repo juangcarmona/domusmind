@@ -92,7 +92,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: 9b11266f965013d55e733a3e06b7a5a32b842074
@@ -137,7 +137,7 @@ jobs:
       contents: read
       issues: read
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: 9b11266f965013d55e733a3e06b7a5a32b842074
@@ -193,7 +193,7 @@ jobs:
       worker: ${{ steps.route.outputs.worker }}
       integration_request: ${{ steps.route.outputs.integration_request }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: 9b11266f965013d55e733a3e06b7a5a32b842074
@@ -250,7 +250,7 @@ jobs:
       LIGHTHOUSE_STAGE: ${{ needs.route.outputs.stage }}
       LIGHTHOUSE_WORKER: ${{ needs.route.outputs.worker }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: 9b11266f965013d55e733a3e06b7a5a32b842074

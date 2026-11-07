@@ -25,7 +25,7 @@ jobs:
     outputs:
       issues: ${{ steps.scan.outputs.issues }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: 9b11266f965013d55e733a3e06b7a5a32b842074
@@ -73,7 +73,7 @@ jobs:
     env:
       LIGHTHOUSE_ISSUE: ${{ matrix.issue }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: 9b11266f965013d55e733a3e06b7a5a32b842074
@@ -133,7 +133,7 @@ jobs:
     env:
       LIGHTHOUSE_ISSUE: ${{ matrix.issue }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: 9b11266f965013d55e733a3e06b7a5a32b842074
@@ -218,7 +218,7 @@ jobs:
       LIGHTHOUSE_REPORT_INDEX_ISSUE: ${{ vars.LIGHTHOUSE_REPORT_INDEX_ISSUE }}
       LIGHTHOUSE_OBSERVED_ISSUES: ${{ needs.scan.outputs.issues }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: 9b11266f965013d55e733a3e06b7a5a32b842074
@@ -268,7 +268,7 @@ jobs:
       LIGHTHOUSE_REPORT_INDEX_ISSUE: ${{ vars.LIGHTHOUSE_REPORT_INDEX_ISSUE }}
       LIGHTHOUSE_OBSERVED_ISSUES: ${{ needs.scan.outputs.issues }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: 9b11266f965013d55e733a3e06b7a5a32b842074
