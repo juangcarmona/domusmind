@@ -5,8 +5,8 @@
 - Baseline: `0.1.0`
 - Product: `DomusMind`
 - Profiles: `dotnet-backend`, `react-web-platform`, `web-bff`, `visual-theme`
-- SDLC package: `@juangcarmona/lighthouse-sdlc@0.15.2`
-- UI package: `@juangcarmona/lighthouse-ui@0.2.0`
+- SDLC package: `@juangcarmona/lighthouse-sdlc@0.22.4`
+- UI package: `@juangcarmona/lighthouse-ui@0.2.1`
 - ProductShape: 0.23.0
 - ArcShape: 0.4.0
 - Public site: `disabled`
