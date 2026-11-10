@@ -1,0 +1,18 @@
+sequenceDiagram
+    accTitle: Calendar subscription access
+    participant O as Subscription owner
+    participant W as Web app
+    participant C as CalendarSubscriptionsController
+    participant H as Calendar application handler
+    participant D as PostgreSQL
+    participant X as External calendar client
+
+    O->>W: Create household or member subscription
+    W->>C: POST /api/calendar/subscriptions (JWT)
+    C->>H: Dispatch create command
+    H->>D: Persist subscription and token hash, then append domain event
+    H-->>W: Return private URL once
+    X->>C: GET /calendar/subscriptions/{token}.ics
+    C->>H: Dispatch feed query
+    H->>D: Verify hash, load scoped Plans, record successful access
+    H-->>X: Read-only ICS (title and timing)

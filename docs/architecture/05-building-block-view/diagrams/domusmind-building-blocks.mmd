@@ -1,0 +1,26 @@
+flowchart LR
+    accTitle: DomusMind building blocks
+    person([Household member])
+    visitor([Site visitor])
+    msgraph[(Microsoft Graph)]
+    interpreter["Configured text interpreter<br/>Ollama or OpenAI-compatible"]
+
+    subgraph domusmind [DomusMind]
+        web["Web app<br/>React + Vite SPA"]
+        api["DomusMind API<br/>ASP.NET Core modular monolith"]
+        db[("DomusMind database<br/>PostgreSQL")]
+        apphost["AppHost<br/>.NET Aspire, development only"]
+    end
+
+    site["Public site<br/>Astro static site"]
+
+    person --> web
+    visitor --> site
+    web -- "HTTPS/JSON, JWT bearer" --> api
+    api -- "EF Core / Npgsql" --> db
+    api -- "delegated OAuth, delta queries" --> msgraph
+    api -- "structured interpretation" --> interpreter
+    apphost -. "starts and wires" .-> api
+    apphost -. "starts and wires" .-> web
+    apphost -. "provisions" .-> db
+    apphost -. "provisions local mode" .-> interpreter

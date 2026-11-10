@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "capability": {
+    "id": "labels",
+    "provider": "github",
+    "selection": "selected-by-default",
+    "version": "4"
+  },
+  "catalogVersion": "0.5.0",
+  "provider": {
+    "provider": "github",
+    "repo": "juangcarmona/domusmind"
+  },
+  "desiredHash": "cdf151b5d28fd123ac00d8dccdb632c1c8fdf648691196889c981564ed80b055",
+  "observedHash": "cb054bfb0e751e287d5af9154a252ae85b9f3a1e38f84b7163dc534cd9efb7c6",
+  "targetHash": "cb054bfb0e751e287d5af9154a252ae85b9f3a1e38f84b7163dc534cd9efb7c6",
+  "operations": [
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "blast-radius-high",
+      "color": "0F766E",
+      "description": "Large affected surface."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "blast-radius-low",
+      "color": "C7F0E8",
+      "description": "Small affected surface."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "blast-radius-medium",
+      "color": "4FB3A4",
+      "description": "Medium affected surface."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "execution-failed",
+      "color": "CF222E",
+      "description": "A worker attempt failed; inspect its latest outcome and recovery action."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "human-working",
+      "color": "A371F7",
+      "description": "Human reservation: agents must stop and release their work."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "impact-high",
+      "color": "6E40C9",
+      "description": "High impact."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "impact-low",
+      "color": "E9D5FF",
+      "description": "Low impact."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "impact-medium",
+      "color": "A371F7",
+      "description": "Medium impact."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "implement",
+      "color": "1F6FEB",
+      "description": "Owner request to plan and implement this issue in one PR."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "integrate",
+      "color": "238636",
+      "description": "Assess the linked PR after current owner approval and passing checks; never authorizes merge."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "pr-draft",
+      "color": "8B949E",
+      "description": "The linked implementation PR is a draft."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "pr-ready",
+      "color": "238636",
+      "description": "The linked implementation PR is ready for human review."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "propose",
+      "color": "A371F7",
+      "description": "Owner request for a separate proposal PR from current refinement evidence."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "ready",
+      "color": "238636",
+      "description": "Refinement passed; continuation depends on installed policy and future. Never authorizes merge."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "refine",
+      "color": "4DA3FF",
+      "description": "Owner request to refine; installed policy may continue to implementation."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "review",
+      "color": "A371F7",
+      "description": "Work item is awaiting review."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "risk-high",
+      "color": "CF222E",
+      "description": "High delivery risk."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "risk-low",
+      "color": "FFEBE9",
+      "description": "Low delivery risk."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "risk-medium",
+      "color": "F0883E",
+      "description": "Medium delivery risk."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "size-l",
+      "color": "4DA3FF",
+      "description": "Large work item."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "size-m",
+      "color": "80C2FF",
+      "description": "Medium work item."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "size-s",
+      "color": "BFE3FF",
+      "description": "Small work item."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "size-xl",
+      "color": "1F6FEB",
+      "description": "Extra-large work item."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "triage",
+      "color": "8B949E",
+      "description": "Owner request to assess this issue; publication stops at triaged."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "urgency-asap",
+      "color": "D29922",
+      "description": "High urgency."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "urgency-normal",
+      "color": "8B949E",
+      "description": "Normal urgency."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "urgency-now",
+      "color": "CF222E",
+      "description": "Immediate urgency."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "waiting-review",
+      "color": "D29922",
+      "description": "Inspect the result or PR for feedback or a pending decision."
+    },
+    {
+      "type": "create-label",
+      "kind": "create",
+      "name": "wip",
+      "color": "D29922",
+      "description": "Work item is actively in progress."
+    }
+  ],
+  "operationPolicy": {
+    "allowed": [
+      "create",
+      "preserve"
+    ],
+    "blocked": [
+      "modify",
+      "rename",
+      "remove",
+      "ambiguous"
+    ]
+  },
+  "blockedOperations": [
+    "modify"
+  ],
+  "conflicts": [],
+  "status": "adopted",
+  "verified": true
+}

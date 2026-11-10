@@ -1,0 +1,25 @@
+sequenceDiagram
+    accTitle: Shared list updates across open sessions
+    participant A as Member A browser
+    participant C as ListsController
+    participant H as Lists command handler
+    participant DB as DomusMind database
+    participant N as ListChangeNotifier
+    participant S as Member B SSE stream
+    participant B as Member B browser
+
+    B->>C: GET /api/shared-lists/{id}/events with bearer token
+    C->>H: authorize through GetListDetail query
+    H->>DB: check list access and household membership
+    C-->>B: 200 text/event-stream with refresh event
+    B->>C: GET /api/shared-lists/{id} with bearer token
+    A->>C: POST/PATCH list mutation with bearer token
+    C->>H: Dispatch list command
+    H->>DB: authorize, update SharedList, commit event log
+    C->>N: publish list id after command succeeds
+    N-->>S: empty refresh event for this list
+    S-->>B: forward refresh event
+    B->>C: GET /api/shared-lists/{id} with bearer token
+    C->>H: authorize through GetListDetail query
+    H->>DB: load current list detail
+    C-->>B: current detail response

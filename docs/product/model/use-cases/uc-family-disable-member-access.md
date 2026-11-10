@@ -20,7 +20,7 @@ provenance:
 
 ## Goal
 
-A person can no longer sign in, while remaining part of the household (observed: openspec/specs/family/spec.md, Member Access Provisioning).
+A person can no longer use DomusMind, while remaining part of the household.
 
 ## Trigger
 
@@ -28,12 +28,12 @@ A manager decides a person should stop using DomusMind for now.
 
 ## Preconditions
 
-The person has an Active account, the actor is a manager and the person is not the manager themselves.
+The person has Active access, the actor is a manager and the person is not the manager themselves.
 
 ## Main Flow
 
 1. The manager chooses to disable the person's access.
-2. DomusMind disables the account; the person's access becomes Disabled.
+2. DomusMind denies the person's application access, including existing sessions; the person's access becomes Disabled. Their provider account is unaffected.
 
 ## Alternative Flows
 
@@ -46,4 +46,4 @@ None known.
 
 ## Postconditions
 
-The person stays in the household roster with Disabled access.
+The person stays in the household roster with Disabled access and the same provider identity binding.

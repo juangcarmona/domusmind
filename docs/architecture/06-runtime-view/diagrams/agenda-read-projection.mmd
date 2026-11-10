@@ -1,0 +1,10 @@
+flowchart LR
+    accTitle: Agenda read projection
+    Web["Web app Agenda"] -->|GET weekly-grid| Q["GetWeeklyGrid query handler<br/>Features/Family"]
+    Q --> F[(Family members)]
+    Q --> C[(CalendarEvent)]
+    Q --> T[(HouseholdTask, Routine)]
+    Q --> L[(SharedList items with temporal fields)]
+    Q --> R[(ResponsibilityDomain names)]
+    Q --> X[(ExternalCalendarConnection and entries)]
+    Q -->|week grid per member and household| Web

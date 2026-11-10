@@ -9,6 +9,7 @@ bounded-context: BC-FAMILY
 governed-by:
   - BR-FAMILY-MANAGERS-ADMINISTER
   - BR-FAMILY-PET-RESTRICTIONS
+  - BR-OIDC-IDENTITY-BOUND-TO-ACCESS
 uses-terms:
   - TERM-MEMBER-ACCESS
   - TERM-MANAGER
@@ -21,7 +22,7 @@ provenance:
 
 ## Goal
 
-A person who had no access gets a sign-in account linked to them and can start using DomusMind (observed: openspec/specs/family/spec.md, Member Access Provisioning).
+A person with No Access receives a pending invitation to use DomusMind.
 
 ## Trigger
 
@@ -29,13 +30,13 @@ A manager wants another person in the household to use DomusMind.
 
 ## Preconditions
 
-The person has No Access, is not a pet, and the actor is a manager.
+The person has No Access, is not a pet, has an email for the invitation, and the actor is a manager.
 
 ## Main Flow
 
-1. The manager chooses to grant access to the person.
-2. DomusMind links a new sign-in account to the person.
-3. The person's access becomes Invited or Provisioned: they must change their password on first sign-in.
+1. The manager chooses to invite the person using their email.
+2. DomusMind creates a single-use invitation link tied to that person and email.
+3. The person's access becomes Invited or Provisioned. The manager can copy the link to share it.
 
 ## Alternative Flows
 
@@ -45,8 +46,8 @@ None known.
 
 - The person is a pet: rejected.
 - The actor is not a manager: rejected.
-- The person already has an account: rejected (observed: src/backend/DomusMind.Domain/Family/Family.cs, LinkMemberAccount).
+- The person already has pending or active access: rejected.
 
 ## Postconditions
 
-The person has an account and appears as Invited or Provisioned until they sign in and change their password.
+The person remains Invited or Provisioned until they accept with a matching verified OIDC identity. No provider account is created by DomusMind.

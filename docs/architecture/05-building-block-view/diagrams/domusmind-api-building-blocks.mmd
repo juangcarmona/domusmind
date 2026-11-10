@@ -1,0 +1,17 @@
+flowchart TB
+    accTitle: DomusMind API building blocks
+    Api["DomusMind.Api<br/>controllers, auth and Swagger wiring, error mapping"]
+    Infra["DomusMind.Infrastructure<br/>DbContext, migrations, dispatchers, event log, auth, Graph client, background worker"]
+    App["DomusMind.Application<br/>slices: commands, queries, handlers; ports"]
+    Contracts["DomusMind.Contracts<br/>request and response models"]
+    Domain["DomusMind.Domain<br/>aggregates, value objects, domain events"]
+
+    Api --> App
+    Api --> Contracts
+    Api --> Infra
+    Infra --> App
+    Infra --> Domain
+    Infra --> Contracts
+    App --> Domain
+    App --> Contracts
+    Contracts -.-> Domain

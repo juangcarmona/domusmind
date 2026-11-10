@@ -25,7 +25,7 @@ Outside the current product:
 - pets as a separate operational area (pets exist only within the household's people);
 - assistant-initiated or automatic execution of household changes without explicit Inbox approval;
 - external integrations beyond Phase 1 read-only Outlook import and read-only DomusMind calendar subscriptions, including external messaging integration, calendar write-back and a large integration catalogue;
-- external identity federation as a requirement, and complex multi-tenant concerns as a primary driver.
+- complex multi-tenant concerns as a primary driver.
 
 ## Rationale
 
@@ -38,4 +38,5 @@ The product supports shared household clarity. The conversational assistant can 
 - Chat threads stay inside one household and expose private history only to their participants (CHG-HOUSEHOLD-CHATS).
 - Assistant questions disclose the selected provider's data boundary; fallback identifies the target that handled the request (CHG-CONVERSATIONAL-ASSISTANT).
 - No assistant-generated proposal changes a household record before explicit approval in Inbox.
+- Production sign-in uses the operator-configured OIDC provider (CON-PRODUCTION-OIDC-SIGN-IN).
 - Current product messaging must stay grounded in what exists now.

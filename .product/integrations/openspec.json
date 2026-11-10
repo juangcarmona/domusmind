@@ -1,7 +1,7 @@
 {
   "provider": "openspec",
-  "version": "0.22.0",
-  "openspecVersion": "1.11.0",
+  "version": "0.23.0",
+  "openspecVersion": "1.16.0",
   "installedAt": "2026-09-30T12:52:09.779Z",
   "configPath": "openspec/config.yaml",
   "ciExamplePath": ".product/integrations/openspec.ci.yml",
@@ -57,5 +57,6 @@
       "openspec/schemas/product-recovery/templates/brief.md": "sha256:b00607c5c3f55fef6021c2377eaf52b189571f484aa2645c252f941a3d94f57b",
       "openspec/schemas/product-recovery/templates/report.md": "sha256:b38d3a49f51f9b1a18b4ba7ddb3998ba46b625cdbec521a811f4c758f432fa14"
     }
-  }
+  },
+  "updatedAt": "2026-10-31T01:02:43.429Z"
 }

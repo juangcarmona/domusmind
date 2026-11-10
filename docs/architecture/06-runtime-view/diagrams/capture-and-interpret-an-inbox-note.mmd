@@ -1,0 +1,23 @@
+sequenceDiagram
+    accTitle: Capture and interpret an Inbox note
+    participant Web as Web app
+    participant C as InboxController
+    participant H as Inbox handlers
+    participant Auth as FamilyAuthorizationService
+    participant DB as DomusMind database
+    participant O as Configured interpreter
+    participant EL as EventLogWriter
+    Web->>C: POST /api/inbox with text and family id
+    C->>H: Dispatch(CaptureInboxItemCommand, current user)
+    H->>Auth: Check household access
+    H->>DB: Save raw Inbox item and capture event
+    C-->>Web: 201 captured item
+    Web->>C: POST /api/inbox/{id}/interpret
+    C->>H: Dispatch(InterpretInboxItemCommand, current user)
+    H->>Auth: Check household access
+    H->>DB: Read raw note
+    H->>O: Structured interpretation request
+    O-->>H: Proposal fields
+    H->>EL: Save pending proposals and interpretation event
+    H-->>C: Inbox response model
+    C-->>Web: 200 proposals for review

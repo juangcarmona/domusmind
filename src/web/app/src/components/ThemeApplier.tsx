@@ -10,13 +10,22 @@ export function ThemeApplier() {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === "dark") {
-      root.setAttribute("data-theme", "dark");
-    } else if (theme === "light") {
-      root.setAttribute("data-theme", "light");
-    } else {
-      root.removeAttribute("data-theme");
-    }
+    const systemPreference = window.matchMedia("(prefers-color-scheme: dark)");
+    const applyTheme = () => {
+      const resolvedTheme =
+        theme === "system"
+          ? systemPreference.matches
+            ? "dark"
+            : "light"
+          : theme;
+      root.setAttribute("data-theme", resolvedTheme);
+    };
+
+    applyTheme();
+    if (theme !== "system") return;
+
+    systemPreference.addEventListener("change", applyTheme);
+    return () => systemPreference.removeEventListener("change", applyTheme);
   }, [theme]);
 
   return null;

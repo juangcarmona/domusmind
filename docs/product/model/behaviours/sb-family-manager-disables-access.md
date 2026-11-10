@@ -12,6 +12,8 @@ given:
 when: "Access is disabled"
 then:
   - "The person's access becomes Disabled"
+  - "Existing and new DomusMind sessions cannot use the household"
+  - "The provider account and person remain unchanged"
 uses-terms:
   - TERM-MEMBER-ACCESS
 provenance:

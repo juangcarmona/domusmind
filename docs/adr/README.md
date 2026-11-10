@@ -1,6 +1,6 @@
 # Architecture Decision Records
 
-This directory holds DomusMind's Architecture Decision Records: one file per significant decision, carrying its context, the decision, its consequences and the alternatives rejected. Records are numbered sequentially and never renumbered; a reversed decision gets a new record that supersedes the old one. The ADRs are authoritative for decision rationale and status, and they are indexed for architecture readers from [`docs/architecture/09-architecture-decisions.md`](../architecture/09-architecture-decisions.md), which maps each decision in effect to the architecture it affects.
+This directory holds DomusMind's Architecture Decision Records: one file per significant decision, carrying its context, the decision, its consequences and the alternatives rejected. Records are numbered sequentially and never renumbered; a reversed decision gets a new record that supersedes the old one. The ADRs are authoritative for decision rationale and status, and they are indexed for architecture readers from [`docs/architecture/09-architecture-decisions/README.md`](../architecture/09-architecture-decisions/README.md), which maps each decision in effect to the architecture it affects.
 
 | Number | Title | Status | Date |
 | --- | --- | --- | --- |
@@ -14,3 +14,4 @@ This directory holds DomusMind's Architecture Decision Records: one file per sig
 | 0008 | [Collaborate across modules through persisted domain events](0008-collaborate-across-modules-through-persisted-domain-events.md) | Accepted | 2026-03-10 |
 | 0009 | [Use ULID-based strongly typed identifiers](0009-use-ulid-based-strongly-typed-identifiers.md) | Superseded by ADR-0010 | 2026-10-01 |
 | 0010 | [Use GUID-backed strongly typed identifiers](0010-use-guid-backed-strongly-typed-identifiers.md) | Accepted | 2026-10-01 |
+| 0011 | [Pilot an OIDC BFF in development](0011-pilot-oidc-bff-in-development.md) | Accepted | 2026-10-28 |

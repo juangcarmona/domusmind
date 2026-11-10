@@ -9,9 +9,10 @@ given:
   - "A person has No Access"
   - "The requester is a manager"
   - "The person is not a pet"
-when: "Access is provisioned"
+when: "The manager invites the person using their email"
 then:
-  - "The person is linked to a sign-in account"
+  - "A copyable single-use invitation link is tied to that person and email"
+  - "No provider identity is linked until the person accepts with a matching verified email"
   - "The person's access becomes Invited or Provisioned"
 uses-terms:
   - TERM-MEMBER-ACCESS

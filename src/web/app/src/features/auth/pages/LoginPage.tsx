@@ -7,6 +7,7 @@ import { HouseholdLogo } from "../../../components/HouseholdLogo";
 interface Props { onSuccess?: () => void; }
 
 export function LoginPage({ onSuccess }: Props) {
+  const bffMode = import.meta.env.VITE_AUTH_MODE === "oidc-bff";
   const { login } = useAuth();
   const { t } = useTranslation("auth");
   const [email, setEmail] = useState("");
@@ -30,7 +31,11 @@ export function LoginPage({ onSuccess }: Props) {
           <HouseholdLogo size={40} />
         </div>
         <h1>{t("signIn")}</h1>
-        <form onSubmit={handleSubmit}>
+        {bffMode ? (
+          <button type="button" className="btn auth-submit" onClick={() => { window.location.assign("/api/session/login"); }}>
+            {t("signIn")}
+          </button>
+        ) : <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="email">{t("email")}</label>
             <input id="email" className="form-control" type="email" value={email}
@@ -45,7 +50,7 @@ export function LoginPage({ onSuccess }: Props) {
           <button type="submit" className="btn auth-submit" disabled={loading}>
             {loading ? t("signingIn") : t("signIn")}
           </button>
-        </form>
+        </form>}
       </div>
     </div>
   );

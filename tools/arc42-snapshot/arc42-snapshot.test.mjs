@@ -32,8 +32,9 @@ test('loads the complete arc42 contract and architecture decision records', asyn
   const docs = await loadDocs(architectureDirectory);
   const records = await loadDecisionRecords(architectureDirectory);
   assert.equal(docs.sections.length, 12);
-  assert.equal(records.length, 10);
+  assert.equal(records.length, 11);
   assert.ok(records.some(({ name }) => name === '0010-use-guid-backed-strongly-typed-identifiers.md'));
+  assert.ok(records.some(({ name }) => name === '0011-pilot-oidc-bff-in-development.md'));
   assert.ok(records.every(({ content }) => content.includes('#')));
 });
 

@@ -34,6 +34,6 @@ Controllers are thin transport adapters: they bind explicit request models, disp
 ## References
 
 - Legacy source: `docs/06_interfaces/api.md`
-- Rule: [`AGENTS.md`](../../AGENTS.md) (mandatory architectural rules)
+- Rule: [`AGENTS.md`](https://github.com/juangcarmona/domusmind/blob/617876cbc123e07f0bf4a1b300df1c9816b7afc7/AGENTS.md) (mandatory architectural rules)
 - Evidence: [`src/backend/DomusMind.Api/Program.cs`](../../src/backend/DomusMind.Api/Program.cs), [`src/backend/DomusMind.Api/Controllers/`](../../src/backend/DomusMind.Api/Controllers/), [`src/backend/DomusMind.Api/OpenApi/OpenApiAuthExtensions.cs`](../../src/backend/DomusMind.Api/OpenApi/OpenApiAuthExtensions.cs), [`src/backend/DomusMind.Api/DomusMind.Api.csproj`](../../src/backend/DomusMind.Api/DomusMind.Api.csproj)
 - Related: [ADR-0001](0001-use-an-internal-application-mediator.md), [ADR-0006](0006-map-explicitly-without-automapper.md)

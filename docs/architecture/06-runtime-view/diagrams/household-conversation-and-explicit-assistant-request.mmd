@@ -1,0 +1,37 @@
+sequenceDiagram
+    accTitle: Household conversation and explicit assistant request
+    participant Web as Web app
+    participant C as ChatsController
+    participant H as Chat handlers
+    participant Auth as FamilyAuthorizationService
+    participant DB as DomusMind database
+    participant Q as Existing authorized read query
+    participant R as Household provider route
+    participant AI as Hosted or local target
+    participant IR as Inbox proposal reaction
+    participant EL as EventLogWriter
+
+    Web->>C: POST /api/chats/{threadId}/messages with bearer token
+    C->>H: Dispatch(PostChatMessageCommand, current user)
+    H->>Auth: Check household access and thread participation
+    H->>DB: Persist member message and event-log row
+    alt Text begins with @dm
+        C->>H: Dispatch(AnswerAssistantQuestionCommand)
+        H->>Auth: Recheck household access and participation
+        H->>Q: Dispatch read-only query for classified topic
+        Q->>DB: Read authorized household data
+        H->>R: Resolve ordered targets for household
+        R->>AI: Question plus authorized context
+        alt Retryable provider failure or unsupported capability
+            AI-->>R: Retryable failure
+            R->>AI: Try next configured target
+        end
+        AI-->>R: Answer and optional structured proposal
+        R-->>H: Completion, target and fallback status
+        H->>EL: Persist assistant message linked to question
+        opt Complete action in a household thread
+            EL->>IR: Dispatch AssistantProposalRequested
+            IR->>DB: Save Inbox item linked to source Chat message
+        end
+    end
+    C-->>Web: 201 member message and optional assistant response

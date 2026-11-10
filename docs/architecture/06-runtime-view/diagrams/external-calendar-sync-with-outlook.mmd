@@ -1,0 +1,21 @@
+sequenceDiagram
+    accTitle: External calendar sync with Outlook
+    participant Trig as Settings (manual) or RefreshWorker (scheduled)
+    participant H as SyncExternalCalendarConnection handler
+    participant Lease as Sync lease service
+    participant Conn as ExternalCalendarConnection aggregate
+    participant GA as Graph auth service
+    participant GC as Graph calendar client
+    participant DB as DomusMind database
+
+    Trig->>H: Dispatch(SyncExternalCalendarConnectionCommand)
+    H->>Lease: TryAcquire (10-minute lease on the connection)
+    H->>Conn: MarkSyncing, SaveChanges
+    H->>GA: GetAccessToken (cached token or silent MSAL refresh from encrypted cache)
+    loop each selected feed
+        H->>GC: initial window load, or delta from stored delta token
+        H->>DB: upsert or delete external entries, record delta token, SaveChanges
+    end
+    H->>Conn: RecordSyncSuccess, PartialFailure or Failure
+    H->>DB: SaveChanges, write connection events to event log
+    H->>Lease: Release

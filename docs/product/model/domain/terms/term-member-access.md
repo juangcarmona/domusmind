@@ -18,19 +18,17 @@ provenance:
 
 ## Definition
 
-Whether and how a person can sign in to DomusMind. Access links a person to a sign-in account and is always in one of five states:
-- No Access: no account is linked.
-- Invited or Provisioned: an account exists, a password change is required and the person has never signed in.
-- Password Reset Required: an account exists, a password change is required and the person has signed in before.
-- Active: an account exists, is not disabled and needs no forced password change.
-- Disabled: an account exists but is disabled.
-(observed: openspec/specs/family/spec.md, Member Access Provisioning; family-member-management.md, MemberAccessStatus.)
+Whether a household person may use DomusMind. Access is separate from provider credentials and has four states:
+- No Access: no invitation or provider identity is bound to the person.
+- Invited or Provisioned: a single-use invitation link is pending for the person's email; no provider identity is bound yet.
+- Active: a provider identity is bound and application access is enabled.
+- Disabled: a provider identity remains bound but application access is denied.
 
 ## Distinguish From
 
 - Not the person's membership: a person with no access is still fully part of the household.
-- Not the sign-in account itself, which lies outside this area (observed: openspec family spec, NOTE N7).
+- Not the provider's sign-in account or credentials, which remain outside the household domain.
 
 ## Usage
 
-Managed by managers: provision, disable, enable and reset (observed: openspec family spec). Shown in the directory next to each person (observed: family-member-management.md, MemberDirectoryItemResponse).
+Managed by managers through invitations and application access. Shown in the directory next to each person.

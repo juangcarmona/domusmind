@@ -20,7 +20,7 @@ Settings is where phase 1 Outlook calendar connections are managed.
 - `docs/design/surface-system.md`
 - `docs/product/model`
 - `docs/product/model`
-- `docs/architecture/03-context-and-scope.md`
+- `docs/architecture/03-context-and-scope/README.md`
 
 ---
 

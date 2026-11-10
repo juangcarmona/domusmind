@@ -4,6 +4,7 @@ import { useAuth } from "../../../auth/AuthProvider";
 import type { ApiError } from "../../../api/authApi";
 
 export function AccountSettingsSection() {
+  const bffMode = import.meta.env.VITE_AUTH_MODE === "oidc-bff";
   const { t } = useTranslation("settings");
   const { t: tCommon } = useTranslation("common");
   const { user, changePassword, logout } = useAuth();
@@ -55,7 +56,7 @@ export function AccountSettingsSection() {
         </div>
       </div>
 
-      <div className="settings-subsection">
+      {!bffMode && <div className="settings-subsection">
         <h3 className="settings-subsection-title">{t("account.changePassword")}</h3>
         <form onSubmit={handleChangePassword} className="settings-form">
           <div className="form-group">
@@ -106,7 +107,7 @@ export function AccountSettingsSection() {
             {saving ? t("account.saving") : t("account.save")}
           </button>
         </form>
-      </div>
+      </div>}
     </section>
   );
 }

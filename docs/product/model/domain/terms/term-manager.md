@@ -16,7 +16,7 @@ provenance:
 
 ## Definition
 
-A designation on a person that grants authority over the household's administration: adding people and pets, removing them, managing relationships, changing household settings, editing other people's core details and anyone's role, and provisioning, disabling, enabling or resetting their access (observed: openspec/specs/family/spec.md, Purpose, Member Core Details Update, Member Access Provisioning; decided: Q-0023, Q-0024, Q-0025).
+A designation on a person that grants authority over the household's administration: adding people and pets, removing them, managing relationships, changing household settings, editing other people's core details and anyone's role, inviting people, replacing or revoking pending invitation links, and disabling or re-enabling their application access.
 
 ## Distinguish From
 

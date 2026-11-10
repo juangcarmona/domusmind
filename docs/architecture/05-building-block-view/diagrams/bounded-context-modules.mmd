@@ -1,0 +1,19 @@
+flowchart TB
+    accTitle: Bounded context modules
+    Family["Family<br/>Family aggregate"]
+    Resp["Responsibilities<br/>ResponsibilityDomain"]
+    Cal["Calendar<br/>CalendarEvent, ExternalCalendarConnection"]
+    Tasks["Tasks<br/>HouseholdTask, Routine"]
+    Lists["Lists<br/>SharedList"]
+    Meals["MealPlanning<br/>MealPlan, Recipe, WeeklyTemplate"]
+    Chats["Chats<br/>ChatThread, ChatMessage"]
+
+    Resp --> Family
+    Cal --> Family
+    Tasks --> Family
+    Lists --> Family
+    Meals --> Family
+    Chats --> Family
+    Cal --> Resp
+    Tasks --> Resp
+    Lists --> Resp

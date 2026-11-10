@@ -9,7 +9,6 @@ Each kind of truth has one home.
 | [`architecture/`](architecture/README.md) | How the system realises the product: arc42, twelve sections | Ordinary edits; product-dependent statements cite the model |
 | [`adr/`](adr/README.md) | Architecture decision records | A new ADR; accepted records are not rewritten |
 | [`devops.md`](devops.md) | Versioning, release, CI workflows and required checks | Ordinary edits |
-| [`engineering-lifecycle.md`](engineering-lifecycle.md) | The adopted engineering lifecycle (Definition of Ready and Done) | The lifecycle's own amendment process |
 
 Behaviour specs live in [`openspec/specs/`](../openspec/specs), bound to the product model by citations. The Product Snapshot, a browsable page of the whole model, is attached to every run of the `product-snapshot` workflow.
 

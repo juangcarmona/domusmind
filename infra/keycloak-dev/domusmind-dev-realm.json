@@ -1,0 +1,46 @@
+{
+  "realm": "domusmind-dev",
+  "enabled": true,
+  "sslRequired": "none",
+  "users": [
+    {
+      "id": "00000000-0000-0000-0000-0000000000b1",
+      "username": "developer",
+      "firstName": "Development",
+      "lastName": "Admin",
+      "email": "admin@domusmind.local",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        { "type": "password", "value": "DevelopmentOnly123!", "temporary": false }
+      ]
+    },
+    {
+      "id": "00000000-0000-0000-0000-0000000000b2",
+      "username": "development-member",
+      "firstName": "Development",
+      "lastName": "Member",
+      "email": "member@domusmind.local",
+      "emailVerified": true,
+      "enabled": true,
+      "credentials": [
+        { "type": "password", "value": "DevelopmentOnly123!", "temporary": false }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "domusmind-dev",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": ["http://localhost:61546/signin-oidc", "http://localhost:61546/signout-callback-oidc"],
+      "webOrigins": ["http://localhost:61546"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:61546/signout-callback-oidc"
+      }
+    }
+  ]
+}

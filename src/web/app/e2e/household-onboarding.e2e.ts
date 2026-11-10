@@ -436,7 +436,13 @@ test("onboard a generated household and cover primary workflows at desktop and p
       await expect(page.getByLabel("Message")).toHaveValue("");
 
       await page.getByLabel("Message").fill("@dm create a task called assistant-created task");
-      await page.getByRole("button", { name: "Send" }).click();
+      const [proposalResponse] = await Promise.all([
+        page.waitForResponse((response) => response.request().method() === "POST" &&
+          /\/api\/chats\/[^/]+\/messages$/.test(new URL(response.url()).pathname)),
+        page.getByRole("button", { name: "Send" }).click(),
+      ]);
+      expect(proposalResponse.status()).toBe(201);
+      expect((await proposalResponse.json()).assistantResponse).toBeTruthy();
       const timelineAfter = await page.request.get(`/api/families/${family.familyId}/timeline`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });

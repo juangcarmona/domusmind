@@ -1,0 +1,385 @@
+# lighthouse-issue-control:v1
+# Optional GitHub-native stage adapter; source owned by lighthouse-sdlc.
+name: router
+run-name: "${{ (github.event_name == 'workflow_run' && 'Delivery after CI') || inputs.workflow || inputs.stage || github.event.label.name || ((github.event.pull_request || github.event.issue.pull_request) && 'PR review') || (github.event_name == 'issue_comment' && 'reply') || 'refine' }} #${{ github.event.issue.number || github.event.pull_request.number || inputs.issue }} · ${{ github.actor }}"
+on:
+  issues:
+    types: [labeled, unlabeled]
+  issue_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+  pull_request_review_comment:
+    types: [created]
+  pull_request:
+    types: [ready_for_review, converted_to_draft, closed, reopened]
+  workflow_run:
+    workflows: ["refine"]
+    types: [completed]
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Work item to process
+        required: true
+        type: string
+      stage:
+        description: Authorized lifecycle stage
+        required: true
+        default: refine
+        type: choice
+        options: [triage, refine, propose, implement, integrate, review]
+      workflow:
+        description: Select the authorized workflow
+        required: true
+        default: stage
+        type: choice
+        options: [stage]
+      client_request:
+        description: Versioned stage-only client intent; requires explicit issue-control adoption
+        required: false
+        type: string
+      model_selection:
+        description: Optional JSON model selection for this execution
+        required: false
+        type: string
+      after_run:
+        description: Recheck a completed execution through the same continuation rules
+        required: false
+        type: string
+      epic_parent:
+        description: Authenticated parent issue for epic triage
+        required: false
+        type: string
+      epic_run:
+        description: Completed epic execution for child triage
+        required: false
+        type: string
+      pull_request:
+        description: PR number for integrate or review
+        required: false
+        type: string
+      product_decision_comment:
+        description: Replay an existing unedited owner Product Change approval comment on pull_request
+        required: false
+        type: string
+      head:
+        description: Full accepted PR head SHA for integrate or review
+        required: false
+        type: string
+      merge:
+        description: Explicitly authorize integrating this accepted PR head
+        required: false
+        default: false
+        type: boolean
+permissions:
+  contents: read
+env:
+  LIGHTHOUSE_ENABLED_STAGES: triage,refine,propose,implement,integrate,review
+  LIGHTHOUSE_AUTO_IMPLEMENT: true
+  LIGHTHOUSE_COMPLETION_ENABLED: false
+  LIGHTHOUSE_PRODUCT_CHANGE_ENABLED: false
+jobs:
+  pr-state:
+    if: >-
+      vars.LIGHTHOUSE_AUTOMATION_ENABLED == 'true' &&
+      (github.event_name == 'workflow_run' || github.event_name == 'schedule' ||
+       (github.event_name == 'pull_request' && github.actor == github.repository_owner))
+    concurrency:
+      group: lighthouse-pr-state
+      cancel-in-progress: false
+      queue: max
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          repository: juangcarmona/lighthouse
+          ref: e6ea62ab0184f517ab2653d3a91c3a90a1d8b567
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Project implementation PR state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node src/packages/sdlc/src/pr-state-actions.mjs
+      - name: Observe workflow telemetry
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node src/packages/sdlc/src/telemetry-workflow.mjs
+      - name: Preserve workflow telemetry
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-telemetry-${{ github.job }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/gh-aw/telemetry/*.jsonl
+            ${{ runner.temp }}/gh-aw/telemetry/????????-????-????-????-????????????.json
+            ${{ runner.temp }}/gh-aw/telemetry/export-health.json
+          if-no-files-found: ignore
+          retention-days: 14
+  epic-triage:
+    if: >-
+      vars.LIGHTHOUSE_AUTOMATION_ENABLED == 'true' && vars.LIGHTHOUSE_EPIC_ENABLED == 'true' &&
+      github.event_name == 'workflow_run' && github.event.action == 'completed' &&
+      github.event.workflow_run.path == '.github/workflows/lighthouse-sdlc-epic.yml' && github.event.workflow_run.conclusion == 'success'
+    concurrency:
+      group: lighthouse-epic-triage-${{ github.event.workflow_run.id }}
+      cancel-in-progress: false
+      queue: max
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+      contents: read
+      issues: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          repository: juangcarmona/lighthouse
+          ref: e6ea62ab0184f517ab2653d3a91c3a90a1d8b567
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Dispatch authenticated epic child triage
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node src/packages/sdlc/src/epic-dispatch.mjs
+      - name: Observe workflow telemetry
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node src/packages/sdlc/src/telemetry-workflow.mjs
+      - name: Preserve workflow telemetry
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-telemetry-${{ github.job }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/gh-aw/telemetry/*.jsonl
+            ${{ runner.temp }}/gh-aw/telemetry/????????-????-????-????-????????????.json
+            ${{ runner.temp }}/gh-aw/telemetry/export-health.json
+          if-no-files-found: ignore
+          retention-days: 14
+  route:
+    if: >-
+      inputs.client_request == '' &&
+      !(github.event_name == 'issue_comment' && contains(github.event.comment.body, 'lighthouse-issue-control')) &&
+      vars.LIGHTHOUSE_AUTOMATION_ENABLED == 'true' &&
+      (github.actor == github.repository_owner || github.event_name == 'workflow_run' || (github.event_name == 'issues' && github.event.action == 'labeled') ||
+       (github.event_name == 'workflow_dispatch' && github.actor == 'github-actions[bot]' && ((inputs.after_run != '' && ((inputs.stage == 'implement' && inputs.workflow != 'product-change') || (inputs.stage == 'review' && inputs.workflow == 'stage') || inputs.workflow == 'product-change' || inputs.workflow == 'resume-product' || inputs.workflow == 'resume-aligned')) || ((inputs.stage == 'triage' || (inputs.stage == 'refine' && inputs.workflow == 'stage')) && inputs.epic_parent != '' && inputs.epic_run != '')))) &&
+      (github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_run' ||
+        (github.event_name == 'issues' && (github.event.label.name == 'triage' || github.event.label.name == 'refine' || github.event.label.name == 'propose' || github.event.label.name == 'implement' || github.event.label.name == 'integrate' || (github.event.action == 'unlabeled' && github.event.label.name == 'future'))) ||
+       github.event_name == 'issue_comment' || github.event_name == 'pull_request_review' || github.event_name == 'pull_request_review_comment')
+    concurrency:
+      group: lighthouse-route-${{ github.event_name }}-${{ github.event.comment.id || github.event.review.id || github.run_id }}
+      cancel-in-progress: false
+      queue: max
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: read
+      contents: read
+      issues: write
+      pull-requests: write
+    outputs:
+      run: ${{ steps.route.outputs.run }}
+      issue: ${{ steps.route.outputs.issue }}
+      epic_parent: ${{ steps.route.outputs.epic_parent }}
+      stage: ${{ steps.route.outputs.stage }}
+      worker: ${{ steps.route.outputs.worker }}
+      integration_request: ${{ steps.route.outputs.integration_request }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          repository: juangcarmona/lighthouse
+          ref: e6ea62ab0184f517ab2653d3a91c3a90a1d8b567
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Route the authorized event
+        id: route
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LIGHTHOUSE_COMPLETION_ENABLED: false
+          LIGHTHOUSE_EPIC_ENABLED: ${{ vars.LIGHTHOUSE_EPIC_ENABLED }}
+          LIGHTHOUSE_PRODUCT_CHANGE_ENABLED: ${{ env.LIGHTHOUSE_PRODUCT_CHANGE_ENABLED }}
+        run: node src/packages/sdlc/src/issue-actions.mjs route
+      - name: Observe workflow telemetry
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node src/packages/sdlc/src/telemetry-workflow.mjs
+      - name: Preserve workflow telemetry
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-telemetry-${{ github.job }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/gh-aw/telemetry/*.jsonl
+            ${{ runner.temp }}/gh-aw/telemetry/????????-????-????-????-????????????.json
+            ${{ runner.temp }}/gh-aw/telemetry/export-health.json
+          if-no-files-found: ignore
+          retention-days: 14
+  dispatch:
+    name: 📥 Dispatch selected stage
+    needs: route
+    if: needs.route.outputs.run == 'true'
+    concurrency:
+      group: lighthouse-issue-${{ needs.route.outputs.epic_parent || needs.route.outputs.issue }}
+      cancel-in-progress: false
+      queue: max
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+      contents: read
+      issues: write
+      pull-requests: read
+    env:
+      LIGHTHOUSE_INTEGRATION_REQUEST: ${{ needs.route.outputs.integration_request }}
+      LIGHTHOUSE_ISSUE: ${{ needs.route.outputs.issue }}
+      LIGHTHOUSE_EPIC_PARENT: ${{ needs.route.outputs.epic_parent }}
+      LIGHTHOUSE_EPIC_ENABLED: ${{ vars.LIGHTHOUSE_EPIC_ENABLED }}
+      LIGHTHOUSE_EPIC_CAPACITY: ${{ vars.LIGHTHOUSE_EPIC_CAPACITY }}
+      LIGHTHOUSE_STAGE: ${{ needs.route.outputs.stage }}
+      LIGHTHOUSE_WORKER: ${{ needs.route.outputs.worker }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          repository: juangcarmona/lighthouse
+          ref: e6ea62ab0184f517ab2653d3a91c3a90a1d8b567
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Record the authorized request
+        id: request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node src/packages/sdlc/src/issue-actions.mjs dispatch-prepare
+      - name: Preserve the request before dispatch
+        if: steps.request.outputs.send == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.request.outputs.artifact }}
+          path: ${{ runner.temp }}/lighthouse-${{ github.run_id }}-${{ github.run_attempt }}/dispatch.json
+          retention-days: 14
+          if-no-files-found: error
+      - name: Dispatch the independent stage
+        if: steps.request.outputs.send == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LIGHTHOUSE_DISPATCH_COMMENT: ${{ steps.request.outputs.comment }}
+        run: node src/packages/sdlc/src/issue-actions.mjs dispatch-send
+      - name: Observe workflow telemetry
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node src/packages/sdlc/src/telemetry-workflow.mjs
+      - name: Preserve workflow telemetry
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-telemetry-${{ github.job }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/gh-aw/telemetry/*.jsonl
+            ${{ runner.temp }}/gh-aw/telemetry/????????-????-????-????-????????????.json
+            ${{ runner.temp }}/gh-aw/telemetry/export-health.json
+          if-no-files-found: ignore
+          retention-days: 14
+  client-control:
+    if: >-
+      true && github.actor == github.repository_owner &&
+      ((github.event_name == 'workflow_dispatch' && inputs.client_request != '') ||
+       (github.event_name == 'issue_comment' && !github.event.issue.pull_request && contains(github.event.comment.body, 'lighthouse-issue-control')))
+    concurrency:
+      group: lighthouse-issue-${{ github.event.issue.number || inputs.issue }}
+      cancel-in-progress: false
+      queue: max
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+      contents: read
+      issues: write
+      pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      LIGHTHOUSE_AUTOMATION_ENABLED: ${{ vars.LIGHTHOUSE_AUTOMATION_ENABLED }}
+      LIGHTHOUSE_EPIC_ENABLED: ${{ vars.LIGHTHOUSE_EPIC_ENABLED }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          repository: juangcarmona/lighthouse
+          ref: e6ea62ab0184f517ab2653d3a91c3a90a1d8b567
+          persist-credentials: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Authenticate and reconcile the original client intent
+        id: control
+        run: node src/packages/sdlc/src/issue-control-actions.mjs prepare
+      - name: Retain immutable client intent before admission
+        if: steps.control.outputs.preserve == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.control.outputs.request_artifact }}
+          path: ${{ runner.temp }}/lighthouse-control-${{ github.run_id }}-${{ github.run_attempt }}/request.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Retain exact stable-key lookup
+        if: steps.control.outputs.preserve == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.control.outputs.key_artifact }}
+          path: ${{ runner.temp }}/lighthouse-control-${{ github.run_id }}-${{ github.run_attempt }}/request.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Retain equivalent-payload lookup
+        if: steps.control.outputs.preserve == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.control.outputs.payload_artifact }}
+          path: ${{ runner.temp }}/lighthouse-control-${{ github.run_id }}-${{ github.run_attempt }}/request.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Recheck canonical admission and record the existing native dispatch
+        if: steps.control.outputs.preserve == 'true'
+        id: admit
+        run: node src/packages/sdlc/src/issue-control-actions.mjs admit
+      - name: Retain native request before its one dispatch
+        if: steps.admit.outputs.send == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.admit.outputs.dispatch_artifact }}
+          path: ${{ runner.temp }}/lighthouse-control-${{ github.run_id }}-${{ github.run_attempt }}/dispatch.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Send the independent native stage once
+        if: steps.admit.outputs.send == 'true'
+        run: node src/packages/sdlc/src/issue-control-actions.mjs send
+      - name: Retain authenticated source outcome before updating its comment
+        if: steps.admit.outputs.send == 'true' || steps.admit.outputs.terminal == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.admit.outputs.result_artifact }}
+          path: ${{ runner.temp }}/lighthouse-control-${{ github.run_id }}-${{ github.run_attempt }}/result.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Publish source acknowledgment
+        if: steps.admit.outputs.send == 'true' || steps.admit.outputs.terminal == 'true'
+        run: node src/packages/sdlc/src/issue-control-actions.mjs publish

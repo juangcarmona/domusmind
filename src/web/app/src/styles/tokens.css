@@ -68,6 +68,7 @@
   --z-bottom-sheet-backdrop: 50;
   --z-bottom-sheet: 60;
   --z-modal: 100;
+
 }
 
 :root[data-theme="dark"] {

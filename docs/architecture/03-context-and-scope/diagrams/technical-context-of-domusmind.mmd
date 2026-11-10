@@ -1,0 +1,29 @@
+flowchart LR
+    accTitle: Technical context of DomusMind
+    browser["Browser<br/>(desktop or mobile)"]
+    operator["Self-hosting operator"]
+    msid["Microsoft identity platform<br/>login.microsoftonline.com"]
+    msgraph["Microsoft Graph<br/>graph.microsoft.com"]
+    calendarClient["External calendar client"]
+    ghcr["Container registry<br/>(GHCR)"]
+    swa["Azure Static Web Apps"]
+
+    subgraph app["DomusMind application container"]
+        web["Web app (SPA files)"]
+        api["REST API"]
+        worker["Calendar refresh worker"]
+    end
+    db[("PostgreSQL")]
+
+    browser -- "HTTPS: SPA assets" --> web
+    browser -- "HTTPS JSON /api,<br/>JWT bearer" --> api
+    calendarClient -- "HTTPS GET, private ICS URL" --> api
+    browser -- "OAuth authorize redirect" --> msid
+    api -- "auth-code exchange,<br/>token refresh (MSAL)" --> msid
+    api -- "HTTPS REST, delegated token" --> msgraph
+    worker -- "HTTPS REST, delegated token" --> msgraph
+    api --- db
+    worker --- db
+    operator -- "pulls image" --> ghcr
+    operator -- "environment variables,<br/>first-run setup" --> app
+    browser -- "HTTPS: static pages" --> swa

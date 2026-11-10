@@ -24,11 +24,13 @@ export function useListChangeStream(listId: string | null) {
     async function connect() {
       while (!controller.signal.aborted) {
         const token = getStoredToken();
-        if (!token) return;
+        const bffMode = import.meta.env.VITE_AUTH_MODE === "oidc-bff";
+        if (!token && !bffMode) return;
 
         try {
           const response = await fetch(`/api/shared-lists/${activeListId}/events`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: bffMode ? undefined : { Authorization: `Bearer ${token}` },
+            credentials: "same-origin",
             signal: controller.signal,
           });
 

@@ -134,7 +134,7 @@ A removed member cannot participate in new relationships. Removing a member does
 
 <!-- pdac:cite id="BR-FAMILY-OWNS-HOUSEHOLD-STRUCTURE" digest="sha256:661a8bfff912e490d64710e11b333119cb4143fdf597ca2672523e0bd7fae034" -->
 
-<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:16a5dbe3d9df35349d7f302b5f2399945e2395332587d8883fc71c4406754cf7" -->
+<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:589d9a2df048a4686422fa8cb77e36fc4d8d14aea5cd6049145c1a764101820d" -->
 
 <!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
 
@@ -157,13 +157,13 @@ Members may edit their own profile details through a separate profile update pat
 
 <!-- pdac:cite id="UC-FAMILY-UPDATE-MEMBER-DETAILS" digest="sha256:02ea0e682c88a9b50ec75e9f82aaf888ae5bcf959853e2e691375f4593706a23" -->
 
-<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:16a5dbe3d9df35349d7f302b5f2399945e2395332587d8883fc71c4406754cf7" -->
+<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:589d9a2df048a4686422fa8cb77e36fc4d8d14aea5cd6049145c1a764101820d" -->
 
 <!-- pdac:cite id="BR-FAMILY-BIRTH-DATE-IN-PAST" digest="sha256:e0115d380b63512e91e99a3a38a7ced5ee1bf2bb170ef5a073ca4b7a584b07b8" -->
 
-<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:12dacff31d93a8b994bddadabce84831a7ba4c8bf06eb8a15710b673cd66349b" -->
+<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:d82d2bd934fc9835545ea9c22211213496ad48160b287fe1c750ee41a56d0108" -->
 
-<!-- pdac:cite id="TERM-MANAGER" digest="sha256:c5bfc7b04717b03d178606f77a0ebe0c29c34ee76af10d4d8d459693d600277a" -->
+<!-- pdac:cite id="TERM-MANAGER" digest="sha256:46aaea84ab16cbd95b7f0bc5ad3415fc44661a875903bf6a5be91e6635df2536" -->
 
 <!-- pdac:cite id="SB-FAMILY-MANAGER-UPDATES-MEMBER" digest="sha256:6656d7d70669825cb2950c5f8d18d95d0ba25f1e4361df58b29cfd3f2c120e53" -->
 
@@ -238,48 +238,51 @@ Managers may also update any member's profile details.
 
 ### Requirement: Member Access Provisioning
 
-A household manager SHALL be able to provision, disable, enable, and reset system access for members.
+A household manager SHALL be able to invite a person using a copyable single-use link tied to that person's email, replace or revoke a pending link, and disable or re-enable application access. DomusMind SHALL leave credential recovery to the configured OIDC provider.
 
-Access provisioning links a member's household identity to an authentication account. Pets cannot be provisioned with access.
+The person SHALL accept the invitation after authenticating with the configured OIDC provider and presenting a matching provider-verified email. Only then SHALL DomusMind bind the provider identity to the household person. Pets cannot receive an invitation.
 
-The access state of a member is one of: `NoAccess`, `InvitedOrProvisioned`, `PasswordResetRequired`, `Active`, `Disabled`.
+The access state of a member is one of: `NoAccess`, `InvitedOrProvisioned`, `Active`, `Disabled`.
 
 | State | Meaning |
 |---|---|
-| `NoAccess` | No authentication account linked |
-| `InvitedOrProvisioned` | Account exists, password change required, never logged in |
-| `PasswordResetRequired` | Account exists, password change required, has logged in before |
-| `Active` | Account exists, not disabled, no forced password change |
-| `Disabled` | Account exists but is disabled |
+| `NoAccess` | No invitation or provider identity is bound |
+| `InvitedOrProvisioned` | A single-use invitation link is pending; no provider identity is bound |
+| `Active` | A provider identity is bound and application access is enabled |
+| `Disabled` | The provider identity remains bound but application access is denied |
 
 Rules:
-- Only a manager may provision, disable, enable, or regenerate access for other members
+- Only a manager may invite, replace or revoke a pending link, and disable or re-enable access for other members
 - A manager may not disable their own access
-- Pets cannot be provisioned with access
+- Pets cannot receive access
+- A replaced, revoked or used link cannot be accepted
+- Disabling access denies existing and new DomusMind sessions without changing the provider account
 
-<!-- pdac:cite id="FR-FAMILY-MANAGE-MEMBER-ACCESS" digest="sha256:36fd2c62c621cc1599a9d60e84a7fbd4c40e424552eb70b12d03b6cb760ac4e8" -->
+<!-- pdac:cite id="UC-FAMILY-ACCEPT-ACCESS-INVITATION" digest="sha256:15b97d91e39ce4d69d8467e468fbaec0a4e4522829f8f6c4c99fd44028742eed" -->
+<!-- pdac:cite id="UC-FAMILY-MANAGE-INVITATION" digest="sha256:0d683ece47ef3a5e1c4faebd710b6fb52bdc771c880180c00c83050ed79e19c6" -->
+<!-- pdac:cite id="BR-OIDC-IDENTITY-BOUND-TO-ACCESS" digest="sha256:fe8b835e5ecd65e4617579e887254942616f265fc9ea887bf32708214e59fa26" -->
 
-<!-- pdac:cite id="UC-FAMILY-PROVISION-MEMBER-ACCESS" digest="sha256:38ab99dfc5bc409197237451317d77eca49848183f2185f360a3d8d1f14622b7" -->
+<!-- pdac:cite id="FR-FAMILY-MANAGE-MEMBER-ACCESS" digest="sha256:e01eaebdfaeb83a20e4fae93ca4921ba5cc7ecc53738120939cd75875ee65bdc" -->
 
-<!-- pdac:cite id="UC-FAMILY-DISABLE-MEMBER-ACCESS" digest="sha256:b31cfb989c835b046bd758ea13d41df4587b96aa9fe42c03579ed69f26ceea3a" -->
+<!-- pdac:cite id="UC-FAMILY-PROVISION-MEMBER-ACCESS" digest="sha256:7e9f4d1e423f2087757f80068dfbf0bd71a0b1ea3d33b42e4c01d4f618f6ed60" -->
 
-<!-- pdac:cite id="UC-FAMILY-ENABLE-MEMBER-ACCESS" digest="sha256:24e8b64d134a5cdeb33ff6e36896879c64a13f9f3d62f9371cc5cde4671e2a72" -->
+<!-- pdac:cite id="UC-FAMILY-DISABLE-MEMBER-ACCESS" digest="sha256:fed9768e22af9d50e00f635e4f9469596b7cd2ef7ae0cb30275b2d771cad3928" -->
 
-<!-- pdac:cite id="UC-FAMILY-RESET-MEMBER-ACCESS" digest="sha256:51e1bcc957caa70b8af9863e0e7847087fe1d36e6d205b7025cad4ee151fc56a" -->
+<!-- pdac:cite id="UC-FAMILY-ENABLE-MEMBER-ACCESS" digest="sha256:81ed353808fb9530dfe79549ad8e6404de135a6a4fd4a9dda4b4433b8ed81671" -->
 
-<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:16a5dbe3d9df35349d7f302b5f2399945e2395332587d8883fc71c4406754cf7" -->
+<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:589d9a2df048a4686422fa8cb77e36fc4d8d14aea5cd6049145c1a764101820d" -->
 
-<!-- pdac:cite id="BR-FAMILY-MANAGER-KEEPS-OWN-ACCESS" digest="sha256:81f0e5a3d3df0bf834b5544c2229c0ccdbe33d76e7d7bbfd2e37f3cb739029b7" -->
+<!-- pdac:cite id="BR-FAMILY-MANAGER-KEEPS-OWN-ACCESS" digest="sha256:4f68a000c29cb72c86d999067ead084acd50dcf35dcaa40c4672ee4f394035c0" -->
 
 <!-- pdac:cite id="BR-FAMILY-PET-RESTRICTIONS" digest="sha256:bb6786787a592043220d16abdba4e60d0260c2c8597351c67e41cb24fe53d9ba" -->
 
-<!-- pdac:cite id="TERM-MEMBER-ACCESS" digest="sha256:b7985c2011d508e2f15b31f8079b9dd54cd5c3603870e83324c4892601f1593b" -->
+<!-- pdac:cite id="TERM-MEMBER-ACCESS" digest="sha256:215b756825d3f4cd80d0649ff4fd58d167e6de88cfab73d8534cd3d9a1c05e12" -->
 
-<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:12dacff31d93a8b994bddadabce84831a7ba4c8bf06eb8a15710b673cd66349b" -->
+<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:d82d2bd934fc9835545ea9c22211213496ad48160b287fe1c750ee41a56d0108" -->
 
-<!-- pdac:cite id="SB-FAMILY-MANAGER-PROVISIONS-ACCESS" digest="sha256:44a9e2ba5fdac89b35f94cf3d24127190aa1e3c70e6d7a0fb9e619a18edc0217" -->
+<!-- pdac:cite id="SB-FAMILY-MANAGER-PROVISIONS-ACCESS" digest="sha256:6c3183ad4bbc95c99288eeb5813faa3f4f7d9f80f433ec158185a0872491df9d" -->
 
-<!-- pdac:cite id="SB-FAMILY-MANAGER-DISABLES-ACCESS" digest="sha256:6597572884c6b7cd0fbcc3078e42a4fb7104b7c885a71731a8bcc6929b1ab730" -->
+<!-- pdac:cite id="SB-FAMILY-MANAGER-DISABLES-ACCESS" digest="sha256:13ba06074c9050e14587c11a21f5b07969e068414bd234fbc5f132a801930a33" -->
 
 <!-- pdac:cite id="SB-FAMILY-MANAGER-ENABLES-ACCESS" digest="sha256:c0fa5208d278db6694fe9bdd9cdc0702631842fe2a23b794d0aec7801557c6b0" -->
 
@@ -290,15 +293,16 @@ Rules:
 - GIVEN a member exists with `NoAccess` state
 - AND the requesting user is a manager
 - AND the member role is not Pet
-- WHEN access is provisioned
-- THEN the member is linked to an authentication account
+- WHEN the manager creates an invitation link
+- THEN the manager can copy the single-use link
+- AND no provider identity is yet bound
 - AND the member state becomes `InvitedOrProvisioned`
 
 #### Scenario: A non-manager cannot administer access
 
 - GIVEN a member exists
 - AND the requesting user is not a manager
-- WHEN they attempt to provision, disable, enable, or reset access
+- WHEN they attempt to invite, replace or revoke an invitation, disable, or enable access
 - THEN the operation is rejected
 
 #### Scenario: Manager disables a member's access
@@ -308,6 +312,7 @@ Rules:
 - AND the target is not the requesting manager themselves
 - WHEN access is disabled
 - THEN the member state becomes `Disabled`
+- AND existing DomusMind sessions cannot use the household
 
 #### Scenario: A manager cannot disable their own access
 
@@ -316,12 +321,30 @@ Rules:
 - THEN the operation is rejected
 - AND their access remains active
 
-#### Scenario: A manager resets another member's password
+#### Scenario: An invited person accepts access
 
-- GIVEN another member has an authentication account
+- GIVEN a person has a valid pending invitation link
+- AND their configured OIDC provider reports a verified email matching the invitation
+- WHEN that person accepts the link
+- THEN the provider identity is bound to that household person
+- AND their access becomes `Active`
+- AND the link cannot be used again
+
+#### Scenario: A manager replaces a pending invitation link
+
+- GIVEN a person has a pending invitation link
 - AND the requesting user is a manager
-- WHEN the manager resets that member's password
-- THEN the member must change their password at the next sign-in
+- WHEN the manager replaces that link
+- THEN the old link can no longer be accepted
+- AND the manager can copy a new single-use link for the same person and email
+
+#### Scenario: A manager revokes a pending invitation link
+
+- GIVEN a person has a pending invitation link
+- AND the requesting user is a manager
+- WHEN the manager revokes that link
+- THEN the link can no longer be accepted
+- AND the person's access becomes `NoAccess`
 
 #### Scenario: Manager enables a member's access
 
@@ -329,6 +352,7 @@ Rules:
 - AND the requesting user is a manager
 - WHEN access is enabled
 - THEN the member state becomes `Active`
+- AND the existing provider identity binding is retained
 
 #### Scenario: Provisioning a Pet is rejected
 
@@ -408,7 +432,7 @@ Relationships connect two distinct members of the same household. Relationship t
 
 <!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
 
-<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:16a5dbe3d9df35349d7f302b5f2399945e2395332587d8883fc71c4406754cf7" -->
+<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:589d9a2df048a4686422fa8cb77e36fc4d8d14aea5cd6049145c1a764101820d" -->
 
 <!-- pdac:cite id="BR-FAMILY-OWNS-HOUSEHOLD-STRUCTURE" digest="sha256:661a8bfff912e490d64710e11b333119cb4143fdf597ca2672523e0bd7fae034" -->
 
