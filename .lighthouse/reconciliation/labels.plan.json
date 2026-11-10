@@ -5,7 +5,7 @@
     "id": "labels",
     "provider": "github",
     "selection": "selected-by-default",
-    "version": "2"
+    "version": "4"
   },
   "catalogVersion": "0.5.0",
   "operationPolicy": {
@@ -30,7 +30,7 @@
       {
         "id": "labels",
         "provider": "github",
-        "version": "2",
+        "version": "4",
         "adapter": "github-labels",
         "catalogVersion": "0.5.0",
         "configuration": {
@@ -66,10 +66,22 @@
               "description": "Owner request for a separate proposal PR from current refinement evidence."
             },
             {
+              "name": "integrate",
+              "role": "command",
+              "color": "238636",
+              "description": "Assess the linked PR after current owner approval and passing checks; never authorizes merge."
+            },
+            {
               "name": "future",
               "role": "overlay",
               "color": "8B949E",
               "description": "Pause implementation; triage, refinement and proposal remain available."
+            },
+            {
+              "name": "execution-failed",
+              "role": "state",
+              "color": "CF222E",
+              "description": "A worker attempt failed; inspect its latest outcome and recovery action."
             },
             {
               "name": "waiting-review",
@@ -277,16 +289,21 @@
     "capability": {
       "id": "labels",
       "provider": "github",
-      "version": "2"
+      "version": "4"
     },
-    "desiredHash": "108629bb928a12c842d346f996661da24ce58cd4eec4a3402e0b300e46ab9bb4",
-    "observedHash": "5295a2ff0137bbc117eb0b009580ebdb0317970cba9495587ceff57ee9d4a31b",
-    "targetHash": "157df9cb9ce78abcbf371c41914c1945cd1630873f398ae0a84ad4a4f2469ebc",
+    "desiredHash": "cdf151b5d28fd123ac00d8dccdb632c1c8fdf648691196889c981564ed80b055",
+    "observedHash": "cb054bfb0e751e287d5af9154a252ae85b9f3a1e38f84b7163dc534cd9efb7c6",
+    "targetHash": "cb054bfb0e751e287d5af9154a252ae85b9f3a1e38f84b7163dc534cd9efb7c6",
     "target": [
       {
         "name": "agent-working",
         "color": "D29922",
         "description": "An agent holds the host reservation; wait before editing."
+      },
+      {
+        "name": "agentic-workflows",
+        "color": "EDEDED",
+        "description": null
       },
       {
         "name": "app-error",
@@ -349,6 +366,11 @@
         "description": "The identified error is accepted with a recorded reason"
       },
       {
+        "name": "execution-failed",
+        "color": "CF222E",
+        "description": "A worker attempt failed; inspect its latest outcome and recovery action."
+      },
+      {
         "name": "future",
         "color": "C5DEF5",
         "description": "Accepted for later consideration; not currently scheduled"
@@ -387,6 +409,11 @@
         "name": "implement",
         "color": "1F6FEB",
         "description": "Owner request to plan and implement this issue in one PR."
+      },
+      {
+        "name": "integrate",
+        "color": "238636",
+        "description": "Assess the linked PR after current owner approval and passing checks; never authorizes merge."
       },
       {
         "name": "invalid",
@@ -536,8 +563,8 @@
     ],
     "drift": {
       "status": "none",
-      "expectedHash": null,
-      "observedHash": "5295a2ff0137bbc117eb0b009580ebdb0317970cba9495587ceff57ee9d4a31b"
+      "expectedHash": "cb054bfb0e751e287d5af9154a252ae85b9f3a1e38f84b7163dc534cd9efb7c6",
+      "observedHash": "cb054bfb0e751e287d5af9154a252ae85b9f3a1e38f84b7163dc534cd9efb7c6"
     },
     "operationPolicy": {
       "allowed": [
@@ -557,13 +584,29 @@
     "changes": [
       {
         "name": "agent-working",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "agent-working",
+          "color": "D29922",
+          "description": "An agent holds the host reservation; wait before editing."
+        },
         "desired": {
           "name": "agent-working",
           "color": "D29922",
           "description": "An agent holds the host reservation; wait before editing.",
           "role": "overlay"
+        }
+      },
+      {
+        "name": "agentic-workflows",
+        "status": "preserved",
+        "operation": "preserve",
+        "existing": {
+          "name": "agentic-workflows",
+          "color": "EDEDED",
+          "description": null
         }
       },
       {
@@ -588,8 +631,14 @@
       },
       {
         "name": "blast-radius-high",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "blast-radius-high",
+          "color": "0F766E",
+          "description": "Large affected surface."
+        },
         "desired": {
           "name": "blast-radius-high",
           "color": "0F766E",
@@ -601,8 +650,14 @@
       },
       {
         "name": "blast-radius-low",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "blast-radius-low",
+          "color": "C7F0E8",
+          "description": "Small affected surface."
+        },
         "desired": {
           "name": "blast-radius-low",
           "color": "C7F0E8",
@@ -614,8 +669,14 @@
       },
       {
         "name": "blast-radius-medium",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "blast-radius-medium",
+          "color": "4FB3A4",
+          "description": "Medium affected surface."
+        },
         "desired": {
           "name": "blast-radius-medium",
           "color": "4FB3A4",
@@ -696,6 +757,23 @@
         }
       },
       {
+        "name": "execution-failed",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "execution-failed",
+          "color": "CF222E",
+          "description": "A worker attempt failed; inspect its latest outcome and recovery action."
+        },
+        "desired": {
+          "name": "execution-failed",
+          "color": "CF222E",
+          "description": "A worker attempt failed; inspect its latest outcome and recovery action.",
+          "role": "state"
+        }
+      },
+      {
         "name": "future",
         "status": "customized",
         "operation": "preserve",
@@ -736,8 +814,14 @@
       },
       {
         "name": "human-working",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "human-working",
+          "color": "A371F7",
+          "description": "Human reservation: agents must stop and release their work."
+        },
         "desired": {
           "name": "human-working",
           "color": "A371F7",
@@ -747,8 +831,14 @@
       },
       {
         "name": "impact-high",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "impact-high",
+          "color": "6E40C9",
+          "description": "High impact."
+        },
         "desired": {
           "name": "impact-high",
           "color": "6E40C9",
@@ -760,8 +850,14 @@
       },
       {
         "name": "impact-low",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "impact-low",
+          "color": "E9D5FF",
+          "description": "Low impact."
+        },
         "desired": {
           "name": "impact-low",
           "color": "E9D5FF",
@@ -773,8 +869,14 @@
       },
       {
         "name": "impact-medium",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "impact-medium",
+          "color": "A371F7",
+          "description": "Medium impact."
+        },
         "desired": {
           "name": "impact-medium",
           "color": "A371F7",
@@ -786,12 +888,35 @@
       },
       {
         "name": "implement",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "implement",
+          "color": "1F6FEB",
+          "description": "Owner request to plan and implement this issue in one PR."
+        },
         "desired": {
           "name": "implement",
           "color": "1F6FEB",
           "description": "Owner request to plan and implement this issue in one PR.",
+          "role": "command"
+        }
+      },
+      {
+        "name": "integrate",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "integrate",
+          "color": "238636",
+          "description": "Assess the linked PR after current owner approval and passing checks; never authorizes merge."
+        },
+        "desired": {
+          "name": "integrate",
+          "color": "238636",
+          "description": "Assess the linked PR after current owner approval and passing checks; never authorizes merge.",
           "role": "command"
         }
       },
@@ -827,8 +952,14 @@
       },
       {
         "name": "needs-info",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "needs-info",
+          "color": "D876E3",
+          "description": "Triage or refinement needs information; the owner answers the reported question."
+        },
         "desired": {
           "name": "needs-info",
           "color": "D876E3",
@@ -838,8 +969,14 @@
       },
       {
         "name": "pr-draft",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "pr-draft",
+          "color": "8B949E",
+          "description": "The linked implementation PR is a draft."
+        },
         "desired": {
           "name": "pr-draft",
           "color": "8B949E",
@@ -849,8 +986,14 @@
       },
       {
         "name": "pr-ready",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "pr-ready",
+          "color": "238636",
+          "description": "The linked implementation PR is ready for human review."
+        },
         "desired": {
           "name": "pr-ready",
           "color": "238636",
@@ -890,8 +1033,14 @@
       },
       {
         "name": "propose",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "propose",
+          "color": "A371F7",
+          "description": "Owner request for a separate proposal PR from current refinement evidence."
+        },
         "desired": {
           "name": "propose",
           "color": "A371F7",
@@ -911,8 +1060,14 @@
       },
       {
         "name": "ready",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "ready",
+          "color": "238636",
+          "description": "Refinement passed; continuation depends on installed policy and future. Never authorizes merge."
+        },
         "desired": {
           "name": "ready",
           "color": "238636",
@@ -922,8 +1077,14 @@
       },
       {
         "name": "refine",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "refine",
+          "color": "4DA3FF",
+          "description": "Owner request to refine; installed policy may continue to implementation."
+        },
         "desired": {
           "name": "refine",
           "color": "4DA3FF",
@@ -933,8 +1094,14 @@
       },
       {
         "name": "review",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "review",
+          "color": "A371F7",
+          "description": "Work item is awaiting review."
+        },
         "desired": {
           "name": "review",
           "color": "A371F7",
@@ -944,8 +1111,14 @@
       },
       {
         "name": "risk-high",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "risk-high",
+          "color": "CF222E",
+          "description": "High delivery risk."
+        },
         "desired": {
           "name": "risk-high",
           "color": "CF222E",
@@ -957,8 +1130,14 @@
       },
       {
         "name": "risk-low",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "risk-low",
+          "color": "FFEBE9",
+          "description": "Low delivery risk."
+        },
         "desired": {
           "name": "risk-low",
           "color": "FFEBE9",
@@ -970,8 +1149,14 @@
       },
       {
         "name": "risk-medium",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "risk-medium",
+          "color": "F0883E",
+          "description": "Medium delivery risk."
+        },
         "desired": {
           "name": "risk-medium",
           "color": "F0883E",
@@ -983,8 +1168,14 @@
       },
       {
         "name": "size-l",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "size-l",
+          "color": "4DA3FF",
+          "description": "Large work item."
+        },
         "desired": {
           "name": "size-l",
           "color": "4DA3FF",
@@ -996,8 +1187,14 @@
       },
       {
         "name": "size-m",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "size-m",
+          "color": "80C2FF",
+          "description": "Medium work item."
+        },
         "desired": {
           "name": "size-m",
           "color": "80C2FF",
@@ -1009,8 +1206,14 @@
       },
       {
         "name": "size-s",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "size-s",
+          "color": "BFE3FF",
+          "description": "Small work item."
+        },
         "desired": {
           "name": "size-s",
           "color": "BFE3FF",
@@ -1022,8 +1225,14 @@
       },
       {
         "name": "size-xl",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "size-xl",
+          "color": "1F6FEB",
+          "description": "Extra-large work item."
+        },
         "desired": {
           "name": "size-xl",
           "color": "1F6FEB",
@@ -1035,8 +1244,14 @@
       },
       {
         "name": "triage",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "triage",
+          "color": "8B949E",
+          "description": "Owner request to assess this issue; publication stops at triaged."
+        },
         "desired": {
           "name": "triage",
           "color": "8B949E",
@@ -1046,8 +1261,14 @@
       },
       {
         "name": "triaged",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "triaged",
+          "color": "4FB3A4",
+          "description": "Owner-admitted triage passed; the owner decides whether to refine."
+        },
         "desired": {
           "name": "triaged",
           "color": "4FB3A4",
@@ -1057,8 +1278,14 @@
       },
       {
         "name": "urgency-asap",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "urgency-asap",
+          "color": "D29922",
+          "description": "High urgency."
+        },
         "desired": {
           "name": "urgency-asap",
           "color": "D29922",
@@ -1070,8 +1297,14 @@
       },
       {
         "name": "urgency-normal",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "urgency-normal",
+          "color": "8B949E",
+          "description": "Normal urgency."
+        },
         "desired": {
           "name": "urgency-normal",
           "color": "8B949E",
@@ -1083,8 +1316,14 @@
       },
       {
         "name": "urgency-now",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "urgency-now",
+          "color": "CF222E",
+          "description": "Immediate urgency."
+        },
         "desired": {
           "name": "urgency-now",
           "color": "CF222E",
@@ -1096,8 +1335,14 @@
       },
       {
         "name": "waiting-review",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "waiting-review",
+          "color": "D29922",
+          "description": "Inspect the result or PR for feedback or a pending decision."
+        },
         "desired": {
           "name": "waiting-review",
           "color": "D29922",
@@ -1107,8 +1352,14 @@
       },
       {
         "name": "wip",
-        "status": "missing",
-        "operation": "create",
+        "status": "unchanged",
+        "operation": "preserve",
+        "blockedOperations": [],
+        "existing": {
+          "name": "wip",
+          "color": "D29922",
+          "description": "Work item is actively in progress."
+        },
         "desired": {
           "name": "wip",
           "color": "D29922",
@@ -1127,441 +1378,19 @@
         }
       }
     ],
-    "operations": [
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "agent-working",
-        "color": "D29922",
-        "description": "An agent holds the host reservation; wait before editing."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "blast-radius-high",
-        "color": "0F766E",
-        "description": "Large affected surface."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "blast-radius-low",
-        "color": "C7F0E8",
-        "description": "Small affected surface."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "blast-radius-medium",
-        "color": "4FB3A4",
-        "description": "Medium affected surface."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "human-working",
-        "color": "A371F7",
-        "description": "Human reservation: agents must stop and release their work."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "impact-high",
-        "color": "6E40C9",
-        "description": "High impact."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "impact-low",
-        "color": "E9D5FF",
-        "description": "Low impact."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "impact-medium",
-        "color": "A371F7",
-        "description": "Medium impact."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "implement",
-        "color": "1F6FEB",
-        "description": "Owner request to plan and implement this issue in one PR."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "needs-info",
-        "color": "D876E3",
-        "description": "Triage or refinement needs information; the owner answers the reported question."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "pr-draft",
-        "color": "8B949E",
-        "description": "The linked implementation PR is a draft."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "pr-ready",
-        "color": "238636",
-        "description": "The linked implementation PR is ready for human review."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "propose",
-        "color": "A371F7",
-        "description": "Owner request for a separate proposal PR from current refinement evidence."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "ready",
-        "color": "238636",
-        "description": "Refinement passed; continuation depends on installed policy and future. Never authorizes merge."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "refine",
-        "color": "4DA3FF",
-        "description": "Owner request to refine; installed policy may continue to implementation."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "review",
-        "color": "A371F7",
-        "description": "Work item is awaiting review."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "risk-high",
-        "color": "CF222E",
-        "description": "High delivery risk."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "risk-low",
-        "color": "FFEBE9",
-        "description": "Low delivery risk."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "risk-medium",
-        "color": "F0883E",
-        "description": "Medium delivery risk."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "size-l",
-        "color": "4DA3FF",
-        "description": "Large work item."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "size-m",
-        "color": "80C2FF",
-        "description": "Medium work item."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "size-s",
-        "color": "BFE3FF",
-        "description": "Small work item."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "size-xl",
-        "color": "1F6FEB",
-        "description": "Extra-large work item."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "triage",
-        "color": "8B949E",
-        "description": "Owner request to assess this issue; publication stops at triaged."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "triaged",
-        "color": "4FB3A4",
-        "description": "Owner-admitted triage passed; the owner decides whether to refine."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "urgency-asap",
-        "color": "D29922",
-        "description": "High urgency."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "urgency-normal",
-        "color": "8B949E",
-        "description": "Normal urgency."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "urgency-now",
-        "color": "CF222E",
-        "description": "Immediate urgency."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "waiting-review",
-        "color": "D29922",
-        "description": "Inspect the result or PR for feedback or a pending decision."
-      },
-      {
-        "type": "create-label",
-        "kind": "create",
-        "name": "wip",
-        "color": "D29922",
-        "description": "Work item is actively in progress."
-      }
-    ],
+    "operations": [],
     "errors": [],
     "record": {
       "schemaVersion": 1,
       "capability": {
         "id": "labels",
         "provider": "github",
-        "version": "2"
+        "version": "4"
       },
-      "desiredHash": "108629bb928a12c842d346f996661da24ce58cd4eec4a3402e0b300e46ab9bb4",
-      "observedHash": "157df9cb9ce78abcbf371c41914c1945cd1630873f398ae0a84ad4a4f2469ebc",
-      "targetHash": "157df9cb9ce78abcbf371c41914c1945cd1630873f398ae0a84ad4a4f2469ebc",
-      "operations": [
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "agent-working",
-          "color": "D29922",
-          "description": "An agent holds the host reservation; wait before editing."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "blast-radius-high",
-          "color": "0F766E",
-          "description": "Large affected surface."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "blast-radius-low",
-          "color": "C7F0E8",
-          "description": "Small affected surface."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "blast-radius-medium",
-          "color": "4FB3A4",
-          "description": "Medium affected surface."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "human-working",
-          "color": "A371F7",
-          "description": "Human reservation: agents must stop and release their work."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "impact-high",
-          "color": "6E40C9",
-          "description": "High impact."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "impact-low",
-          "color": "E9D5FF",
-          "description": "Low impact."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "impact-medium",
-          "color": "A371F7",
-          "description": "Medium impact."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "implement",
-          "color": "1F6FEB",
-          "description": "Owner request to plan and implement this issue in one PR."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "needs-info",
-          "color": "D876E3",
-          "description": "Triage or refinement needs information; the owner answers the reported question."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "pr-draft",
-          "color": "8B949E",
-          "description": "The linked implementation PR is a draft."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "pr-ready",
-          "color": "238636",
-          "description": "The linked implementation PR is ready for human review."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "propose",
-          "color": "A371F7",
-          "description": "Owner request for a separate proposal PR from current refinement evidence."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "ready",
-          "color": "238636",
-          "description": "Refinement passed; continuation depends on installed policy and future. Never authorizes merge."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "refine",
-          "color": "4DA3FF",
-          "description": "Owner request to refine; installed policy may continue to implementation."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "review",
-          "color": "A371F7",
-          "description": "Work item is awaiting review."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "risk-high",
-          "color": "CF222E",
-          "description": "High delivery risk."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "risk-low",
-          "color": "FFEBE9",
-          "description": "Low delivery risk."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "risk-medium",
-          "color": "F0883E",
-          "description": "Medium delivery risk."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "size-l",
-          "color": "4DA3FF",
-          "description": "Large work item."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "size-m",
-          "color": "80C2FF",
-          "description": "Medium work item."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "size-s",
-          "color": "BFE3FF",
-          "description": "Small work item."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "size-xl",
-          "color": "1F6FEB",
-          "description": "Extra-large work item."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "triage",
-          "color": "8B949E",
-          "description": "Owner request to assess this issue; publication stops at triaged."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "triaged",
-          "color": "4FB3A4",
-          "description": "Owner-admitted triage passed; the owner decides whether to refine."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "urgency-asap",
-          "color": "D29922",
-          "description": "High urgency."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "urgency-normal",
-          "color": "8B949E",
-          "description": "Normal urgency."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "urgency-now",
-          "color": "CF222E",
-          "description": "Immediate urgency."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "waiting-review",
-          "color": "D29922",
-          "description": "Inspect the result or PR for feedback or a pending decision."
-        },
-        {
-          "type": "create-label",
-          "kind": "create",
-          "name": "wip",
-          "color": "D29922",
-          "description": "Work item is actively in progress."
-        }
-      ],
+      "desiredHash": "cdf151b5d28fd123ac00d8dccdb632c1c8fdf648691196889c981564ed80b055",
+      "observedHash": "cb054bfb0e751e287d5af9154a252ae85b9f3a1e38f84b7163dc534cd9efb7c6",
+      "targetHash": "cb054bfb0e751e287d5af9154a252ae85b9f3a1e38f84b7163dc534cd9efb7c6",
+      "operations": [],
       "blockedOperations": [
         "modify"
       ],
@@ -1570,7 +1399,7 @@
   },
   "authorization": {
     "required": true,
-    "planHash": "912d8d1b17323aa99eebf2f3ac14c67b3a747b76c0be229c0a8878be4cd70616"
+    "planHash": "f5b094f95fdc146d85a3785a409558f6e5082fd2c0a4fdc6639a383867611927"
   },
   "nextAction": "lighthouse capabilities apply --plan-file .lighthouse/reconciliation/labels.plan.json --authorize <plan-hash>"
 }

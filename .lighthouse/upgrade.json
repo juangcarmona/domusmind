@@ -13,12 +13,13 @@
   "adoption": {
     "labels": {
       "id": "labels",
-      "status": "pending-adoption",
+      "status": "adopted",
       "selection": "selected-by-default",
       "provider": "github",
       "version": "4",
       "catalogVersion": "0.5.0",
-      "nextAction": "lighthouse capabilities plan --id labels --provider github --repo <owner/repo> --plan-file .lighthouse/reconciliation/labels.plan.json"
+      "nextAction": null,
+      "recordPath": ".lighthouse/reconciliation/labels.json"
     },
     "github-profile": {
       "id": "github-profile",

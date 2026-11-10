@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contractVersion": 1,
-  "routerDigest": "89e329127e4d89608d39356cdad96402c9e1faadee1d4712080c6381c184421d",
+  "routerDigest": "d2d0f63873f295c73d633ec9cdd6a1a94dbb6c9634b7c833497dd7e5d810b3b0",
   "stages": [
     "triage",
     "refine",
@@ -10,7 +10,7 @@
     "integrate",
     "review"
   ],
-  "autoImplement": false,
+  "autoImplement": true,
   "completionEnabled": false,
   "productChangeEnabled": false,
   "backgroundWorkflows": []
