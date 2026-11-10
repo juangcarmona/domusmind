@@ -1,0 +1,66 @@
+# Draft Surface Spec — Mis cosas
+
+Status: proposed by `CHG-HOUSEHOLD-ASSETS-001`; Mis cosas is the product-owner-selected navigation label, pending household validation and Product Change acceptance.
+
+## Purpose
+
+Help household members answer: what do we manage, where is it, what do we know, what needs attention, who is responsible, where is its paperwork, what has been done, and what has it cost?
+
+This is an operational household memory surface, not an inventory-counting dashboard, accounting screen or maintenance task board.
+
+## Depends On
+
+- Accepted ProductShape model and `CHG-HOUSEHOLD-ASSETS-001`.
+- `docs/design/surface-system.md`.
+- Existing Household, Areas, Agenda, Calendar, Tasks and Lists ownership boundaries.
+
+## Entry Points
+
+- Main navigation labeled “Mis cosas”.
+- Agenda obligation projection opens the associated Asset and due occurrence.
+- Contextual links from Areas or explicitly related Task/Calendar Plan/List detail.
+
+## Role and Shell
+
+Use the persistent product shell and compact page header. Desktop follows the established dense-list plus right inspector pattern. Mobile preserves the same information and actions with a collapsed list and pushed detail or bottom sheet; do not make a separate mobile workflow.
+
+## Default View
+
+A compact, searchable household list. Rows should prioritize name, category, Location and separately any containing Asset, responsible Area/member and a concise attention cue (for example next due or overdue). Parent-child relationships are visible but do not imply ownership or responsibility. Avoid decorative category cards and summary metric dashboards.
+
+Useful filters may include category, location/parent, responsibility, due/overdue and active/archived. Search matches names and ordinary identifying details; sensitive identifiers require product/privacy review before indexing.
+
+## Inspector
+
+Selection opens an inspector without losing list context. It presents, in this order as available:
+
+1. Identity, category, lifecycle and useful common details.
+2. Reusable household Location and any containing Asset, management basis and responsible Area/member as separate facts. A property Asset may link to its own Location.
+3. Upcoming and overdue obligations with next action, recurrence summary and explicit completion/reschedule actions.
+4. Document metadata and authorized links/references, with a separate remove action. The first release has no upload control.
+5. Maintenance, repair, inspection and installation history with date, provider, optional actual cost and evidence.
+6. Explicitly linked Tasks, Calendar plans or Lists, labeled by their owning context.
+
+No standalone full-detail page is assumed unless the existing surface system requires it.
+
+## Capture and Interaction
+
+“Add” starts with a small required set (name and a broad category from a short list with “Other”), then offers progressive optional details. Capture must not require a serial number, parent, member, Area or exhaustive attribute schema. Parent selection is optional and represents containment only. “Mis cosas” is the chosen UI label, subject to household validation.
+
+Obligation create/edit presents a due date in the manager-configured household timezone without an exact time, recurrence rule, separate optional Area/member responsibility and lifecycle clearly. Completion asks only for necessary outcome details and offers optional provider, cost with currency, notes and supporting paperwork. Skip and reschedule are explicit actions; rescheduling a pending date does not edit the rule. A mistaken completion receives a visible traceable correction. Unscheduled work can be recorded without first inventing an obligation. Any linked Task or appointment is an explicit separate action. Ordinary removal of an Asset with history archives it; definitive deletion needs a separate explicit flow.
+
+## Agenda Relationship
+
+Agenda displays an obligation due projection with Asset identity and a route to the obligation. It must distinguish an obligation from a Task or Calendar Plan. If a member separately creates related work, show two distinguishable linked items without collapsing rows or synchronizing completion implicitly.
+
+## Accessibility and Responsive Behavior
+
+Preserve keyboard navigation, labeled controls, focus management in the inspector/bottom sheet, non-color-only overdue cues, readable hierarchy and consistent actions at narrow widths. Validate with browser journeys at supported desktop and mobile viewports.
+
+## Open UX Decisions
+
+- Validate the selected “Mis cosas” label and category vocabulary with household members.
+- Which minimal Location fields and lifecycle actions are useful for a household, and how to make the linked property Asset and Location easy to distinguish during capture.
+- Which list row metadata and attention states are most useful without creating visual noise.
+- Which metadata fields and grant/revoke controls are useful for authorized links; document metadata is visible only to explicitly granted household members, and upload belongs to a later separately approved storage capability.
+- How much recurrence detail is legible in list and Agenda cues.
