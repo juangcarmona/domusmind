@@ -34,6 +34,9 @@ operations:
   modify:
     - CON-PRODUCT-CURRENT-SCOPE
     - CON-PRODUCT-HOUSEHOLD-FIRST
+    - TERM-HOUSEHOLD-SETTINGS
+    - UC-FAMILY-CONFIGURE-HOUSEHOLD-SETTINGS
+    - FR-FAMILY-HOUSEHOLD-SETTINGS
   remove: []
 ---
 
@@ -41,7 +44,7 @@ operations:
 
 Households keep cars, homes, boilers, appliances, electronics, boats and other things that create ongoing responsibilities. The useful information is scattered across memory, paper, email and unrelated tools: what the household manages, where it is, what must happen next, who is responsible, where its paperwork is, what has already been done and what it cost. Missing a renewal, inspection, warranty deadline or service can create avoidable expense and stress. A plain inventory does not solve the continuing mental load.
 
-DomusMind already coordinates household responsibilities, time, work and shared memory, but its current product model does not provide a first-class home for managed things and their persistent obligations and history. The active Roadmap Product Change also contains low-confidence proposals named Property, Documents and Inventory, including a property-maintenance use case. This initiative is independent: Household Assets is the chosen authority for obligations of a managed property, and the overlapping Roadmap draft must be reconciled before either change is accepted. This change does not modify Roadmap.
+DomusMind already coordinates household responsibilities, time, work and shared memory, but its current product model does not provide a first-class home for managed things and their persistent obligations and history. The active Roadmap Product Change also contained low-confidence Property, Documents and Inventory proposals, including a property-maintenance use case. Household Assets is the chosen authority for obligations of a managed property. This PR reconciles the independent Roadmap proposal by retiring its duplicate Property/Maintenance artifacts while leaving Documents and stock Inventory distinct.
 
 ## Intended Product Outcome
 
@@ -51,7 +54,7 @@ The provisional internal domain name is **Household Assets**, with **Asset** as 
 
 The draft domain model distinguishes an `Asset` from a reusable, household-scoped `Asset Location`. A property may be an Asset with its own obligations and history, linked to a Location that other Assets can also reference. Asset containment and shared physical location are separate relationships. The draft also proposes persistent `Asset Obligation` aggregates for requirements that recur or become due; bounded, durable `Obligation Occurrence` history only when due work is recorded, completed, skipped or explicitly rescheduled; and append-oriented `Asset Records` for maintenance, repair, inspection, installation and other historical facts, including events not initiated by an obligation. These are candidate domain boundaries, not accepted implementation design. Documents have metadata and authorization-bound storage references; binary storage is not assumed to exist. A provider can initially be descriptive text on a record or obligation rather than a generic Contacts context. Actual costs may be recorded against a historical record; this is not accounting.
 
-The coherent MVP is explicit household capture and organization; common asset details, optional management basis and optional, distinct Area/member responsibility; one-time and calendar- or completion-relative obligations; a single next-due/overdue pending cycle; explicit completion, skip or reschedule with one linked history entry; ad-hoc records and actual cost; document metadata and authorized links without binary upload; search; and read-only Agenda projection. Archived or sold Assets retain read-only history while associated document references can be removed separately. The initial slice must prove car insurance/inspection/service, boiler warranty/service, a property with contained equipment, member/Area responsibility, and history/cost discovery. Usage-meter recurrence, legal/maintenance templates, AI extraction, automatic suggestions, contracts, financial planning and broad document management are later or deferred.
+The coherent MVP is explicit household capture and organization using a short category list with “Other”; common asset details, optional management basis and optional, distinct Area/member responsibility; one-time and calendar- or completion-relative obligations on dates in the manager-configured household timezone; a single next-due/overdue pending cycle; explicit completion, skip or reschedule with one linked history entry; ad-hoc records and actual cost with currency per record; document metadata and authorized links visible only to explicitly granted members, without binary upload; search; and read-only Agenda projection. Explicitly linked Tasks/Plans remain distinguishable Agenda items. Archived or sold Assets retain read-only history while associated document references can be removed separately. The ordinary remove action archives an Asset with history; definitive deletion is a separate explicit flow. The initial slice must prove car insurance/inspection/service, boiler warranty/service, a property with contained equipment, member/Area responsibility, and history/cost discovery. Usage-meter recurrence, legal/maintenance templates, AI extraction, automatic suggestions, contracts, financial planning and broad document management are later or deferred.
 
 ## Rationale
 
@@ -59,7 +62,7 @@ DomusMind's product promise is shared household clarity, visible responsibility 
 
 The initiative and ordered delivery backlog are tracked by [Epic #235: Household assets, obligations, paperwork and history](https://github.com/juangcarmona/domusmind/issues/235). This Product Change defines intent; the Epic owns implementation decomposition.
 
-Property/location decision: the product owner answered verbatim, “Dos conceptos vinculados”. In the question's options, this meant a property Asset and a separate Location linked together. The proposed artifacts therefore let a property keep its own obligations and history while several Assets can refer to the same physical Location; linking them does not turn location into containment or legal ownership. The exact location fields and lifecycle remain to be refined without adding a generic property-management context.
+Property/location decision: the product owner answered verbatim, “Dos conceptos vinculados”. In the question's options, this meant a property Asset and a separate Location linked together. The proposed artifacts therefore let a property keep its own obligations and history while several Assets can refer to the same physical Location; linking them does not turn location into containment or legal ownership. A Location requires a name and may have an address; later lifecycle actions remain to be refined without adding a generic property-management context.
 
 The product owner then selected these eight options verbatim:
 
@@ -84,7 +87,9 @@ The product owner then selected these seven options verbatim:
 - “Fecha local del hogar, sin hora exacta (recomendado)”
 - “Añadir una corrección trazable y conservar el resultado anterior (recomendado)”
 
-Accordingly, the proposed surface is named Mis cosas; Household Assets owns property obligations, with the independent low-confidence Roadmap proposal to be reconciled before acceptance. A Location needs only a name at capture; address is optional. Skipping a due cycle records the omission and advances to the next due state. Rescheduling moves that cycle only and preserves the recurrence rule. First-release due dates are household-local dates without an exact time; how the household timezone is selected remains to be defined. A mistaken completion is corrected by adding a traceable correction while retaining the prior outcome.
+Accordingly, the proposed surface is named Mis cosas; Household Assets owns property obligations, with the three overlapping low-confidence Property/Maintenance artifacts retired from the independent Roadmap proposal. A Location needs only a name at capture; address is optional. Skipping a due cycle records the omission and advances to the next due state. Rescheduling moves that cycle only and preserves the recurrence rule. First-release due dates are household-local dates without an exact time. A mistaken completion is corrected by adding a traceable correction while retaining the prior outcome.
+
+For the final seven multiple-choice decisions, the product owner's verbatim reply was “todas las recomendadas”. The selected recommendations were: manager-configured household timezone; skipped completion-relative cycles advance from their skipped due date; short category list with “Other”; document metadata visible only to explicitly granted household members; actual cost recorded with its currency per record; ordinary removal archives an Asset with history while definitive deletion requires a separate explicit flow; and linked Tasks/Calendar Plans remain two distinguishable Agenda items. The proposed Household Settings artifacts carry the timezone decision while Household retains ownership. `CHG-ROADMAP` records the Property/Maintenance retirement; Documents and stock Inventory remain independent proposals.
 
 Product-pattern research (reviewed 2026-10-19; vendor/project feature descriptions, not independent comparative evaluations) challenges the scope:
 
@@ -100,6 +105,7 @@ These sources are first-party descriptions and establish feature patterns only. 
 
 - New internal bounded context for household asset identity, lifecycle, obligations and associated history.
 - Household-scoped authorization and membership; references to Areas/member responsibility without re-owning those structures.
+- Household Settings gains a manager-controlled timezone used for Asset Obligation local dates; Household retains ownership of the setting.
 - Agenda as the unified read projection for upcoming and overdue asset obligations; no automatic Task or Calendar Plan creation.
 - Optional explicit links to Tasks, Calendar plans and Lists only where a user-created execution or preparation item has independent meaning. Their owning contexts retain lifecycle and validation.
 - New Mis cosas surface specification, subordinate to the accepted product model and existing surface system.
@@ -110,15 +116,14 @@ These sources are first-party descriptions and establish feature patterns only. 
 ## Open Questions
 
 - Which Location lifecycle actions beyond named capture and optional address are needed? The property Asset and Location are distinct linked concepts; validate their capture flow with households.
-- Which common categories and category-specific fields are necessary for the first useful release? Prefer a small validated common model plus focused category details; reject schema-free extensibility until evidence justifies it.
-- How is the household timezone chosen or changed for local-date due rules? What are calendar anchors beyond the agreed monthly month-end case and the next-due anchor after a skipped completion-relative cycle? Usage/meter recurrence is deferred.
+- Which specific labels belong in the initial short category list with “Other”, and which category-specific details are worth adding after common fields? Reject schema-free extensibility until evidence justifies it.
+- What happens to already scheduled obligations if a manager changes the household timezone, and which calendar anchors beyond the agreed monthly month-end case are needed? Usage/meter recurrence is deferred.
 - Which member actions can reverse or annotate a mistaken skip/reschedule, and how are traceable corrections shown in one history entry?
-- Which document types/metadata and sensitive-data rules apply? Documents may include identity, vehicle or insurance details; household access is the minimum boundary, not a justification for broad exposure.
-- Are actual record costs enough for MVP? Proposed scope excludes expected-cost forecasting, recurring premium ledger, multi-currency accounting, budgets and depreciation. Decide currency treatment for households with expenses in more than one currency.
+- Which document type labels and metadata beyond an authorized link are useful? Document metadata is limited to explicitly granted household members and source-content access remains independent.
+- Are actual costs enough for MVP beyond amount and currency per record? Expected-cost forecasting, recurring premium ledgers, budgets and depreciation remain excluded.
 - Are providers simple names on records or reusable household providers? Start with names; do not create generic Contacts/Contracts contexts absent concrete journeys.
-- Should asset obligations be linked to a Task/Calendar plan explicitly, and how should Agenda present both without implying duplicate due items or synchronizing status silently?
-- Household Assets is authoritative for managed-property obligations. Before acceptance, which low-confidence `CHG-ROADMAP` Property/Maintenance artifacts should be retired or reframed? The independent Roadmap change is not edited here; its Documents and stock Inventory proposals remain separate.
-- What deletion/transfer and correction policy applies beyond the agreed read-only history after sale/archive and separate removal of document associations? The linked external content retains its own source policy.
+- Which optional links to Lists add value beyond the decided explicit Task/Calendar Plan links, and what cross-surface detail should be shown? Agenda keeps linked obligation and work items distinguishable without status synchronization.
+- What transfer policy applies beyond the agreed read-only history after sale/archive? Definitive deletion of an Asset with history belongs to a separate explicit flow; linked external content retains its own source policy.
 
 ## Product Acceptance
 
@@ -137,4 +142,4 @@ The Product Change may be accepted when product owners confirm:
 
 ## Out of Scope
 
-This draft does not approve or apply itself; implement application functionality; select a storage provider, persistence schema, framework or deployment topology; define universal legal, insurance or manufacturer obligations; provide AI/MCP or automated document extraction; generate tasks/plans/lists automatically; deliver usage-meter/IoT integrations, asset checkout, enterprise multi-company controls, depreciation, accounting, budgeting, banking, contractor marketplaces, renovation management or a standalone document-management product. It does not modify `CHG-ROADMAP` or the canonical product model. Any resulting delivery follows the separate Epic and ordered child issues.
+This draft does not approve or apply itself; implement application functionality; select a storage provider, persistence schema, framework or deployment topology; define universal legal, insurance or manufacturer obligations; provide AI/MCP or automated document extraction; generate tasks/plans/lists automatically; deliver usage-meter/IoT integrations, asset checkout, enterprise multi-company controls, depreciation, accounting, budgeting, banking, contractor marketplaces, renovation management or a standalone document-management product. The separate definitive-deletion flow is not part of the initial slice. This change does not modify the canonical product model. Any resulting delivery follows the separate Epic and ordered child issues.

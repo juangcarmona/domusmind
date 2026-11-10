@@ -12,7 +12,7 @@ verification:
 ---
 ## Requirement
 
-Agenda can display upcoming and overdue Asset Obligation due information with its asset identity and navigation to the obligation. Projection updates after obligation lifecycle changes; any separately linked Task or Calendar Plan remains distinguishable, independently owned and not silently synchronized.
+Agenda can display upcoming and overdue Asset Obligation due information with its asset identity and navigation to the obligation. Projection updates after obligation lifecycle changes; any explicitly linked Task or Calendar Plan appears as a separate, distinguishable item with a visible link to the obligation, remains independently owned and is not silently synchronized.
 
 ## Rationale
 

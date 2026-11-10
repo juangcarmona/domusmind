@@ -6,7 +6,7 @@ status: draft
 ---
 ## Rule
 
-An Asset Obligation defines a persistent requirement and due rule. It does not create a Task, Routine, Calendar Plan or List item automatically. A member may explicitly create or link such work; its owning context retains validation, authorization and lifecycle. Agenda may project the obligation independently and should identify related work without implying duplicate ownership or silent status synchronization.
+An Asset Obligation defines a persistent requirement and due rule. It does not create a Task, Routine, Calendar Plan or List item automatically. A member may explicitly create or link such work; its owning context retains validation, authorization and lifecycle. Agenda displays a linked obligation and Task or Calendar Plan as two distinguishable items with an explicit relationship, without implying duplicate ownership or silent status synchronization.
 
 ## Rationale
 

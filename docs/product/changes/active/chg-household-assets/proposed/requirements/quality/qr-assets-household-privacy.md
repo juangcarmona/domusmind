@@ -9,11 +9,11 @@ applies-to:
   - UC-ASSETS-REGISTER-AND-ORGANIZE
   - UC-ASSETS-REVIEW-HOUSEHOLD-ASSETS
 verification:
-  - scenario: "Cross-household authorization and document-reference integration tests prove that unauthorized members cannot enumerate assets, obligations, history or file content."
+  - scenario: "Cross-household authorization and document-reference integration tests prove that unauthorized members cannot enumerate assets, obligations or history; a household member without an explicit document grant cannot view its metadata, and source content retains its own access check."
 ---
 ## Requirement
 
-Every asset operation and Agenda projection enforces the existing household/member authorization boundary. Sensitive document metadata and references are not exposed to a member unless that member is authorized by both the household and the source storage policy. The first release does not handle uploaded document bytes.
+Every asset operation and Agenda projection enforces the existing household/member authorization boundary. Asset Document metadata and references are visible only to explicitly granted household members; accessing the referenced source additionally obeys its own authorization policy. The first release does not handle uploaded document bytes.
 
 ## Measurement
 

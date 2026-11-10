@@ -19,7 +19,6 @@ operations:
     - UC-FAMILY-REMOVE-MEMBER
     - UC-LISTS-DUPLICATE-ITEM
     - UC-LISTS-MOVE-ITEM
-    - UC-ROADMAP-PLAN-PROPERTY-MAINTENANCE
     - UC-ROADMAP-SEE-RENEWALS-AND-DEADLINES
     - UC-ROADMAP-TRACK-HOUSEHOLD-STOCK
     - UC-ROADMAP-TRACK-IMPORTANT-DOCUMENTS
@@ -33,14 +32,12 @@ operations:
     - TERM-AREA-PARTICIPANT
     - TERM-HOUSEHOLD-ROLE
     - TERM-IMPORTANT-DOCUMENT
-    - TERM-PROPERTY-MAINTENANCE
     - TERM-RELATIONSHIP
     - TERM-RENEWAL-DEADLINE
     - TERM-SUPPLY-STATE
     - BC-ADMINISTRATION
     - BC-DOCUMENTS
     - BC-INVENTORY
-    - BC-PROPERTY
     - FR-AREAS-DEFAULT-AREAS
     - FR-AREAS-FUTURE-BALANCE-INSIGHTS
     - FR-FAMILY-MANAGE-RELATIONSHIPS
@@ -74,7 +71,7 @@ The recovered initial baseline (CHG-INITIAL) mixed current product with the phas
 A separate, reviewable proposal of DomusMind's future product, following the phased roadmap stated by CON-PRODUCT-PHASED-ROADMAP:
 
 - V1.1 operational hardening: removing people and pets, relationships between people, a person's stay in the household, household roles and their fit with kinds of person.
-- V2 household domain expansion: household administration with renewals and deadlines, important documents, property and maintenance, inventory and supply state, several contacts and emergency information per person, and recurring plans.
+- V2 household domain expansion: household administration with renewals and deadlines, important documents, inventory and supply state, several contacts and emergency information per person, and recurring plans. Household Assets is the separate proposal for managed-property obligations and maintenance history.
 - V3 intelligence and integrations: AI-assisted interpretation, automation pipelines, calendar synchronisation beyond read-only import, household insights, messaging integrations, quick capture and import, and reminder routing.
 - Unversioned planned capabilities recovered with low confidence: starting a task, richer task attributes and insights, completing a plan, recurring-plan rules, clearing, describing and reactivating Areas, Area participants, default Areas, responsibility balance insights, duplicating and moving list items, and Agenda markers.
 
@@ -89,9 +86,11 @@ Product-owner decisions:
 
 This change proposes the phased roadmap (V1.1, V2, V3) as future product. It is to be accepted only after CHG-INITIAL is applied and is the baseline: its artifacts reference baseline artifacts (actors, bounded contexts, terms, use cases and rules of CHG-INITIAL), which do not exist in the product model until then. The moved artifacts are unchanged apart from their references.
 
+Household Assets reconciliation (CHG-HOUSEHOLD-ASSETS-001): the product owner selected “Household Assets; reconciliar Roadmap antes de aceptar (recomendado)” for managed-property obligations. The low-confidence `BC-PROPERTY`, `TERM-PROPERTY-MAINTENANCE` and `UC-ROADMAP-PLAN-PROPERTY-MAINTENANCE` proposals are removed from this live Roadmap change so two contexts do not claim the same upkeep workflow. The independent Documents and stock Inventory proposals retain their distinct scope. Git history preserves the removed drafts.
+
 ## Affected Product Areas
 
-Household and members (V1.1 membership and relationships, V2 contacts), areas of responsibility (planned Area capabilities), plans and the Agenda (recurring plans, plan completion, markers), tasks (starting tasks, task insights), shared lists (duplicate and move items), the new V2 household domains, and the V3 intelligence and integration capabilities across the product.
+Household and members (V1.1 membership and relationships, V2 contacts), areas of responsibility (planned Area capabilities), plans and the Agenda (recurring plans, plan completion, markers), tasks (starting tasks, task insights), shared lists (duplicate and move items), the remaining V2 household administration, Documents and stock Inventory proposals, and the V3 intelligence and integration capabilities across the product. Managed-property obligations belong to CHG-HOUSEHOLD-ASSETS-001.
 
 ## Open Questions
 

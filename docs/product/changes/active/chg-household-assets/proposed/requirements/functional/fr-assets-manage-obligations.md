@@ -12,7 +12,7 @@ verification:
 ---
 ## Requirement
 
-An authorized member can define, review, suspend and cancel a one-time, calendar-based or completion-relative Asset Obligation. First-release due dates are household-local calendar dates without exact times. DomusMind exposes one pending due cycle as a distinguishable read-only Agenda projection; an unresolved cycle stays overdue until explicitly resolved. A monthly last-day rule uses the last valid day of each month, and completion-relative recurrence advances from the actual completion date. Explicit skip records the omission and calculates the next due state; rescheduling changes only the pending cycle, not the rule. It does not create a Task, Routine, Plan or List item automatically.
+An authorized member can define, review, suspend and cancel a one-time, calendar-based or completion-relative Asset Obligation. First-release due dates are calendar dates in the manager-configured household timezone, without exact times. DomusMind exposes one pending due cycle as a distinguishable read-only Agenda projection; an unresolved cycle stays overdue until explicitly resolved. A monthly last-day rule uses the last valid day of each month. Completion-relative recurrence advances from the actual completion date or, when explicitly skipped, from the skipped cycle's due date. Rescheduling changes only the pending cycle, not the rule. It does not create a Task, Routine, Plan or List item automatically.
 
 ## Rationale
 

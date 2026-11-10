@@ -11,7 +11,7 @@ verification:
 ---
 ## Requirement
 
-An authorized member can add, discover and separately remove document metadata and authorized links/references associated with an Asset, subject to both household and source-content access. Removing the association does not delete external source content or the Asset's read-only history. The first release does not upload or store binary files; a later upload capability requires a separate secure storage, access, retention, deletion, backup and content-validation decision.
+An authorized member can add, discover and separately remove document metadata and authorized links/references associated with an Asset. Metadata is visible only to household members explicitly granted access to that document; opening the reference additionally requires source-content authorization. Removing the association does not delete external source content or the Asset's read-only history. The first release does not upload or store binary files; a later upload capability requires a separate secure storage, access, retention, deletion, backup and content-validation decision.
 
 ## Rationale
 

@@ -9,7 +9,7 @@ applies-to:
   - UC-ASSETS-MANAGE-OBLIGATION
   - UC-ASSETS-COMPLETE-OBLIGATION
 verification:
-  - scenario: "Deterministic tests cover a 31 January monthly last-day anchor through February and March, one overdue pending cycle across missed months, completion-relative progression from actual completion, household-local dates across daylight-saving transitions, explicit skip/reschedule, retry/idempotency, concurrent completion and historical retention."
+  - scenario: "Deterministic tests cover a 31 January monthly last-day anchor through February and March, one overdue pending cycle across missed months, completion-relative progression from actual completion or a skipped due date, manager-configured household-local dates across device timezones and daylight-saving transitions, explicit skip/reschedule, retry/idempotency, concurrent completion and historical retention."
 ---
 ## Requirement
 

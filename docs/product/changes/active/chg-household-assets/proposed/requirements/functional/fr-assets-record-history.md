@@ -12,7 +12,7 @@ verification:
 ---
 ## Requirement
 
-An authorized member can complete, skip or reschedule a due occurrence and can record unscheduled maintenance, repair, inspection, installation or other supported history. The system retains bounded occurrence history and linked Asset Records as one visible entry per outcome without duplicate outcomes on retry. A mistaken completion is corrected by adding a traceable correction that preserves the original outcome. After sale or archive, history remains readable but not ordinarily editable. Optional actual costs are associated with the historical record, not treated as an accounting ledger.
+An authorized member can complete, skip or reschedule a due occurrence and can record unscheduled maintenance, repair, inspection, installation or other supported history. The system retains bounded occurrence history and linked Asset Records as one visible entry per outcome without duplicate outcomes on retry. A mistaken completion is corrected by adding a traceable correction that preserves the original outcome. After sale or archive, history remains readable but not ordinarily editable. Optional actual costs carry an amount and currency on each historical record, not an accounting ledger.
 
 ## Rationale
 

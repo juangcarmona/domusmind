@@ -7,7 +7,7 @@ defined-in: BC-HOUSEHOLD-ASSETS
 ---
 ## Definition
 
-A durable historical fact about an Asset, such as maintenance, repair, inspection, installation, transfer or disposal, optionally linked to an obligation occurrence, provider, actual cost and supporting document.
+A durable historical fact about an Asset, such as maintenance, repair, inspection, installation, transfer or disposal, optionally linked to an obligation occurrence, provider, actual cost with its currency, and supporting document.
 
 ## Distinguish From
 

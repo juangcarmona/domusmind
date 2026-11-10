@@ -45,13 +45,13 @@ No standalone full-detail page is assumed unless the existing surface system req
 
 ## Capture and Interaction
 
-“Add” starts with a small required set (name and broad category), then offers progressive optional details. Capture must not require a serial number, parent, member, Area or exhaustive attribute schema. Parent selection is optional and represents containment only. The final UI label remains subject to user research.
+“Add” starts with a small required set (name and a broad category from a short list with “Other”), then offers progressive optional details. Capture must not require a serial number, parent, member, Area or exhaustive attribute schema. Parent selection is optional and represents containment only. “Mis cosas” is the chosen UI label, subject to household validation.
 
-Obligation create/edit presents a household-local due date without an exact time, recurrence rule, separate optional Area/member responsibility and lifecycle clearly. Completion asks only for necessary outcome details and offers optional provider, cost, notes and supporting paperwork. Skip and reschedule are explicit actions; rescheduling a pending date does not edit the rule. A mistaken completion receives a visible traceable correction. Unscheduled work can be recorded without first inventing an obligation. Any linked Task or appointment is an explicit separate action.
+Obligation create/edit presents a due date in the manager-configured household timezone without an exact time, recurrence rule, separate optional Area/member responsibility and lifecycle clearly. Completion asks only for necessary outcome details and offers optional provider, cost with currency, notes and supporting paperwork. Skip and reschedule are explicit actions; rescheduling a pending date does not edit the rule. A mistaken completion receives a visible traceable correction. Unscheduled work can be recorded without first inventing an obligation. Any linked Task or appointment is an explicit separate action. Ordinary removal of an Asset with history archives it; definitive deletion needs a separate explicit flow.
 
 ## Agenda Relationship
 
-Agenda displays an obligation due projection with Asset identity and a route to the obligation. It must distinguish an obligation from a Task or Calendar Plan. If a member separately creates related work, show the relationship without collapsing rows or synchronizing completion implicitly.
+Agenda displays an obligation due projection with Asset identity and a route to the obligation. It must distinguish an obligation from a Task or Calendar Plan. If a member separately creates related work, show two distinguishable linked items without collapsing rows or synchronizing completion implicitly.
 
 ## Accessibility and Responsive Behavior
 
@@ -62,5 +62,5 @@ Preserve keyboard navigation, labeled controls, focus management in the inspecto
 - Validate the selected “Mis cosas” label and category vocabulary with household members.
 - Which minimal Location fields and lifecycle actions are useful for a household, and how to make the linked property Asset and Location easy to distinguish during capture.
 - Which list row metadata and attention states are most useful without creating visual noise.
-- Which document metadata and sensitive-data controls are essential for authorized links; upload belongs to a later separately approved storage capability.
+- Which metadata fields and grant/revoke controls are useful for authorized links; document metadata is visible only to explicitly granted household members, and upload belongs to a later separately approved storage capability.
 - How much recurrence detail is legible in list and Agenda cues.

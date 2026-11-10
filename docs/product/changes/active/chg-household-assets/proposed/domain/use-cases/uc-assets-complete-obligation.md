@@ -35,7 +35,7 @@ The member is authorized for the Asset and the obligation is active or has a res
 
 ## Alternative Flows
 
-- Member explicitly skips the pending cycle; the system records the omission and calculates the next due state under the rule. The anchor for a skipped completion-relative cycle remains to be defined.
+- Member explicitly skips the pending cycle; the system records the omission and calculates the next due state under the rule. A completion-relative rule advances from the skipped cycle's due date.
 - Member reschedules only the pending cycle; the system retains the original recurrence rule for future cycles.
 - Member records unscheduled maintenance directly as an Asset Record without an obligation.
 - Member corrects a mistaken completion through a traceable correction linked to the original outcome; the prior history remains visible.
