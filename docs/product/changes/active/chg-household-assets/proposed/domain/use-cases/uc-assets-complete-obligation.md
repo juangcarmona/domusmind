@@ -7,6 +7,7 @@ primary-actor: ACT-HOUSEHOLD-MEMBER
 bounded-context: BC-HOUSEHOLD-ASSETS
 governed-by:
   - BR-ASSET-OCCURRENCE-HISTORY
+  - BR-ASSET-RECURRENCE-DUE-STATE
   - BR-ASSET-OBLIGATION-EXECUTION-BOUNDARY
 uses-terms:
   - TERM-ASSET-OBLIGATION
@@ -28,14 +29,16 @@ The member is authorized for the Asset and the obligation is active or has a res
 ## Main Flow
 
 1. Member records completion date and a concise outcome; may add provider, actual cost, notes and authorized supporting document.
-2. System records one durable occurrence outcome and linked Asset Record.
-3. For recurring obligations, system calculates the next due state using the agreed recurrence anchor and calendar rules.
+2. System records one durable occurrence outcome and linked Asset Record, shown as a single history entry.
+3. For recurring obligations, system calculates the next due state using the rule. Completion-relative recurrence starts from the actual completion date; a monthly last-day calendar rule stays on the last valid day of each month.
 4. Agenda reflects the updated projection without altering any related Task or Calendar Plan.
 
 ## Alternative Flows
 
-- Member explicitly skips or reschedules an occurrence; the reason and effect on future recurrence are defined by product rules.
+- Member explicitly skips the pending cycle; the system records the omission and calculates the next due state under the rule. The anchor for a skipped completion-relative cycle remains to be defined.
+- Member reschedules only the pending cycle; the system retains the original recurrence rule for future cycles.
 - Member records unscheduled maintenance directly as an Asset Record without an obligation.
+- Member corrects a mistaken completion through a traceable correction linked to the original outcome; the prior history remains visible.
 
 ## Failure Conditions
 

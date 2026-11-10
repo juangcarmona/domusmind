@@ -6,11 +6,11 @@ status: draft
 derived-from:
   - UC-ASSETS-REGISTER-AND-ORGANIZE
 verification:
-  - scenario: "An authorized member registers a detached asset and an asset contained by a household property; invalid cross-household references and containment cycles are rejected."
+  - scenario: "An authorized member registers a named Location without an address, links it to a property Asset and equipment, and may add an address later; invalid cross-household references and containment cycles are rejected."
 ---
 ## Requirement
 
-An authorized household member can create, find and update a household-scoped managed thing with a name and broad category, and may record common details, optional containment, physical location, management basis and responsibility as distinct optional facts. References must resolve only within the same authorized household and containment must not permit cycles.
+An authorized household member can create, find and update a household-scoped managed thing with a name and broad category, and may record common details, optional containment, a separately created or selected household Location, optional management basis and optional Area and member responsibility as distinct facts. A new Location requires only a name; its address is optional. A property Asset and its Location remain linked but separately identifiable. Several Assets may share one Location without acquiring a containment relationship. References must resolve only within the same authorized household and containment must not permit cycles.
 
 ## Rationale
 

@@ -13,7 +13,7 @@ verification:
 ---
 ## Requirement
 
-Every asset operation and Agenda projection enforces the existing household/member authorization boundary. Sensitive document metadata and bytes/references are not exposed to a member unless that member is authorized by both the household and the source storage policy.
+Every asset operation and Agenda projection enforces the existing household/member authorization boundary. Sensitive document metadata and references are not exposed to a member unless that member is authorized by both the household and the source storage policy. The first release does not handle uploaded document bytes.
 
 ## Measurement
 

@@ -15,4 +15,4 @@ A record may be created without a scheduled obligation. It is not an accounting 
 
 ## Usage
 
-Preserve history and correction trace according to an explicit retention policy. Obligation completion should connect to the relevant history rather than produce duplicate entries.
+Preserve history after an Asset is sold or archived; it remains readable but cannot be changed through ordinary editing. A completed obligation connects its occurrence outcome to one visible history entry rather than producing duplicate rows. A mistaken completion is corrected with a linked, traceable correction that retains the original outcome. Deletion/transfer policy remains to be defined.

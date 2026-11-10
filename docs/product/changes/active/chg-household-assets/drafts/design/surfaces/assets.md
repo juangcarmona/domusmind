@@ -1,6 +1,6 @@
-# Draft Surface Spec — Household Assets (working label)
+# Draft Surface Spec — Mis cosas
 
-Status: proposed by `CHG-HOUSEHOLD-ASSETS-001`; not accepted product terminology or implementation contract.
+Status: proposed by `CHG-HOUSEHOLD-ASSETS-001`; Mis cosas is the product-owner-selected navigation label, pending household validation and Product Change acceptance.
 
 ## Purpose
 
@@ -16,7 +16,7 @@ This is an operational household memory surface, not an inventory-counting dashb
 
 ## Entry Points
 
-- Main navigation using the final household-facing label.
+- Main navigation labeled “Mis cosas”.
 - Agenda obligation projection opens the associated Asset and due occurrence.
 - Contextual links from Areas or explicitly related Task/Calendar Plan/List detail.
 
@@ -26,7 +26,7 @@ Use the persistent product shell and compact page header. Desktop follows the es
 
 ## Default View
 
-A compact, searchable household list. Rows should prioritize name, category, location/containing property, responsible Area/member and a concise attention cue (for example next due or overdue). Parent-child relationships are visible but do not imply ownership or responsibility. Avoid decorative category cards and summary metric dashboards.
+A compact, searchable household list. Rows should prioritize name, category, Location and separately any containing Asset, responsible Area/member and a concise attention cue (for example next due or overdue). Parent-child relationships are visible but do not imply ownership or responsibility. Avoid decorative category cards and summary metric dashboards.
 
 Useful filters may include category, location/parent, responsibility, due/overdue and active/archived. Search matches names and ordinary identifying details; sensitive identifiers require product/privacy review before indexing.
 
@@ -35,9 +35,9 @@ Useful filters may include category, location/parent, responsibility, due/overdu
 Selection opens an inspector without losing list context. It presents, in this order as available:
 
 1. Identity, category, lifecycle and useful common details.
-2. Location/containing Asset, management basis and responsible Area/member as separate facts.
+2. Reusable household Location and any containing Asset, management basis and responsible Area/member as separate facts. A property Asset may link to its own Location.
 3. Upcoming and overdue obligations with next action, recurrence summary and explicit completion/reschedule actions.
-4. Documents and clear distinction between uploaded content and an external/authorized reference.
+4. Document metadata and authorized links/references, with a separate remove action. The first release has no upload control.
 5. Maintenance, repair, inspection and installation history with date, provider, optional actual cost and evidence.
 6. Explicitly linked Tasks, Calendar plans or Lists, labeled by their owning context.
 
@@ -47,7 +47,7 @@ No standalone full-detail page is assumed unless the existing surface system req
 
 “Add” starts with a small required set (name and broad category), then offers progressive optional details. Capture must not require a serial number, parent, member, Area or exhaustive attribute schema. Parent selection is optional and represents containment only. The final UI label remains subject to user research.
 
-Obligation create/edit presents due rule, timezone/local date semantics, responsible reference and lifecycle clearly. Completion asks only for necessary outcome details and offers optional provider, cost, notes and supporting paperwork. Unscheduled work can be recorded without first inventing an obligation. Any linked Task or appointment is an explicit separate action.
+Obligation create/edit presents a household-local due date without an exact time, recurrence rule, separate optional Area/member responsibility and lifecycle clearly. Completion asks only for necessary outcome details and offers optional provider, cost, notes and supporting paperwork. Skip and reschedule are explicit actions; rescheduling a pending date does not edit the rule. A mistaken completion receives a visible traceable correction. Unscheduled work can be recorded without first inventing an obligation. Any linked Task or appointment is an explicit separate action.
 
 ## Agenda Relationship
 
@@ -59,8 +59,8 @@ Preserve keyboard navigation, labeled controls, focus management in the inspecto
 
 ## Open UX Decisions
 
-- Household-facing label and category vocabulary.
-- How a property is represented and whether location needs a reusable entity.
+- Validate the selected “Mis cosas” label and category vocabulary with household members.
+- Which minimal Location fields and lifecycle actions are useful for a household, and how to make the linked property Asset and Location easy to distinguish during capture.
 - Which list row metadata and attention states are most useful without creating visual noise.
-- Whether document upload is MVP or an authorized reference-only first step, pending storage/security assessment.
+- Which document metadata and sensitive-data controls are essential for authorized links; upload belongs to a later separately approved storage capability.
 - How much recurrence detail is legible in list and Agenda cues.

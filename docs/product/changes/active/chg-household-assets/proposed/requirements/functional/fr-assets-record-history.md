@@ -8,11 +8,11 @@ derived-from:
   - UC-ASSETS-REGISTER-AND-ORGANIZE
   - BR-ASSET-OCCURRENCE-HISTORY
 verification:
-  - scenario: "Completing an occurrence twice with the same operation does not duplicate its history record; unscheduled repairs can be recorded independently."
+  - scenario: "Completing an occurrence twice with the same operation leaves one linked visible history entry; a mistaken completion gains a traceable correction without losing the original; sale or archive preserves read-only history."
 ---
 ## Requirement
 
-An authorized member can complete, skip or reschedule a due occurrence and can record unscheduled maintenance, repair, inspection, installation or other supported history. The system retains bounded occurrence history and linked Asset Records without duplicate outcomes on retry; optional actual costs are associated with the historical record, not treated as an accounting ledger.
+An authorized member can complete, skip or reschedule a due occurrence and can record unscheduled maintenance, repair, inspection, installation or other supported history. The system retains bounded occurrence history and linked Asset Records as one visible entry per outcome without duplicate outcomes on retry. A mistaken completion is corrected by adding a traceable correction that preserves the original outcome. After sale or archive, history remains readable but not ordinarily editable. Optional actual costs are associated with the historical record, not treated as an accounting ledger.
 
 ## Rationale
 

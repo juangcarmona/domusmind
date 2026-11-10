@@ -16,7 +16,7 @@ Answer what the household manages, where it is, what needs attention, who is res
 
 ## Trigger
 
-A member opens the household Assets surface or follows an Agenda obligation projection.
+A member opens the household Mis cosas surface or follows an Agenda obligation projection.
 
 ## Preconditions
 

@@ -24,7 +24,7 @@ A member registers a car, boiler or property, records useful details, optionally
 
 ## Variants and Branches
 
-- A second property can be an Asset with optional contained equipment, subject to validated terminology/model.
+- A second property can be an Asset linked to its separate Location; equipment may share that Location and may optionally be contained by the property Asset.
 - An unscheduled repair or installation becomes a historical record without requiring an obligation.
 - A task or appointment is created only by explicit member action in its owning context.
 

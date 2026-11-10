@@ -4,6 +4,8 @@ type: domain-term
 title: Asset
 status: draft
 defined-in: BC-HOUSEHOLD-ASSETS
+uses-terms:
+  - TERM-ASSET-LOCATION
 ---
 ## Definition
 
@@ -15,4 +17,4 @@ An Asset is not an inventory quantity or stock item managed by Lists, nor does i
 
 ## Usage
 
-An Asset has household scope, identity and lifecycle. It may optionally reference a containing Asset, a physical location, a responsible Area/member, management basis, documents, obligations and records. These relationships have separate meanings.
+An Asset has household scope, identity and lifecycle. A property may be an Asset with its own obligations and history, linked to a separate Asset Location. Any Asset may optionally reference a containing Asset, an Asset Location, a responsible Area, a responsible member, management basis, documents, obligations and records. Area and member are independent optional responsibility facts; management basis is optional and does not imply ownership. After sale or archive, recorded history remains read-only.
