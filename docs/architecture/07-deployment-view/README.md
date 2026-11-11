@@ -12,7 +12,7 @@ DomusMind has three materially different deployment variants: the **self-hosted 
 
 ### Overview
 
-A household runs DomusMind on one Docker host as a Compose stack defined in [`deploy/docker-compose.yml`](../../../deploy/docker-compose.yml), including PostgreSQL, the API and SPA, and the selected Inbox interpreter. Ollama is the default local provider; an OpenAI-compatible endpoint can be selected with the external-interpreter Compose override. The operator supplies installation values in a host-side `.env` (template: [`deploy/.env.example`](../../../deploy/.env.example)) and, for external access, their own TLS-terminating reverse proxy.
+A household runs DomusMind on one Docker host as a Compose stack. Stable releases use the maintained [`deploy/docker-compose.yml`](../../../deploy/docker-compose.yml), including PostgreSQL, the API and SPA, and the selected Inbox interpreter. Commit builds also provide a Compose file generated from the separate [`DomusMind.Deployment`](../../../src/backend/DomusMind.Deployment/AppHost.cs) Aspire AppHost; this bundle currently covers a fresh installation with the default Ollama provider. Ollama is the default local provider; an OpenAI-compatible endpoint can be selected with the external-interpreter Compose override in the stable release. The operator supplies installation values in a host-side `.env` (stable template: [`deploy/.env.example`](../../../deploy/.env.example)) and, for external access, their own TLS-terminating reverse proxy.
 
 ![DomusMind deployment overview](./diagrams/domusmind-deployment-overview.png)
 <!-- diagram-source: ./diagrams/domusmind-deployment-overview.mmd sha256:df907c1f03392f9583290a05237619f7bce716ccd5e52b2c6f507a4a226477bd png-sha256:4f7c09d8dc14ce5ababd11655a3f5e763c34fd7738e66c2b9d55f096d140812d -->
@@ -51,7 +51,7 @@ Keeping PostgreSQL off the host network makes the application the single entry p
 | `DomusMindDbContext` schema and event log | `postgres` container, database `domusmind`, volume `postgres_data` | Self-hosted |
 | ASP.NET Core Data Protection key ring | `domusmind` container, volume `data_protection_keys` | Self-hosted |
 | Container image | GHCR `ghcr.io/<owner>/domusmind` | Registry |
-| Compose file, `.env.example`, install README | GitHub Release assets | Distribution |
+| Compose file, `.env.example`, install README | Stable and commit-build GitHub Release assets | Distribution |
 
 ## Infrastructure Level 1: Public Site
 
@@ -77,7 +77,7 @@ and one-time Pages setup are documented in [Engineering site](../../engineering-
 
 ## Infrastructure Level 1: Local Development
 
-Development uses .NET Aspire through [`DomusMind.AppHost`](../../../src/backend/DomusMind.AppHost/AppHost.cs); it is never used in production. Aspire provisions PostgreSQL and, when the selected provider is Ollama, the local model resource for Inbox interpretation. An OpenAI-compatible provider is configured through AppHost settings and does not start Ollama.
+Development uses .NET Aspire through [`DomusMind.AppHost`](../../../src/backend/DomusMind.AppHost/AppHost.cs). Its development-only Keycloak and Vite resources are never used in a self-hosted installation. The separate distribution AppHost generates a Compose file for commit-build releases; consumers run that generated file with Docker Compose. The development AppHost provisions PostgreSQL and, when the selected provider is Ollama, the local model resource for Inbox interpretation. An OpenAI-compatible provider is configured through development AppHost settings and does not start Ollama.
 
 The development BFF pilot adds a Keycloak container with a fixed test realm and configures the API and Vite web app for OIDC. Its `localhost` HTTP authority is for loopback testing only; a browser reached from another machine needs a trusted HTTPS reverse proxy, an issuer URL reachable by both browser and API, and matching exact Keycloak redirect and web-origin settings. The production Compose stack does not include Keycloak and retains local JWT authentication.
 
