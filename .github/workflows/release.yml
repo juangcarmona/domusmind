@@ -315,6 +315,30 @@ jobs:
           APP_PORT: "24365"
         run: docker compose -f deploy/docker-compose.yml config --quiet
 
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install Aspire CLI
+        run: |
+          dotnet tool install --global Aspire.Cli --version 13.6.1
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+      - name: Generate Aspire installation bundle
+        env:
+          Image__Tag: ${{ needs.prepare.outputs.version }}
+        run: |
+          aspire publish --apphost src/backend/DomusMind.Deployment/DomusMind.Deployment.csproj \
+            --environment Production --non-interactive --nologo \
+            --output-path "$RUNNER_TEMP/domusmind-aspire"
+          cp deploy/README-aspire.md "$RUNNER_TEMP/domusmind-aspire/README.md"
+          mv "$RUNNER_TEMP/domusmind-aspire/.env" "$RUNNER_TEMP/domusmind-aspire/.env.example"
+          DB_USER=ci DB_PASSWORD=ci JWT_SECRET=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
+            docker compose --file "$RUNNER_TEMP/domusmind-aspire/docker-compose.yaml" config --quiet
+          mkdir -p release-artifacts
+          (cd "$RUNNER_TEMP/domusmind-aspire" && zip -q "$GITHUB_WORKSPACE/release-artifacts/domusmind-aspire-${{ needs.prepare.outputs.version }}.zip" docker-compose.yaml .env.example README.md)
+
       - name: Publish release
         uses: softprops/action-gh-release@v2
         with:
@@ -328,3 +352,4 @@ jobs:
             deploy/.env.example
             deploy/README.md
             release-artifacts/release-manifest.json
+            release-artifacts/domusmind-aspire-${{ needs.prepare.outputs.version }}.zip

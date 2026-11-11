@@ -72,7 +72,7 @@ Both channels publish to `ghcr.io/<owner>/domusmind` and build from the same Doc
 2. **Backend validation** and **Web app validation**, which run in parallel. The backend job restores, builds and tests `DomusMind.slnx` in Release. The web app job runs `npm ci` and `npm run build`.
 3. **Create tag.** Creates and pushes an annotated `v<version>` tag.
 4. **Build and push image.** Generates `src/web/app/src/generated/version.ts` (`APP_VERSION`, `APP_RELEASE_DATE`, `APP_COMMIT_SHA`, `APP_IS_PRERELEASE`) and `release-manifest.json`, then builds and pushes the immutable tags with OCI `source`, `revision` and `version` labels.
-5. **Publish GitHub Release.** Validates the compose file with `docker compose config`, then publishes the release with generated notes and the summary. The release assets are `deploy/docker-compose.yml`, `deploy/.env.example`, `deploy/README.md` and `release-manifest.json`.
+5. **Publish GitHub Release.** Validates the maintained Compose file, generates and validates a second installation bundle through the distribution Aspire AppHost, then publishes the release with generated notes and the summary. The release assets include the existing `deploy/docker-compose.yml`, `deploy/.env.example`, `deploy/README.md`, `release-manifest.json`, and `domusmind-aspire-<version>.zip`.
 
 A release can be traced through the git tag, the GitHub Release, the immutable image tags, the OCI labels and the in-app version metadata. The web app's Settings, About screen shows the version metadata. The backend has no version endpoint and logs no version at startup.
 
