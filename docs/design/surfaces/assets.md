@@ -1,6 +1,13 @@
-# Draft Surface Spec — Mis cosas
+---
+title: Surface Spec — Mis cosas
+status: Canonical
+audience: Product / Design / Engineering
+scope: Household assets, obligations and history
+---
 
-Status: proposed by `CHG-HOUSEHOLD-ASSETS-001`; Mis cosas is the product-owner-selected navigation label, pending household validation and Product Change acceptance.
+# Surface Spec — Mis cosas
+
+Accepted through `CHG-HOUSEHOLD-ASSETS-001`. The product owner selected “Mis cosas” as the navigation label; household validation remains pending.
 
 ## Purpose
 
@@ -10,7 +17,7 @@ This is an operational household memory surface, not an inventory-counting dashb
 
 ## Depends On
 
-- Accepted ProductShape model and `CHG-HOUSEHOLD-ASSETS-001`.
+- Accepted ProductShape model and applied `CHG-HOUSEHOLD-ASSETS-001`.
 - `docs/design/surface-system.md`.
 - Existing Household, Areas, Agenda, Calendar, Tasks and Lists ownership boundaries.
 

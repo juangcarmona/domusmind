@@ -11,6 +11,7 @@ The application palette, spacing and typography are defined in [`src/web/app/src
 | [surface-system.md](surface-system.md) | The shared surface system: navigation, layout, patterns |
 | [surfaces/agenda.md](surfaces/agenda.md) | The Agenda surface |
 | [surfaces/chats.md](surfaces/chats.md) | The Chats surface |
+| [surfaces/assets.md](surfaces/assets.md) | Mis cosas: household assets, obligations and history |
 | [surfaces/areas.md](surfaces/areas.md) | The Areas surface |
 | [surfaces/lists.md](surfaces/lists.md) | The Lists surface |
 | [surfaces/meal-planning.md](surfaces/meal-planning.md) | The Meal Planning surface |

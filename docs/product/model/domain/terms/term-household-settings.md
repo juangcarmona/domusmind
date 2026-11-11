@@ -8,14 +8,14 @@ synonyms: []
 uses-terms:
   - TERM-HOUSEHOLD
 provenance:
-  source: "src/backend/DomusMind.Domain/Family/Family.cs (UpdateSettings), src/backend/DomusMind.Domain/Family/Events/FamilySettingsUpdated.cs; openspec/specs/family/spec.md (NOTE N2); docs/_legacy/04_contexts/family.md (Commands: UpdateFamilySettings); interview: product owner decision Q-0025 (E-0158)"
+  source: "src/backend/DomusMind.Domain/Family/Family.cs (UpdateSettings), src/backend/DomusMind.Domain/Family/Events/FamilySettingsUpdated.cs; openspec/specs/family/spec.md (NOTE N2); docs/_legacy/04_contexts/family.md (Commands: UpdateFamilySettings); interview: product owner decision Q-0025 (E-0158); CHG-HOUSEHOLD-ASSETS-001 owner refinement (household timezone)"
   confidence: high
   recovered-from: observation
 ---
 
 ## Definition
 
-Preferences that belong to the household itself and shape how the product presents time and language for everyone in it: the household name, its primary language, its first day of week and its date format (observed: src/backend/DomusMind.Domain/Family/Family.cs, UpdateSettings).
+Preferences that belong to the household itself and shape how the product presents time and language for everyone in it: the household name, its primary language, its first day of week, its date format and its configured timezone. The first four fields are current product (observed: src/backend/DomusMind.Domain/Family/Family.cs, UpdateSettings); the timezone is proposed by CHG-HOUSEHOLD-ASSETS-001.
 
 ## Distinguish From
 
@@ -23,4 +23,4 @@ Preferences that belong to the household itself and shape how the product presen
 
 ## Usage
 
-Other areas depend on the first day of week: the Agenda week view and meal plans start from it (inferred: meal-planning and agenda documents refer to "the household's configured first day of week").
+Other areas depend on the first day of week: the Agenda week view and meal plans start from it (inferred: meal-planning and agenda documents refer to "the household's configured first day of week"). Household Assets uses the configured timezone to interpret its local-date obligations consistently for all members; a member's device timezone and the server timezone do not change those due dates (CHG-HOUSEHOLD-ASSETS-001 owner decision).
