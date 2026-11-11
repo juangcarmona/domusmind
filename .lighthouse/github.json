@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "profileVersion": 1,
+  "repository": "juangcarmona/domusmind",
+  "intake": "preserve",
+  "requiredChecks": [
+    { "context": "backend gate", "integrationId": 15368 },
+    { "context": "webapp gate", "integrationId": 15368 },
+    { "context": "public site gate", "integrationId": 15368 },
+    { "context": "codeql gate", "integrationId": 15368 }
+  ],
+  "requiredApprovals": 0,
+  "evidenceBranch": "process/retrospectives",
+  "releaseWorkflowReady": false,
+  "overrides": {
+    "repository.allow_merge_commit": {
+      "value": true,
+      "reason": "Preserve the repository's existing merge options."
+    },
+    "repository.allow_rebase_merge": {
+      "value": true,
+      "reason": "Preserve the repository's existing merge options."
+    },
+    "repository.allow_auto_merge": {
+      "value": false,
+      "reason": "Lighthouse performs exact-head integration after independent review and required checks."
+    },
+    "repository.delete_branch_on_merge": {
+      "value": false,
+      "reason": "Preserve the repository's existing branch retention policy."
+    },
+    "actions.workflow": {
+      "value": null,
+      "reason": "Keep the existing read-only default and PR publication setting."
+    },
+    "releases.immutable": {
+      "value": null,
+      "reason": "The edge publisher creates commit-addressed prereleases and retains its existing release policy."
+    },
+    "rules.main": {
+      "value": null,
+      "reason": "Keep classic branch protection while migrating required checks to unconditional gates."
+    }
+  },
+  "completion": {
+    "publishEvidence": true,
+    "postMergeWorkflows": ["docker-edge.yml"]
+  }
+}

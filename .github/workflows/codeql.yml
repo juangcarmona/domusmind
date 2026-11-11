@@ -108,3 +108,22 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:javascript-typescript"
+
+  gate:
+    name: codeql gate
+    needs: [changes, analyze-csharp, analyze-javascript]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require both analyses when code changed
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          RELEVANT: ${{ needs.changes.outputs.relevant }}
+          CSHARP_RESULT: ${{ needs.analyze-csharp.result }}
+          JAVASCRIPT_RESULT: ${{ needs.analyze-javascript.result }}
+        run: |
+          test "$CHANGES_RESULT" = success
+          if [ "$RELEVANT" = true ]; then
+            test "$CSHARP_RESULT" = success
+            test "$JAVASCRIPT_RESULT" = success
+          fi

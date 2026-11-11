@@ -14,7 +14,7 @@ on:
   pull_request:
     types: [ready_for_review, converted_to_draft, closed, reopened]
   workflow_run:
-    workflows: ["refine"]
+    workflows: ["refine","integrate","unattended","docker-edge"]
     types: [completed]
   schedule:
     - cron: '*/5 * * * *'
@@ -27,7 +27,7 @@ on:
       stage:
         description: Authorized lifecycle stage
         required: true
-        default: refine
+        default: propose
         type: choice
         options: [triage, refine, propose, implement, integrate, review]
       workflow:
@@ -78,7 +78,7 @@ permissions:
 env:
   LIGHTHOUSE_ENABLED_STAGES: triage,refine,propose,implement,integrate,review
   LIGHTHOUSE_AUTO_IMPLEMENT: true
-  LIGHTHOUSE_COMPLETION_ENABLED: false
+  LIGHTHOUSE_COMPLETION_ENABLED: true
   LIGHTHOUSE_PRODUCT_CHANGE_ENABLED: false
 jobs:
   pr-state:
@@ -212,7 +212,7 @@ jobs:
         id: route
         env:
           GH_TOKEN: ${{ github.token }}
-          LIGHTHOUSE_COMPLETION_ENABLED: false
+          LIGHTHOUSE_COMPLETION_ENABLED: true
           LIGHTHOUSE_EPIC_ENABLED: ${{ vars.LIGHTHOUSE_EPIC_ENABLED }}
           LIGHTHOUSE_PRODUCT_CHANGE_ENABLED: ${{ env.LIGHTHOUSE_PRODUCT_CHANGE_ENABLED }}
         run: node src/packages/sdlc/src/issue-actions.mjs route
