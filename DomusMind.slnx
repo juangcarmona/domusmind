@@ -5,6 +5,7 @@
     <Project Path="src/backend/DomusMind.Api/DomusMind.Api.csproj" />
     <Project Path="src/backend/DomusMind.Application/DomusMind.Application.csproj" />
     <Project Path="src/backend/DomusMind.Contracts/DomusMind.Contracts.csproj" />
+    <Project Path="src/backend/DomusMind.Deployment/DomusMind.Deployment.csproj" />
     <Project Path="src/backend/DomusMind.Domain/DomusMind.Domain.csproj" />
     <Project Path="src/backend/DomusMind.Infrastructure/DomusMind.Infrastructure.csproj" />
   </Folder>

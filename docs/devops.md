@@ -59,10 +59,10 @@ DomusMind uses semantic versioning with explicit prerelease lanes. [`release.yml
 
 | Channel | Producer | Tags | Mutability |
 | --- | --- | --- | --- |
-| Edge | [`docker-edge.yml`](../.github/workflows/docker-edge.yml), on every push to `main` that touches backend, web app, compose or release workflow files | `edge` | Moves on every build |
+| Commit build | [`docker-edge.yml`](../.github/workflows/docker-edge.yml), on every push to `main` | `sha-<fullsha>` and `edge` | Commit tag identifies one source revision; `edge` moves |
 | Release | [`release.yml`](../.github/workflows/release.yml), manual | `v<version>`, `<version>`, `sha-<shortsha>` | Immutable |
 
-Both channels publish to `ghcr.io/<owner>/domusmind` and build from the same Dockerfile, sharing one GitHub Actions build cache. Use `edge` only to test the current tip of `main`. Installations pin an exact release version. The release workflow never publishes `latest`, `edge` or `MAJOR.MINOR` tags.
+Both channels publish to `ghcr.io/<owner>/domusmind` and build from the same Dockerfile, sharing one GitHub Actions build cache. Each commit build records the pushed image digest and publishes a `build-<fullsha>` prerelease with an Aspire-generated installation bundle. It does not deploy to any consumer host. Use `edge` only to test the current tip of `main`. Existing installations pin an exact stable release version. The release workflow never publishes `latest`, `edge` or `MAJOR.MINOR` tags.
 
 ## Release Pipeline
 
@@ -72,7 +72,7 @@ Both channels publish to `ghcr.io/<owner>/domusmind` and build from the same Doc
 2. **Backend validation** and **Web app validation**, which run in parallel. The backend job restores, builds and tests `DomusMind.slnx` in Release. The web app job runs `npm ci` and `npm run build`.
 3. **Create tag.** Creates and pushes an annotated `v<version>` tag.
 4. **Build and push image.** Generates `src/web/app/src/generated/version.ts` (`APP_VERSION`, `APP_RELEASE_DATE`, `APP_COMMIT_SHA`, `APP_IS_PRERELEASE`) and `release-manifest.json`, then builds and pushes the immutable tags with OCI `source`, `revision` and `version` labels.
-5. **Publish GitHub Release.** Validates the compose file with `docker compose config`, then publishes the release with generated notes and the summary. The release assets are `deploy/docker-compose.yml`, `deploy/.env.example`, `deploy/README.md` and `release-manifest.json`.
+5. **Publish GitHub Release.** Validates the maintained Compose file, generates and validates a second installation bundle through the distribution Aspire AppHost, then publishes the release with generated notes and the summary. The release assets include the existing `deploy/docker-compose.yml`, `deploy/.env.example`, `deploy/README.md`, `release-manifest.json`, and `domusmind-aspire-<version>.zip`.
 
 A release can be traced through the git tag, the GitHub Release, the immutable image tags, the OCI labels and the in-app version metadata. The web app's Settings, About screen shows the version metadata. The backend has no version endpoint and logs no version at startup.
 
@@ -91,7 +91,7 @@ A release can be traced through the git tag, the GitHub Release, the immutable i
 | [`docs-ci.yml`](../.github/workflows/docs-ci.yml) | `architecture docs` | Checks the ArcShape architecture, links, and citations (`arcshape validate --links --citations`), runs markdownlint over `docs/architecture` and `docs/adr`, and runs `prodshape citations verify docs/architecture`. Unresolved or tampered citations fail the job. Stale citations only warn |
 | [`engineering-site.yml`](../.github/workflows/engineering-site.yml) | `Browser journeys`, `Build Engineering site`, `Publish Engineering site` | Runs generated-data browser coverage against the composed API, web app and PostgreSQL; publishes nightly reports and bounded evidence alongside the landing page, arc42/ADR and ProductShape snapshots. The non-cancelling publisher restores the current site manifest before updating it; see [`docs/engineering-site.md`](engineering-site.md) and [`docs/engineering-e2e.md`](engineering-e2e.md) |
 
-[`public-site-cd.yml`](../.github/workflows/public-site-cd.yml) deploys the public site to Azure Static Web Apps on pushes to `main` that touch `src/web/public`. In short, CI validates, `docker-edge.yml` publishes edge images, and `release.yml` is the only publisher of release images.
+[`public-site-cd.yml`](../.github/workflows/public-site-cd.yml) deploys the public site to Azure Static Web Apps on pushes to `main` that touch `src/web/public`. CI validates PRs; `docker-edge.yml` publishes a commit-addressed image and prerelease distribution on every push to `main`; `release.yml` publishes stable and versioned prerelease images on explicit dispatch.
 
 The image smoke workflow runs on pull requests touching the backend, web app, Docker Compose installation, or the smoke-test workflow itself, and on matching pushes to `main`. It builds from the same [`DomusMind.Api/Dockerfile`](../src/backend/DomusMind.Api/Dockerfile) used by edge and release images. Its credentials and database are generated per run; it never connects to a developer or production database and does not publish the image.
 
