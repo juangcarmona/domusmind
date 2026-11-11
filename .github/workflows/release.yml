@@ -333,11 +333,11 @@ jobs:
             --environment Production --non-interactive --nologo \
             --output-path "$RUNNER_TEMP/domusmind-aspire"
           cp deploy/README-aspire.md "$RUNNER_TEMP/domusmind-aspire/README.md"
-          mv "$RUNNER_TEMP/domusmind-aspire/.env" "$RUNNER_TEMP/domusmind-aspire/.env.example"
+          mv "$RUNNER_TEMP/domusmind-aspire/.env" "$RUNNER_TEMP/domusmind-aspire/env.example"
           DB_USER=ci DB_PASSWORD=ci JWT_SECRET=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
             docker compose --file "$RUNNER_TEMP/domusmind-aspire/docker-compose.yaml" config --quiet
           mkdir -p release-artifacts
-          (cd "$RUNNER_TEMP/domusmind-aspire" && zip -q "$GITHUB_WORKSPACE/release-artifacts/domusmind-aspire-${{ needs.prepare.outputs.version }}.zip" docker-compose.yaml .env.example README.md)
+          (cd "$RUNNER_TEMP/domusmind-aspire" && zip -q "$GITHUB_WORKSPACE/release-artifacts/domusmind-aspire-${{ needs.prepare.outputs.version }}.zip" docker-compose.yaml env.example README.md)
 
       - name: Publish release
         uses: softprops/action-gh-release@v2

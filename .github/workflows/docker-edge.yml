@@ -94,7 +94,7 @@ jobs:
             --environment Production --non-interactive --nologo \
             --output-path "$RUNNER_TEMP/domusmind-distribution"
           cp deploy/README-aspire.md "$RUNNER_TEMP/domusmind-distribution/README.md"
-          mv "$RUNNER_TEMP/domusmind-distribution/.env" "$RUNNER_TEMP/domusmind-distribution/.env.example"
+          mv "$RUNNER_TEMP/domusmind-distribution/.env" "$RUNNER_TEMP/domusmind-distribution/env.example"
           DB_USER=ci DB_PASSWORD=ci JWT_SECRET=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa \
             docker compose --file "$RUNNER_TEMP/domusmind-distribution/docker-compose.yaml" config --quiet
 
@@ -111,5 +111,5 @@ jobs:
             This release is tied to a commit. Stable SemVer releases remain available separately.
           files: |
             ${{ runner.temp }}/domusmind-distribution/docker-compose.yaml
-            ${{ runner.temp }}/domusmind-distribution/.env.example
+            ${{ runner.temp }}/domusmind-distribution/env.example
             ${{ runner.temp }}/domusmind-distribution/README.md
