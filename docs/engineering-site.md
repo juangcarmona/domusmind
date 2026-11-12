@@ -17,8 +17,9 @@ Its source content is generated from the repository on every relevant push to
   their editable Mermaid sources and content hashes are checked with
   `node scripts/architecture-diagrams.mjs --check`. To regenerate previews, run
   `node scripts/architecture-diagrams.mjs` in a browser-capable environment.
-- `/model/` is generated with the pinned ProductShape CLI version used by
-  `product-snapshot.yml`.
+- `/model/` copies `.product/generated/explorer.html` to `model/index.html`.
+  It uses the root lockfile’s ProductShape CLI, shared with `product-snapshot.yml`,
+  which copies the same entry point to `domusmind-product-snapshot.html` for download.
 - `/e2e/` contains the browser journey report index, a stable latest URL, and
   bounded history. See [Browser end-to-end reports](engineering-e2e.md) for
   the selected journeys, evidence and retention policy.
