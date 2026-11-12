@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/engineering-site.yml'
       - 'tools/engineering-site/**'
       - 'tools/static-site/**'
@@ -64,7 +66,7 @@ jobs:
           fi
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(\.github/workflows/engineering-site\.yml$|tools/(engineering-site|static-site|arc42-snapshot|e2e-report)/|scripts/((build|check)-architecture-site|architecture-diagrams(\.test)?)\.mjs$|src/web/app/(e2e/|playwright\.config\.ts$|package(-lock)?\.json$)|docs/(architecture|adr|product/model)/|\.product/config\.yaml$|docs/engineering-(site|e2e)\.md$)'; then
+          if printf '%s\n' "$files" | grep -qE '^(package(-lock)?\.json$|\.github/workflows/engineering-site\.yml$|tools/(engineering-site|static-site|arc42-snapshot|e2e-report)/|scripts/((build|check)-architecture-site|architecture-diagrams(\.test)?)\.mjs$|src/web/app/(e2e/|playwright\.config\.ts$|package(-lock)?\.json$)|docs/(architecture|adr|product/model)/|\.product/config\.yaml$|docs/engineering-(site|e2e)\.md$)'; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
@@ -261,9 +263,9 @@ jobs:
 
       - name: Generate ProductShape snapshot
         run: |
-          npx -y @prodshape/cli@0.22.0 graph --format html
+          npx --no-install prodshape graph --format html
           mkdir -p _site/model
-          cp .product/generated/snapshot.html _site/model/index.html
+          cp .product/generated/explorer.html _site/model/index.html
 
       - name: Finalize the site manifest
         run: node tools/static-site/static-site.mjs finalize _site

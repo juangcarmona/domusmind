@@ -7,7 +7,7 @@
     "@fission-ai/openspec": "1.16.0",
     "@juangcarmona/lighthouse": "0.12.65",
     "@juangcarmona/lighthouse-ui": "0.2.1",
-    "@prodshape/cli": "0.23.0"
+    "@prodshape/cli": "0.26.0"
   },
   "overrides": {
     "@juangcarmona/lighthouse": {

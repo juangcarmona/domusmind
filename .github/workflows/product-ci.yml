@@ -11,7 +11,11 @@ on:
     paths:
       - 'docs/product/**'
       - '.product/**'
+      - '.claude/**'
+      - '.agents/**'
       - 'openspec/**'
+      - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/product-ci.yml'
   workflow_dispatch:
 
@@ -44,7 +48,7 @@ jobs:
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
             --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(docs/product/|\.product/|openspec/|\.github/workflows/product-ci\.yml$)'; then
+          if printf '%s\n' "$files" | grep -qE '^(package(-lock)?\.json$|docs/product/|\.product/|\.claude/|\.agents/|openspec/|\.github/workflows/product-ci\.yml$)'; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
@@ -64,16 +68,19 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install OpenSpec
-        run: npm install -g @fission-ai/openspec@1
+      - name: Install engineering tools
+        run: npm ci --ignore-scripts
 
       - name: Validate OpenSpec specifications
-        run: openspec validate --all
+        run: npx --no-install openspec validate --all
 
       - name: Validate the product model
-        run: npx -y @prodshape/cli@0.22.0 validate
+        run: npx --no-install prodshape validate
+
+      - name: Verify ProductShape integration integrity
+        run: npx --no-install prodshape integration update --check
 
       # Every current OpenSpec document must be bound to the model with current
       # citations, or exempt with a human-approved reason.
       - name: Verify OpenSpec citations
-        run: npx -y @prodshape/cli@0.22.0 citations verify --provider openspec
+        run: npx --no-install prodshape citations verify --provider openspec

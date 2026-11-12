@@ -11,6 +11,8 @@ on:
     paths:
       - 'docs/product/**'
       - '.product/**'
+      - 'package.json'
+      - 'package-lock.json'
       - '.github/workflows/product-snapshot.yml'
   # A pull request that changes the model gets its own snapshot, so a reviewer
   # can open the proposed product rather than read the diff. No path filter:
@@ -52,7 +54,7 @@ jobs:
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
             --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(docs/product/|\.product/|\.github/workflows/product-snapshot\.yml$)'; then
+          if printf '%s\n' "$files" | grep -qE '^(package(-lock)?\.json$|docs/product/|\.product/|\.github/workflows/product-snapshot\.yml$)'; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
@@ -72,14 +74,17 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install engineering tools
+        run: npm ci --ignore-scripts
+
       - name: Generate the snapshot
-        run: npx -y @prodshape/cli@0.22.0 graph --format html
+        run: npx --no-install prodshape graph --format html
 
       # The file is self-contained, so it is uploaded unzipped and opens
       # straight from disk. With `archive: false` the artifact takes the file's
       # name, hence the rename.
       - name: Name the snapshot after the product
-        run: cp .product/generated/snapshot.html domusmind-product-snapshot.html
+        run: cp .product/generated/explorer.html domusmind-product-snapshot.html
 
       - name: Upload the snapshot
         id: upload
