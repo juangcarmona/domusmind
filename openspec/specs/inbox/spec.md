@@ -35,7 +35,7 @@ Inbox SHALL support interpretation of captured notes and supported action reques
 
 <!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8f2efe33de44deac70caac674756cd003907c878b4bdfb69128b6f5515bb6f4f" -->
 
-<!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:e844ae46daacc6cc3506484172f829b59bc485ffa5d9c9058649885ddbcdd7d0" -->
+<!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:13175fea8397c7f3c4fba319e63231aac0150c12d04ea532fb0dcfc706696e3f" -->
 <!-- pdac:cite id="BR-ASSISTANT-PROVIDER-FALLBACK" digest="sha256:2c98370c1a0aaaff6a236833daf18682088f617825e15cc6f789cf8718597ba9" -->
 <!-- pdac:cite id="TERM-ASSISTANT-PROVIDER-TARGET" digest="sha256:3dae47c4e9e1adb8f0d1ec16d5de18e3261adb0c39874806472f318cda3fee4b" -->
 
@@ -50,7 +50,7 @@ Inbox SHALL support interpretation of captured notes and supported action reques
 
 Each proposal is reviewed, refined, approved or rejected independently. Approval invokes the owning Calendar, Tasks or Lists behavior and still follows its authorization and validation rules. Rejection or leaving a proposal pending does not change household state.
 
-<!-- pdac:cite id="FR-INBOX-REVIEW" digest="sha256:6839e058607fdba5b20c2e3a539803734bcc2f8e277af64793751b8bf7677dac" -->
+<!-- pdac:cite id="FR-INBOX-REVIEW" digest="sha256:43daf3b67ffad7bd4dd93b39939359941b955f0e449d04f4dab5cd5ca04e3422" -->
 
 <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:92d34d343ebc239e46c834106ac81dc978c2f014b9ae1e5574786cc82da7821e" -->
 

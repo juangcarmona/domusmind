@@ -1,0 +1,77 @@
+---
+id: LC-INBOX-PROPOSAL
+type: domain-lifecycle
+title: Inbox proposal lifecycle
+status: active
+subject: TERM-INBOX-PROPOSAL
+states:
+  - id: PENDING
+    title: Pending
+    initial: true
+  - id: EXECUTING
+    title: Executing
+  - id: APPLIED
+    title: Applied
+    terminal: true
+  - id: REJECTED
+    title: Rejected
+    terminal: true
+transitions:
+  - id: APPROVE
+    title: Approve one proposal
+    from:
+      - PENDING
+    to: EXECUTING
+    trigger: An authorized member explicitly approves the proposal
+    initiated-by: &a1
+      - ACT-HOUSEHOLD-MEMBER
+    governed-by:
+      - BR-INBOX-REVIEW-AND-EXECUTION
+    realized-by:
+      - UC-INBOX-CAPTURE-AND-REVIEW
+  - id: APPLY
+    title: Record the completed area action
+    from:
+      - EXECUTING
+    to: APPLIED
+    trigger: The owning area successfully performs the approved action
+    governed-by:
+      - BR-INBOX-REVIEW-AND-EXECUTION
+    realized-by:
+      - UC-INBOX-CAPTURE-AND-REVIEW
+  - id: REJECT
+    title: Reject one proposal
+    from:
+      - PENDING
+    to: REJECTED
+    trigger: An authorized member explicitly rejects the proposal
+    initiated-by: *a1
+    governed-by:
+      - BR-INBOX-REVIEW-AND-EXECUTION
+    realized-by:
+      - UC-INBOX-CAPTURE-AND-REVIEW
+provenance:
+  source: BR-INBOX-REVIEW-AND-EXECUTION; UC-INBOX-CAPTURE-AND-REVIEW; src/backend/DomusMind.Domain/Inbox/InboxProposal.cs; src/backend/DomusMind.Domain/Inbox/InboxItem.cs; src/backend/DomusMind.Application/Features/Inbox/Execute/ExecuteApprovedInboxProposalHandler.cs
+  confidence: high
+  recovered-from: documentation
+---
+
+## Purpose
+
+Keep the member's decision separate from the result of the approved action.
+
+## Invariants
+
+Each proposal represents one action. Capturing or interpreting a note leaves that action unapplied. Approval requires household access, and execution must pass the owning area's authorization and validation rules.
+
+## State Semantics
+
+Pending proposals can be refined, approved or rejected. Executing means approval has started the area action; it does not claim that a household record exists. Applied means the area action succeeded and its result is linked to the proposal. Rejected proposals invoke no area action.
+
+## Transition Semantics
+
+Approval raises InboxProposalApproved and starts execution. Successful execution is recorded through InboxProposalApplied. Rejection records InboxProposalChanged with the rejected status. Refinement changes proposal details while it remains pending.
+
+## Boundaries
+
+The owning area retains authority over its records. These states describe the proposal, not the Plan, Task or List Item it refers to. Recovery after an execution failure is not defined by the accepted product model; this lifecycle adds no retry, rollback or reset transition. It does not add a new UI visibility requirement for Executing.

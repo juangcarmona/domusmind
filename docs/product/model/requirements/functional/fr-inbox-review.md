@@ -7,7 +7,11 @@ derived-from:
   - UC-INBOX-CAPTURE-AND-REVIEW
   - BR-INBOX-REVIEW-AND-EXECUTION
 verification:
-  - scenario-ref: SB-INBOX-REVIEW-PROPOSAL
+  - scenario-ref: SB-INBOX-APPROVE-PROPOSAL
+  - scenario-ref: SB-INBOX-APPLY-PROPOSAL
+  - scenario-ref: SB-INBOX-REJECT-PROPOSAL
+  - scenario-ref: SB-INBOX-UNAUTHORIZED-PROPOSAL
+  - scenario-ref: SB-INBOX-INVALID-PROPOSAL
 uses-terms:
   - TERM-INBOX-ITEM
   - TERM-INBOX-PROPOSAL
@@ -19,4 +23,4 @@ An authorized household member MUST be able to review proposals, refine a propos
 
 ## Rationale
 
-Review makes AI assistance a tool for household members rather than an authority over the household (issue #17).
+Members review and decide on each suggested action before it changes household records (issue #17).

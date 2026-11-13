@@ -165,7 +165,7 @@ Completed tasks cannot return to pending. Cancelled tasks cannot be completed. C
 
 <!-- pdac:cite id="FR-TASKS-COMPLETE-TASK" digest="sha256:37265014449d4bc6e107f6c0a712fef40f79ca2b9ad05b0f1744d5efea99a9e7" -->
 
-<!-- pdac:cite id="SB-TASKS-COMPLETE-TASK" digest="sha256:c06386e0493cf0262841eedc2aa96b4607941bd01277d75a1a48238283410824" -->
+<!-- pdac:cite id="SB-TASKS-COMPLETE-TASK" digest="sha256:3ae707f9f316ff0ea29829ec4d8d1ca8eaddb830fe9e6741c1e8db599ac06dfa" -->
 
 <!-- pdac:cite id="SB-TASKS-COMPLETE-TWICE-REJECTED" digest="sha256:52c4ea998b1fa7c9360ac72fa9c6dae7b7b45f2f8e7c688592e3f15476af31ee" -->
 
@@ -207,7 +207,7 @@ Cancellation preserves the task in history but removes it from active work. Canc
 
 <!-- pdac:cite id="FR-TASKS-CANCEL-TASK" digest="sha256:5e9f0c5cf475c71536ee549c99d2c638354aa58c6f462e44350123df286b41ae" -->
 
-<!-- pdac:cite id="SB-TASKS-CANCEL-TASK" digest="sha256:b6bd7ad80845ed2956a40e64517b1f67cab41ce1b82fa111bb3fcdcb5fe15fec" -->
+<!-- pdac:cite id="SB-TASKS-CANCEL-TASK" digest="sha256:b303095cc87548586f3adf3ecf9a84d66899780ecd2a219b639e7ad65ad02a38" -->
 
 <!-- pdac:cite id="SB-TASKS-CANCEL-COMPLETED-REJECTED" digest="sha256:39a82947223d2619dfe0843efad64280ebd9f24a6b60b6d9a30b54a7faca3111" -->
 
