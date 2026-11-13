@@ -27,6 +27,20 @@ case, rule or constraint through `illustrates`.
 Generate the browsable Product Explorer with `npm run product:build`. Its output
 is `.product/generated/explorer.html`.
 
+### Start with an area
+
+| Household question | Entry point |
+| --- | --- |
+| Who belongs to the household and who can use the app? | [Household and people](model/domain/bounded-contexts/bc-family.md) |
+| Who is responsible for an Area? | [Close ownership gaps](model/journeys/jrn-areas-close-ownership-gaps.md) |
+| What is happening and what needs attention today? | [Review today](model/journeys/jrn-product-what-matters-today.md) |
+| How does work move from pending to done? | [Tasks](model/domain/lifecycles/lc-task.md) and [Routines](model/domain/lifecycles/lc-routine.md) |
+| How do we reuse a checklist? | [Lists](model/journeys/jrn-lists-reuse-a-list.md) |
+| How do meals become a shopping list? | [Plan meals and shopping](model/journeys/jrn-meals-plan-the-week.md) |
+| How does a Chat request become a reviewed action? | [Chats, Inbox and Calendar](model/journeys/jrn-chat-review-household-action.md) |
+| What happens to a captured suggestion? | [Inbox proposals](model/domain/lifecycles/lc-inbox-proposal.md) |
+| What household things and obligations are in scope? | [Household Assets](model/journeys/jrn-assets-keep-household-ready.md) |
+
 ## Change the definition
 
 - `model/` holds the accepted Product Definition (the baseline).
@@ -53,3 +67,22 @@ Artifact status describes product acceptance: `active` is current intent;
 The local lifecycle template follows `prodshape schema domain-lifecycle`. The
 0.26.0 template command still lists the earlier artifact kinds, so use
 `.product/templates/domain-lifecycle.md` when authoring a lifecycle.
+
+## Write for people
+
+Use Humanizer,
+[Taste](https://github.com/Leonxlnx/taste-skill/blob/main/skills/taste-skill/SKILL.md)
+and [Plain English](https://github.com/b1rdmania/claude-plain-english-skill/blob/main/SKILL.md)
+as editorial review inputs. Name the person who acts, state the outcome directly
+and put the information readers need first. Keep obligations, permissions,
+conditions and unresolved decisions explicit. Product and design decisions retain
+their existing authority.
+
+Use a requirement title to name the required outcome and a use-case title to name
+the person's action. Keep them separate when the requirement states an obligation
+and the use case explains its context and flow. A structured behaviour gives one
+context, one stimulus and outcomes that hold together; split alternative actions
+or outcomes into separate examples.
+
+The [model review](reviews/2026-11-13-model-clarity.md) records the lifecycle rollout,
+the review of all 181 original examples and the remaining owner questions.

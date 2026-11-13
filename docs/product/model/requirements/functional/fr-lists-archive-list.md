@@ -1,22 +1,23 @@
 ---
 id: FR-LISTS-ARCHIVE-LIST
 type: functional-requirement
-title: "Archive a list without losing data"
+title: Archive a list without losing data
 status: active
 derived-from:
   - UC-LISTS-ARCHIVE-LIST
   - BR-LISTS-ARCHIVE-STATE
   - BR-LISTS-ARCHIVED-READ-ONLY
 verification:
-  - scenario-ref: "SB-LISTS-ARCHIVE"
-  - scenario-ref: "SB-LISTS-ARCHIVE-TWICE-REJECTED"
-  - scenario-ref: "SB-LISTS-ARCHIVED-ADD-REJECTED"
+  - scenario-ref: SB-LISTS-ARCHIVE
+  - scenario-ref: SB-LISTS-ARCHIVE-TWICE-REJECTED
+  - scenario-ref: SB-LISTS-ARCHIVED-ITEM-ADD-REFUSED
+  - scenario-ref: SB-LISTS-ARCHIVED-ITEM-CHECK-REFUSED
 uses-terms:
   - TERM-ARCHIVED-LIST
 provenance:
   source: "openspec/specs/lists/spec.md (Requirement: List Archive); interview: product owner decision Q-0031 (E-0158)"
-  confidence: "high"
-  recovered-from: "documentation"
+  confidence: high
+  recovered-from: documentation
 ---
 
 ## Requirement

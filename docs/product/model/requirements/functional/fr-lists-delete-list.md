@@ -1,20 +1,20 @@
 ---
 id: FR-LISTS-DELETE-LIST
 type: functional-requirement
-title: "Permanently delete a list"
+title: Deleting a List permanently removes its items
 status: active
 derived-from:
   - UC-LISTS-DELETE-LIST
   - BR-LISTS-DELETE-PERMANENT
 verification:
-  - scenario-ref: "SB-LISTS-DELETE"
+  - scenario-ref: SB-LISTS-DELETE
 uses-terms:
   - TERM-LIST
   - TERM-LIST-ITEM
 provenance:
   source: "docs/_legacy/04_contexts/shared-lists.md (Commands, Domain Events: DeleteSharedList, SharedListDeleted); src/backend/DomusMind.Domain/Lists/SharedList.cs (Delete, ListDeleted); src/backend/DomusMind.Application/Features/Lists/DeleteList; src/backend/DomusMind.Api/Controllers/ListsController.cs (DELETE lists/{listId}); interview: product owner decision Q-0026 (E-0158)"
-  confidence: "medium"
-  recovered-from: "interview"
+  confidence: medium
+  recovered-from: interview
 ---
 
 ## Requirement

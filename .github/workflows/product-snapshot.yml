@@ -1,6 +1,6 @@
 name: product-snapshot
 
-# Builds the Product Snapshot of docs/product and keeps it as a workflow run
+# Builds the Product Explorer of docs/product and keeps it as a workflow run
 # artifact rather than a Pages site. The snapshot is derived output, generated
 # from the commit being built and never committed. `prodshape graph` refuses to
 # write while the model has blocking diagnostics, so a broken model fails this
@@ -77,8 +77,8 @@ jobs:
       - name: Install engineering tools
         run: npm ci --ignore-scripts
 
-      - name: Generate the snapshot
-        run: npx --no-install prodshape graph --format html
+      - name: Generate the Product Explorer
+        run: npm run product:build
 
       # The file is self-contained, so it is uploaded unzipped and opens
       # straight from disk. With `archive: false` the artifact takes the file's
@@ -100,7 +100,7 @@ jobs:
           ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
         run: |
           {
-            echo "## Product snapshot"
+            echo "## Product Explorer"
             echo
             echo "[domusmind-product-snapshot.html](${ARTIFACT_URL}) for \`${GITHUB_SHA}\`. Download it and open it in a browser; it needs no server."
           } >> "$GITHUB_STEP_SUMMARY"

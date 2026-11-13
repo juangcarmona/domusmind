@@ -25,7 +25,7 @@ provenance:
 
 ## Intent
 
-A connection reports that every selected feed failed.
+Make a wholly failed synchronization distinguishable from current calendar data.
 
 ## Boundaries
 

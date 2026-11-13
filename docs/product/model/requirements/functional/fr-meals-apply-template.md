@@ -1,23 +1,23 @@
 ---
-id: "FR-MEALS-APPLY-TEMPLATE"
-type: "functional-requirement"
-title: "Plan a week from a template"
-status: "active"
+id: FR-MEALS-APPLY-TEMPLATE
+type: functional-requirement
+title: A weekly template creates a Draft meal plan snapshot
+status: active
 derived-from:
-  - "UC-MEALS-APPLY-TEMPLATE"
-  - "BR-MEALS-TEMPLATE-SNAPSHOT"
-  - "BR-MEALS-ONE-PLAN-PER-WEEK"
+  - UC-MEALS-APPLY-TEMPLATE
+  - BR-MEALS-TEMPLATE-SNAPSHOT
+  - BR-MEALS-ONE-PLAN-PER-WEEK
 verification:
-  - scenario-ref: "SB-MEALS-APPLY-TEMPLATE-EMPTY-WEEK"
-  - scenario-ref: "SB-MEALS-APPLY-TEMPLATE-DELETED-RECIPE"
-  - scenario-ref: "SB-MEALS-APPLY-TEMPLATE-EXISTING-WEEK"
+  - scenario-ref: SB-MEALS-APPLY-TEMPLATE-EMPTY-WEEK
+  - scenario-ref: SB-MEALS-APPLY-TEMPLATE-DELETED-RECIPE
+  - scenario-ref: SB-MEALS-APPLY-TEMPLATE-EXISTING-WEEK
 uses-terms:
-  - "TERM-WEEKLY-TEMPLATE"
-  - "TERM-MEAL-PLAN"
+  - TERM-WEEKLY-TEMPLATE
+  - TERM-MEAL-PLAN
 provenance:
   source: "openspec/specs/meal-planning/spec.md (Requirement: Apply Weekly Template); src/backend/DomusMind.Domain/MealPlanning/Entities/MealPlan.cs (CreateFromTemplate); interview: product owner decision Q-0037 (E-0158)"
-  confidence: "medium"
-  recovered-from: "documentation"
+  confidence: medium
+  recovered-from: documentation
 ---
 
 ## Requirement

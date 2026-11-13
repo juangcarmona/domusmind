@@ -40,7 +40,7 @@ None stated.
 
 ## Failure Conditions
 
-None specified (observed: openspec/specs/tasks/spec.md, Notes 3). The current domain model has no way to remove an assignee yet (observed: src/backend/DomusMind.Domain/Tasks/HouseholdTask.cs).
+None specified (observed: openspec/specs/tasks/spec.md, Notes 3). HouseholdTask.Unassign now removes the assignee and records TaskUnassigned (observed: src/backend/DomusMind.Domain/Tasks/HouseholdTask.cs).
 
 ## Postconditions
 

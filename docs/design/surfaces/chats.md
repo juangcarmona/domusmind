@@ -30,7 +30,7 @@ Messages show the author's name and local time. Assistant replies are visually d
 
 Chats shows an external-provider notice when the selected assistant sends questions and household context outside the deployment. Ordinary messages are not sent to the assistant.
 
-<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:1908dad987dce6d293efd2ed5de7928b2d57eb788d868102461ade53c74dc7cf" -->
+<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:d8dd787f0b4bb9bbaaac8e897ecd777ad057866d3e8288a1d060bb1c0dc6321f" -->
 <!-- pdac:cite id="QR-CHAT-PRIVATE-CONTENT" digest="sha256:b58936e309e9fea5898eddefd2c44a8c6eebdb25d268add2f59a3d2c3667baca" -->
 
 ## Privacy and access

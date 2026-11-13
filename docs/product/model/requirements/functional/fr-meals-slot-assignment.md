@@ -1,26 +1,27 @@
 ---
-id: "FR-MEALS-SLOT-ASSIGNMENT"
-type: "functional-requirement"
-title: "Assign or clear meal slots"
-status: "active"
+id: FR-MEALS-SLOT-ASSIGNMENT
+type: functional-requirement
+title: Assign or clear meal slots
+status: active
 derived-from:
-  - "UC-MEALS-UPDATE-SLOT"
-  - "BR-MEALS-LOCKED-SLOT"
-  - "BR-MEALS-SLOT-SOURCE-CONSISTENCY"
-  - "BR-MEALS-PLAN-LIFECYCLE"
+  - UC-MEALS-UPDATE-SLOT
+  - BR-MEALS-LOCKED-SLOT
+  - BR-MEALS-SLOT-SOURCE-CONSISTENCY
+  - BR-MEALS-PLAN-LIFECYCLE
 verification:
-  - scenario-ref: "SB-MEALS-ASSIGN-RECIPE-TO-SLOT"
-  - scenario-ref: "SB-MEALS-CLEAR-SLOT"
-  - scenario-ref: "SB-MEALS-LOCKED-SLOT-REJECTED"
-  - scenario-ref: "SB-MEALS-UNLOCK-AND-CHANGE-SLOT"
-  - scenario-ref: "SB-MEALS-COMPLETED-PLAN-REJECTS-CHANGE"
+  - scenario-ref: SB-MEALS-ASSIGN-RECIPE-DRAFT
+  - scenario-ref: SB-MEALS-ASSIGN-RECIPE-ACTIVE
+  - scenario-ref: SB-MEALS-CLEAR-SLOT
+  - scenario-ref: SB-MEALS-LOCKED-SLOT-REJECTED
+  - scenario-ref: SB-MEALS-UNLOCK-AND-CHANGE-SLOT
+  - scenario-ref: SB-MEALS-COMPLETED-PLAN-REJECTS-CHANGE
 uses-terms:
-  - "TERM-MEAL-SLOT"
-  - "TERM-MEAL-SOURCE"
+  - TERM-MEAL-SLOT
+  - TERM-MEAL-SOURCE
 provenance:
   source: "openspec/specs/meal-planning/spec.md (Requirement: Meal Slot Assignment); src/backend/DomusMind.Domain/MealPlanning/Entities/MealPlan.cs (UpdateSlot)"
-  confidence: "high"
-  recovered-from: "documentation"
+  confidence: high
+  recovered-from: documentation
 ---
 
 ## Requirement

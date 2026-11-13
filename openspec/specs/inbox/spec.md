@@ -20,7 +20,7 @@ Inbox stores household notes and assistant action requests and presents optional
 
 An authorized household member can capture a text note and retrieve the original text and its review status. Raw text is retained as household data and is visible only to authorized members of that household.
 
-<!-- pdac:cite id="FR-INBOX-CAPTURE" digest="sha256:e6f9cc97410c50a3a387dedc4f588004d54ede6d881a673d851faa801f4d3d46" -->
+<!-- pdac:cite id="FR-INBOX-CAPTURE" digest="sha256:522b9c28e76f8f2f7c113be168f53020be4cbd7abdbfaea52b28577d98a9e2db" -->
 
 #### Scenario: Member captures a note
 
@@ -33,9 +33,9 @@ An authorized household member can capture a text note and retrieve the original
 
 Inbox SHALL support interpretation of captured notes and supported action requests from household Chats. It MAY suggest Plan create/update, Task, Reminder, Timeline Note and List Item add/update proposals. A private Chat request is not copied into Inbox. A Reminder proposal identifies an existing Plan and a positive offset. A Timeline Note proposal has a date and text. A List Item proposal identifies an active list the member may edit. Inbox distinguishes interpreted fields and unresolved details from the original note. Interpretation must not execute product behavior. The Inbox discloses which hosted or local target receives request text and authorized context, and identifies when fallback occurs.
 
-<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8f2efe33de44deac70caac674756cd003907c878b4bdfb69128b6f5515bb6f4f" -->
+<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8655bde49845f4278b7ad37baeab11421c4ae263138f278a4a902d6aef1fcee8" -->
 
-<!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:13175fea8397c7f3c4fba319e63231aac0150c12d04ea532fb0dcfc706696e3f" -->
+<!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:90b04c52585e12c8c0083b41322685067f69f32783fd280db0e895f7714debb3" -->
 <!-- pdac:cite id="BR-ASSISTANT-PROVIDER-FALLBACK" digest="sha256:2c98370c1a0aaaff6a236833daf18682088f617825e15cc6f789cf8718597ba9" -->
 <!-- pdac:cite id="TERM-ASSISTANT-PROVIDER-TARGET" digest="sha256:3dae47c4e9e1adb8f0d1ec16d5de18e3261adb0c39874806472f318cda3fee4b" -->
 

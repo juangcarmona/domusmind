@@ -87,3 +87,9 @@ jobs:
       # citations, or exempt with a human-approved reason.
       - name: Verify OpenSpec citations
         run: npx --no-install prodshape citations verify --provider openspec
+
+      - name: Verify configured product citation consumers
+        run: npx --no-install prodshape citations verify
+
+      - name: Build the Product Explorer
+        run: npm run product:build

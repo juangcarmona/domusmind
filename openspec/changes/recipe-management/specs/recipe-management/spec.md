@@ -39,7 +39,7 @@ A household SHALL be able to update a recipe's metadata after creation.
 
 Updatable fields: name, description, preparation time, cook time, servings, isFavorite, allowedMealTypes, and tags. Name must remain unique within the family. All fields are replaced in full (no partial patch).
 
-<!-- pdac:cite id="FR-RECIPES-UPDATE" digest="sha256:733871393da840075fb57813e3e5453c6a84949ea91f7a51568168e3a7d0894b" -->
+<!-- pdac:cite id="FR-RECIPES-UPDATE" digest="sha256:beed777fe2618300d42fcb98eb5e6193fc8c62aa1e05a00957e43ed27ed57d83" -->
 
 <!-- pdac:cite id="UC-RECIPES-UPDATE-RECIPE" digest="sha256:0fb0ec3cf0b3ef1ad1159d45b722e6be18e00d694f7290a93b9a29f5a26c27f5" -->
 
@@ -71,7 +71,7 @@ A household SHALL be able to delete a recipe from the library, subject to a refe
 
 A recipe SHALL NOT be deleted if it is currently referenced by any slot in an Active meal plan. Draft or Completed plans do not block deletion.
 
-<!-- pdac:cite id="FR-RECIPES-DELETE" digest="sha256:8c2e5784a8e8bd51c1e1709dba553bb976376fe7e3011801831423d4c2e1d63b" -->
+<!-- pdac:cite id="FR-RECIPES-DELETE" digest="sha256:7ad724d99da2ba8bd340eedddcf5d47e338caef5ccfecbf0a3628252da8e6015" -->
 
 <!-- pdac:cite id="UC-RECIPES-DELETE-RECIPE" digest="sha256:47bb5bbb4aaa4ff7c6a788ca533d974aa3fa9561177752b8ca6dfc7c55ff8b56" -->
 
@@ -83,7 +83,9 @@ A recipe SHALL NOT be deleted if it is currently referenced by any slot in an Ac
 
 <!-- pdac:cite id="SB-RECIPES-DELETE-BLOCKED-BY-ACTIVE-PLAN" digest="sha256:50a9c1d606a609b8e3c5a17c5ae3369c8a19c431ac92476a053da273eae03afd" -->
 
-<!-- pdac:cite id="SB-RECIPES-DELETE-USED-BY-PAST-OR-DRAFT" digest="sha256:88c3d0fe9ecea04556fffeafad4e8f9b6a658d60cb909a6769b58a840055839b" -->
+<!-- pdac:cite id="SB-RECIPES-DELETE-USED-BY-DRAFT" digest="sha256:f11150bc5920881864826435886fc7d05bedb13bb0181ab1c2baf06b5ea18fc4" -->
+<!-- pdac:cite id="SB-RECIPES-DELETE-USED-BY-COMPLETED" digest="sha256:ea2dfb9d2504c56d7bf34cf6e64b08158d29c6e803442fd1089954a06c83241a" -->
+<!-- pdac:cite id="SB-RECIPES-DELETE-USED-BY-MIXED" digest="sha256:706527d485ae835661411efe9c2f5a42be0ba2d66e482aa6355d802facaba4dd" -->
 
 #### Scenario: Household deletes an unreferenced recipe
 

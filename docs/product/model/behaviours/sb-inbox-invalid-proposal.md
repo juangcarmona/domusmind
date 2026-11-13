@@ -20,7 +20,7 @@ uses-terms:
 
 ## Intent
 
-The owning area refuses an invalid approved action.
+Preserve the owning area's validation rules when an action comes through Inbox.
 
 ## Boundaries
 

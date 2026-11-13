@@ -1,7 +1,7 @@
 ---
 id: FR-TASKS-DELETE-ROUTINE
 type: functional-requirement
-title: Delete a routine
+title: Deleted routines no longer appear in the product
 status: active
 derived-from:
   - UC-TASKS-DELETE-ROUTINE

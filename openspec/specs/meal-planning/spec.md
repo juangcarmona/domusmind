@@ -14,7 +14,7 @@ Meal Planning is scoped to the household — not to individual members — and i
 
 <!-- pdac:cite id="BR-MEALS-HOUSEHOLD-SCOPED-MEALS" digest="sha256:ef16950ff7825bfa0a1af1d5492432640c6f8ab77987aa3bf0fd4b20ca6aaa26" -->
 
-<!-- pdac:cite id="JRN-MEALS-PLAN-THE-WEEK" digest="sha256:9fc9f5d6a981bd7d09f0368e2d8e178e5fb9a9aa587a74a725abb6b2e8a4b867" -->
+<!-- pdac:cite id="JRN-MEALS-PLAN-THE-WEEK" digest="sha256:1ca92afdde559b5b4dc74423673bace6d67c62a826e7474e5321f033cb15b887" -->
 
 <!-- pdac:cite id="QR-MEALS-LOW-EFFORT-PLANNING" digest="sha256:4791efc078efb88dccaddd5efad2ef16055fe6c61c8bd618f7c331bf3d0ec3da" -->
 
@@ -123,7 +123,7 @@ Each slot may also carry optional notes, an `isOptional` flag (non-binding meal,
 
 Slot structure is fixed at plan creation. This operation updates content only, not structure.
 
-<!-- pdac:cite id="FR-MEALS-SLOT-ASSIGNMENT" digest="sha256:a2824fb818d49c4081eff578a4a890c691b173f5b63b284e2e8ac82e984969b8" -->
+<!-- pdac:cite id="FR-MEALS-SLOT-ASSIGNMENT" digest="sha256:7c02ee787691996b2cafed0e60c636487f906536247d3f5960e2beb8c18d786b" -->
 
 <!-- pdac:cite id="UC-MEALS-UPDATE-SLOT" digest="sha256:a659fa4c170ec938919501335736ec5ea87ea35c81cc207d793db62e5a6c9d74" -->
 
@@ -139,7 +139,8 @@ Slot structure is fixed at plan creation. This operation updates content only, n
 
 <!-- pdac:cite id="TERM-MEAL-SOURCE" digest="sha256:56aae694f8d61a548820236be6b3ad413dfd25881d95ca3a9fb37465c74794a7" -->
 
-<!-- pdac:cite id="SB-MEALS-ASSIGN-RECIPE-TO-SLOT" digest="sha256:fb51d0830a51a58e770ed405ee68a6c88ec5240d98395dc238ff6a58753e2562" -->
+<!-- pdac:cite id="SB-MEALS-ASSIGN-RECIPE-DRAFT" digest="sha256:3507447df3332c09a80b1f84599da4cb8d954bf2d6119d45db76ed876bb9e606" -->
+<!-- pdac:cite id="SB-MEALS-ASSIGN-RECIPE-ACTIVE" digest="sha256:5dabd0c7cbd087636db467f44c2ec264d5633513a8b47d41617478bf31a2bbc6" -->
 
 <!-- pdac:cite id="SB-MEALS-CLEAR-SLOT" digest="sha256:d98aa580c0172fd881adb4cd60f116bc6f71bf115a0d043e156e600226d7fc4b" -->
 
@@ -246,13 +247,13 @@ Recipes may be updated after creation; ingredients can be added or modified.
 
 <!-- pdac:cite id="BR-RECIPES-ALLOWED-MEAL-TYPES" digest="sha256:d5576dfc67764576f0e2d0f681e4c56655eb6be09ff5e5ed95b3c1fc87241f3a" -->
 
-<!-- pdac:cite id="FR-RECIPES-DELETE" digest="sha256:8c2e5784a8e8bd51c1e1709dba553bb976376fe7e3011801831423d4c2e1d63b" -->
+<!-- pdac:cite id="FR-RECIPES-DELETE" digest="sha256:7ad724d99da2ba8bd340eedddcf5d47e338caef5ccfecbf0a3628252da8e6015" -->
 
 <!-- pdac:cite id="UC-RECIPES-DELETE-RECIPE" digest="sha256:47bb5bbb4aaa4ff7c6a788ca533d974aa3fa9561177752b8ca6dfc7c55ff8b56" -->
 
 <!-- pdac:cite id="BR-RECIPES-DELETE-GUARD" digest="sha256:2e15467fd305be37d291774e1e09606ef41448d1713b4f98d5ff2cbce2ada86e" -->
 
-<!-- pdac:cite id="FR-RECIPES-UPDATE" digest="sha256:733871393da840075fb57813e3e5453c6a84949ea91f7a51568168e3a7d0894b" -->
+<!-- pdac:cite id="FR-RECIPES-UPDATE" digest="sha256:beed777fe2618300d42fcb98eb5e6193fc8c62aa1e05a00957e43ed27ed57d83" -->
 
 <!-- pdac:cite id="UC-RECIPES-UPDATE-RECIPE" digest="sha256:0fb0ec3cf0b3ef1ad1159d45b722e6be18e00d694f7290a93b9a29f5a26c27f5" -->
 
@@ -341,7 +342,7 @@ If a plan already exists for the target week, the existing plan is returned and 
 
 After a template is applied, individual slots may still be modified.
 
-<!-- pdac:cite id="FR-MEALS-APPLY-TEMPLATE" digest="sha256:e56a7c3366c9feb248490de5dd3f3d265cceb46f5434c54738ceb22e949c9cb1" -->
+<!-- pdac:cite id="FR-MEALS-APPLY-TEMPLATE" digest="sha256:bd1bff7939cc76096b2e6a88d0364fe00ea1e877ac55e8909033abd163b49597" -->
 
 <!-- pdac:cite id="UC-MEALS-APPLY-TEMPLATE" digest="sha256:2d62181e6fc6fe0dedc0d942713adf63104020c991ef3db8b32acc114d53ce66" -->
 

@@ -25,7 +25,7 @@ provenance:
 
 ## Intent
 
-A connection reports expired provider authorization.
+Tell the member when restoring provider access is needed before calendar data can refresh.
 
 ## Boundaries
 

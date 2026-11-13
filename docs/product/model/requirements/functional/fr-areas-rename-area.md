@@ -1,7 +1,7 @@
 ---
 id: FR-AREAS-RENAME-AREA
 type: functional-requirement
-title: Rename an Area
+title: Households can change an Area name
 status: active
 derived-from:
   - UC-AREAS-RENAME-AREA
@@ -11,7 +11,7 @@ verification:
 uses-terms:
   - TERM-AREA
 provenance:
-  source: 'openspec/specs/areas/spec.md (Requirement: Area Renaming)'
+  source: "openspec/specs/areas/spec.md (Requirement: Area Renaming)"
   confidence: high
   recovered-from: documentation
 ---

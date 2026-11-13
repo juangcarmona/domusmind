@@ -7,8 +7,10 @@ quality-attribute: security
 applies-to:
   - UC-INBOX-CAPTURE-AND-REVIEW
 verification:
-  - scenario-ref: SB-INBOX-CAPTURE-AND-INTERPRET
+  - scenario-ref: SB-INBOX-CAPTURE-NOTE
+  - scenario-ref: SB-CHAT-STAGE-PLAN-PROPOSAL
   - scenario-ref: SB-INBOX-UNAUTHORIZED-PROPOSAL
+  - scenario-ref: SB-CHAT-PRIVATE-ACTION-STAYS-PRIVATE
 uses-terms:
   - TERM-INBOX-ITEM
   - TERM-INBOX-PROPOSAL

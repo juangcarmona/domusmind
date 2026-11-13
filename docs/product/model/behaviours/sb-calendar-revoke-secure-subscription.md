@@ -11,7 +11,6 @@ given:
   - The subscription is active.
 then:
   - The subscription becomes unavailable to external calendar clients, and later requests are denied.
-  - Later requests using its URL are denied.
   - No DomusMind plan is changed.
 uses-terms:
   - TERM-CALENDAR-SUBSCRIPTION

@@ -25,7 +25,7 @@ provenance:
 
 ## Intent
 
-A connection reports a successful sync.
+Give the member a current health result after the imported calendars refresh.
 
 ## Boundaries
 

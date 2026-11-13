@@ -14,15 +14,16 @@ in the linked ADRs; structure and behaviour live in the linked views.
 | --- | --- | --- |
 | Evolvability of the domain model; one owner per product axis | A **domain-centric modular monolith**: one deployable, split into Domain, Application, Contracts, Infrastructure and Api projects, with one module per bounded context running through them. The framework-free domain sits at the centre and dependencies point inwards. | [ADR-0004](../../adr/0004-build-a-domain-centric-modular-monolith.md), [building blocks](../05-building-block-view/README.md) |
 | Explicit, independently evolving capabilities | **Vertical slices** per capability inside each module, executed as explicit commands and queries through an internal mediator. A command changes one aggregate; handlers never call other handlers. | [ADR-0001](../../adr/0001-use-an-internal-application-mediator.md), [crosscutting concepts](../08-crosscutting-concepts/README.md) |
-| Modules stay decoupled | Modules share only identifiers and **domain events**. Every event raised by an aggregate is appended to a persisted event log. The intended collaboration mechanism is in-process reaction to those events; today events are persisted only, and no event handlers are registered or dispatched. | [ADR-0008](../../adr/0008-collaborate-across-modules-through-persisted-domain-events.md), [runtime view](../06-runtime-view/README.md), [risks](../11-risks-and-technical-debt/README.md) |
+| Modules stay decoupled | Modules share identifiers and **domain events**. `EventLogWriter` persists raised events and invokes the registered dispatcher. The `InboxProposalApproved` handler executes the approved action through its owning area's command. | [ADR-0008](../../adr/0008-collaborate-across-modules-through-persisted-domain-events.md), [`EventLogWriter`](../../../src/backend/DomusMind.Infrastructure/Events/EventLogWriter.cs), [`ExecuteApprovedInboxProposalHandler`](../../../src/backend/DomusMind.Application/Features/Inbox/Execute/ExecuteApprovedInboxProposalHandler.cs) |
 | One product on every screen | **API-first**: the REST API, built from ASP.NET Core controllers over explicit contract models with explicit mapping, is the only way into the system. One responsive web app is its client on desktop and mobile. | [ADR-0005](../../adr/0005-expose-a-rest-api-through-aspnet-core-controllers.md), [ADR-0006](../../adr/0006-map-explicitly-without-automapper.md) |
 | Today understood at a glance; read surfaces never own data | **Read projections**: cross-module surfaces such as the Agenda are queries that project from each owning module with EF Core directly and without change tracking, and never write back. | [ADR-0007](../../adr/0007-use-ef-core-directly-without-generic-repositories.md), [runtime view](../06-runtime-view/README.md) |
 | Household data isolation | **Local authentication** issues JWT access and refresh tokens to a user identity that is separate from household membership. Every household request is authorized against the caller's access to that family on the server. | [ADR-0002](../../adr/0002-keep-authentication-local-and-separate-from-member-identity.md), [crosscutting concepts](../08-crosscutting-concepts/README.md) |
 | Read-only Outlook ingestion, pull only | An **integration adapter** in Infrastructure, behind an Application abstraction, imports entries into a separate read-only model owned by the Calendar module. Members trigger refreshes manually and a hosted worker runs scheduled ones. | [ADR-0003](../../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md), [runtime view](../06-runtime-view/README.md) |
 | Operable by a single household | **One container image** in which the API serves the built web app, with PostgreSQL alongside and schema migrations applied at startup. .NET Aspire orchestrates the same parts for local development. | [Deployment view](../07-deployment-view/README.md) |
 
-The module set mirrors the product's bounded contexts one to one, and the projection
-strategy keeps each axis owned by a single module:
+Each implemented area owns its records, and read projections combine data across
+those boundaries. Inbox and Chats extend the original six modules listed below;
+Household Assets remains accepted product intent without an implementation module:
 
 <!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:f0adb53673dfbfd7051791182578f9ee2f44e0a37b7699c16258854579342a13" -->
 <!-- pdac:cite id="BC-FAMILY" digest="sha256:1b48c9a4b2eba0dfb34314f7afbe1b5801e4f8c41e0ab5a586a9e7da57f7ee4f" -->
@@ -40,8 +41,9 @@ Identifiers are strongly typed value objects backed by GUIDs
 ([ADR-0010](../../adr/0010-use-guid-backed-strongly-typed-identifiers.md)); the mechanism
 is described in [section 08](../08-crosscutting-concepts/README.md#identifiers).
 
-The strategy deliberately adds no extension points for capabilities outside the
-current scope, such as messaging channels, AI interpretation or further calendar
-providers. They would arrive as new modules, slices or adapters within the same shape.
+Inbox interpretation and the Chats assistant use configured provider adapters.
+They stage proposals for explicit review; the owning area's command performs the
+approved action. Additional capabilities follow the same module, slice and adapter
+structure when their Product Changes are accepted.
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:bbe8615d41428bc12d1a225306bd3b5b1fc4e4747dc80c9125220f483bc610a9" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:86c4b7c550c3e4edf5c1f614510ece6a13274480c6333c7114e1a103f0219169" -->

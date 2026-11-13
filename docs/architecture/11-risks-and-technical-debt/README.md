@@ -75,4 +75,4 @@ Recipe management is delivered while its OpenSpec change remains active.
 
 External calendars refresh only through the background worker and manual sync; the web app never triggers the catch-up sync endpoint on sign-in or when the Agenda opens ([`ExternalCalendarRefreshWorker.cs`](../../../src/backend/DomusMind.Infrastructure/BackgroundJobs/Calendar/ExternalCalendarRefreshWorker.cs), [`externalCalendarApi.ts`](../../../src/web/app/src/api/externalCalendarApi.ts)).
 
-<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:6395fc275a0ad0d787e23defa29afc83213e042d2ecf161add0059c731822988" -->
+<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:ba16ad06b77cfb02dcfcbee49418c1a7bf18251f91c4bf5858a6209cf87e59b4" -->

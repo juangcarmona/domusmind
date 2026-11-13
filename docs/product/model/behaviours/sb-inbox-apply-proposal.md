@@ -23,7 +23,7 @@ uses-terms:
 
 ## Intent
 
-An approved proposal records its successful result.
+Give the member a traceable result once the owning area completes the action.
 
 ## Boundaries
 

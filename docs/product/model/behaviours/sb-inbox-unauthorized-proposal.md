@@ -19,7 +19,7 @@ uses-terms:
 
 ## Intent
 
-A person without household access cannot approve a proposal.
+Keep a proposal within the household access boundary that already governs its action.
 
 ## Boundaries
 

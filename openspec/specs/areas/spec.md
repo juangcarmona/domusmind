@@ -230,7 +230,7 @@ The new primary owner must belong to the same family as the Area.
 
 A household SHALL be able to rename an Area.
 
-<!-- pdac:cite id="FR-AREAS-RENAME-AREA" digest="sha256:3bb1d9d4678b4b0f3c1ec26e23d185ae152dbd3841505a70a5e83775c425e3b6" -->
+<!-- pdac:cite id="FR-AREAS-RENAME-AREA" digest="sha256:50cc3902da39caf49bf67cdc47858e8244232d40bd51240f18d89fb327d75e22" -->
 
 <!-- pdac:cite id="UC-AREAS-RENAME-AREA" digest="sha256:1df8637116f2bd1b1e931bd3522e67be9daf866d0878b55bde7c695bc401b8a5" -->
 
@@ -254,9 +254,9 @@ A household SHALL be able to archive an Area.
 
 Archived Areas are retained and visible when filtered for, but are distinguished from active Areas.
 
-<!-- pdac:cite id="FR-AREAS-ARCHIVE-AREA" digest="sha256:61858840e7a767e9780719fccaa49c2bf3d5fb5627b1832dfd717fe7eeb97536" -->
+<!-- pdac:cite id="FR-AREAS-ARCHIVE-AREA" digest="sha256:a52fdbf5738f801bac4ee0d2c34b3e6c03353b4fda46d22b3c499069ff281ca7" -->
 
-<!-- pdac:cite id="UC-AREAS-ARCHIVE-AREA" digest="sha256:067155f11be19859765494e77b687e08cb42b305b0ce61554d8e80221e783aa2" -->
+<!-- pdac:cite id="UC-AREAS-ARCHIVE-AREA" digest="sha256:bc38b2fe1288e0b32e16344abac9ec71d44081ea4d368fe55819f1c2af5e094f" -->
 
 <!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:e7196eaf5a47d7e4d00002fc29785bc463758d4fa47e08bcb279b9350d88a1f0" -->
 

@@ -12,7 +12,7 @@ All surfaces share the same shell, layout grammar, visual tone, and interaction 
 
 <!-- pdac:cite id="FR-WEB-APP-SHELL" digest="sha256:841b3571594a0d027a82d7f0a21afe531f98089c711f04cc9afc0a4f641c3b72" -->
 <!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:ca38e0324cedc282b3ad87f3f482eb85bf0772b6aeb509468f9b18a4559a7418" -->
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:7de869c937a3553053b5d5fce34c1e5db69426f8fef9fa4dc79e01475837ecf9" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:86c4b7c550c3e4edf5c1f614510ece6a13274480c6333c7114e1a103f0219169" -->
 
 <!-- pdac:cite id="UC-WEB-MOVE-BETWEEN-SURFACES" digest="sha256:e7adb55bd3adfc47814fc7d124dd249e3284480ea0dcb269fc0e6d12ccf5b3bb" -->
 
@@ -557,7 +557,7 @@ Archived lists are no longer in active use but are retained.
 
 <!-- pdac:cite id="TERM-CHECKED-ITEM" digest="sha256:92b2028e2e875bd9b994751aa25de16c9928b4204734ca2cfe7a77e1ff1bd94b" -->
 
-<!-- pdac:cite id="FR-LISTS-ARCHIVE-LIST" digest="sha256:050b27be17e6b043e91241e56988e8099bc62e18ff07fe964842e197bfe11477" -->
+<!-- pdac:cite id="FR-LISTS-ARCHIVE-LIST" digest="sha256:52744392c19330310abdbc3cd54c83decc4e430df0985fe8ee93218cd25c3dd7" -->
 
 <!-- pdac:cite id="UC-LISTS-ARCHIVE-LIST" digest="sha256:1b1904e7a6583bce2e708950e1b87060cdf5c7ac0ae7432036226211825a0cde" -->
 
@@ -650,7 +650,7 @@ Outlook calendar connections are managed in Profile. Each member manages their o
 
 Settings SHALL NOT handle: editing of native household plans, browsing of imported entries as a calendar-like surface, provider write-back, or administrative control of another member's calendar connections in phase 1.
 
-<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:f6d31fa396855bedd343863cb7e1485c49ad0cde33f074bf702852432a9c1f7c" -->
+<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:cbc68a46b1c8cdec569c82e15ae1ae4de01a615795e09a8f543c24e2ad215d99" -->
 <!-- pdac:cite id="UC-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:4368dc7f90d60dfc87ce6d3313e2865ec897854ece9e4cbc1f064356c53a4820" -->
 <!-- pdac:cite id="FR-WEB-SETTINGS-SURFACE" digest="sha256:ded16890d8ee378ace6a8f2e67f815920b569ec20eef0904e177614a0eecb44d" -->
 
@@ -686,7 +686,7 @@ Each connection row shows: provider label, account email, included calendar coun
 
 <!-- pdac:cite id="FR-WEB-CALENDAR-CONNECTIONS-SECTION" digest="sha256:ff32c9662d1c32f4f33d0046caa1ca98db89157e0c27e2d6bd763622bd665f0a" -->
 
-<!-- pdac:cite id="FR-WEB-CONFIRM-DISCONNECT" digest="sha256:e938c89cca90929913990eaba3bb556b2e6f9a12b53eca14efadb0763dc382c3" -->
+<!-- pdac:cite id="FR-WEB-CONFIRM-DISCONNECT" digest="sha256:1cbeb290a7623298a0504c813901a94e5f7e4d678de0dd33b13e9b659f85d640" -->
 
 <!-- pdac:cite id="FR-CALENDAR-SHOW-CONNECTION-STATUS" digest="sha256:ebea42ca547efc3df187cfb4e96c667c5f0421336e08dec667a693dbcb2b7403" -->
 
@@ -702,7 +702,8 @@ Each connection row shows: provider label, account email, included calendar coun
 
 <!-- pdac:cite id="BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS" digest="sha256:a3c89a729bbc1b61d0b8104ceacce71dc29a6e915ab2a90834c869b72c0a9da8" -->
 
-<!-- pdac:cite id="SB-WEB-DISCONNECT-CONFIRMATION" digest="sha256:dcb36d5105f87047c7c19261610758db1fa39e201836df71e895f525029d3f1e" -->
+<!-- pdac:cite id="SB-WEB-REQUEST-DISCONNECT" digest="sha256:e0850b11d01addfc8ff54d1986ecd5fba67f721608a5f0bd909c1b5ebe63a00b" -->
+<!-- pdac:cite id="SB-WEB-CONFIRM-DISCONNECT" digest="sha256:538194d0e6a28b3756af7560f8ed6ed72894fba8c75be6989ea7d0f38cfded60" -->
 
 #### Scenario: User disconnects an Outlook connection
 

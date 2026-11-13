@@ -44,7 +44,14 @@ replaced the current local sign-in path. DomusMind does not send invitation emai
 
 <!-- pdac:cite id="CON-PRODUCTION-OIDC-SIGN-IN" digest="sha256:eb9059ccb8ca63b54036bb940fc2b5c472e06357b2e2084a9ad7900c88b490a3" -->
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:bbe8615d41428bc12d1a225306bd3b5b1fc4e4747dc80c9125220f483bc610a9" -->
+Inbox and Chats are implemented alongside the original core areas. Their assistant
+adapters send request text and authorized context to the configured hosted or local
+provider, with the product's disclosure and review rules. Calendar subscription
+clients receive a separate read-only projection. Household Assets is accepted
+intent without a backend module. The diagrams above focus on the original core
+context and omit these assistant-provider exchanges.
+
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:86c4b7c550c3e4edf5c1f614510ece6a13274480c6333c7114e1a103f0219169" -->
 
 ## Technical Context
 

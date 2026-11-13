@@ -24,7 +24,7 @@ provenance:
 
 ## Intent
 
-A member starts one connection sync.
+Let a member bring one connection up to date while preserving exclusive sync access.
 
 ## Boundaries
 

@@ -40,8 +40,8 @@ An authorized household member SHALL be able to create a household conversation 
 
 Chats SHALL invoke the assistant only when a member message begins with an explicit `@dm` mention and answer from information available to the invoking member. A supported Plan or List Item create/update request in a household thread MAY produce an unreviewed Inbox proposal after required details are known. The assistant SHALL NOT invoke domain commands; each proposal needs explicit Inbox approval. Private-thread requests are not copied into Inbox. Responses identify the provider target and any fallback.
 
-<!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:6f5fac9fbbe79085b01eb2e67339a0f5c531d80f5e78ce1233e150dc7742899e" -->
-<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:1908dad987dce6d293efd2ed5de7928b2d57eb788d868102461ade53c74dc7cf" -->
+<!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:db3f154f813d074cac902e755f3af966bcf889ac6ddc7356927eeb79eedc3a11" -->
+<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:d8dd787f0b4bb9bbaaac8e897ecd777ad057866d3e8288a1d060bb1c0dc6321f" -->
 <!-- pdac:cite id="UC-CHAT-ASK-ASSISTANT" digest="sha256:0d58faa2d48485053d947a4c8b633b6aa4ab261d633894f5e4fa133f4715f9d6" -->
 <!-- pdac:cite id="TERM-INBOX-PROPOSAL" digest="sha256:4a818e728ca80288c87447e0c4138ccd67cae35e29ad219e40a0563fa72ee6de" -->
 
@@ -92,7 +92,7 @@ Chats SHALL invoke the assistant only when a member message begins with an expli
 
 The household manager SHALL be able to configure and order one to three hosted or local assistant targets. Credentials SHALL remain secret. The product SHALL disclose what text and authorized context each target receives and identify which target handled a request and whether fallback occurred. Fallback SHALL be limited to retryable provider availability or capability failures.
 
-<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:f6d31fa396855bedd343863cb7e1485c49ad0cde33f074bf702852432a9c1f7c" -->
+<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:cbc68a46b1c8cdec569c82e15ae1ae4de01a615795e09a8f543c24e2ad215d99" -->
 <!-- pdac:cite id="UC-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:4368dc7f90d60dfc87ce6d3313e2865ec897854ece9e4cbc1f064356c53a4820" -->
 <!-- pdac:cite id="BR-ASSISTANT-PROVIDER-FALLBACK" digest="sha256:2c98370c1a0aaaff6a236833daf18682088f617825e15cc6f789cf8718597ba9" -->
 <!-- pdac:cite id="QR-ASSISTANT-PROVIDER-PRIVACY" digest="sha256:17c1d2b4e0e56c4edea6f365bf389d232ba0772e52dd327c8b9ae907b7e2d614" -->

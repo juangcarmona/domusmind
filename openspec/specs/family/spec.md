@@ -280,7 +280,7 @@ Rules:
 
 <!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:9e4e0dad11e4c8cb94efdebca7ef64b3dd6c21db313e05dbadaaf7f3807075fd" -->
 
-<!-- pdac:cite id="SB-FAMILY-MANAGER-PROVISIONS-ACCESS" digest="sha256:4cc7900ef666f595a8f3f3f0bfc65fb7cb427985f89141066feaeaf8bbd4860a" -->
+<!-- pdac:cite id="SB-FAMILY-MANAGER-PROVISIONS-ACCESS" digest="sha256:099af453e80ea446cad19a2659a9e7e1803f777ae127225e832667c532073129" -->
 
 <!-- pdac:cite id="SB-FAMILY-MANAGER-DISABLES-ACCESS" digest="sha256:b80811021daa3ee3159ecfe532fe2cb12acaa7acaa4b1ab040b2f29440453f7a" -->
 

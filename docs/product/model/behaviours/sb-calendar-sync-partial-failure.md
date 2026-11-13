@@ -26,7 +26,7 @@ provenance:
 
 ## Intent
 
-A connection reports a partial feed failure.
+Keep useful feed results and make incomplete synchronization visible.
 
 ## Boundaries
 

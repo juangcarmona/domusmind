@@ -14,18 +14,20 @@ separate static public site. What the product does, for whom and why is owned by
 [product model](../../product/model/); this section names only the drivers that shape the
 architecture.
 
-The scope of the running system is the six product areas, each implemented as one
-module in the backend (Family, Responsibilities, Calendar, Tasks, Lists, Meal
-Planning), plus local authentication and first-run setup. Anything outside that
-scope has no building block today.
+The backend implements Family, Responsibilities, Calendar, Tasks, Lists, Meal
+Planning, Inbox and Chats, alongside authentication and first-run setup. Inbox
+passes approved proposals to their owning area through domain events. Household
+Assets is accepted product intent and has no backend module at this revision.
+The product model describes intent; the implementation evidence determines which
+capabilities are delivered.
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:bbe8615d41428bc12d1a225306bd3b5b1fc4e4747dc80c9125220f483bc610a9" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:86c4b7c550c3e4edf5c1f614510ece6a13274480c6333c7114e1a103f0219169" -->
 
-The household, not the individual user, is the unit around which data and access are
+The household is the unit around which data and access are
 partitioned: every household-owned record carries its family identifier, and the API
 checks the caller's access to that family before acting.
 
-<!-- pdac:cite id="CON-PRODUCT-HOUSEHOLD-FIRST" digest="sha256:9ffd7fd5d31817890e9263cea8286b25102bd41092769a0cfe3e0765792808b3" -->
+<!-- pdac:cite id="CON-PRODUCT-HOUSEHOLD-FIRST" digest="sha256:c8abe3f8c03538b49288c014a327aa3da0f2cf0d44ea2c091aee99d34f8f663a" -->
 
 Each product axis is owned by exactly one module; read surfaces such as the Agenda
 combine data from several modules without owning it. This is the main reason the

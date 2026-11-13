@@ -59,7 +59,7 @@ A household SHALL be able to schedule a Plan with a title and a start date as th
 
 Optional inputs include an end after the start, household member participants (of any role), reminders, an optional description and colour, and an Area reference for context. A new Plan starts scheduled and belongs to exactly one household.
 
-<!-- pdac:cite id="FR-CALENDAR-SCHEDULE-PLAN" digest="sha256:5002367b45c348e6429316409c63fb3c5c20dff05fc5e15f2cd76bf6b91ef7ca" -->
+<!-- pdac:cite id="FR-CALENDAR-SCHEDULE-PLAN" digest="sha256:7ea76dfa3ca8621928f91c69c1c1d37e876909d528926405ac053fecda627fa7" -->
 
 <!-- pdac:cite id="UC-CALENDAR-SCHEDULE-PLAN" digest="sha256:be241830302906c9a08258b12b322a738c73ca574a0f755e65063fe77defa743" -->
 
@@ -124,7 +124,7 @@ A household SHALL be able to update the schedule of a scheduled Plan.
 
 Rescheduling updates the start and optionally the end. A Plan's identity, participants, and reminders remain unchanged. A cancelled Plan cannot be changed.
 
-<!-- pdac:cite id="FR-CALENDAR-RESCHEDULE-PLAN" digest="sha256:a8b70f8c982285b88c71dd71da704fdc7ff3509b8a991eacc675e5730cb15a16" -->
+<!-- pdac:cite id="FR-CALENDAR-RESCHEDULE-PLAN" digest="sha256:eb8196f1f6a0539ffc24d27abfce3b939c96d6478f5389f866cc3feaea196abf" -->
 
 <!-- pdac:cite id="UC-CALENDAR-RESCHEDULE-PLAN" digest="sha256:614a41bed3c42e2c3c77f34c2b7dea394d3cf0714d2e326cdb84405f4039217f" -->
 
@@ -165,7 +165,7 @@ A household SHALL be able to cancel a scheduled Plan.
 
 Cancellation preserves the Plan in history but removes it from active planning. Once cancelled, a Plan cannot be changed: it cannot be rescheduled or cancelled again; participants cannot be added or removed; reminders cannot be added or removed; and title, description, or colour cannot be edited.
 
-<!-- pdac:cite id="FR-CALENDAR-CANCEL-PLAN" digest="sha256:53b73f69861626f442cc19410a78860736db1ec7aafcb119b1e7e7d3520cc598" -->
+<!-- pdac:cite id="FR-CALENDAR-CANCEL-PLAN" digest="sha256:a2f690a66110025b8a6aebe5cfb527f521094a376a10e58ca64d77a0006be9ef" -->
 
 <!-- pdac:cite id="UC-CALENDAR-CANCEL-PLAN" digest="sha256:16f41091b62c6a5c17afce8708424bb7f768ef8ec54c028dd47c0b10ca7c1a56" -->
 
@@ -416,7 +416,7 @@ A member SHALL be able to configure which provider calendars are selected for in
 
 Supported sync horizons: 30, 90, 180, or 365 days forward. Changing the selected calendars or the sync horizon triggers rehydration of affected feeds. Removed feeds stop projecting entries and their sync state is cleared. A configuration change must not create native Event aggregates.
 
-<!-- pdac:cite id="FR-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR" digest="sha256:65ebb0f18b44b6f257e75f978ff023fea6449144b23bdc59c4f77665a37fc5e8" -->
+<!-- pdac:cite id="FR-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR" digest="sha256:cce36628f25ef3a79295b09126348ef04778f8fac999eaddaa4c80341fbc1a83" -->
 
 <!-- pdac:cite id="UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR" digest="sha256:eaf278bf6b3a77c0dc9ff934b444ab82b5aa23dac9c882f3c16ed698f1f410ff" -->
 
@@ -474,7 +474,7 @@ A member SHALL be able to disconnect an external calendar connection.
 
 Disconnection removes the connection and all its imported read-only entries from DomusMind. Disconnection does not modify any native Event aggregates. Imported entries owned by the connection stop appearing in Agenda projections immediately after disconnection. Disconnection removes only DomusMind's local integration state and locally held delegated access material — no operations are performed on the provider account or provider-side calendars.
 
-<!-- pdac:cite id="FR-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR" digest="sha256:7bfdd307fcfa7a2c2144d03ccd965f0128ce4b48a8f121cba03ef139b7de5f3b" -->
+<!-- pdac:cite id="FR-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR" digest="sha256:a765e9f46bd2d5de55ff5c2e50daa4ac2eaef58df4ce44f8868cda2c9c2b4f76" -->
 
 <!-- pdac:cite id="UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR" digest="sha256:3a3e5fa7533474185fbda7d556bb496ff71feb16302a5e219ff587eba5a386bc" -->
 
@@ -566,7 +566,7 @@ The system SHALL automatically refresh stale external calendar connections in th
 
 The default refresh interval is 60 minutes. Catch-up triggers also fire on user login and when Agenda is opened in Member scope with a stale connection. A connection is never synced concurrently with itself. A batch failure for one connection must not prevent other connections from refreshing. Background refresh must not create native Event aggregates.
 
-<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:6395fc275a0ad0d787e23defa29afc83213e042d2ecf161add0059c731822988" -->
+<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:ba16ad06b77cfb02dcfcbee49418c1a7bf18251f91c4bf5858a6209cf87e59b4" -->
 
 <!-- pdac:cite id="UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS" digest="sha256:b9b47a9df92b0d6a7d456d2831e4359e16c414180f0ec2ccb000906a54c94ab5" -->
 

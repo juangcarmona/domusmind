@@ -47,4 +47,4 @@ None stated by the sources.
 
 The Area is archived and retained. Tasks and routines that referenced it lose their Area reference (decided: Q-0010).
 
-Archiving an Area is current product intent (decided: Q-0013), although the domain code has no archived state yet (observed: src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs); reactivating or deleting an Area is not specified (observed: openspec/specs/areas/spec.md, Notes).
+Archiving an Area is current product intent (decided: Q-0013), and ResponsibilityDomain.Archive now records that state (observed: src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs); reactivating or deleting an Area is not specified (observed: openspec/specs/areas/spec.md, Notes).

@@ -1,7 +1,7 @@
 ---
 id: FR-ASSISTANT-CONFIGURE-PROVIDERS
 type: functional-requirement
-title: Configure the household assistant provider route
+title: Managers configure an ordered assistant provider route
 status: active
 derived-from:
   - UC-ASSISTANT-CONFIGURE-PROVIDERS

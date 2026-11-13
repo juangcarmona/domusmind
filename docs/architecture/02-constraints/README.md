@@ -29,15 +29,15 @@ here.
 
 | Constraint | Architectural consequence | Negotiable |
 | --- | --- | --- |
-| Current product scope | Only the six area modules plus authentication and setup exist; out-of-scope areas, messaging channels, AI and further integrations get no building blocks or extension points ahead of need. | Product decision |
+| Current product scope | Eight backend areas include Inbox and Chats. Approved Inbox proposals execute through the owning area. Household Assets remains accepted intent without a backend module; additional capabilities follow reviewed Product Changes. | Product decision |
 | Household-first | The family is the partition key of household data and the unit of authorization. | Product decision |
 | Separate axes | One module owns each axis; cross-module read surfaces project data and never write it back. | Product decision |
-| No hidden automation | No background process creates household records. The only scheduled job refreshes read-only external calendar state. | Product decision |
+| Explicit household decisions | Assistant requests can stage Inbox proposals. Each action requires explicit approval and the owning area's authorization and validation. Scheduled calendar refresh imports read-only external data. | Product decision |
 
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:bbe8615d41428bc12d1a225306bd3b5b1fc4e4747dc80c9125220f483bc610a9" -->
-<!-- pdac:cite id="CON-PRODUCT-HOUSEHOLD-FIRST" digest="sha256:9ffd7fd5d31817890e9263cea8286b25102bd41092769a0cfe3e0765792808b3" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:86c4b7c550c3e4edf5c1f614510ece6a13274480c6333c7114e1a103f0219169" -->
+<!-- pdac:cite id="CON-PRODUCT-HOUSEHOLD-FIRST" digest="sha256:c8abe3f8c03538b49288c014a327aa3da0f2cf0d44ea2c091aee99d34f8f663a" -->
 <!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:f0adb53673dfbfd7051791182578f9ee2f44e0a37b7699c16258854579342a13" -->
-<!-- pdac:cite id="CON-PRODUCT-NO-MAGIC-AUTOMATION" digest="sha256:4f7a8c80ff01e3ed657053b9bfad7c86ee0ba95db9c2029b9a40dc660efc8d9e" -->
+<!-- pdac:cite id="CON-PRODUCT-NO-MAGIC-AUTOMATION" digest="sha256:57f1dd3c04450536f959ee84803b429703e090c02f5eb7445450218da0cde161" -->
 
 ## Organizational and process constraints
 

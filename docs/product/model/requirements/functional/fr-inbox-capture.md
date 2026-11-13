@@ -6,14 +6,14 @@ status: active
 derived-from:
   - UC-INBOX-CAPTURE-AND-REVIEW
 verification:
-  - scenario-ref: SB-INBOX-CAPTURE-AND-INTERPRET
+  - scenario-ref: SB-INBOX-CAPTURE-NOTE
 uses-terms:
   - TERM-INBOX-ITEM
 ---
 
 ## Requirement
 
-An authorized household member MUST be able to capture a note as an Inbox item and later retrieve its original text and review status. The proposed V1 accepts text input.
+An authorized household member MUST be able to capture a note as an Inbox item and later retrieve its original text and review status. Text input is accepted.
 
 ## Rationale
 

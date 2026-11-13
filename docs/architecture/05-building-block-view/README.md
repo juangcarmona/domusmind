@@ -34,7 +34,7 @@ The backend is a single deployable modular monolith rather than a set of service
 
 - **Web app to API**: JSON over HTTPS under `/api`, authenticated with a bearer access token issued by the API itself ([ADR-0002](../../adr/0002-keep-authentication-local-and-separate-from-member-identity.md)). The web app keeps hand-written typed wrappers under [`src/web/app/src/api`](../../../src/web/app/src/api); the OpenAPI document is the contract.
 - **API to Microsoft Graph**: outbound only, delegated per connected member, read-only calendar scope ([ADR-0003](../../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md)). The external interface itself is owned by [section 03](../03-context-and-scope/README.md).
-- **API to assistant provider**: Inbox text and explicitly invoked Chat requests are routed through the household's ordered provider targets. The API protects saved credentials with ASP.NET Core Data Protection, and the web surfaces disclose target hosting and fallback. <!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:f6d31fa396855bedd343863cb7e1485c49ad0cde33f074bf702852432a9c1f7c" -->
+- **API to assistant provider**: Inbox text and explicitly invoked Chat requests are routed through the household's ordered provider targets. The API protects saved credentials with ASP.NET Core Data Protection, and the web surfaces disclose target hosting and fallback. <!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:cbc68a46b1c8cdec569c82e15ae1ae4de01a615795e09a8f543c24e2ad215d99" -->
 
 ## Level 2
 
@@ -80,7 +80,7 @@ Arrows are domain-level references and point at the module whose identifier type
 | MealPlanning | Weekly meal plans and slots, the recipe library and weekly templates; requests shopping lists that then belong to Lists | `MealPlan`, `Recipe`, `WeeklyTemplate` | [`Domain/MealPlanning`](../../../src/backend/DomusMind.Domain/MealPlanning), [`Features/MealPlanning`](../../../src/backend/DomusMind.Application/Features/MealPlanning) |
 | Chats | Household and participant-scoped conversations, persistent messages, authorized assistant answers and review-first action proposals | `ChatThread`, `ChatMessage` | [`Domain/Chats`](../../../src/backend/DomusMind.Domain/Chats), [`Features/Chats`](../../../src/backend/DomusMind.Application/Features/Chats) |
 
-Chats emits an assistant-proposal event for complete household-thread actions; the Inbox reaction owns creation of the review item, so approval still reaches Calendar or Lists through their normal commands ([ADR-0008](../../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)). <!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:6f5fac9fbbe79085b01eb2e67339a0f5c531d80f5e78ce1233e150dc7742899e" -->
+Chats emits an assistant-proposal event for complete household-thread actions; the Inbox reaction owns creation of the review item, so approval still reaches Calendar or Lists through their normal commands ([ADR-0008](../../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)). <!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:db3f154f813d074cac902e755f3af966bcf889ac6ddc7356927eeb79eedc3a11" -->
 
 The product responsibility of each module is owned by its bounded-context artifact; the table above only states how the code realizes it.
 

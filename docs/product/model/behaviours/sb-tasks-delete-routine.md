@@ -24,7 +24,7 @@ provenance:
 
 ## Intent
 
-Deleting a routine removes its future occurrences.
+Let the household stop recurring work that no longer applies.
 
 ## Boundaries
 

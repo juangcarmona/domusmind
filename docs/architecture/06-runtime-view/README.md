@@ -51,9 +51,9 @@ The Chats controller reads the authenticated user and dispatches commands and qu
 
 For a complete action request in a household thread, the assistant message raises `AssistantProposalRequested`. The Inbox-owned reaction stores an unreviewed proposal linked to the originating Chat message. It does not call a Calendar or Lists command. A private-thread request never raises this event. On explicit approval, Inbox dispatches the normal command owned by Calendar or Lists, then marks its proposal applied. The Chat message, event and Inbox reaction participate in the event writer's transaction.
 
-<!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:6f5fac9fbbe79085b01eb2e67339a0f5c531d80f5e78ce1233e150dc7742899e" -->
-<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8f2efe33de44deac70caac674756cd003907c878b4bdfb69128b6f5515bb6f4f" -->
-<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:f6d31fa396855bedd343863cb7e1485c49ad0cde33f074bf702852432a9c1f7c" -->
+<!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:db3f154f813d074cac902e755f3af966bcf889ac6ddc7356927eeb79eedc3a11" -->
+<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8655bde49845f4278b7ad37baeab11421c4ae263138f278a4a902d6aef1fcee8" -->
+<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:cbc68a46b1c8cdec569c82e15ae1ae4de01a615795e09a8f543c24e2ad215d99" -->
 <!-- pdac:cite id="QR-ASSISTANT-PROVIDER-PRIVACY" digest="sha256:17c1d2b4e0e56c4edea6f365bf389d232ba0772e52dd327c8b9ae907b7e2d614" -->
 
 ![Household conversation and explicit assistant request](./diagrams/household-conversation-and-explicit-assistant-request.png)
@@ -121,7 +121,7 @@ External calendars are ingested one way, from Microsoft Graph into Calendar-owne
 Two triggers converge on the same command: a member's manual sync from Settings, and the `ExternalCalendarRefreshWorker` hosted service, which wakes every 300 seconds and selects up to 10 due connections (scheduled refresh enabled, not disconnected or auth-expired, next sync time reached, no live lease). The worker selects the most overdue connections first; connections without a next-sync timestamp come first, and connection id breaks ties. It dispatches the sync for each with a small random delay. Each connection's next sync is scheduled from its own interval, 60 minutes by default.
 
 <!-- pdac:cite id="FR-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:786617e80baa09464aa3e3c5588a596444e4963880d8be17a3e48288d6fd6925" -->
-<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:6395fc275a0ad0d787e23defa29afc83213e042d2ecf161add0059c731822988" -->
+<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:ba16ad06b77cfb02dcfcbee49418c1a7bf18251f91c4bf5858a6209cf87e59b4" -->
 
 ![External calendar sync with Outlook](./diagrams/external-calendar-sync-with-outlook.png)
 <!-- diagram-source: ./diagrams/external-calendar-sync-with-outlook.mmd sha256:9274b138840b39099be08329a29d878e8a7264cc901215dbc29424452dbb942d png-sha256:f84b3693de4d1af37bdb6acfbb5ad98cc5f0e1ced2020db5470514f561e663da -->

@@ -24,7 +24,7 @@ uses-terms:
 
 ## Intent
 
-A member rejects one pending proposal.
+Let the member decline one suggestion while retaining its review history.
 
 ## Boundaries
 

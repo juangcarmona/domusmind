@@ -182,7 +182,7 @@ Archiving transitions the list out of the active collection. All data is preserv
 
 A list that is already archived cannot be archived again.
 
-<!-- pdac:cite id="FR-LISTS-ARCHIVE-LIST" digest="sha256:050b27be17e6b043e91241e56988e8099bc62e18ff07fe964842e197bfe11477" -->
+<!-- pdac:cite id="FR-LISTS-ARCHIVE-LIST" digest="sha256:52744392c19330310abdbc3cd54c83decc4e430df0985fe8ee93218cd25c3dd7" -->
 
 <!-- pdac:cite id="SB-LISTS-ARCHIVE" digest="sha256:6c0a6878c819ada87235cd49ddfa67d8490441f05dc2a563a3f484f02bc04bf0" -->
 
@@ -244,7 +244,7 @@ A household SHALL be able to add a new item to an active list with only a name.
 
 A new item is always created in an unchecked state. Optional fields at creation: quantity and note. Items are appended in stable order — each new item receives the next position. Importance and temporal fields are not set at item creation; they are applied through dedicated operations after creation. An assistant may stage an addition as an Inbox proposal, but Lists changes only after an authorized member approves it.
 
-<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8f2efe33de44deac70caac674756cd003907c878b4bdfb69128b6f5515bb6f4f" -->
+<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8655bde49845f4278b7ad37baeab11421c4ae263138f278a4a902d6aef1fcee8" -->
 <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:92d34d343ebc239e46c834106ac81dc978c2f014b9ae1e5574786cc82da7821e" -->
 
 <!-- pdac:cite id="FR-LISTS-ADD-ITEM" digest="sha256:31ca6047288c0e531133f611eda3ba2b8c142fc5d991cc0015103929474a2ff3" -->

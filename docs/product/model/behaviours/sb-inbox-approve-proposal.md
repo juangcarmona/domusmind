@@ -23,7 +23,7 @@ uses-terms:
 
 ## Intent
 
-An authorized member approves one pending proposal.
+Keep the member's approval distinct from the owning area's result.
 
 ## Boundaries
 
