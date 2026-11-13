@@ -2,7 +2,7 @@
 id: TERM-ROUTINE-SCOPE
 type: domain-term
 title: Routine Scope
-status: draft
+status: active
 defined-in: BC-TASKS
 synonyms: []
 uses-terms:

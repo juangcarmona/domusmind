@@ -2,7 +2,7 @@
 id: "SB-RECIPES-VIEW-NOT-FOUND"
 type: "structured-behaviour"
 title: "Opening a recipe that is not in the library reports not found"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-VIEW-RECIPE"
 given:

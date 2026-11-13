@@ -2,7 +2,7 @@
 id: UC-TASKS-RENAME-TASK
 type: use-case
 title: Rename a task
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

@@ -2,7 +2,7 @@
 id: UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS
 type: use-case
 title: "Refresh stale external calendars in the background"
-status: draft
+status: active
 primary-actor: "ACT-CALENDAR-SYNC-SCHEDULER"
 supporting-actors:
   - "ACT-MICROSOFT-OUTLOOK"

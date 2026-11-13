@@ -2,7 +2,7 @@
 id: SB-CALENDAR-RESCHEDULE-INVALID-TIMES
 type: structured-behaviour
 title: "Rescheduling to an end before the start is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-RESCHEDULE-PLAN"
   - "BR-CALENDAR-PLAN-END-AFTER-START"

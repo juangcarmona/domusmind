@@ -2,7 +2,7 @@
 id: QR-ASSISTANT-PROVIDER-PRIVACY
 type: quality-requirement
 title: Protect household information sent to assistant providers
-status: draft
+status: active
 quality-attribute: security
 applies-to:
   - UC-CHAT-ASK-ASSISTANT

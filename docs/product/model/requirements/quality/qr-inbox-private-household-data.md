@@ -2,7 +2,7 @@
 id: QR-INBOX-PRIVATE-HOUSEHOLD-DATA
 type: quality-requirement
 title: Protect raw Inbox notes and interpretations
-status: draft
+status: active
 quality-attribute: security
 applies-to:
   - UC-INBOX-CAPTURE-AND-REVIEW

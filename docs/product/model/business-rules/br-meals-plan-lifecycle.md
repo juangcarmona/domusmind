@@ -2,11 +2,7 @@
 id: "BR-MEALS-PLAN-LIFECYCLE"
 type: "business-rule"
 title: "Meal plans move from Draft to Active to Completed"
-status: "draft"
-applies-to:
-  - "UC-MEALS-CREATE-PLAN"
-  - "UC-MEALS-PROMOTE-PLAN"
-  - "UC-MEALS-UPDATE-SLOT"
+status: "active"
 uses-terms:
   - "TERM-MEAL-PLAN"
   - "TERM-MEAL-PLAN-STATUS"

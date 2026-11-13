@@ -2,9 +2,7 @@
 id: BR-CALENDAR-REMINDER-BEFORE-START
 type: business-rule
 title: "A reminder is an offset before the plan's start"
-status: draft
-applies-to:
-  - "UC-CALENDAR-MANAGE-PLAN-REMINDERS"
+status: active
 uses-terms:
   - "TERM-REMINDER"
   - "TERM-PLAN"

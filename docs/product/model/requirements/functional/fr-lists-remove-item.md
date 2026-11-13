@@ -2,7 +2,7 @@
 id: FR-LISTS-REMOVE-ITEM
 type: functional-requirement
 title: "Permanently remove an item"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-REMOVE-ITEM
 verification:

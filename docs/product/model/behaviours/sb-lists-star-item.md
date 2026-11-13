@@ -2,7 +2,7 @@
 id: SB-LISTS-STAR-ITEM
 type: structured-behaviour
 title: "Starring an item"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-SET-ITEM-IMPORTANCE
   - BR-LISTS-IMPORTANCE-BINARY

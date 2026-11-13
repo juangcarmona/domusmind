@@ -2,7 +2,7 @@
 id: BC-HOUSEHOLD-ASSETS
 type: bounded-context
 title: Household Assets
-status: draft
+status: active
 ---
 ## Responsibility
 

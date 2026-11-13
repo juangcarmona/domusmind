@@ -2,7 +2,7 @@
 id: FR-AGENDA-HOUSEHOLD-DAY-BOARD
 type: functional-requirement
 title: "Show the household day as a board"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
   - "BR-AGENDA-ENTRY-PRIORITY-ORDER"

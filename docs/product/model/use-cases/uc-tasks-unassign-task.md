@@ -2,7 +2,7 @@
 id: UC-TASKS-UNASSIGN-TASK
 type: use-case
 title: Remove a task's assignee
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

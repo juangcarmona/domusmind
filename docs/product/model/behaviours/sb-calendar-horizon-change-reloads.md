@@ -2,7 +2,7 @@
 id: SB-CALENDAR-HORIZON-CHANGE-RELOADS
 type: structured-behaviour
 title: "Changing the horizon triggers a fresh load"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
   - "BR-CALENDAR-HORIZON-CHANGE-RELOADS"

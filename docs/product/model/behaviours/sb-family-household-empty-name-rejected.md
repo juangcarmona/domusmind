@@ -2,7 +2,7 @@
 id: SB-FAMILY-HOUSEHOLD-EMPTY-NAME-REJECTED
 type: structured-behaviour
 title: "Household without a name is rejected"
-status: draft
+status: active
 illustrates:
   - BR-FAMILY-HOUSEHOLD-NAME-REQUIRED
 when: "Someone tries to create a household with an empty or missing name"

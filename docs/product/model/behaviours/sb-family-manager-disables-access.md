@@ -2,7 +2,7 @@
 id: SB-FAMILY-MANAGER-DISABLES-ACCESS
 type: structured-behaviour
 title: "A manager disables a person's access"
-status: draft
+status: active
 illustrates:
   - UC-FAMILY-DISABLE-MEMBER-ACCESS
 given:

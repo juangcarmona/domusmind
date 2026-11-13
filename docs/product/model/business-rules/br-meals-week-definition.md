@@ -2,10 +2,9 @@
 id: "BR-MEALS-WEEK-DEFINITION"
 type: "business-rule"
 title: "A meal plan week starts on the household's first day of week and spans seven days"
-status: "draft"
+status: "active"
 applies-to:
-  - "UC-MEALS-CREATE-PLAN"
-  - "BC-MEAL-PLANNING"
+  - BC-MEAL-PLANNING
 uses-terms:
   - "TERM-MEAL-PLAN"
   - "TERM-HOUSEHOLD"

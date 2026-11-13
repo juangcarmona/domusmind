@@ -2,7 +2,7 @@
 id: SB-CALENDAR-CANCEL-CANCELLED-PLAN
 type: structured-behaviour
 title: "A plan cannot be cancelled twice"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-CANCEL-PLAN"
   - "BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED"

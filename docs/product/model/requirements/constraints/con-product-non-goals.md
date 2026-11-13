@@ -2,7 +2,7 @@
 id: CON-PRODUCT-NON-GOALS
 type: constraint
 title: "What DomusMind deliberately is not"
-status: draft
+status: active
 uses-terms:
   - "TERM-TASK"
   - "TERM-PLAN"

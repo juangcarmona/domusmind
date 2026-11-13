@@ -2,7 +2,7 @@
 id: "BR-MEALS-NO-AUTOMATIC-TASKS"
 type: "business-rule"
 title: "Meal planning never creates tasks automatically"
-status: "draft"
+status: "active"
 applies-to:
   - "BC-MEAL-PLANNING"
 uses-terms:

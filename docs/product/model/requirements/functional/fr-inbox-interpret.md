@@ -2,7 +2,7 @@
 id: FR-INBOX-INTERPRET
 type: functional-requirement
 title: Interpret a request as reviewable proposals
-status: draft
+status: active
 derived-from:
   - UC-INBOX-CAPTURE-AND-REVIEW
 verification:

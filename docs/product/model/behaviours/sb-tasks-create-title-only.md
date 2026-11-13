@@ -2,7 +2,7 @@
 id: SB-TASKS-CREATE-TITLE-ONLY
 type: structured-behaviour
 title: Task created with a title only
-status: draft
+status: active
 illustrates:
   - UC-TASKS-CREATE-TASK
   - BR-TASKS-TITLE-REQUIRED

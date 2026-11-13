@@ -2,7 +2,7 @@
 id: SB-LISTS-DELETE
 type: structured-behaviour
 title: "Deleting a list removes it and its items"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-DELETE-LIST
   - BR-LISTS-DELETE-PERMANENT

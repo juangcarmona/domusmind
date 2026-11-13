@@ -2,7 +2,7 @@
 id: FR-FAMILY-MANAGE-MEMBER-ACCESS
 type: functional-requirement
 title: "Managers control people's access"
-status: draft
+status: active
 derived-from:
   - UC-FAMILY-PROVISION-MEMBER-ACCESS
   - UC-FAMILY-ACCEPT-ACCESS-INVITATION

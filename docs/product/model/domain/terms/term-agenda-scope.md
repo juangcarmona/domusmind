@@ -2,7 +2,7 @@
 id: TERM-AGENDA-SCOPE
 type: domain-term
 title: "Agenda Scope"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Household scope"

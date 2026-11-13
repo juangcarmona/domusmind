@@ -2,7 +2,7 @@
 id: TERM-MEMBER-DIRECTORY
 type: domain-term
 title: "People Directory"
-status: draft
+status: active
 defined-in: BC-FAMILY
 synonyms:
   - "Member Directory"

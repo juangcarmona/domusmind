@@ -10,13 +10,13 @@ The web app makes the household understandable — what is happening, what needs
 
 All surfaces share the same shell, layout grammar, visual tone, and interaction model. The product must feel like one system, not a collection of disconnected screens.
 
-<!-- pdac:cite id="FR-WEB-APP-SHELL" digest="sha256:31085ec615794bf88151dee377bbfb2f5021f7a11dfbb4fbeb53ab6028cefadf" -->
-<!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:471f9fa8993fa17314d158ee599bfbe772b0b10251665aabcedb4f99ec16d486" -->
-<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:0268d2de7634eb54e3d980787ca06f465ea0158752702868c355985f7a5112e9" -->
+<!-- pdac:cite id="FR-WEB-APP-SHELL" digest="sha256:841b3571594a0d027a82d7f0a21afe531f98089c711f04cc9afc0a4f641c3b72" -->
+<!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:ca38e0324cedc282b3ad87f3f482eb85bf0772b6aeb509468f9b18a4559a7418" -->
+<!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:7de869c937a3553053b5d5fce34c1e5db69426f8fef9fa4dc79e01475837ecf9" -->
 
-<!-- pdac:cite id="UC-WEB-MOVE-BETWEEN-SURFACES" digest="sha256:644e9cb653039be248abe495399211a5757cec36a5e4296cdd494098705e05f1" -->
+<!-- pdac:cite id="UC-WEB-MOVE-BETWEEN-SURFACES" digest="sha256:e7adb55bd3adfc47814fc7d124dd249e3284480ea0dcb269fc0e6d12ccf5b3bb" -->
 
-<!-- pdac:cite id="JRN-PRODUCT-WHAT-MATTERS-TODAY" digest="sha256:d3b34ef815ae22176d06373d245649d511cfd136c57ef2d7859598fdaf22b37f" -->
+<!-- pdac:cite id="JRN-PRODUCT-WHAT-MATTERS-TODAY" digest="sha256:f362293fcb9ea9d94e0e798ad0d8bfbcc4fd315f5bb4e703996753fa297d53f1" -->
 
 ---
 
@@ -36,13 +36,13 @@ On mobile, the left rail collapses into a compact navigation pattern (drawer or 
 
 The navigation gives access to each primary surface, including Chats for household conversations and explicit @dm questions. The current surface is indicated in the navigation.
 
-<!-- pdac:cite id="FR-WEB-APP-SHELL" digest="sha256:31085ec615794bf88151dee377bbfb2f5021f7a11dfbb4fbeb53ab6028cefadf" -->
+<!-- pdac:cite id="FR-WEB-APP-SHELL" digest="sha256:841b3571594a0d027a82d7f0a21afe531f98089c711f04cc9afc0a4f641c3b72" -->
 
-<!-- pdac:cite id="UC-WEB-MOVE-BETWEEN-SURFACES" digest="sha256:644e9cb653039be248abe495399211a5757cec36a5e4296cdd494098705e05f1" -->
+<!-- pdac:cite id="UC-WEB-MOVE-BETWEEN-SURFACES" digest="sha256:e7adb55bd3adfc47814fc7d124dd249e3284480ea0dcb269fc0e6d12ccf5b3bb" -->
 
-<!-- pdac:cite id="QR-WEB-MOBILE-SAME-PRODUCT" digest="sha256:c318bd0291b8badc6c509bd6dbdc22cf069487aa03b5d15714210312ac261e5d" -->
+<!-- pdac:cite id="QR-WEB-MOBILE-SAME-PRODUCT" digest="sha256:0b38079d5c55a3bcc863ca9b9903dc959910db3df187576c9c9522546b605047" -->
 
-<!-- pdac:cite id="SB-WEB-NAVIGATE-AGENDA-TO-LISTS" digest="sha256:4877188ce2b000393bad98518b314be0b3d6f97c8df41bae43e6e4db0021fe34" -->
+<!-- pdac:cite id="SB-WEB-NAVIGATE-AGENDA-TO-LISTS" digest="sha256:303e18c78fda63501c895e2f4a6363ee25af876e7578457fe19099932cd9a6fc" -->
 
 #### Scenario: User navigates from Agenda to Lists
 
@@ -75,17 +75,17 @@ The primary surfaces SHALL maintain strict ownership boundaries. No surface owns
 
 Tasks own a structured execution lifecycle. Areas own accountability. Lists own capture. Agenda reads from all sources but writes to none of them.
 
-<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:740fa2cc41d90ec6afb099c5f97fa44e9092af8d83cd68291f807262387a44b0" -->
+<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:f0adb53673dfbfd7051791182578f9ee2f44e0a37b7699c16258854579342a13" -->
 
-<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:652b5a6581672dfbabf8e5da42d010cc34d51bbcbf5b2bc73fac9273bb631337" -->
+<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:a3c72a044c52c99808fa103720f30e8737d55fc1f7c9b6d7cc78e56c7539359c" -->
 
-<!-- pdac:cite id="BR-WEB-SETTINGS-STAYS-CONFIGURATION" digest="sha256:d39e22599e6932f15dec9d9328e42cd39b17254968c267480466de3dcfcafcdf" -->
+<!-- pdac:cite id="BR-WEB-SETTINGS-STAYS-CONFIGURATION" digest="sha256:359161ae6d2ae57e66e5f0e4d264593cac97a51760fdf377c0018076b62037f7" -->
 
-<!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:cb2e2207883d40101d5b4ef7b33d79dc2c444d62b2b66c80c5e887b5e938b061" -->
+<!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:3d1bef6b9be254d8683460f8e32fdc7e3dfe406720927975e5ec5dbc646f1faa" -->
 
-<!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:3e2d211a42325e9e719480512210f6ec9c5255f4fa647518cae3598e2bd6e835" -->
+<!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:bb3de4faf9d7ae3434d0db4180f005236ef81bc3ab84875aaa364e97ac3e66bd" -->
 
-<!-- pdac:cite id="BC-CHATS" digest="sha256:11b1dbbc66eb13111c05c9123eaa642b4049468bd2d40b04fa86800e8d706da5" -->
+<!-- pdac:cite id="BC-CHATS" digest="sha256:8bee3e6eae0eef994be3523b72a983cd4c98e8b3aa1d365da90fd7de7d24283f" -->
 
 #### Scenario: Agenda projects source records without taking ownership
 
@@ -107,15 +107,15 @@ Default entry state:
 
 Switching to Week mode preserves the current scope. Switching to a member scope preserves the current mode and date.
 
-<!-- pdac:cite id="FR-AGENDA-DEFAULT-ENTRY" digest="sha256:3c9ce83b74e0fd104a25d173790954085d2b95317ca31b828692b301e8f9d637" -->
+<!-- pdac:cite id="FR-AGENDA-DEFAULT-ENTRY" digest="sha256:1604ac8dfd3867fe9ccb2e2be3168fd1d65b9369bc06f8e4e3995d436aec4285" -->
 
-<!-- pdac:cite id="BR-AGENDA-DEFAULT-ENTRY-STATE" digest="sha256:0791c2a66b0379b6ba16ca0b57ca61f989fdc63e7733ba3a2ff578cbac1c1e20" -->
+<!-- pdac:cite id="BR-AGENDA-DEFAULT-ENTRY-STATE" digest="sha256:1aa3ff1187ac63bfd50169b370b3ef9a9254b43966d9eab80ffdd4f14b50b05b" -->
 
-<!-- pdac:cite id="BR-AGENDA-SCOPE-SWITCH-KEEPS-CONTEXT" digest="sha256:e02f53667c4612164319e6c05f980c64ff758014bac4d99ab0730dd716c2e5ad" -->
+<!-- pdac:cite id="BR-AGENDA-SCOPE-SWITCH-KEEPS-CONTEXT" digest="sha256:f68c9943d8de6de62b06d780fbc59c1fae84a59edcf711676048ed6961acc740" -->
 
-<!-- pdac:cite id="QR-PRODUCT-TODAY-AT-A-GLANCE" digest="sha256:659932b0b836c008118516caa8647d05dc133c1e12c31114f6df3a49527420fa" -->
+<!-- pdac:cite id="QR-PRODUCT-TODAY-AT-A-GLANCE" digest="sha256:5de2ebf4d1b4d156a4c05bd53d8bb4aa3145206cf6ad9669f9aeb2a0f85ecb37" -->
 
-<!-- pdac:cite id="JRN-PRODUCT-WHAT-MATTERS-TODAY" digest="sha256:d3b34ef815ae22176d06373d245649d511cfd136c57ef2d7859598fdaf22b37f" -->
+<!-- pdac:cite id="JRN-PRODUCT-WHAT-MATTERS-TODAY" digest="sha256:f362293fcb9ea9d94e0e798ad0d8bfbcc4fd315f5bb4e703996753fa297d53f1" -->
 
 #### Scenario: User opens the app on a weekday
 
@@ -136,23 +136,23 @@ Agenda SHALL support two scopes: Household and Member.
 
 Switching to a member scope is triggered by clicking a member identity (avatar or name). The current date and mode are preserved when switching scope.
 
-<!-- pdac:cite id="TERM-AGENDA-SCOPE" digest="sha256:7253db64d83dac0a1595a1f2c629b59e27d467f8677afcfa330f9ebf3cdaafc9" -->
+<!-- pdac:cite id="TERM-AGENDA-SCOPE" digest="sha256:7d64b169305cffdcfae55f7c66209f15ca27c3d00065ff7123253fc234d394e9" -->
 
-<!-- pdac:cite id="FR-AGENDA-SCOPE-AND-MODE-SWITCHING" digest="sha256:eab963a157c87e65ff18629754491c6e96fcd5dc75d0810d4c37bd4d503d1ac4" -->
+<!-- pdac:cite id="FR-AGENDA-SCOPE-AND-MODE-SWITCHING" digest="sha256:048418adbe18b051f9c7ba0573518322e4aaea8bb073ea0f61881f13ad7bed4f" -->
 
-<!-- pdac:cite id="UC-AGENDA-NAVIGATE" digest="sha256:532ae62a754386ab4c7166dc2db3856434a5538c9c39242114b854af029b8657" -->
+<!-- pdac:cite id="UC-AGENDA-NAVIGATE" digest="sha256:27b7f4ebd25e3ca6b1236b8dc8caf2400a60011a10cdfe7873317a63228b970e" -->
 
-<!-- pdac:cite id="UC-AGENDA-VIEW-HOUSEHOLD-AGENDA" digest="sha256:3aa05500b8b3f5f223447760dc3b2d73fded5269ea3925ae117d4c0d93be4318" -->
+<!-- pdac:cite id="UC-AGENDA-VIEW-HOUSEHOLD-AGENDA" digest="sha256:06da1c10928a2e14a7b2ace4e421c5d68123aa381fe516d913f405bbf4a88893" -->
 
-<!-- pdac:cite id="UC-AGENDA-VIEW-MEMBER-AGENDA" digest="sha256:2c870adbc231b6b1b0c661ab8062530786d0ef7d40c29ca48d6099cd46500fbc" -->
+<!-- pdac:cite id="UC-AGENDA-VIEW-MEMBER-AGENDA" digest="sha256:500f25f0376043d38af118a8e6824e8c032a27831f7aa01719c04fda98dc2c44" -->
 
-<!-- pdac:cite id="BR-AGENDA-SCOPE-SWITCH-KEEPS-CONTEXT" digest="sha256:e02f53667c4612164319e6c05f980c64ff758014bac4d99ab0730dd716c2e5ad" -->
+<!-- pdac:cite id="BR-AGENDA-SCOPE-SWITCH-KEEPS-CONTEXT" digest="sha256:f68c9943d8de6de62b06d780fbc59c1fae84a59edcf711676048ed6961acc740" -->
 
-<!-- pdac:cite id="BR-AGENDA-MEMBER-SCOPE-PLANS" digest="sha256:687c533e32506e30c54751e420d32bc5d6ca0683d04cb534977881f133c0e45b" -->
+<!-- pdac:cite id="BR-AGENDA-MEMBER-SCOPE-PLANS" digest="sha256:fb1cc45142f9871212ec0c144e92003d0cdeeb427ce92397612c38ca1f2a175a" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:b1dcb8fae830badbc584fe2a2e8b3ec117053470d9123391b2fa0d69f6bc9e69" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:c1f6a0090e071a7cbca68eb2f1b200e68156542ace4fe9a8ca0223f3aa71df32" -->
 
-<!-- pdac:cite id="SB-AGENDA-MEMBER-HOUSEHOLD-PLAN-WITHOUT-PARTICIPANTS" digest="sha256:ed376ec2c0b4bb952338f7183a7b50c29e43e58497c5d10f0b27935113311f48" -->
+<!-- pdac:cite id="SB-AGENDA-MEMBER-HOUSEHOLD-PLAN-WITHOUT-PARTICIPANTS" digest="sha256:d8d590d90b5ca72952ef0cb73e71e4fe022c50e4fe547cf21da0150a1eb8af53" -->
 
 #### Scenario: User switches from Household to a member scope
 
@@ -185,19 +185,19 @@ Agenda SHALL support three time modes: Day, Week, and Month.
 
 The mode toggle is accessible without scrolling, on both desktop and mobile.
 
-<!-- pdac:cite id="TERM-AGENDA-MODE" digest="sha256:4962f471f0c6157f565f83459b8e453d86120d9cae4dc19bb268fd100b51ee7f" -->
+<!-- pdac:cite id="TERM-AGENDA-MODE" digest="sha256:c6b80ef7bcb2266ea8b3c50eb6c9954d594714d921a8102973bca252ca48e2ac" -->
 
-<!-- pdac:cite id="FR-AGENDA-SCOPE-AND-MODE-SWITCHING" digest="sha256:eab963a157c87e65ff18629754491c6e96fcd5dc75d0810d4c37bd4d503d1ac4" -->
+<!-- pdac:cite id="FR-AGENDA-SCOPE-AND-MODE-SWITCHING" digest="sha256:048418adbe18b051f9c7ba0573518322e4aaea8bb073ea0f61881f13ad7bed4f" -->
 
-<!-- pdac:cite id="FR-AGENDA-HOUSEHOLD-DAY-BOARD" digest="sha256:aad8ac860b5c014e2498e3fe01c0212b99a00a47add18b47f0b95e678e1f172f" -->
+<!-- pdac:cite id="FR-AGENDA-HOUSEHOLD-DAY-BOARD" digest="sha256:7dc7600fd06cbc97077be1acbf7443e02ebe635838a27b212f6c39cd1ca76dd9" -->
 
-<!-- pdac:cite id="FR-AGENDA-MEMBER-DAY-TIMELINE" digest="sha256:0b3a0835f85644202dcaf98da711dfe478f50290928e502f91e214b6d920e281" -->
+<!-- pdac:cite id="FR-AGENDA-MEMBER-DAY-TIMELINE" digest="sha256:dba2518b34ec42da83ed0197b47cb2db345d57c2ba76b32d86e58ebc3724f564" -->
 
-<!-- pdac:cite id="FR-AGENDA-WEEK-VIEW" digest="sha256:1a914a6129591596301447031ecea6b1c4abc658087a9b8594143738bd32c9c6" -->
+<!-- pdac:cite id="FR-AGENDA-WEEK-VIEW" digest="sha256:dfda5d1785c059561d2d320f299c6a2d9643d9c243aaad224f7daad10ba9533c" -->
 
-<!-- pdac:cite id="FR-AGENDA-MONTH-VIEW" digest="sha256:5fe78463a472773e56734ec2d0cbe27136fc0962720ae9b10de24334f6816b5c" -->
+<!-- pdac:cite id="FR-AGENDA-MONTH-VIEW" digest="sha256:cde10b68fc76275f7d57907ea6c5cb9ca1ea590eea1ed8d7c55859232d262895" -->
 
-<!-- pdac:cite id="BR-AGENDA-WEEK-STARTS-ON-HOUSEHOLD-FIRST-DAY" digest="sha256:f921026b204a43ad8570d08eccf2e0e0a692c1c858b28e148b0219feea0982f0" -->
+<!-- pdac:cite id="BR-AGENDA-WEEK-STARTS-ON-HOUSEHOLD-FIRST-DAY" digest="sha256:07bbb5ad779c66a8f0349ef52a91c6631c76d0496a8e55ee752c72f68cbed000" -->
 
 #### Scenario: User taps a date in Month mode
 
@@ -223,9 +223,9 @@ Order within any day or cell:
 
 Completed and checked items remain visible but de-emphasized, not removed.
 
-<!-- pdac:cite id="BR-AGENDA-ENTRY-PRIORITY-ORDER" digest="sha256:99c2693fee545eedd4a3feb29da8d89e78edb05d8c68bba4afffc5073078cac6" -->
+<!-- pdac:cite id="BR-AGENDA-ENTRY-PRIORITY-ORDER" digest="sha256:4bb5b5f53d3f74ab929768074734785133a92a7ea30c940f17bb0e353e63f1ba" -->
 
-<!-- pdac:cite id="FR-WEB-COUNTS-AND-COMPRESSED-COMPLETION" digest="sha256:75b1699d75bf1b4494c8a72fc588b0fbf1813618f8d5f608c61e14d2dda3a3fd" -->
+<!-- pdac:cite id="FR-WEB-COUNTS-AND-COMPRESSED-COMPLETION" digest="sha256:a222ff4110e33f64b652398e78b61a103ec013957a8844561515563763bb1df8" -->
 
 #### Scenario: Agenda items follow the defined priority order
 
@@ -247,13 +247,13 @@ Deselecting closes the inspector or bottom sheet without any navigation.
 
 Agenda does not navigate to a separate page for item inspection or creation.
 
-<!-- pdac:cite id="FR-AGENDA-INSPECT-ENTRY" digest="sha256:938a73fbc4f9919aaad58faa9f0ca6e1171804afd79b8eedeca4caf80c954f99" -->
+<!-- pdac:cite id="FR-AGENDA-INSPECT-ENTRY" digest="sha256:88cfacfed507d3405a1a85b00cbfe2c0ec803dbfe319068a94d21d1131a946c7" -->
 
-<!-- pdac:cite id="UC-AGENDA-INSPECT-ENTRY" digest="sha256:fbb3eb9a54bd0ebdbad83db2c1025a28fac4c3866d7107035614c0fc2fd05b6b" -->
+<!-- pdac:cite id="UC-AGENDA-INSPECT-ENTRY" digest="sha256:abdaa6bbeb066db2f71154961df7e4f405a409fd37fe290987d679f710f4d1b6" -->
 
-<!-- pdac:cite id="FR-AGENDA-CREATE-IN-CONTEXT" digest="sha256:761445cdb4f2654e5f0a8e539b58a1f2eac384bf5fa779a161e789b7278e483d" -->
+<!-- pdac:cite id="FR-AGENDA-CREATE-IN-CONTEXT" digest="sha256:b56239d0d179c502a7db9f9bb8de51df57c077abfaa1b724312f23700fe84dee" -->
 
-<!-- pdac:cite id="FR-WEB-CONTEXTUAL-DETAIL-PATTERNS" digest="sha256:7d0eea19745ff772c67fad4b9248424244669368f6c113c10884eb9b45cc48ef" -->
+<!-- pdac:cite id="FR-WEB-CONTEXTUAL-DETAIL-PATTERNS" digest="sha256:5cbddd4d738a319aba075ce6c69082423619f352188faf139f892270cbd4c425" -->
 
 #### Scenario: User selects a plan on desktop
 
@@ -286,21 +286,21 @@ Projected list items:
 - in Household + Day: appear in the shared household row, not in individual member rows
 - in Member scope: appear in the non-timed section alongside tasks and routines
 
-<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:652b5a6581672dfbabf8e5da42d010cc34d51bbcbf5b2bc73fac9273bb631337" -->
+<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:a3c72a044c52c99808fa103720f30e8737d55fc1f7c9b6d7cc78e56c7539359c" -->
 
-<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:07f2a39c4da3143f7ba1dc285acb840d8a121020a2c68adf87783c23b1e92af9" -->
+<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:043eef067ee7db97dd23b7dc3dc2e7c9b7c52b4c9f5aefc6e3d2066abd179350" -->
 
-<!-- pdac:cite id="BR-AGENDA-LIST-ITEMS-HOUSEHOLD-ROW" digest="sha256:9abd5f15ec082a5ca1bc132d65e0efd3e9a2948830531dfbd514e38020b7b56e" -->
+<!-- pdac:cite id="BR-AGENDA-LIST-ITEMS-HOUSEHOLD-ROW" digest="sha256:a1346bfc71bcc50424d839ee9a9779cedf52284197c98dc35ea8edf265b2a16a" -->
 
-<!-- pdac:cite id="FR-LISTS-OPEN-IN-LISTS-FROM-AGENDA" digest="sha256:8eadf3f69912d9fb73e1526b622556cf379395868b04ab4084ef8d08d43829c3" -->
+<!-- pdac:cite id="FR-LISTS-OPEN-IN-LISTS-FROM-AGENDA" digest="sha256:e00b832b3463117967eef9ea29223bba3e49587a1243aeaa56140b49577a0d6f" -->
 
-<!-- pdac:cite id="FR-AGENDA-ENTRY-TYPES-DISTINGUISHABLE" digest="sha256:a44de0d8278f8bf9ee5f21c1620d9b9787284d49a0c97f6ce37839310e52fd2a" -->
+<!-- pdac:cite id="FR-AGENDA-ENTRY-TYPES-DISTINGUISHABLE" digest="sha256:153e467b9bce79cc6090ee57380de4fb8ddeb255069088d495aff8cb73080757" -->
 
-<!-- pdac:cite id="TERM-PROJECTED-LIST-ITEM" digest="sha256:c8ace0e5be8d059740bfd3edd63eb5f8b101c2687ffcccbc7f918c9e5a864fd7" -->
+<!-- pdac:cite id="TERM-PROJECTED-LIST-ITEM" digest="sha256:1d7dee71c8e9ef330968975a9a7b48e15b547f1b823286d462ab6b5ed059078f" -->
 
-<!-- pdac:cite id="UC-LISTS-SEE-ITEMS-IN-AGENDA" digest="sha256:ee7a292721be6b4b2df1d3de830f3918089d760b22e49883e906b03b657c7e80" -->
+<!-- pdac:cite id="UC-LISTS-SEE-ITEMS-IN-AGENDA" digest="sha256:19f437a80c20b0934963cfd836845c4f7d45d3caa9e31b73984860dfd63cc900" -->
 
-<!-- pdac:cite id="SB-AGENDA-MEMBER-LIST-ITEMS-READ-ONLY" digest="sha256:aca5be88f2c84c717d71bed6e7b84dc226ebd267d0bfc2a2e7f5c05cf78f54c6" -->
+<!-- pdac:cite id="SB-AGENDA-MEMBER-LIST-ITEMS-READ-ONLY" digest="sha256:8231ad3d04776f037c212779854491d81a971d0eca1fd320e617a373d65c93df" -->
 
 #### Scenario: User selects a projected list item in Agenda
 
@@ -329,21 +329,21 @@ External entries are never converted to editable household plans.
 
 External entries are omitted from Agenda when they fall outside the selected date window, even if cached locally.
 
-<!-- pdac:cite id="FR-AGENDA-EXTERNAL-ENTRY-PRESENTATION" digest="sha256:866645ac5e44faca42776b0ad94a13c249431c370fbe3d8139e2f6136fa23503" -->
+<!-- pdac:cite id="FR-AGENDA-EXTERNAL-ENTRY-PRESENTATION" digest="sha256:ba4ab90479187bd041f38b0cd6513153f5eaea9d0560f49cf127e125696370b0" -->
 
-<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-ENTRY" digest="sha256:9ef123050d8fc32bd7755be77ace1bab03fe0009c4583a0bdced3aff9aba6272" -->
+<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-ENTRY" digest="sha256:a544452b97f1df5874ba287953f6e9ad857c23c3dd1902fc5f3d22bca412ca6b" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:b1dcb8fae830badbc584fe2a2e8b3ec117053470d9123391b2fa0d69f6bc9e69" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:c1f6a0090e071a7cbca68eb2f1b200e68156542ace4fe9a8ca0223f3aa71df32" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:a3d8d4afcfc23492b745fa37ac5b103ae76a7bc1d214456aeddbe2f57473ceea" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:0a46d8c63e8a5ca97a1757e7ed3e0528c2c10779a63621783793131b2bf55522" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRY-VISIBILITY" digest="sha256:c0b22c61a193c5202c7877f77b3b86a5f0251afabebafa9367623f63d3a4cf42" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRY-VISIBILITY" digest="sha256:949e939555ba5883283a4fde1554e44e12a29571db306d54222f01114f3a782d" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:2b2ea1de6c0f9a84d96f94d20087467fa7a198f197da80a85748fb145816fe03" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:f538589cc3d3dd54bfc8539b59e38f13f87b49547cf25e651e8ce2906810583e" -->
 
-<!-- pdac:cite id="SB-AGENDA-MEMBER-INCLUDES-IMPORTED" digest="sha256:b36d86ff2957c14ce9476a747fe05e0a8cb48b3c83c913066bf01400c78789cd" -->
+<!-- pdac:cite id="SB-AGENDA-MEMBER-INCLUDES-IMPORTED" digest="sha256:2e6e2071df4c87715883ec209e11c2f221c09046119a4bc5b393f3a1644c8370" -->
 
-<!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-EXCLUDES-EXTERNAL" digest="sha256:314f199dbf9e633b3422db2e43359e1936f4c0fd61fd8c4ba4a18e76c2d3b2ea" -->
+<!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-EXCLUDES-EXTERNAL" digest="sha256:7783dc44b8b6ab700b8fb8b48ee763fe3e9b904ff78b9b37b7169da7ebad11a5" -->
 
 #### Scenario: External entry appears in Member scope
 
@@ -368,13 +368,13 @@ The cue shows the list name and the current unchecked item count. Selecting the 
 
 Agenda does not expand list items inline as plan content. Agenda does not convert list items to tasks. The cue and the temporal projection of list items are two independent mechanisms.
 
-<!-- pdac:cite id="FR-LISTS-PLAN-LIST-CUE" digest="sha256:010654cd32b56f0f85d189f4d5f6953f1de930e44cd0037cd5722c0a461f49cc" -->
+<!-- pdac:cite id="FR-LISTS-PLAN-LIST-CUE" digest="sha256:81912e77e4934b36cf350a287e610201ff95a73d7e1f8ae8ccb3e773e748e352" -->
 
-<!-- pdac:cite id="BR-LISTS-PLAN-LINK-DOES-NOT-PROJECT" digest="sha256:4c9723864e62308e6b5a0068872b52fcafd549eebd8837c69d9eef568c10ea42" -->
+<!-- pdac:cite id="BR-LISTS-PLAN-LINK-DOES-NOT-PROJECT" digest="sha256:2bdc7fe6d5bc3727361258ac8d5fd7e22f16d3056002e48b7eaa663a2ff1c150" -->
 
-<!-- pdac:cite id="BR-LISTS-CONTEXT-LINKS-INFORMATIONAL" digest="sha256:75037c1fcced9208b8cd1c668a98f37b7d742dea8c8f447a482e15bf7e3c76f6" -->
+<!-- pdac:cite id="BR-LISTS-CONTEXT-LINKS-INFORMATIONAL" digest="sha256:c5d604a88b3d0a26c3005ee116c6145fd451a9fd4e2f1b56f4e48f0c5fdd7f16" -->
 
-<!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:cb2e2207883d40101d5b4ef7b33d79dc2c444d62b2b66c80c5e887b5e938b061" -->
+<!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:3d1bef6b9be254d8683460f8e32fdc7e3dfe406720927975e5ec5dbc646f1faa" -->
 
 #### Scenario: Plan cue opens its linked List
 
@@ -399,19 +399,19 @@ Inspector sections for capabilities not set on an item are collapsed by default.
 On desktop: switcher pane + active list pane + optional inspector (three-column).
 On mobile: active list fills the screen; list switcher is accessible via drawer or sheet.
 
-<!-- pdac:cite id="FR-LISTS-SURFACE-LAYOUT" digest="sha256:dacab172d564533ea1cf10e7c4f5a056f7b3a59bca0b2d479e473213f5be44f6" -->
+<!-- pdac:cite id="FR-LISTS-SURFACE-LAYOUT" digest="sha256:d7b14e7e9cb7fef6eacf885efb2916a5d26d67d61d790653afac224b49548034" -->
 
-<!-- pdac:cite id="FR-LISTS-BROWSE-LISTS" digest="sha256:dc7bf80f44b5e99a69a0c2449b160a2d5bca9746fb817cffc1e7e28d04c24228" -->
+<!-- pdac:cite id="FR-LISTS-BROWSE-LISTS" digest="sha256:5b9e3226a32138d68f98657ee01c2530bcbf39f097e41b55e7a18c8b6f8efc26" -->
 
-<!-- pdac:cite id="FR-LISTS-OPEN-LIST" digest="sha256:2adf8e6854602e5d6029b6cb889800220fed57d862de2bbfa07136611deb8053" -->
+<!-- pdac:cite id="FR-LISTS-OPEN-LIST" digest="sha256:7b22d78453a3e7e8c72f95e9391ab646c664da7e5c9afe7b39a3948efa9e6bfd" -->
 
-<!-- pdac:cite id="UC-LISTS-BROWSE-LISTS" digest="sha256:119aa4f67efbc350613fa0f77e48134406a41ffc0e0c53b729e73f3e57d15508" -->
+<!-- pdac:cite id="UC-LISTS-BROWSE-LISTS" digest="sha256:3edc8eb98802d84347ef8ae624a29dc866c5dcf0939db22a0067288b42f87f7b" -->
 
-<!-- pdac:cite id="UC-LISTS-OPEN-LIST" digest="sha256:245d5390e63e0281cb1cb5c29ef1a9fa25ab39fc2c4cf54b51240b6d5f571dfe" -->
+<!-- pdac:cite id="UC-LISTS-OPEN-LIST" digest="sha256:8e1a65110f288baa5f7fb827197590037cb9e7255c9cb1d61ac0c85d656cfa10" -->
 
-<!-- pdac:cite id="FR-WEB-COUNTS-AND-COMPRESSED-COMPLETION" digest="sha256:75b1699d75bf1b4494c8a72fc588b0fbf1813618f8d5f608c61e14d2dda3a3fd" -->
+<!-- pdac:cite id="FR-WEB-COUNTS-AND-COMPRESSED-COMPLETION" digest="sha256:a222ff4110e33f64b652398e78b61a103ec013957a8844561515563763bb1df8" -->
 
-<!-- pdac:cite id="SB-LISTS-OPEN-UNCHECKED-FIRST" digest="sha256:6c1e8e0624f0b3efc8eb12a39bc8297df35fd52943cee0474d2bbaacd422f779" -->
+<!-- pdac:cite id="SB-LISTS-OPEN-UNCHECKED-FIRST" digest="sha256:7bd0a97f8e052ca3c996fde32163ba3062bf5079a9189747164b7cfabae33def" -->
 
 #### Scenario: User switches between lists
 
@@ -443,21 +443,21 @@ A plain item with a title only is fully valid. A starred item with all three tem
 
 Items do not carry an assignee, a status system beyond checked/unchecked, comments, attachments, or steps.
 
-<!-- pdac:cite id="TERM-LIST-ITEM" digest="sha256:904520339922c3589e43d6ea243a61938b6f5304cb1e30cc8c8b7bffff92aa2e" -->
+<!-- pdac:cite id="TERM-LIST-ITEM" digest="sha256:c6112cdc3c6f6573d978a595cec94145f47269189357e3e50257d39667ca56ee" -->
 
-<!-- pdac:cite id="TERM-ITEM-IMPORTANCE" digest="sha256:10b6e633466cc85d1aee7ab7f7d74e519279a86581c1f715e2cb4956e1437a10" -->
+<!-- pdac:cite id="TERM-ITEM-IMPORTANCE" digest="sha256:e3bbf50c0811e62b653decd8f04508de22754a2f836fd939ffa7cd4fe1ac0de7" -->
 
-<!-- pdac:cite id="TERM-ITEM-TEMPORAL-FIELDS" digest="sha256:138ea408865568c2d484dcdef52b9395e05a4f103ce7fc9462e9deead72e484d" -->
+<!-- pdac:cite id="TERM-ITEM-TEMPORAL-FIELDS" digest="sha256:15498c7a4246e94ae298569f73d3f6cfa6efdbc366631baae6fe03a5fc8b8578" -->
 
-<!-- pdac:cite id="FR-LISTS-ITEM-IMPORTANCE" digest="sha256:6f2ad263ba0ae54f8a682c9578ec553165f84da6bc547ed31a224ab021d09834" -->
+<!-- pdac:cite id="FR-LISTS-ITEM-IMPORTANCE" digest="sha256:ce302425272a44f0fe0719f0589804bcc94e294a07d4e4b486ad7b19f90ad394" -->
 
-<!-- pdac:cite id="FR-LISTS-SET-ITEM-TIMING" digest="sha256:d7ebe6861d147b98d3f0b647ac8ab6123a20cea7ff52e516210fe306593e9a93" -->
+<!-- pdac:cite id="FR-LISTS-SET-ITEM-TIMING" digest="sha256:b3cbffce65b3e20f553f712ea2729544a94c6e4a9bc888619b60e7a58eb41c14" -->
 
-<!-- pdac:cite id="BR-LISTS-IMPORTANCE-BINARY" digest="sha256:8f9276f3e7b87e7f2ad2c59437da11a5ec0481cdaa7f97e520c6f8a91a8fe6c3" -->
+<!-- pdac:cite id="BR-LISTS-IMPORTANCE-BINARY" digest="sha256:b779b624287684ff2c848bbf1152cd268f2d4d8e0849e3fe391010817143c4d2" -->
 
-<!-- pdac:cite id="BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT" digest="sha256:40002c49ac40b5b30be14b9d66152d74c7c6db734817ff70ba4976c4849778fe" -->
+<!-- pdac:cite id="BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT" digest="sha256:88fa4dda19ba3d6cd4e9e92b1d43d08fb0d96717d76e1428747adf70df3e55bb" -->
 
-<!-- pdac:cite id="CON-LISTS-ITEM-CAPABILITY-BOUNDARY" digest="sha256:057cef9585d6cb8ab3cba66f55cdb76637abe9b9bb9342a997232b58dba53e15" -->
+<!-- pdac:cite id="CON-LISTS-ITEM-CAPABILITY-BOUNDARY" digest="sha256:f0b4e3bfe38b1249e7261996f8b21420e271b1c5ee0d349e7a42264f23bdfe9e" -->
 
 #### Scenario: List Item works without optional capabilities
 
@@ -482,17 +482,17 @@ Clearing all temporal fields from an item removes it from Agenda projection imme
 
 When a repeat rule is set alongside a due date, the due date acts as the anchor for the current recurrence.
 
-<!-- pdac:cite id="FR-LISTS-AGENDA-PROJECTION" digest="sha256:97074fff7f6f05b914ce4619df4ea615d6d3b8198c29f7a9c85b9cd0a95ffe0b" -->
+<!-- pdac:cite id="FR-LISTS-AGENDA-PROJECTION" digest="sha256:b94162c9eb42af755596bd3448c69f727b83d6dd2a707631568d90ea10453d50" -->
 
-<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:07f2a39c4da3143f7ba1dc285acb840d8a121020a2c68adf87783c23b1e92af9" -->
+<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:043eef067ee7db97dd23b7dc3dc2e7c9b7c52b4c9f5aefc6e3d2066abd179350" -->
 
-<!-- pdac:cite id="BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT" digest="sha256:40002c49ac40b5b30be14b9d66152d74c7c6db734817ff70ba4976c4849778fe" -->
+<!-- pdac:cite id="BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT" digest="sha256:88fa4dda19ba3d6cd4e9e92b1d43d08fb0d96717d76e1428747adf70df3e55bb" -->
 
-<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:740fa2cc41d90ec6afb099c5f97fa44e9092af8d83cd68291f807262387a44b0" -->
+<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:f0adb53673dfbfd7051791182578f9ee2f44e0a37b7699c16258854579342a13" -->
 
-<!-- pdac:cite id="FR-LISTS-CLEAR-ITEM-TIMING" digest="sha256:dac218145bbf6f152b37ca13e0c90761046bf9141f5cec589137e62d80d0ebda" -->
+<!-- pdac:cite id="FR-LISTS-CLEAR-ITEM-TIMING" digest="sha256:befbf601bbf68f6cda4e54ee4af1a8642208b44c15c1692005c7da958f2b3a50" -->
 
-<!-- pdac:cite id="SB-LISTS-CLEARED-ITEM-LEAVES-AGENDA" digest="sha256:9f66ef5bca4eecb07050a78ed725f41873bd84e1422ad2ae6d4cd783dc29c0ff" -->
+<!-- pdac:cite id="SB-LISTS-CLEARED-ITEM-LEAVES-AGENDA" digest="sha256:435869f319b3f053ea27df3bc2eb5b8d6f9dd5a0bf910fbe2201071d409a806b" -->
 
 #### Scenario: List Item projects while it has temporal information
 
@@ -516,21 +516,21 @@ A list may be created from the Lists surface, from the detail of a plan, or from
 
 Item capture SHALL not require a modal. Quick add must support sequential entry without interruption. Focus returns for repeated capture.
 
-<!-- pdac:cite id="FR-LISTS-CREATE-LIST" digest="sha256:40e9d54e5314ad2e475d7fce3b2a85fa548e4b4928390b1a4cbb5c3889b68c8c" -->
+<!-- pdac:cite id="FR-LISTS-CREATE-LIST" digest="sha256:25c9cc803d305300a243539bd99da341cbda24a290f61af4894dbd02f91b0e6d" -->
 
-<!-- pdac:cite id="UC-LISTS-CREATE-LIST" digest="sha256:375c978ff484265047fac5dc6656ddafb9b13474b61d356ce67388071a75ae5e" -->
+<!-- pdac:cite id="UC-LISTS-CREATE-LIST" digest="sha256:82df9acf755674420aae2f412b71663853188987c855c12931e78c38a4db8f4d" -->
 
-<!-- pdac:cite id="BR-LISTS-LIST-NAME-REQUIRED" digest="sha256:e8b8f128499fe155698642fddd3002344b0ec947bece7644a30f3d8f54a7b752" -->
+<!-- pdac:cite id="BR-LISTS-LIST-NAME-REQUIRED" digest="sha256:95049208f08bebfb977ee6a6bad5f34e2ceef9fbd21bff7aadfc78cdf7fd6d29" -->
 
-<!-- pdac:cite id="BR-LISTS-CONTEXT-LINKS-INFORMATIONAL" digest="sha256:75037c1fcced9208b8cd1c668a98f37b7d742dea8c8f447a482e15bf7e3c76f6" -->
+<!-- pdac:cite id="BR-LISTS-CONTEXT-LINKS-INFORMATIONAL" digest="sha256:c5d604a88b3d0a26c3005ee116c6145fd451a9fd4e2f1b56f4e48f0c5fdd7f16" -->
 
-<!-- pdac:cite id="FR-LISTS-ADD-ITEM" digest="sha256:e8aa749e760b1deb27d59fd5f3e997342ccfd52438cffb1f96e79479275a3ce5" -->
+<!-- pdac:cite id="FR-LISTS-ADD-ITEM" digest="sha256:31ca6047288c0e531133f611eda3ba2b8c142fc5d991cc0015103929474a2ff3" -->
 
-<!-- pdac:cite id="QR-LISTS-FRICTIONLESS-CAPTURE" digest="sha256:54f0abaea8ee6e4683dca671179356b0dc68aeaeab8353b550bfefc66212698c" -->
+<!-- pdac:cite id="QR-LISTS-FRICTIONLESS-CAPTURE" digest="sha256:c49275adaa16e46f1d1613af96372c572b5562e38912ce8db7693be665d6e4ec" -->
 
-<!-- pdac:cite id="SB-LISTS-CREATE-NAME-ONLY" digest="sha256:debfbf3036eda107b3f1f195d25d5023ed3fa3554f5f9da2bb9f76da13caa8ab" -->
+<!-- pdac:cite id="SB-LISTS-CREATE-NAME-ONLY" digest="sha256:67ca544ab5591dbd2d620615cf09d68da36f4a8da202529356e9f571083ec2ed" -->
 
-<!-- pdac:cite id="SB-LISTS-SEQUENTIAL-CAPTURE" digest="sha256:084f626099f7e5566efe9ecbb65bda5c6a31d63d03ea1c9fed0045de260fe92c" -->
+<!-- pdac:cite id="SB-LISTS-SEQUENTIAL-CAPTURE" digest="sha256:f71db1393adbc83b54644275fa8d6f276a304a59ac74ea138432bd12ca5bfa44" -->
 
 #### Scenario: User creates a list with a name only
 
@@ -551,17 +551,17 @@ Completed items are de-emphasized behind a collapse toggle (`Completed (N)`) but
 
 Archived lists are no longer in active use but are retained.
 
-<!-- pdac:cite id="JRN-LISTS-REUSE-A-LIST" digest="sha256:e59043d8f633b8e68bbfff954803e5f97c46167d42a022ac5b11b7b875603d10" -->
+<!-- pdac:cite id="JRN-LISTS-REUSE-A-LIST" digest="sha256:b6207a0738ce655272ca0575c950bc6a5b5fc830ca0e9dc116365b2e9eff73dc" -->
 
-<!-- pdac:cite id="TERM-ARCHIVED-LIST" digest="sha256:71bd5c8a326250a271fca746551c3e38d203d4318eb29bc9ee02dc6b1487b85d" -->
+<!-- pdac:cite id="TERM-ARCHIVED-LIST" digest="sha256:3283e585a3a3a503e6af9b70f17f75c99dcc79f5e3a0b7ad58cbaa29bf5ed860" -->
 
-<!-- pdac:cite id="TERM-CHECKED-ITEM" digest="sha256:5556c31585a82994143d5a49b60e7d1c8d9780aede68115e79e8fbaee6499246" -->
+<!-- pdac:cite id="TERM-CHECKED-ITEM" digest="sha256:92b2028e2e875bd9b994751aa25de16c9928b4204734ca2cfe7a77e1ff1bd94b" -->
 
-<!-- pdac:cite id="FR-LISTS-ARCHIVE-LIST" digest="sha256:7204dcb449c16d9bf95653de6d5dab3140f60ad07df5dcc3a31ae877b6e27e57" -->
+<!-- pdac:cite id="FR-LISTS-ARCHIVE-LIST" digest="sha256:050b27be17e6b043e91241e56988e8099bc62e18ff07fe964842e197bfe11477" -->
 
-<!-- pdac:cite id="UC-LISTS-ARCHIVE-LIST" digest="sha256:2395fb97234a2de067a6f26ada8345758c18ccf3ef081d97c9d20a9b04fa6afe" -->
+<!-- pdac:cite id="UC-LISTS-ARCHIVE-LIST" digest="sha256:1b1904e7a6583bce2e708950e1b87060cdf5c7ac0ae7432036226211825a0cde" -->
 
-<!-- pdac:cite id="FR-WEB-COUNTS-AND-COMPRESSED-COMPLETION" digest="sha256:75b1699d75bf1b4494c8a72fc588b0fbf1813618f8d5f608c61e14d2dda3a3fd" -->
+<!-- pdac:cite id="FR-WEB-COUNTS-AND-COMPRESSED-COMPLETION" digest="sha256:a222ff4110e33f64b652398e78b61a103ec013957a8844561515563763bb1df8" -->
 
 #### Scenario: Completed List Items remain accessible
 
@@ -598,25 +598,25 @@ Clicking an owner or supporter name in the inspector navigates to that person's 
 
 There is no separate full-detail page for Areas. A direct URL to an area detail page redirects to the Areas surface with that area's selection restored.
 
-<!-- pdac:cite id="FR-AREAS-OWNERSHIP-VISIBILITY" digest="sha256:87da19a0776edd63c305dbcc30a7e51ec98fe949c762e217df6f17d284c745b4" -->
+<!-- pdac:cite id="FR-AREAS-OWNERSHIP-VISIBILITY" digest="sha256:acf5743c30edd22cc0badaaf5bc4d6998fb46c2e71dc2dc84452b7557a4b14d8" -->
 
-<!-- pdac:cite id="UC-AREAS-REVIEW-OWNERSHIP" digest="sha256:fe5c941fe5760bc287bf7e51f2e59e21e0215853396e8f5760ada0ae99d35acd" -->
+<!-- pdac:cite id="UC-AREAS-REVIEW-OWNERSHIP" digest="sha256:bf641773cb1723b92c2eb3e20bfebb013ee1be7d3722c06df94cc97e56cc69a0" -->
 
-<!-- pdac:cite id="TERM-OWNERSHIP-GAP" digest="sha256:e403011bc8751c3eb99fa08906c90b4172f9e0f8e7eb8d4e49761a40ac843531" -->
+<!-- pdac:cite id="TERM-OWNERSHIP-GAP" digest="sha256:6315a8195c46d7e4cae41ff65fcaf5a4a777c8d964661988b850cdc6102c4434" -->
 
-<!-- pdac:cite id="FR-AREAS-LINKED-WORK" digest="sha256:848cee830481740fcd7579c934393814a7aebadcd3af422ff9e190ae01a55a7b" -->
+<!-- pdac:cite id="FR-AREAS-LINKED-WORK" digest="sha256:b867edbec0a1c2482f5d7e1bd2d88ca1a3a65107d38bb0e15884ae1228db21e6" -->
 
-<!-- pdac:cite id="FR-AREAS-CREATE-WORK-FROM-AREA" digest="sha256:8067db8e87e5852fb22b4d5af029609a8ed981602c384ea5777205f1f1e270bf" -->
+<!-- pdac:cite id="FR-AREAS-CREATE-WORK-FROM-AREA" digest="sha256:fadb351fdb99292d3b4d7c5f42c31cef12b77d1ef1a8c0248b8831914c661273" -->
 
-<!-- pdac:cite id="FR-AREAS-AREA-COLOR" digest="sha256:72d580077f39e5fc9bf6a006d109b15b03b7aa06ace7fafde3c4ce3883aa94ca" -->
+<!-- pdac:cite id="FR-AREAS-AREA-COLOR" digest="sha256:ee51f587835984eb7de4d74edffaa0626f0caeaf06e3001e8949419e76b50df8" -->
 
 <!-- pdac:cite id="QR-AREAS-GAPS-AT-A-GLANCE" digest="sha256:f1a55dc43455210a0ed6dd85f11f80d67e68d984acd0d84e65e8f392fce5829f" -->
 
-<!-- pdac:cite id="FR-WEB-CONTEXTUAL-DETAIL-PATTERNS" digest="sha256:7d0eea19745ff772c67fad4b9248424244669368f6c113c10884eb9b45cc48ef" -->
+<!-- pdac:cite id="FR-WEB-CONTEXTUAL-DETAIL-PATTERNS" digest="sha256:5cbddd4d738a319aba075ce6c69082423619f352188faf139f892270cbd4c425" -->
 
-<!-- pdac:cite id="SB-AREAS-UNOWNED-FIRST" digest="sha256:9c21be8ac399f55a749f9b93986be95559b578f293922b375be1768afff351be" -->
+<!-- pdac:cite id="SB-AREAS-UNOWNED-FIRST" digest="sha256:47b6a5b5b96fe924545ba8d7fba1408ed5eaff98d3404ddb129ff5d09dd29b41" -->
 
-<!-- pdac:cite id="SB-AREAS-GAP-INDICATOR" digest="sha256:797e4f31f1fca1a42437dcc02b8d5cf61763383fe4d34fb9e1f5a2e5e692a9e4" -->
+<!-- pdac:cite id="SB-AREAS-GAP-INDICATOR" digest="sha256:3ddabbf8e8bd488cc243d27a98468f3b9bf74559e1f0092ad6d2b8848b4e6a6f" -->
 
 #### Scenario: User views Areas with an unowned Area
 
@@ -650,17 +650,17 @@ Outlook calendar connections are managed in Profile. Each member manages their o
 
 Settings SHALL NOT handle: editing of native household plans, browsing of imported entries as a calendar-like surface, provider write-back, or administrative control of another member's calendar connections in phase 1.
 
-<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:6f46b897ec17ba34fa6027cdfa95a01a41d176d06edb4e69daced913c924bdc8" -->
-<!-- pdac:cite id="UC-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:b86e8a21e83677a4cbe232704a35ea0fa5f07f572d563b18f3c4fbcc87cfb39f" -->
-<!-- pdac:cite id="FR-WEB-SETTINGS-SURFACE" digest="sha256:d6bc7cc0dd3fe7d5338d0bb8e836467cde256b6feea2fce0c789204c1d22fc79" -->
+<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:f6d31fa396855bedd343863cb7e1485c49ad0cde33f074bf702852432a9c1f7c" -->
+<!-- pdac:cite id="UC-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:4368dc7f90d60dfc87ce6d3313e2865ec897854ece9e4cbc1f064356c53a4820" -->
+<!-- pdac:cite id="FR-WEB-SETTINGS-SURFACE" digest="sha256:ded16890d8ee378ace6a8f2e67f815920b569ec20eef0904e177614a0eecb44d" -->
 
-<!-- pdac:cite id="UC-WEB-MANAGE-SETTINGS" digest="sha256:9dbb90084c9135c6603878370913e153c97318b79ae85bbb5106eab623292734" -->
+<!-- pdac:cite id="UC-WEB-MANAGE-SETTINGS" digest="sha256:7e168c902564d7bc6f54495ca764cc3cb6e7976fb327cba962a3176fad2ce07a" -->
 
-<!-- pdac:cite id="BR-WEB-SETTINGS-STAYS-CONFIGURATION" digest="sha256:d39e22599e6932f15dec9d9328e42cd39b17254968c267480466de3dcfcafcdf" -->
+<!-- pdac:cite id="BR-WEB-SETTINGS-STAYS-CONFIGURATION" digest="sha256:359161ae6d2ae57e66e5f0e4d264593cac97a51760fdf377c0018076b62037f7" -->
 
-<!-- pdac:cite id="BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS" digest="sha256:92737f241a94bb8c8663837766c0035e4f8c64b12cc5409bef30289fb4dab848" -->
+<!-- pdac:cite id="BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS" digest="sha256:a3c89a729bbc1b61d0b8104ceacce71dc29a6e915ab2a90834c869b72c0a9da8" -->
 
-<!-- pdac:cite id="SB-WEB-SETTINGS-OPENS-ON-PROFILE" digest="sha256:d499111e5c7daf319d71a4a482457abc74d8a19a56cea38f9683c4ca8dca9a91" -->
+<!-- pdac:cite id="SB-WEB-SETTINGS-OPENS-ON-PROFILE" digest="sha256:d1d2c1d3321d62776397d526c6fb7c76cdd39fd92371b07a34d4359ffef62aec" -->
 
 #### Scenario: User opens Settings
 
@@ -684,25 +684,25 @@ A member SHALL be able to connect, configure, sync, and disconnect their Outlook
 
 Each connection row shows: provider label, account email, included calendar count, sync horizon, last sync time, and current status.
 
-<!-- pdac:cite id="FR-WEB-CALENDAR-CONNECTIONS-SECTION" digest="sha256:1fb3cc1de52ffa3afa91f266978c9221423a19f961597d080d9e2aae2aeafeea" -->
+<!-- pdac:cite id="FR-WEB-CALENDAR-CONNECTIONS-SECTION" digest="sha256:ff32c9662d1c32f4f33d0046caa1ca98db89157e0c27e2d6bd763622bd665f0a" -->
 
-<!-- pdac:cite id="FR-WEB-CONFIRM-DISCONNECT" digest="sha256:cb0f0d3acd4db0feede258fdaeaacdf07fce5b3742780859627354cae6002205" -->
+<!-- pdac:cite id="FR-WEB-CONFIRM-DISCONNECT" digest="sha256:e938c89cca90929913990eaba3bb556b2e6f9a12b53eca14efadb0763dc382c3" -->
 
-<!-- pdac:cite id="FR-CALENDAR-SHOW-CONNECTION-STATUS" digest="sha256:90493f6dec63621093e6aaffdcfec1673e691583f48157237781964253fb8ca4" -->
+<!-- pdac:cite id="FR-CALENDAR-SHOW-CONNECTION-STATUS" digest="sha256:b9c8bdaa5b345203b1688c4f2ec3dae6b03956a0fb4ff504ddbcce56fd996af8" -->
 
-<!-- pdac:cite id="FR-CALENDAR-SYNC-ALL-MY-CALENDARS" digest="sha256:584a41b95599d2173f6c7e358a2c04873010db89917b1dec55c10fbb0eac240f" -->
+<!-- pdac:cite id="FR-CALENDAR-SYNC-ALL-MY-CALENDARS" digest="sha256:00d6307f6e04781deae485202279fadb2c0840b08267d96f71e1d8c40f3fc62b" -->
 
-<!-- pdac:cite id="UC-CALENDAR-CONNECT-OUTLOOK" digest="sha256:f8c4aff4fa188eacc0a4014f41ab98b85f94446cca0daab97e36a8a67c4f1a5f" -->
+<!-- pdac:cite id="UC-CALENDAR-CONNECT-OUTLOOK" digest="sha256:2b5979801bddd1324f3c23b0958b000afe550e98e17a11ce792c2ea54235c034" -->
 
-<!-- pdac:cite id="UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR" digest="sha256:2cfd9b4b0f71c7e62dcd49d1fda91cdbee19a21a49023c4c8eab24d6dbb9c3a0" -->
+<!-- pdac:cite id="UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR" digest="sha256:eaf278bf6b3a77c0dc9ff934b444ab82b5aa23dac9c882f3c16ed698f1f410ff" -->
 
-<!-- pdac:cite id="UC-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:bbecb1046bb1b9c284c6f69ed6a02879f41210f364542e9538d7bb63cd99045e" -->
+<!-- pdac:cite id="UC-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:20397f50049cb36f540d4e65b7989c0f38be858535349e86daf4790319b37fe4" -->
 
-<!-- pdac:cite id="UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR" digest="sha256:2e005d84005460d3bb48da21ccbd69a57c65964dc32c774bae93df627c8bb21b" -->
+<!-- pdac:cite id="UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR" digest="sha256:3a3e5fa7533474185fbda7d556bb496ff71feb16302a5e219ff587eba5a386bc" -->
 
-<!-- pdac:cite id="BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS" digest="sha256:92737f241a94bb8c8663837766c0035e4f8c64b12cc5409bef30289fb4dab848" -->
+<!-- pdac:cite id="BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS" digest="sha256:a3c89a729bbc1b61d0b8104ceacce71dc29a6e915ab2a90834c869b72c0a9da8" -->
 
-<!-- pdac:cite id="SB-WEB-DISCONNECT-CONFIRMATION" digest="sha256:0828a6c9065b8fe44e71d0e60f8076426aba49c9af1f84bc319e558663649b0f" -->
+<!-- pdac:cite id="SB-WEB-DISCONNECT-CONFIRMATION" digest="sha256:dcb36d5105f87047c7c19261610758db1fa39e201836df71e895f525029d3f1e" -->
 
 #### Scenario: User disconnects an Outlook connection
 
@@ -735,11 +735,11 @@ The web app SHALL use consistent patterns for contextual detail across all surfa
 
 Contextual creation actions (add plan, add task, add list item) stay close to the current surface. Creation does not require navigating to a separate page.
 
-<!-- pdac:cite id="FR-WEB-CONTEXTUAL-DETAIL-PATTERNS" digest="sha256:7d0eea19745ff772c67fad4b9248424244669368f6c113c10884eb9b45cc48ef" -->
+<!-- pdac:cite id="FR-WEB-CONTEXTUAL-DETAIL-PATTERNS" digest="sha256:5cbddd4d738a319aba075ce6c69082423619f352188faf139f892270cbd4c425" -->
 
-<!-- pdac:cite id="FR-WEB-LOCAL-CAPTURE" digest="sha256:a43d6d379267bfaaa54145e61b18a92e07c6f02dda63ef57e4d4ebfd82a33b47" -->
+<!-- pdac:cite id="FR-WEB-LOCAL-CAPTURE" digest="sha256:e5ac1c8084079d226d134ec0f16ac26e57e15e716b4925c8070db85b000ddc12" -->
 
-<!-- pdac:cite id="QR-PRODUCT-CAPTURE-EASIER-THAN-REMEMBERING" digest="sha256:a4c482905ac1c2e5c6fac9a61e6d1449d28a4d682cc4bd43a452d80a79944b8b" -->
+<!-- pdac:cite id="QR-PRODUCT-CAPTURE-EASIER-THAN-REMEMBERING" digest="sha256:8481194f2c3fb06e4c6d24ab85b116e0f6f08200e1ece492593e2eb554a4e8ac" -->
 
 #### Scenario: Selecting an item uses contextual detail
 
@@ -767,13 +767,13 @@ The mobile web app SHALL present the same product logic as desktop in a collapse
 
 Mobile must feel like the same product at a smaller scale, not a different product.
 
-<!-- pdac:cite id="QR-WEB-MOBILE-SAME-PRODUCT" digest="sha256:c318bd0291b8badc6c509bd6dbdc22cf069487aa03b5d15714210312ac261e5d" -->
+<!-- pdac:cite id="QR-WEB-MOBILE-SAME-PRODUCT" digest="sha256:0b38079d5c55a3bcc863ca9b9903dc959910db3df187576c9c9522546b605047" -->
 
-<!-- pdac:cite id="QR-AGENDA-MOBILE-PARITY" digest="sha256:995a78a704051071eda6e66154994c53bc729905ddec7dd9473da8592b779fe7" -->
+<!-- pdac:cite id="QR-AGENDA-MOBILE-PARITY" digest="sha256:7096274135e4808dfaec9a30523645cebc0e11bfad842b073078f08052633187" -->
 
-<!-- pdac:cite id="QR-WEB-CONTENT-OVER-CHROME" digest="sha256:d77b33426ebc338ec4fdfd1e9a075c38ca7867793bb6aabdb9b62c71a7d54ff4" -->
+<!-- pdac:cite id="QR-WEB-CONTENT-OVER-CHROME" digest="sha256:2c69639ca2b2671411675f4b9c68fef916c646f7ab3c3d45b6d5514629aca541" -->
 
-<!-- pdac:cite id="FR-WEB-LOCAL-CAPTURE" digest="sha256:a43d6d379267bfaaa54145e61b18a92e07c6f02dda63ef57e4d4ebfd82a33b47" -->
+<!-- pdac:cite id="FR-WEB-LOCAL-CAPTURE" digest="sha256:e5ac1c8084079d226d134ec0f16ac26e57e15e716b4925c8070db85b000ddc12" -->
 
 #### Scenario: Mobile keeps the same product behavior
 

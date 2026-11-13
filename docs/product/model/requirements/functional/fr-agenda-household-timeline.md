@@ -2,7 +2,7 @@
 id: FR-AGENDA-HOUSEHOLD-TIMELINE
 type: functional-requirement
 title: "Show the household's temporal picture"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
   - "BR-AGENDA-PROJECTION-READ-ONLY"

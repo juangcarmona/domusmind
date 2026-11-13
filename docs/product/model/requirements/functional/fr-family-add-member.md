@@ -2,7 +2,7 @@
 id: FR-FAMILY-ADD-MEMBER
 type: functional-requirement
 title: "Add a person with a name and role"
-status: draft
+status: active
 derived-from:
   - UC-FAMILY-ADD-MEMBER
   - BR-FAMILY-PERSON-NEEDS-NAME-AND-ROLE

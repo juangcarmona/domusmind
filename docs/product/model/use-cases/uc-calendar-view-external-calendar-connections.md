@@ -2,7 +2,7 @@
 id: UC-CALENDAR-VIEW-EXTERNAL-CALENDAR-CONNECTIONS
 type: use-case
 title: "Review external calendar connections and their status"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

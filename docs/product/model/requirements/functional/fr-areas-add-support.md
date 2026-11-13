@@ -2,19 +2,19 @@
 id: FR-AREAS-ADD-SUPPORT
 type: functional-requirement
 title: Add Support people to an Area
-status: draft
+status: active
 derived-from:
-- UC-AREAS-ADD-SUPPORT
-- BR-AREAS-UNIQUE-SUPPORT
-- BR-AREAS-SAME-HOUSEHOLD-PEOPLE
-- BR-AREAS-OWNER-NOT-SUPPORT
+  - UC-AREAS-ADD-SUPPORT
+  - BR-AREAS-UNIQUE-SUPPORT
+  - BR-AREAS-SAME-HOUSEHOLD-PEOPLE
+  - BR-AREAS-OWNER-NOT-SUPPORT
 verification:
-- scenario-ref: SB-AREAS-ADD-SUPPORT
-- scenario-ref: SB-AREAS-REJECT-DUPLICATE-SUPPORT
-- scenario-ref: SB-AREAS-REJECT-OWNER-AS-SUPPORT
+  - scenario-ref: SB-AREAS-ADD-SUPPORT
+  - scenario-ref: SB-AREAS-REJECT-DUPLICATE-SUPPORT
+  - scenario-ref: SB-AREAS-REJECT-OWNER-AS-SUPPORT
 uses-terms:
-- TERM-AREA
-- TERM-AREA-SUPPORT
+  - TERM-AREA
+  - TERM-AREA-SUPPORT
 provenance:
   source: "openspec/specs/areas/spec.md (Requirement: Secondary Owner Assignment); interview: product owner decision Q-0017 (E-0158)"
   confidence: high

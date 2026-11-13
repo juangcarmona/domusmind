@@ -2,7 +2,7 @@
 id: SB-FAMILY-PET-ADDED
 type: structured-behaviour
 title: "A pet is added to the household"
-status: draft
+status: active
 illustrates:
   - UC-FAMILY-REGISTER-PET
 given:

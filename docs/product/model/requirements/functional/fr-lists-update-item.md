@@ -2,7 +2,7 @@
 id: FR-LISTS-UPDATE-ITEM
 type: functional-requirement
 title: "Update an item's name, quantity and note"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-UPDATE-ITEM
   - BR-LISTS-ITEM-NAME-REQUIRED

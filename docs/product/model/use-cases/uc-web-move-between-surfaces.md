@@ -2,7 +2,7 @@
 id: UC-WEB-MOVE-BETWEEN-SURFACES
 type: use-case
 title: "Move between the product's surfaces"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 governed-by: []

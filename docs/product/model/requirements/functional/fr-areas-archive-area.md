@@ -2,13 +2,13 @@
 id: FR-AREAS-ARCHIVE-AREA
 type: functional-requirement
 title: Archive an Area
-status: draft
+status: active
 derived-from:
-- UC-AREAS-ARCHIVE-AREA
+  - UC-AREAS-ARCHIVE-AREA
 verification:
-- scenario-ref: SB-AREAS-ARCHIVE-AREA
+  - scenario-ref: SB-AREAS-ARCHIVE-AREA
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: "openspec/specs/areas/spec.md (Requirement: Area Archiving); interview: product owner decision Q-0013 (E-0158)"
   confidence: high

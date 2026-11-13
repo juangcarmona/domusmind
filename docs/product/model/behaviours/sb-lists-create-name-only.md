@@ -2,7 +2,7 @@
 id: SB-LISTS-CREATE-NAME-ONLY
 type: structured-behaviour
 title: "Creating a list with a name only"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-CREATE-LIST
   - BR-LISTS-LIST-NAME-REQUIRED

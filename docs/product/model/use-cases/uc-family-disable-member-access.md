@@ -2,7 +2,7 @@
 id: UC-FAMILY-DISABLE-MEMBER-ACCESS
 type: use-case
 title: "Disable a person's access"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MANAGER
 supporting-actors: []
 bounded-context: BC-FAMILY

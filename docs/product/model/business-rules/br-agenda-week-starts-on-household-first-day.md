@@ -2,9 +2,7 @@
 id: BR-AGENDA-WEEK-STARTS-ON-HOUSEHOLD-FIRST-DAY
 type: business-rule
 title: "The Agenda week starts on the household's first day of week"
-status: draft
-applies-to:
-  - "UC-AGENDA-NAVIGATE"
+status: active
 uses-terms:
   - "TERM-AGENDA-MODE"
   - "TERM-HOUSEHOLD"

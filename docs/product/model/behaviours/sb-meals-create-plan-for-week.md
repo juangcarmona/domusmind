@@ -2,7 +2,7 @@
 id: "SB-MEALS-CREATE-PLAN-FOR-WEEK"
 type: "structured-behaviour"
 title: "Creating a plan for a week gives a Draft with every slot Unplanned"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-CREATE-PLAN"
   - "BR-MEALS-FULL-SLOT-GRID"

@@ -2,7 +2,7 @@
 id: "FR-RECIPES-UPDATE"
 type: "functional-requirement"
 title: "Edit a recipe"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-RECIPES-UPDATE-RECIPE"
   - "BR-RECIPES-NAME-UNIQUE"

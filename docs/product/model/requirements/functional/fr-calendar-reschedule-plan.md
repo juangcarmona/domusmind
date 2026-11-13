@@ -2,7 +2,7 @@
 id: FR-CALENDAR-RESCHEDULE-PLAN
 type: functional-requirement
 title: "Reschedule a plan"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-RESCHEDULE-PLAN"
   - "BR-CALENDAR-PLAN-END-AFTER-START"

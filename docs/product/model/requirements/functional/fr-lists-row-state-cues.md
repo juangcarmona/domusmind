@@ -2,7 +2,7 @@
 id: FR-LISTS-ROW-STATE-CUES
 type: functional-requirement
 title: "Item rows show their state compactly"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-OPEN-LIST
 verification:

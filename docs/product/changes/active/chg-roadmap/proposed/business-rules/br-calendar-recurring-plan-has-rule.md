@@ -3,8 +3,6 @@ id: BR-CALENDAR-RECURRING-PLAN-HAS-RULE
 type: business-rule
 title: "A recurring plan must define its recurrence"
 status: draft
-applies-to:
-  - "UC-CALENDAR-MANAGE-RECURRING-PLANS"
 uses-terms:
   - "TERM-PLAN"
 provenance:

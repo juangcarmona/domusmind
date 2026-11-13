@@ -2,7 +2,7 @@
 id: FR-LISTS-CLEAR-ITEM-TIMING
 type: functional-requirement
 title: "Clear all timing from an item at once"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-CLEAR-ITEM-SCHEDULE
 verification:

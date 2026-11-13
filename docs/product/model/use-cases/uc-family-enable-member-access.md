@@ -2,7 +2,7 @@
 id: UC-FAMILY-ENABLE-MEMBER-ACCESS
 type: use-case
 title: "Re-enable a person's access"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MANAGER
 supporting-actors: []
 bounded-context: BC-FAMILY

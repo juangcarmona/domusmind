@@ -2,7 +2,7 @@
 id: TERM-TASK
 type: domain-term
 title: Task
-status: draft
+status: active
 defined-in: BC-TASKS
 synonyms:
   - HouseholdTask

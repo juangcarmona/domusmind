@@ -2,7 +2,7 @@
 id: UC-AGENDA-INSPECT-ENTRY
 type: use-case
 title: "Inspect an Agenda entry"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

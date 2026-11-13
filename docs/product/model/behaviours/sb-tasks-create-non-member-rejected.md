@@ -2,7 +2,7 @@
 id: SB-TASKS-CREATE-NON-MEMBER-REJECTED
 type: structured-behaviour
 title: Task with an assignee from outside the household is rejected
-status: draft
+status: active
 illustrates:
   - UC-TASKS-CREATE-TASK
   - BR-TASKS-ASSIGNEE-IN-HOUSEHOLD

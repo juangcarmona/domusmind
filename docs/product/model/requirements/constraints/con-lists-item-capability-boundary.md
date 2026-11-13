@@ -2,7 +2,7 @@
 id: CON-LISTS-ITEM-CAPABILITY-BOUNDARY
 type: constraint
 title: "List items carry no assignment, status lifecycle or task-like extras"
-status: draft
+status: active
 applies-to:
   - BC-LISTS
 uses-terms:

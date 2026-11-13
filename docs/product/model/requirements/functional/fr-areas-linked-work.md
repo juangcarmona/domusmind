@@ -2,18 +2,18 @@
 id: FR-AREAS-LINKED-WORK
 type: functional-requirement
 title: Show the work linked to an Area
-status: draft
+status: active
 derived-from:
-- UC-AREAS-REVIEW-OWNERSHIP
+  - UC-AREAS-REVIEW-OWNERSHIP
 verification:
-- scenario: An Area with two open tasks linked shows an open-task count of two on its row and lists both tasks in its detail
-- scenario: An Area with a linked shopping list shows no list count on its row and shows the list in its detail
+  - scenario: An Area with two open tasks linked shows an open-task count of two on its row and lists both tasks in its detail
+  - scenario: An Area with a linked shopping list shows no list count on its row and shows the list in its detail
 uses-terms:
-- TERM-AREA
-- TERM-TASK
-- TERM-PLAN
-- TERM-ROUTINE
-- TERM-LIST
+  - TERM-AREA
+  - TERM-TASK
+  - TERM-PLAN
+  - TERM-ROUTINE
+  - TERM-LIST
 provenance:
   source: "docs/_legacy/00_product/surfaces/areas.md (Default View, Inspector, Data, Interaction); interview: product owner decision Q-0020 (E-0158)"
   confidence: high

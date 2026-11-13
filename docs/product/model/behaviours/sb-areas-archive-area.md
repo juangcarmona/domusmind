@@ -2,18 +2,18 @@
 id: SB-AREAS-ARCHIVE-AREA
 type: structured-behaviour
 title: An archived Area leaves the active view but is kept
-status: draft
+status: active
 illustrates:
-- UC-AREAS-ARCHIVE-AREA
+  - UC-AREAS-ARCHIVE-AREA
 given:
-- An Area exists
+  - An Area exists
 when: The household archives the Area
 then:
-- The Area is marked as archived
-- The Area is not shown in the default active view
-- The Area is shown when the archived filter is applied
+  - The Area is marked as archived
+  - The Area is not shown in the default active view
+  - The Area is shown when the archived filter is applied
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: 'openspec/specs/areas/spec.md (scenario: Household archives an Area)'
   confidence: high

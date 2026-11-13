@@ -2,7 +2,7 @@
 id: SB-TASKS-ROUTINE-INVALID-RECURRENCE-REJECTED
 type: structured-behaviour
 title: Weekly routine without days is rejected
-status: draft
+status: active
 illustrates:
   - UC-TASKS-CREATE-ROUTINE
   - BR-TASKS-VALID-ROUTINE-RECURRENCE

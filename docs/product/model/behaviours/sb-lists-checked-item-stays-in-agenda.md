@@ -2,7 +2,7 @@
 id: SB-LISTS-CHECKED-ITEM-STAYS-IN-AGENDA
 type: structured-behaviour
 title: "A checked item with a due date stays in the Agenda, de-emphasised"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-TOGGLE-ITEM
   - UC-LISTS-SEE-ITEMS-IN-AGENDA

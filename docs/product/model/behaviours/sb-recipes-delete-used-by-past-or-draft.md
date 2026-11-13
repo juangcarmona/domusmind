@@ -2,7 +2,7 @@
 id: "SB-RECIPES-DELETE-USED-BY-PAST-OR-DRAFT"
 type: "structured-behaviour"
 title: "Deleting a recipe used only by Draft or Completed plans succeeds"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-DELETE-RECIPE"
   - "BR-RECIPES-DELETE-GUARD"

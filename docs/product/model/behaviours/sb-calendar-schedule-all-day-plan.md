@@ -2,7 +2,7 @@
 id: SB-CALENDAR-SCHEDULE-ALL-DAY-PLAN
 type: structured-behaviour
 title: "A plan can be scheduled for a whole day without a time"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-SCHEDULE-PLAN"
   - "BR-CALENDAR-PLAN-REQUIRES-TITLE-AND-START"

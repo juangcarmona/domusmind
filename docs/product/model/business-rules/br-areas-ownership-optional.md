@@ -2,13 +2,11 @@
 id: BR-AREAS-OWNERSHIP-OPTIONAL
 type: business-rule
 title: An Area may exist without an Owner
-status: draft
-applies-to:
-- UC-AREAS-CREATE-AREA
+status: active
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
-- TERM-OWNERSHIP-GAP
+  - TERM-AREA
+  - TERM-AREA-OWNER
+  - TERM-OWNERSHIP-GAP
 provenance:
   source: openspec/specs/areas/spec.md (Area Creation); docs/_legacy/04_contexts/responsibilities.md (Lifecycle Integrity); docs/_legacy/00_product/surfaces/areas.md (Interaction); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs
   confidence: high

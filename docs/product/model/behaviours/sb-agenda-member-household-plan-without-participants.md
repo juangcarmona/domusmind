@@ -2,7 +2,7 @@
 id: SB-AGENDA-MEMBER-HOUSEHOLD-PLAN-WITHOUT-PARTICIPANTS
 type: structured-behaviour
 title: "A household plan without participants appears in each person's Agenda"
-status: draft
+status: active
 illustrates:
   - "UC-AGENDA-VIEW-MEMBER-AGENDA"
   - "BR-AGENDA-MEMBER-SCOPE-PLANS"

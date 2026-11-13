@@ -2,7 +2,7 @@
 id: SB-CALENDAR-ADD-PARTICIPANT-CANCELLED-PLAN
 type: structured-behaviour
 title: "No participants can be added to a cancelled plan"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS"
   - "BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED"

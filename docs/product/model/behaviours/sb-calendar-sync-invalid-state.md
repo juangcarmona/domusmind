@@ -2,7 +2,7 @@
 id: SB-CALENDAR-SYNC-INVALID-STATE
 type: structured-behaviour
 title: "Invalid sync state falls back to a fresh load"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
   - "BR-CALENDAR-HORIZON-CHANGE-RELOADS"

@@ -2,21 +2,15 @@
 id: BR-AREAS-ANY-MEMBER-MANAGES
 type: business-rule
 title: Any household member may manage Areas
-status: draft
+status: active
 applies-to:
-- BC-RESPONSIBILITIES
-- UC-AREAS-CREATE-AREA
-- UC-AREAS-RENAME-AREA
-- UC-AREAS-ARCHIVE-AREA
-- UC-AREAS-ASSIGN-OWNER
-- UC-AREAS-ADD-SUPPORT
-- UC-AREAS-REMOVE-SUPPORT
+  - BC-RESPONSIBILITIES
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
-- TERM-AREA-SUPPORT
-- TERM-MEMBER
-- TERM-MANAGER
+  - TERM-AREA
+  - TERM-AREA-OWNER
+  - TERM-AREA-SUPPORT
+  - TERM-MEMBER
+  - TERM-MANAGER
 provenance:
   source: "openspec/specs/areas/spec.md (requirements phrased as 'the household'); interview: product owner decision Q-0014 (E-0158)"
   confidence: high

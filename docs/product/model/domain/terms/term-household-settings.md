@@ -2,7 +2,7 @@
 id: TERM-HOUSEHOLD-SETTINGS
 type: domain-term
 title: "Household Settings"
-status: draft
+status: active
 defined-in: BC-FAMILY
 synonyms: []
 uses-terms:

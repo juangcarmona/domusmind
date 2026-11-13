@@ -2,11 +2,7 @@
 id: BR-AGENDA-ENTRY-PRIORITY-ORDER
 type: business-rule
 title: "Agenda entries follow a fixed priority order within a day"
-status: draft
-applies-to:
-  - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
-  - "UC-AGENDA-VIEW-MEMBER-AGENDA"
-  - "UC-LISTS-SEE-ITEMS-IN-AGENDA"
+status: active
 uses-terms:
   - "TERM-AGENDA"
   - "TERM-PLAN"

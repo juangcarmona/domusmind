@@ -2,7 +2,7 @@
 id: FR-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR
 type: functional-requirement
 title: "Choose calendars and horizon for a connection"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
   - "BR-CALENDAR-SUPPORTED-SYNC-HORIZONS"

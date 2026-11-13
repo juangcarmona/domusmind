@@ -2,7 +2,7 @@
 id: SB-LISTS-SET-DUE-DATE
 type: structured-behaviour
 title: "Setting a due date puts the item in the Agenda without making it a task"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-SCHEDULE-ITEM
   - BR-LISTS-ITEM-IS-NOT-A-TASK

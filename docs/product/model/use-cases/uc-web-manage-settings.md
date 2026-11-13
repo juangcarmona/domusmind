@@ -2,7 +2,7 @@
 id: UC-WEB-MANAGE-SETTINGS
 type: use-case
 title: "Find and use configuration in Settings"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors:
   - "ACT-MICROSOFT-OUTLOOK"

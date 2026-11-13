@@ -2,7 +2,7 @@
 id: TERM-ASSISTANT-PROVIDER-TARGET
 type: domain-term
 title: Assistant provider target
-status: draft
+status: active
 defined-in: BC-CHATS
 synonyms: []
 uses-terms: []

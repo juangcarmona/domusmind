@@ -2,7 +2,7 @@
 id: TERM-ITEM-IMPORTANCE
 type: domain-term
 title: "Item Importance"
-status: draft
+status: active
 defined-in: BC-LISTS
 synonyms:
   - "starred"

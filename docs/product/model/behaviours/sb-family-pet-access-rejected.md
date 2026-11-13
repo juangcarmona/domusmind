@@ -2,7 +2,7 @@
 id: SB-FAMILY-PET-ACCESS-REJECTED
 type: structured-behaviour
 title: "A pet cannot be given access"
-status: draft
+status: active
 illustrates:
   - BR-FAMILY-PET-RESTRICTIONS
 given:

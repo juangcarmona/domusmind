@@ -2,9 +2,7 @@
 id: BR-CHAT-ASSISTANT-READ-ONLY
 type: business-rule
 title: The Chats assistant responds only to explicit read-only questions
-status: draft
-applies-to:
-  - UC-CHAT-ASK-ASSISTANT
+status: active
 uses-terms:
   - TERM-ASSISTANT-RESPONSE
 ---

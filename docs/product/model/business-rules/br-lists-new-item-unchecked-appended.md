@@ -2,9 +2,7 @@
 id: BR-LISTS-NEW-ITEM-UNCHECKED-APPENDED
 type: business-rule
 title: "A new item starts unchecked at the end of the list"
-status: draft
-applies-to:
-  - UC-LISTS-ADD-ITEM
+status: active
 uses-terms:
   - TERM-LIST-ITEM
 provenance:

@@ -2,7 +2,7 @@
 id: TERM-PROJECTED-LIST-ITEM
 type: domain-term
 title: "Projected List Item"
-status: draft
+status: active
 defined-in: BC-LISTS
 synonyms:
   - "list-item Agenda entry"

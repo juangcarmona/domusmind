@@ -2,7 +2,7 @@
 id: FR-CALENDAR-SHOW-CONNECTION-STATUS
 type: functional-requirement
 title: "Show a member their connections and sync health"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-VIEW-EXTERNAL-CALENDAR-CONNECTIONS"
   - "BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS"

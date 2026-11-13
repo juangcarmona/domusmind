@@ -16,7 +16,7 @@ Every quality requirement in the model is a usability or consistency requirement
 
 Once a household has completed onboarding, the web client's authenticated router sends the root and every unknown route to the household Agenda, so no configuration stands between sign-in and today's picture. That picture is a query-time projection: one query handler reads plans, tasks, routines, temporal list items and areas through the shared `DbContext` and returns a single read model, so the client does not assemble the household view from several calls.
 
-<!-- pdac:cite id="QR-PRODUCT-TODAY-AT-A-GLANCE" digest="sha256:659932b0b836c008118516caa8647d05dc133c1e12c31114f6df3a49527420fa" -->
+<!-- pdac:cite id="QR-PRODUCT-TODAY-AT-A-GLANCE" digest="sha256:5de2ebf4d1b4d156a4c05bd53d8bb4aa3145206cf6ad9669f9aeb2a0f85ecb37" -->
 
 Evidence: [`AuthedRoutes.tsx`](../../../src/web/app/src/app/AuthedRoutes.tsx), [`GetWeeklyGridQueryHandler.cs`](../../../src/backend/DomusMind.Application/Features/Family/GetWeeklyGrid/GetWeeklyGridQueryHandler.cs), [`GetEnrichedTimelineQueryHandler.cs`](../../../src/backend/DomusMind.Application/Features/Family/GetEnrichedTimeline/GetEnrichedTimelineQueryHandler.cs).
 
@@ -24,11 +24,11 @@ Evidence: [`AuthedRoutes.tsx`](../../../src/web/app/src/app/AuthedRoutes.tsx), [
 
 There is one client for every screen size: the responsive React web app. Mobile is a layout mode chosen at runtime by a single breakpoint hook, with shared components for the mobile forms of detail (bottom sheet) and navigation, so phone and desktop call the same API, the same store and the same feature pages. No separate mobile client or mobile-specific API exists.
 
-<!-- pdac:cite id="QR-WEB-MOBILE-SAME-PRODUCT" digest="sha256:c318bd0291b8badc6c509bd6dbdc22cf069487aa03b5d15714210312ac261e5d" -->
+<!-- pdac:cite id="QR-WEB-MOBILE-SAME-PRODUCT" digest="sha256:0b38079d5c55a3bcc863ca9b9903dc959910db3df187576c9c9522546b605047" -->
 
 The Agenda follows the same mechanism: its page, scope selector and modes are one implementation rendered in two layouts.
 
-<!-- pdac:cite id="QR-AGENDA-MOBILE-PARITY" digest="sha256:995a78a704051071eda6e66154994c53bc729905ddec7dd9473da8592b779fe7" -->
+<!-- pdac:cite id="QR-AGENDA-MOBILE-PARITY" digest="sha256:7096274135e4808dfaec9a30523645cebc0e11bfad842b073078f08052633187" -->
 
 Evidence: [`useIsMobile.ts`](../../../src/web/app/src/hooks/useIsMobile.ts), [`BottomSheetDetail.tsx`](../../../src/web/app/src/components/BottomSheetDetail.tsx), [`AppShell.tsx`](../../../src/web/app/src/components/AppShell.tsx). Gap: parity is not verified automatically; the web app has two unit test files and no end-to-end or viewport tests.
 
@@ -36,11 +36,11 @@ Evidence: [`useIsMobile.ts`](../../../src/web/app/src/hooks/useIsMobile.ts), [`B
 
 Capture commands carry only the fields their area requires as mandatory parameters and take every other detail as optional, nullable data; later enrichment goes through separate commands (for example setting an item's timing or importance). Creation is a single command per capture, issued from the surface's inline quick-add component, so the client needs no extra round trip or navigation.
 
-<!-- pdac:cite id="QR-PRODUCT-CAPTURE-EASIER-THAN-REMEMBERING" digest="sha256:a4c482905ac1c2e5c6fac9a61e6d1449d28a4d682cc4bd43a452d80a79944b8b" -->
+<!-- pdac:cite id="QR-PRODUCT-CAPTURE-EASIER-THAN-REMEMBERING" digest="sha256:8481194f2c3fb06e4c6d24ab85b116e0f6f08200e1ece492593e2eb554a4e8ac" -->
 
 For lists, adding an item is one command whose only required value is the name, and the client applies later item edits (toggle, rename, timing, importance, reorder) optimistically in its store before the API confirms them.
 
-<!-- pdac:cite id="QR-LISTS-FRICTIONLESS-CAPTURE" digest="sha256:54f0abaea8ee6e4683dca671179356b0dc68aeaeab8353b550bfefc66212698c" -->
+<!-- pdac:cite id="QR-LISTS-FRICTIONLESS-CAPTURE" digest="sha256:c49275adaa16e46f1d1613af96372c572b5562e38912ce8db7693be665d6e4ec" -->
 
 Evidence: [`AddItemToListCommand.cs`](../../../src/backend/DomusMind.Application/Features/Lists/AddItemToList/AddItemToListCommand.cs), [`CreateTaskCommand.cs`](../../../src/backend/DomusMind.Application/Features/Tasks/CreateTask/CreateTaskCommand.cs), [`ScheduleEventCommand.cs`](../../../src/backend/DomusMind.Application/Features/Calendar/ScheduleEvent/ScheduleEventCommand.cs), [`QuickAddBar.tsx`](../../../src/web/app/src/components/QuickAddBar.tsx), [`listsSlice.ts`](../../../src/web/app/src/store/listsSlice.ts).
 
@@ -48,7 +48,7 @@ Evidence: [`AddItemToListCommand.cs`](../../../src/backend/DomusMind.Application
 
 The API exposes an authenticated server-sent-events stream for an open list. After a list mutation succeeds, the API sends an empty invalidation notice to subscribers; the client then reloads the detail through the existing authorized query. The stream is authorized with the same list-detail query at subscription time, and mutation handlers continue to check household access. Notifications contain no list contents. The client reconnects after a dropped stream and reloads immediately, so disconnects do not leave a list stale indefinitely.
 
-<!-- pdac:cite id="QR-LISTS-REAL-TIME-SHARING" digest="sha256:bc063af2dad51048a90d0f8d29ee7466d0d74e5ad96462900c5a476996d89455" -->
+<!-- pdac:cite id="QR-LISTS-REAL-TIME-SHARING" digest="sha256:f6395989e6f67550ef00dca8128c89a18c06d7f918afd3c90d3300b5e2c64b9e" -->
 
 Evidence: [`ListsController.cs`](../../../src/backend/DomusMind.Api/Controllers/ListsController.cs), [`ListChangeNotifier.cs`](../../../src/backend/DomusMind.Api/Realtime/ListChangeNotifier.cs), [`useListChangeStream.ts`](../../../src/web/app/src/features/lists/useListChangeStream.ts). The in-process notifier supports the documented single-application-instance deployment; a multi-instance deployment would need a shared notification channel. The product requirement defines no latency SLO, so verification asserts eventual propagation without a manual refresh and sets no product latency target.
 

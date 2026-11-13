@@ -2,7 +2,7 @@
 id: "UC-MEALS-UPDATE-SLOT"
 type: "use-case"
 title: "Assign or clear a meal slot"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

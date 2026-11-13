@@ -2,7 +2,7 @@
 id: FR-FAMILY-UPDATE-MEMBER-PROFILE
 type: functional-requirement
 title: "People update their own profile"
-status: draft
+status: active
 derived-from:
   - UC-FAMILY-UPDATE-MEMBER-DETAILS
 verification:

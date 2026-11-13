@@ -2,7 +2,7 @@
 id: UC-FAMILY-VIEW-MEMBER-DIRECTORY
 type: use-case
 title: "View the people directory"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-FAMILY

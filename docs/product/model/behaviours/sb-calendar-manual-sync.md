@@ -2,7 +2,7 @@
 id: SB-CALENDAR-MANUAL-SYNC
 type: structured-behaviour
 title: "A manual sync imports entries from selected calendars"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
 given:

@@ -2,7 +2,7 @@
 id: UC-TASKS-UPDATE-ROUTINE
 type: use-case
 title: Update a routine
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

@@ -2,7 +2,7 @@
 id: FR-LISTS-TOGGLE-ITEM
 type: functional-requirement
 title: "Check and uncheck items"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-TOGGLE-ITEM
   - BR-LISTS-TOGGLE-PRESERVES-ITEM

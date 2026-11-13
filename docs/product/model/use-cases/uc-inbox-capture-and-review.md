@@ -2,7 +2,7 @@
 id: UC-INBOX-CAPTURE-AND-REVIEW
 type: use-case
 title: Capture and review a household note
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-INBOX

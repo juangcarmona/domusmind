@@ -2,7 +2,7 @@
 id: FR-INBOX-REVIEW
 type: functional-requirement
 title: Review, refine and decide on Inbox proposals
-status: draft
+status: active
 derived-from:
   - UC-INBOX-CAPTURE-AND-REVIEW
   - BR-INBOX-REVIEW-AND-EXECUTION

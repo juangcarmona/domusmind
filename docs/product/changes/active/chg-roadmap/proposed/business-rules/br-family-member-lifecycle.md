@@ -3,8 +3,6 @@ id: BR-FAMILY-MEMBER-LIFECYCLE
 type: business-rule
 title: "People move through planned, active, inactive and archived"
 status: draft
-applies-to:
-  - UC-FAMILY-MANAGE-MEMBER-LIFECYCLE
 uses-terms:
   - TERM-MEMBER
 provenance:

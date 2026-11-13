@@ -2,7 +2,7 @@
 id: SB-AGENDA-HOUSEHOLD-ALL-SOURCES
 type: structured-behaviour
 title: "The household timeline combines plans, tasks, routines and list items"
-status: draft
+status: active
 illustrates:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
   - "BR-AGENDA-PROJECTION-READ-ONLY"

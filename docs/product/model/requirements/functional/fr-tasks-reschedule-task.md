@@ -2,7 +2,7 @@
 id: FR-TASKS-RESCHEDULE-TASK
 type: functional-requirement
 title: Reschedule an open task
-status: draft
+status: active
 derived-from:
   - UC-TASKS-RESCHEDULE-TASK
   - BR-TASKS-CLOSED-TASK-FINAL

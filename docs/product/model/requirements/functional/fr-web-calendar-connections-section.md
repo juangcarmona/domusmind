@@ -2,7 +2,7 @@
 id: FR-WEB-CALENDAR-CONNECTIONS-SECTION
 type: functional-requirement
 title: "Manage Outlook connections inline in Settings"
-status: draft
+status: active
 derived-from:
   - "UC-WEB-MANAGE-SETTINGS"
   - "UC-CALENDAR-VIEW-EXTERNAL-CALENDAR-CONNECTIONS"

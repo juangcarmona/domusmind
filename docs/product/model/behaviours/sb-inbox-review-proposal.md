@@ -2,7 +2,7 @@
 id: SB-INBOX-REVIEW-PROPOSAL
 type: structured-behaviour
 title: A member approves or rejects an Inbox proposal
-status: draft
+status: active
 illustrates:
   - UC-INBOX-CAPTURE-AND-REVIEW
   - BR-INBOX-REVIEW-AND-EXECUTION

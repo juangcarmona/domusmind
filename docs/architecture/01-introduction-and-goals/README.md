@@ -32,7 +32,7 @@ combine data from several modules without owning it. This is the main reason the
 backend is a modular monolith with strict module boundaries rather than one shared
 model.
 
-<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:740fa2cc41d90ec6afb099c5f97fa44e9092af8d83cd68291f807262387a44b0" -->
+<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:f0adb53673dfbfd7051791182578f9ee2f44e0a37b7699c16258854579342a13" -->
 
 ## Quality Goals
 
@@ -50,11 +50,11 @@ quality requirements to their realisation and evidence.
 
 Goal 3 realises:
 
-<!-- pdac:cite id="QR-WEB-MOBILE-SAME-PRODUCT" digest="sha256:c318bd0291b8badc6c509bd6dbdc22cf069487aa03b5d15714210312ac261e5d" -->
+<!-- pdac:cite id="QR-WEB-MOBILE-SAME-PRODUCT" digest="sha256:0b38079d5c55a3bcc863ca9b9903dc959910db3df187576c9c9522546b605047" -->
 
 Goal 4 realises:
 
-<!-- pdac:cite id="QR-PRODUCT-TODAY-AT-A-GLANCE" digest="sha256:659932b0b836c008118516caa8647d05dc133c1e12c31114f6df3a49527420fa" -->
+<!-- pdac:cite id="QR-PRODUCT-TODAY-AT-A-GLANCE" digest="sha256:5de2ebf4d1b4d156a4c05bd53d8bb4aa3145206cf6ad9669f9aeb2a0f85ecb37" -->
 
 ## Stakeholders
 

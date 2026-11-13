@@ -2,7 +2,7 @@
 id: FR-AGENDA-LINKABLE-STATE
 type: functional-requirement
 title: "Link directly to an Agenda scope, mode and date"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-NAVIGATE"
 verification:

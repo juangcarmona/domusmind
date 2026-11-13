@@ -2,12 +2,7 @@
 id: BR-LISTS-PLAN-LINK-DOES-NOT-PROJECT
 type: business-rule
 title: "A plan-linked list does not project its items through the plan"
-status: draft
-applies-to:
-  - UC-LISTS-SEE-ITEMS-IN-AGENDA
-  - UC-LISTS-UPDATE-LIST
-  - UC-AGENDA-VIEW-HOUSEHOLD-AGENDA
-  - UC-AGENDA-VIEW-MEMBER-AGENDA
+status: active
 uses-terms:
   - TERM-LIST
   - TERM-LIST-ITEM

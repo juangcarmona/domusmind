@@ -2,7 +2,7 @@
 id: "SB-MEALS-CREATE-PLAN-EXISTING-WEEK"
 type: "structured-behaviour"
 title: "Creating a plan for a week that has one returns the existing plan"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-CREATE-PLAN"
   - "BR-MEALS-ONE-PLAN-PER-WEEK"

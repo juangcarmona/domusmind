@@ -2,21 +2,21 @@
 id: UC-AREAS-ADD-SUPPORT
 type: use-case
 title: Add Support to an Area
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-RESPONSIBILITIES
 governed-by:
-- BR-AREAS-ANY-MEMBER-MANAGES
-- BR-AREAS-SAME-HOUSEHOLD-PEOPLE
-- BR-AREAS-NO-INACTIVE-ASSIGNEE
-- BR-AREAS-UNIQUE-SUPPORT
-- BR-AREAS-OWNER-NOT-SUPPORT
-- BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE
+  - BR-AREAS-ANY-MEMBER-MANAGES
+  - BR-AREAS-SAME-HOUSEHOLD-PEOPLE
+  - BR-AREAS-NO-INACTIVE-ASSIGNEE
+  - BR-AREAS-UNIQUE-SUPPORT
+  - BR-AREAS-OWNER-NOT-SUPPORT
+  - BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE
 uses-terms:
-- TERM-AREA
-- TERM-AREA-SUPPORT
-- TERM-MEMBER
+  - TERM-AREA
+  - TERM-AREA-SUPPORT
+  - TERM-MEMBER
 provenance:
   source: "openspec/specs/areas/spec.md (Secondary Owner Assignment); docs/_legacy/00_product/surfaces/areas.md (Interaction); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs (AssignSecondaryOwner); interview: product owner decision Q-0014 (E-0158); interview: product owner decision Q-0017 (E-0158)"
   confidence: high

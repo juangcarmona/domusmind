@@ -2,12 +2,13 @@
 id: UC-LISTS-RESTORE-LIST
 type: use-case
 title: "Restore an archived list"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS
 governed-by:
   - BR-LISTS-ARCHIVE-STATE
+  - BR-LISTS-ARCHIVED-READ-ONLY
 uses-terms:
   - TERM-LIST
   - TERM-ARCHIVED-LIST

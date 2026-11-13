@@ -2,7 +2,7 @@
 id: TERM-ASSET-DOCUMENT
 type: domain-term
 title: Asset Document
-status: draft
+status: active
 defined-in: BC-HOUSEHOLD-ASSETS
 ---
 ## Definition

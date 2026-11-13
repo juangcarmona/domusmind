@@ -2,7 +2,7 @@
 id: SB-LISTS-CLEARED-ITEM-LEAVES-AGENDA
 type: structured-behaviour
 title: "An item leaves the Agenda once its timing is cleared but stays in its list"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-CLEAR-ITEM-SCHEDULE
   - UC-LISTS-SEE-ITEMS-IN-AGENDA

@@ -2,7 +2,7 @@
 id: SB-AGENDA-HOUSEHOLD-LIST-ITEMS
 type: structured-behaviour
 title: "Temporal list items appear as their own entry type"
-status: draft
+status: active
 illustrates:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
 given:

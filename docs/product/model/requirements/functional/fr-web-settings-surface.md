@@ -2,7 +2,7 @@
 id: FR-WEB-SETTINGS-SURFACE
 type: functional-requirement
 title: "Settings with Profile, Household and Preferences sections"
-status: draft
+status: active
 derived-from:
   - "UC-WEB-MANAGE-SETTINGS"
   - "UC-FAMILY-UPDATE-MEMBER-DETAILS"

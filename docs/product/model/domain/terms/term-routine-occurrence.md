@@ -2,7 +2,7 @@
 id: TERM-ROUTINE-OCCURRENCE
 type: domain-term
 title: Routine Occurrence
-status: draft
+status: active
 defined-in: BC-TASKS
 synonyms:
   - "Projected occurrence"

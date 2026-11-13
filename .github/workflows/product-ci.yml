@@ -77,6 +77,9 @@ jobs:
       - name: Validate the product model
         run: npx --no-install prodshape validate
 
+      - name: Validate active Product Change overlays
+        run: npx --no-install prodshape change validate
+
       - name: Verify ProductShape integration integrity
         run: npx --no-install prodshape integration update --check
 

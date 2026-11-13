@@ -2,7 +2,7 @@
 id: FR-WEB-APP-SHELL
 type: functional-requirement
 title: "One persistent shell for every surface"
-status: draft
+status: active
 derived-from:
   - "UC-WEB-MOVE-BETWEEN-SURFACES"
   - "CON-PRODUCT-SEPARATE-AXES"

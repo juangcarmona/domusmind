@@ -2,7 +2,7 @@
 id: UC-TASKS-SEE-WORK-IN-AGENDA
 type: use-case
 title: See tasks and routines in the Agenda
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

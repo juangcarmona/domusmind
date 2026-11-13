@@ -2,7 +2,7 @@
 id: FR-CALENDAR-SCHEDULE-PLAN
 type: functional-requirement
 title: "Schedule a plan"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-SCHEDULE-PLAN"
   - "BR-CALENDAR-PLAN-REQUIRES-TITLE-AND-START"

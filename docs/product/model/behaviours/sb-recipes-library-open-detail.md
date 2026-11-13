@@ -2,7 +2,7 @@
 id: "SB-RECIPES-LIBRARY-OPEN-DETAIL"
 type: "structured-behaviour"
 title: "Selecting a recipe in the library shows its full detail"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-BROWSE-LIBRARY"
   - "UC-RECIPES-VIEW-RECIPE"

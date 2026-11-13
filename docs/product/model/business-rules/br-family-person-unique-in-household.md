@@ -2,10 +2,9 @@
 id: BR-FAMILY-PERSON-UNIQUE-IN-HOUSEHOLD
 type: business-rule
 title: "A person belongs to exactly one household and is unique in it"
-status: draft
+status: active
 applies-to:
   - BC-FAMILY
-  - UC-FAMILY-ADD-MEMBER
 uses-terms:
   - TERM-MEMBER
   - TERM-HOUSEHOLD

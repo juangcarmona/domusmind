@@ -2,7 +2,7 @@
 id: JRN-PRODUCT-ONBOARD-HOUSEHOLD
 type: journey
 title: "Start a household and reach a working Agenda"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 steps:
   - use-case: "UC-SIGN-IN-WITH-OIDC"

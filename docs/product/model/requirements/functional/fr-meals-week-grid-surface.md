@@ -2,7 +2,7 @@
 id: "FR-MEALS-WEEK-GRID-SURFACE"
 type: "functional-requirement"
 title: "Weekly meal planning surface"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-MEALS-VIEW-PLAN"
   - "UC-MEALS-UPDATE-SLOT"

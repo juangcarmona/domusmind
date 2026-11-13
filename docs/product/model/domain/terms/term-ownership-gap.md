@@ -2,15 +2,15 @@
 id: TERM-OWNERSHIP-GAP
 type: domain-term
 title: Ownership Gap
-status: draft
+status: active
 defined-in: BC-RESPONSIBILITIES
 synonyms:
-- Unowned Area
-- Partially Assigned Area
+  - Unowned Area
+  - Partially Assigned Area
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
-- TERM-AREA-SUPPORT
+  - TERM-AREA
+  - TERM-AREA-OWNER
+  - TERM-AREA-SUPPORT
 provenance:
   source: openspec/specs/areas/spec.md (Ownership Visibility); docs/_legacy/00_product/surfaces/areas.md (Main List); docs/_legacy/04_contexts/responsibilities.md (Responsibility Coverage View)
   confidence: high

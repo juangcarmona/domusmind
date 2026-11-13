@@ -2,7 +2,7 @@
 id: "SB-MEALS-ASSIGN-RECIPE-TO-SLOT"
 type: "structured-behaviour"
 title: "Assigning a recipe fills the slot with that recipe"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-UPDATE-SLOT"
 given:

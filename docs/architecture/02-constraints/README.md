@@ -20,7 +20,7 @@ linked ADR, and it is negotiable only by superseding that ADR.
 
 The Graph constraint derives from:
 
-<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:a631bcb19c09716b7cbee7b25563b55eec7ca4287de67c84cb1081144d29deb9" -->
+<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:c575d9e19b4520f13a09facea0c1196b6a42ec1f4554865cdb470485d46eb4b0" -->
 
 ## Product constraints
 
@@ -36,8 +36,8 @@ here.
 
 <!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:bbe8615d41428bc12d1a225306bd3b5b1fc4e4747dc80c9125220f483bc610a9" -->
 <!-- pdac:cite id="CON-PRODUCT-HOUSEHOLD-FIRST" digest="sha256:9ffd7fd5d31817890e9263cea8286b25102bd41092769a0cfe3e0765792808b3" -->
-<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:740fa2cc41d90ec6afb099c5f97fa44e9092af8d83cd68291f807262387a44b0" -->
-<!-- pdac:cite id="CON-PRODUCT-NO-MAGIC-AUTOMATION" digest="sha256:dfee6795206856c7de2daa1bea17439e821f001104bcdf304d49a6ee49ec848b" -->
+<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:f0adb53673dfbfd7051791182578f9ee2f44e0a37b7699c16258854579342a13" -->
+<!-- pdac:cite id="CON-PRODUCT-NO-MAGIC-AUTOMATION" digest="sha256:4f7a8c80ff01e3ed657053b9bfad7c86ee0ba95db9c2029b9a40dc660efc8d9e" -->
 
 ## Organizational and process constraints
 

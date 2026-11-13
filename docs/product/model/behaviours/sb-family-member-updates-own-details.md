@@ -2,7 +2,7 @@
 id: SB-FAMILY-MEMBER-UPDATES-OWN-DETAILS
 type: structured-behaviour
 title: "A person who is not a manager updates their own name and birth date"
-status: draft
+status: active
 illustrates:
   - UC-FAMILY-UPDATE-MEMBER-DETAILS
   - BR-FAMILY-MANAGERS-ADMINISTER

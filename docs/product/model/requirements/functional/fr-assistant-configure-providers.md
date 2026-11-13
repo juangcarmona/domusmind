@@ -2,7 +2,7 @@
 id: FR-ASSISTANT-CONFIGURE-PROVIDERS
 type: functional-requirement
 title: Configure the household assistant provider route
-status: draft
+status: active
 derived-from:
   - UC-ASSISTANT-CONFIGURE-PROVIDERS
 verification:

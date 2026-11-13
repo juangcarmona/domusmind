@@ -2,11 +2,9 @@
 id: BR-LISTS-AGENDA-PROJECTION
 type: business-rule
 title: "List items with temporal fields appear in the Agenda"
-status: draft
+status: active
 applies-to:
   - BC-LISTS
-  - UC-LISTS-SEE-ITEMS-IN-AGENDA
-  - UC-LISTS-SCHEDULE-ITEM
 uses-terms:
   - TERM-PROJECTED-LIST-ITEM
   - TERM-ITEM-TEMPORAL-FIELDS

@@ -2,10 +2,9 @@
 id: BR-TASKS-TASKS-CREATED-EXPLICITLY
 type: business-rule
 title: Tasks are never generated from routines or plans
-status: draft
+status: active
 applies-to:
   - BC-TASKS
-  - UC-TASKS-CREATE-TASK
 uses-terms:
   - TERM-TASK
   - TERM-ROUTINE

@@ -2,7 +2,7 @@
 id: BR-LISTS-HOUSEHOLD-SCOPED
 type: business-rule
 title: "Lists belong to the household and are shared by default"
-status: draft
+status: active
 applies-to:
   - BC-LISTS
 uses-terms:

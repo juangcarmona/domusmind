@@ -2,7 +2,7 @@
 id: "UC-MEALS-VIEW-PLAN"
 type: "use-case"
 title: "See the week's meal plan"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

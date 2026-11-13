@@ -2,10 +2,7 @@
 id: BR-CALENDAR-SUPPORTED-SYNC-HORIZONS
 type: business-rule
 title: "Sync horizons are limited to 30, 90, 180 or 365 days"
-status: draft
-applies-to:
-  - "UC-CALENDAR-CONNECT-OUTLOOK"
-  - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
+status: active
 uses-terms:
   - "TERM-SYNC-HORIZON"
 provenance:

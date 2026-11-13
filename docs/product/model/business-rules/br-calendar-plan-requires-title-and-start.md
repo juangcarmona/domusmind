@@ -2,9 +2,7 @@
 id: BR-CALENDAR-PLAN-REQUIRES-TITLE-AND-START
 type: business-rule
 title: "A plan needs a title and a start"
-status: draft
-applies-to:
-  - "UC-CALENDAR-SCHEDULE-PLAN"
+status: active
 uses-terms:
   - "TERM-PLAN"
 provenance:

@@ -25,15 +25,15 @@ shown only to make that separation explicit.
 
 The two human partners and Outlook are the product's actors:
 
-<!-- pdac:cite id="ACT-HOUSEHOLD-MEMBER" digest="sha256:18173726b69715b42a2c09ddd0c09876f486d1abefd93c3131e2cb0d6c4df860" -->
-<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:d82d2bd934fc9835545ea9c22211213496ad48160b287fe1c750ee41a56d0108" -->
-<!-- pdac:cite id="ACT-MICROSOFT-OUTLOOK" digest="sha256:5f796b186efb4d164fd71462cce88157e4857e7e602f35acffee972881c33f54" -->
+<!-- pdac:cite id="ACT-HOUSEHOLD-MEMBER" digest="sha256:15b65c1c587d35c6e28a20522a70a619060adda71cdb22dc0851a3812a8e2ec4" -->
+<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:9e4e0dad11e4c8cb94efdebca7ef64b3dd6c21db313e05dbadaaf7f3807075fd" -->
+<!-- pdac:cite id="ACT-MICROSOFT-OUTLOOK" digest="sha256:a274a18ef29171d475391275699318abf8c93ee7fa3daf494741dbe1fce6af66" -->
 
 The product model also names a calendar sync scheduler actor. Architecturally it is
 not a partner but a hosted background worker **inside** the boundary; it appears as an
 outbound call to Microsoft Graph below.
 
-<!-- pdac:cite id="ACT-CALENDAR-SYNC-SCHEDULER" digest="sha256:af7e16c4a05a0b76bf10ec69cc19e11e7b47c9dbf5c40adf437a3e842f5f1ef8" -->
+<!-- pdac:cite id="ACT-CALENDAR-SYNC-SCHEDULER" digest="sha256:93756f5008efb26952e8def217428fcc7601ce2adecce3b0dddf877757493a33" -->
 
 The public site visitor has no product-model actor; the site's content is governed by
 [`docs/design/public-site.md`](../../design/public-site.md).
@@ -42,7 +42,7 @@ This diagram describes the current implementation. The approved product target a
 an operator-configured OIDC provider as an authentication partner; it has not yet
 replaced the current local sign-in path. DomusMind does not send invitation email.
 
-<!-- pdac:cite id="CON-PRODUCTION-OIDC-SIGN-IN" digest="sha256:cdd9d1ae4655bdf9de6a2d57f7b27074acb10ab2ae300220fdf82f82e67c9ff7" -->
+<!-- pdac:cite id="CON-PRODUCTION-OIDC-SIGN-IN" digest="sha256:eb9059ccb8ca63b54036bb940fc2b5c472e06357b2e2084a9ad7900c88b490a3" -->
 
 <!-- pdac:cite id="CON-PRODUCT-CURRENT-SCOPE" digest="sha256:bbe8615d41428bc12d1a225306bd3b5b1fc4e4747dc80c9125220f483bc610a9" -->
 
@@ -65,7 +65,7 @@ part of the deployment rather than an external partner; its topology belongs to 
 | Outlook authorization | Microsoft identity platform | OAuth 2.0 authorization code flow; the API builds the authorize URL, the browser is redirected, the API redeems the code through MSAL and keeps the token cache server-side (encryption depends on configuration, see [section 11](../11-risks-and-technical-debt/README.md)) | Out | [`Integrations/Calendar/Microsoft/`](../../../src/backend/DomusMind.Infrastructure/Integrations/Calendar/Microsoft/) |
 | Calendar ingestion | Microsoft Graph v1.0 | HTTPS REST: calendar list and `calendarView` delta queries with the delegated `Calendars.Read` scope; pull only, manual or scheduled | Out (read) | [ADR-0003](../../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md) |
 | Calendar subscription feed | External calendar client | HTTPS GET using a private subscription URL; read-only ICS response, no household sign-in | In (read) | [`CalendarSubscriptionsController.cs`](../../../src/backend/DomusMind.Api/Controllers/CalendarSubscriptionsController.cs) |
-<!-- pdac:cite id="ACT-EXTERNAL-CALENDAR-CLIENT" digest="sha256:b9169f1b4d986570cd4d5997733f53ddb2b71531189c787f57edcaf74c113a67" -->
+<!-- pdac:cite id="ACT-EXTERNAL-CALENDAR-CLIENT" digest="sha256:f6c0dfdd8f870fe475a479f7c9d0764f896cfe121f66fc876a9159cfdb7d9139" -->
 | Image distribution | Container registry | OCI image pulled by the operator | Out of band | [`docker-edge.yml`](../../../.github/workflows/docker-edge.yml) |
 | Public site | Browser | Static HTML on Azure Static Web Apps; no call to the application | Out | [`src/web/public/`](../../../src/web/public/) |
 | Email, push, messaging | none | Not implemented | — | No sender in `src/backend` |

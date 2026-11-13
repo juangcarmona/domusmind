@@ -2,10 +2,7 @@
 id: BR-LISTS-ARCHIVE-STATE
 type: business-rule
 title: "Archive and restore are symmetric and preserve all list data"
-status: draft
-applies-to:
-  - UC-LISTS-ARCHIVE-LIST
-  - UC-LISTS-RESTORE-LIST
+status: active
 uses-terms:
   - TERM-LIST
   - TERM-ARCHIVED-LIST

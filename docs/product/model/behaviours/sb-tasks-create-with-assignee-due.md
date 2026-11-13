@@ -2,7 +2,7 @@
 id: SB-TASKS-CREATE-WITH-ASSIGNEE-DUE
 type: structured-behaviour
 title: Task created with an assignee and a due date
-status: draft
+status: active
 illustrates:
   - UC-TASKS-CREATE-TASK
 given:

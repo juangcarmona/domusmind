@@ -6,17 +6,17 @@
 
 A household SHALL be able to retrieve the full detail of a single recipe, including its complete ingredient list.
 
-<!-- pdac:cite id="FR-RECIPES-DETAIL" digest="sha256:0e0d422c5299e2fd97d969a06cb652814c18c14c9c7ae459bf3c964d29caca3b" -->
+<!-- pdac:cite id="FR-RECIPES-DETAIL" digest="sha256:6d8e670e1225300aac4a0a0490b6da9ac83d30d3d2ffda66dd6204fe08ab59e6" -->
 
-<!-- pdac:cite id="UC-RECIPES-VIEW-RECIPE" digest="sha256:06c252bac16722b4a109c9bcc28fce527edc4e44d5f22e09c222efa889df90ca" -->
+<!-- pdac:cite id="UC-RECIPES-VIEW-RECIPE" digest="sha256:b66dd0aeafaea8725a3204492555ff0a40f50dcd0067c1e2844992e41f5a7c91" -->
 
-<!-- pdac:cite id="TERM-RECIPE" digest="sha256:a0a6852e2fe6cc29247e1d0cf8e2159cea630e420d1f40adc5458c02a4e7fcd1" -->
+<!-- pdac:cite id="TERM-RECIPE" digest="sha256:3c619b3dae05589a60edac9f0ed0b63a78a963b1070a73cb6c4c5b76e9a570b4" -->
 
-<!-- pdac:cite id="TERM-INGREDIENT" digest="sha256:856986e747f9963a266837a7aced64b419cb5e0e31b02af7503dcd6785aecbe5" -->
+<!-- pdac:cite id="TERM-INGREDIENT" digest="sha256:e70048c508c2ac43cbd9797dc538c97f9240f658fc0cffcd73c937c64c1586d8" -->
 
-<!-- pdac:cite id="SB-RECIPES-VIEW-DETAIL" digest="sha256:4c0e9c0641beee33a9471a7d3ad9c94e58e631431ba7013dee4bc06610588e44" -->
+<!-- pdac:cite id="SB-RECIPES-VIEW-DETAIL" digest="sha256:44cd77c634c35dc3fde00b0148e615c467086d1a7a9b238005033d573644061e" -->
 
-<!-- pdac:cite id="SB-RECIPES-VIEW-NOT-FOUND" digest="sha256:450b6306b56459be1e22019eb5aeb2394c745f6eb5676a354991bfbeb640805c" -->
+<!-- pdac:cite id="SB-RECIPES-VIEW-NOT-FOUND" digest="sha256:faf20a6d9f352eb52d59e075db65c67bee22a65bc56fef32db0097a529c894b2" -->
 
 #### Scenario: Household retrieves a recipe by ID
 
@@ -39,15 +39,15 @@ A household SHALL be able to update a recipe's metadata after creation.
 
 Updatable fields: name, description, preparation time, cook time, servings, isFavorite, allowedMealTypes, and tags. Name must remain unique within the family. All fields are replaced in full (no partial patch).
 
-<!-- pdac:cite id="FR-RECIPES-UPDATE" digest="sha256:b9a2910eede27b053d5a6ef69a9353774eca4f2410fadc76647c818b50d12fbd" -->
+<!-- pdac:cite id="FR-RECIPES-UPDATE" digest="sha256:733871393da840075fb57813e3e5453c6a84949ea91f7a51568168e3a7d0894b" -->
 
-<!-- pdac:cite id="UC-RECIPES-UPDATE-RECIPE" digest="sha256:6825e998420a1234fc86e999215f082e17c4796a7ea709d40d20818b02b0a8bd" -->
+<!-- pdac:cite id="UC-RECIPES-UPDATE-RECIPE" digest="sha256:0fb0ec3cf0b3ef1ad1159d45b722e6be18e00d694f7290a93b9a29f5a26c27f5" -->
 
-<!-- pdac:cite id="BR-RECIPES-NAME-UNIQUE" digest="sha256:566fe524fa65c59602ade22e42e52cf55d27b6682382bf6c92db1e86f0710150" -->
+<!-- pdac:cite id="BR-RECIPES-NAME-UNIQUE" digest="sha256:54fe88bd63ffb8100bf3dbb97bf05c0275a1dfcc89645b9659c013783a93e7a8" -->
 
-<!-- pdac:cite id="SB-RECIPES-UPDATE" digest="sha256:9ff5a3c9b90b0f4a5768de8088de3067b99fc4be5729dfc80da7c0d12d885e14" -->
+<!-- pdac:cite id="SB-RECIPES-UPDATE" digest="sha256:42fa377a20742beae8999bba3813e160b76287a3fa0f4aeb1a7911ca5ca56f94" -->
 
-<!-- pdac:cite id="SB-RECIPES-RENAME-CONFLICT" digest="sha256:c7e9008428e9a26b5f26f1d04c10bc24f039d06aaecd94fc822d857d64c2c599" -->
+<!-- pdac:cite id="SB-RECIPES-RENAME-CONFLICT" digest="sha256:362780b5775e2e187ea275324a16a82ef6c09ffb725f8eaf706eab50f2315d11" -->
 
 #### Scenario: Household updates a recipe
 
@@ -71,19 +71,19 @@ A household SHALL be able to delete a recipe from the library, subject to a refe
 
 A recipe SHALL NOT be deleted if it is currently referenced by any slot in an Active meal plan. Draft or Completed plans do not block deletion.
 
-<!-- pdac:cite id="FR-RECIPES-DELETE" digest="sha256:cb195db1bf181dfd62617a60604b4438d2ea9d476d78dbb62fe8c68fc96089a6" -->
+<!-- pdac:cite id="FR-RECIPES-DELETE" digest="sha256:8c2e5784a8e8bd51c1e1709dba553bb976376fe7e3011801831423d4c2e1d63b" -->
 
-<!-- pdac:cite id="UC-RECIPES-DELETE-RECIPE" digest="sha256:b9dabcfacb713eefa11031b17c4992a5eb43a220c2eae3662a9b5bb96de11a85" -->
+<!-- pdac:cite id="UC-RECIPES-DELETE-RECIPE" digest="sha256:47bb5bbb4aaa4ff7c6a788ca533d974aa3fa9561177752b8ca6dfc7c55ff8b56" -->
 
-<!-- pdac:cite id="BR-RECIPES-DELETE-GUARD" digest="sha256:974103e77810c33d6bd1ecae8266284a454470810f64eb426758fbcda52b8e89" -->
+<!-- pdac:cite id="BR-RECIPES-DELETE-GUARD" digest="sha256:2e15467fd305be37d291774e1e09606ef41448d1713b4f98d5ff2cbce2ada86e" -->
 
-<!-- pdac:cite id="TERM-MEAL-PLAN-STATUS" digest="sha256:c2ccc55684994f91de79b4de0675ac21b7feb923fe92f5477780c1d4ffcf2f05" -->
+<!-- pdac:cite id="TERM-MEAL-PLAN-STATUS" digest="sha256:8771ab7cdffe66d265ba863bfd83723d03cd29ba69b9bbf968ccc7637f42f397" -->
 
-<!-- pdac:cite id="SB-RECIPES-DELETE-UNREFERENCED" digest="sha256:aba7f3dc6fd29b35e23f5d7de94a95cb022b427d748abd007d4f0c2ebbb1b814" -->
+<!-- pdac:cite id="SB-RECIPES-DELETE-UNREFERENCED" digest="sha256:53b1008265453ebea65d33af2b302c4c36f6b4a7c03ea221a33bce0807a40c3d" -->
 
-<!-- pdac:cite id="SB-RECIPES-DELETE-BLOCKED-BY-ACTIVE-PLAN" digest="sha256:7b3942a528d6abfa57b1a92c067c75a227d816796bfc180e68f0379ed40863ad" -->
+<!-- pdac:cite id="SB-RECIPES-DELETE-BLOCKED-BY-ACTIVE-PLAN" digest="sha256:50a9c1d606a609b8e3c5a17c5ae3369c8a19c431ac92476a053da273eae03afd" -->
 
-<!-- pdac:cite id="SB-RECIPES-DELETE-USED-BY-PAST-OR-DRAFT" digest="sha256:5537a5fb57920aeab76617a570b8ad25bebbacc3e0039b183db8cf298c5a3462" -->
+<!-- pdac:cite id="SB-RECIPES-DELETE-USED-BY-PAST-OR-DRAFT" digest="sha256:88c3d0fe9ecea04556fffeafad4e8f9b6a658d60cb909a6769b58a840055839b" -->
 
 #### Scenario: Household deletes an unreferenced recipe
 
@@ -114,21 +114,21 @@ A household SHALL be able to add, update, and remove individual ingredients from
 
 Ingredient identity within a recipe is the ingredient name (case-insensitive). A recipe may not contain two ingredients with the same name.
 
-<!-- pdac:cite id="FR-RECIPES-INGREDIENTS" digest="sha256:7059e97cd2eeaaf68396610bb1f2b4c6a382615c1491df62a94506dce8e70a71" -->
+<!-- pdac:cite id="FR-RECIPES-INGREDIENTS" digest="sha256:82e9ab23dc511501d2a8f51222e43dc395c8f99365dd238e91dabebae50b745b" -->
 
-<!-- pdac:cite id="UC-RECIPES-MANAGE-INGREDIENTS" digest="sha256:e46fd68c79fa8d3e690b955ba261bc0853f23fa28a9ae42853f1017faf7fb9cd" -->
+<!-- pdac:cite id="UC-RECIPES-MANAGE-INGREDIENTS" digest="sha256:1aa4b2786d2d9f085881e2c21e1b3622f14f13f9ea52a1813f0a93e319712f00" -->
 
-<!-- pdac:cite id="BR-RECIPES-INGREDIENT-NAME-UNIQUE" digest="sha256:e2c4c7915e08a7cd51d1c20b7af3bb4776ead0f8073329d3856d0724f9e7e7f1" -->
+<!-- pdac:cite id="BR-RECIPES-INGREDIENT-NAME-UNIQUE" digest="sha256:49bf51a252a84807602bd53fcbbe8754840772a71957f7108738501f3cc4e0a0" -->
 
-<!-- pdac:cite id="TERM-INGREDIENT" digest="sha256:856986e747f9963a266837a7aced64b419cb5e0e31b02af7503dcd6785aecbe5" -->
+<!-- pdac:cite id="TERM-INGREDIENT" digest="sha256:e70048c508c2ac43cbd9797dc538c97f9240f658fc0cffcd73c937c64c1586d8" -->
 
-<!-- pdac:cite id="SB-RECIPES-ADD-INGREDIENT" digest="sha256:4e8ef7d0c4859976b564f6400049dfdae8ffb896f40c9ceda25524e11a6f815b" -->
+<!-- pdac:cite id="SB-RECIPES-ADD-INGREDIENT" digest="sha256:958a735b570dd857840f7259232cce57426dd4f5b52f7d99e727bfaf2f0514b3" -->
 
-<!-- pdac:cite id="SB-RECIPES-DUPLICATE-INGREDIENT-REJECTED" digest="sha256:8d9610e82de358e84d91fba329124e24b61d78f63278c9b6e9a0e1ed87d212cb" -->
+<!-- pdac:cite id="SB-RECIPES-DUPLICATE-INGREDIENT-REJECTED" digest="sha256:ada5b20b446e6a2553be7650df35de9d0467faf86c9937a51c92beb2ceae3463" -->
 
-<!-- pdac:cite id="SB-RECIPES-UPDATE-INGREDIENT" digest="sha256:4f908d6931a4c00edd8cd5671858ec375fad06ef04f2fde0ff1c48e8a42ee1fe" -->
+<!-- pdac:cite id="SB-RECIPES-UPDATE-INGREDIENT" digest="sha256:d7ed3e6bc26f9c449d03917f2b558dbf7d55a684d4991ea6151ed71d2ad2c156" -->
 
-<!-- pdac:cite id="SB-RECIPES-REMOVE-INGREDIENT" digest="sha256:42d2ea1e4ab12f0d22b61a6cbd202f5a15beccd15802c755a183e76622eeb217" -->
+<!-- pdac:cite id="SB-RECIPES-REMOVE-INGREDIENT" digest="sha256:0d8e6d070db9a1b8cf40f7979fb365d8e00197bb789e8aaa23e0da8782d23b29" -->
 
 #### Scenario: Household adds an ingredient to an existing recipe
 
@@ -164,27 +164,27 @@ Ingredient identity within a recipe is the ingredient name (case-insensitive). A
 
 The web application SHALL provide a dedicated recipe library surface where a household can browse, view, create, edit, and delete recipes independently of the weekly meal plan view.
 
-<!-- pdac:cite id="FR-RECIPES-LIBRARY-SURFACE" digest="sha256:39fb69cb69311e5b14ddf29498d7f94a462cc0540eac56770c15680feccf6a5f" -->
+<!-- pdac:cite id="FR-RECIPES-LIBRARY-SURFACE" digest="sha256:c8ab313c8ada872d7cdec7c39b58bc2afef4e736fe51b286f34b398ad93b5858" -->
 
-<!-- pdac:cite id="UC-RECIPES-BROWSE-LIBRARY" digest="sha256:457336010457babd21f0b02fee26cef2f00e543726236d9e802629ed8f98833f" -->
+<!-- pdac:cite id="UC-RECIPES-BROWSE-LIBRARY" digest="sha256:fbcff790cf18adf9b802721d066aafff3e01dcd239d62fb5ff197f8e629837e9" -->
 
-<!-- pdac:cite id="UC-RECIPES-VIEW-RECIPE" digest="sha256:06c252bac16722b4a109c9bcc28fce527edc4e44d5f22e09c222efa889df90ca" -->
+<!-- pdac:cite id="UC-RECIPES-VIEW-RECIPE" digest="sha256:b66dd0aeafaea8725a3204492555ff0a40f50dcd0067c1e2844992e41f5a7c91" -->
 
-<!-- pdac:cite id="UC-RECIPES-CREATE-RECIPE" digest="sha256:c9aba5e8213215812c9767138d04130ab2fa2875d493c7a72f060f8cbd2b6e35" -->
+<!-- pdac:cite id="UC-RECIPES-CREATE-RECIPE" digest="sha256:b1982c4e6063006dac46caf79a882dbb237450836e34795ea7dd1751b8ce02a8" -->
 
-<!-- pdac:cite id="UC-RECIPES-UPDATE-RECIPE" digest="sha256:6825e998420a1234fc86e999215f082e17c4796a7ea709d40d20818b02b0a8bd" -->
+<!-- pdac:cite id="UC-RECIPES-UPDATE-RECIPE" digest="sha256:0fb0ec3cf0b3ef1ad1159d45b722e6be18e00d694f7290a93b9a29f5a26c27f5" -->
 
-<!-- pdac:cite id="UC-RECIPES-DELETE-RECIPE" digest="sha256:b9dabcfacb713eefa11031b17c4992a5eb43a220c2eae3662a9b5bb96de11a85" -->
+<!-- pdac:cite id="UC-RECIPES-DELETE-RECIPE" digest="sha256:47bb5bbb4aaa4ff7c6a788ca533d974aa3fa9561177752b8ca6dfc7c55ff8b56" -->
 
-<!-- pdac:cite id="SB-RECIPES-BROWSE-LIBRARY" digest="sha256:179e040dfc23f214b1d0fa5a4cf1ac399b6b961dc41c1f16ba9bffe934f61655" -->
+<!-- pdac:cite id="SB-RECIPES-BROWSE-LIBRARY" digest="sha256:340058490b9cc68d3187fbacc2c1e55cd1b13df1c05331f1934a2e7155479c77" -->
 
-<!-- pdac:cite id="SB-RECIPES-LIBRARY-OPEN-DETAIL" digest="sha256:4b9c2a65127400ec0e3927f14931f8704e41c579ac881ea1961f5eeec4ba3f9a" -->
+<!-- pdac:cite id="SB-RECIPES-LIBRARY-OPEN-DETAIL" digest="sha256:512f06106ea6b9551e48148288d351d5b171db018c2b775de36cf80f8d549e41" -->
 
-<!-- pdac:cite id="SB-RECIPES-LIBRARY-CREATE" digest="sha256:54fc4a51765646a10f218c461c27d9f29f8c6131153964ae8ac679fa5b8b50ee" -->
+<!-- pdac:cite id="SB-RECIPES-LIBRARY-CREATE" digest="sha256:5619c7cf53912a2bf4403b8efcc65108a56ab5ddceba2f1e764adb5a06a614c4" -->
 
-<!-- pdac:cite id="SB-RECIPES-LIBRARY-EDIT" digest="sha256:4b7a510e846e49cdfba63a76b9037f4d19e458ea1ca41c4230ebb10349e1577b" -->
+<!-- pdac:cite id="SB-RECIPES-LIBRARY-EDIT" digest="sha256:c87c80d5f398d30162f6080f2bfe3f76da4f0ad4e215cc866ed6b8a53f7929ea" -->
 
-<!-- pdac:cite id="SB-RECIPES-LIBRARY-DELETE" digest="sha256:bb61563362e958ac4d987563c936ead7d87c627d3cf59f3511fd873814883931" -->
+<!-- pdac:cite id="SB-RECIPES-LIBRARY-DELETE" digest="sha256:645c1ebc8500c628a2ac390c5e91abd211d650225e7a3c2ac2a59128a2262d1b" -->
 
 #### Scenario: Household browses the recipe library
 

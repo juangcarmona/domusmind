@@ -2,10 +2,7 @@
 id: BR-TASKS-ASSIGNEE-IN-HOUSEHOLD
 type: business-rule
 title: A task has at most one assignee from the same household
-status: draft
-applies-to:
-  - UC-TASKS-CREATE-TASK
-  - UC-TASKS-ASSIGN-TASK
+status: active
 uses-terms:
   - TERM-TASK
   - TERM-TASK-ASSIGNEE

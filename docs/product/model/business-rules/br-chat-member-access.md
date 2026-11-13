@@ -2,9 +2,7 @@
 id: BR-CHAT-MEMBER-ACCESS
 type: business-rule
 title: Chat threads are limited to their household participants
-status: draft
-applies-to:
-  - UC-CHAT-USE-CONVERSATIONS
+status: active
 uses-terms:
   - TERM-CHAT-THREAD
   - TERM-CHAT-MESSAGE

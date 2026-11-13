@@ -2,7 +2,7 @@
 id: UC-LISTS-MAKE-LIST-PRIVATE
 type: use-case
 title: "Keep a list private to one person"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

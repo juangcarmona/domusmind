@@ -2,10 +2,7 @@
 id: BR-CALENDAR-PARTICIPANT-IN-HOUSEHOLD
 type: business-rule
 title: "Participants must belong to the plan's household"
-status: draft
-applies-to:
-  - "UC-CALENDAR-SCHEDULE-PLAN"
-  - "UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS"
+status: active
 uses-terms:
   - "TERM-PLAN-PARTICIPANT"
   - "TERM-HOUSEHOLD"

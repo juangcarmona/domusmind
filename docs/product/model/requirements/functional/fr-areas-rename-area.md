@@ -2,14 +2,14 @@
 id: FR-AREAS-RENAME-AREA
 type: functional-requirement
 title: Rename an Area
-status: draft
+status: active
 derived-from:
-- UC-AREAS-RENAME-AREA
-- BR-AREAS-NAME-REQUIRED
+  - UC-AREAS-RENAME-AREA
+  - BR-AREAS-NAME-REQUIRED
 verification:
-- scenario-ref: SB-AREAS-RENAME-AREA
+  - scenario-ref: SB-AREAS-RENAME-AREA
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: 'openspec/specs/areas/spec.md (Requirement: Area Renaming)'
   confidence: high

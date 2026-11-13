@@ -2,11 +2,9 @@
 id: BR-LISTS-ITEM-IS-NOT-A-TASK
 type: business-rule
 title: "A list item never becomes a task or scheduled work"
-status: draft
+status: active
 applies-to:
   - BC-LISTS
-  - UC-LISTS-SCHEDULE-ITEM
-  - UC-LISTS-UPDATE-LIST
 uses-terms:
   - TERM-LIST-ITEM
   - TERM-TASK

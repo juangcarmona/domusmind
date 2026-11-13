@@ -2,7 +2,7 @@
 id: FR-LISTS-PLAN-LIST-CUE
 type: functional-requirement
 title: "Show a compact list cue on plans linked to a list"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-SEE-ITEMS-IN-AGENDA
   - UC-AGENDA-VIEW-HOUSEHOLD-AGENDA

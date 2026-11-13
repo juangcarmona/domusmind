@@ -2,7 +2,7 @@
 id: TERM-EXTERNAL-CALENDAR-CONNECTION
 type: domain-term
 title: "External Calendar Connection"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Outlook connection"

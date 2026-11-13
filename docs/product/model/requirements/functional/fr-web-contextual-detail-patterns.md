@@ -2,7 +2,7 @@
 id: FR-WEB-CONTEXTUAL-DETAIL-PATTERNS
 type: functional-requirement
 title: "Inspect in place, confirm in a modal, navigate only for depth"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-INSPECT-ENTRY"
   - "UC-LISTS-OPEN-LIST"

@@ -2,7 +2,7 @@
 id: FR-TASKS-PAUSE-ROUTINE
 type: functional-requirement
 title: Pause an active routine
-status: draft
+status: active
 derived-from:
   - UC-TASKS-PAUSE-ROUTINE
   - BR-TASKS-PAUSE-RESUME

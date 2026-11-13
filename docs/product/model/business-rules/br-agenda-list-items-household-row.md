@@ -2,9 +2,7 @@
 id: BR-AGENDA-LIST-ITEMS-HOUSEHOLD-ROW
 type: business-rule
 title: "Projected list items sit in the household's shared row"
-status: draft
-applies-to:
-  - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
+status: active
 uses-terms:
   - "TERM-LIST-ITEM"
   - "TERM-AGENDA-SCOPE"

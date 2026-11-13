@@ -2,7 +2,7 @@
 id: SB-CALENDAR-DISCONNECT
 type: structured-behaviour
 title: "Disconnecting removes the connection and its entries"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR"
   - "BR-CALENDAR-DISCONNECT-IS-LOCAL"

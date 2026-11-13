@@ -2,7 +2,7 @@
 id: SB-TASKS-PAUSE-UNTIL-AUTO-RESUME
 type: structured-behaviour
 title: Routine paused until a date resumes on that date
-status: draft
+status: active
 illustrates:
   - UC-TASKS-PAUSE-ROUTINE
   - BR-TASKS-PAUSE-UNTIL-RESUMES

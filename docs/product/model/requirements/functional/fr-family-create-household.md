@@ -2,7 +2,7 @@
 id: FR-FAMILY-CREATE-HOUSEHOLD
 type: functional-requirement
 title: "Create a household from a name"
-status: draft
+status: active
 derived-from:
   - UC-FAMILY-CREATE-HOUSEHOLD
   - BR-FAMILY-HOUSEHOLD-NAME-REQUIRED

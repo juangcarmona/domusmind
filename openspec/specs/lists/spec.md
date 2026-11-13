@@ -14,25 +14,25 @@ Lists are scoped to the household (family). They may be optionally associated wi
 
 List state is shared in real time across household members — additions, toggles, and updates are visible to all without a manual refresh.
 
-<!-- pdac:cite id="BC-LISTS" digest="sha256:ebe914e9acf2be4ff0b5cd2bea8fbc7dd9e63713e3f6dea5e2b600a05ea7be76" -->
+<!-- pdac:cite id="BC-LISTS" digest="sha256:7a770f21b03b8d0f769f46552bc0ef53fd885d5ce0ab41d081d831d2aa74ae4c" -->
 
-<!-- pdac:cite id="TERM-LIST" digest="sha256:6549eba0b2224a4838902f734991430b4f097d5c9d8de8401f67573f4e78ec7a" -->
+<!-- pdac:cite id="TERM-LIST" digest="sha256:3972250cf543d9e8e6ea53b2472fb03ba2328475f47ab3202b4e867781b0fd48" -->
 
-<!-- pdac:cite id="TERM-LIST-ITEM" digest="sha256:904520339922c3589e43d6ea243a61938b6f5304cb1e30cc8c8b7bffff92aa2e" -->
+<!-- pdac:cite id="TERM-LIST-ITEM" digest="sha256:c6112cdc3c6f6573d978a595cec94145f47269189357e3e50257d39667ca56ee" -->
 
-<!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:cb2e2207883d40101d5b4ef7b33d79dc2c444d62b2b66c80c5e887b5e938b061" -->
+<!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:3d1bef6b9be254d8683460f8e32fdc7e3dfe406720927975e5ec5dbc646f1faa" -->
 
-<!-- pdac:cite id="CON-LISTS-ITEM-CAPABILITY-BOUNDARY" digest="sha256:057cef9585d6cb8ab3cba66f55cdb76637abe9b9bb9342a997232b58dba53e15" -->
+<!-- pdac:cite id="CON-LISTS-ITEM-CAPABILITY-BOUNDARY" digest="sha256:f0b4e3bfe38b1249e7261996f8b21420e271b1c5ee0d349e7a42264f23bdfe9e" -->
 
-<!-- pdac:cite id="BR-LISTS-HOUSEHOLD-SCOPED" digest="sha256:7ea7d7ef5ff31e6a1296f023db734a577b07a449f4beb31bb72d31ef9c500072" -->
+<!-- pdac:cite id="BR-LISTS-HOUSEHOLD-SCOPED" digest="sha256:4b6ceded7b878e265d641f2ebf7a89d99c1d32e15cf0c25231c8591d1d76f199" -->
 
-<!-- pdac:cite id="BR-LISTS-CONTEXT-LINKS-INFORMATIONAL" digest="sha256:75037c1fcced9208b8cd1c668a98f37b7d742dea8c8f447a482e15bf7e3c76f6" -->
+<!-- pdac:cite id="BR-LISTS-CONTEXT-LINKS-INFORMATIONAL" digest="sha256:c5d604a88b3d0a26c3005ee116c6145fd451a9fd4e2f1b56f4e48f0c5fdd7f16" -->
 
-<!-- pdac:cite id="BR-LISTS-PLAN-LINK-DOES-NOT-PROJECT" digest="sha256:4c9723864e62308e6b5a0068872b52fcafd549eebd8837c69d9eef568c10ea42" -->
+<!-- pdac:cite id="BR-LISTS-PLAN-LINK-DOES-NOT-PROJECT" digest="sha256:2bdc7fe6d5bc3727361258ac8d5fd7e22f16d3056002e48b7eaa663a2ff1c150" -->
 
-<!-- pdac:cite id="QR-LISTS-REAL-TIME-SHARING" digest="sha256:bc063af2dad51048a90d0f8d29ee7466d0d74e5ad96462900c5a476996d89455" -->
+<!-- pdac:cite id="QR-LISTS-REAL-TIME-SHARING" digest="sha256:f6395989e6f67550ef00dca8128c89a18c06d7f918afd3c90d3300b5e2c64b9e" -->
 
-<!-- pdac:cite id="JRN-LISTS-REUSE-A-LIST" digest="sha256:e59043d8f633b8e68bbfff954803e5f97c46167d42a022ac5b11b7b875603d10" -->
+<!-- pdac:cite id="JRN-LISTS-REUSE-A-LIST" digest="sha256:b6207a0738ce655272ca0575c950bc6a5b5fc830ca0e9dc116365b2e9eff73dc" -->
 
 <!-- pdac-drift ids="BR-LISTS-PRIVATE-LIST, FR-LISTS-PRIVATE-LIST, BR-LISTS-HOUSEHOLD-SCOPED" summary="Purpose presents every list as household-scoped and shared with all members; the model lets a list be private to one person (Q-0027)" -->
 
@@ -48,25 +48,25 @@ Optional associations at creation: an Area (contextual memory for that Area), a 
 
 A list is initialized with an empty item collection.
 
-<!-- pdac:cite id="FR-LISTS-CREATE-LIST" digest="sha256:40e9d54e5314ad2e475d7fce3b2a85fa548e4b4928390b1a4cbb5c3889b68c8c" -->
+<!-- pdac:cite id="FR-LISTS-CREATE-LIST" digest="sha256:25c9cc803d305300a243539bd99da341cbda24a290f61af4894dbd02f91b0e6d" -->
 
-<!-- pdac:cite id="SB-LISTS-CREATE-NAME-ONLY" digest="sha256:debfbf3036eda107b3f1f195d25d5023ed3fa3554f5f9da2bb9f76da13caa8ab" -->
+<!-- pdac:cite id="SB-LISTS-CREATE-NAME-ONLY" digest="sha256:67ca544ab5591dbd2d620615cf09d68da36f4a8da202529356e9f571083ec2ed" -->
 
-<!-- pdac:cite id="SB-LISTS-CREATE-LINKED-TO-PLAN" digest="sha256:c6282a216c55b5f3878fc6cf6827b2459a67b601f4ff373f32cd996bab2052a5" -->
+<!-- pdac:cite id="SB-LISTS-CREATE-LINKED-TO-PLAN" digest="sha256:4e14bcad3e1cb911e53dc7975241e0ceab0a6953a1ea11fbfe67b921a2e51450" -->
 
-<!-- pdac:cite id="UC-LISTS-CREATE-LIST" digest="sha256:375c978ff484265047fac5dc6656ddafb9b13474b61d356ce67388071a75ae5e" -->
+<!-- pdac:cite id="UC-LISTS-CREATE-LIST" digest="sha256:82df9acf755674420aae2f412b71663853188987c855c12931e78c38a4db8f4d" -->
 
-<!-- pdac:cite id="BR-LISTS-LIST-NAME-REQUIRED" digest="sha256:e8b8f128499fe155698642fddd3002344b0ec947bece7644a30f3d8f54a7b752" -->
+<!-- pdac:cite id="BR-LISTS-LIST-NAME-REQUIRED" digest="sha256:95049208f08bebfb977ee6a6bad5f34e2ceef9fbd21bff7aadfc78cdf7fd6d29" -->
 
-<!-- pdac:cite id="BR-LISTS-CONTEXT-LINKS-INFORMATIONAL" digest="sha256:75037c1fcced9208b8cd1c668a98f37b7d742dea8c8f447a482e15bf7e3c76f6" -->
+<!-- pdac:cite id="BR-LISTS-CONTEXT-LINKS-INFORMATIONAL" digest="sha256:c5d604a88b3d0a26c3005ee116c6145fd451a9fd4e2f1b56f4e48f0c5fdd7f16" -->
 
-<!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:cb2e2207883d40101d5b4ef7b33d79dc2c444d62b2b66c80c5e887b5e938b061" -->
+<!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:3d1bef6b9be254d8683460f8e32fdc7e3dfe406720927975e5ec5dbc646f1faa" -->
 
-<!-- pdac:cite id="QR-LISTS-FRICTIONLESS-CAPTURE" digest="sha256:54f0abaea8ee6e4683dca671179356b0dc68aeaeab8353b550bfefc66212698c" -->
+<!-- pdac:cite id="QR-LISTS-FRICTIONLESS-CAPTURE" digest="sha256:c49275adaa16e46f1d1613af96372c572b5562e38912ce8db7693be665d6e4ec" -->
 
-<!-- pdac:cite id="TERM-LIST" digest="sha256:6549eba0b2224a4838902f734991430b4f097d5c9d8de8401f67573f4e78ec7a" -->
+<!-- pdac:cite id="TERM-LIST" digest="sha256:3972250cf543d9e8e6ea53b2472fb03ba2328475f47ab3202b4e867781b0fd48" -->
 
-<!-- pdac:cite id="TERM-LIST-KIND" digest="sha256:87ad710f1908d9fcf40c75670966f9780f7f405eb43dc05cb3fe6fbf2fda6672" -->
+<!-- pdac:cite id="TERM-LIST-KIND" digest="sha256:2f2700e38b8910125fd9b57d88c64cc3dac9bc863978f52bd2924010052b483e" -->
 
 #### Scenario: Household creates a list with a name only
 
@@ -90,15 +90,15 @@ A household SHALL be able to retrieve a summary of all active lists for the fami
 
 Each summary includes the list name and unchecked item count. Archived lists are excluded from the default result.
 
-<!-- pdac:cite id="FR-LISTS-BROWSE-LISTS" digest="sha256:dc7bf80f44b5e99a69a0c2449b160a2d5bca9746fb817cffc1e7e28d04c24228" -->
+<!-- pdac:cite id="FR-LISTS-BROWSE-LISTS" digest="sha256:5b9e3226a32138d68f98657ee01c2530bcbf39f097e41b55e7a18c8b6f8efc26" -->
 
-<!-- pdac:cite id="SB-LISTS-BROWSE-ACTIVE" digest="sha256:fa0cf89fdc326f3dad3a6915aca5cdae9a28aa574d3dbc0820c7cf99db9dc0ce" -->
+<!-- pdac:cite id="SB-LISTS-BROWSE-ACTIVE" digest="sha256:9be2ef19668384adc1d060e49bbeab9ec2542d1e91e01098f0107414f20389f6" -->
 
-<!-- pdac:cite id="SB-LISTS-BROWSE-EXCLUDES-ARCHIVED" digest="sha256:7e2a42d48e84b2d5e1d6cfada8f22ecf93dae75bb69583d2963a8ba4ddb2c5e4" -->
+<!-- pdac:cite id="SB-LISTS-BROWSE-EXCLUDES-ARCHIVED" digest="sha256:4a56bb8052928788ee4ee66723891bfccaa1dc1eb46bc65f1aefdec4d47c9273" -->
 
-<!-- pdac:cite id="UC-LISTS-BROWSE-LISTS" digest="sha256:119aa4f67efbc350613fa0f77e48134406a41ffc0e0c53b729e73f3e57d15508" -->
+<!-- pdac:cite id="UC-LISTS-BROWSE-LISTS" digest="sha256:3edc8eb98802d84347ef8ae624a29dc866c5dcf0939db22a0067288b42f87f7b" -->
 
-<!-- pdac:cite id="TERM-ARCHIVED-LIST" digest="sha256:71bd5c8a326250a271fca746551c3e38d203d4318eb29bc9ee02dc6b1487b85d" -->
+<!-- pdac:cite id="TERM-ARCHIVED-LIST" digest="sha256:3283e585a3a3a503e6af9b70f17f75c99dcc79f5e3a0b7ad58cbaa29bf5ed860" -->
 
 #### Scenario: Household views the list switcher
 
@@ -121,13 +121,13 @@ A household SHALL be able to retrieve the full content of a list, including all 
 
 Items are returned in two groups: unchecked items first, then checked items. Within each group, items are ordered by their stable display order. All items are included regardless of checked state.
 
-<!-- pdac:cite id="FR-LISTS-OPEN-LIST" digest="sha256:2adf8e6854602e5d6029b6cb889800220fed57d862de2bbfa07136611deb8053" -->
+<!-- pdac:cite id="FR-LISTS-OPEN-LIST" digest="sha256:7b22d78453a3e7e8c72f95e9391ab646c664da7e5c9afe7b39a3948efa9e6bfd" -->
 
-<!-- pdac:cite id="SB-LISTS-OPEN-UNCHECKED-FIRST" digest="sha256:6c1e8e0624f0b3efc8eb12a39bc8297df35fd52943cee0474d2bbaacd422f779" -->
+<!-- pdac:cite id="SB-LISTS-OPEN-UNCHECKED-FIRST" digest="sha256:7bd0a97f8e052ca3c996fde32163ba3062bf5079a9189747164b7cfabae33def" -->
 
-<!-- pdac:cite id="UC-LISTS-OPEN-LIST" digest="sha256:245d5390e63e0281cb1cb5c29ef1a9fa25ab39fc2c4cf54b51240b6d5f571dfe" -->
+<!-- pdac:cite id="UC-LISTS-OPEN-LIST" digest="sha256:8e1a65110f288baa5f7fb827197590037cb9e7255c9cb1d61ac0c85d656cfa10" -->
 
-<!-- pdac:cite id="TERM-CHECKED-ITEM" digest="sha256:5556c31585a82994143d5a49b60e7d1c8d9780aede68115e79e8fbaee6499246" -->
+<!-- pdac:cite id="TERM-CHECKED-ITEM" digest="sha256:92b2028e2e875bd9b994751aa25de16c9928b4204734ca2cfe7a77e1ff1bd94b" -->
 
 #### Scenario: Household opens a list
 
@@ -144,19 +144,19 @@ A household SHALL be able to update a list's name and optional associations.
 
 Updatable fields: name, Area association, linked Plan, kind. At least one field must be provided. Fields not included in the request are unchanged. Area association and Plan linkage may be cleared explicitly.
 
-<!-- pdac:cite id="FR-LISTS-UPDATE-LIST" digest="sha256:a4105ede932f96b9ce49aaf4ac170e6fc24535aa956e06ecf7142e34054ef8b9" -->
+<!-- pdac:cite id="FR-LISTS-UPDATE-LIST" digest="sha256:a5698e5ecdb6992e2c43258f224916174fd099cca0c59f6ba559391ca3d9901f" -->
 
-<!-- pdac:cite id="SB-LISTS-RENAME" digest="sha256:8c38737a493ec6decdcef6879fbeb7a6e2f85adaa8d9dfc52be277a31382325f" -->
+<!-- pdac:cite id="SB-LISTS-RENAME" digest="sha256:7d6f32d6299e0b4fa84c2822a51deb17abc1a6bdf08eb435c67bcaced04c0575" -->
 
-<!-- pdac:cite id="SB-LISTS-CLEAR-PLAN-LINK" digest="sha256:4122f6bb3f4af302880e42ca6de41325376b4fe52bc717716233a52f7b9ad8a5" -->
+<!-- pdac:cite id="SB-LISTS-CLEAR-PLAN-LINK" digest="sha256:6aad6d7f2b8338dd0fcadda2efe32d87ce19b9e38365b24e13c8b5d7945c74d0" -->
 
-<!-- pdac:cite id="UC-LISTS-UPDATE-LIST" digest="sha256:f49087c1e3e6cc028bd2013b62b7a4c65f17341ea79a44435a1920251609b9ed" -->
+<!-- pdac:cite id="UC-LISTS-UPDATE-LIST" digest="sha256:beeba258dbe3f6ba50f32647f6b064962b1f00a98e110f816e1f4f75f702b52a" -->
 
-<!-- pdac:cite id="BR-LISTS-CONTEXT-LINKS-INFORMATIONAL" digest="sha256:75037c1fcced9208b8cd1c668a98f37b7d742dea8c8f447a482e15bf7e3c76f6" -->
+<!-- pdac:cite id="BR-LISTS-CONTEXT-LINKS-INFORMATIONAL" digest="sha256:c5d604a88b3d0a26c3005ee116c6145fd451a9fd4e2f1b56f4e48f0c5fdd7f16" -->
 
-<!-- pdac:cite id="BR-LISTS-LIST-NAME-REQUIRED" digest="sha256:e8b8f128499fe155698642fddd3002344b0ec947bece7644a30f3d8f54a7b752" -->
+<!-- pdac:cite id="BR-LISTS-LIST-NAME-REQUIRED" digest="sha256:95049208f08bebfb977ee6a6bad5f34e2ceef9fbd21bff7aadfc78cdf7fd6d29" -->
 
-<!-- pdac:cite id="TERM-LIST-KIND" digest="sha256:87ad710f1908d9fcf40c75670966f9780f7f405eb43dc05cb3fe6fbf2fda6672" -->
+<!-- pdac:cite id="TERM-LIST-KIND" digest="sha256:2f2700e38b8910125fd9b57d88c64cc3dac9bc863978f52bd2924010052b483e" -->
 
 #### Scenario: Household renames a list
 
@@ -182,19 +182,19 @@ Archiving transitions the list out of the active collection. All data is preserv
 
 A list that is already archived cannot be archived again.
 
-<!-- pdac:cite id="FR-LISTS-ARCHIVE-LIST" digest="sha256:7204dcb449c16d9bf95653de6d5dab3140f60ad07df5dcc3a31ae877b6e27e57" -->
+<!-- pdac:cite id="FR-LISTS-ARCHIVE-LIST" digest="sha256:050b27be17e6b043e91241e56988e8099bc62e18ff07fe964842e197bfe11477" -->
 
-<!-- pdac:cite id="SB-LISTS-ARCHIVE" digest="sha256:148dd74a469517cc70e4380b54ba5be66496edce6a7358737baf4bbeb42d2a3f" -->
+<!-- pdac:cite id="SB-LISTS-ARCHIVE" digest="sha256:c9379ccbb5ac33d455a33444d024ca26cfd7fa9b61ee1a7d308266d8b516ca96" -->
 
-<!-- pdac:cite id="SB-LISTS-ARCHIVE-TWICE-REJECTED" digest="sha256:f0afc89b3c30b90a451656df97693cdf5091388d1ddc0ac7b78323e07702dbec" -->
+<!-- pdac:cite id="SB-LISTS-ARCHIVE-TWICE-REJECTED" digest="sha256:a968324eb8311ee8ac685c0f8514ea6d8e1337253f27ca8c3fb3180d453f9364" -->
 
-<!-- pdac:cite id="UC-LISTS-ARCHIVE-LIST" digest="sha256:2395fb97234a2de067a6f26ada8345758c18ccf3ef081d97c9d20a9b04fa6afe" -->
+<!-- pdac:cite id="UC-LISTS-ARCHIVE-LIST" digest="sha256:1b1904e7a6583bce2e708950e1b87060cdf5c7ac0ae7432036226211825a0cde" -->
 
-<!-- pdac:cite id="BR-LISTS-ARCHIVE-STATE" digest="sha256:c9572f4c87f0eb313eb0ce9b60311c9d8f81eafe0a394767fea4561592e48171" -->
+<!-- pdac:cite id="BR-LISTS-ARCHIVE-STATE" digest="sha256:eec8e50fbefbbf5d6ae56d3650200f956e319ff65ae7201b86526807a8e1c93e" -->
 
-<!-- pdac:cite id="BR-LISTS-ARCHIVED-READ-ONLY" digest="sha256:5e8bfb0f1ca4b21a79d05c4ea7f94e1a899b3443f8b9625af913ed60dc9f7c70" -->
+<!-- pdac:cite id="BR-LISTS-ARCHIVED-READ-ONLY" digest="sha256:2efea969d9cadd61803b9e2fcf708cb7ace6bf72d3daa5a2873f860ded04193b" -->
 
-<!-- pdac:cite id="TERM-ARCHIVED-LIST" digest="sha256:71bd5c8a326250a271fca746551c3e38d203d4318eb29bc9ee02dc6b1487b85d" -->
+<!-- pdac:cite id="TERM-ARCHIVED-LIST" digest="sha256:3283e585a3a3a503e6af9b70f17f75c99dcc79f5e3a0b7ad58cbaa29bf5ed860" -->
 
 <!-- pdac-drift ids="BR-LISTS-ARCHIVED-READ-ONLY, FR-LISTS-ARCHIVE-LIST, TERM-ARCHIVED-LIST" summary="Spec does not make an archived list read-only and its item toggle, update, importance and timing requirements apply to any item; the model rejects item changes on an archived list until it is restored (Q-0031)" -->
 
@@ -219,15 +219,15 @@ A household SHALL be able to restore an archived list to active use.
 
 Restore is the symmetric inverse of archive. No item data is modified. The restored list behaves identically to any other active list. A list that is not archived cannot be restored.
 
-<!-- pdac:cite id="FR-LISTS-RESTORE-LIST" digest="sha256:e891cbbb3a192f687a69b80fbf5040c39616a5c0ada7f4094f40c520533939b9" -->
+<!-- pdac:cite id="FR-LISTS-RESTORE-LIST" digest="sha256:0deba81893a356379ca3ba12744d9856c42b1a53fc7371cae53853b665bb00b3" -->
 
-<!-- pdac:cite id="SB-LISTS-RESTORE" digest="sha256:3487aac1bab98bd2d8e818920ef1f2b1e67626e42306ca610f2650aea37bf8b5" -->
+<!-- pdac:cite id="SB-LISTS-RESTORE" digest="sha256:d45d5c94bcbf926ec765cd6b19419dd87c275b56927c39999dabbc649ec27294" -->
 
-<!-- pdac:cite id="UC-LISTS-RESTORE-LIST" digest="sha256:eced0ea5306e36b24e7383bfe6bb7697d9e911b2a3158553c2014bacee0c78d0" -->
+<!-- pdac:cite id="UC-LISTS-RESTORE-LIST" digest="sha256:8d6749745dfdea956d173ff87481388095f41038b3308451ff609703da340667" -->
 
-<!-- pdac:cite id="BR-LISTS-ARCHIVE-STATE" digest="sha256:c9572f4c87f0eb313eb0ce9b60311c9d8f81eafe0a394767fea4561592e48171" -->
+<!-- pdac:cite id="BR-LISTS-ARCHIVE-STATE" digest="sha256:eec8e50fbefbbf5d6ae56d3650200f956e319ff65ae7201b86526807a8e1c93e" -->
 
-<!-- pdac:cite id="TERM-ARCHIVED-LIST" digest="sha256:71bd5c8a326250a271fca746551c3e38d203d4318eb29bc9ee02dc6b1487b85d" -->
+<!-- pdac:cite id="TERM-ARCHIVED-LIST" digest="sha256:3283e585a3a3a503e6af9b70f17f75c99dcc79f5e3a0b7ad58cbaa29bf5ed860" -->
 
 #### Scenario: Household restores an archived list
 
@@ -244,26 +244,26 @@ A household SHALL be able to add a new item to an active list with only a name.
 
 A new item is always created in an unchecked state. Optional fields at creation: quantity and note. Items are appended in stable order — each new item receives the next position. Importance and temporal fields are not set at item creation; they are applied through dedicated operations after creation. An assistant may stage an addition as an Inbox proposal, but Lists changes only after an authorized member approves it.
 
-<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:f1a488d642604dbe43c9e465683fa2602b7f027d5618c4c4d3ac7e73cc29e8be" -->
-<!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:7c54cc5879964502757faea971dacd03b841305ae6166d64072cde41aea1303f" -->
+<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8f2efe33de44deac70caac674756cd003907c878b4bdfb69128b6f5515bb6f4f" -->
+<!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:92d34d343ebc239e46c834106ac81dc978c2f014b9ae1e5574786cc82da7821e" -->
 
-<!-- pdac:cite id="FR-LISTS-ADD-ITEM" digest="sha256:e8aa749e760b1deb27d59fd5f3e997342ccfd52438cffb1f96e79479275a3ce5" -->
+<!-- pdac:cite id="FR-LISTS-ADD-ITEM" digest="sha256:31ca6047288c0e531133f611eda3ba2b8c142fc5d991cc0015103929474a2ff3" -->
 
-<!-- pdac:cite id="SB-LISTS-ADD-ITEM" digest="sha256:76fc4b35e2d298256f90e2780c892669ff60c867c1319ec47c463b5cec3ad4ab" -->
+<!-- pdac:cite id="SB-LISTS-ADD-ITEM" digest="sha256:ab8758ad6cc21c132a9d60afca8b0a664b3b2c3739d1f3b86978db3079d65e7d" -->
 
-<!-- pdac:cite id="SB-LISTS-SEQUENTIAL-CAPTURE" digest="sha256:084f626099f7e5566efe9ecbb65bda5c6a31d63d03ea1c9fed0045de260fe92c" -->
+<!-- pdac:cite id="SB-LISTS-SEQUENTIAL-CAPTURE" digest="sha256:f71db1393adbc83b54644275fa8d6f276a304a59ac74ea138432bd12ca5bfa44" -->
 
-<!-- pdac:cite id="UC-LISTS-ADD-ITEM" digest="sha256:c8effd1bb82b42ca0d65ff777b6268c2501387060f57a85bf2af661b0c14aa34" -->
+<!-- pdac:cite id="UC-LISTS-ADD-ITEM" digest="sha256:225a14936af4adf944fc467e7ade4f6dd560a20d6937dac48be51c3afd26663a" -->
 
-<!-- pdac:cite id="BR-LISTS-NEW-ITEM-UNCHECKED-APPENDED" digest="sha256:4777df4ac2432868485d8e0f3217cc860d76988bf8ad912712ada779661ec493" -->
+<!-- pdac:cite id="BR-LISTS-NEW-ITEM-UNCHECKED-APPENDED" digest="sha256:48d80f3f2f4e8dc648d33b357c5e03eea4e592d72ec921beb4d04c630e9347d8" -->
 
-<!-- pdac:cite id="BR-LISTS-ITEM-NAME-REQUIRED" digest="sha256:34df8f109bcc1480c64730e5bb5bf10a7dcc96602b753c50ba7b25deddedc8bf" -->
+<!-- pdac:cite id="BR-LISTS-ITEM-NAME-REQUIRED" digest="sha256:5293bba721343a22f68c8e4c51ca3aeffe8c22bbb7bc27b7362d67738cc0ac77" -->
 
-<!-- pdac:cite id="BR-LISTS-ARCHIVED-READ-ONLY" digest="sha256:5e8bfb0f1ca4b21a79d05c4ea7f94e1a899b3443f8b9625af913ed60dc9f7c70" -->
+<!-- pdac:cite id="BR-LISTS-ARCHIVED-READ-ONLY" digest="sha256:2efea969d9cadd61803b9e2fcf708cb7ace6bf72d3daa5a2873f860ded04193b" -->
 
-<!-- pdac:cite id="QR-LISTS-FRICTIONLESS-CAPTURE" digest="sha256:54f0abaea8ee6e4683dca671179356b0dc68aeaeab8353b550bfefc66212698c" -->
+<!-- pdac:cite id="QR-LISTS-FRICTIONLESS-CAPTURE" digest="sha256:c49275adaa16e46f1d1613af96372c572b5562e38912ce8db7693be665d6e4ec" -->
 
-<!-- pdac:cite id="TERM-LIST-ITEM" digest="sha256:904520339922c3589e43d6ea243a61938b6f5304cb1e30cc8c8b7bffff92aa2e" -->
+<!-- pdac:cite id="TERM-LIST-ITEM" digest="sha256:c6112cdc3c6f6573d978a595cec94145f47269189357e3e50257d39667ca56ee" -->
 
 #### Scenario: Household adds an item to a list
 
@@ -286,15 +286,15 @@ A household SHALL be able to update the base fields of a list item: name, quanti
 
 At least one of these fields must be provided. Fields not included are left unchanged. Quantity may be cleared explicitly. This operation does not affect checked state, importance, temporal fields, or item order. An assistant may stage these supported fields as an Inbox proposal, but Lists changes only after an authorized member approves it.
 
-<!-- pdac:cite id="FR-LISTS-UPDATE-ITEM" digest="sha256:ffef253a196bbafe63a688a4cea869d3f9a9146ceb230dce59a9448726c092f7" -->
+<!-- pdac:cite id="FR-LISTS-UPDATE-ITEM" digest="sha256:ac9c993fe7be9604213732cfbb89cd07b9cd1ef6b234946e7889c3da28b98005" -->
 
-<!-- pdac:cite id="SB-LISTS-RENAME-ITEM" digest="sha256:cbc4a2a83389f96e903c7abb73632e47c8dc11cce7732e3c84e0e88a58a67977" -->
+<!-- pdac:cite id="SB-LISTS-RENAME-ITEM" digest="sha256:bfddfc7ee76362815bf8e464fda2c8da2ada6765e985599e30292a223afc057e" -->
 
-<!-- pdac:cite id="SB-LISTS-CLEAR-QUANTITY" digest="sha256:5d2111f912868ddb4bf2266e152945ac1aa52bfbd306888bef1da93ac89470e4" -->
+<!-- pdac:cite id="SB-LISTS-CLEAR-QUANTITY" digest="sha256:44bb4a4730448dfe9abf39cdd635f4182ad70fd28c3c9117a1ec0249256c4a78" -->
 
-<!-- pdac:cite id="UC-LISTS-UPDATE-ITEM" digest="sha256:9374470251c52adcbb0149d065d560a5b69e49b3ca0ca3581fbd6dea03e52719" -->
+<!-- pdac:cite id="UC-LISTS-UPDATE-ITEM" digest="sha256:da03e156bcb1280aeb5b60d118c85ad437d579fb7b4e5d14331e229d7b51cdc9" -->
 
-<!-- pdac:cite id="BR-LISTS-ITEM-NAME-REQUIRED" digest="sha256:34df8f109bcc1480c64730e5bb5bf10a7dcc96602b753c50ba7b25deddedc8bf" -->
+<!-- pdac:cite id="BR-LISTS-ITEM-NAME-REQUIRED" digest="sha256:5293bba721343a22f68c8e4c51ca3aeffe8c22bbb7bc27b7362d67738cc0ac77" -->
 
 #### Scenario: Household updates an item's name
 
@@ -320,21 +320,21 @@ Toggle is binary: unchecked → checked (item is handled for this use), or check
 
 A checked item with temporal fields continues to project into the Agenda surface in a de-emphasized state. Toggle does not clear temporal fields.
 
-<!-- pdac:cite id="FR-LISTS-TOGGLE-ITEM" digest="sha256:f62cb9ee1d25437277aa435e386caa5a02b6f268803cf70861c8721286e28af5" -->
+<!-- pdac:cite id="FR-LISTS-TOGGLE-ITEM" digest="sha256:c158a8a3a674aa12d9b60772dba45a3ff914a75d8bb088940a1f9de5f734e119" -->
 
-<!-- pdac:cite id="SB-LISTS-CHECK-ITEM" digest="sha256:5fc60ec7a75826e0db808d5dcc97cb2187c2ea6cac94adfd7f81fef0b65964a4" -->
+<!-- pdac:cite id="SB-LISTS-CHECK-ITEM" digest="sha256:2a1f5b606cbc228a292710d8aa511ed9f66164aa4d83ec3b3a4d74f91479ebae" -->
 
-<!-- pdac:cite id="SB-LISTS-UNCHECK-ITEM" digest="sha256:b47d76803eafcaa2807c5fb4ca3cd6715945ef7c3b4b8460af3b021a9c19cb20" -->
+<!-- pdac:cite id="SB-LISTS-UNCHECK-ITEM" digest="sha256:eaea2752d02c18887c571fd0cf8d6c3af699dff58c4ab6804b0965fafe310f3b" -->
 
-<!-- pdac:cite id="SB-LISTS-CHECKED-ITEM-STAYS-IN-AGENDA" digest="sha256:63ba6a5bcd5da05939a9be25150e296659891d74f376ca91ff5be8f1414466d8" -->
+<!-- pdac:cite id="SB-LISTS-CHECKED-ITEM-STAYS-IN-AGENDA" digest="sha256:b39da8440e6bb567d87d951698c935b3d9dff0f5bc564bd8f9c27a362cf0fd26" -->
 
-<!-- pdac:cite id="UC-LISTS-TOGGLE-ITEM" digest="sha256:5cc4db7826b2b31f6e00a93f54f3f1d5e70be7e608f6f4c86cadcbed1816b24f" -->
+<!-- pdac:cite id="UC-LISTS-TOGGLE-ITEM" digest="sha256:591b03f8b2639723dea6a3788c966a07d62a753f8b135195463a686386cb656b" -->
 
-<!-- pdac:cite id="BR-LISTS-TOGGLE-PRESERVES-ITEM" digest="sha256:e8530110ac8225a196763352f7aa29d44027f7be270e92eb77feb84161eb559e" -->
+<!-- pdac:cite id="BR-LISTS-TOGGLE-PRESERVES-ITEM" digest="sha256:7825a92a0bf1847c2d536815a9df1b089d8b5005f3d534cb675cb9c3d86dde59" -->
 
-<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:07f2a39c4da3143f7ba1dc285acb840d8a121020a2c68adf87783c23b1e92af9" -->
+<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:043eef067ee7db97dd23b7dc3dc2e7c9b7c52b4c9f5aefc6e3d2066abd179350" -->
 
-<!-- pdac:cite id="TERM-CHECKED-ITEM" digest="sha256:5556c31585a82994143d5a49b60e7d1c8d9780aede68115e79e8fbaee6499246" -->
+<!-- pdac:cite id="TERM-CHECKED-ITEM" digest="sha256:92b2028e2e875bd9b994751aa25de16c9928b4204734ca2cfe7a77e1ff1bd94b" -->
 
 #### Scenario: Household checks an item
 
@@ -365,15 +365,15 @@ A household SHALL be able to permanently remove an item from a list.
 
 Removal is immediate and irreversible. The item is deleted from the list's ordered collection. If the removed item had temporal fields, it is removed from Agenda projection. Removal has no effects outside the list.
 
-<!-- pdac:cite id="FR-LISTS-REMOVE-ITEM" digest="sha256:85ac6d83788ba434bd792f7db6d2b5af4790b4cf01d493425c5a0cdbfff24186" -->
+<!-- pdac:cite id="FR-LISTS-REMOVE-ITEM" digest="sha256:b08b2488166905a607c953f20daa9e6312a3d05e0f9b271b0e155d8d31e52ba4" -->
 
-<!-- pdac:cite id="SB-LISTS-REMOVE-ITEM" digest="sha256:6b46f0c26eb5bd4b8b2a89a17e9b4f278e87bbca443cffb79d12fe1297826043" -->
+<!-- pdac:cite id="SB-LISTS-REMOVE-ITEM" digest="sha256:c3f9ff2377c28efb75b99aca195cc104e1df62f2e6c8d8c8a18a158023bb7ba0" -->
 
-<!-- pdac:cite id="SB-LISTS-REMOVE-DATED-ITEM" digest="sha256:5aa6817b2d78843455635a435736b67dcd85f91ff38dcb213b98456c6e9ffbc5" -->
+<!-- pdac:cite id="SB-LISTS-REMOVE-DATED-ITEM" digest="sha256:4442edd8e796c9f1856ce5e901174968915b83c88ff80249c50fdcb1b2126c3e" -->
 
-<!-- pdac:cite id="UC-LISTS-REMOVE-ITEM" digest="sha256:ee30e1a30a9b03fa6c6126c06145bfbfd5d59bbc0590ac69c5c15b6ad32ce57e" -->
+<!-- pdac:cite id="UC-LISTS-REMOVE-ITEM" digest="sha256:2a51e7adc13cc1faedcd697f14bad87a91fbc9b9ec7eaf3056c0b7d3769c8a33" -->
 
-<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:07f2a39c4da3143f7ba1dc285acb840d8a121020a2c68adf87783c23b1e92af9" -->
+<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:043eef067ee7db97dd23b7dc3dc2e7c9b7c52b4c9f5aefc6e3d2066abd179350" -->
 
 #### Scenario: Household removes an item
 
@@ -396,15 +396,15 @@ A household SHALL be able to set the display order of items within a list.
 
 The operation takes the complete intended order as a full replacement. The provided list must contain exactly the current set of items — no additions, no omissions. Order carries no semantic meaning (no priority, urgency, or importance). Checked and unchecked items are part of the same ordered sequence; display grouping is a surface concern.
 
-<!-- pdac:cite id="FR-LISTS-REORDER-ITEMS" digest="sha256:ab648a92c737aad4cb0a2e5c49a5379f69f79f6dec2f6a28d042ad7aa2191ca8" -->
+<!-- pdac:cite id="FR-LISTS-REORDER-ITEMS" digest="sha256:bfc6bee0b15b5393466a520f857b6dbb5d7e49b95fac7deff9604eece2caa818" -->
 
-<!-- pdac:cite id="SB-LISTS-REORDER" digest="sha256:badbdbfe8f21dad8b47dd64f436db410d8145850084f97d3032d965ad322d2ab" -->
+<!-- pdac:cite id="SB-LISTS-REORDER" digest="sha256:dadb735f9bda046cb922cb422082045ba3298ad2c21d43c62c0a9e01f3da2f8e" -->
 
-<!-- pdac:cite id="SB-LISTS-REORDER-MISMATCH-REJECTED" digest="sha256:c06c138867b0776aa11fb2e99827823e201f3ce89ed847ab163c82971724d7dd" -->
+<!-- pdac:cite id="SB-LISTS-REORDER-MISMATCH-REJECTED" digest="sha256:9d3b7d2a873d66436bf961c717c13edbfe357bd67002324f826add5466a6ca6c" -->
 
-<!-- pdac:cite id="UC-LISTS-REORDER-ITEMS" digest="sha256:460b0473750714aa1ace70dd43d5a44add2d20420bbae7e6fa9babb549f52fb6" -->
+<!-- pdac:cite id="UC-LISTS-REORDER-ITEMS" digest="sha256:c2f711de4be452a677c289178af777c6ef0ad86bcf2470b02f6302c3beede29b" -->
 
-<!-- pdac:cite id="BR-LISTS-REORDER-FULL-SET" digest="sha256:e8bdf1316756fa650fa405e2d3951dd016da9886dcf510a4b2f45967674ff1f0" -->
+<!-- pdac:cite id="BR-LISTS-REORDER-FULL-SET" digest="sha256:864f8ce571b1a75902305f975acc65a3e15e21fa3c824926f709edee23a9406d" -->
 
 #### Scenario: Household reorders items
 
@@ -428,17 +428,17 @@ A household SHALL be able to mark or unmark any list item as important.
 
 Importance is a binary flag (starred / not-starred). It is not a score or ranking. Setting importance to a value that is already set is a no-op. Importance does not affect temporal fields, checked state, or Agenda projection eligibility.
 
-<!-- pdac:cite id="FR-LISTS-ITEM-IMPORTANCE" digest="sha256:6f2ad263ba0ae54f8a682c9578ec553165f84da6bc547ed31a224ab021d09834" -->
+<!-- pdac:cite id="FR-LISTS-ITEM-IMPORTANCE" digest="sha256:ce302425272a44f0fe0719f0589804bcc94e294a07d4e4b486ad7b19f90ad394" -->
 
-<!-- pdac:cite id="SB-LISTS-STAR-ITEM" digest="sha256:62c8fdf2528be0ee4c295066bc8d3034b4d083f5d12becd4ca52697b0858098e" -->
+<!-- pdac:cite id="SB-LISTS-STAR-ITEM" digest="sha256:cb288cc57fc0c9a0266e6c33f2efecf2a5d4c904830a3888a14bf67e4dda9203" -->
 
-<!-- pdac:cite id="SB-LISTS-STAR-IDEMPOTENT" digest="sha256:1f7b8203d39039b66d14a33b11f4609d30814764e02adca9bbd29bdcab4a6f36" -->
+<!-- pdac:cite id="SB-LISTS-STAR-IDEMPOTENT" digest="sha256:469f1deb26c3db416a7f6b715bdb7cb5bb9ee4e37cd50f57f79b7b6a6abe606e" -->
 
-<!-- pdac:cite id="UC-LISTS-SET-ITEM-IMPORTANCE" digest="sha256:0f88892c503db136b57d4196f34f7edfb6b7e591e816411da99788cd10f84b95" -->
+<!-- pdac:cite id="UC-LISTS-SET-ITEM-IMPORTANCE" digest="sha256:e9ee3917dd20c6c3b2489bb69338cd8b42597b8011f48d62341f7cd4afd1c8e7" -->
 
-<!-- pdac:cite id="BR-LISTS-IMPORTANCE-BINARY" digest="sha256:8f9276f3e7b87e7f2ad2c59437da11a5ec0481cdaa7f97e520c6f8a91a8fe6c3" -->
+<!-- pdac:cite id="BR-LISTS-IMPORTANCE-BINARY" digest="sha256:b779b624287684ff2c848bbf1152cd268f2d4d8e0849e3fe391010817143c4d2" -->
 
-<!-- pdac:cite id="TERM-ITEM-IMPORTANCE" digest="sha256:10b6e633466cc85d1aee7ab7f7d74e519279a86581c1f715e2cb4956e1437a10" -->
+<!-- pdac:cite id="TERM-ITEM-IMPORTANCE" digest="sha256:e3bbf50c0811e62b653decd8f04508de22754a2f836fd939ffa7cd4fe1ac0de7" -->
 
 #### Scenario: Household marks an item as important
 
@@ -464,23 +464,23 @@ At least one temporal field must be provided per operation. Fields not included 
 
 When an item transitions from having no temporal fields to having at least one, this is treated as a distinct scheduling event. Subsequent updates to already-set temporal fields are treated as updates.
 
-<!-- pdac:cite id="FR-LISTS-SET-ITEM-TIMING" digest="sha256:d7ebe6861d147b98d3f0b647ac8ab6123a20cea7ff52e516210fe306593e9a93" -->
+<!-- pdac:cite id="FR-LISTS-SET-ITEM-TIMING" digest="sha256:b3cbffce65b3e20f553f712ea2729544a94c6e4a9bc888619b60e7a58eb41c14" -->
 
-<!-- pdac:cite id="SB-LISTS-SET-DUE-DATE" digest="sha256:147ea57d7976d23536d9872f2464ada239fae8d12932767343fc2ea3caa0b74f" -->
+<!-- pdac:cite id="SB-LISTS-SET-DUE-DATE" digest="sha256:9004b57d0b5c5577d6a1378a626ab2ae38e81e5e89c5c42fda4e65e2b52e404e" -->
 
-<!-- pdac:cite id="SB-LISTS-SET-REMINDER-ONLY" digest="sha256:7b45148dff325bf184897a76389b4abb1ea71823325ce9d76c4a0fae40068cc3" -->
+<!-- pdac:cite id="SB-LISTS-SET-REMINDER-ONLY" digest="sha256:db40c73557269f3b216d94170715d769cbfc6bb2a1cfccc4679a65a496d825ab" -->
 
-<!-- pdac:cite id="SB-LISTS-SET-REPEAT-ONLY" digest="sha256:79fecc7cdf6782364cc29d24cc716e428979a034d0ae47760c323367d5a4a2d7" -->
+<!-- pdac:cite id="SB-LISTS-SET-REPEAT-ONLY" digest="sha256:8d1cb8d55715a6d35a4d46352756355e8b5382ed26bcdb4e4b1c9ddde9d9fd74" -->
 
-<!-- pdac:cite id="UC-LISTS-SCHEDULE-ITEM" digest="sha256:771638ba8221f8c57b50e04a490d9960d1600f90e549c31d6e14556d09c29e00" -->
+<!-- pdac:cite id="UC-LISTS-SCHEDULE-ITEM" digest="sha256:675600256096facb5293fcbf96e179ba667cd76c400e91d3d7ddf8f1ac5dcff7" -->
 
-<!-- pdac:cite id="BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT" digest="sha256:40002c49ac40b5b30be14b9d66152d74c7c6db734817ff70ba4976c4849778fe" -->
+<!-- pdac:cite id="BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT" digest="sha256:88fa4dda19ba3d6cd4e9e92b1d43d08fb0d96717d76e1428747adf70df3e55bb" -->
 
-<!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:cb2e2207883d40101d5b4ef7b33d79dc2c444d62b2b66c80c5e887b5e938b061" -->
+<!-- pdac:cite id="BR-LISTS-ITEM-IS-NOT-A-TASK" digest="sha256:3d1bef6b9be254d8683460f8e32fdc7e3dfe406720927975e5ec5dbc646f1faa" -->
 
-<!-- pdac:cite id="TERM-ITEM-TEMPORAL-FIELDS" digest="sha256:138ea408865568c2d484dcdef52b9395e05a4f103ce7fc9462e9deead72e484d" -->
+<!-- pdac:cite id="TERM-ITEM-TEMPORAL-FIELDS" digest="sha256:15498c7a4246e94ae298569f73d3f6cfa6efdbc366631baae6fe03a5fc8b8578" -->
 
-<!-- pdac:cite id="TERM-ITEM-REPEAT-RULE" digest="sha256:d93b02a933295822a4fd3d73a0f27d879475d21592ef5edd45587d7ef5cf12a1" -->
+<!-- pdac:cite id="TERM-ITEM-REPEAT-RULE" digest="sha256:c17e5b8a9590f4c589c30a6ced4799cd5dc4c15de14f93839ab3529e13e952b4" -->
 
 #### Scenario: Household sets a due date on an item
 
@@ -513,15 +513,15 @@ All three fields — due date, reminder, and repeat rule — are cleared atomica
 
 If the item has no temporal fields, the operation is a no-op and succeeds silently.
 
-<!-- pdac:cite id="FR-LISTS-CLEAR-ITEM-TIMING" digest="sha256:dac218145bbf6f152b37ca13e0c90761046bf9141f5cec589137e62d80d0ebda" -->
+<!-- pdac:cite id="FR-LISTS-CLEAR-ITEM-TIMING" digest="sha256:befbf601bbf68f6cda4e54ee4af1a8642208b44c15c1692005c7da958f2b3a50" -->
 
-<!-- pdac:cite id="SB-LISTS-CLEAR-TIMING" digest="sha256:3fe8223fd91fa8cd3f7aebcf7f9b063ec50a2cf5c1a258bcd472cc8579918a2b" -->
+<!-- pdac:cite id="SB-LISTS-CLEAR-TIMING" digest="sha256:fb816b34f5338e59dc16ac188f414b2e7020d1790f2a5d39ef1baf23a08c4a5f" -->
 
-<!-- pdac:cite id="SB-LISTS-CLEAR-TIMING-NOOP" digest="sha256:105db06995bea76e40fe3e50b19465680895c07e998d4cf2185d49c90c91bc86" -->
+<!-- pdac:cite id="SB-LISTS-CLEAR-TIMING-NOOP" digest="sha256:3caee20f8cb652bb7a29ac39235e753522cb9f066069114fb37a4830371fbd86" -->
 
-<!-- pdac:cite id="UC-LISTS-CLEAR-ITEM-SCHEDULE" digest="sha256:1c2d65f129e1410eab1dd7136e4049a598402c85ab6205025acdb3256c9de277" -->
+<!-- pdac:cite id="UC-LISTS-CLEAR-ITEM-SCHEDULE" digest="sha256:05f0d58c57bd00c204408ac467a377cf46cb4cd0c45a8ac8c55b715000691046" -->
 
-<!-- pdac:cite id="TERM-ITEM-TEMPORAL-FIELDS" digest="sha256:138ea408865568c2d484dcdef52b9395e05a4f103ce7fc9462e9deead72e484d" -->
+<!-- pdac:cite id="TERM-ITEM-TEMPORAL-FIELDS" digest="sha256:15498c7a4246e94ae298569f73d3f6cfa6efdbc366631baae6fe03a5fc8b8578" -->
 
 #### Scenario: Household clears temporal fields from an item
 
@@ -554,23 +554,23 @@ Projected list items are read-only in Agenda. They carry a visible list-origin c
 
 Checked items that meet a projection condition still appear in Agenda, de-emphasized. They are not removed from projection until their temporal fields are cleared.
 
-<!-- pdac:cite id="FR-LISTS-AGENDA-PROJECTION" digest="sha256:97074fff7f6f05b914ce4619df4ea615d6d3b8198c29f7a9c85b9cd0a95ffe0b" -->
+<!-- pdac:cite id="FR-LISTS-AGENDA-PROJECTION" digest="sha256:b94162c9eb42af755596bd3448c69f727b83d6dd2a707631568d90ea10453d50" -->
 
-<!-- pdac:cite id="SB-LISTS-DUE-TODAY-IN-AGENDA" digest="sha256:b6aeb0a0e614423de4e288251c78ab684092caff4e0281e870e87e902975bab3" -->
+<!-- pdac:cite id="SB-LISTS-DUE-TODAY-IN-AGENDA" digest="sha256:e6df1ad8bf5fd5a70a423032de6fbd1f91c568ab0251ff5ccf5ce4a23c60726e" -->
 
-<!-- pdac:cite id="SB-LISTS-CHECKED-ITEM-STAYS-IN-AGENDA" digest="sha256:63ba6a5bcd5da05939a9be25150e296659891d74f376ca91ff5be8f1414466d8" -->
+<!-- pdac:cite id="SB-LISTS-CHECKED-ITEM-STAYS-IN-AGENDA" digest="sha256:b39da8440e6bb567d87d951698c935b3d9dff0f5bc564bd8f9c27a362cf0fd26" -->
 
-<!-- pdac:cite id="SB-LISTS-CLEARED-ITEM-LEAVES-AGENDA" digest="sha256:9f66ef5bca4eecb07050a78ed725f41873bd84e1422ad2ae6d4cd783dc29c0ff" -->
+<!-- pdac:cite id="SB-LISTS-CLEARED-ITEM-LEAVES-AGENDA" digest="sha256:435869f319b3f053ea27df3bc2eb5b8d6f9dd5a0bf910fbe2201071d409a806b" -->
 
-<!-- pdac:cite id="UC-LISTS-SEE-ITEMS-IN-AGENDA" digest="sha256:ee7a292721be6b4b2df1d3de830f3918089d760b22e49883e906b03b657c7e80" -->
+<!-- pdac:cite id="UC-LISTS-SEE-ITEMS-IN-AGENDA" digest="sha256:19f437a80c20b0934963cfd836845c4f7d45d3caa9e31b73984860dfd63cc900" -->
 
-<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:07f2a39c4da3143f7ba1dc285acb840d8a121020a2c68adf87783c23b1e92af9" -->
+<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:043eef067ee7db97dd23b7dc3dc2e7c9b7c52b4c9f5aefc6e3d2066abd179350" -->
 
-<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:652b5a6581672dfbabf8e5da42d010cc34d51bbcbf5b2bc73fac9273bb631337" -->
+<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:a3c72a044c52c99808fa103720f30e8737d55fc1f7c9b6d7cc78e56c7539359c" -->
 
-<!-- pdac:cite id="BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT" digest="sha256:40002c49ac40b5b30be14b9d66152d74c7c6db734817ff70ba4976c4849778fe" -->
+<!-- pdac:cite id="BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT" digest="sha256:88fa4dda19ba3d6cd4e9e92b1d43d08fb0d96717d76e1428747adf70df3e55bb" -->
 
-<!-- pdac:cite id="TERM-PROJECTED-LIST-ITEM" digest="sha256:c8ace0e5be8d059740bfd3edd63eb5f8b101c2687ffcccbc7f918c9e5a864fd7" -->
+<!-- pdac:cite id="TERM-PROJECTED-LIST-ITEM" digest="sha256:1d7dee71c8e9ef330968975a9a7b48e15b547f1b823286d462ab6b5ed059078f" -->
 
 #### Scenario: Item with due date appears in Agenda on that date
 

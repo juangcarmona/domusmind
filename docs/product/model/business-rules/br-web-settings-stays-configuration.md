@@ -2,9 +2,7 @@
 id: BR-WEB-SETTINGS-STAYS-CONFIGURATION
 type: business-rule
 title: "Settings holds configuration only"
-status: draft
-applies-to:
-  - "UC-WEB-MANAGE-SETTINGS"
+status: active
 uses-terms:
   - "TERM-PLAN"
   - "TERM-EXTERNAL-CALENDAR-ENTRY"

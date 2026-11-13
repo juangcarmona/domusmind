@@ -2,7 +2,7 @@
 id: "SB-MEALS-VIEW-RECIPE-SLOT-DETAILS"
 type: "structured-behaviour"
 title: "Recipe slots show the recipe's name, servings and times"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-VIEW-PLAN"
 given:

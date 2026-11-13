@@ -2,7 +2,7 @@
 id: UC-FAMILY-ACCEPT-ACCESS-INVITATION
 type: use-case
 title: Accept an invitation to use DomusMind
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-FAMILY

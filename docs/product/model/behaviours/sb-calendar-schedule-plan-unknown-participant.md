@@ -2,7 +2,7 @@
 id: SB-CALENDAR-SCHEDULE-PLAN-UNKNOWN-PARTICIPANT
 type: structured-behaviour
 title: "A plan with a participant from outside the household is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-SCHEDULE-PLAN"
   - "BR-CALENDAR-PARTICIPANT-IN-HOUSEHOLD"

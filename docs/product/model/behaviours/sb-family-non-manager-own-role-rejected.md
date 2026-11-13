@@ -2,7 +2,7 @@
 id: SB-FAMILY-NON-MANAGER-OWN-ROLE-REJECTED
 type: structured-behaviour
 title: "A person who is not a manager cannot change their own role"
-status: draft
+status: active
 illustrates:
   - BR-FAMILY-MANAGERS-ADMINISTER
 given:

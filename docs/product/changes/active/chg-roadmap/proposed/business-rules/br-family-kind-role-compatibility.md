@@ -3,8 +3,6 @@ id: BR-FAMILY-KIND-ROLE-COMPATIBILITY
 type: business-rule
 title: "A person's kind limits their household role"
 status: draft
-applies-to:
-  - UC-FAMILY-ASSIGN-HOUSEHOLD-ROLE
 uses-terms:
   - TERM-HOUSEHOLD-ROLE
   - TERM-MEMBER-ROLE

@@ -2,7 +2,7 @@
 id: QR-AGENDA-MOBILE-PARITY
 type: quality-requirement
 title: "The Agenda on mobile is the same product"
-status: draft
+status: active
 quality-attribute: "usability"
 applies-to:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"

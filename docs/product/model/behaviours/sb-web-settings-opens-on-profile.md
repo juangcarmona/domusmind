@@ -2,7 +2,7 @@
 id: SB-WEB-SETTINGS-OPENS-ON-PROFILE
 type: structured-behaviour
 title: "Settings opens on the person's profile"
-status: draft
+status: active
 illustrates:
   - "UC-WEB-MANAGE-SETTINGS"
 when: "the person navigates to Settings"

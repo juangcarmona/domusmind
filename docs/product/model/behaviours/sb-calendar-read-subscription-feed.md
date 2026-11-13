@@ -2,7 +2,7 @@
 id: SB-CALENDAR-READ-SUBSCRIPTION-FEED
 type: structured-behaviour
 title: An external calendar client reads an active subscription
-status: draft
+status: active
 illustrates:
   - UC-CALENDAR-READ-SUBSCRIPTION-FEED
   - BR-CALENDAR-SUBSCRIPTION-ACCESS

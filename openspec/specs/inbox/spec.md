@@ -6,11 +6,11 @@
 
 Inbox stores household notes and assistant action requests and presents optional Plan create/update, Task, Reminder, Timeline Note and List Item add/update proposals for an authorized member's decision. A Reminder adds an offset to an existing Plan; a Timeline Note is a standalone dated family note. The household member remains responsible for every change to shared product state.
 
-<!-- pdac:cite id="BC-INBOX" digest="sha256:bc90937648b6bc5398680e0c192dc7d470e46fba359991982b55bbbeda594cab" -->
+<!-- pdac:cite id="BC-INBOX" digest="sha256:dc000d44ca9852b67481248905e09f5116b84637d4cc725137ab80dc4524498e" -->
 
-<!-- pdac:cite id="TERM-INBOX-ITEM" digest="sha256:282309fac7b6161f54cbb3c3247faccd8da1506796ab0319fd1b4b89aefd45a7" -->
+<!-- pdac:cite id="TERM-INBOX-ITEM" digest="sha256:fe44f0370ce6c30eef712fd3c925705bef6e5c8d792b849ff0f6465e879d2fd3" -->
 
-<!-- pdac:cite id="TERM-INBOX-PROPOSAL" digest="sha256:338813e09047ef84c451b2e8afa55879912772536afe9b80d69bc994035a37ce" -->
+<!-- pdac:cite id="TERM-INBOX-PROPOSAL" digest="sha256:4a818e728ca80288c87447e0c4138ccd67cae35e29ad219e40a0563fa72ee6de" -->
 
 ---
 
@@ -20,7 +20,7 @@ Inbox stores household notes and assistant action requests and presents optional
 
 An authorized household member can capture a text note and retrieve the original text and its review status. Raw text is retained as household data and is visible only to authorized members of that household.
 
-<!-- pdac:cite id="FR-INBOX-CAPTURE" digest="sha256:4bdadc809f324b1df68faf4b47365ec5de20697436f0e83e80a33416fd97258b" -->
+<!-- pdac:cite id="FR-INBOX-CAPTURE" digest="sha256:e6f9cc97410c50a3a387dedc4f588004d54ede6d881a673d851faa801f4d3d46" -->
 
 #### Scenario: Member captures a note
 
@@ -33,11 +33,11 @@ An authorized household member can capture a text note and retrieve the original
 
 Inbox SHALL support interpretation of captured notes and supported action requests from household Chats. It MAY suggest Plan create/update, Task, Reminder, Timeline Note and List Item add/update proposals. A private Chat request is not copied into Inbox. A Reminder proposal identifies an existing Plan and a positive offset. A Timeline Note proposal has a date and text. A List Item proposal identifies an active list the member may edit. Inbox distinguishes interpreted fields and unresolved details from the original note. Interpretation must not execute product behavior. The Inbox discloses which hosted or local target receives request text and authorized context, and identifies when fallback occurs.
 
-<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:f1a488d642604dbe43c9e465683fa2602b7f027d5618c4c4d3ac7e73cc29e8be" -->
+<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8f2efe33de44deac70caac674756cd003907c878b4bdfb69128b6f5515bb6f4f" -->
 
-<!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:671602d6ae7cf237d2cc2c4c93dc385e7e6e6a8940206c5f2526872610c5e851" -->
-<!-- pdac:cite id="BR-ASSISTANT-PROVIDER-FALLBACK" digest="sha256:07ffbc80116119eba2b2a1febdff940366df8e1dffb807106a4f2f9d29088b7a" -->
-<!-- pdac:cite id="TERM-ASSISTANT-PROVIDER-TARGET" digest="sha256:9518dbd21adfc0e1ee6140643e5889050d90b902ef440118bb0efb19b21e928f" -->
+<!-- pdac:cite id="QR-INBOX-PRIVATE-HOUSEHOLD-DATA" digest="sha256:e844ae46daacc6cc3506484172f829b59bc485ffa5d9c9058649885ddbcdd7d0" -->
+<!-- pdac:cite id="BR-ASSISTANT-PROVIDER-FALLBACK" digest="sha256:2c98370c1a0aaaff6a236833daf18682088f617825e15cc6f789cf8718597ba9" -->
+<!-- pdac:cite id="TERM-ASSISTANT-PROVIDER-TARGET" digest="sha256:3dae47c4e9e1adb8f0d1ec16d5de18e3261adb0c39874806472f318cda3fee4b" -->
 
 #### Scenario: Interpretation is unavailable
 
@@ -50,9 +50,9 @@ Inbox SHALL support interpretation of captured notes and supported action reques
 
 Each proposal is reviewed, refined, approved or rejected independently. Approval invokes the owning Calendar, Tasks or Lists behavior and still follows its authorization and validation rules. Rejection or leaving a proposal pending does not change household state.
 
-<!-- pdac:cite id="FR-INBOX-REVIEW" digest="sha256:8bd88c2349b041ed29da4d7d69c7423782605d478d6ad209a3e27f2fb47e33a5" -->
+<!-- pdac:cite id="FR-INBOX-REVIEW" digest="sha256:6839e058607fdba5b20c2e3a539803734bcc2f8e277af64793751b8bf7677dac" -->
 
-<!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:7c54cc5879964502757faea971dacd03b841305ae6166d64072cde41aea1303f" -->
+<!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:92d34d343ebc239e46c834106ac81dc978c2f014b9ae1e5574786cc82da7821e" -->
 
 #### Scenario: Member rejects a proposal
 

@@ -2,7 +2,7 @@
 id: FR-CALENDAR-SYNC-EXTERNAL-CALENDAR
 type: functional-requirement
 title: "Sync an external calendar on demand"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
   - "BR-CALENDAR-NO-CONCURRENT-SYNC"

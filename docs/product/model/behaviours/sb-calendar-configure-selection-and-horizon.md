@@ -2,7 +2,7 @@
 id: SB-CALENDAR-CONFIGURE-SELECTION-AND-HORIZON
 type: structured-behaviour
 title: "A member selects calendars and sets a horizon"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
 given:

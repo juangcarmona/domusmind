@@ -2,7 +2,7 @@
 id: FR-CALENDAR-CANCEL-PLAN
 type: functional-requirement
 title: "Cancel a plan"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-CANCEL-PLAN"
   - "BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED"

@@ -2,10 +2,7 @@
 id: BR-LISTS-CONTEXT-LINKS-INFORMATIONAL
 type: business-rule
 title: "Area and plan links on a list are optional and informational"
-status: draft
-applies-to:
-  - UC-LISTS-CREATE-LIST
-  - UC-LISTS-UPDATE-LIST
+status: active
 uses-terms:
   - TERM-LIST
   - TERM-AREA

@@ -2,7 +2,7 @@
 id: "JRN-MEALS-PLAN-THE-WEEK"
 type: "journey"
 title: "Plan the household's week of meals and shopping"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 steps:
   - use-case: "UC-MEALS-VIEW-PLAN"

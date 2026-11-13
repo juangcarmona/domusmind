@@ -2,7 +2,7 @@
 id: FR-LISTS-ARCHIVE-LIST
 type: functional-requirement
 title: "Archive a list without losing data"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-ARCHIVE-LIST
   - BR-LISTS-ARCHIVE-STATE

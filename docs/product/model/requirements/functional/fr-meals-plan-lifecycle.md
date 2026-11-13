@@ -2,7 +2,7 @@
 id: "FR-MEALS-PLAN-LIFECYCLE"
 type: "functional-requirement"
 title: "Meal plan lifecycle"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-MEALS-PROMOTE-PLAN"
   - "BR-MEALS-PLAN-LIFECYCLE"

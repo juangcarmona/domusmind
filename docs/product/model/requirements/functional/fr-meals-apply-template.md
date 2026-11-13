@@ -2,7 +2,7 @@
 id: "FR-MEALS-APPLY-TEMPLATE"
 type: "functional-requirement"
 title: "Plan a week from a template"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-MEALS-APPLY-TEMPLATE"
   - "BR-MEALS-TEMPLATE-SNAPSHOT"

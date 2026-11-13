@@ -2,7 +2,7 @@
 id: SB-LISTS-ARCHIVE-TWICE-REJECTED
 type: structured-behaviour
 title: "Archiving an already archived list is rejected"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-ARCHIVE-LIST
   - BR-LISTS-ARCHIVE-STATE

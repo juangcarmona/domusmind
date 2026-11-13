@@ -2,7 +2,7 @@
 id: UC-CALENDAR-MANAGE-SUBSCRIPTIONS
 type: use-case
 title: Manage calendar subscriptions
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-CALENDAR

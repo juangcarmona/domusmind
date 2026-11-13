@@ -2,7 +2,7 @@
 id: SB-LISTS-ARCHIVE
 type: structured-behaviour
 title: "Archiving a list keeps its items"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-ARCHIVE-LIST
   - BR-LISTS-ARCHIVE-STATE

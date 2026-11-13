@@ -2,7 +2,7 @@
 id: UC-CALENDAR-RESCHEDULE-PLAN
 type: use-case
 title: "Reschedule a plan"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

@@ -2,14 +2,11 @@
 id: BR-AREAS-OWNER-NOT-SUPPORT
 type: business-rule
 title: The Owner of an Area is not also its Support
-status: draft
-applies-to:
-- UC-AREAS-ASSIGN-OWNER
-- UC-AREAS-ADD-SUPPORT
+status: active
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
-- TERM-AREA-SUPPORT
+  - TERM-AREA
+  - TERM-AREA-OWNER
+  - TERM-AREA-SUPPORT
 provenance:
   source: "docs/_legacy/04_contexts/responsibilities.md (Role Consistency); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs (AssignPrimaryOwner, TransferPrimaryOwner); interview: product owner decision Q-0017 (E-0158)"
   confidence: high

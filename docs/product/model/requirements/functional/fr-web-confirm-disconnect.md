@@ -2,7 +2,7 @@
 id: FR-WEB-CONFIRM-DISCONNECT
 type: functional-requirement
 title: "Confirm before disconnecting a calendar"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR"
   - "UC-WEB-MANAGE-SETTINGS"

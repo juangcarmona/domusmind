@@ -2,7 +2,7 @@
 id: UC-LISTS-UPDATE-ITEM
 type: use-case
 title: "Edit an item's name, quantity or note"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

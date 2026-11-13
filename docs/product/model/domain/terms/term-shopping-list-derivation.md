@@ -2,7 +2,7 @@
 id: "TERM-SHOPPING-LIST-DERIVATION"
 type: "domain-term"
 title: "Shopping List Derivation"
-status: "draft"
+status: "active"
 defined-in: "BC-MEAL-PLANNING"
 synonyms:
   - "RequestShoppingList"

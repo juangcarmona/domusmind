@@ -2,7 +2,7 @@
 id: "SB-RECIPES-BROWSE-LIBRARY"
 type: "structured-behaviour"
 title: "The recipe library lists every recipe by name with summary details"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-BROWSE-LIBRARY"
 given:

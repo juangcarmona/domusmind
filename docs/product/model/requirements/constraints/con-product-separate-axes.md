@@ -2,7 +2,7 @@
 id: CON-PRODUCT-SEPARATE-AXES
 type: constraint
 title: "Time, execution, ownership and capture stay separate"
-status: draft
+status: active
 applies-to:
   - "BC-CALENDAR"
   - "BC-TASKS"

@@ -2,7 +2,7 @@
 id: SB-AGENDA-MEMBER-INCLUDES-IMPORTED
 type: structured-behaviour
 title: "A member's Agenda shows their plans and their Outlook entries"
-status: draft
+status: active
 illustrates:
   - "UC-AGENDA-VIEW-MEMBER-AGENDA"
   - "BR-CALENDAR-EXTERNAL-ENTRY-VISIBILITY"

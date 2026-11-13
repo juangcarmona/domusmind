@@ -2,7 +2,7 @@
 id: FR-ASSETS-MANAGE-OBLIGATIONS
 type: functional-requirement
 title: Define and project asset obligations
-status: draft
+status: active
 derived-from:
   - UC-ASSETS-MANAGE-OBLIGATION
   - BR-ASSET-OBLIGATION-EXECUTION-BOUNDARY

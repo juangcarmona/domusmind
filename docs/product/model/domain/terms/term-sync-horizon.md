@@ -2,7 +2,7 @@
 id: TERM-SYNC-HORIZON
 type: domain-term
 title: "Sync Horizon"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Forward horizon"

@@ -2,7 +2,7 @@
 id: SB-LISTS-ARCHIVED-ADD-REJECTED
 type: structured-behaviour
 title: "Adding or checking items on an archived list is rejected"
-status: draft
+status: active
 illustrates:
   - BR-LISTS-ARCHIVED-READ-ONLY
   - UC-LISTS-ADD-ITEM

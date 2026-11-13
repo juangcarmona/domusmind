@@ -2,10 +2,7 @@
 id: BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT
 type: business-rule
 title: "Due date, reminder and repeat are independently optional"
-status: draft
-applies-to:
-  - UC-LISTS-SCHEDULE-ITEM
-  - UC-LISTS-CLEAR-ITEM-SCHEDULE
+status: active
 uses-terms:
   - TERM-ITEM-TEMPORAL-FIELDS
   - TERM-ITEM-REPEAT-RULE

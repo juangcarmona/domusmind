@@ -2,7 +2,7 @@
 id: UC-FAMILY-UPDATE-MEMBER-DETAILS
 type: use-case
 title: "Edit a person, including my own profile"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-FAMILY

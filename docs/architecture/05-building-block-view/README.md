@@ -34,7 +34,7 @@ The backend is a single deployable modular monolith rather than a set of service
 
 - **Web app to API**: JSON over HTTPS under `/api`, authenticated with a bearer access token issued by the API itself ([ADR-0002](../../adr/0002-keep-authentication-local-and-separate-from-member-identity.md)). The web app keeps hand-written typed wrappers under [`src/web/app/src/api`](../../../src/web/app/src/api); the OpenAPI document is the contract.
 - **API to Microsoft Graph**: outbound only, delegated per connected member, read-only calendar scope ([ADR-0003](../../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md)). The external interface itself is owned by [section 03](../03-context-and-scope/README.md).
-- **API to assistant provider**: Inbox text and explicitly invoked Chat requests are routed through the household's ordered provider targets. The API protects saved credentials with ASP.NET Core Data Protection, and the web surfaces disclose target hosting and fallback. <!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:6f46b897ec17ba34fa6027cdfa95a01a41d176d06edb4e69daced913c924bdc8" -->
+- **API to assistant provider**: Inbox text and explicitly invoked Chat requests are routed through the household's ordered provider targets. The API protects saved credentials with ASP.NET Core Data Protection, and the web surfaces disclose target hosting and fallback. <!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:f6d31fa396855bedd343863cb7e1485c49ad0cde33f074bf702852432a9c1f7c" -->
 
 ## Level 2
 
@@ -63,7 +63,7 @@ Platform slices that are not bounded contexts also live in the application layer
 
 Each bounded context is a module that appears with the same name in `Domain`, `Application/Features`, `Contracts` and, through controllers, in `Api`. The module boundaries follow the product's separation of time, execution, ownership and capture.
 
-<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:740fa2cc41d90ec6afb099c5f97fa44e9092af8d83cd68291f807262387a44b0" -->
+<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:f0adb53673dfbfd7051791182578f9ee2f44e0a37b7699c16258854579342a13" -->
 
 ![Bounded context modules](./diagrams/bounded-context-modules.png)
 <!-- diagram-source: ./diagrams/bounded-context-modules.mmd sha256:528cf1e3f8bea9e3b81465fa9e81ffda75cfeb65b95e60ac10bfc44793782927 png-sha256:7149f0676c09cf94125f13cbcb3174ac7b8d039d8d18d564e3976fe8f2d19070 -->
@@ -80,17 +80,17 @@ Arrows are domain-level references and point at the module whose identifier type
 | MealPlanning | Weekly meal plans and slots, the recipe library and weekly templates; requests shopping lists that then belong to Lists | `MealPlan`, `Recipe`, `WeeklyTemplate` | [`Domain/MealPlanning`](../../../src/backend/DomusMind.Domain/MealPlanning), [`Features/MealPlanning`](../../../src/backend/DomusMind.Application/Features/MealPlanning) |
 | Chats | Household and participant-scoped conversations, persistent messages, authorized assistant answers and review-first action proposals | `ChatThread`, `ChatMessage` | [`Domain/Chats`](../../../src/backend/DomusMind.Domain/Chats), [`Features/Chats`](../../../src/backend/DomusMind.Application/Features/Chats) |
 
-Chats emits an assistant-proposal event for complete household-thread actions; the Inbox reaction owns creation of the review item, so approval still reaches Calendar or Lists through their normal commands ([ADR-0008](../../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)). <!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:af9ab2889fe4bb5b9168f43d0725874432354e723000b96ae0d732fd8ffc597b" -->
+Chats emits an assistant-proposal event for complete household-thread actions; the Inbox reaction owns creation of the review item, so approval still reaches Calendar or Lists through their normal commands ([ADR-0008](../../adr/0008-collaborate-across-modules-through-persisted-domain-events.md)). <!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:6f5fac9fbbe79085b01eb2e67339a0f5c531d80f5e78ce1233e150dc7742899e" -->
 
 The product responsibility of each module is owned by its bounded-context artifact; the table above only states how the code realizes it.
 
-<!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
-<!-- pdac:cite id="BC-RESPONSIBILITIES" digest="sha256:288de55e6b2023b73e2a4c9992f9390250c4a7690500cd4d6a207c432f324cc5" -->
-<!-- pdac:cite id="BC-CALENDAR" digest="sha256:001862e5b66de444fc8d524e4bd63d39418293fdb6ae558c1c7bcdfac68cb424" -->
-<!-- pdac:cite id="BC-TASKS" digest="sha256:7a1a64e2267e7795b9766611ab9d65af92e80600a128617a728d4bff899a032d" -->
-<!-- pdac:cite id="BC-LISTS" digest="sha256:ebe914e9acf2be4ff0b5cd2bea8fbc7dd9e63713e3f6dea5e2b600a05ea7be76" -->
-<!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:3e2d211a42325e9e719480512210f6ec9c5255f4fa647518cae3598e2bd6e835" -->
-<!-- pdac:cite id="BC-CHATS" digest="sha256:11b1dbbc66eb13111c05c9123eaa642b4049468bd2d40b04fa86800e8d706da5" -->
+<!-- pdac:cite id="BC-FAMILY" digest="sha256:1b48c9a4b2eba0dfb34314f7afbe1b5801e4f8c41e0ab5a586a9e7da57f7ee4f" -->
+<!-- pdac:cite id="BC-RESPONSIBILITIES" digest="sha256:031c9bd3da1ee33bb97c7f5b66f5d37827db17703653d1b00013680d61c55e58" -->
+<!-- pdac:cite id="BC-CALENDAR" digest="sha256:a365941e30ed9ca7e5a897db9bfbf057484fb0f87caa0c7a2dc4fdb1275c771f" -->
+<!-- pdac:cite id="BC-TASKS" digest="sha256:30abcef1a1eaa3f38dfcb0ada4d54bb3a4f83b4b9c50f1ae3d68b0faa4f835d3" -->
+<!-- pdac:cite id="BC-LISTS" digest="sha256:7a770f21b03b8d0f769f46552bc0ef53fd885d5ce0ab41d081d831d2aa74ae4c" -->
+<!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:bb3de4faf9d7ae3434d0db4180f005236ef81bc3ab84875aaa364e97ac3e66bd" -->
+<!-- pdac:cite id="BC-CHATS" digest="sha256:8bee3e6eae0eef994be3523b72a983cd4c98e8b3aa1d365da90fd7de7d24283f" -->
 
 Cross-module read models are not owned by any single module. The Agenda week grid and household timeline queries live under `Features/Family` and the member agenda under `Features/Calendar`, and each reads the aggregates of several modules directly through `IDomusMindDbContext` (see [section 06](../06-runtime-view/README.md)).
 

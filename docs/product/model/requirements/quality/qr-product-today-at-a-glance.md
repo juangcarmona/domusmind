@@ -2,7 +2,7 @@
 id: QR-PRODUCT-TODAY-AT-A-GLANCE
 type: quality-requirement
 title: "The household understands today within seconds"
-status: draft
+status: active
 quality-attribute: "usability"
 applies-to:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"

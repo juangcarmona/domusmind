@@ -2,16 +2,16 @@
 id: SB-AREAS-RENAME-AREA
 type: structured-behaviour
 title: Renaming an Area
-status: draft
+status: active
 illustrates:
-- UC-AREAS-RENAME-AREA
+  - UC-AREAS-RENAME-AREA
 given:
-- An Area exists
+  - An Area exists
 when: The household gives the Area a new name
 then:
-- The Area carries the new name
+  - The Area carries the new name
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: 'openspec/specs/areas/spec.md (scenario: Household renames an Area)'
   confidence: high

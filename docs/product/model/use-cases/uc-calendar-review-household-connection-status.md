@@ -2,7 +2,7 @@
 id: UC-CALENDAR-REVIEW-HOUSEHOLD-CONNECTION-STATUS
 type: use-case
 title: "Review the status of the household's external calendar connections"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MANAGER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

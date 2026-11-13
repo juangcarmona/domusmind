@@ -2,7 +2,7 @@
 id: TERM-AGENDA
 type: domain-term
 title: "Agenda"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Agenda View"

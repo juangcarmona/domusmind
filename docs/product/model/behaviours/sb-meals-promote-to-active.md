@@ -2,7 +2,7 @@
 id: "SB-MEALS-PROMOTE-TO-ACTIVE"
 type: "structured-behaviour"
 title: "Promoting a Draft plan makes it the Active plan for the week"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-PROMOTE-PLAN"
   - "BR-MEALS-PLAN-LIFECYCLE"

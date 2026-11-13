@@ -2,7 +2,7 @@
 id: TERM-ASSET-OBLIGATION
 type: domain-term
 title: Asset Obligation
-status: draft
+status: active
 defined-in: BC-HOUSEHOLD-ASSETS
 ---
 ## Definition

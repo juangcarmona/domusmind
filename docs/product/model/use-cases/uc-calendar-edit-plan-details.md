@@ -2,7 +2,7 @@
 id: UC-CALENDAR-EDIT-PLAN-DETAILS
 type: use-case
 title: "Edit a plan's title, description or colour"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

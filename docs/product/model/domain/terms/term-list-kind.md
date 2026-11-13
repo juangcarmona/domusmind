@@ -2,7 +2,7 @@
 id: TERM-LIST-KIND
 type: domain-term
 title: "List Kind"
-status: draft
+status: active
 defined-in: BC-LISTS
 synonyms:
   - "kind"

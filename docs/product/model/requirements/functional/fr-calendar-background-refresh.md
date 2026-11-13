@@ -2,7 +2,7 @@
 id: FR-CALENDAR-BACKGROUND-REFRESH
 type: functional-requirement
 title: "Refresh stale external calendars in the background"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS"
   - "BR-CALENDAR-DEFAULT-REFRESH-HOURLY"

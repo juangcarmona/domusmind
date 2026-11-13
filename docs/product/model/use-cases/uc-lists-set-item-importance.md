@@ -2,7 +2,7 @@
 id: UC-LISTS-SET-ITEM-IMPORTANCE
 type: use-case
 title: "Star or unstar an item"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

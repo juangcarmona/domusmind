@@ -2,7 +2,7 @@
 id: FR-TASKS-PAUSE-ROUTINE-UNTIL
 type: functional-requirement
 title: Pause a routine until a date
-status: draft
+status: active
 derived-from:
   - UC-TASKS-PAUSE-ROUTINE
   - BR-TASKS-PAUSE-UNTIL-RESUMES

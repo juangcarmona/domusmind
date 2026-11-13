@@ -2,7 +2,7 @@
 id: SB-TASKS-ASSIGN-NON-MEMBER-REJECTED
 type: structured-behaviour
 title: Assigning a task to someone outside the household is rejected
-status: draft
+status: active
 illustrates:
   - UC-TASKS-ASSIGN-TASK
   - BR-TASKS-ASSIGNEE-IN-HOUSEHOLD

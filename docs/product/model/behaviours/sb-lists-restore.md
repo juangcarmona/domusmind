@@ -2,7 +2,7 @@
 id: SB-LISTS-RESTORE
 type: structured-behaviour
 title: "Restoring a list brings it back unchanged"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-RESTORE-LIST
   - BR-LISTS-ARCHIVE-STATE

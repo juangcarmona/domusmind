@@ -2,15 +2,15 @@
 id: TERM-AREA
 type: domain-term
 title: Area
-status: draft
+status: active
 defined-in: BC-RESPONSIBILITIES
 synonyms:
-- Responsibility Domain
-- Responsibility
+  - Responsibility Domain
+  - Responsibility
 uses-terms:
-- TERM-HOUSEHOLD
-- TERM-AREA-OWNER
-- TERM-AREA-SUPPORT
+  - TERM-HOUSEHOLD
+  - TERM-AREA-OWNER
+  - TERM-AREA-SUPPORT
 provenance:
   source: "openspec/specs/areas/spec.md (Purpose, Notes); docs/_legacy/04_contexts/responsibilities.md (Aggregate Roots, Ubiquitous Language Notes); docs/_legacy/00_product/surfaces/areas.md; src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs; interview: product owner decision Q-0040 (E-0158)"
   confidence: high

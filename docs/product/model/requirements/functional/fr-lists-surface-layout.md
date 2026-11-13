@@ -2,7 +2,7 @@
 id: FR-LISTS-SURFACE-LAYOUT
 type: functional-requirement
 title: "Lists surface: switcher, active list, quick add and inspector"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-BROWSE-LISTS
   - UC-LISTS-OPEN-LIST

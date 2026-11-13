@@ -2,11 +2,7 @@
 id: BR-CALENDAR-DEFAULT-REFRESH-HOURLY
 type: business-rule
 title: "Scheduled refresh is on and hourly by default"
-status: draft
-applies-to:
-  - "UC-CALENDAR-CONNECT-OUTLOOK"
-  - "UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS"
-  - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
+status: active
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-SYNC"
   - "TERM-EXTERNAL-CALENDAR-CONNECTION"

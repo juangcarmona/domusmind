@@ -2,7 +2,7 @@
 id: SB-LISTS-CREATE-LINKED-TO-PLAN
 type: structured-behaviour
 title: "Creating a list linked to a plan keeps list semantics"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-CREATE-LIST
   - BR-LISTS-ITEM-IS-NOT-A-TASK

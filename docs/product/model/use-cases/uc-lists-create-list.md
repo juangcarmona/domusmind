@@ -2,7 +2,7 @@
 id: UC-LISTS-CREATE-LIST
 type: use-case
 title: "Create a list"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

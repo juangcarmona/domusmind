@@ -2,7 +2,7 @@
 id: ACT-EXTERNAL-CALENDAR-CLIENT
 type: actor
 title: External Calendar Client
-status: draft
+status: active
 actor-kind: external-system
 ---
 

@@ -2,7 +2,7 @@
 id: TERM-PLAN
 type: domain-term
 title: "Plan"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Event"

@@ -2,20 +2,20 @@
 id: UC-AREAS-CREATE-AREA
 type: use-case
 title: Add an Area
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-RESPONSIBILITIES
 governed-by:
-- BR-AREAS-ANY-MEMBER-MANAGES
-- BR-AREAS-ONE-HOUSEHOLD
-- BR-AREAS-NAME-REQUIRED
-- BR-AREAS-OWNERSHIP-OPTIONAL
+  - BR-AREAS-ANY-MEMBER-MANAGES
+  - BR-AREAS-ONE-HOUSEHOLD
+  - BR-AREAS-NAME-REQUIRED
+  - BR-AREAS-OWNERSHIP-OPTIONAL
 uses-terms:
-- TERM-AREA
-- TERM-HOUSEHOLD
-- TERM-AREA-OWNER
-- TERM-AREA-SUPPORT
+  - TERM-AREA
+  - TERM-HOUSEHOLD
+  - TERM-AREA-OWNER
+  - TERM-AREA-SUPPORT
 provenance:
   source: "openspec/specs/areas/spec.md (Area Creation); docs/_legacy/00_product/surfaces/areas.md (Header, Interaction); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs (Create); interview: product owner decision Q-0014 (E-0158)"
   confidence: high

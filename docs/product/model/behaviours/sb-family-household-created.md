@@ -2,7 +2,7 @@
 id: SB-FAMILY-HOUSEHOLD-CREATED
 type: structured-behaviour
 title: "Household is created from a name"
-status: draft
+status: active
 illustrates:
   - UC-FAMILY-CREATE-HOUSEHOLD
 given:

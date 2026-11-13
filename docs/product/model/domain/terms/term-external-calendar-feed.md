@@ -2,7 +2,7 @@
 id: TERM-EXTERNAL-CALENDAR-FEED
 type: domain-term
 title: "External Calendar Feed"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Selected calendar"

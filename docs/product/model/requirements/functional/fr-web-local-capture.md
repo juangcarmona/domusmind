@@ -2,7 +2,7 @@
 id: FR-WEB-LOCAL-CAPTURE
 type: functional-requirement
 title: "Create things from where you are"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-CREATE-FROM-AGENDA"
   - "UC-LISTS-ADD-ITEM"

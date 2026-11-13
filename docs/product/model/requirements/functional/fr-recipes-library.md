@@ -2,7 +2,7 @@
 id: "FR-RECIPES-LIBRARY"
 type: "functional-requirement"
 title: "Household recipe library"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-RECIPES-CREATE-RECIPE"
   - "UC-RECIPES-BROWSE-LIBRARY"

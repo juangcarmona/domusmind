@@ -2,7 +2,7 @@
 id: SB-WEB-DISCONNECT-CONFIRMATION
 type: structured-behaviour
 title: "Disconnecting Outlook asks for confirmation first"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR"
 given:

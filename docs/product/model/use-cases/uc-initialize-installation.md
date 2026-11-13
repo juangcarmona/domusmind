@@ -2,7 +2,7 @@
 id: UC-INITIALIZE-INSTALLATION
 type: use-case
 title: Initialize a production installation
-status: draft
+status: active
 primary-actor: ACT-INSTALLATION-OPERATOR
 supporting-actors: []
 governed-by:

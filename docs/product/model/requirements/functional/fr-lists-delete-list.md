@@ -2,7 +2,7 @@
 id: FR-LISTS-DELETE-LIST
 type: functional-requirement
 title: "Permanently delete a list"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-DELETE-LIST
   - BR-LISTS-DELETE-PERMANENT

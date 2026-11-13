@@ -2,7 +2,7 @@
 id: "SB-RECIPES-RESTRICTED-MEAL-TYPE-HIDDEN"
 type: "structured-behaviour"
 title: "A Dinner-only recipe is not offered for a Breakfast slot"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-BROWSE-LIBRARY"
   - "BR-RECIPES-ALLOWED-MEAL-TYPES"

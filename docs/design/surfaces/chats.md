@@ -11,8 +11,8 @@ scope: Household conversations and explicit read-only assistant questions
 
 Chats gives household members one place to coordinate in household conversations and private groups, with an explicitly invoked, read-only `@dm` assistant.
 
-<!-- pdac:cite id="BC-CHATS" digest="sha256:11b1dbbc66eb13111c05c9123eaa642b4049468bd2d40b04fa86800e8d706da5" -->
-<!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:471f9fa8993fa17314d158ee599bfbe772b0b10251665aabcedb4f99ec16d486" -->
+<!-- pdac:cite id="BC-CHATS" digest="sha256:8bee3e6eae0eef994be3523b72a983cd4c98e8b3aa1d365da90fd7de7d24283f" -->
+<!-- pdac:cite id="FR-CHAT-MANAGE-THREADS" digest="sha256:ca38e0324cedc282b3ad87f3f482eb85bf0772b6aeb509468f9b18a4559a7418" -->
 
 ## Layout
 
@@ -30,11 +30,11 @@ Messages show the author's name and local time. Assistant replies are visually d
 
 Chats shows an external-provider notice when the selected assistant sends questions and household context outside the deployment. Ordinary messages are not sent to the assistant.
 
-<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:f1f7e93a9607dc324ecada95aa4bf2f012e7e0a96304c5b4a6d07e8ea5d4d710" -->
-<!-- pdac:cite id="QR-CHAT-PRIVATE-CONTENT" digest="sha256:8ad3fa078189d181c554234ff721be2110dc75a813373ea153d16178e983e5da" -->
+<!-- pdac:cite id="BR-CHAT-ASSISTANT-READ-ONLY" digest="sha256:1908dad987dce6d293efd2ed5de7928b2d57eb788d868102461ade53c74dc7cf" -->
+<!-- pdac:cite id="QR-CHAT-PRIVATE-CONTENT" digest="sha256:b58936e309e9fea5898eddefd2c44a8c6eebdb25d268add2f59a3d2c3667baca" -->
 
 ## Privacy and access
 
 Only participants can find, read or post to a private group. A rejected request does not reveal the title or message content. The page does not show member details for a thread the current member cannot access.
 
-<!-- pdac:cite id="BR-CHAT-MEMBER-ACCESS" digest="sha256:fa5a7ef2fc77a8b8a3c55da99567c801445606f9ecc263bafff5a0261c0bb15a" -->
+<!-- pdac:cite id="BR-CHAT-MEMBER-ACCESS" digest="sha256:4a477d90cec98082be4894fe5c77a009172de5cb9a127d4ab379c795c5c7bce6" -->

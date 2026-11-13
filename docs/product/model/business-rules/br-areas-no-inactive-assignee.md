@@ -2,13 +2,10 @@
 id: BR-AREAS-NO-INACTIVE-ASSIGNEE
 type: business-rule
 title: Removed or inactive people cannot receive new Area assignments
-status: draft
-applies-to:
-- UC-AREAS-ASSIGN-OWNER
-- UC-AREAS-ADD-SUPPORT
+status: active
 uses-terms:
-- TERM-AREA
-- TERM-MEMBER
+  - TERM-AREA
+  - TERM-MEMBER
 provenance:
   source: "docs/_legacy/04_contexts/responsibilities.md (Invariants, Family Consistency; Domain Events Consumed); interview: product owner decision Q-0018 (E-0158)"
   confidence: medium

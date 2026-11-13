@@ -2,7 +2,7 @@
 id: UC-ASSETS-REGISTER-AND-ORGANIZE
 type: use-case
 title: Register and organize a household-managed thing
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 bounded-context: BC-HOUSEHOLD-ASSETS
 governed-by:

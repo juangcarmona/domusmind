@@ -2,7 +2,7 @@
 id: SB-LISTS-BROWSE-ACTIVE
 type: structured-behaviour
 title: "The list switcher shows active lists with unchecked counts"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-BROWSE-LISTS
 given:

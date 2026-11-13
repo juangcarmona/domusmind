@@ -2,7 +2,7 @@
 id: FR-LISTS-PRIVATE-LIST
 type: functional-requirement
 title: "Lists are shared by default and can be private to one person"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-MAKE-LIST-PRIVATE
   - BR-LISTS-PRIVATE-LIST

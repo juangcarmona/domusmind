@@ -2,7 +2,7 @@
 id: QR-LISTS-REAL-TIME-SHARING
 type: quality-requirement
 title: "List changes are visible to the whole household without refresh"
-status: draft
+status: active
 quality-attribute: "consistency"
 applies-to:
   - BC-LISTS

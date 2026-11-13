@@ -2,7 +2,7 @@
 id: SB-FAMILY-MANAGER-ENABLES-ACCESS
 type: structured-behaviour
 title: "A manager re-enables a person's access"
-status: draft
+status: active
 illustrates:
   - UC-FAMILY-ENABLE-MEMBER-ACCESS
 given:

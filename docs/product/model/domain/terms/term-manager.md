@@ -2,7 +2,7 @@
 id: TERM-MANAGER
 type: domain-term
 title: "Manager"
-status: draft
+status: active
 defined-in: BC-FAMILY
 synonyms:
   - "Household Manager"

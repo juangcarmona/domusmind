@@ -2,15 +2,15 @@
 id: UC-AREAS-RENAME-AREA
 type: use-case
 title: Rename an Area
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-RESPONSIBILITIES
 governed-by:
-- BR-AREAS-ANY-MEMBER-MANAGES
-- BR-AREAS-NAME-REQUIRED
+  - BR-AREAS-ANY-MEMBER-MANAGES
+  - BR-AREAS-NAME-REQUIRED
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: "openspec/specs/areas/spec.md (Area Renaming); docs/_legacy/00_product/surfaces/areas.md (Inspector); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs (Rename); interview: product owner decision Q-0014 (E-0158)"
   confidence: high

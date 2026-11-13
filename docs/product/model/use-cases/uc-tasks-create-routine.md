@@ -2,7 +2,7 @@
 id: UC-TASKS-CREATE-ROUTINE
 type: use-case
 title: Create a routine
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS
@@ -10,6 +10,7 @@ governed-by:
   - BR-TASKS-VALID-ROUTINE-RECURRENCE
   - BR-TASKS-PEOPLE-SCOPE-NEEDS-TARGETS
   - BR-TASKS-ROUTINES-PROJECTED
+  - BR-TASKS-AREA-CATEGORISES-ONLY
 uses-terms:
   - TERM-ROUTINE
   - TERM-ROUTINE-RECURRENCE

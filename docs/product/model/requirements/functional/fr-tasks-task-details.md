@@ -2,7 +2,7 @@
 id: FR-TASKS-TASK-DETAILS
 type: functional-requirement
 title: Give a task a description, a colour and a timed due date
-status: draft
+status: active
 derived-from:
   - UC-TASKS-CREATE-TASK
 verification:

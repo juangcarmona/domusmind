@@ -2,7 +2,7 @@
 id: TERM-ROUTINE
 type: domain-term
 title: Routine
-status: draft
+status: active
 defined-in: BC-TASKS
 synonyms: []
 uses-terms:

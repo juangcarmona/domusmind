@@ -2,7 +2,7 @@
 id: SB-CALENDAR-SYNC-CONCURRENT
 type: structured-behaviour
 title: "A connection is not synced twice at once"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
   - "BR-CALENDAR-NO-CONCURRENT-SYNC"

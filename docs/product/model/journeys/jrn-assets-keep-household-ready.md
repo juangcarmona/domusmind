@@ -2,7 +2,7 @@
 id: JRN-ASSETS-KEEP-HOUSEHOLD-READY
 type: journey
 title: Keep household-managed things ready
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 steps:
   - use-case: UC-ASSETS-REGISTER-AND-ORGANIZE

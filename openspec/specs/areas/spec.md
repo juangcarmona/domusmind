@@ -28,21 +28,21 @@ Other capabilities (tasks, plans, meal plans) may optionally reference an Area f
 
 Default Areas may be bootstrapped for a newly created household to reduce setup friction.
 
-<!-- pdac:cite id="FR-AREAS-CREATE-AREA" digest="sha256:4c5286b209258a4917ec0adddd3cb73c86b3d295ad5f8ad07bfb776af5031428" -->
+<!-- pdac:cite id="FR-AREAS-CREATE-AREA" digest="sha256:e47160cbf20bcebd66f90e8782f13ebe117faed58218a549f3373dbec29c7db1" -->
 
-<!-- pdac:cite id="UC-AREAS-CREATE-AREA" digest="sha256:27123ebf2580c2346b975a75a78ce1ef5934c3f07561e1535ca1481202e5cfb2" -->
+<!-- pdac:cite id="UC-AREAS-CREATE-AREA" digest="sha256:fb92ab357fb4b145cdc7655ac757f8100e1490424d08d1b77710c10f7815a3c6" -->
 
-<!-- pdac:cite id="BR-AREAS-NAME-REQUIRED" digest="sha256:3bb588f6d5de580a64bc454d23ce3958b5d786983350ccfc40370fcdc1d1d834" -->
+<!-- pdac:cite id="BR-AREAS-NAME-REQUIRED" digest="sha256:ef9473c4431f6692628ff6a334fdac8aaa63954aa59a63887ca33923d4c2ea6c" -->
 
-<!-- pdac:cite id="BR-AREAS-OWNERSHIP-OPTIONAL" digest="sha256:eb1cd98a004a9c552021c8c00b7bd0c9f120c8d46ae8a6e8768ea12e54b00dc7" -->
+<!-- pdac:cite id="BR-AREAS-OWNERSHIP-OPTIONAL" digest="sha256:b78ea5bf745d01ddf6df583c6fe2602466b54bbc9932ae19c7da2f5ff408ba47" -->
 
-<!-- pdac:cite id="BR-AREAS-ONE-HOUSEHOLD" digest="sha256:6aad55f75c6b2324feb22b98da2885b7f081362f59a9eaa4b6d2b08da8dd5d89" -->
+<!-- pdac:cite id="BR-AREAS-ONE-HOUSEHOLD" digest="sha256:91515f7d6b7fd63353017cdcb60be50936b5a7ab7ca31ad50a12ebfac3259808" -->
 
-<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:f76c31e9c4623b245b4e7bea9fe81efbead0b3531e3877656e1f29c284ec809c" -->
+<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:e7196eaf5a47d7e4d00002fc29785bc463758d4fa47e08bcb279b9350d88a1f0" -->
 
-<!-- pdac:cite id="TERM-AREA" digest="sha256:f92e65449cfc1d379e15a6db5a40c2b069c68ea2671e45622650cb52d6354889" -->
+<!-- pdac:cite id="TERM-AREA" digest="sha256:976ac0460848d3395277a844f2beb4d62e6a06214d77e3f34d399b9a3feaf74b" -->
 
-<!-- pdac:cite id="SB-AREAS-CREATE-AREA" digest="sha256:11fdc9fe2fac5f6cc6f28ecb4b826d6a9c2ba273d77b94f862aef9122db07aff" -->
+<!-- pdac:cite id="SB-AREAS-CREATE-AREA" digest="sha256:1ed9b3e387eb749c13fc3f757108348ecfe01c9b140b8d1abd3b0c3f11cf2e56" -->
 
 <!-- pdac-drift ids="BC-RESPONSIBILITIES" summary="spec allows default Areas to be bootstrapped for a new household; the model has no default Areas (decided: Q-0015)" -->
 
@@ -65,29 +65,29 @@ The primary owner is the member accountable for that Area. The primary owner mus
 
 Assigning a primary owner when one is already set replaces the previous owner. Transfer of primary ownership must always result in exactly one active primary owner.
 
-<!-- pdac:cite id="FR-AREAS-ASSIGN-OWNER" digest="sha256:c31f87b9eed954ff87bfb992268d8021997892344a604f18b3094a4435cbceb8" -->
+<!-- pdac:cite id="FR-AREAS-ASSIGN-OWNER" digest="sha256:4a6ecb340845e141e9c8e3205b761a8b69fcc0b4d45d6d00c46ad122e2798fd7" -->
 
-<!-- pdac:cite id="UC-AREAS-ASSIGN-OWNER" digest="sha256:bf9cc076c8daced2bfa0edbe80064c51d5f6f6643bbe5bd4b2737e316a52fe65" -->
+<!-- pdac:cite id="UC-AREAS-ASSIGN-OWNER" digest="sha256:bcf0319631469de361b3c6f5092def082b6325947f0699a52b49d47460e0c529" -->
 
-<!-- pdac:cite id="BR-AREAS-SINGLE-OWNER" digest="sha256:2123ead862639b7e83626f13b76c836f07f6f1dee1c64ecc41358717d84c35b4" -->
+<!-- pdac:cite id="BR-AREAS-SINGLE-OWNER" digest="sha256:1238c8a78a73277bbef49a57570724b10b09670351a71001c3b9af9415e10c7c" -->
 
-<!-- pdac:cite id="BR-AREAS-SAME-HOUSEHOLD-PEOPLE" digest="sha256:fe9903e5ef4853ddbc2427015d9291f8b556755c63f87f7c2715dd50a94fbc2d" -->
+<!-- pdac:cite id="BR-AREAS-SAME-HOUSEHOLD-PEOPLE" digest="sha256:41928a2f064c528565e46acc98cf7ae03be0d0faf185e958e0917f16ed6f51e7" -->
 
-<!-- pdac:cite id="BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE" digest="sha256:aeb3d7e1e4a05d4a238fd2ca801118605302d9420859397ccae4bd7ef8baa9fc" -->
+<!-- pdac:cite id="BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE" digest="sha256:855d4fc5b699713e713de560e1317a4ce4851f0c9d54483a29b937c930feff33" -->
 
-<!-- pdac:cite id="BR-AREAS-OWNER-NOT-SUPPORT" digest="sha256:c39161b43a6c0b8a56cf8f1e270af037ccd76a0d55f4668395f2b93b91c24677" -->
+<!-- pdac:cite id="BR-AREAS-OWNER-NOT-SUPPORT" digest="sha256:dfc3f03fd053bfa38970a52ae3a604c37259cf2682c738810717995f710ddea4" -->
 
-<!-- pdac:cite id="BR-AREAS-NO-INACTIVE-ASSIGNEE" digest="sha256:658f15559d2d4159e0aaa9f34fbb95487cd63f464d8fc258946cd02e8cd9e174" -->
+<!-- pdac:cite id="BR-AREAS-NO-INACTIVE-ASSIGNEE" digest="sha256:400d3d6076c12f5a4c3c1c9f56b7eb210f5fbac56534ef4019ec4a789aeb2775" -->
 
-<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:f76c31e9c4623b245b4e7bea9fe81efbead0b3531e3877656e1f29c284ec809c" -->
+<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:e7196eaf5a47d7e4d00002fc29785bc463758d4fa47e08bcb279b9350d88a1f0" -->
 
-<!-- pdac:cite id="TERM-AREA-OWNER" digest="sha256:e8fd632c146effbb577bc5e063a7c1684f46e5602682d823f7bdeb5ff60e4558" -->
+<!-- pdac:cite id="TERM-AREA-OWNER" digest="sha256:a99a47f784d89b722cff7d894eb729fec19510330334e760805365920d8eff3a" -->
 
-<!-- pdac:cite id="SB-AREAS-ASSIGN-FIRST-OWNER" digest="sha256:3fc0f6fcad277c6d19bc556f7fd0a11ddedfc4c99b414d893c7ccd293741e9fb" -->
+<!-- pdac:cite id="SB-AREAS-ASSIGN-FIRST-OWNER" digest="sha256:52ffbb43527539b2a78e75533c975bb579b5824bf1a8c713dc4c65aef8de1fd4" -->
 
-<!-- pdac:cite id="SB-AREAS-REPLACE-OWNER" digest="sha256:3dd014700ead38f6b8fc85fb816dc7baecdd437bb129f928f39f4bbfe9bbb04f" -->
+<!-- pdac:cite id="SB-AREAS-REPLACE-OWNER" digest="sha256:43414f3b7af5b7b160bb2af8df55de628a395488e87e8c9b79356d94b6f3367c" -->
 
-<!-- pdac:cite id="SB-AREAS-REJECT-OUTSIDE-OWNER" digest="sha256:8bec78040b75f7fa49b04a8451b147c42145235669eade94bdaf88d4d49aa3e0" -->
+<!-- pdac:cite id="SB-AREAS-REJECT-OUTSIDE-OWNER" digest="sha256:940583d7d8d97fed26e4467dc3d25901000997b1ecbbe672caf6bbe2d5be7089" -->
 
 #### Scenario: Household assigns a primary owner to an Area
 
@@ -120,23 +120,23 @@ Secondary owners provide backup or shared accountability coverage for the Area. 
 
 A secondary owner does not replace the primary owner.
 
-<!-- pdac:cite id="FR-AREAS-ADD-SUPPORT" digest="sha256:b375cece8091243562c3f8b85f7aeb03d789a2b7f1a93984d6fdb7e00403e2cb" -->
+<!-- pdac:cite id="FR-AREAS-ADD-SUPPORT" digest="sha256:c815cd85342fbc7af1629a74f742fa05a8266c0cb06183a3b64d8fa06b72b451" -->
 
-<!-- pdac:cite id="UC-AREAS-ADD-SUPPORT" digest="sha256:a406223e1b237d39cc41285d3a25add74ff82ff72e5993e6aa53ec933a0eda41" -->
+<!-- pdac:cite id="UC-AREAS-ADD-SUPPORT" digest="sha256:33c7ceb949c5fb0ec239143d3f78f406245045e32953d10100025279c23f6d8a" -->
 
-<!-- pdac:cite id="BR-AREAS-UNIQUE-SUPPORT" digest="sha256:9d14a0933acc6831e63b794111f7f6eb5671dff483c0e4eb0f8008dd8484ca66" -->
+<!-- pdac:cite id="BR-AREAS-UNIQUE-SUPPORT" digest="sha256:92701de5b46bb57746247a6b391e40a6f2547a9f5d17186e669181d4962439d8" -->
 
-<!-- pdac:cite id="BR-AREAS-SAME-HOUSEHOLD-PEOPLE" digest="sha256:fe9903e5ef4853ddbc2427015d9291f8b556755c63f87f7c2715dd50a94fbc2d" -->
+<!-- pdac:cite id="BR-AREAS-SAME-HOUSEHOLD-PEOPLE" digest="sha256:41928a2f064c528565e46acc98cf7ae03be0d0faf185e958e0917f16ed6f51e7" -->
 
-<!-- pdac:cite id="BR-AREAS-NO-INACTIVE-ASSIGNEE" digest="sha256:658f15559d2d4159e0aaa9f34fbb95487cd63f464d8fc258946cd02e8cd9e174" -->
+<!-- pdac:cite id="BR-AREAS-NO-INACTIVE-ASSIGNEE" digest="sha256:400d3d6076c12f5a4c3c1c9f56b7eb210f5fbac56534ef4019ec4a789aeb2775" -->
 
-<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:f76c31e9c4623b245b4e7bea9fe81efbead0b3531e3877656e1f29c284ec809c" -->
+<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:e7196eaf5a47d7e4d00002fc29785bc463758d4fa47e08bcb279b9350d88a1f0" -->
 
-<!-- pdac:cite id="TERM-AREA-SUPPORT" digest="sha256:57f25b36298732ba7f37c884da6113dc98e57a3490316d2f72d48e3f0fdb53d6" -->
+<!-- pdac:cite id="TERM-AREA-SUPPORT" digest="sha256:dc9c68154fabba1f6b47fef6524b68377e39dadb93316f7dbe46d8bb281a6983" -->
 
-<!-- pdac:cite id="SB-AREAS-ADD-SUPPORT" digest="sha256:bfcdabea7622ac92c4079ca31cd06fe9c681e16baf2d39e50659925c2896e983" -->
+<!-- pdac:cite id="SB-AREAS-ADD-SUPPORT" digest="sha256:61f46039a64ff4064a05ce75cfd4c8b52a29fd6bc050d1808daed584787f7e7a" -->
 
-<!-- pdac:cite id="SB-AREAS-REJECT-DUPLICATE-SUPPORT" digest="sha256:bbcdbc753f9109215be8405ed7b1223b90b148a7c0d8ea8c41d96fb67cea8679" -->
+<!-- pdac:cite id="SB-AREAS-REJECT-DUPLICATE-SUPPORT" digest="sha256:a14909442ebad1b51039d22752a934e98b516f382299dd10bfb13521e277fb74" -->
 
 <!-- pdac-drift ids="BR-AREAS-OWNER-NOT-SUPPORT, FR-AREAS-ADD-SUPPORT, SB-AREAS-REJECT-OWNER-AS-SUPPORT" summary="spec accepts as Support any family member not already Support; the model rejects adding the Area's Owner as Support (decided: Q-0017)" -->
 
@@ -162,17 +162,17 @@ A household SHALL be able to remove a secondary owner from an Area.
 
 Removing a secondary owner does not affect the primary owner or other secondary owners.
 
-<!-- pdac:cite id="FR-AREAS-REMOVE-SUPPORT" digest="sha256:8f3c373489f138e604669eec09d3e8669cd95ab76a163b5485f449fb6ca39aa7" -->
+<!-- pdac:cite id="FR-AREAS-REMOVE-SUPPORT" digest="sha256:39d8fb5aba06ed681f686f76a32aedb6bbc0163cb5b84a78192d81a528eabf72" -->
 
-<!-- pdac:cite id="UC-AREAS-REMOVE-SUPPORT" digest="sha256:8c121adf917654287c5d0cb4d9e680f7bce2eda254fea1ceaf0f0eed544fd6ba" -->
+<!-- pdac:cite id="UC-AREAS-REMOVE-SUPPORT" digest="sha256:72739ad9f6fa2c61e4781da30ce179fec4aaad77ca67d2c0b91c1cf2d96f96d4" -->
 
-<!-- pdac:cite id="BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE" digest="sha256:aeb3d7e1e4a05d4a238fd2ca801118605302d9420859397ccae4bd7ef8baa9fc" -->
+<!-- pdac:cite id="BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE" digest="sha256:855d4fc5b699713e713de560e1317a4ce4851f0c9d54483a29b937c930feff33" -->
 
-<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:f76c31e9c4623b245b4e7bea9fe81efbead0b3531e3877656e1f29c284ec809c" -->
+<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:e7196eaf5a47d7e4d00002fc29785bc463758d4fa47e08bcb279b9350d88a1f0" -->
 
-<!-- pdac:cite id="TERM-AREA-SUPPORT" digest="sha256:57f25b36298732ba7f37c884da6113dc98e57a3490316d2f72d48e3f0fdb53d6" -->
+<!-- pdac:cite id="TERM-AREA-SUPPORT" digest="sha256:dc9c68154fabba1f6b47fef6524b68377e39dadb93316f7dbe46d8bb281a6983" -->
 
-<!-- pdac:cite id="SB-AREAS-REMOVE-SUPPORT" digest="sha256:a9baf854d055e97217e37ce50e93be0b03ddfa6eba4a908314843e05db358ef7" -->
+<!-- pdac:cite id="SB-AREAS-REMOVE-SUPPORT" digest="sha256:b23a2b4e84cef6bbf94eb381d822cb6feb054f1486a8e5af11db1649577e6ec6" -->
 
 #### Scenario: Household removes a secondary owner
 
@@ -192,21 +192,21 @@ Transfer is an explicit, auditable operation — not an implicit overwrite. The 
 
 The new primary owner must belong to the same family as the Area.
 
-<!-- pdac:cite id="FR-AREAS-TRANSFER-OWNERSHIP" digest="sha256:48882b866db8bc9088a6a713bb6a625a2c05b94d9b1554c0ea765b7ef61ea493" -->
+<!-- pdac:cite id="FR-AREAS-TRANSFER-OWNERSHIP" digest="sha256:b80ef6f8810d8ebcb96ebcbd7ee12829e29aaba8e34d3e191d6f97237e2f4eb8" -->
 
-<!-- pdac:cite id="UC-AREAS-ASSIGN-OWNER" digest="sha256:bf9cc076c8daced2bfa0edbe80064c51d5f6f6643bbe5bd4b2737e316a52fe65" -->
+<!-- pdac:cite id="UC-AREAS-ASSIGN-OWNER" digest="sha256:bcf0319631469de361b3c6f5092def082b6325947f0699a52b49d47460e0c529" -->
 
-<!-- pdac:cite id="BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE" digest="sha256:aeb3d7e1e4a05d4a238fd2ca801118605302d9420859397ccae4bd7ef8baa9fc" -->
+<!-- pdac:cite id="BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE" digest="sha256:855d4fc5b699713e713de560e1317a4ce4851f0c9d54483a29b937c930feff33" -->
 
-<!-- pdac:cite id="BR-AREAS-SAME-HOUSEHOLD-PEOPLE" digest="sha256:fe9903e5ef4853ddbc2427015d9291f8b556755c63f87f7c2715dd50a94fbc2d" -->
+<!-- pdac:cite id="BR-AREAS-SAME-HOUSEHOLD-PEOPLE" digest="sha256:41928a2f064c528565e46acc98cf7ae03be0d0faf185e958e0917f16ed6f51e7" -->
 
-<!-- pdac:cite id="BR-AREAS-SINGLE-OWNER" digest="sha256:2123ead862639b7e83626f13b76c836f07f6f1dee1c64ecc41358717d84c35b4" -->
+<!-- pdac:cite id="BR-AREAS-SINGLE-OWNER" digest="sha256:1238c8a78a73277bbef49a57570724b10b09670351a71001c3b9af9415e10c7c" -->
 
-<!-- pdac:cite id="TERM-RESPONSIBILITY-TRANSFER" digest="sha256:2c12c27419fdf795b4b04949b2a3bf85179682a621310d30593f8ab8d4360757" -->
+<!-- pdac:cite id="TERM-RESPONSIBILITY-TRANSFER" digest="sha256:a467abc3510f94575ce11c84aa964e4e9d2ffdae453c3d4f27562e9fbcbdaced" -->
 
-<!-- pdac:cite id="SB-AREAS-TRANSFER-OWNERSHIP" digest="sha256:10ba20534afdd2707eca9a31b48cb0077911d9920e2dae9500f33e8727ac70ff" -->
+<!-- pdac:cite id="SB-AREAS-TRANSFER-OWNERSHIP" digest="sha256:8fe5971e8097d994eab6b45f46c6bab7c821be58f9baf16b331cf86a6f57a1e3" -->
 
-<!-- pdac:cite id="SB-AREAS-REJECT-OUTSIDE-TRANSFER" digest="sha256:60fbdf8fc9da15116d77853031f8cc62aa3d6bf644a5455606049f7db86b78d1" -->
+<!-- pdac:cite id="SB-AREAS-REJECT-OUTSIDE-TRANSFER" digest="sha256:b58d0039455df440e6a879678150ef48af64d47a466eab3eb2b1a9db8c266768" -->
 
 #### Scenario: Household transfers Area ownership
 
@@ -230,15 +230,15 @@ The new primary owner must belong to the same family as the Area.
 
 A household SHALL be able to rename an Area.
 
-<!-- pdac:cite id="FR-AREAS-RENAME-AREA" digest="sha256:a6386ea947e5f888d6a4d1c82775e3b29b0033023df682f4b079820a9d1744d9" -->
+<!-- pdac:cite id="FR-AREAS-RENAME-AREA" digest="sha256:3bb1d9d4678b4b0f3c1ec26e23d185ae152dbd3841505a70a5e83775c425e3b6" -->
 
-<!-- pdac:cite id="UC-AREAS-RENAME-AREA" digest="sha256:c3289681b13442b610865cb4baa631ad38f8cf53aeffe432a1144b1f25dc49b2" -->
+<!-- pdac:cite id="UC-AREAS-RENAME-AREA" digest="sha256:1df8637116f2bd1b1e931bd3522e67be9daf866d0878b55bde7c695bc401b8a5" -->
 
-<!-- pdac:cite id="BR-AREAS-NAME-REQUIRED" digest="sha256:3bb588f6d5de580a64bc454d23ce3958b5d786983350ccfc40370fcdc1d1d834" -->
+<!-- pdac:cite id="BR-AREAS-NAME-REQUIRED" digest="sha256:ef9473c4431f6692628ff6a334fdac8aaa63954aa59a63887ca33923d4c2ea6c" -->
 
-<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:f76c31e9c4623b245b4e7bea9fe81efbead0b3531e3877656e1f29c284ec809c" -->
+<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:e7196eaf5a47d7e4d00002fc29785bc463758d4fa47e08bcb279b9350d88a1f0" -->
 
-<!-- pdac:cite id="SB-AREAS-RENAME-AREA" digest="sha256:4e62bd6de8def338ddd13a93b7c9c3237375c87856b0c4978f356a0dbb362f5c" -->
+<!-- pdac:cite id="SB-AREAS-RENAME-AREA" digest="sha256:de410afd4f9fa661e17cbf07e07416de1aaa7e57b00d413816cf2ac88ebc82c6" -->
 
 #### Scenario: Household renames an Area
 
@@ -254,15 +254,15 @@ A household SHALL be able to archive an Area.
 
 Archived Areas are retained and visible when filtered for, but are distinguished from active Areas.
 
-<!-- pdac:cite id="FR-AREAS-ARCHIVE-AREA" digest="sha256:37a18941dff1c63714b9850f75311a250443fabcb729a5ac4d6ba21ff1c089bd" -->
+<!-- pdac:cite id="FR-AREAS-ARCHIVE-AREA" digest="sha256:61858840e7a767e9780719fccaa49c2bf3d5fb5627b1832dfd717fe7eeb97536" -->
 
-<!-- pdac:cite id="UC-AREAS-ARCHIVE-AREA" digest="sha256:d773dcd1a024bc46c41aab2b1486c9e0b4e94480abbc4c2230a1ff56101b0ec6" -->
+<!-- pdac:cite id="UC-AREAS-ARCHIVE-AREA" digest="sha256:067155f11be19859765494e77b687e08cb42b305b0ce61554d8e80221e783aa2" -->
 
-<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:f76c31e9c4623b245b4e7bea9fe81efbead0b3531e3877656e1f29c284ec809c" -->
+<!-- pdac:cite id="BR-AREAS-ANY-MEMBER-MANAGES" digest="sha256:e7196eaf5a47d7e4d00002fc29785bc463758d4fa47e08bcb279b9350d88a1f0" -->
 
-<!-- pdac:cite id="BR-TASKS-ARCHIVED-AREA-CLEARED" digest="sha256:4ebf5122a85fc47a1b6ef5fecc66c463ac6a46846ae7fe4485d2097a97e42d7e" -->
+<!-- pdac:cite id="BR-TASKS-ARCHIVED-AREA-CLEARED" digest="sha256:3334e78310889e51497c45b324544bef1b473b448e751656b8f5ddcc1ff2a43d" -->
 
-<!-- pdac:cite id="SB-AREAS-ARCHIVE-AREA" digest="sha256:9f1c6bbcefc77d03bde3672550398eaf8633d6b3225d864f08ff9a4f21b55736" -->
+<!-- pdac:cite id="SB-AREAS-ARCHIVE-AREA" digest="sha256:b9239fe4023a7465e4f12bbdc71bc3a603959ad7827f9f305895bc25b0b485da" -->
 
 #### Scenario: Household archives an Area
 
@@ -284,19 +284,19 @@ An Area is considered unowned when no primary owner is assigned. An Area is cons
 
 Each Area row shows the Area name, primary owner (or a gap indicator if unowned), and support members if present.
 
-<!-- pdac:cite id="FR-AREAS-OWNERSHIP-VISIBILITY" digest="sha256:87da19a0776edd63c305dbcc30a7e51ec98fe949c762e217df6f17d284c745b4" -->
+<!-- pdac:cite id="FR-AREAS-OWNERSHIP-VISIBILITY" digest="sha256:acf5743c30edd22cc0badaaf5bc4d6998fb46c2e71dc2dc84452b7557a4b14d8" -->
 
-<!-- pdac:cite id="UC-AREAS-REVIEW-OWNERSHIP" digest="sha256:fe5c941fe5760bc287bf7e51f2e59e21e0215853396e8f5760ada0ae99d35acd" -->
+<!-- pdac:cite id="UC-AREAS-REVIEW-OWNERSHIP" digest="sha256:bf641773cb1723b92c2eb3e20bfebb013ee1be7d3722c06df94cc97e56cc69a0" -->
 
-<!-- pdac:cite id="TERM-OWNERSHIP-GAP" digest="sha256:e403011bc8751c3eb99fa08906c90b4172f9e0f8e7eb8d4e49761a40ac843531" -->
+<!-- pdac:cite id="TERM-OWNERSHIP-GAP" digest="sha256:6315a8195c46d7e4cae41ff65fcaf5a4a777c8d964661988b850cdc6102c4434" -->
 
-<!-- pdac:cite id="JRN-AREAS-CLOSE-OWNERSHIP-GAPS" digest="sha256:dad23263cf93824de985037fd93456c2f1c335383145f25c10529c6251c3a396" -->
+<!-- pdac:cite id="JRN-AREAS-CLOSE-OWNERSHIP-GAPS" digest="sha256:205e4a10523c547486d210c134dc7a04698ed9425014196fca1a28e98e287004" -->
 
 <!-- pdac:cite id="QR-AREAS-GAPS-AT-A-GLANCE" digest="sha256:f1a55dc43455210a0ed6dd85f11f80d67e68d984acd0d84e65e8f392fce5829f" -->
 
-<!-- pdac:cite id="SB-AREAS-UNOWNED-FIRST" digest="sha256:9c21be8ac399f55a749f9b93986be95559b578f293922b375be1768afff351be" -->
+<!-- pdac:cite id="SB-AREAS-UNOWNED-FIRST" digest="sha256:47b6a5b5b96fe924545ba8d7fba1408ed5eaff98d3404ddb129ff5d09dd29b41" -->
 
-<!-- pdac:cite id="SB-AREAS-GAP-INDICATOR" digest="sha256:797e4f31f1fca1a42437dcc02b8d5cf61763383fe4d34fb9e1f5a2e5e692a9e4" -->
+<!-- pdac:cite id="SB-AREAS-GAP-INDICATOR" digest="sha256:3ddabbf8e8bd488cc243d27a98468f3b9bf74559e1f0092ad6d2b8848b4e6a6f" -->
 
 #### Scenario: Unowned Area appears at the top of the list
 
@@ -318,15 +318,15 @@ Other household capabilities — including tasks, plans, routines, and calendar 
 
 Referencing an Area does not change ownership assignments. Ownership belongs exclusively to the Responsibilities context. Other contexts use Area identity as a categorization anchor only.
 
-<!-- pdac:cite id="FR-AREAS-CROSS-CONTEXT-REFERENCE" digest="sha256:5aff86faf538e5a0537325653933c5e4ef6edf40f4972323b71613dbcca78bd9" -->
+<!-- pdac:cite id="FR-AREAS-CROSS-CONTEXT-REFERENCE" digest="sha256:79a713f51c250ee739e56168e25abf38566aa204af08f745fc6136c511c7d1a1" -->
 
-<!-- pdac:cite id="BR-AREAS-OWNERSHIP-EXCLUSIVE" digest="sha256:f8cd1f144ecd083696ccb24518d4fe73ad467205b4e87883df7247db42a570f9" -->
+<!-- pdac:cite id="BR-AREAS-OWNERSHIP-EXCLUSIVE" digest="sha256:0139a48e2daf32671e19923ef4917d8ab38585d4a224bfdafed1735dcb5c7eb0" -->
 
-<!-- pdac:cite id="BR-TASKS-AREA-CATEGORISES-ONLY" digest="sha256:9c2fb9c31feb96ab6309a5e768f3bfd87b7d9f028fe5a27e42accaf363a1b916" -->
+<!-- pdac:cite id="BR-TASKS-AREA-CATEGORISES-ONLY" digest="sha256:1c63c0149739660ca8a8626e6f2eb9260cab229cdb5bb667aebefb36c89e314e" -->
 
-<!-- pdac:cite id="BC-RESPONSIBILITIES" digest="sha256:288de55e6b2023b73e2a4c9992f9390250c4a7690500cd4d6a207c432f324cc5" -->
+<!-- pdac:cite id="BC-RESPONSIBILITIES" digest="sha256:031c9bd3da1ee33bb97c7f5b66f5d37827db17703653d1b00013680d61c55e58" -->
 
-<!-- pdac:cite id="SB-AREAS-TASK-REFERENCES-AREA" digest="sha256:40e939b27933d2c4a62502023bc5b6a339b645184f3181e88e5a261419e6b197" -->
+<!-- pdac:cite id="SB-AREAS-TASK-REFERENCES-AREA" digest="sha256:d057b816b76bc1de4c4dec91f5ab82f757cdaf742aaa8548dbfe051758cf3c99" -->
 
 #### Scenario: A task references an Area
 

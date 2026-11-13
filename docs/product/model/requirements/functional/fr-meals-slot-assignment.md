@@ -2,7 +2,7 @@
 id: "FR-MEALS-SLOT-ASSIGNMENT"
 type: "functional-requirement"
 title: "Assign or clear meal slots"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-MEALS-UPDATE-SLOT"
   - "BR-MEALS-LOCKED-SLOT"

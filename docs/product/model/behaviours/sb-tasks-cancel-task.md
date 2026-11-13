@@ -2,7 +2,7 @@
 id: SB-TASKS-CANCEL-TASK
 type: structured-behaviour
 title: Task cancelled
-status: draft
+status: active
 illustrates:
   - UC-TASKS-CANCEL-TASK
 given:

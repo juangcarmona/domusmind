@@ -2,7 +2,7 @@
 id: FR-TASKS-UNASSIGN-TASK
 type: functional-requirement
 title: Remove a task's assignee
-status: draft
+status: active
 derived-from:
   - UC-TASKS-UNASSIGN-TASK
 verification:

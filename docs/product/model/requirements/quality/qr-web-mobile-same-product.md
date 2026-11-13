@@ -2,7 +2,7 @@
 id: QR-WEB-MOBILE-SAME-PRODUCT
 type: quality-requirement
 title: "Mobile is the same product in a smaller frame"
-status: draft
+status: active
 quality-attribute: "usability"
 applies-to:
   - "UC-WEB-MOVE-BETWEEN-SURFACES"

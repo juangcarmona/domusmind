@@ -2,7 +2,7 @@
 id: "UC-RECIPES-CREATE-RECIPE"
 type: "use-case"
 title: "Add a recipe to the household library"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

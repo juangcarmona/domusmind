@@ -2,7 +2,7 @@
 id: "SB-MEALS-APPLY-TEMPLATE-EXISTING-WEEK"
 type: "structured-behaviour"
 title: "Applying a template to a week that has a plan returns that plan"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-APPLY-TEMPLATE"
   - "BR-MEALS-ONE-PLAN-PER-WEEK"

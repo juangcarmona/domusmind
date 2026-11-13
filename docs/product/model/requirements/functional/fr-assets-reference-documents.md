@@ -2,7 +2,7 @@
 id: FR-ASSETS-REFERENCE-DOCUMENTS
 type: functional-requirement
 title: Associate authorized paperwork with an asset
-status: draft
+status: active
 derived-from:
   - UC-ASSETS-REGISTER-AND-ORGANIZE
   - UC-ASSETS-COMPLETE-OBLIGATION

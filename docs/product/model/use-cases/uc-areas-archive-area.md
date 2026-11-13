@@ -2,15 +2,15 @@
 id: UC-AREAS-ARCHIVE-AREA
 type: use-case
 title: Archive an Area
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-RESPONSIBILITIES
 governed-by:
-- BR-AREAS-ANY-MEMBER-MANAGES
-- BR-TASKS-ARCHIVED-AREA-CLEARED
+  - BR-AREAS-ANY-MEMBER-MANAGES
+  - BR-TASKS-ARCHIVED-AREA-CLEARED
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: "openspec/specs/areas/spec.md (Area Archiving); docs/_legacy/04_contexts/responsibilities.md (Commands); docs/_legacy/00_product/surfaces/areas.md (Interaction); interview: product owner decision Q-0010 (E-0158); interview: product owner decision Q-0013 (E-0158); interview: product owner decision Q-0014 (E-0158)"
   confidence: high

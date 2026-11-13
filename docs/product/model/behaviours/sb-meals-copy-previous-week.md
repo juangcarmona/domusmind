@@ -2,7 +2,7 @@
 id: "SB-MEALS-COPY-PREVIOUS-WEEK"
 type: "structured-behaviour"
 title: "Copying the previous week reproduces its slots without its shopping list"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-COPY-PREVIOUS-WEEK"
   - "BR-MEALS-COPY-EXCLUDES-SHOPPING-LIST"

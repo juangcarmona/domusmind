@@ -2,7 +2,7 @@
 id: UC-ASSETS-MANAGE-OBLIGATION
 type: use-case
 title: Define an asset obligation
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 bounded-context: BC-HOUSEHOLD-ASSETS
 governed-by:

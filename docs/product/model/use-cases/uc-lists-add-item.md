@@ -2,7 +2,7 @@
 id: UC-LISTS-ADD-ITEM
 type: use-case
 title: "Add an item to a list"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

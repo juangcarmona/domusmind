@@ -2,7 +2,7 @@
 id: FR-AGENDA-DEFAULT-ENTRY
 type: functional-requirement
 title: "Open the Agenda on today's household day"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
   - "BR-AGENDA-DEFAULT-ENTRY-STATE"

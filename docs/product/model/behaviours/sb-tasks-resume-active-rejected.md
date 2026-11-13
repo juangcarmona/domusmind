@@ -2,7 +2,7 @@
 id: SB-TASKS-RESUME-ACTIVE-REJECTED
 type: structured-behaviour
 title: Active routine cannot be resumed
-status: draft
+status: active
 illustrates:
   - UC-TASKS-RESUME-ROUTINE
   - BR-TASKS-PAUSE-RESUME

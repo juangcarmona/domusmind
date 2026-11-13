@@ -2,13 +2,13 @@
 id: FR-AREAS-AREA-COLOR
 type: functional-requirement
 title: Give each Area a colour cue
-status: draft
+status: active
 derived-from:
-- UC-AREAS-CHANGE-AREA-COLOR
+  - UC-AREAS-CHANGE-AREA-COLOR
 verification:
-- scenario: Picking green from the palette in an Area's detail shows a green dot on that Area's row
+  - scenario: Picking green from the palette in an Area's detail shows a green dot on that Area's row
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: "docs/_legacy/00_product/surfaces/areas.md (Default View, Inspector, Interaction); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs (Color, Repaint); interview: product owner decision Q-0019 (E-0158)"
   confidence: high

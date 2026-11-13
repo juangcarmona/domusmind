@@ -2,7 +2,7 @@
 id: "FR-RECIPES-DELETE"
 type: "functional-requirement"
 title: "Delete a recipe with a guard"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-RECIPES-DELETE-RECIPE"
   - "BR-RECIPES-DELETE-GUARD"

@@ -2,7 +2,7 @@
 id: SB-CALENDAR-REVOKE-SECURE-SUBSCRIPTION
 type: structured-behaviour
 title: A member revokes a calendar subscription
-status: draft
+status: active
 illustrates:
   - UC-CALENDAR-MANAGE-SUBSCRIPTIONS
   - BR-CALENDAR-SUBSCRIPTION-ACCESS

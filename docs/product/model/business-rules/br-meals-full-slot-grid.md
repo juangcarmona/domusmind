@@ -2,11 +2,7 @@
 id: "BR-MEALS-FULL-SLOT-GRID"
 type: "business-rule"
 title: "Every meal plan has the full grid of slots from creation"
-status: "draft"
-applies-to:
-  - "UC-MEALS-CREATE-PLAN"
-  - "UC-MEALS-UPDATE-SLOT"
-  - "UC-MEALS-VIEW-PLAN"
+status: "active"
 uses-terms:
   - "TERM-MEAL-PLAN"
   - "TERM-MEAL-SLOT"

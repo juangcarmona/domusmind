@@ -2,9 +2,7 @@
 id: "BR-MEALS-COPY-EXCLUDES-SHOPPING-LIST"
 type: "business-rule"
 title: "Copying a week never carries over its shopping list"
-status: "draft"
-applies-to:
-  - "UC-MEALS-COPY-PREVIOUS-WEEK"
+status: "active"
 uses-terms:
   - "TERM-MEAL-PLAN"
   - "TERM-SHOPPING-LIST-DERIVATION"

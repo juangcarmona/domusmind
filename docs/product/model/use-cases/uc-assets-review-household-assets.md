@@ -2,7 +2,7 @@
 id: UC-ASSETS-REVIEW-HOUSEHOLD-ASSETS
 type: use-case
 title: Review household things, upcoming responsibilities and history
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 bounded-context: BC-HOUSEHOLD-ASSETS
 uses-terms:

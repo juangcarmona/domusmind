@@ -2,7 +2,7 @@
 id: UC-CHAT-USE-CONVERSATIONS
 type: use-case
 title: Household members use conversations
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 bounded-context: BC-CHATS
 governed-by:

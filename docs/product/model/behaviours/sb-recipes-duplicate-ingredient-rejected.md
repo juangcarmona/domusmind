@@ -2,7 +2,7 @@
 id: "SB-RECIPES-DUPLICATE-INGREDIENT-REJECTED"
 type: "structured-behaviour"
 title: "Adding an ingredient whose name differs only in case is rejected"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-MANAGE-INGREDIENTS"
   - "BR-RECIPES-INGREDIENT-NAME-UNIQUE"

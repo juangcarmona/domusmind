@@ -2,7 +2,7 @@
 id: TERM-ASSET-RECORD
 type: domain-term
 title: Asset Record
-status: draft
+status: active
 defined-in: BC-HOUSEHOLD-ASSETS
 ---
 ## Definition

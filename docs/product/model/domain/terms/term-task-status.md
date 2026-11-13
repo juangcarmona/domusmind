@@ -2,7 +2,7 @@
 id: TERM-TASK-STATUS
 type: domain-term
 title: Task Status
-status: draft
+status: active
 defined-in: BC-TASKS
 synonyms:
   - TaskStatus

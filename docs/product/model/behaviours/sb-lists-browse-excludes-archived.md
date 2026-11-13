@@ -2,7 +2,7 @@
 id: SB-LISTS-BROWSE-EXCLUDES-ARCHIVED
 type: structured-behaviour
 title: "An archived list is not among the active lists"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-BROWSE-LISTS
   - BR-LISTS-ARCHIVE-STATE

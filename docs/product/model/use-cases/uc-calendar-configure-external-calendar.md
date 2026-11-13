@@ -2,7 +2,7 @@
 id: UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR
 type: use-case
 title: "Choose calendars and horizon for a connection"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

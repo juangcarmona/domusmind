@@ -2,7 +2,7 @@
 id: SB-LISTS-REMOVE-ITEM
 type: structured-behaviour
 title: "Removing an item leaves the others unchanged"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-REMOVE-ITEM
 given:

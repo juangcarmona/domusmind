@@ -2,7 +2,7 @@
 id: FR-TASKS-WORK-OVERVIEWS
 type: functional-requirement
 title: Provide task and routine overviews
-status: draft
+status: active
 derived-from:
   - UC-TASKS-REVIEW-HOUSEHOLD-WORK
 verification:

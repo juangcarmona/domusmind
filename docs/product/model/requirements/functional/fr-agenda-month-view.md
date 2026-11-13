@@ -2,7 +2,7 @@
 id: FR-AGENDA-MONTH-VIEW
 type: functional-requirement
 title: "Show a month for load awareness"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
   - "UC-AGENDA-NAVIGATE"

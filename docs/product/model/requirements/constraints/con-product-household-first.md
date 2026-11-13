@@ -2,7 +2,7 @@
 id: CON-PRODUCT-HOUSEHOLD-FIRST
 type: constraint
 title: DomusMind is household-first, not person-first
-status: draft
+status: active
 applies-to:
   - BC-FAMILY
   - BC-RESPONSIBILITIES

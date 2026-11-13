@@ -2,10 +2,7 @@
 id: "BR-MEALS-TEMPLATE-NAME-UNIQUE"
 type: "business-rule"
 title: "Weekly template names are unique within a household"
-status: "draft"
-applies-to:
-  - "UC-MEALS-CREATE-TEMPLATE"
-  - "UC-MEALS-UPDATE-TEMPLATE"
+status: "active"
 uses-terms:
   - "TERM-WEEKLY-TEMPLATE"
   - "TERM-HOUSEHOLD"

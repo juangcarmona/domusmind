@@ -2,7 +2,7 @@
 id: SB-CALENDAR-UNSUPPORTED-HORIZON
 type: structured-behaviour
 title: "An unsupported horizon is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
   - "BR-CALENDAR-SUPPORTED-SYNC-HORIZONS"

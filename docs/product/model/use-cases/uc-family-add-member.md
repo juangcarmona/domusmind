@@ -2,7 +2,7 @@
 id: UC-FAMILY-ADD-MEMBER
 type: use-case
 title: "Add a person to the household"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MANAGER
 supporting-actors: []
 bounded-context: BC-FAMILY

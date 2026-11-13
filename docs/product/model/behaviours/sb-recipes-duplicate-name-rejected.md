@@ -2,7 +2,7 @@
 id: "SB-RECIPES-DUPLICATE-NAME-REJECTED"
 type: "structured-behaviour"
 title: "Creating a recipe with an existing name is rejected"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-CREATE-RECIPE"
   - "BR-RECIPES-NAME-UNIQUE"

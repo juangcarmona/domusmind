@@ -2,11 +2,9 @@
 id: BR-TASKS-AREA-CATEGORISES-ONLY
 type: business-rule
 title: Areas categorise tasks but do not change them
-status: draft
+status: active
 applies-to:
   - BC-TASKS
-  - UC-TASKS-CREATE-TASK
-  - UC-TASKS-CREATE-ROUTINE
 uses-terms:
   - TERM-AREA
   - TERM-TASK

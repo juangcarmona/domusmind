@@ -2,7 +2,7 @@
 id: "FR-RECIPES-DETAIL"
 type: "functional-requirement"
 title: "View recipe detail"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-RECIPES-VIEW-RECIPE"
 verification:

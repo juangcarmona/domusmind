@@ -2,7 +2,7 @@
 id: QR-WEB-CONTENT-OVER-CHROME
 type: quality-requirement
 title: "Household content dominates the interface"
-status: draft
+status: active
 quality-attribute: "usability"
 applies-to:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"

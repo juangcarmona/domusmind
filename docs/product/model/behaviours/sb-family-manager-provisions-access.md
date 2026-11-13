@@ -2,7 +2,7 @@
 id: SB-FAMILY-MANAGER-PROVISIONS-ACCESS
 type: structured-behaviour
 title: "A manager gives a person access"
-status: draft
+status: active
 illustrates:
   - UC-FAMILY-PROVISION-MEMBER-ACCESS
 given:

@@ -2,7 +2,7 @@
 id: FR-CHAT-ASK-ASSISTANT
 type: functional-requirement
 title: Answer questions and stage supported actions in Chats
-status: draft
+status: active
 derived-from:
   - UC-CHAT-ASK-ASSISTANT
   - BR-CHAT-ASSISTANT-READ-ONLY

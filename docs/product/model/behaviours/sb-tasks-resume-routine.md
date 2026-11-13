@@ -2,7 +2,7 @@
 id: SB-TASKS-RESUME-ROUTINE
 type: structured-behaviour
 title: Paused routine resumed
-status: draft
+status: active
 illustrates:
   - UC-TASKS-RESUME-ROUTINE
   - BR-TASKS-PAUSE-RESUME

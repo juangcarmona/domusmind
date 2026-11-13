@@ -2,7 +2,7 @@
 id: SB-TASKS-AGENDA-HIDES-PAUSED-ROUTINE
 type: structured-behaviour
 title: Paused routine does not appear in the Agenda
-status: draft
+status: active
 illustrates:
   - UC-TASKS-SEE-WORK-IN-AGENDA
   - BR-TASKS-PAUSE-RESUME

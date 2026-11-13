@@ -2,7 +2,7 @@
 id: "SB-MEALS-SHOPPING-LIST-FROM-PLAN"
 type: "structured-behaviour"
 title: "Requesting a shopping list creates a list of consolidated ingredients"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-DERIVE-SHOPPING-LIST"
   - "BR-MEALS-SHOPPING-LIST-CONSOLIDATION"

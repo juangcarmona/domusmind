@@ -2,14 +2,14 @@
 id: TERM-RESPONSIBILITY-TRANSFER
 type: domain-term
 title: Responsibility Transfer
-status: draft
+status: active
 defined-in: BC-RESPONSIBILITIES
 synonyms:
-- Transfer Responsibility
-- Ownership Transfer
+  - Transfer Responsibility
+  - Ownership Transfer
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
+  - TERM-AREA
+  - TERM-AREA-OWNER
 provenance:
   source: "openspec/specs/areas/spec.md (Responsibility Transfer, Notes); docs/_legacy/04_contexts/responsibilities.md; src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs; interview: product owner decision Q-0012 (E-0158)"
   confidence: high

@@ -2,9 +2,7 @@
 id: BR-CALENDAR-ONE-CONNECTION-PER-ACCOUNT
 type: business-rule
 title: "One active connection per person and provider account"
-status: draft
-applies-to:
-  - "UC-CALENDAR-CONNECT-OUTLOOK"
+status: active
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-CONNECTION"
 provenance:

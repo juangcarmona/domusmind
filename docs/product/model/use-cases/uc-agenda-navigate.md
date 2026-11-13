@@ -2,7 +2,7 @@
 id: UC-AGENDA-NAVIGATE
 type: use-case
 title: "Move through the Agenda by scope, mode and date"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

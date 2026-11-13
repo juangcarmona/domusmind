@@ -2,7 +2,7 @@
 id: ACT-MICROSOFT-OUTLOOK
 type: actor
 title: Microsoft Outlook
-status: draft
+status: active
 actor-kind: external-system
 provenance:
   source: docs/_legacy/01_system/system-spec.md (External Calendar Ingestion Phase 1); docs/_legacy/06_interfaces/external-calendar-api.md

@@ -2,7 +2,7 @@
 id: TERM-TASK-ASSIGNEE
 type: domain-term
 title: Assignee
-status: draft
+status: active
 defined-in: BC-TASKS
 synonyms:
   - TaskAssignment

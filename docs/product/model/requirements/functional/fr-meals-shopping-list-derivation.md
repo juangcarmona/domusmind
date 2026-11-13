@@ -2,7 +2,7 @@
 id: "FR-MEALS-SHOPPING-LIST-DERIVATION"
 type: "functional-requirement"
 title: "Derive a shopping list from a meal plan"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-MEALS-DERIVE-SHOPPING-LIST"
   - "BR-MEALS-SHOPPING-LIST-REQUIRES-RECIPE"

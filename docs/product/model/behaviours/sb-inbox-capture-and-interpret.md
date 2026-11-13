@@ -2,7 +2,7 @@
 id: SB-INBOX-CAPTURE-AND-INTERPRET
 type: structured-behaviour
 title: A member captures a note and receives proposals
-status: draft
+status: active
 illustrates:
   - UC-INBOX-CAPTURE-AND-REVIEW
   - BR-INBOX-REVIEW-AND-EXECUTION

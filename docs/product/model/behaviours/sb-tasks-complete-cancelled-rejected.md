@@ -2,7 +2,7 @@
 id: SB-TASKS-COMPLETE-CANCELLED-REJECTED
 type: structured-behaviour
 title: Cancelled task cannot be completed
-status: draft
+status: active
 illustrates:
   - UC-TASKS-COMPLETE-TASK
   - BR-TASKS-CLOSED-TASK-FINAL

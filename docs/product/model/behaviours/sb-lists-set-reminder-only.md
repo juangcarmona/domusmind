@@ -2,7 +2,7 @@
 id: SB-LISTS-SET-REMINDER-ONLY
 type: structured-behaviour
 title: "A reminder alone is enough to appear in the Agenda"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-SCHEDULE-ITEM
   - BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT

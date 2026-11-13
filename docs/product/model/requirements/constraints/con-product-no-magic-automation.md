@@ -2,7 +2,7 @@
 id: CON-PRODUCT-NO-MAGIC-AUTOMATION
 type: constraint
 title: "No hidden automation: household records are created explicitly"
-status: draft
+status: active
 applies-to:
   - "BC-FAMILY"
   - "BC-RESPONSIBILITIES"

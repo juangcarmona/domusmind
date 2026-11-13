@@ -2,7 +2,7 @@
 id: FR-TASKS-DELETE-ROUTINE
 type: functional-requirement
 title: Delete a routine
-status: draft
+status: active
 derived-from:
   - UC-TASKS-DELETE-ROUTINE
 verification:

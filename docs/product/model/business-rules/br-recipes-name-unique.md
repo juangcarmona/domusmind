@@ -2,10 +2,7 @@
 id: "BR-RECIPES-NAME-UNIQUE"
 type: "business-rule"
 title: "Recipe names are unique within a household"
-status: "draft"
-applies-to:
-  - "UC-RECIPES-CREATE-RECIPE"
-  - "UC-RECIPES-UPDATE-RECIPE"
+status: "active"
 uses-terms:
   - "TERM-RECIPE"
   - "TERM-HOUSEHOLD"

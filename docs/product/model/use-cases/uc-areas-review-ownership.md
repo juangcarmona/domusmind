@@ -2,16 +2,16 @@
 id: UC-AREAS-REVIEW-OWNERSHIP
 type: use-case
 title: Review household ownership on the Areas surface
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-RESPONSIBILITIES
 governed-by: []
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
-- TERM-AREA-SUPPORT
-- TERM-OWNERSHIP-GAP
+  - TERM-AREA
+  - TERM-AREA-OWNER
+  - TERM-AREA-SUPPORT
+  - TERM-OWNERSHIP-GAP
 provenance:
   source: "openspec/specs/areas/spec.md (Ownership Visibility); docs/_legacy/00_product/surfaces/areas.md (Entry Points, Default View, Main List, Inspector, Data, Interaction); interview: product owner decision Q-0020 (E-0158)"
   confidence: medium

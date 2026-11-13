@@ -2,10 +2,9 @@
 id: BR-CALENDAR-PLAN-BELONGS-TO-ONE-HOUSEHOLD
 type: business-rule
 title: "Every plan belongs to exactly one household"
-status: draft
+status: active
 applies-to:
-  - "BC-CALENDAR"
-  - "UC-CALENDAR-SCHEDULE-PLAN"
+  - BC-CALENDAR
 uses-terms:
   - "TERM-PLAN"
   - "TERM-HOUSEHOLD"

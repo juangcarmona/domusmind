@@ -2,7 +2,7 @@
 id: UC-TASKS-DELETE-ROUTINE
 type: use-case
 title: Delete a routine
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

@@ -2,7 +2,7 @@
 id: UC-FAMILY-CREATE-HOUSEHOLD
 type: use-case
 title: "Create a household"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-FAMILY

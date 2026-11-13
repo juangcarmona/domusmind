@@ -2,9 +2,7 @@
 id: BR-INBOX-REVIEW-AND-EXECUTION
 type: business-rule
 title: Inbox proposals require an explicit decision
-status: draft
-applies-to:
-  - UC-INBOX-CAPTURE-AND-REVIEW
+status: active
 uses-terms:
   - TERM-INBOX-ITEM
   - TERM-INBOX-PROPOSAL

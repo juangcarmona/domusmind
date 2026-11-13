@@ -2,7 +2,7 @@
 id: "SB-MEALS-SHOPPING-LIST-RE-REQUEST"
 type: "structured-behaviour"
 title: "Requesting another shopping list leaves the earlier one untouched"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-DERIVE-SHOPPING-LIST"
   - "BR-MEALS-SHOPPING-LIST-NEW-EACH-TIME"

@@ -2,7 +2,7 @@
 id: SB-TASKS-COMPLETE-TASK
 type: structured-behaviour
 title: Task marked as completed
-status: draft
+status: active
 illustrates:
   - UC-TASKS-COMPLETE-TASK
 given:

@@ -2,7 +2,7 @@
 id: "UC-RECIPES-VIEW-RECIPE"
 type: "use-case"
 title: "View a recipe's details"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

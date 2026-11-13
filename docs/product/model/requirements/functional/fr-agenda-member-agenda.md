@@ -2,7 +2,7 @@
 id: FR-AGENDA-MEMBER-AGENDA
 type: functional-requirement
 title: "Show one person's temporal picture"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-VIEW-MEMBER-AGENDA"
   - "BR-CALENDAR-EXTERNAL-ENTRY-VISIBILITY"

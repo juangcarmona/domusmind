@@ -2,7 +2,7 @@
 id: TERM-EXTERNAL-CALENDAR-SYNC
 type: domain-term
 title: "External Calendar Sync"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Synchronization"

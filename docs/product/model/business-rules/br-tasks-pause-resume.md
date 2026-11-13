@@ -2,10 +2,7 @@
 id: BR-TASKS-PAUSE-RESUME
 type: business-rule
 title: Only active routines pause and only paused routines resume
-status: draft
-applies-to:
-  - UC-TASKS-PAUSE-ROUTINE
-  - UC-TASKS-RESUME-ROUTINE
+status: active
 uses-terms:
   - TERM-ROUTINE
   - TERM-ROUTINE-OCCURRENCE

@@ -2,7 +2,7 @@
 id: "FR-MEALS-CREATE-PLAN"
 type: "functional-requirement"
 title: "Create a weekly meal plan"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-MEALS-CREATE-PLAN"
   - "BR-MEALS-FULL-SLOT-GRID"

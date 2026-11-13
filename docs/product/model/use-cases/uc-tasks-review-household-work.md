@@ -2,7 +2,7 @@
 id: UC-TASKS-REVIEW-HOUSEHOLD-WORK
 type: use-case
 title: Review household work
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

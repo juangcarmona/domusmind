@@ -2,7 +2,7 @@
 id: SB-FAMILY-MANAGER-UPDATES-MEMBER
 type: structured-behaviour
 title: "A manager updates a person's name and role"
-status: draft
+status: active
 illustrates:
   - UC-FAMILY-UPDATE-MEMBER-DETAILS
 given:

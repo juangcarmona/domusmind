@@ -2,9 +2,7 @@
 id: BR-CALENDAR-DISCONNECT-IS-LOCAL
 type: business-rule
 title: "Disconnecting only removes DomusMind's own copy"
-status: draft
-applies-to:
-  - "UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR"
+status: active
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-CONNECTION"
   - "TERM-EXTERNAL-CALENDAR-ENTRY"

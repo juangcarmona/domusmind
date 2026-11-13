@@ -2,9 +2,7 @@
 id: BR-CALENDAR-OUTLOOK-REQUIRED-ACCESS
 type: business-rule
 title: "Connecting Outlook requires read and continued access"
-status: draft
-applies-to:
-  - "UC-CALENDAR-CONNECT-OUTLOOK"
+status: active
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-CONNECTION"
 provenance:

@@ -2,7 +2,7 @@
 id: SB-CALENDAR-REMOVE-NON-PARTICIPANT
 type: structured-behaviour
 title: "Removing someone who is not a participant is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS"
   - "BR-CALENDAR-PARTICIPANT-UNIQUE"

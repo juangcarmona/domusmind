@@ -2,10 +2,7 @@
 id: "BR-RECIPES-ALLOWED-MEAL-TYPES"
 type: "business-rule"
 title: "Recipes are offered only for compatible meal types"
-status: "draft"
-applies-to:
-  - "UC-RECIPES-BROWSE-LIBRARY"
-  - "UC-MEALS-UPDATE-SLOT"
+status: "active"
 uses-terms:
   - "TERM-RECIPE"
   - "TERM-MEAL-TYPE"

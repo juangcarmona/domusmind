@@ -2,13 +2,13 @@
 id: BR-AREAS-OWNERSHIP-EXCLUSIVE
 type: business-rule
 title: Only Areas changes ownership
-status: draft
+status: active
 applies-to:
-- BC-RESPONSIBILITIES
+  - BC-RESPONSIBILITIES
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
-- TERM-AREA-SUPPORT
+  - TERM-AREA
+  - TERM-AREA-OWNER
+  - TERM-AREA-SUPPORT
 provenance:
   source: "openspec/specs/areas/spec.md (Purpose, Cross-Context Referencing); docs/_legacy/04_contexts/responsibilities.md (Ownership Boundary); interview: product owner decision Q-0040 (E-0158)"
   confidence: high

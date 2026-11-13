@@ -2,7 +2,7 @@
 id: SB-CALENDAR-REFRESH-STALE
 type: structured-behaviour
 title: "A stale connection is refreshed automatically"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS"
   - "BR-CALENDAR-DEFAULT-REFRESH-HOURLY"

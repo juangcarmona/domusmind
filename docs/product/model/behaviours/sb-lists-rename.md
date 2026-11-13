@@ -2,7 +2,7 @@
 id: SB-LISTS-RENAME
 type: structured-behaviour
 title: "Renaming a list changes only its name"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-UPDATE-LIST
 given:

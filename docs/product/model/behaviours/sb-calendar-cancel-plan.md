@@ -2,7 +2,7 @@
 id: SB-CALENDAR-CANCEL-PLAN
 type: structured-behaviour
 title: "A cancelled plan leaves active planning"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-CANCEL-PLAN"
 given:

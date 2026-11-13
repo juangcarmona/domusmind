@@ -2,7 +2,7 @@
 id: "SB-RECIPES-LIBRARY-EDIT"
 type: "structured-behaviour"
 title: "A recipe edited from the library shows the new values"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-UPDATE-RECIPE"
 given:

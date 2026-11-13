@@ -24,17 +24,17 @@ in the linked ADRs; structure and behaviour live in the linked views.
 The module set mirrors the product's bounded contexts one to one, and the projection
 strategy keeps each axis owned by a single module:
 
-<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:740fa2cc41d90ec6afb099c5f97fa44e9092af8d83cd68291f807262387a44b0" -->
-<!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
-<!-- pdac:cite id="BC-RESPONSIBILITIES" digest="sha256:288de55e6b2023b73e2a4c9992f9390250c4a7690500cd4d6a207c432f324cc5" -->
-<!-- pdac:cite id="BC-CALENDAR" digest="sha256:001862e5b66de444fc8d524e4bd63d39418293fdb6ae558c1c7bcdfac68cb424" -->
-<!-- pdac:cite id="BC-TASKS" digest="sha256:7a1a64e2267e7795b9766611ab9d65af92e80600a128617a728d4bff899a032d" -->
-<!-- pdac:cite id="BC-LISTS" digest="sha256:ebe914e9acf2be4ff0b5cd2bea8fbc7dd9e63713e3f6dea5e2b600a05ea7be76" -->
-<!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:3e2d211a42325e9e719480512210f6ec9c5255f4fa647518cae3598e2bd6e835" -->
+<!-- pdac:cite id="CON-PRODUCT-SEPARATE-AXES" digest="sha256:f0adb53673dfbfd7051791182578f9ee2f44e0a37b7699c16258854579342a13" -->
+<!-- pdac:cite id="BC-FAMILY" digest="sha256:1b48c9a4b2eba0dfb34314f7afbe1b5801e4f8c41e0ab5a586a9e7da57f7ee4f" -->
+<!-- pdac:cite id="BC-RESPONSIBILITIES" digest="sha256:031c9bd3da1ee33bb97c7f5b66f5d37827db17703653d1b00013680d61c55e58" -->
+<!-- pdac:cite id="BC-CALENDAR" digest="sha256:a365941e30ed9ca7e5a897db9bfbf057484fb0f87caa0c7a2dc4fdb1275c771f" -->
+<!-- pdac:cite id="BC-TASKS" digest="sha256:30abcef1a1eaa3f38dfcb0ada4d54bb3a4f83b4b9c50f1ae3d68b0faa4f835d3" -->
+<!-- pdac:cite id="BC-LISTS" digest="sha256:7a770f21b03b8d0f769f46552bc0ef53fd885d5ce0ab41d081d831d2aa74ae4c" -->
+<!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:bb3de4faf9d7ae3434d0db4180f005236ef81bc3ab84875aaa364e97ac3e66bd" -->
 
 The Outlook adapter realises the pull-only, read-only integration constraint:
 
-<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:a631bcb19c09716b7cbee7b25563b55eec7ca4287de67c84cb1081144d29deb9" -->
+<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:c575d9e19b4520f13a09facea0c1196b6a42ec1f4554865cdb470485d46eb4b0" -->
 
 Identifiers are strongly typed value objects backed by GUIDs
 ([ADR-0010](../../adr/0010-use-guid-backed-strongly-typed-identifiers.md)); the mechanism

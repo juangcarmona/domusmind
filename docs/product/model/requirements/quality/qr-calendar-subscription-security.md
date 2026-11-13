@@ -2,7 +2,7 @@
 id: QR-CALENDAR-SUBSCRIPTION-SECURITY
 type: quality-requirement
 title: Calendar subscriptions protect shared calendar information
-status: draft
+status: active
 quality-attribute: security
 applies-to:
   - UC-CALENDAR-MANAGE-SUBSCRIPTIONS

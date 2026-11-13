@@ -2,7 +2,7 @@
 id: FR-CALENDAR-MANAGE-PLAN-REMINDERS
 type: functional-requirement
 title: "Add and remove plan reminders"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-MANAGE-PLAN-REMINDERS"
   - "BR-CALENDAR-REMINDER-OFFSET-UNIQUE"

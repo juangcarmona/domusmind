@@ -2,17 +2,7 @@
 id: BR-LISTS-ARCHIVED-READ-ONLY
 type: business-rule
 title: "Archived lists are read-only until restored"
-status: draft
-applies-to:
-  - UC-LISTS-ADD-ITEM
-  - UC-LISTS-TOGGLE-ITEM
-  - UC-LISTS-UPDATE-ITEM
-  - UC-LISTS-SET-ITEM-IMPORTANCE
-  - UC-LISTS-SCHEDULE-ITEM
-  - UC-LISTS-CLEAR-ITEM-SCHEDULE
-  - UC-LISTS-REORDER-ITEMS
-  - UC-LISTS-REMOVE-ITEM
-  - UC-LISTS-RESTORE-LIST
+status: active
 uses-terms:
   - TERM-ARCHIVED-LIST
   - TERM-LIST-ITEM

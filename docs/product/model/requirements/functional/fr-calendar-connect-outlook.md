@@ -2,7 +2,7 @@
 id: FR-CALENDAR-CONNECT-OUTLOOK
 type: functional-requirement
 title: "Connect an Outlook account for read-only ingestion"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-CONNECT-OUTLOOK"
   - "BR-CALENDAR-ONE-CONNECTION-PER-ACCOUNT"

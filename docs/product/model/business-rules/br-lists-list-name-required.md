@@ -2,10 +2,7 @@
 id: BR-LISTS-LIST-NAME-REQUIRED
 type: business-rule
 title: "A list must have a non-empty name"
-status: draft
-applies-to:
-  - UC-LISTS-CREATE-LIST
-  - UC-LISTS-UPDATE-LIST
+status: active
 uses-terms:
   - TERM-LIST
 provenance:

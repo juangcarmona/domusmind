@@ -2,7 +2,7 @@
 id: FR-LISTS-CREATE-LIST
 type: functional-requirement
 title: "Create a list from a name"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-CREATE-LIST
   - BR-LISTS-LIST-NAME-REQUIRED

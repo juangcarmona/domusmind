@@ -2,7 +2,7 @@
 id: UC-CALENDAR-MANAGE-PLAN-REMINDERS
 type: use-case
 title: "Add or remove plan reminders"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

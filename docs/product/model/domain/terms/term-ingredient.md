@@ -2,7 +2,7 @@
 id: "TERM-INGREDIENT"
 type: "domain-term"
 title: "Ingredient"
-status: "draft"
+status: "active"
 defined-in: "BC-MEAL-PLANNING"
 synonyms:
   - "Ingredient"

@@ -2,7 +2,7 @@
 id: SB-CALENDAR-RESCHEDULE-CANCELLED-PLAN
 type: structured-behaviour
 title: "A cancelled plan cannot be rescheduled"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-RESCHEDULE-PLAN"
   - "BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED"

@@ -2,7 +2,7 @@
 id: FR-INBOX-CAPTURE
 type: functional-requirement
 title: Capture a household note in Inbox
-status: draft
+status: active
 derived-from:
   - UC-INBOX-CAPTURE-AND-REVIEW
 verification:

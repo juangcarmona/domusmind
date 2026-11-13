@@ -2,7 +2,7 @@
 id: TERM-HOUSEHOLD
 type: domain-term
 title: "Household"
-status: draft
+status: active
 defined-in: BC-FAMILY
 synonyms:
   - Family

@@ -2,7 +2,7 @@
 id: TERM-CHAT-MESSAGE
 type: domain-term
 title: Chat message
-status: draft
+status: active
 defined-in: BC-CHATS
 synonyms: []
 uses-terms:

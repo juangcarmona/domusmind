@@ -2,7 +2,7 @@
 id: TERM-MEMBER
 type: domain-term
 title: "Person"
-status: draft
+status: active
 defined-in: BC-FAMILY
 synonyms:
   - Member

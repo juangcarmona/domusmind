@@ -2,9 +2,7 @@
 id: BR-CALENDAR-EXTERNAL-ENTRY-VISIBILITY
 type: business-rule
 title: "When an imported entry is shown"
-status: draft
-applies-to:
-  - "UC-AGENDA-VIEW-MEMBER-AGENDA"
+status: active
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-ENTRY"
   - "TERM-EXTERNAL-CALENDAR-FEED"

@@ -2,7 +2,7 @@
 id: SB-LISTS-OPEN-UNCHECKED-FIRST
 type: structured-behaviour
 title: "Opening a list shows unchecked items before checked ones"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-OPEN-LIST
 given:

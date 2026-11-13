@@ -2,7 +2,7 @@
 id: FR-AGENDA-CREATE-IN-CONTEXT
 type: functional-requirement
 title: "Create items from the Agenda with context prefilled"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-CREATE-FROM-AGENDA"
 verification:

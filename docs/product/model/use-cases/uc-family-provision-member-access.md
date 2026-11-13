@@ -2,7 +2,7 @@
 id: UC-FAMILY-PROVISION-MEMBER-ACCESS
 type: use-case
 title: "Give a person access to DomusMind"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MANAGER
 supporting-actors: []
 bounded-context: BC-FAMILY

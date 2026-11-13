@@ -2,7 +2,7 @@
 id: CON-PRODUCT-CURRENT-SCOPE
 type: constraint
 title: The product covers household coordination and connected household-managed things
-status: draft
+status: active
 uses-terms:
   - TERM-HOUSEHOLD
   - TERM-EXTERNAL-CALENDAR-ENTRY

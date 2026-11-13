@@ -2,7 +2,7 @@
 id: FR-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR
 type: functional-requirement
 title: "Disconnect an external calendar"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR"
   - "BR-CALENDAR-DISCONNECT-IS-LOCAL"

@@ -2,7 +2,7 @@
 id: BC-CALENDAR
 type: bounded-context
 title: Calendar
-status: draft
+status: active
 provenance:
   source: "docs/product/model/domain/bounded-contexts/bc-calendar.md; GitHub issue #16"
   confidence: high

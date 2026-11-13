@@ -2,7 +2,7 @@
 id: "UC-MEALS-COPY-PREVIOUS-WEEK"
 type: "use-case"
 title: "Plan a week by copying the previous one"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

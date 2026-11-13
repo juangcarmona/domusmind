@@ -2,7 +2,7 @@
 id: UC-LISTS-DELETE-LIST
 type: use-case
 title: "Permanently delete a list"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

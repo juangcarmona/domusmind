@@ -2,7 +2,7 @@
 id: FR-TASKS-ROUTINE-END-TIME-AREA
 type: functional-requirement
 title: Give a routine an end time and an Area
-status: draft
+status: active
 derived-from:
   - UC-TASKS-CREATE-ROUTINE
   - UC-TASKS-UPDATE-ROUTINE

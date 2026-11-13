@@ -2,7 +2,7 @@
 id: "TERM-MEAL-SOURCE"
 type: "domain-term"
 title: "Meal Source"
-status: "draft"
+status: "active"
 defined-in: "BC-MEAL-PLANNING"
 synonyms:
   - "MealSourceType"

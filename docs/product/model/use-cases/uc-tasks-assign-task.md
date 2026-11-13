@@ -2,7 +2,7 @@
 id: UC-TASKS-ASSIGN-TASK
 type: use-case
 title: Assign a task to a person
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

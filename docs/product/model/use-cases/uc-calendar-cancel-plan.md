@@ -2,7 +2,7 @@
 id: UC-CALENDAR-CANCEL-PLAN
 type: use-case
 title: "Cancel a plan"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

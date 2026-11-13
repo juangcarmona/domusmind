@@ -2,12 +2,12 @@
 id: JRN-AREAS-CLOSE-OWNERSHIP-GAPS
 type: journey
 title: Close the household's ownership gaps
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 steps:
-- use-case: UC-AREAS-REVIEW-OWNERSHIP
-- use-case: UC-AREAS-ASSIGN-OWNER
-- use-case: UC-AREAS-ADD-SUPPORT
+  - use-case: UC-AREAS-REVIEW-OWNERSHIP
+  - use-case: UC-AREAS-ASSIGN-OWNER
+  - use-case: UC-AREAS-ADD-SUPPORT
 provenance:
   source: "docs/_legacy/00_product/surfaces/areas.md (Purpose, Entry Points, Interaction, Success Criteria); openspec/specs/areas/spec.md (Ownership Visibility); interview: product owner decision Q-0015 (E-0158)"
   confidence: medium

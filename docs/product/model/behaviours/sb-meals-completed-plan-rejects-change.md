@@ -2,7 +2,7 @@
 id: "SB-MEALS-COMPLETED-PLAN-REJECTS-CHANGE"
 type: "structured-behaviour"
 title: "A Completed plan refuses slot changes"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-UPDATE-SLOT"
   - "BR-MEALS-PLAN-LIFECYCLE"
