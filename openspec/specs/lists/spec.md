@@ -184,7 +184,7 @@ A list that is already archived cannot be archived again.
 
 <!-- pdac:cite id="FR-LISTS-ARCHIVE-LIST" digest="sha256:050b27be17e6b043e91241e56988e8099bc62e18ff07fe964842e197bfe11477" -->
 
-<!-- pdac:cite id="SB-LISTS-ARCHIVE" digest="sha256:c9379ccbb5ac33d455a33444d024ca26cfd7fa9b61ee1a7d308266d8b516ca96" -->
+<!-- pdac:cite id="SB-LISTS-ARCHIVE" digest="sha256:6c0a6878c819ada87235cd49ddfa67d8490441f05dc2a563a3f484f02bc04bf0" -->
 
 <!-- pdac:cite id="SB-LISTS-ARCHIVE-TWICE-REJECTED" digest="sha256:a968324eb8311ee8ac685c0f8514ea6d8e1337253f27ca8c3fb3180d453f9364" -->
 
@@ -221,7 +221,7 @@ Restore is the symmetric inverse of archive. No item data is modified. The resto
 
 <!-- pdac:cite id="FR-LISTS-RESTORE-LIST" digest="sha256:0deba81893a356379ca3ba12744d9856c42b1a53fc7371cae53853b665bb00b3" -->
 
-<!-- pdac:cite id="SB-LISTS-RESTORE" digest="sha256:d45d5c94bcbf926ec765cd6b19419dd87c275b56927c39999dabbc649ec27294" -->
+<!-- pdac:cite id="SB-LISTS-RESTORE" digest="sha256:aeecdcaa3868472dad35760476ef751faf801c90db5841359f38e26ef4b57e0b" -->
 
 <!-- pdac:cite id="UC-LISTS-RESTORE-LIST" digest="sha256:8d6749745dfdea956d173ff87481388095f41038b3308451ff609703da340667" -->
 

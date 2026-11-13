@@ -1,22 +1,26 @@
 ---
 id: FR-CALENDAR-SHOW-CONNECTION-STATUS
 type: functional-requirement
-title: "Show a member their connections and sync health"
+title: Show a member their connections and sync health
 status: active
 derived-from:
-  - "UC-CALENDAR-VIEW-EXTERNAL-CALENDAR-CONNECTIONS"
-  - "BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS"
+  - UC-CALENDAR-VIEW-EXTERNAL-CALENDAR-CONNECTIONS
+  - BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS
 verification:
   - scenario: "A member whose Outlook authorization expired opens their connections and sees that connection flagged as needing re-authorization with the last error, while their other connection shows its last successful sync (observed: external-calendar-api.md; ExternalCalendarConnectionStatus.cs)."
   - scenario: "A member opens one connection and sees its selected and available provider calendars with each calendar's sync window (observed: external-calendar-api.md, Get connection detail)."
+  - scenario-ref: SB-CALENDAR-SYNC-SUCCESS
+  - scenario-ref: SB-CALENDAR-SYNC-PARTIAL-FAILURE
+  - scenario-ref: SB-CALENDAR-SYNC-FAILURE
+  - scenario-ref: SB-CALENDAR-AUTH-EXPIRED
 uses-terms:
-  - "TERM-EXTERNAL-CALENDAR-CONNECTION"
-  - "TERM-EXTERNAL-CALENDAR-FEED"
-  - "TERM-SYNC-HORIZON"
+  - TERM-EXTERNAL-CALENDAR-CONNECTION
+  - TERM-EXTERNAL-CALENDAR-FEED
+  - TERM-SYNC-HORIZON
 provenance:
   source: "src/backend/DomusMind.Domain/Calendar/ExternalConnections/ExternalCalendarConnectionStatus.cs; docs/_legacy/06_interfaces/external-calendar-api.md (List member connections, Get connection detail); docs/_legacy/06_interfaces/external-calendar-contract-model-catalog.md (Status values); src/backend/DomusMind.Domain/Calendar/ExternalConnections/ExternalCalendarConnection.cs; interview: product owner decision Q-0049 (E-0158)"
-  confidence: "high"
-  recovered-from: "documentation"
+  confidence: high
+  recovered-from: documentation
 ---
 
 ## Requirement

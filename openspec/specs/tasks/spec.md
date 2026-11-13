@@ -338,7 +338,7 @@ A paused routine stops appearing in agenda projections. The routine retains its 
 
 <!-- pdac:cite id="FR-TASKS-PAUSE-ROUTINE" digest="sha256:8059ca8e3c8a08d6d4627760012c7ee4083b609c6c45182d54c4ab5cb6fdef35" -->
 
-<!-- pdac:cite id="SB-TASKS-PAUSE-ROUTINE" digest="sha256:635c3711c6b6efd2e4b0ae1586ff64b05404cd17877f9d30d27b1a51e66d3c54" -->
+<!-- pdac:cite id="SB-TASKS-PAUSE-ROUTINE" digest="sha256:0f644c50dcaba4ad549c1d51fceaaf33c6dd9bc46e7077158f62630188838641" -->
 
 <!-- pdac:cite id="SB-TASKS-PAUSE-PAUSED-REJECTED" digest="sha256:d8abc9a465e274ab1fe94ca193410bb5d5e5e4620b62689aa7206570388139d3" -->
 
@@ -373,7 +373,7 @@ A resumed routine becomes active and begins appearing in agenda projections agai
 
 <!-- pdac:cite id="FR-TASKS-RESUME-ROUTINE" digest="sha256:ca14a5d469152463f35cf906cc9e4e84cd6f987682c54d4710f5c30744e29052" -->
 
-<!-- pdac:cite id="SB-TASKS-RESUME-ROUTINE" digest="sha256:d95bb1922cb988daa720d26b33eb358fe2c4f65ed633bdb570b923c386430a62" -->
+<!-- pdac:cite id="SB-TASKS-RESUME-ROUTINE" digest="sha256:d599e1ba868b9f3e6ff952ddfab86373427a3f256dfcf2f832a85de2d543903e" -->
 
 <!-- pdac:cite id="SB-TASKS-RESUME-ACTIVE-REJECTED" digest="sha256:1d800781e760a2aa51115b8d6e6df0e4f552c2a2736b7275b21c4b474575bfba" -->
 

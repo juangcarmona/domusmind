@@ -688,7 +688,7 @@ Each connection row shows: provider label, account email, included calendar coun
 
 <!-- pdac:cite id="FR-WEB-CONFIRM-DISCONNECT" digest="sha256:e938c89cca90929913990eaba3bb556b2e6f9a12b53eca14efadb0763dc382c3" -->
 
-<!-- pdac:cite id="FR-CALENDAR-SHOW-CONNECTION-STATUS" digest="sha256:b9c8bdaa5b345203b1688c4f2ec3dae6b03956a0fb4ff504ddbcce56fd996af8" -->
+<!-- pdac:cite id="FR-CALENDAR-SHOW-CONNECTION-STATUS" digest="sha256:ebea42ca547efc3df187cfb4e96c667c5f0421336e08dec667a693dbcb2b7403" -->
 
 <!-- pdac:cite id="FR-CALENDAR-SYNC-ALL-MY-CALENDARS" digest="sha256:00d6307f6e04781deae485202279fadb2c0840b08267d96f71e1d8c40f3fc62b" -->
 

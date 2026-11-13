@@ -171,7 +171,7 @@ Cancellation preserves the Plan in history but removes it from active planning. 
 
 <!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:599c500bb2d7c2fe55ab003998aad87f2aa58f667553ba880045ed02a70120a9" -->
 
-<!-- pdac:cite id="SB-CALENDAR-CANCEL-PLAN" digest="sha256:07768ec93f9aac34713cc74e2e768a941cc38a6a1709eca445dd04241593b9ec" -->
+<!-- pdac:cite id="SB-CALENDAR-CANCEL-PLAN" digest="sha256:0f3fcb8c9fb6afd6778ae7e62177eb35fe720a75e558228cfc880f6fd76a2bf3" -->
 
 <!-- pdac:cite id="SB-CALENDAR-CANCEL-CANCELLED-PLAN" digest="sha256:cfff3ff5d8a8c573a7aac5c289fb4862225f35f4c6fafa2c848502b3102d843d" -->
 
@@ -482,7 +482,7 @@ Disconnection removes the connection and all its imported read-only entries from
 
 <!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:f538589cc3d3dd54bfc8539b59e38f13f87b49547cf25e651e8ce2906810583e" -->
 
-<!-- pdac:cite id="SB-CALENDAR-DISCONNECT" digest="sha256:f41562d352507951df0866a1d9e68e47fc04ec6195d36dc2530a328521e294b1" -->
+<!-- pdac:cite id="SB-CALENDAR-DISCONNECT" digest="sha256:08ccad7fc87478aee53ebac67db39444dd69f4badb02aff22d6b89e14f8b8e06" -->
 
 <!-- pdac:cite id="SB-CALENDAR-DISCONNECT-UNKNOWN" digest="sha256:96cbddcb5828d1d7b4bb861ab0218a4e981cc751ea06225292b0e2f813e6537a" -->
 
@@ -509,7 +509,7 @@ A member SHALL be able to manually trigger synchronization of an external calend
 
 Synchronization imports new, updated, and deleted occurrences from each selected feed within the active sync horizon. The sync operates incrementally using a stored delta cursor when one is available; otherwise it performs a fresh bounded load. Two synchronizations of the same connection must not run concurrently. Imported entries remain read-only.
 
-<!-- pdac:cite id="FR-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:4719b19d697b273b6917e7ea23aa4bb7937d085da59d4d28973480b648e06cc0" -->
+<!-- pdac:cite id="FR-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:786617e80baa09464aa3e3c5588a596444e4963880d8be17a3e48288d6fd6925" -->
 
 <!-- pdac:cite id="UC-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:20397f50049cb36f540d4e65b7989c0f38be858535349e86daf4790319b37fe4" -->
 

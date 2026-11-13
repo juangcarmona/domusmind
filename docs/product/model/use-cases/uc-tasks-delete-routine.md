@@ -10,7 +10,7 @@ governed-by: []
 uses-terms:
   - TERM-ROUTINE
 provenance:
-  source: "docs/_legacy/04_contexts/tasks.md (Commands, Domain Events Emitted); openspec/specs/tasks/spec.md (Notes 5); absent from src/backend/DomusMind.Domain/Tasks; interview: product owner decision Q-0009 (E-0158)"
+  source: "docs/_legacy/04_contexts/tasks.md (Commands, Domain Events Emitted); openspec/specs/tasks/spec.md (Notes 5); src/backend/DomusMind.Domain/Tasks/Routine.cs; src/backend/DomusMind.Application/Features/Tasks/DeleteRoutine/DeleteRoutineCommandHandler.cs; interview: product owner decision Q-0009 (E-0158)"
   confidence: medium
   recovered-from: documentation
 ---
@@ -38,7 +38,7 @@ None stated.
 
 ## Failure Conditions
 
-None specified (observed: openspec/specs/tasks/spec.md, Notes 5). The current domain model has no deletion for routines yet (observed: src/backend/DomusMind.Domain/Tasks/Routine.cs).
+None specified (observed: openspec/specs/tasks/spec.md, Notes 5). Routine.Delete and the DeleteRoutine handler now implement removal (observed: src/backend/DomusMind.Domain/Tasks/Routine.cs; src/backend/DomusMind.Application/Features/Tasks/DeleteRoutine/DeleteRoutineCommandHandler.cs).
 
 ## Postconditions
 
