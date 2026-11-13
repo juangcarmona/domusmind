@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "enabled": true,
+  "routes": ["ff"],
+  "paths": [
+    "src/backend/",
+    "src/web/app/",
+    "src/web/public/",
+    "tests/",
+    "docs/architecture/",
+    "docs/design/",
+    "docs/devops.md"
+  ],
+  "reviewerProfile": "plan",
+  "allowFivePoint": false,
+  "merge": true,
+  "maxCorrections": 1,
+  "timeoutSeconds": 6600
+}

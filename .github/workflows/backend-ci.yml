@@ -102,3 +102,18 @@ jobs:
         with:
           name: domusmind-api
           path: artifact/api
+
+  gate:
+    name: backend gate
+    needs: [changes, build]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require a successful build when backend changed
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          RELEVANT: ${{ needs.changes.outputs.relevant }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          test "$CHANGES_RESULT" = success
+          if [ "$RELEVANT" = true ]; then test "$BUILD_RESULT" = success; fi

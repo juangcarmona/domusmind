@@ -77,3 +77,18 @@ jobs:
           name: public-site-dist
           path: src/web/public/dist
           if-no-files-found: error
+
+  gate:
+    name: public site gate
+    needs: [changes, validate]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require validation when the site changed
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          RELEVANT: ${{ needs.changes.outputs.relevant }}
+          VALIDATE_RESULT: ${{ needs.validate.result }}
+        run: |
+          test "$CHANGES_RESULT" = success
+          if [ "$RELEVANT" = true ]; then test "$VALIDATE_RESULT" = success; fi
