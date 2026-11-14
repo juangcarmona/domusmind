@@ -289,7 +289,7 @@ unaffected:
 
 ## Problem
 
-Several examples combine different stimuli or states, and fourteen requirements share a title with their use case. Some recovery notes no longer match implemented operations. Cross-area journeys do not make every ownership handoff visible.
+Several examples combine different stimuli or states, and fourteen title matches occur between requirements and use cases. Some recovery notes no longer match implemented operations. Cross-area journeys do not make every ownership handoff visible.
 
 ## Intended Product Outcome
 
@@ -309,7 +309,7 @@ The four low-confidence recovered artifacts remain draft: CON-PRODUCT-PHASED-ROA
 
 ## Product Acceptance
 
-The fourteen requirement/use-case pairs retain separate responsibilities with distinct titles. Every retired example has replacement references. The complete original set of 181 structured behaviours is accounted for in the review. Household access and owning-area validation still govern cross-area actions. No confidence level is raised to hide a warning.
+The fourteen shared titles are clarified while preserving the existing many-to-many FR–UC relationships. Every retired example has replacement references. The complete original set of 181 structured behaviours is accounted for in the review. Household access and owning-area validation still govern cross-area actions. No confidence level is raised to hide a warning.
 
 ## Out of Scope
 

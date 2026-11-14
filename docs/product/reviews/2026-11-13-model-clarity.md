@@ -4,7 +4,7 @@
 
 The original 640 tracked model files represented 630 product artifacts and 10 directory placeholders. The graph was connected, and all 181 structured behaviours were used by requirements. The file count did not establish duplication.
 
-The model now uses PDAC v1alpha2, six native lifecycles and separate examples for actions that had been combined. Readers can start from a household question in the [product guide](../README.md). The fourteen same-title requirement/use-case pairs remain separate, with outcome titles for requirements and action titles for use cases.
+The model now uses PDaC v1alpha2, six native lifecycles and separate examples for actions that had been combined. Readers can start from a household question in the [product guide](../README.md). Fourteen shared titles were reviewed and clarified, with outcome titles for requirements and action titles for use cases. FR–UC relationships remain many-to-many.
 
 | Measure | Before | After |
 | --- | ---: | ---: |
@@ -42,7 +42,7 @@ Each batch was authored as a native Product Change, validated as an overlay, giv
 
 All 19 transition identities have at least one positive example linked by covers-transition. This checks the model relationship; it does not prove every source-state variant or delivered implementation. Refused actions keep their own examples without claiming a successful transition.
 
-The implementation contains 71 IDomainEvent declarations. Events remain implementation evidence and can be the stimulus or result in an example. This PDAC contract has no standalone domain-event artifact. Copying each event into a new document would create another inventory to maintain without adding native meaning.
+The implementation contains 71 IDomainEvent declarations. Events remain implementation evidence and can be the stimulus or result in an example. This PDaC contract has no standalone domain-event artifact. Copying each event into a new document would create another inventory to maintain without adding native meaning.
 
 InboxProposalApproved, InboxProposalApplied, RoutinePaused, RoutineResumed, RoutineDeleted, ListArchived, ListRestored, ListDeleted and EventCancelled provide evidence for the modeled changes. The registered Inbox event handler already dispatches owning-area commands through EventLogWriter. Stale architecture prose claiming events were never dispatched is corrected; accepted ADRs are unchanged.
 
@@ -78,9 +78,11 @@ Humanizer 3.1.0 supplied the review for repeated framing, inflated claims and un
 
 The edits preserve normative MUST, SHOULD and MAY meanings, access boundaries and undecided items. The scope and household constraints lead with what the product does. Existing scope exclusions remain explicit where they set an accepted boundary. Long Inbox validation prose is laid out by proposal type. The Invited/Provisioned wording now makes clear that these label the same pending invitation; a duplicate subscription-revocation outcome is removed.
 
-## Fourteen requirement/use-case pairs
+## Fourteen shared FR–UC titles reviewed
 
-Each pair was reviewed in full. The requirement and flow carry different information, so both are retained. Requirement titles now state the required outcome.
+The review selected fourteen title matches between requirements and use cases. Their content was reviewed in full, and requirement titles now state the required outcome.
+
+FR–UC relationships are many-to-many. All 161 original FR-to-UC derived-from links are unchanged: 22 FRs reference multiple UCs, and 36 UCs are referenced by multiple FRs. For example, FR-FAMILY-MANAGE-MEMBER-ACCESS references five UCs, while UC-INBOX-CAPTURE-AND-REVIEW contributes to three FRs. The title review created no new FR or UC and changed none of these links.
 
 | Requirement | Use case | Review |
 | --- | --- | --- |
