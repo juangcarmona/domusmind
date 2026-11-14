@@ -2,7 +2,7 @@
 id: "SB-MEALS-APPLY-TEMPLATE-EMPTY-WEEK"
 type: "structured-behaviour"
 title: "Applying a template to an empty week creates a pre-filled Draft"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-APPLY-TEMPLATE"
   - "BR-MEALS-TEMPLATE-SNAPSHOT"

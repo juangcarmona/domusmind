@@ -2,9 +2,7 @@
 id: "BR-RECIPES-DELETE-GUARD"
 type: "business-rule"
 title: "A recipe used by an Active meal plan cannot be deleted"
-status: "draft"
-applies-to:
-  - "UC-RECIPES-DELETE-RECIPE"
+status: "active"
 uses-terms:
   - "TERM-RECIPE"
   - "TERM-MEAL-PLAN-STATUS"

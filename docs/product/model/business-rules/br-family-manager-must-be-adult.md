@@ -2,10 +2,7 @@
 id: BR-FAMILY-MANAGER-MUST-BE-ADULT
 type: business-rule
 title: "Only adults can be managers"
-status: draft
-applies-to:
-  - UC-FAMILY-ADD-MEMBER
-  - UC-FAMILY-UPDATE-MEMBER-DETAILS
+status: active
 uses-terms:
   - TERM-MANAGER
   - TERM-MEMBER-ROLE

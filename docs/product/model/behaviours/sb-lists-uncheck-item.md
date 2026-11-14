@@ -2,7 +2,7 @@
 id: SB-LISTS-UNCHECK-ITEM
 type: structured-behaviour
 title: "Unchecking an item makes it relevant again"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-TOGGLE-ITEM
   - BR-LISTS-TOGGLE-PRESERVES-ITEM

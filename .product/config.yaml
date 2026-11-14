@@ -1,4 +1,4 @@
-version: v1alpha1
+version: v1alpha2
 product-root: docs/product
 validation:
   warnings-as-errors: false
@@ -15,5 +15,6 @@ extensions:
       consumer-roots:
         - openspec
         - docs/architecture
+        - docs/design
         - src
         - tests

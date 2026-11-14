@@ -2,13 +2,13 @@
 id: UC-AREAS-CHANGE-AREA-COLOR
 type: use-case
 title: Change an Area's colour
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-RESPONSIBILITIES
 governed-by: []
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: "docs/_legacy/00_product/surfaces/areas.md (Default View, Inspector, Interaction); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs (Color, Repaint); openspec/specs/areas/spec.md (Notes, Area color); interview: product owner decision Q-0019 (E-0158)"
   confidence: high

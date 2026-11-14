@@ -2,9 +2,8 @@
 id: BR-TASKS-EXPLICIT-ASSIGNMENT
 type: business-rule
 title: Tasks are only assigned explicitly
-status: draft
+status: active
 applies-to:
-  - UC-TASKS-ASSIGN-TASK
   - BC-TASKS
 uses-terms:
   - TERM-TASK-ASSIGNEE

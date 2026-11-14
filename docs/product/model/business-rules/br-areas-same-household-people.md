@@ -2,14 +2,11 @@
 id: BR-AREAS-SAME-HOUSEHOLD-PEOPLE
 type: business-rule
 title: Only people of the Area's household can own or support it
-status: draft
-applies-to:
-- UC-AREAS-ASSIGN-OWNER
-- UC-AREAS-ADD-SUPPORT
+status: active
 uses-terms:
-- TERM-AREA
-- TERM-MEMBER
-- TERM-HOUSEHOLD
+  - TERM-AREA
+  - TERM-MEMBER
+  - TERM-HOUSEHOLD
 provenance:
   source: openspec/specs/areas/spec.md (Primary Owner Assignment, Secondary Owner Assignment, Responsibility Transfer); docs/_legacy/04_contexts/responsibilities.md (Family Consistency)
   confidence: high

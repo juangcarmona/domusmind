@@ -2,7 +2,7 @@
 id: "UC-MEALS-APPLY-TEMPLATE"
 type: "use-case"
 title: "Plan a week from a template"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

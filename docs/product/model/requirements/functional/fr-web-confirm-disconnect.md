@@ -1,21 +1,22 @@
 ---
 id: FR-WEB-CONFIRM-DISCONNECT
 type: functional-requirement
-title: "Confirm before disconnecting a calendar"
-status: draft
+title: Confirm before disconnecting a calendar
+status: active
 derived-from:
-  - "UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR"
-  - "UC-WEB-MANAGE-SETTINGS"
+  - UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR
+  - UC-WEB-MANAGE-SETTINGS
 verification:
-  - scenario-ref: "SB-WEB-DISCONNECT-CONFIRMATION"
+  - scenario-ref: SB-WEB-REQUEST-DISCONNECT
+  - scenario-ref: SB-WEB-CONFIRM-DISCONNECT
 uses-terms:
-  - "TERM-EXTERNAL-CALENDAR-CONNECTION"
-  - "TERM-EXTERNAL-CALENDAR-ENTRY"
-  - "TERM-PLAN"
+  - TERM-EXTERNAL-CALENDAR-CONNECTION
+  - TERM-EXTERNAL-CALENDAR-ENTRY
+  - TERM-PLAN
 provenance:
   source: "openspec/specs/web-app/spec.md (Outlook Calendar Connection Management); docs/_legacy/00_product/surfaces/settings.md (Interaction Rules: Disconnect)"
-  confidence: "high"
-  recovered-from: "documentation"
+  confidence: high
+  recovered-from: documentation
 ---
 
 ## Requirement

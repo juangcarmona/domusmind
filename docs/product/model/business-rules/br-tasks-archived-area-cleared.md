@@ -2,10 +2,9 @@
 id: BR-TASKS-ARCHIVED-AREA-CLEARED
 type: business-rule
 title: Archiving an Area removes it from tasks and routines
-status: draft
+status: active
 applies-to:
   - BC-TASKS
-  - UC-AREAS-ARCHIVE-AREA
 uses-terms:
   - TERM-AREA
   - TERM-TASK

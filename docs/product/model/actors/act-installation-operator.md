@@ -2,7 +2,7 @@
 id: ACT-INSTALLATION-OPERATOR
 type: actor
 title: Installation Operator
-status: draft
+status: active
 actor-kind: human
 ---
 

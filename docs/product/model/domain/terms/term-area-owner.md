@@ -2,13 +2,13 @@
 id: TERM-AREA-OWNER
 type: domain-term
 title: Owner
-status: draft
+status: active
 defined-in: BC-RESPONSIBILITIES
 synonyms:
-- Primary Owner
+  - Primary Owner
 uses-terms:
-- TERM-AREA
-- TERM-MEMBER
+  - TERM-AREA
+  - TERM-MEMBER
 provenance:
   source: openspec/specs/areas/spec.md (Purpose, Primary Owner Assignment); docs/_legacy/04_contexts/responsibilities.md (Ubiquitous Language Notes); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs
   confidence: high

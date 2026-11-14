@@ -3,8 +3,6 @@ id: BR-FAMILY-RELATIONSHIP-INTEGRITY
 type: business-rule
 title: "Relationships link two distinct existing people, once per type"
 status: draft
-applies-to:
-  - UC-FAMILY-MANAGE-RELATIONSHIPS
 uses-terms:
   - TERM-RELATIONSHIP
   - TERM-MEMBER

@@ -2,9 +2,7 @@
 id: BR-AGENDA-SCOPE-SWITCH-KEEPS-CONTEXT
 type: business-rule
 title: "Switching scope keeps the mode and date"
-status: draft
-applies-to:
-  - "UC-AGENDA-NAVIGATE"
+status: active
 uses-terms:
   - "TERM-AGENDA-SCOPE"
   - "TERM-AGENDA-MODE"

@@ -2,7 +2,7 @@
 id: "UC-MEALS-PROMOTE-PLAN"
 type: "use-case"
 title: "Make a meal plan the household's working plan"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

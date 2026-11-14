@@ -2,7 +2,7 @@
 id: "SB-MEALS-LOCKED-SLOT-REJECTED"
 type: "structured-behaviour"
 title: "Changing a locked slot without unlocking it is rejected"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-UPDATE-SLOT"
   - "BR-MEALS-LOCKED-SLOT"

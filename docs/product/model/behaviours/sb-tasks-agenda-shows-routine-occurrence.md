@@ -2,7 +2,7 @@
 id: SB-TASKS-AGENDA-SHOWS-ROUTINE-OCCURRENCE
 type: structured-behaviour
 title: Active routine appears on its scheduled days
-status: draft
+status: active
 illustrates:
   - UC-TASKS-SEE-WORK-IN-AGENDA
   - BR-TASKS-ROUTINES-PROJECTED

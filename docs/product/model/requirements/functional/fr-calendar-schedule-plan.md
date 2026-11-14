@@ -1,26 +1,26 @@
 ---
 id: FR-CALENDAR-SCHEDULE-PLAN
 type: functional-requirement
-title: "Schedule a plan"
-status: draft
+title: New Plans require a title and start and accept optional details
+status: active
 derived-from:
-  - "UC-CALENDAR-SCHEDULE-PLAN"
-  - "BR-CALENDAR-PLAN-REQUIRES-TITLE-AND-START"
-  - "BR-CALENDAR-PLAN-END-AFTER-START"
-  - "BR-CALENDAR-PARTICIPANT-IN-HOUSEHOLD"
+  - UC-CALENDAR-SCHEDULE-PLAN
+  - BR-CALENDAR-PLAN-REQUIRES-TITLE-AND-START
+  - BR-CALENDAR-PLAN-END-AFTER-START
+  - BR-CALENDAR-PARTICIPANT-IN-HOUSEHOLD
 verification:
-  - scenario-ref: "SB-CALENDAR-SCHEDULE-PLAN-MINIMUM"
-  - scenario-ref: "SB-CALENDAR-SCHEDULE-PLAN-END-BEFORE-START"
-  - scenario-ref: "SB-CALENDAR-SCHEDULE-PLAN-UNKNOWN-PARTICIPANT"
-  - scenario-ref: "SB-CALENDAR-SCHEDULE-ALL-DAY-PLAN"
+  - scenario-ref: SB-CALENDAR-SCHEDULE-PLAN-MINIMUM
+  - scenario-ref: SB-CALENDAR-SCHEDULE-PLAN-END-BEFORE-START
+  - scenario-ref: SB-CALENDAR-SCHEDULE-PLAN-UNKNOWN-PARTICIPANT
+  - scenario-ref: SB-CALENDAR-SCHEDULE-ALL-DAY-PLAN
 uses-terms:
-  - "TERM-PLAN"
-  - "TERM-PLAN-PARTICIPANT"
-  - "TERM-AREA"
+  - TERM-PLAN
+  - TERM-PLAN-PARTICIPANT
+  - TERM-AREA
 provenance:
   source: "openspec/specs/calendar/spec.md (Event Scheduling); src/backend/DomusMind.Domain/Calendar/CalendarEvent.cs; src/backend/DomusMind.Domain/Calendar/ValueObjects/EventTime.cs; interview: product owner decision Q-0045 (E-0158)"
-  confidence: "high"
-  recovered-from: "documentation"
+  confidence: high
+  recovered-from: documentation
 ---
 
 ## Requirement

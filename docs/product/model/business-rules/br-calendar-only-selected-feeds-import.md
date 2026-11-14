@@ -2,10 +2,7 @@
 id: BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT
 type: business-rule
 title: "Only selected provider calendars import entries"
-status: draft
-applies-to:
-  - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
-  - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
+status: active
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-FEED"
 provenance:

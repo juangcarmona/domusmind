@@ -2,7 +2,7 @@
 id: QR-PRODUCT-CAPTURE-EASIER-THAN-REMEMBERING
 type: quality-requirement
 title: "Capturing household state is easier than remembering it"
-status: draft
+status: active
 quality-attribute: "usability"
 applies-to:
   - "UC-LISTS-ADD-ITEM"

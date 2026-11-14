@@ -2,9 +2,7 @@
 id: BR-FAMILY-DIRECTORY-ORDER
 type: business-rule
 title: "The directory is ordered by group, managers first, then name"
-status: draft
-applies-to:
-  - UC-FAMILY-VIEW-MEMBER-DIRECTORY
+status: active
 uses-terms:
   - TERM-MEMBER-DIRECTORY
   - TERM-MANAGER

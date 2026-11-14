@@ -2,7 +2,7 @@
 id: TERM-INBOX-ITEM
 type: domain-term
 title: Inbox item
-status: draft
+status: active
 defined-in: BC-INBOX
 provenance:
   source: "GitHub issue #17; proposed scope for CHG-INBOX-ASSISTED-CAPTURE"

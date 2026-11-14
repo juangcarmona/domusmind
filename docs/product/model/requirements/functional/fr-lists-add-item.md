@@ -2,7 +2,7 @@
 id: FR-LISTS-ADD-ITEM
 type: functional-requirement
 title: "Add an item to an active list with only a name"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-ADD-ITEM
   - BR-LISTS-NEW-ITEM-UNCHECKED-APPENDED

@@ -2,22 +2,22 @@
 id: UC-AREAS-ASSIGN-OWNER
 type: use-case
 title: Set or change an Area's Owner
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-RESPONSIBILITIES
 governed-by:
-- BR-AREAS-ANY-MEMBER-MANAGES
-- BR-AREAS-SINGLE-OWNER
-- BR-AREAS-SAME-HOUSEHOLD-PEOPLE
-- BR-AREAS-NO-INACTIVE-ASSIGNEE
-- BR-AREAS-OWNER-NOT-SUPPORT
-- BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE
+  - BR-AREAS-ANY-MEMBER-MANAGES
+  - BR-AREAS-SINGLE-OWNER
+  - BR-AREAS-SAME-HOUSEHOLD-PEOPLE
+  - BR-AREAS-NO-INACTIVE-ASSIGNEE
+  - BR-AREAS-OWNER-NOT-SUPPORT
+  - BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
-- TERM-MEMBER
-- TERM-RESPONSIBILITY-TRANSFER
+  - TERM-AREA
+  - TERM-AREA-OWNER
+  - TERM-MEMBER
+  - TERM-RESPONSIBILITY-TRANSFER
 provenance:
   source: "openspec/specs/areas/spec.md (Primary Owner Assignment); docs/_legacy/00_product/surfaces/areas.md (Interaction); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs (AssignPrimaryOwner); interview: product owner decision Q-0012 (E-0158); interview: product owner decision Q-0014 (E-0158); openspec/specs/areas/spec.md (Responsibility Transfer, Notes); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs (TransferPrimaryOwner); interview: product owner review decision (merges)"
   confidence: high

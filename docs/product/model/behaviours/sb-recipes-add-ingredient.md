@@ -2,7 +2,7 @@
 id: "SB-RECIPES-ADD-INGREDIENT"
 type: "structured-behaviour"
 title: "Adding a new ingredient grows the recipe's ingredient list"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-MANAGE-INGREDIENTS"
 given:

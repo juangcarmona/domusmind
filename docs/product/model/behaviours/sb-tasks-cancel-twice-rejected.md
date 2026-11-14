@@ -2,7 +2,7 @@
 id: SB-TASKS-CANCEL-TWICE-REJECTED
 type: structured-behaviour
 title: Cancelled task cannot be cancelled again
-status: draft
+status: active
 illustrates:
   - UC-TASKS-CANCEL-TASK
   - BR-TASKS-CLOSED-TASK-FINAL

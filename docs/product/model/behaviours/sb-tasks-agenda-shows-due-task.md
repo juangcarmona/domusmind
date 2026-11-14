@@ -2,7 +2,7 @@
 id: SB-TASKS-AGENDA-SHOWS-DUE-TASK
 type: structured-behaviour
 title: Task with a due date appears in the Agenda
-status: draft
+status: active
 illustrates:
   - UC-TASKS-SEE-WORK-IN-AGENDA
 given:

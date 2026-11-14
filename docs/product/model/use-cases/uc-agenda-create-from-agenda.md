@@ -2,7 +2,7 @@
 id: UC-AGENDA-CREATE-FROM-AGENDA
 type: use-case
 title: "Add a plan, task or other item from the Agenda"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

@@ -2,7 +2,7 @@
 id: UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS
 type: use-case
 title: "Add or remove plan participants"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

@@ -20,6 +20,9 @@ product behaviour, with explicit context (given), a single stimulus (when) and o
 outcomes (then). All given entries and all then entries are conjunctive; alternatives are
 separate SB artifacts, never an ambiguous "or" clause.
 illustrates: the use cases, business rules or constraints this example makes concrete (required).
+covers-transition (optional in v1alpha2): an object with lifecycle: LC-EXAMPLE
+and transition: FINISH. Add it only when this example performs that transition;
+a rejected action still illustrates its use case or rule without covering a transition.
 given (optional) / when / then: format-neutral product clauses. Never start a clause with a
 literal GIVEN, WHEN, THEN or AND keyword in any letter case; renderers supply those words.
 Never name test classes, step definitions, selectors, mocks or other implementation machinery.

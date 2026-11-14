@@ -2,7 +2,7 @@
 id: "UC-MEALS-CREATE-TEMPLATE"
 type: "use-case"
 title: "Save a weekly meal template"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

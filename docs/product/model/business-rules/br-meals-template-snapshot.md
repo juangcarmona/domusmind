@@ -2,9 +2,7 @@
 id: "BR-MEALS-TEMPLATE-SNAPSHOT"
 type: "business-rule"
 title: "Applying a template copies it as a snapshot"
-status: "draft"
-applies-to:
-  - "UC-MEALS-APPLY-TEMPLATE"
+status: "active"
 uses-terms:
   - "TERM-WEEKLY-TEMPLATE"
   - "TERM-MEAL-PLAN"

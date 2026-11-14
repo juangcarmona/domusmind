@@ -1,13 +1,12 @@
 ---
 id: BR-CHAT-ASSISTANT-READ-ONLY
 type: business-rule
-title: The Chats assistant responds only to explicit read-only questions
-status: draft
-applies-to:
-  - UC-CHAT-ASK-ASSISTANT
+title: The Chats assistant answers explicit requests and stages reviewed actions
+status: active
 uses-terms:
   - TERM-ASSISTANT-RESPONSE
 ---
+
 ## Rule
 
 The assistant responds only when a member explicitly invokes `@dm`. It answers from DomusMind information the invoking member may access, does not present unsupported information as fact, and cannot invoke household domain commands. A supported Plan or List Item create/update request in a household thread may be clarified and staged as an unreviewed Inbox proposal. It cannot create or change a Plan, Task, List Item or other household record until an authorized member explicitly approves the proposal through Inbox. An action request in a private thread is not copied to the household Inbox.

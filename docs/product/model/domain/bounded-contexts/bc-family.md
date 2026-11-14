@@ -2,7 +2,7 @@
 id: BC-FAMILY
 type: bounded-context
 title: Household and Members
-status: draft
+status: active
 provenance:
   source: "openspec/specs/family/spec.md (Purpose, Identity Boundary Enforcement, Notes N1-N8); docs/_legacy/04_contexts/family.md (Purpose, Responsibilities, Boundaries With Other Contexts, Design Notes); docs/_legacy/04_contexts/family-member-management.md (Phase 1 scope); corroborated by src/backend/DomusMind.Domain/Family/**; interview: product owner decision Q-0021 (E-0158); interview: product owner decision Q-0022 (E-0158); interview: product owner decision Q-0024 (E-0158); interview: product owner decision Q-0025 (E-0158)"
   confidence: high

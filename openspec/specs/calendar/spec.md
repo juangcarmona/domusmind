@@ -24,17 +24,17 @@ The household-facing term is **Plan**; `Event` is a domain-code synonym for the 
 
 Imported external calendar data is read-only integration state. It must never be treated as native household planning state.
 
-<!-- pdac:cite id="BC-CALENDAR" digest="sha256:001862e5b66de444fc8d524e4bd63d39418293fdb6ae558c1c7bcdfac68cb424" -->
+<!-- pdac:cite id="BC-CALENDAR" digest="sha256:a365941e30ed9ca7e5a897db9bfbf057484fb0f87caa0c7a2dc4fdb1275c771f" -->
 
-<!-- pdac:cite id="TERM-PLAN" digest="sha256:f06fe7678136c535cf5f55e815f161d73562165b17c565f9496386dbd8395ac3" -->
+<!-- pdac:cite id="TERM-PLAN" digest="sha256:a1ff0f3de21aac20325b367ed1898b3eb3688f97d6c3e0b60b798c724025b07b" -->
 
-<!-- pdac:cite id="TERM-CALENDAR-SUBSCRIPTION" digest="sha256:ef668c1ca67896c5423bb06458d9ea44192a904779ab92f37af9e38b2c7b8205" -->
+<!-- pdac:cite id="TERM-CALENDAR-SUBSCRIPTION" digest="sha256:cedc0b1c2b89b20e16f3332e222c5db3aedd6c2ad530cb30a74e665f0ef72c83" -->
 
-<!-- pdac:cite id="TERM-AGENDA" digest="sha256:816f1a2f6d4e87da6b928b3c6d68433adab2c5467f4c02667e00fdb9b86387f0" -->
+<!-- pdac:cite id="TERM-AGENDA" digest="sha256:a83d53e6c8e54bf187b9038ee34722a44ddd5c98211e1c69089db40b96b26014" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:2b2ea1de6c0f9a84d96f94d20087467fa7a198f197da80a85748fb145816fe03" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:f538589cc3d3dd54bfc8539b59e38f13f87b49547cf25e651e8ce2906810583e" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:a3d8d4afcfc23492b745fa37ac5b103ae76a7bc1d214456aeddbe2f57473ceea" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:0a46d8c63e8a5ca97a1757e7ed3e0528c2c10779a63621783793131b2bf55522" -->
 
 ## Requirements
 
@@ -42,7 +42,7 @@ Imported external calendar data is read-only integration state. It must never be
 
 An authorized household member can create a family timeline note with a date and note text. A note is a standalone Calendar record and appears in the household timeline on its date without changing a Plan or another area record.
 
-<!-- pdac:cite id="BC-CALENDAR" digest="sha256:001862e5b66de444fc8d524e4bd63d39418293fdb6ae558c1c7bcdfac68cb424" -->
+<!-- pdac:cite id="BC-CALENDAR" digest="sha256:a365941e30ed9ca7e5a897db9bfbf057484fb0f87caa0c7a2dc4fdb1275c771f" -->
 
 #### Scenario: Member records a dated family note
 
@@ -59,29 +59,29 @@ A household SHALL be able to schedule a Plan with a title and a start date as th
 
 Optional inputs include an end after the start, household member participants (of any role), reminders, an optional description and colour, and an Area reference for context. A new Plan starts scheduled and belongs to exactly one household.
 
-<!-- pdac:cite id="FR-CALENDAR-SCHEDULE-PLAN" digest="sha256:bd41645e55c258195ace26b0a0c80f301df66c4f6b9da0688005e72fc34caa97" -->
+<!-- pdac:cite id="FR-CALENDAR-SCHEDULE-PLAN" digest="sha256:7ea76dfa3ca8621928f91c69c1c1d37e876909d528926405ac053fecda627fa7" -->
 
-<!-- pdac:cite id="UC-CALENDAR-SCHEDULE-PLAN" digest="sha256:1d352af5e2b9dbe134c0d2731506114f5656c35d50a7346d7e88cd0eb6a45da8" -->
+<!-- pdac:cite id="UC-CALENDAR-SCHEDULE-PLAN" digest="sha256:be241830302906c9a08258b12b322a738c73ca574a0f755e65063fe77defa743" -->
 
-<!-- pdac:cite id="BR-CALENDAR-PLAN-REQUIRES-TITLE-AND-START" digest="sha256:4e9f7d1662dd3383ac02f651186e69ba48289e1680c4624abba444f7183346ba" -->
+<!-- pdac:cite id="BR-CALENDAR-PLAN-REQUIRES-TITLE-AND-START" digest="sha256:285002bc7e1031cb3d8357f5d6c9a63ebf2a3d7aae3518884b46eecd846ab03f" -->
 
-<!-- pdac:cite id="BR-CALENDAR-PLAN-END-AFTER-START" digest="sha256:a9c60bc761516a4bcb95d4bc350f2ecb3106b5c82af05db5bd0e96cdb7b399ea" -->
+<!-- pdac:cite id="BR-CALENDAR-PLAN-END-AFTER-START" digest="sha256:6d0419337b4972f996926be897f47ef476618d4c0625aeb2b329502d5b6371ad" -->
 
-<!-- pdac:cite id="BR-CALENDAR-PARTICIPANT-IN-HOUSEHOLD" digest="sha256:e7357786552892d48ee56f18e1141d513be6e603e1eec7f33d090e97f0103535" -->
+<!-- pdac:cite id="BR-CALENDAR-PARTICIPANT-IN-HOUSEHOLD" digest="sha256:f623ece46da14fa7a170c70b043953ba411e57fa85f5c4a040b1fff91cdcd645" -->
 
-<!-- pdac:cite id="BR-CALENDAR-PLAN-BELONGS-TO-ONE-HOUSEHOLD" digest="sha256:35c8ee69a2de1f83c595f15a51f9fce90205e72ca6c99e3533cb324503685049" -->
+<!-- pdac:cite id="BR-CALENDAR-PLAN-BELONGS-TO-ONE-HOUSEHOLD" digest="sha256:49a257891acf96132d3b06683a506f5d8bc0967daddbbbcb8e992dd9049d000f" -->
 
-<!-- pdac:cite id="TERM-PLAN" digest="sha256:f06fe7678136c535cf5f55e815f161d73562165b17c565f9496386dbd8395ac3" -->
+<!-- pdac:cite id="TERM-PLAN" digest="sha256:a1ff0f3de21aac20325b367ed1898b3eb3688f97d6c3e0b60b798c724025b07b" -->
 
-<!-- pdac:cite id="TERM-PLAN-PARTICIPANT" digest="sha256:9aec8030305ed4f94ceefe56c52cdfd679f58bae7b1b97c4c3f9014902074c96" -->
+<!-- pdac:cite id="TERM-PLAN-PARTICIPANT" digest="sha256:d26d0159e743bf71f303e354e9c99b328c0601388d7378c6e2fb1ea03d6126b4" -->
 
-<!-- pdac:cite id="SB-CALENDAR-SCHEDULE-PLAN-MINIMUM" digest="sha256:65598ceb793e3dbe3aefe0fc4becd48c750903e6de819a26f10ab969aa35aadb" -->
+<!-- pdac:cite id="SB-CALENDAR-SCHEDULE-PLAN-MINIMUM" digest="sha256:6eca8e70d013bcaacfa9b6c4c7193fb1ce6c9edc78655c0fe5a856f7306c0a45" -->
 
-<!-- pdac:cite id="SB-CALENDAR-SCHEDULE-PLAN-END-BEFORE-START" digest="sha256:17b26905f475af3aa2315cba33118428927f3241aa4971f8017749c99ca9befa" -->
+<!-- pdac:cite id="SB-CALENDAR-SCHEDULE-PLAN-END-BEFORE-START" digest="sha256:aa28c4c106a13ac18df98b31ffbad0634055660ff1d8a7820b22db1a2fef8b20" -->
 
-<!-- pdac:cite id="SB-CALENDAR-SCHEDULE-PLAN-UNKNOWN-PARTICIPANT" digest="sha256:194bb5e8dc7345e587089e2decad2f0e38505c0891c9a87968380863e3ef2185" -->
+<!-- pdac:cite id="SB-CALENDAR-SCHEDULE-PLAN-UNKNOWN-PARTICIPANT" digest="sha256:d0285426afc652cf64e1784ea223f40cf3a2e9144e4e0c1b05bbfba892d8fe0f" -->
 
-<!-- pdac:cite id="SB-CALENDAR-SCHEDULE-ALL-DAY-PLAN" digest="sha256:7d4a3dd334ecdfd337d76e96770a9edcbed638baecbdf7337b097e1c696dc3bb" -->
+<!-- pdac:cite id="SB-CALENDAR-SCHEDULE-ALL-DAY-PLAN" digest="sha256:1cee6b7ebccd3f4ed7cc6470f0b8a33913bb19d62f0d0e2db427be66331d46b2" -->
 
 #### Scenario: Household creates a Plan with minimum inputs
 
@@ -124,19 +124,19 @@ A household SHALL be able to update the schedule of a scheduled Plan.
 
 Rescheduling updates the start and optionally the end. A Plan's identity, participants, and reminders remain unchanged. A cancelled Plan cannot be changed.
 
-<!-- pdac:cite id="FR-CALENDAR-RESCHEDULE-PLAN" digest="sha256:0fd9effe4cc812573e94d4803c563719133e2077ca39d411b8f7332640da1eb9" -->
+<!-- pdac:cite id="FR-CALENDAR-RESCHEDULE-PLAN" digest="sha256:eb8196f1f6a0539ffc24d27abfce3b939c96d6478f5389f866cc3feaea196abf" -->
 
-<!-- pdac:cite id="UC-CALENDAR-RESCHEDULE-PLAN" digest="sha256:b271a7e6b992fa9f9eb2487d1429a5bd2a46d334f1f7064779dfc287075639c4" -->
+<!-- pdac:cite id="UC-CALENDAR-RESCHEDULE-PLAN" digest="sha256:614a41bed3c42e2c3c77f34c2b7dea394d3cf0714d2e326cdb84405f4039217f" -->
 
-<!-- pdac:cite id="BR-CALENDAR-PLAN-END-AFTER-START" digest="sha256:a9c60bc761516a4bcb95d4bc350f2ecb3106b5c82af05db5bd0e96cdb7b399ea" -->
+<!-- pdac:cite id="BR-CALENDAR-PLAN-END-AFTER-START" digest="sha256:6d0419337b4972f996926be897f47ef476618d4c0625aeb2b329502d5b6371ad" -->
 
-<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:d0ffa51dd1b3cb43b9ccec2077dd08a91fc3e03e0124f8112b361e122abf94f9" -->
+<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:599c500bb2d7c2fe55ab003998aad87f2aa58f667553ba880045ed02a70120a9" -->
 
-<!-- pdac:cite id="SB-CALENDAR-RESCHEDULE-PLAN" digest="sha256:9eeba089f8470428310ab4caeb564d17c37e1923b9c9f470598a6ebb1a8dd4a1" -->
+<!-- pdac:cite id="SB-CALENDAR-RESCHEDULE-PLAN" digest="sha256:dcf03361cf3257f87fe790a12a4fe120da8dcf9f1a0f4e3ae9db2f9ad124cedf" -->
 
-<!-- pdac:cite id="SB-CALENDAR-RESCHEDULE-CANCELLED-PLAN" digest="sha256:52e53dde2c7da7ef00aacec96fffbff27b9bcc3d23068cd7be9589455e32deb5" -->
+<!-- pdac:cite id="SB-CALENDAR-RESCHEDULE-CANCELLED-PLAN" digest="sha256:c4da368bf019f8373db923f9f98330546b5dc28614732e33172f4b06113e7b77" -->
 
-<!-- pdac:cite id="SB-CALENDAR-RESCHEDULE-INVALID-TIMES" digest="sha256:49dc28f5bd0c9f8aeb81fdc1e0a18b6184404ef6602d24567bd9eeb69c316dbd" -->
+<!-- pdac:cite id="SB-CALENDAR-RESCHEDULE-INVALID-TIMES" digest="sha256:ae47b032ef0620b656f3e32d49454eddc80e607650c017c97aee51fe1e5106c9" -->
 
 #### Scenario: Event is rescheduled
 
@@ -165,17 +165,17 @@ A household SHALL be able to cancel a scheduled Plan.
 
 Cancellation preserves the Plan in history but removes it from active planning. Once cancelled, a Plan cannot be changed: it cannot be rescheduled or cancelled again; participants cannot be added or removed; reminders cannot be added or removed; and title, description, or colour cannot be edited.
 
-<!-- pdac:cite id="FR-CALENDAR-CANCEL-PLAN" digest="sha256:c915803cb87d6684644fb00805bc2d506fd1f07cae4403263c20666fb23b713f" -->
+<!-- pdac:cite id="FR-CALENDAR-CANCEL-PLAN" digest="sha256:a2f690a66110025b8a6aebe5cfb527f521094a376a10e58ca64d77a0006be9ef" -->
 
-<!-- pdac:cite id="UC-CALENDAR-CANCEL-PLAN" digest="sha256:112064a4ebddfe5d53a46aad8feb3c9bc6ff1c101f8b7054baa26e7c89a12b3d" -->
+<!-- pdac:cite id="UC-CALENDAR-CANCEL-PLAN" digest="sha256:16f41091b62c6a5c17afce8708424bb7f768ef8ec54c028dd47c0b10ca7c1a56" -->
 
-<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:d0ffa51dd1b3cb43b9ccec2077dd08a91fc3e03e0124f8112b361e122abf94f9" -->
+<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:599c500bb2d7c2fe55ab003998aad87f2aa58f667553ba880045ed02a70120a9" -->
 
-<!-- pdac:cite id="SB-CALENDAR-CANCEL-PLAN" digest="sha256:648f50fc7076e75beea7648a3c459057a7bf5452d9b6db8855f234aaf265ab2f" -->
+<!-- pdac:cite id="SB-CALENDAR-CANCEL-PLAN" digest="sha256:0f3fcb8c9fb6afd6778ae7e62177eb35fe720a75e558228cfc880f6fd76a2bf3" -->
 
-<!-- pdac:cite id="SB-CALENDAR-CANCEL-CANCELLED-PLAN" digest="sha256:4b76cc35c9b6b2881bfb444f6e212f38a43223d3a4f6250d1b5ad03f52d2a5ab" -->
+<!-- pdac:cite id="SB-CALENDAR-CANCEL-CANCELLED-PLAN" digest="sha256:cfff3ff5d8a8c573a7aac5c289fb4862225f35f4c6fafa2c848502b3102d843d" -->
 
-<!-- pdac:cite id="SB-CALENDAR-CHANGE-REMINDER-CANCELLED-PLAN" digest="sha256:5b708c53e7d3bcc78899b29833a6a80d60e34a3d96f4d298f616bbb90cafcaf5" -->
+<!-- pdac:cite id="SB-CALENDAR-CHANGE-REMINDER-CANCELLED-PLAN" digest="sha256:3b9d7c2f3a373f14dd6da506e39a66eaec8d42465de25c38d8cfd13b0c7ea15d" -->
 
 #### Scenario: Event is cancelled
 
@@ -203,11 +203,11 @@ Cancellation preserves the Plan in history but removes it from active planning. 
 
 A household member SHOULD be able to change a scheduled Plan's title, description, and colour without changing its identity or schedule. A cancelled Plan cannot be edited.
 
-<!-- pdac:cite id="FR-CALENDAR-EDIT-PLAN-DETAILS" digest="sha256:ca23082b1f6882680dce423bf2395c4b0cde1a0cc10df648c3e164c484e9e0df" -->
+<!-- pdac:cite id="FR-CALENDAR-EDIT-PLAN-DETAILS" digest="sha256:05fb5aad0a232d2e82327ad16fd64f738035088cf8647b9d6da5b796d3f8d764" -->
 
-<!-- pdac:cite id="UC-CALENDAR-EDIT-PLAN-DETAILS" digest="sha256:6b1230aff5f82056a84617fdabd59001412297dedc6da7315cf2f61daf087e68" -->
+<!-- pdac:cite id="UC-CALENDAR-EDIT-PLAN-DETAILS" digest="sha256:ae9fa81ee1600c3d1ff76dc2462d6592571cc167c140fb1745dcb6e7e92757fd" -->
 
-<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:d0ffa51dd1b3cb43b9ccec2077dd08a91fc3e03e0124f8112b361e122abf94f9" -->
+<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:599c500bb2d7c2fe55ab003998aad87f2aa58f667553ba880045ed02a70120a9" -->
 
 #### Scenario: Member edits a scheduled Plan's details
 
@@ -231,27 +231,27 @@ A household SHALL be able to add and remove participants from an event.
 
 Each participant must be a household member and may appear only once on a Plan. Participants cannot be added to or removed from a cancelled Plan.
 
-<!-- pdac:cite id="FR-CALENDAR-MANAGE-PLAN-PARTICIPANTS" digest="sha256:c49632dc7e408cea8d44ca0643d7662abbcc67c96f0cfa2b2402cec1ef562c26" -->
+<!-- pdac:cite id="FR-CALENDAR-MANAGE-PLAN-PARTICIPANTS" digest="sha256:1e28b7ae34e7fea44abc0475780fbf89bbc3a19c192fdca5272ed07db498b66c" -->
 
-<!-- pdac:cite id="UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS" digest="sha256:6663583cfeef4838a5801900727e5661db158fc37766ddc2dc55218df166da16" -->
+<!-- pdac:cite id="UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS" digest="sha256:accc944b47bbe87b04554585e32df9a9bdf952538173877b7332752a8ee3e8bc" -->
 
-<!-- pdac:cite id="BR-CALENDAR-PARTICIPANT-UNIQUE" digest="sha256:4a280f60bfa7b6d8696527afe55d5c15d93bc959e1bf6e5f89b9a154ed3aba2f" -->
+<!-- pdac:cite id="BR-CALENDAR-PARTICIPANT-UNIQUE" digest="sha256:b690a242a9d3d0ef4a1db0a8bebc1aef35a991b1a0a27e10f84eebc3dca78282" -->
 
-<!-- pdac:cite id="BR-CALENDAR-PARTICIPANT-IN-HOUSEHOLD" digest="sha256:e7357786552892d48ee56f18e1141d513be6e603e1eec7f33d090e97f0103535" -->
+<!-- pdac:cite id="BR-CALENDAR-PARTICIPANT-IN-HOUSEHOLD" digest="sha256:f623ece46da14fa7a170c70b043953ba411e57fa85f5c4a040b1fff91cdcd645" -->
 
-<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:d0ffa51dd1b3cb43b9ccec2077dd08a91fc3e03e0124f8112b361e122abf94f9" -->
+<!-- pdac:cite id="BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED" digest="sha256:599c500bb2d7c2fe55ab003998aad87f2aa58f667553ba880045ed02a70120a9" -->
 
-<!-- pdac:cite id="TERM-PLAN-PARTICIPANT" digest="sha256:9aec8030305ed4f94ceefe56c52cdfd679f58bae7b1b97c4c3f9014902074c96" -->
+<!-- pdac:cite id="TERM-PLAN-PARTICIPANT" digest="sha256:d26d0159e743bf71f303e354e9c99b328c0601388d7378c6e2fb1ea03d6126b4" -->
 
-<!-- pdac:cite id="SB-CALENDAR-ADD-PARTICIPANT" digest="sha256:89545defaceaba81ab32a06d5ebfe9f6eb362c7561941cb000d1190565383bae" -->
+<!-- pdac:cite id="SB-CALENDAR-ADD-PARTICIPANT" digest="sha256:a668d057a0cb15861bdc29a2db948b80df094f9f7bbc8010400f3915b0c345c8" -->
 
-<!-- pdac:cite id="SB-CALENDAR-ADD-DUPLICATE-PARTICIPANT" digest="sha256:854f901835d0d81a1472c3707d3a54ceb817fdccfe1b2a8ca963dcd4cc1f9335" -->
+<!-- pdac:cite id="SB-CALENDAR-ADD-DUPLICATE-PARTICIPANT" digest="sha256:8ad0a40cc4e8ad521329be5954b5696702164334e147e779cd5752fd763853b8" -->
 
-<!-- pdac:cite id="SB-CALENDAR-ADD-PARTICIPANT-CANCELLED-PLAN" digest="sha256:eb9905ca369e8f24089b47c726473b6eccab937189fd2be00e32da5349857434" -->
+<!-- pdac:cite id="SB-CALENDAR-ADD-PARTICIPANT-CANCELLED-PLAN" digest="sha256:4e66bc1d19ad6bac18675f3040358a5ec3f40f98b2ea8e6722c8d577246fd668" -->
 
-<!-- pdac:cite id="SB-CALENDAR-REMOVE-PARTICIPANT" digest="sha256:dddce8bf657b5b06a6ee4cb2aea6046d2152de5201f919596c2db5f59dbb317f" -->
+<!-- pdac:cite id="SB-CALENDAR-REMOVE-PARTICIPANT" digest="sha256:7a3168aefbee3875be165bdbb01625cc71bd2fd55366fe0053186eb9b50ebdfd" -->
 
-<!-- pdac:cite id="SB-CALENDAR-REMOVE-NON-PARTICIPANT" digest="sha256:bfe7e70e43315a1e0bb378f36f3b2e08b01ec630f5348db59ee58154df818000" -->
+<!-- pdac:cite id="SB-CALENDAR-REMOVE-NON-PARTICIPANT" digest="sha256:da3e7d4e873e5e51abbdbfc4453a8a702c33826b63c3ed4502644796d5c9de55" -->
 
 #### Scenario: Participant is added to an event
 
@@ -300,23 +300,23 @@ A household SHALL be able to add and remove time-based reminders on a scheduled 
 
 Reminders are defined as offsets relative to the event's start time (e.g. 30 minutes before, 24 hours before). Each offset must be unique per event. Calendar defines reminder schedules; notification delivery belongs to infrastructure.
 
-<!-- pdac:cite id="FR-CALENDAR-MANAGE-PLAN-REMINDERS" digest="sha256:f7fa0b9b501dd3b7e2895e798a0e5e493b0bdd32a5094951912b82610198a089" -->
+<!-- pdac:cite id="FR-CALENDAR-MANAGE-PLAN-REMINDERS" digest="sha256:134cc135b54a2d2972ffd16d3bc76930495e33a836558fd605d96849dd8b560c" -->
 
-<!-- pdac:cite id="UC-CALENDAR-MANAGE-PLAN-REMINDERS" digest="sha256:5b0dcdccd49f86bdfe459f343b99b8df689ec954929610c012de3c29c56cf03b" -->
+<!-- pdac:cite id="UC-CALENDAR-MANAGE-PLAN-REMINDERS" digest="sha256:4d20b53488a2c974a97cdd0125d646c0f2b4d49a32ff4ac3cc010e8bb8affb9d" -->
 
-<!-- pdac:cite id="BR-CALENDAR-REMINDER-OFFSET-UNIQUE" digest="sha256:7ee30d83e566648e630729d570868c47d687bca4be7ae6add761b5e0f9b2baf5" -->
+<!-- pdac:cite id="BR-CALENDAR-REMINDER-OFFSET-UNIQUE" digest="sha256:c01cb2c91642c63975eb58fc956c40913bfad385ffea1c0b69b97f8ddd118a1e" -->
 
-<!-- pdac:cite id="BR-CALENDAR-REMINDER-BEFORE-START" digest="sha256:cc417232fbde7497405080d5df75d87cfbdf0350f8f1e2cd21e829389b5e3de9" -->
+<!-- pdac:cite id="BR-CALENDAR-REMINDER-BEFORE-START" digest="sha256:f2d7b2ea5566604e52fc9639e3d7a31efe73cfe682fd21926e8fe19c4e0eed4b" -->
 
-<!-- pdac:cite id="TERM-REMINDER" digest="sha256:96357bca9767a603e335970f75ed643c20e92492d07fb4efb2aa8c63732cd134" -->
+<!-- pdac:cite id="TERM-REMINDER" digest="sha256:a5ca233e79dc46068bff49c2b45fc8468b5b0f64e1b6ff962e12f628734a4e3e" -->
 
-<!-- pdac:cite id="SB-CALENDAR-ADD-REMINDER" digest="sha256:352b4ecc30dc56951dca4feedbd0c0522b478d90083e2cf3ed8a434175d8a1bd" -->
+<!-- pdac:cite id="SB-CALENDAR-ADD-REMINDER" digest="sha256:7187bfa5569469aa3d110d79fe757c79208bf6e767fd32ebf87f451e0049acec" -->
 
-<!-- pdac:cite id="SB-CALENDAR-ADD-DUPLICATE-REMINDER" digest="sha256:8528c1af4c510a68c82ca313b4100fe01b2355c3bb740f956bfd59b1dfc183f0" -->
+<!-- pdac:cite id="SB-CALENDAR-ADD-DUPLICATE-REMINDER" digest="sha256:1e83384c59bdbda6e89b7fb867f28adddd29c565ccb56a86c5a19cac60dca966" -->
 
-<!-- pdac:cite id="SB-CALENDAR-REMOVE-REMINDER" digest="sha256:9626e48b3b21dbaf419f82511a2b9feec112c0ad5731152183aab607e21fe278" -->
+<!-- pdac:cite id="SB-CALENDAR-REMOVE-REMINDER" digest="sha256:b0d2e277e6afe0aba8d16fe3fa1a3f1fd663735984ba36053d2c0e7f122d0bf1" -->
 
-<!-- pdac:cite id="SB-CALENDAR-REMOVE-MISSING-REMINDER" digest="sha256:f7912153591dacba77d84c20799ae3fb93545a726b43f9b0d85b1798ea192b85" -->
+<!-- pdac:cite id="SB-CALENDAR-REMOVE-MISSING-REMINDER" digest="sha256:a4861167aedb5073221e926ebf2b5460b002219d1f7cec4e44192724e3e5a056" -->
 
 #### Scenario: Reminder is added to an event
 
@@ -359,33 +359,33 @@ A member SHALL be able to connect a Microsoft Outlook account to their DomusMind
 
 Connecting establishes a delegated external calendar connection. Connection requires a successful delegated authorization including `Calendars.Read` and `offline_access` scopes. A member may not have two active connections to the same Outlook account. Connecting does not create native Event aggregates. The initial data import occurs through a subsequent sync operation. On connection creation, default sync settings are applied: a sync horizon of now − 1 day to now + 90 days forward, scheduled refresh enabled with a default interval of 60 minutes.
 
-<!-- pdac:cite id="FR-CALENDAR-CONNECT-OUTLOOK" digest="sha256:9622bceda9cb6c52db6ecd691fdc235a9a677d16eee23180a31f6d02380bf388" -->
+<!-- pdac:cite id="FR-CALENDAR-CONNECT-OUTLOOK" digest="sha256:50cfc7aa037888b885e20f91a1a152ec089c55f4f6fa051fcb2d31a8a227a768" -->
 
-<!-- pdac:cite id="UC-CALENDAR-CONNECT-OUTLOOK" digest="sha256:f8c4aff4fa188eacc0a4014f41ab98b85f94446cca0daab97e36a8a67c4f1a5f" -->
+<!-- pdac:cite id="UC-CALENDAR-CONNECT-OUTLOOK" digest="sha256:2b5979801bddd1324f3c23b0958b000afe550e98e17a11ce792c2ea54235c034" -->
 
-<!-- pdac:cite id="JRN-CALENDAR-BRING-OUTLOOK-INTO-AGENDA" digest="sha256:c244eeaca0222ecd280c8170250bfa0d7e02d4703befbbffddedc04f5198d464" -->
+<!-- pdac:cite id="JRN-CALENDAR-BRING-OUTLOOK-INTO-AGENDA" digest="sha256:525b0a9415a662490181aa092811e0cad1f0c48fffd408f3d2505c8e70a4dc05" -->
 
-<!-- pdac:cite id="ACT-MICROSOFT-OUTLOOK" digest="sha256:5f796b186efb4d164fd71462cce88157e4857e7e602f35acffee972881c33f54" -->
+<!-- pdac:cite id="ACT-MICROSOFT-OUTLOOK" digest="sha256:a274a18ef29171d475391275699318abf8c93ee7fa3daf494741dbe1fce6af66" -->
 
-<!-- pdac:cite id="BR-CALENDAR-OUTLOOK-REQUIRED-ACCESS" digest="sha256:930b71665ccb52c4a57896655dcefdbe469480c4ad1973c179c57197e1534645" -->
+<!-- pdac:cite id="BR-CALENDAR-OUTLOOK-REQUIRED-ACCESS" digest="sha256:556b0ae693f9cb4396113be0e3c161fd22a811c5d94db7d976635570241ad1f1" -->
 
-<!-- pdac:cite id="BR-CALENDAR-ONE-CONNECTION-PER-ACCOUNT" digest="sha256:64e4f60f3587511b2d16522e52c46318d37a336718636b251a4b4d4c05c884c5" -->
+<!-- pdac:cite id="BR-CALENDAR-ONE-CONNECTION-PER-ACCOUNT" digest="sha256:7ebb4f852677a608d2037cf65b1910e49d3a2e4ee13cb70e59a83cf525777e94" -->
 
-<!-- pdac:cite id="BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS" digest="sha256:92737f241a94bb8c8663837766c0035e4f8c64b12cc5409bef30289fb4dab848" -->
+<!-- pdac:cite id="BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS" digest="sha256:a3c89a729bbc1b61d0b8104ceacce71dc29a6e915ab2a90834c869b72c0a9da8" -->
 
-<!-- pdac:cite id="BR-CALENDAR-DEFAULT-REFRESH-HOURLY" digest="sha256:ddcfe57b8ec824f9206307c352a548d55614d3f681f690a10064ea0c05158e2f" -->
+<!-- pdac:cite id="BR-CALENDAR-DEFAULT-REFRESH-HOURLY" digest="sha256:c575f89178139004976122190d8a13c8136f3992a7a9190d2fd419859c41f54a" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:2b2ea1de6c0f9a84d96f94d20087467fa7a198f197da80a85748fb145816fe03" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:f538589cc3d3dd54bfc8539b59e38f13f87b49547cf25e651e8ce2906810583e" -->
 
-<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-CONNECTION" digest="sha256:e748e63deba44f835b829a1dba1e6a0a90592ca927ee34922701e5fbda5758b7" -->
+<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-CONNECTION" digest="sha256:71fd7f91ddaeb838b698bee045adaad8e95f3790cd3637633ab0fb9ff4af6671" -->
 
-<!-- pdac:cite id="TERM-SYNC-HORIZON" digest="sha256:fe2a373405ffcd5295b2bd2bd0a7ee58c8479f6af8096652834c72ec9e211756" -->
+<!-- pdac:cite id="TERM-SYNC-HORIZON" digest="sha256:d5e8c5b396642312a552935a31f6134a752040f75fb821ceb329e545f6aac81f" -->
 
-<!-- pdac:cite id="SB-CALENDAR-CONNECT-OUTLOOK" digest="sha256:0b741369ff7411f5f401fc7a05f21c48f56b0843e061f4153b495997d51c595d" -->
+<!-- pdac:cite id="SB-CALENDAR-CONNECT-OUTLOOK" digest="sha256:1b65fce3b6a17f8b0aafbe33bb30a4b9ae43e0cc5fa51d39a2bba8fa5489c346" -->
 
-<!-- pdac:cite id="SB-CALENDAR-CONNECT-DUPLICATE-ACCOUNT" digest="sha256:142e4cf37ed79f6c3e5e7d29c5d4a5d1460501ec843288d8b20e8c549fdc473a" -->
+<!-- pdac:cite id="SB-CALENDAR-CONNECT-DUPLICATE-ACCOUNT" digest="sha256:f3900665713dc2f78171d2306284576fe3fdc4e676b9757e73af1b3bd2ee2949" -->
 
-<!-- pdac:cite id="SB-CALENDAR-CONNECT-MISSING-ACCESS" digest="sha256:b6c25c223884113f84aa6709f676222c4617e3ae77256169a5e02bbc9ed00e62" -->
+<!-- pdac:cite id="SB-CALENDAR-CONNECT-MISSING-ACCESS" digest="sha256:736cc5226870fe1cda9a6cc175028c4642e3be9205a3e9a6da387857b4f20a3b" -->
 
 #### Scenario: Member connects an Outlook account
 
@@ -410,35 +410,50 @@ Connecting establishes a delegated external calendar connection. Connection requ
 
 ---
 
+### Requirement: External Calendar Connection Health
+
+<!-- pdac:cite id="FR-CALENDAR-SHOW-CONNECTION-STATUS" digest="sha256:49e6cb0c06c0278bef22fced1c67a24cc388fdbe533f10582bc25acd308bf39e" -->
+<!-- pdac:cite id="LC-EXTERNAL-CALENDAR-CONNECTION" digest="sha256:04f6d9502ca9d27cab5239ef3a179979ad42aa0a2b4cf67d11d87916f80ce7ec" -->
+<!-- pdac:cite id="SB-CALENDAR-FULL-RELOAD-STAYS-SYNCING" digest="sha256:5c47b53b4138ee73b15324084013653997f70ab972d86903c35951afd4bb76e6" -->
+
+A member SHALL see each connection's product status and its last error when present. The status catalog is Pending initial sync, Healthy, Syncing, Partial failure, Failed, Authorization expired and Disconnected. Failed and Authorization expired SHALL carry the failure reason. A full reload SHALL run within Syncing; Needs attention and Rehydrating are not separate product states (CHG-STATE-MODEL-COMPLETION).
+
+#### Scenario: Full reload retains the sync progress state
+
+- GIVEN a connection is Syncing and its incremental sync state is invalid
+- WHEN the connection loads the selected calendars for its configured horizon
+- THEN the connection remains Syncing while the full reload runs
+- AND no separate Rehydrating product state is shown
+
 ### Requirement: External Calendar Configuration
 
 A member SHALL be able to configure which provider calendars are selected for ingestion and which sync horizon applies to a connection.
 
 Supported sync horizons: 30, 90, 180, or 365 days forward. Changing the selected calendars or the sync horizon triggers rehydration of affected feeds. Removed feeds stop projecting entries and their sync state is cleared. A configuration change must not create native Event aggregates.
 
-<!-- pdac:cite id="FR-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR" digest="sha256:e3a1dcb7128c90af4e87da38aae9641e754c6a6ea81f2ed9e064c1164d2b6adc" -->
+<!-- pdac:cite id="FR-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR" digest="sha256:cce36628f25ef3a79295b09126348ef04778f8fac999eaddaa4c80341fbc1a83" -->
 
-<!-- pdac:cite id="UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR" digest="sha256:2cfd9b4b0f71c7e62dcd49d1fda91cdbee19a21a49023c4c8eab24d6dbb9c3a0" -->
+<!-- pdac:cite id="UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR" digest="sha256:eaf278bf6b3a77c0dc9ff934b444ab82b5aa23dac9c882f3c16ed698f1f410ff" -->
 
-<!-- pdac:cite id="BR-CALENDAR-SUPPORTED-SYNC-HORIZONS" digest="sha256:108b36696099fec2a33f0a8a4ff5c86c7c4f6994300afc57f40d53fdcfca36af" -->
+<!-- pdac:cite id="BR-CALENDAR-SUPPORTED-SYNC-HORIZONS" digest="sha256:5d1b47fcee5b94be9694ea0fa110b322e2a49bad64c13f55960f9ba08d041adf" -->
 
-<!-- pdac:cite id="BR-CALENDAR-HORIZON-CHANGE-RELOADS" digest="sha256:29df7eb132b538b7223f5d4c728829260a754ba43aeb20fc3acbde6f475d126e" -->
+<!-- pdac:cite id="BR-CALENDAR-HORIZON-CHANGE-RELOADS" digest="sha256:79b8c9607677595440cf3ec07c3501c38a75c4a6fdb12a17365fe24803cbcfc8" -->
 
-<!-- pdac:cite id="BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT" digest="sha256:2203af1f822a02a6785362b0180282d26d90ac808ee9a319379b6ad7a89eacb8" -->
+<!-- pdac:cite id="BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT" digest="sha256:99f6fe7d4fa4be123e4b54cc5e23a54b6f9810ffc173e74c7295ea1c6e6baf9e" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:2b2ea1de6c0f9a84d96f94d20087467fa7a198f197da80a85748fb145816fe03" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:f538589cc3d3dd54bfc8539b59e38f13f87b49547cf25e651e8ce2906810583e" -->
 
-<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-FEED" digest="sha256:e7fa4ebe35ec7082c2703c35ec8dd11d9189ef5c7235f2fac15256ab4f4fbee5" -->
+<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-FEED" digest="sha256:5624402938f25e7089946fa295798b0c0152942eb66ddf9ec900619d2d0a84ea" -->
 
-<!-- pdac:cite id="TERM-SYNC-HORIZON" digest="sha256:fe2a373405ffcd5295b2bd2bd0a7ee58c8479f6af8096652834c72ec9e211756" -->
+<!-- pdac:cite id="TERM-SYNC-HORIZON" digest="sha256:d5e8c5b396642312a552935a31f6134a752040f75fb821ceb329e545f6aac81f" -->
 
-<!-- pdac:cite id="SB-CALENDAR-CONFIGURE-SELECTION-AND-HORIZON" digest="sha256:2410482369386b7ab24c1213bfe9dcd25ee5189575dd0768653296b756f7b3ad" -->
+<!-- pdac:cite id="SB-CALENDAR-CONFIGURE-SELECTION-AND-HORIZON" digest="sha256:1d30d2d05e242313bb1b6df92582aabf7d14327baa86c663f490a8c13aa9ce43" -->
 
-<!-- pdac:cite id="SB-CALENDAR-DESELECT-FEED" digest="sha256:06f38c34100b4fc666124588593905e234502d6218768828df8dc82186278b41" -->
+<!-- pdac:cite id="SB-CALENDAR-DESELECT-FEED" digest="sha256:90876b7145514f5b21efdc45116772200cb482f879c93de9394ccc68f7d610be" -->
 
-<!-- pdac:cite id="SB-CALENDAR-HORIZON-CHANGE-RELOADS" digest="sha256:4c7d4ae8971e2313dcc513e5551d3e70e3aea9a5efe43ba097b5d2b4ab1b2be9" -->
+<!-- pdac:cite id="SB-CALENDAR-HORIZON-CHANGE-RELOADS" digest="sha256:32a934be9368ab2a4f217b0efdb3b31f5a6c73abbdc43ef10da1da29a3cbf5d4" -->
 
-<!-- pdac:cite id="SB-CALENDAR-UNSUPPORTED-HORIZON" digest="sha256:2ecb510b3dcf2a52c9ce68632aef1c23bd347b68913304137121b6a18538ace2" -->
+<!-- pdac:cite id="SB-CALENDAR-UNSUPPORTED-HORIZON" digest="sha256:0ef2bf7bdb22fe129bb9ccdf5a9b808c2213742359b664c6499e472b5b3da8a9" -->
 
 #### Scenario: Member selects calendars and sets a sync horizon
 
@@ -474,17 +489,17 @@ A member SHALL be able to disconnect an external calendar connection.
 
 Disconnection removes the connection and all its imported read-only entries from DomusMind. Disconnection does not modify any native Event aggregates. Imported entries owned by the connection stop appearing in Agenda projections immediately after disconnection. Disconnection removes only DomusMind's local integration state and locally held delegated access material — no operations are performed on the provider account or provider-side calendars.
 
-<!-- pdac:cite id="FR-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR" digest="sha256:e00320683fbfcb03c01ce44e12874cc062b28d3acb054b2a68c69c3865e70f68" -->
+<!-- pdac:cite id="FR-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR" digest="sha256:a765e9f46bd2d5de55ff5c2e50daa4ac2eaef58df4ce44f8868cda2c9c2b4f76" -->
 
-<!-- pdac:cite id="UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR" digest="sha256:2e005d84005460d3bb48da21ccbd69a57c65964dc32c774bae93df627c8bb21b" -->
+<!-- pdac:cite id="UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR" digest="sha256:3a3e5fa7533474185fbda7d556bb496ff71feb16302a5e219ff587eba5a386bc" -->
 
-<!-- pdac:cite id="BR-CALENDAR-DISCONNECT-IS-LOCAL" digest="sha256:3592d1e7dca48282606e0a91d63e5b16fa6d6db6e0f1c48284daf03495e6e236" -->
+<!-- pdac:cite id="BR-CALENDAR-DISCONNECT-IS-LOCAL" digest="sha256:4b321feb9a5f47fbcc724b1e6d70a152b70dc67343f5a0d518470aaeb67f19d8" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:2b2ea1de6c0f9a84d96f94d20087467fa7a198f197da80a85748fb145816fe03" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:f538589cc3d3dd54bfc8539b59e38f13f87b49547cf25e651e8ce2906810583e" -->
 
-<!-- pdac:cite id="SB-CALENDAR-DISCONNECT" digest="sha256:0e273000ade31e47012f03b1877137aa9ae718a0f0eb8f9a85238a610160705e" -->
+<!-- pdac:cite id="SB-CALENDAR-DISCONNECT" digest="sha256:08ccad7fc87478aee53ebac67db39444dd69f4badb02aff22d6b89e14f8b8e06" -->
 
-<!-- pdac:cite id="SB-CALENDAR-DISCONNECT-UNKNOWN" digest="sha256:9517f9d00124173f5bfa4a3b44da1a7fc771133b6fbd3c8a6ddf72681c037598" -->
+<!-- pdac:cite id="SB-CALENDAR-DISCONNECT-UNKNOWN" digest="sha256:96cbddcb5828d1d7b4bb861ab0218a4e981cc751ea06225292b0e2f813e6537a" -->
 
 #### Scenario: Member disconnects a connection
 
@@ -509,27 +524,27 @@ A member SHALL be able to manually trigger synchronization of an external calend
 
 Synchronization imports new, updated, and deleted occurrences from each selected feed within the active sync horizon. The sync operates incrementally using a stored delta cursor when one is available; otherwise it performs a fresh bounded load. Two synchronizations of the same connection must not run concurrently. Imported entries remain read-only.
 
-<!-- pdac:cite id="FR-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:2e4013f14b0b0d3092f017991253bd2441931459bd1db5b24d0bc5a6c00dc423" -->
+<!-- pdac:cite id="FR-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:786617e80baa09464aa3e3c5588a596444e4963880d8be17a3e48288d6fd6925" -->
 
-<!-- pdac:cite id="UC-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:bbecb1046bb1b9c284c6f69ed6a02879f41210f364542e9538d7bb63cd99045e" -->
+<!-- pdac:cite id="UC-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:20397f50049cb36f540d4e65b7989c0f38be858535349e86daf4790319b37fe4" -->
 
-<!-- pdac:cite id="BR-CALENDAR-NO-CONCURRENT-SYNC" digest="sha256:85649c4ba718266f5043e7a39f97fef18f3cdaec34b67e91bdb207cedb87974b" -->
+<!-- pdac:cite id="BR-CALENDAR-NO-CONCURRENT-SYNC" digest="sha256:cb91537c8a00c86ee5a8efeb0ae78ae4d5c94f112a9f7445c4792e78295b0d78" -->
 
-<!-- pdac:cite id="BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT" digest="sha256:2203af1f822a02a6785362b0180282d26d90ac808ee9a319379b6ad7a89eacb8" -->
+<!-- pdac:cite id="BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT" digest="sha256:99f6fe7d4fa4be123e4b54cc5e23a54b6f9810ffc173e74c7295ea1c6e6baf9e" -->
 
-<!-- pdac:cite id="BR-CALENDAR-HORIZON-CHANGE-RELOADS" digest="sha256:29df7eb132b538b7223f5d4c728829260a754ba43aeb20fc3acbde6f475d126e" -->
+<!-- pdac:cite id="BR-CALENDAR-HORIZON-CHANGE-RELOADS" digest="sha256:79b8c9607677595440cf3ec07c3501c38a75c4a6fdb12a17365fe24803cbcfc8" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:a3d8d4afcfc23492b745fa37ac5b103ae76a7bc1d214456aeddbe2f57473ceea" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:0a46d8c63e8a5ca97a1757e7ed3e0528c2c10779a63621783793131b2bf55522" -->
 
-<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-SYNC" digest="sha256:93a620fa8f638ab7d2b0e0d2daab578f1b020486617c96934cdf0f75db7f0f9d" -->
+<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-SYNC" digest="sha256:2e1eed83b3396992d892883d9f0efd7616821812d36bd069f085960f95756bea" -->
 
-<!-- pdac:cite id="SB-CALENDAR-MANUAL-SYNC" digest="sha256:0d276534d141e1a084f552a5697c921114d24bc76cae01f6dbcc02a42262e310" -->
+<!-- pdac:cite id="SB-CALENDAR-MANUAL-SYNC" digest="sha256:d2bb53909bbecb5dff7cfdc073dbd4f73fda69653322c0044b6785aadd914c3e" -->
 
-<!-- pdac:cite id="SB-CALENDAR-SYNC-INVALID-STATE" digest="sha256:b9ba219536f2c5f5d3d2273f88dd32553184e04a33827a6265886eca45e57de9" -->
+<!-- pdac:cite id="SB-CALENDAR-SYNC-INVALID-STATE" digest="sha256:9605a38c6c360385f8371ef2b3f437b6866427195a5890a2632541ff897bdfd9" -->
 
-<!-- pdac:cite id="SB-CALENDAR-SYNC-CONCURRENT" digest="sha256:cc832522ebc204a5fe2beef7c82586d4db6a4bea3c8fc54baeface829d2ae46b" -->
+<!-- pdac:cite id="SB-CALENDAR-SYNC-CONCURRENT" digest="sha256:f008c597906fc26b4326b2c9d9fdfe0f441b312037e758cb88068188187e362b" -->
 
-<!-- pdac:cite id="SB-CALENDAR-SYNC-NO-FEEDS" digest="sha256:0482cf39c885902cf7dae212ec1b4f694eb8c6a6da06b4f804e2ab31e09767de" -->
+<!-- pdac:cite id="SB-CALENDAR-SYNC-NO-FEEDS" digest="sha256:48bc3d8c7c4a4c71c9c2b94a5752f6dc987819b03b1bdb85c39083dee5dd94e9" -->
 
 #### Scenario: Manual sync imports entries from selected feeds
 
@@ -566,25 +581,25 @@ The system SHALL automatically refresh stale external calendar connections in th
 
 The default refresh interval is 60 minutes. Catch-up triggers also fire on user login and when Agenda is opened in Member scope with a stale connection. A connection is never synced concurrently with itself. A batch failure for one connection must not prevent other connections from refreshing. Background refresh must not create native Event aggregates.
 
-<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:4a820cb4807164b225e417fbb59c0b4cba8a5b188bde26f1821e62a258b2aeb4" -->
+<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:ba16ad06b77cfb02dcfcbee49418c1a7bf18251f91c4bf5858a6209cf87e59b4" -->
 
-<!-- pdac:cite id="UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS" digest="sha256:c85cb91e3305edcf423a102db0233adb71663d994849bf455f241e7d41e0e6b7" -->
+<!-- pdac:cite id="UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS" digest="sha256:b9b47a9df92b0d6a7d456d2831e4359e16c414180f0ec2ccb000906a54c94ab5" -->
 
-<!-- pdac:cite id="ACT-CALENDAR-SYNC-SCHEDULER" digest="sha256:af7e16c4a05a0b76bf10ec69cc19e11e7b47c9dbf5c40adf437a3e842f5f1ef8" -->
+<!-- pdac:cite id="ACT-CALENDAR-SYNC-SCHEDULER" digest="sha256:93756f5008efb26952e8def217428fcc7601ce2adecce3b0dddf877757493a33" -->
 
-<!-- pdac:cite id="BR-CALENDAR-DEFAULT-REFRESH-HOURLY" digest="sha256:ddcfe57b8ec824f9206307c352a548d55614d3f681f690a10064ea0c05158e2f" -->
+<!-- pdac:cite id="BR-CALENDAR-DEFAULT-REFRESH-HOURLY" digest="sha256:c575f89178139004976122190d8a13c8136f3992a7a9190d2fd419859c41f54a" -->
 
-<!-- pdac:cite id="BR-CALENDAR-NO-CONCURRENT-SYNC" digest="sha256:85649c4ba718266f5043e7a39f97fef18f3cdaec34b67e91bdb207cedb87974b" -->
+<!-- pdac:cite id="BR-CALENDAR-NO-CONCURRENT-SYNC" digest="sha256:cb91537c8a00c86ee5a8efeb0ae78ae4d5c94f112a9f7445c4792e78295b0d78" -->
 
-<!-- pdac:cite id="BR-CALENDAR-REFRESH-FAILURES-ISOLATED" digest="sha256:f41e92fb7d9d444e72344a6a887650fa22f486659b5c9200bfae89edec108211" -->
+<!-- pdac:cite id="BR-CALENDAR-REFRESH-FAILURES-ISOLATED" digest="sha256:5b87e85948d6eb058eacf38cc24a2ee1a5b8afe75104318de9d208a7878366fe" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:2b2ea1de6c0f9a84d96f94d20087467fa7a198f197da80a85748fb145816fe03" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:f538589cc3d3dd54bfc8539b59e38f13f87b49547cf25e651e8ce2906810583e" -->
 
-<!-- pdac:cite id="SB-CALENDAR-REFRESH-STALE" digest="sha256:a9e578775f7a5f39b82e8bc7f4fc76f3422857a0eb25dbb0993d4c6568bcd153" -->
+<!-- pdac:cite id="SB-CALENDAR-REFRESH-STALE" digest="sha256:2cf9fb91fc8460221c43e1f02ce2454e619ae4a3416dbbab49cc6165f12b4e8a" -->
 
-<!-- pdac:cite id="SB-CALENDAR-REFRESH-SKIP-FRESH" digest="sha256:167b540f5a1e0826914dbddd1b86654178eef99aca4acbdef3018d604535e55b" -->
+<!-- pdac:cite id="SB-CALENDAR-REFRESH-SKIP-FRESH" digest="sha256:adcf47457405c4c43919233af05a0fe529dbdcaec2aab1b5a8cc84f76e183293" -->
 
-<!-- pdac:cite id="SB-CALENDAR-CATCH-UP-ON-AGENDA-OPEN" digest="sha256:f1bf4c3d0285eab97812840a44d4b364fdaebc78bf5c443413ae144bd7d5f449" -->
+<!-- pdac:cite id="SB-CALENDAR-CATCH-UP-ON-AGENDA-OPEN" digest="sha256:ac3ec6421a6dcf9c4c0f0a07350c93e5be1f7dc0faa0400a1b3b33d9d9e48404" -->
 
 #### Scenario: Stale connection is refreshed automatically
 
@@ -616,35 +631,35 @@ The Agenda assembles Plans, Tasks due within the window, projected Routine occur
 
 Projected entries follow this priority order within a day: overdue → tasks due today → list items with importance → plans (by start time) → routines → list items without importance → completed/checked.
 
-<!-- pdac:cite id="FR-AGENDA-HOUSEHOLD-TIMELINE" digest="sha256:216ada3dc5c56e3e605c57b715ad660765aa2215be26da1ec2f5b91518a002a2" -->
+<!-- pdac:cite id="FR-AGENDA-HOUSEHOLD-TIMELINE" digest="sha256:59ee527f3c3b47e2d6e747ad3374de5794d21c2b28897ff86548ccc936638df3" -->
 
-<!-- pdac:cite id="UC-AGENDA-VIEW-HOUSEHOLD-AGENDA" digest="sha256:3aa05500b8b3f5f223447760dc3b2d73fded5269ea3925ae117d4c0d93be4318" -->
+<!-- pdac:cite id="UC-AGENDA-VIEW-HOUSEHOLD-AGENDA" digest="sha256:06da1c10928a2e14a7b2ace4e421c5d68123aa381fe516d913f405bbf4a88893" -->
 
-<!-- pdac:cite id="TERM-HOUSEHOLD-TIMELINE" digest="sha256:af4c661643850c49998b6046ecfbf3ad3ec73b46dc61bc0d031acace8ed5b932" -->
+<!-- pdac:cite id="TERM-HOUSEHOLD-TIMELINE" digest="sha256:410a4fc4b9ef563f593931082c0a49dd92d6d3a90f41a31c56ec86dcb9d358a3" -->
 
-<!-- pdac:cite id="TERM-AGENDA" digest="sha256:816f1a2f6d4e87da6b928b3c6d68433adab2c5467f4c02667e00fdb9b86387f0" -->
+<!-- pdac:cite id="TERM-AGENDA" digest="sha256:a83d53e6c8e54bf187b9038ee34722a44ddd5c98211e1c69089db40b96b26014" -->
 
-<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:652b5a6581672dfbabf8e5da42d010cc34d51bbcbf5b2bc73fac9273bb631337" -->
+<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:a3c72a044c52c99808fa103720f30e8737d55fc1f7c9b6d7cc78e56c7539359c" -->
 
-<!-- pdac:cite id="BR-AGENDA-ENTRY-PRIORITY-ORDER" digest="sha256:99c2693fee545eedd4a3feb29da8d89e78edb05d8c68bba4afffc5073078cac6" -->
+<!-- pdac:cite id="BR-AGENDA-ENTRY-PRIORITY-ORDER" digest="sha256:4bb5b5f53d3f74ab929768074734785133a92a7ea30c940f17bb0e353e63f1ba" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:b1dcb8fae830badbc584fe2a2e8b3ec117053470d9123391b2fa0d69f6bc9e69" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:c1f6a0090e071a7cbca68eb2f1b200e68156542ace4fe9a8ca0223f3aa71df32" -->
 
-<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:07f2a39c4da3143f7ba1dc285acb840d8a121020a2c68adf87783c23b1e92af9" -->
+<!-- pdac:cite id="BR-LISTS-AGENDA-PROJECTION" digest="sha256:043eef067ee7db97dd23b7dc3dc2e7c9b7c52b4c9f5aefc6e3d2066abd179350" -->
 
-<!-- pdac:cite id="BR-LISTS-PLAN-LINK-DOES-NOT-PROJECT" digest="sha256:4c9723864e62308e6b5a0068872b52fcafd549eebd8837c69d9eef568c10ea42" -->
+<!-- pdac:cite id="BR-LISTS-PLAN-LINK-DOES-NOT-PROJECT" digest="sha256:2bdc7fe6d5bc3727361258ac8d5fd7e22f16d3056002e48b7eaa663a2ff1c150" -->
 
-<!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-ALL-SOURCES" digest="sha256:9a8969ad177e8f99c015d0e040f5086c439bb77cb2b3232296bf21b5695f2a23" -->
+<!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-ALL-SOURCES" digest="sha256:1259c37a9fe9ab08722ddf6abb550f9168ed8ae73ad40793bcc7108c3d86677f" -->
 
-<!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-LIST-ITEMS" digest="sha256:1963f96a8d4688cc0300947ff74f4515a07fb285df8abb622fc6a9da1dd3a466" -->
+<!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-LIST-ITEMS" digest="sha256:4bb5ce58eb9e9aca02dc0897f38d3f6ffe17afba2dff74f55947180e313027da" -->
 
-<!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-EXCLUDES-EXTERNAL" digest="sha256:314f199dbf9e633b3422db2e43359e1936f4c0fd61fd8c4ba4a18e76c2d3b2ea" -->
+<!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-EXCLUDES-EXTERNAL" digest="sha256:7783dc44b8b6ab700b8fb8b48ee763fe3e9b904ff78b9b37b7169da7ebad11a5" -->
 
-<!-- pdac:cite id="BR-MEALS-AGENDA-PROJECTION" digest="sha256:1b3f980477d116ba46ef6addf9e8a1b6aaeeefe5de1560bb9097a092c6b6aa6d" -->
+<!-- pdac:cite id="BR-MEALS-AGENDA-PROJECTION" digest="sha256:fecf2e8fbd7fdf7674ba5f7d8870727b2d53f87d2da15c73e0bed19ffb4af998" -->
 
-<!-- pdac:cite id="FR-MEALS-AGENDA-PROJECTION" digest="sha256:14542a51f00845c388cd4e159f50674eca6d349656eacac4935fa63b064cd244" -->
+<!-- pdac:cite id="FR-MEALS-AGENDA-PROJECTION" digest="sha256:c647b93ceb2e80493b6ea0d5df2ab49ac174e5623a111df1a57cf0e03633561c" -->
 
-<!-- pdac:cite id="SB-MEALS-AGENDA-SHOWS-ASSIGNED-MEAL" digest="sha256:924a7853fae063e0f6713b40a2f463060e02971c1a2e1d696a7189d5161879bc" -->
+<!-- pdac:cite id="SB-MEALS-AGENDA-SHOWS-ASSIGNED-MEAL" digest="sha256:a40268ca794a6a5d985fec6059d791c737a26fe70c48296e704d6ebe00a429d9" -->
 
 #### Scenario: Household timeline includes events, tasks, routines, and list items
 
@@ -682,31 +697,31 @@ The system SHALL produce a member-scoped temporal read model for a requested dat
 
 The projection includes Plans the member participates in and household Plans with no participants, Tasks assigned to the member, Routines for the member or household scope, temporal List Items, and External Calendar Entries from that member's active connections. A Plan whose participants are only other people is not shown. External entries are scoped to the member whose connection owns them, are read-only, and carry a source label (e.g. "Outlook"). An external entry is included only when the connection is active, the feed is selected, the entry falls within the active sync horizon, and the entry has not been tombstoned as deleted. The projection is read-only; it must not create or modify any record.
 
-<!-- pdac:cite id="FR-AGENDA-MEMBER-AGENDA" digest="sha256:32782594f1e61544552dde7f833856d6bed5363a8be703366fc5636fb3d7b3b5" -->
+<!-- pdac:cite id="FR-AGENDA-MEMBER-AGENDA" digest="sha256:328356fe526ea42592dbe73abaf794a0e32b7764d771baffe1ce7bfd2ac462db" -->
 
-<!-- pdac:cite id="UC-AGENDA-VIEW-MEMBER-AGENDA" digest="sha256:2c870adbc231b6b1b0c661ab8062530786d0ef7d40c29ca48d6099cd46500fbc" -->
+<!-- pdac:cite id="UC-AGENDA-VIEW-MEMBER-AGENDA" digest="sha256:500f25f0376043d38af118a8e6824e8c032a27831f7aa01719c04fda98dc2c44" -->
 
-<!-- pdac:cite id="TERM-AGENDA-SCOPE" digest="sha256:7253db64d83dac0a1595a1f2c629b59e27d467f8677afcfa330f9ebf3cdaafc9" -->
+<!-- pdac:cite id="TERM-AGENDA-SCOPE" digest="sha256:7d64b169305cffdcfae55f7c66209f15ca27c3d00065ff7123253fc234d394e9" -->
 
-<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-ENTRY" digest="sha256:9ef123050d8fc32bd7755be77ace1bab03fe0009c4583a0bdced3aff9aba6272" -->
+<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-ENTRY" digest="sha256:a544452b97f1df5874ba287953f6e9ad857c23c3dd1902fc5f3d22bca412ca6b" -->
 
-<!-- pdac:cite id="BR-AGENDA-MEMBER-SCOPE-PLANS" digest="sha256:687c533e32506e30c54751e420d32bc5d6ca0683d04cb534977881f133c0e45b" -->
+<!-- pdac:cite id="BR-AGENDA-MEMBER-SCOPE-PLANS" digest="sha256:fb1cc45142f9871212ec0c144e92003d0cdeeb427ce92397612c38ca1f2a175a" -->
 
-<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:652b5a6581672dfbabf8e5da42d010cc34d51bbcbf5b2bc73fac9273bb631337" -->
+<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:a3c72a044c52c99808fa103720f30e8737d55fc1f7c9b6d7cc78e56c7539359c" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRY-VISIBILITY" digest="sha256:c0b22c61a193c5202c7877f77b3b86a5f0251afabebafa9367623f63d3a4cf42" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRY-VISIBILITY" digest="sha256:949e939555ba5883283a4fde1554e44e12a29571db306d54222f01114f3a782d" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:b1dcb8fae830badbc584fe2a2e8b3ec117053470d9123391b2fa0d69f6bc9e69" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:c1f6a0090e071a7cbca68eb2f1b200e68156542ace4fe9a8ca0223f3aa71df32" -->
 
-<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:a3d8d4afcfc23492b745fa37ac5b103ae76a7bc1d214456aeddbe2f57473ceea" -->
+<!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:0a46d8c63e8a5ca97a1757e7ed3e0528c2c10779a63621783793131b2bf55522" -->
 
-<!-- pdac:cite id="SB-AGENDA-MEMBER-INCLUDES-IMPORTED" digest="sha256:b36d86ff2957c14ce9476a747fe05e0a8cb48b3c83c913066bf01400c78789cd" -->
+<!-- pdac:cite id="SB-AGENDA-MEMBER-INCLUDES-IMPORTED" digest="sha256:2e6e2071df4c87715883ec209e11c2f221c09046119a4bc5b393f3a1644c8370" -->
 
-<!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-EXCLUDES-EXTERNAL" digest="sha256:314f199dbf9e633b3422db2e43359e1936f4c0fd61fd8c4ba4a18e76c2d3b2ea" -->
+<!-- pdac:cite id="SB-AGENDA-HOUSEHOLD-EXCLUDES-EXTERNAL" digest="sha256:7783dc44b8b6ab700b8fb8b48ee763fe3e9b904ff78b9b37b7169da7ebad11a5" -->
 
-<!-- pdac:cite id="SB-AGENDA-MEMBER-LIST-ITEMS-READ-ONLY" digest="sha256:aca5be88f2c84c717d71bed6e7b84dc226ebd267d0bfc2a2e7f5c05cf78f54c6" -->
+<!-- pdac:cite id="SB-AGENDA-MEMBER-LIST-ITEMS-READ-ONLY" digest="sha256:8231ad3d04776f037c212779854491d81a971d0eca1fd320e617a373d65c93df" -->
 
-<!-- pdac:cite id="SB-AGENDA-MEMBER-HOUSEHOLD-PLAN-WITHOUT-PARTICIPANTS" digest="sha256:ed376ec2c0b4bb952338f7183a7b50c29e43e58497c5d10f0b27935113311f48" -->
+<!-- pdac:cite id="SB-AGENDA-MEMBER-HOUSEHOLD-PLAN-WITHOUT-PARTICIPANTS" digest="sha256:d8d590d90b5ca72952ef0cb73e71e4fe022c50e4fe547cf21da0150a1eb8af53" -->
 
 #### Scenario: Member agenda includes personal events and imported entries
 
@@ -742,7 +757,7 @@ The projection includes Plans the member participates in and household Plans wit
 
 Household members with access to the household timeline can create and manage private read-only ICS subscriptions. A subscription is scoped to either all household Plans or the Plans of one household member. It expires 12 months after creation; renewal creates a new subscription. The owner can see access metadata and revoke a subscription.
 
-<!-- pdac:cite id="FR-CALENDAR-MANAGE-SUBSCRIPTIONS" digest="sha256:be31d2356bcd4166ed05806ff0acb55dd0fb3b610bc92c3857bd562b47b0d5b7" -->
+<!-- pdac:cite id="FR-CALENDAR-MANAGE-SUBSCRIPTIONS" digest="sha256:d6628e5804a8e959841593a3a5b86044b264a42b170ee6b1233c7e6e9ebd6f61" -->
 
 #### Scenario: Member creates a household subscription
 
@@ -765,9 +780,9 @@ Household members with access to the household timeline can create and manage pr
 
 An active subscription provides a read-only ICS feed of DomusMind Plans within its scope. The feed includes Plan title and timing only. Imported Outlook entries, descriptions, locations and participants are excluded. External clients cannot change DomusMind Plans.
 
-<!-- pdac:cite id="FR-CALENDAR-SERVE-SUBSCRIPTION-FEED" digest="sha256:99590c81c57bf55ed7f7fbfb9fa0ae8f00e6559176ef6c9d7aa8b4ed043f7a6c" -->
+<!-- pdac:cite id="FR-CALENDAR-SERVE-SUBSCRIPTION-FEED" digest="sha256:bc9e6ff594f9ef7ba062d7e02e5f50b42b20f7407ef9c9bbf0c5b1a6b011a454" -->
 
-<!-- pdac:cite id="BR-CALENDAR-SUBSCRIPTION-ACCESS" digest="sha256:f23e6df00c9fa568487a80d9a9aabcbb42cad4892c2307a8925fe1ee4a786da3" -->
+<!-- pdac:cite id="BR-CALENDAR-SUBSCRIPTION-ACCESS" digest="sha256:f7db6fc0557ada6415b104ae666d440ece7d3752dab4dcbcfff063274ce987d5" -->
 
 #### Scenario: External client reads an active feed
 
@@ -796,7 +811,7 @@ An active subscription provides a read-only ICS feed of DomusMind Plans within i
 
 1. **Phase 1 sync: pull only** — External calendar synchronization is pull-based only. Webhook subscriptions are explicitly out of scope for Phase 1.
 
-<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:a631bcb19c09716b7cbee7b25563b55eec7ca4287de67c84cb1081144d29deb9" -->
+<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:c575d9e19b4520f13a09facea0c1196b6a42ec1f4554865cdb470485d46eb4b0" -->
 
 1. **`pausedUntil` for connections** — No equivalent time-bounded pause exists in the Calendar external connection model (unlike Routine Pause in Tasks). Connections are either active or disconnected.
 

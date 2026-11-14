@@ -3,8 +3,6 @@ id: BR-CALENDAR-COMPLETED-PLAN-SCHEDULE-FIXED
 type: business-rule
 title: "A completed plan cannot change its schedule"
 status: draft
-applies-to:
-  - "UC-CALENDAR-COMPLETE-PLAN"
 uses-terms:
   - "TERM-PLAN"
 provenance:

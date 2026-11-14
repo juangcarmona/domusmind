@@ -2,10 +2,7 @@
 id: BR-TASKS-TITLE-REQUIRED
 type: business-rule
 title: A task needs only a title
-status: draft
-applies-to:
-  - UC-TASKS-CREATE-TASK
-  - UC-TASKS-RENAME-TASK
+status: active
 uses-terms:
   - TERM-TASK
 provenance:

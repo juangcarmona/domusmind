@@ -2,7 +2,7 @@
 id: "UC-RECIPES-DELETE-RECIPE"
 type: "use-case"
 title: "Remove a recipe from the library"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

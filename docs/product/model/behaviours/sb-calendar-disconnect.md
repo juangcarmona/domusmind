@@ -1,27 +1,30 @@
 ---
 id: SB-CALENDAR-DISCONNECT
 type: structured-behaviour
-title: "Disconnecting removes the connection and its entries"
-status: draft
+title: Disconnecting removes the connection and its entries
+status: active
 illustrates:
-  - "UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR"
-  - "BR-CALENDAR-DISCONNECT-IS-LOCAL"
-  - "BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS"
+  - UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR
+  - BR-CALENDAR-DISCONNECT-IS-LOCAL
+  - BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS
 given:
-  - "an active external calendar connection exists"
-when: "the member disconnects it"
+  - an active external calendar connection exists
+when: the member disconnects it
 then:
-  - "the connection is removed"
-  - "none of its imported entries remain active"
-  - "those entries no longer appear in the Agenda"
-  - "no plan is changed"
+  - the connection is removed
+  - none of its imported entries remain active
+  - those entries no longer appear in the Agenda
+  - no plan is changed
 uses-terms:
-  - "TERM-EXTERNAL-CALENDAR-CONNECTION"
-  - "TERM-EXTERNAL-CALENDAR-ENTRY"
+  - TERM-EXTERNAL-CALENDAR-CONNECTION
+  - TERM-EXTERNAL-CALENDAR-ENTRY
 provenance:
   source: "openspec/specs/calendar/spec.md (External Calendar Disconnection: Member disconnects a connection)"
-  confidence: "high"
-  recovered-from: "documentation"
+  confidence: high
+  recovered-from: documentation
+covers-transition:
+  lifecycle: LC-EXTERNAL-CALENDAR-CONNECTION
+  transition: DISCONNECT
 ---
 
 ## Intent

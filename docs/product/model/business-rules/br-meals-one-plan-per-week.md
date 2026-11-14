@@ -2,12 +2,7 @@
 id: "BR-MEALS-ONE-PLAN-PER-WEEK"
 type: "business-rule"
 title: "A household has at most one meal plan per week"
-status: "draft"
-applies-to:
-  - "UC-MEALS-CREATE-PLAN"
-  - "UC-MEALS-APPLY-TEMPLATE"
-  - "UC-MEALS-COPY-PREVIOUS-WEEK"
-  - "UC-MEALS-PROMOTE-PLAN"
+status: "active"
 uses-terms:
   - "TERM-MEAL-PLAN"
   - "TERM-HOUSEHOLD"

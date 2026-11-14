@@ -2,7 +2,7 @@
 id: SB-FAMILY-NON-MANAGER-UPDATE-REJECTED
 type: structured-behaviour
 title: "A non-manager cannot update another person's core details"
-status: draft
+status: active
 illustrates:
   - BR-FAMILY-MANAGERS-ADMINISTER
 given:

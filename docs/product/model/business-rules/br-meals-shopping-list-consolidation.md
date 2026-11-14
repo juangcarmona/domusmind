@@ -2,9 +2,7 @@
 id: "BR-MEALS-SHOPPING-LIST-CONSOLIDATION"
 type: "business-rule"
 title: "Derived shopping lists consolidate ingredients by name and unit"
-status: "draft"
-applies-to:
-  - "UC-MEALS-DERIVE-SHOPPING-LIST"
+status: "active"
 uses-terms:
   - "TERM-SHOPPING-LIST-DERIVATION"
   - "TERM-INGREDIENT"

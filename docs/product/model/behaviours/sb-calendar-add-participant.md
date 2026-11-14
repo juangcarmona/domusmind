@@ -2,7 +2,7 @@
 id: SB-CALENDAR-ADD-PARTICIPANT
 type: structured-behaviour
 title: "A household member is added to a plan"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS"
 given:

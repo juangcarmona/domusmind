@@ -2,7 +2,7 @@
 id: SB-FAMILY-MEMBER-ADDED
 type: structured-behaviour
 title: "A person is added to the household"
-status: draft
+status: active
 illustrates:
   - UC-FAMILY-ADD-MEMBER
 given:

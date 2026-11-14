@@ -2,7 +2,7 @@
 id: "SB-MEALS-TEMPLATE-DUPLICATE-NAME-REJECTED"
 type: "structured-behaviour"
 title: "Creating a template with an existing name is rejected"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-CREATE-TEMPLATE"
   - "BR-MEALS-TEMPLATE-NAME-UNIQUE"

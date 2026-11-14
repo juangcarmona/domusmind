@@ -2,7 +2,7 @@
 id: BR-ASSET-OCCURRENCE-HISTORY
 type: business-rule
 title: Obligation history is bounded, explicit and durable
-status: draft
+status: active
 ---
 ## Rule
 

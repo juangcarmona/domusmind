@@ -2,7 +2,7 @@
 id: SB-CALENDAR-CREATE-SECURE-SUBSCRIPTION
 type: structured-behaviour
 title: An authorized member creates a private calendar subscription
-status: draft
+status: active
 illustrates:
   - UC-CALENDAR-MANAGE-SUBSCRIPTIONS
   - BR-CALENDAR-SUBSCRIPTION-ACCESS

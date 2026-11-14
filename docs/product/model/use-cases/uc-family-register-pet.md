@@ -2,7 +2,7 @@
 id: UC-FAMILY-REGISTER-PET
 type: use-case
 title: "Register a pet"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MANAGER
 supporting-actors: []
 bounded-context: BC-FAMILY

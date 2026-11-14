@@ -2,10 +2,7 @@
 id: BR-CALENDAR-SUBSCRIPTION-ACCESS
 type: business-rule
 title: Calendar subscription access is owner-controlled and read-only
-status: draft
-applies-to:
-  - UC-CALENDAR-MANAGE-SUBSCRIPTIONS
-  - UC-CALENDAR-READ-SUBSCRIPTION-FEED
+status: active
 uses-terms:
   - TERM-CALENDAR-SUBSCRIPTION
 ---

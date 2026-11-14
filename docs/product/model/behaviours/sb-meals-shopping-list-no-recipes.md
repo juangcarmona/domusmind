@@ -2,7 +2,7 @@
 id: "SB-MEALS-SHOPPING-LIST-NO-RECIPES"
 type: "structured-behaviour"
 title: "A plan without recipe slots cannot produce a shopping list"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-DERIVE-SHOPPING-LIST"
   - "BR-MEALS-SHOPPING-LIST-REQUIRES-RECIPE"

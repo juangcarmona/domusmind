@@ -2,7 +2,7 @@
 id: FR-TASKS-UPDATE-ROUTINE
 type: functional-requirement
 title: Update a routine going forward
-status: draft
+status: active
 derived-from:
   - UC-TASKS-UPDATE-ROUTINE
   - BR-TASKS-VALID-ROUTINE-RECURRENCE

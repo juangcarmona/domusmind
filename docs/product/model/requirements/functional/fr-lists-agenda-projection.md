@@ -2,7 +2,7 @@
 id: FR-LISTS-AGENDA-PROJECTION
 type: functional-requirement
 title: "Show time-aware list items in the Agenda"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-SEE-ITEMS-IN-AGENDA
   - BR-LISTS-AGENDA-PROJECTION

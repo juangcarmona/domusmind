@@ -2,7 +2,7 @@
 id: TERM-ARCHIVED-LIST
 type: domain-term
 title: "Archived List"
-status: draft
+status: active
 defined-in: BC-LISTS
 synonyms:
   - "archived"

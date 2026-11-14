@@ -2,7 +2,7 @@
 id: FR-TASKS-CREATE-TASK
 type: functional-requirement
 title: Create a task with a title
-status: draft
+status: active
 derived-from:
   - UC-TASKS-CREATE-TASK
   - BR-TASKS-TITLE-REQUIRED

@@ -48,7 +48,7 @@ jobs:
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
             --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(package(-lock)?\.json$|docs/product/|\.product/|\.claude/|\.agents/|openspec/|\.github/workflows/product-ci\.yml$)'; then
+          if grep -qE '^(package(-lock)?\.json$|docs/product/|\.product/|\.claude/|\.agents/|openspec/|\.github/workflows/product-ci\.yml$)' <<< "$files"; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
@@ -77,6 +77,9 @@ jobs:
       - name: Validate the product model
         run: npx --no-install prodshape validate
 
+      - name: Validate active Product Change overlays
+        run: npx --no-install prodshape change validate
+
       - name: Verify ProductShape integration integrity
         run: npx --no-install prodshape integration update --check
 
@@ -84,3 +87,9 @@ jobs:
       # citations, or exempt with a human-approved reason.
       - name: Verify OpenSpec citations
         run: npx --no-install prodshape citations verify --provider openspec
+
+      - name: Verify configured product citation consumers
+        run: npx --no-install prodshape citations verify
+
+      - name: Build the Product Explorer
+        run: npm run product:build

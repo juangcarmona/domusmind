@@ -2,7 +2,7 @@
 id: TERM-PLAN-PARTICIPANT
 type: domain-term
 title: "Plan Participant"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Participant"

@@ -2,7 +2,7 @@
 id: UC-LISTS-TOGGLE-ITEM
 type: use-case
 title: "Check or uncheck an item"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

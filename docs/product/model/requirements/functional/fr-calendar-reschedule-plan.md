@@ -1,22 +1,22 @@
 ---
 id: FR-CALENDAR-RESCHEDULE-PLAN
 type: functional-requirement
-title: "Reschedule a plan"
-status: draft
+title: Rescheduling preserves Plan identity, participants and reminders
+status: active
 derived-from:
-  - "UC-CALENDAR-RESCHEDULE-PLAN"
-  - "BR-CALENDAR-PLAN-END-AFTER-START"
-  - "BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED"
+  - UC-CALENDAR-RESCHEDULE-PLAN
+  - BR-CALENDAR-PLAN-END-AFTER-START
+  - BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED
 verification:
-  - scenario-ref: "SB-CALENDAR-RESCHEDULE-PLAN"
-  - scenario-ref: "SB-CALENDAR-RESCHEDULE-CANCELLED-PLAN"
-  - scenario-ref: "SB-CALENDAR-RESCHEDULE-INVALID-TIMES"
+  - scenario-ref: SB-CALENDAR-RESCHEDULE-PLAN
+  - scenario-ref: SB-CALENDAR-RESCHEDULE-CANCELLED-PLAN
+  - scenario-ref: SB-CALENDAR-RESCHEDULE-INVALID-TIMES
 uses-terms:
-  - "TERM-PLAN"
+  - TERM-PLAN
 provenance:
-  source: "openspec/specs/calendar/spec.md (Event Rescheduling); src/backend/DomusMind.Domain/Calendar/CalendarEvent.cs (Reschedule)"
-  confidence: "high"
-  recovered-from: "documentation"
+  source: openspec/specs/calendar/spec.md (Event Rescheduling); src/backend/DomusMind.Domain/Calendar/CalendarEvent.cs (Reschedule)
+  confidence: high
+  recovered-from: documentation
 ---
 
 ## Requirement

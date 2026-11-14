@@ -2,7 +2,7 @@
 id: SB-LISTS-REORDER
 type: structured-behaviour
 title: "Reordering changes only positions"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-REORDER-ITEMS
   - BR-LISTS-REORDER-FULL-SET

@@ -2,18 +2,18 @@
 id: FR-AREAS-ASSIGN-OWNER
 type: functional-requirement
 title: Assign a single Owner to an Area
-status: draft
+status: active
 derived-from:
-- UC-AREAS-ASSIGN-OWNER
-- BR-AREAS-SINGLE-OWNER
-- BR-AREAS-SAME-HOUSEHOLD-PEOPLE
+  - UC-AREAS-ASSIGN-OWNER
+  - BR-AREAS-SINGLE-OWNER
+  - BR-AREAS-SAME-HOUSEHOLD-PEOPLE
 verification:
-- scenario-ref: SB-AREAS-ASSIGN-FIRST-OWNER
-- scenario-ref: SB-AREAS-REPLACE-OWNER
-- scenario-ref: SB-AREAS-REJECT-OUTSIDE-OWNER
+  - scenario-ref: SB-AREAS-ASSIGN-FIRST-OWNER
+  - scenario-ref: SB-AREAS-REPLACE-OWNER
+  - scenario-ref: SB-AREAS-REJECT-OUTSIDE-OWNER
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
+  - TERM-AREA
+  - TERM-AREA-OWNER
 provenance:
   source: "openspec/specs/areas/spec.md (Requirement: Primary Owner Assignment); interview: product owner decision Q-0012 (E-0158)"
   confidence: high

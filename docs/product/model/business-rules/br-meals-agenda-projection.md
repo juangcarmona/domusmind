@@ -2,9 +2,7 @@
 id: "BR-MEALS-AGENDA-PROJECTION"
 type: "business-rule"
 title: "Meal slots appear in the Agenda as non-timed household entries"
-status: "draft"
-applies-to:
-  - "UC-MEALS-SEE-MEALS-IN-AGENDA"
+status: "active"
 uses-terms:
   - "TERM-MEAL-SLOT"
   - "TERM-AGENDA"

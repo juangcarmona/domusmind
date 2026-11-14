@@ -2,7 +2,7 @@
 id: FR-FAMILY-IDENTITY-BOUNDARY
 type: functional-requirement
 title: "Keep household structure owned in one place"
-status: draft
+status: active
 derived-from:
   - BR-FAMILY-OWNS-HOUSEHOLD-STRUCTURE
 verification:

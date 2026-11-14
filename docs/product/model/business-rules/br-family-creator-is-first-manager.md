@@ -2,9 +2,7 @@
 id: BR-FAMILY-CREATOR-IS-FIRST-MANAGER
 type: business-rule
 title: "The person who creates the household is its first manager"
-status: draft
-applies-to:
-  - UC-FAMILY-CREATE-HOUSEHOLD
+status: active
 uses-terms:
   - TERM-HOUSEHOLD
   - TERM-MANAGER

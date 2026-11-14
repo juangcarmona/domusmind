@@ -2,7 +2,7 @@
 id: FR-LISTS-UPDATE-LIST
 type: functional-requirement
 title: "Update a list's name and associations"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-UPDATE-LIST
   - BR-LISTS-CONTEXT-LINKS-INFORMATIONAL

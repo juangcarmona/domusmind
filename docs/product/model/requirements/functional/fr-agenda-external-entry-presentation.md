@@ -2,7 +2,7 @@
 id: FR-AGENDA-EXTERNAL-ENTRY-PRESENTATION
 type: functional-requirement
 title: "Present imported entries as read-only and labelled"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-VIEW-MEMBER-AGENDA"
   - "UC-AGENDA-INSPECT-ENTRY"

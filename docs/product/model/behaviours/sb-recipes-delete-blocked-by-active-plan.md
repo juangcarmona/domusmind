@@ -2,7 +2,7 @@
 id: "SB-RECIPES-DELETE-BLOCKED-BY-ACTIVE-PLAN"
 type: "structured-behaviour"
 title: "Deleting a recipe used by an Active plan is rejected"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-DELETE-RECIPE"
   - "BR-RECIPES-DELETE-GUARD"

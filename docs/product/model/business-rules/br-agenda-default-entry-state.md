@@ -2,10 +2,7 @@
 id: BR-AGENDA-DEFAULT-ENTRY-STATE
 type: business-rule
 title: "The Agenda opens on the household, today, by day"
-status: draft
-applies-to:
-  - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
-  - "UC-AGENDA-NAVIGATE"
+status: active
 uses-terms:
   - "TERM-AGENDA"
   - "TERM-AGENDA-SCOPE"

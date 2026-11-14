@@ -2,10 +2,9 @@
 id: "BR-MEALS-HOUSEHOLD-SCOPED-MEALS"
 type: "business-rule"
 title: "Meals are planned for the household, not per person"
-status: "draft"
+status: "active"
 applies-to:
-  - "BC-MEAL-PLANNING"
-  - "UC-MEALS-UPDATE-SLOT"
+  - BC-MEAL-PLANNING
 uses-terms:
   - "TERM-MEAL-PLAN"
   - "TERM-HOUSEHOLD"

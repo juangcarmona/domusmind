@@ -2,7 +2,7 @@
 id: SB-LISTS-REMOVE-DATED-ITEM
 type: structured-behaviour
 title: "Removing a dated item takes it out of the Agenda"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-REMOVE-ITEM
   - BR-LISTS-AGENDA-PROJECTION

@@ -2,7 +2,7 @@
 id: FR-CALENDAR-EDIT-PLAN-DETAILS
 type: functional-requirement
 title: "Edit a plan's title, description and colour"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-EDIT-PLAN-DETAILS"
   - "BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED"

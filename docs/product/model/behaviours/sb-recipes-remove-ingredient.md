@@ -2,7 +2,7 @@
 id: "SB-RECIPES-REMOVE-INGREDIENT"
 type: "structured-behaviour"
 title: "Removing an ingredient shrinks the recipe's ingredient list"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-MANAGE-INGREDIENTS"
 given:

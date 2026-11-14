@@ -2,7 +2,7 @@
 id: SB-LISTS-ADD-ITEM
 type: structured-behaviour
 title: "Adding an item appends it unchecked"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-ADD-ITEM
   - BR-LISTS-NEW-ITEM-UNCHECKED-APPENDED

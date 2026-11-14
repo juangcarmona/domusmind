@@ -1,8 +1,8 @@
 ---
 id: CON-PRODUCT-CURRENT-SCOPE
 type: constraint
-title: The product covers household coordination and connected household-managed things
-status: draft
+title: DomusMind coordinates household people, work, time and managed things
+status: active
 uses-terms:
   - TERM-HOUSEHOLD
   - TERM-EXTERNAL-CALENDAR-ENTRY
@@ -10,15 +10,26 @@ uses-terms:
   - TERM-ASSISTANT-PROVIDER-TARGET
   - TERM-ASSET
 provenance:
-  source: "Current accepted model; proposed scope extension in CHG-HOUSEHOLD-ASSETS-001"
+  source: Current accepted model; proposed scope extension in CHG-HOUSEHOLD-ASSETS-001
   confidence: medium
   recovered-from: documentation
 ---
+
 ## Constraint
 
-The current product covers the household and its people, areas of responsibility, plans with the Agenda and Phase 1 external calendars, read-only calendar subscriptions, dated family timeline notes, tasks and routines, shared lists, meal planning with recipes, a review-first Inbox for household notes and assistant action proposals, household Chats with an explicitly invoked assistant, and household-managed things with their associated obligations, documents/references and history. Chats answers read-only questions and may stage supported household action requests as Inbox proposals; supported initial actions create or update Calendar Plans and add or update List Items. Every household change still requires explicit Inbox approval. Households configure one to three ordered hosted or local assistant provider targets, with visible fallback and data-sharing disclosures (CHG-CONVERSATIONAL-ASSISTANT).
+The current product covers:
 
-Household Assets does not make DomusMind a real-estate/property-management, stock-inventory, finance/accounting, or standalone document-management product. It covers only documents, costs and responsibilities meaningfully associated with a household-managed thing.
+- the household, its people and Areas of responsibility;
+- Plans, the Agenda, Phase 1 external calendars, read-only calendar subscriptions and dated family timeline notes;
+- Tasks, Routines and shared Lists;
+- meal planning and recipes;
+- Inbox notes and action proposals that members review;
+- household Chats and an assistant that members invoke explicitly;
+- household-managed things and their obligations, documents, references and history.
+
+ Chats answers read-only questions and may stage supported household action requests as Inbox proposals; supported initial actions create or update Calendar Plans and add or update List Items. Every household change still requires explicit Inbox approval. Households configure one to three ordered hosted or local assistant provider targets, with visible fallback and data-sharing disclosures (CHG-CONVERSATIONAL-ASSISTANT).
+
+Household Assets covers documents, costs and responsibilities associated with a household-managed thing. Its scope excludes real-estate and property-management operations, stock inventory, finance and accounting, and standalone document management.
 
 Outside the current product:
 

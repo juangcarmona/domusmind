@@ -2,7 +2,7 @@
 id: FR-CALENDAR-MANAGER-CONNECTION-SUMMARY
 type: functional-requirement
 title: "Show a household manager the status of others' connections"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-REVIEW-HOUSEHOLD-CONNECTION-STATUS"
   - "BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS"

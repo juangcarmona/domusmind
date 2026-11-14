@@ -2,7 +2,7 @@
 id: TERM-ASSET-LOCATION
 type: domain-term
 title: Asset Location
-status: draft
+status: active
 defined-in: BC-HOUSEHOLD-ASSETS
 ---
 

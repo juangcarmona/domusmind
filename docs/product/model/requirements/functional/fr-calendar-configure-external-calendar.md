@@ -1,26 +1,26 @@
 ---
 id: FR-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR
 type: functional-requirement
-title: "Choose calendars and horizon for a connection"
-status: draft
+title: Members choose imported calendars and their forward horizon
+status: active
 derived-from:
-  - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
-  - "BR-CALENDAR-SUPPORTED-SYNC-HORIZONS"
-  - "BR-CALENDAR-HORIZON-CHANGE-RELOADS"
-  - "BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT"
+  - UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR
+  - BR-CALENDAR-SUPPORTED-SYNC-HORIZONS
+  - BR-CALENDAR-HORIZON-CHANGE-RELOADS
+  - BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT
 verification:
-  - scenario-ref: "SB-CALENDAR-CONFIGURE-SELECTION-AND-HORIZON"
-  - scenario-ref: "SB-CALENDAR-DESELECT-FEED"
-  - scenario-ref: "SB-CALENDAR-HORIZON-CHANGE-RELOADS"
-  - scenario-ref: "SB-CALENDAR-UNSUPPORTED-HORIZON"
+  - scenario-ref: SB-CALENDAR-CONFIGURE-SELECTION-AND-HORIZON
+  - scenario-ref: SB-CALENDAR-DESELECT-FEED
+  - scenario-ref: SB-CALENDAR-HORIZON-CHANGE-RELOADS
+  - scenario-ref: SB-CALENDAR-UNSUPPORTED-HORIZON
 uses-terms:
-  - "TERM-EXTERNAL-CALENDAR-CONNECTION"
-  - "TERM-EXTERNAL-CALENDAR-FEED"
-  - "TERM-SYNC-HORIZON"
+  - TERM-EXTERNAL-CALENDAR-CONNECTION
+  - TERM-EXTERNAL-CALENDAR-FEED
+  - TERM-SYNC-HORIZON
 provenance:
-  source: "openspec/specs/calendar/spec.md (External Calendar Configuration); docs/_legacy/06_interfaces/external-calendar-api.md (Configure connection); src/backend/DomusMind.Domain/Calendar/ExternalConnections/ExternalCalendarConnection.cs (Configure)"
-  confidence: "high"
-  recovered-from: "documentation"
+  source: openspec/specs/calendar/spec.md (External Calendar Configuration); docs/_legacy/06_interfaces/external-calendar-api.md (Configure connection); src/backend/DomusMind.Domain/Calendar/ExternalConnections/ExternalCalendarConnection.cs (Configure)
+  confidence: high
+  recovered-from: documentation
 ---
 
 ## Requirement

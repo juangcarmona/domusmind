@@ -2,9 +2,7 @@
 id: BR-LISTS-DELETE-PERMANENT
 type: business-rule
 title: "Deleting a list is permanent and removes its items"
-status: draft
-applies-to:
-  - UC-LISTS-DELETE-LIST
+status: active
 uses-terms:
   - TERM-LIST
   - TERM-LIST-ITEM

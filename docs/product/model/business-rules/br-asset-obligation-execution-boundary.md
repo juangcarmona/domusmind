@@ -2,7 +2,7 @@
 id: BR-ASSET-OBLIGATION-EXECUTION-BOUNDARY
 type: business-rule
 title: Asset obligations remain distinct from execution records
-status: draft
+status: active
 ---
 ## Rule
 

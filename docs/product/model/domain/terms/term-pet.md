@@ -2,7 +2,7 @@
 id: TERM-PET
 type: domain-term
 title: "Pet"
-status: draft
+status: active
 defined-in: BC-FAMILY
 synonyms: []
 uses-terms:

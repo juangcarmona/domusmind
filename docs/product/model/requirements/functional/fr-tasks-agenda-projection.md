@@ -2,7 +2,7 @@
 id: FR-TASKS-AGENDA-PROJECTION
 type: functional-requirement
 title: Show tasks and routines in the Agenda
-status: draft
+status: active
 derived-from:
   - UC-TASKS-SEE-WORK-IN-AGENDA
   - BR-TASKS-ROUTINES-PROJECTED

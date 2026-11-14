@@ -2,9 +2,7 @@
 id: "BR-MEALS-SHOPPING-LIST-REQUIRES-RECIPE"
 type: "business-rule"
 title: "A shopping list needs at least one recipe slot"
-status: "draft"
-applies-to:
-  - "UC-MEALS-DERIVE-SHOPPING-LIST"
+status: "active"
 uses-terms:
   - "TERM-SHOPPING-LIST-DERIVATION"
   - "TERM-MEAL-SOURCE"

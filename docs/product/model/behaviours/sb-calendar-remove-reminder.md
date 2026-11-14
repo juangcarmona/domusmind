@@ -2,7 +2,7 @@
 id: SB-CALENDAR-REMOVE-REMINDER
 type: structured-behaviour
 title: "A reminder is removed from a plan"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-MANAGE-PLAN-REMINDERS"
 given:

@@ -2,7 +2,7 @@
 id: TERM-CALENDAR-SUBSCRIPTION
 type: domain-term
 title: Calendar Subscription
-status: draft
+status: active
 defined-in: BC-CALENDAR
 uses-terms:
   - TERM-HOUSEHOLD

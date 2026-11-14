@@ -2,7 +2,7 @@
 id: "UC-MEALS-CREATE-PLAN"
 type: "use-case"
 title: "Start a meal plan for a week"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

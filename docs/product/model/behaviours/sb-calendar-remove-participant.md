@@ -2,7 +2,7 @@
 id: SB-CALENDAR-REMOVE-PARTICIPANT
 type: structured-behaviour
 title: "A participant is removed from a plan"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS"
 given:

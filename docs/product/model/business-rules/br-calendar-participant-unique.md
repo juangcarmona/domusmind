@@ -2,9 +2,7 @@
 id: BR-CALENDAR-PARTICIPANT-UNIQUE
 type: business-rule
 title: "A person takes part in a plan at most once"
-status: draft
-applies-to:
-  - "UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS"
+status: active
 uses-terms:
   - "TERM-PLAN-PARTICIPANT"
 provenance:

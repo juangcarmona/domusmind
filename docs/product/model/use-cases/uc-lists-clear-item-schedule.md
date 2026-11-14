@@ -2,7 +2,7 @@
 id: UC-LISTS-CLEAR-ITEM-SCHEDULE
 type: use-case
 title: "Remove all timing from an item"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

@@ -2,7 +2,7 @@
 id: BC-RESPONSIBILITIES
 type: bounded-context
 title: Responsibilities (Areas)
-status: draft
+status: active
 provenance:
   source: "openspec/specs/areas/spec.md (Purpose, Notes); docs/_legacy/04_contexts/responsibilities.md (Purpose, Boundaries With Other Contexts, Design Notes); docs/_legacy/00_product/surfaces/areas.md (Purpose, Non-Goals); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs; interview: product owner decision Q-0014 (E-0158); interview: product owner decision Q-0015 (E-0158); interview: product owner decision Q-0018 (E-0158); interview: product owner decision Q-0040 (E-0158)"
   confidence: high

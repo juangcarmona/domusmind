@@ -2,7 +2,7 @@
 id: JRN-PRODUCT-WHAT-MATTERS-TODAY
 type: journey
 title: "Handle what matters today across the household"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 steps:
   - use-case: "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"

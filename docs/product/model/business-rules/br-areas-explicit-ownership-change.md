@@ -2,14 +2,10 @@
 id: BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE
 type: business-rule
 title: Ownership changes are explicit
-status: draft
-applies-to:
-- UC-AREAS-ASSIGN-OWNER
-- UC-AREAS-ADD-SUPPORT
-- UC-AREAS-REMOVE-SUPPORT
+status: active
 uses-terms:
-- TERM-AREA
-- TERM-RESPONSIBILITY-TRANSFER
+  - TERM-AREA
+  - TERM-RESPONSIBILITY-TRANSFER
 provenance:
   source: "docs/_legacy/04_contexts/responsibilities.md (Purpose, Lifecycle Integrity); openspec/specs/areas/spec.md (Responsibility Transfer); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs; interview: product owner decision Q-0012 (E-0158)"
   confidence: high

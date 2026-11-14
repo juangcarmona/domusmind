@@ -2,7 +2,7 @@
 id: "FR-MEALS-COPY-PREVIOUS-WEEK"
 type: "functional-requirement"
 title: "Copy the previous week's plan"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-MEALS-COPY-PREVIOUS-WEEK"
   - "BR-MEALS-COPY-EXCLUDES-SHOPPING-LIST"

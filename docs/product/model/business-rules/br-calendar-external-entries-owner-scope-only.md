@@ -2,10 +2,7 @@
 id: BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY
 type: business-rule
 title: "External entries appear only in their owner's Member scope"
-status: draft
-applies-to:
-  - "UC-AGENDA-VIEW-MEMBER-AGENDA"
-  - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
+status: active
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-ENTRY"
   - "TERM-AGENDA-SCOPE"

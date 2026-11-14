@@ -160,6 +160,16 @@ Contains:
 - "Apply template" action
 - "Copy previous week" action
 - "Generate shopping list" action
+- "Finish week" action when the plan is Active
+
+Finish week makes the plan Completed and read-only. The member can still view its
+content. Completed plans have no reopen action, and a calendar week boundary does
+not complete an Active plan automatically. This is the accepted interaction from
+CHG-STATE-MODEL-COMPLETION; implementation is tracked separately.
+
+<!-- pdac:cite id="FR-MEALS-PLAN-LIFECYCLE" digest="sha256:9ec1d5d8d61d286af237b3b1654e44ae5ace5f568ec7a63aa4757678b02b2b7f" -->
+<!-- pdac:cite id="LC-MEAL-PLAN" digest="sha256:9784fc0abf30456337a94f1e1a90a26cf0681d40a53b528d27326e4c9c6adcea" -->
+<!-- pdac:cite id="UC-MEALS-COMPLETE-PLAN" digest="sha256:cdd6abb43d60048cf809ac6eb2da61b4fc8e473eb01b285de5a3de079fe494c8" -->
 
 ---
 

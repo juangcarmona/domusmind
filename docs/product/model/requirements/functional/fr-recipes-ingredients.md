@@ -2,7 +2,7 @@
 id: "FR-RECIPES-INGREDIENTS"
 type: "functional-requirement"
 title: "Edit recipe ingredients"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-RECIPES-MANAGE-INGREDIENTS"
   - "BR-RECIPES-INGREDIENT-NAME-UNIQUE"

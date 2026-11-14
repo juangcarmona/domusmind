@@ -2,7 +2,7 @@
 id: FR-AGENDA-SCOPE-AND-MODE-SWITCHING
 type: functional-requirement
 title: "Switch Agenda scope, mode and date"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-NAVIGATE"
   - "BR-AGENDA-SCOPE-SWITCH-KEEPS-CONTEXT"

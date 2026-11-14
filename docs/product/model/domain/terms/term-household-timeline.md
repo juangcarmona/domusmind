@@ -2,7 +2,7 @@
 id: TERM-HOUSEHOLD-TIMELINE
 type: domain-term
 title: "Household Timeline"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Family Timeline"

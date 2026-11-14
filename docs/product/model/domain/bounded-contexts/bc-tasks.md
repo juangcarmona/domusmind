@@ -2,7 +2,7 @@
 id: BC-TASKS
 type: bounded-context
 title: Tasks
-status: draft
+status: active
 provenance:
   source: "openspec/specs/tasks/spec.md (Purpose, Requirements); docs/_legacy/04_contexts/tasks.md (Purpose, Boundaries With Other Contexts, Design Notes); src/backend/DomusMind.Domain/Tasks/**; interview: product owner decision Q-0006 (E-0158); interview: product owner decision Q-0008 (E-0158); interview: product owner decision Q-0010 (E-0158); interview: product owner decision Q-0011 (E-0158)"
   confidence: high

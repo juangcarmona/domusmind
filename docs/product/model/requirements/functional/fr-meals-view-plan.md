@@ -2,7 +2,7 @@
 id: "FR-MEALS-VIEW-PLAN"
 type: "functional-requirement"
 title: "View a week's meal plan"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-MEALS-VIEW-PLAN"
   - "BR-MEALS-MEAL-TYPE-ORDER"

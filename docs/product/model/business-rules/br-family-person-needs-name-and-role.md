@@ -2,11 +2,7 @@
 id: BR-FAMILY-PERSON-NEEDS-NAME-AND-ROLE
 type: business-rule
 title: "A person needs a name and a valid role"
-status: draft
-applies-to:
-  - UC-FAMILY-ADD-MEMBER
-  - UC-FAMILY-REGISTER-PET
-  - UC-FAMILY-UPDATE-MEMBER-DETAILS
+status: active
 uses-terms:
   - TERM-MEMBER
   - TERM-MEMBER-ROLE

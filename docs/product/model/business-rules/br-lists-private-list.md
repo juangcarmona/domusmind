@@ -2,9 +2,8 @@
 id: BR-LISTS-PRIVATE-LIST
 type: business-rule
 title: "A list can optionally be private to one person"
-status: draft
+status: active
 applies-to:
-  - UC-LISTS-MAKE-LIST-PRIVATE
   - BC-LISTS
 uses-terms:
   - TERM-LIST

@@ -2,7 +2,7 @@
 id: FR-FAMILY-MEMBER-DIRECTORY
 type: functional-requirement
 title: "Show the household's people directory"
-status: draft
+status: active
 derived-from:
   - UC-FAMILY-VIEW-MEMBER-DIRECTORY
   - BR-FAMILY-DIRECTORY-ORDER

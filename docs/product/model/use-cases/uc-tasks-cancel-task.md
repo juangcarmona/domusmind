@@ -2,7 +2,7 @@
 id: UC-TASKS-CANCEL-TASK
 type: use-case
 title: Cancel a task
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

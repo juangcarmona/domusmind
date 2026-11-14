@@ -2,15 +2,15 @@
 id: FR-AREAS-CREATE-AREA
 type: functional-requirement
 title: Create a named Area in the household
-status: draft
+status: active
 derived-from:
-- UC-AREAS-CREATE-AREA
-- BR-AREAS-NAME-REQUIRED
-- BR-AREAS-OWNERSHIP-OPTIONAL
+  - UC-AREAS-CREATE-AREA
+  - BR-AREAS-NAME-REQUIRED
+  - BR-AREAS-OWNERSHIP-OPTIONAL
 verification:
-- scenario-ref: SB-AREAS-CREATE-AREA
+  - scenario-ref: SB-AREAS-CREATE-AREA
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: 'openspec/specs/areas/spec.md (Requirement: Area Creation); docs/_legacy/00_product/surfaces/areas.md (Interaction)'
   confidence: high

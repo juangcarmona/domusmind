@@ -2,7 +2,7 @@
 id: TERM-ROUTINE-RECURRENCE
 type: domain-term
 title: Routine Recurrence
-status: draft
+status: active
 defined-in: BC-TASKS
 synonyms:
   - RecurrenceRule

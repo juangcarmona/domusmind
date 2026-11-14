@@ -1,28 +1,29 @@
 ---
 id: CON-PRODUCT-NO-MAGIC-AUTOMATION
 type: constraint
-title: "No hidden automation: household records are created explicitly"
-status: draft
+title: Household changes require explicit decisions
+status: active
 applies-to:
-  - "BC-FAMILY"
-  - "BC-RESPONSIBILITIES"
-  - "BC-CALENDAR"
-  - "BC-TASKS"
-  - "BC-LISTS"
-  - "BC-MEAL-PLANNING"
-  - "BC-CHATS"
+  - BC-FAMILY
+  - BC-RESPONSIBILITIES
+  - BC-CALENDAR
+  - BC-TASKS
+  - BC-LISTS
+  - BC-MEAL-PLANNING
+  - BC-CHATS
 uses-terms:
-  - "TERM-TASK"
-  - "TERM-PLAN"
-  - "TERM-LIST-ITEM"
+  - TERM-TASK
+  - TERM-PLAN
+  - TERM-LIST-ITEM
 provenance:
-  source: "docs/_legacy/00_product/strategy.md (Vision, Non-Goals); docs/_legacy/09_roadmap/roadmap.md (V3 - Intelligence and Integrations, Rule); docs/_legacy/00_product/public-site.md (Copy Guardrails); docs/_legacy/03_domain/context-map.md (Tasks from Meal Planning, Event Scheduled); product-owner decision for CHG-HOUSEHOLD-CHATS"
+  source: docs/_legacy/00_product/strategy.md (Vision, Non-Goals); docs/_legacy/09_roadmap/roadmap.md (V3 - Intelligence and Integrations, Rule); docs/_legacy/00_product/public-site.md (Copy Guardrails); docs/_legacy/03_domain/context-map.md (Tasks from Meal Planning, Event Scheduled); product-owner decision for CHG-HOUSEHOLD-CHATS
   confidence: medium
   recovered-from: documentation
 ---
+
 ## Constraint
 
-DomusMind does not promise or perform hidden automation. Household records (plans, tasks, routines, list items, area ownership) come into existence only through an explicit household decision; intelligence must strengthen household structure without bypassing its rules.
+Household records (Plans, Tasks, Routines, List Items and Area ownership) come into existence through an explicit household decision. Assistant capabilities follow the household's existing structure and rules.
 
 Public claims must not promise AI capabilities the product cannot deliver.
 

@@ -2,7 +2,7 @@
 id: UC-CALENDAR-READ-SUBSCRIPTION-FEED
 type: use-case
 title: Read a DomusMind calendar subscription
-status: draft
+status: active
 primary-actor: ACT-EXTERNAL-CALENDAR-CLIENT
 supporting-actors:
   - ACT-HOUSEHOLD-MEMBER

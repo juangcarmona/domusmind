@@ -2,9 +2,7 @@
 id: BR-CALENDAR-REMINDER-OFFSET-UNIQUE
 type: business-rule
 title: "Reminder offsets are unique per plan"
-status: draft
-applies-to:
-  - "UC-CALENDAR-MANAGE-PLAN-REMINDERS"
+status: active
 uses-terms:
   - "TERM-REMINDER"
   - "TERM-PLAN"

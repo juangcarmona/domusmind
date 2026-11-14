@@ -2,7 +2,7 @@
 id: TERM-EXTERNAL-CALENDAR-ENTRY
 type: domain-term
 title: "External Calendar Entry"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Imported entry"

@@ -158,13 +158,21 @@ Each connection row should show:
 - current status
 - actions: `Sync now`, `Edit`, `Disconnect`
 
-Status examples:
+Connection states:
 
-- Connected
+- Pending initial sync
+- Healthy
 - Syncing
-- Needs attention
-- Auth expired
-- Rehydrating
+- Partial failure
+- Failed
+- Authorization expired
+- Disconnected
+
+Show the failure reason with Failed or Authorization expired. Keep a full reload
+within Syncing; Needs attention and Rehydrating are not independent product states.
+
+<!-- pdac:cite id="FR-CALENDAR-SHOW-CONNECTION-STATUS" digest="sha256:49e6cb0c06c0278bef22fced1c67a24cc388fdbe533f10582bc25acd308bf39e" -->
+<!-- pdac:cite id="LC-EXTERNAL-CALENDAR-CONNECTION" digest="sha256:04f6d9502ca9d27cab5239ef3a179979ad42aa0a2b4cf67d11d87916f80ce7ec" -->
 
 The row should stay dense and readable.
 It is not a large settings card.

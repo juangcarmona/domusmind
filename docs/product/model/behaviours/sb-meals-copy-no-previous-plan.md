@@ -2,7 +2,7 @@
 id: "SB-MEALS-COPY-NO-PREVIOUS-PLAN"
 type: "structured-behaviour"
 title: "Copying when last week has no plan is a recoverable outcome"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-COPY-PREVIOUS-WEEK"
 given:

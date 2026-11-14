@@ -2,7 +2,7 @@
 id: TERM-CHECKED-ITEM
 type: domain-term
 title: "Checked Item"
-status: draft
+status: active
 defined-in: BC-LISTS
 synonyms:
   - "completed item"

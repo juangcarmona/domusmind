@@ -2,7 +2,7 @@
 id: "TERM-WEEKLY-TEMPLATE"
 type: "domain-term"
 title: "Weekly Template"
-status: "draft"
+status: "active"
 defined-in: "BC-MEAL-PLANNING"
 synonyms:
   - "WeeklyTemplate"

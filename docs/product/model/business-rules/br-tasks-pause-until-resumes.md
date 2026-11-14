@@ -2,10 +2,7 @@
 id: BR-TASKS-PAUSE-UNTIL-RESUMES
 type: business-rule
 title: A routine paused until a date resumes on that date
-status: draft
-applies-to:
-  - UC-TASKS-PAUSE-ROUTINE
-  - UC-TASKS-RESUME-ROUTINE
+status: active
 uses-terms:
   - TERM-ROUTINE
   - TERM-ROUTINE-OCCURRENCE

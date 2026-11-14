@@ -32,24 +32,24 @@ This glossary defines architecture terms only. Household and business terms (hou
 
 The Agenda is a set of read models and projections, not a module; its meaning belongs to the product model.
 
-<!-- pdac:cite id="TERM-AGENDA" digest="sha256:816f1a2f6d4e87da6b928b3c6d68433adab2c5467f4c02667e00fdb9b86387f0" -->
+<!-- pdac:cite id="TERM-AGENDA" digest="sha256:a83d53e6c8e54bf187b9038ee34722a44ddd5c98211e1c69089db40b96b26014" -->
 
 The household timeline is likewise a projection over several modules' aggregates.
 
-<!-- pdac:cite id="TERM-HOUSEHOLD-TIMELINE" digest="sha256:af4c661643850c49998b6046ecfbf3ad3ec73b46dc61bc0d031acace8ed5b932" -->
+<!-- pdac:cite id="TERM-HOUSEHOLD-TIMELINE" digest="sha256:410a4fc4b9ef563f593931082c0a49dd92d6d3a90f41a31c56ec86dcb9d358a3" -->
 
 A list item shown in the Agenda is a temporal projection of a Lists aggregate, not a Calendar or Tasks entity.
 
-<!-- pdac:cite id="TERM-PROJECTED-LIST-ITEM" digest="sha256:c8ace0e5be8d059740bfd3edd63eb5f8b101c2687ffcccbc7f918c9e5a864fd7" -->
+<!-- pdac:cite id="TERM-PROJECTED-LIST-ITEM" digest="sha256:1d7dee71c8e9ef330968975a9a7b48e15b547f1b823286d462ab6b5ed059078f" -->
 
 The Calendar aggregate `CalendarEvent` is the implementation of the household plan.
 
-<!-- pdac:cite id="TERM-PLAN" digest="sha256:f06fe7678136c535cf5f55e815f161d73562165b17c565f9496386dbd8395ac3" -->
+<!-- pdac:cite id="TERM-PLAN" digest="sha256:a1ff0f3de21aac20325b367ed1898b3eb3688f97d6c3e0b60b798c724025b07b" -->
 
 The `Family` aggregate and the family identifier that scopes every module's data implement the household boundary.
 
-<!-- pdac:cite id="TERM-HOUSEHOLD" digest="sha256:f71aa38813b387bc9962f78a716ad33a144b8b754494e9dd560afab3e5520a98" -->
+<!-- pdac:cite id="TERM-HOUSEHOLD" digest="sha256:87493c2e4c72087ed204e99a656f157b648b7f2b5ad636e825bb6edd90716f76" -->
 
 Imported external calendar entries are stored as read-only `ExternalCalendarEntry` records outside the `CalendarEvent` aggregate.
 
-<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-ENTRY" digest="sha256:9ef123050d8fc32bd7755be77ace1bab03fe0009c4583a0bdced3aff9aba6272" -->
+<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-ENTRY" digest="sha256:a544452b97f1df5874ba287953f6e9ad857c23c3dd1902fc5f3d22bca412ca6b" -->

@@ -2,9 +2,7 @@
 id: BR-AGENDA-MEMBER-SCOPE-PLANS
 type: business-rule
 title: "A person's Agenda shows their plans and household plans without participants"
-status: draft
-applies-to:
-  - "UC-AGENDA-VIEW-MEMBER-AGENDA"
+status: active
 uses-terms:
   - "TERM-AGENDA"
   - "TERM-AGENDA-SCOPE"

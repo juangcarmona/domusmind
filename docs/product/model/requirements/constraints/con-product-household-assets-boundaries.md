@@ -2,7 +2,7 @@
 id: CON-PRODUCT-HOUSEHOLD-ASSETS-BOUNDARIES
 type: constraint
 title: Household Assets reuses existing domain ownership
-status: draft
+status: active
 applies-to:
   - BC-HOUSEHOLD-ASSETS
   - BC-FAMILY

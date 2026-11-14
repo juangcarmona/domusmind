@@ -2,7 +2,7 @@
 id: CON-CALENDAR-OUTLOOK-PULL-ONLY
 type: constraint
 title: Phase 1 external calendar import is Outlook only and pull only
-status: draft
+status: active
 applies-to:
   - BC-CALENDAR
   - UC-CALENDAR-CONNECT-OUTLOOK

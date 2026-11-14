@@ -2,10 +2,7 @@
 id: BR-CALENDAR-PLAN-END-AFTER-START
 type: business-rule
 title: "A plan's end must come after its start"
-status: draft
-applies-to:
-  - "UC-CALENDAR-SCHEDULE-PLAN"
-  - "UC-CALENDAR-RESCHEDULE-PLAN"
+status: active
 uses-terms:
   - "TERM-PLAN"
 provenance:

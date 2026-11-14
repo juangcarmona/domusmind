@@ -2,11 +2,9 @@
 id: BR-TASKS-ROUTINES-PROJECTED
 type: business-rule
 title: Routines are projected, not turned into tasks
-status: draft
+status: active
 applies-to:
   - BC-TASKS
-  - UC-TASKS-CREATE-ROUTINE
-  - UC-TASKS-SEE-WORK-IN-AGENDA
 uses-terms:
   - TERM-ROUTINE
   - TERM-ROUTINE-OCCURRENCE

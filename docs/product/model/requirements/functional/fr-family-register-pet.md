@@ -2,7 +2,7 @@
 id: FR-FAMILY-REGISTER-PET
 type: functional-requirement
 title: "Register pets as part of the household"
-status: draft
+status: active
 derived-from:
   - UC-FAMILY-REGISTER-PET
   - BR-FAMILY-PET-RESTRICTIONS

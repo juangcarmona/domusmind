@@ -2,7 +2,7 @@
 id: "UC-RECIPES-BROWSE-LIBRARY"
 type: "use-case"
 title: "Browse the household recipe library"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

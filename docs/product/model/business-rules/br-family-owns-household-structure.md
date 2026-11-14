@@ -2,7 +2,7 @@
 id: BR-FAMILY-OWNS-HOUSEHOLD-STRUCTURE
 type: business-rule
 title: "Only Household and Members changes who belongs"
-status: draft
+status: active
 applies-to:
   - BC-FAMILY
 uses-terms:

@@ -2,7 +2,7 @@
 id: SB-CALENDAR-REMOVE-MISSING-REMINDER
 type: structured-behaviour
 title: "Removing a reminder the plan does not have is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-MANAGE-PLAN-REMINDERS"
   - "BR-CALENDAR-REMINDER-OFFSET-UNIQUE"

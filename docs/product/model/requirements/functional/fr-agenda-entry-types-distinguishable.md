@@ -2,7 +2,7 @@
 id: FR-AGENDA-ENTRY-TYPES-DISTINGUISHABLE
 type: functional-requirement
 title: "Make every Agenda entry type recognisable"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
   - "UC-AGENDA-VIEW-MEMBER-AGENDA"

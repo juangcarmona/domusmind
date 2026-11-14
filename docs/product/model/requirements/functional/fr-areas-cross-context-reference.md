@@ -2,16 +2,16 @@
 id: FR-AREAS-CROSS-CONTEXT-REFERENCE
 type: functional-requirement
 title: Let other household work reference an Area
-status: draft
+status: active
 derived-from:
-- BR-AREAS-OWNERSHIP-EXCLUSIVE
+  - BR-AREAS-OWNERSHIP-EXCLUSIVE
 verification:
-- scenario-ref: SB-AREAS-TASK-REFERENCES-AREA
+  - scenario-ref: SB-AREAS-TASK-REFERENCES-AREA
 uses-terms:
-- TERM-AREA
-- TERM-TASK
-- TERM-PLAN
-- TERM-ROUTINE
+  - TERM-AREA
+  - TERM-TASK
+  - TERM-PLAN
+  - TERM-ROUTINE
 provenance:
   source: 'openspec/specs/areas/spec.md (Requirement: Cross-Context Referencing); docs/_legacy/04_contexts/responsibilities.md'
   confidence: high

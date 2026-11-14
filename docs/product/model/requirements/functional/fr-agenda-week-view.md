@@ -2,7 +2,7 @@
 id: FR-AGENDA-WEEK-VIEW
 type: functional-requirement
 title: "Show a seven-day coordination week"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
   - "UC-AGENDA-VIEW-MEMBER-AGENDA"

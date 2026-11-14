@@ -2,14 +2,14 @@
 id: FR-AREAS-REMOVE-SUPPORT
 type: functional-requirement
 title: Remove a Support person from an Area
-status: draft
+status: active
 derived-from:
-- UC-AREAS-REMOVE-SUPPORT
+  - UC-AREAS-REMOVE-SUPPORT
 verification:
-- scenario-ref: SB-AREAS-REMOVE-SUPPORT
+  - scenario-ref: SB-AREAS-REMOVE-SUPPORT
 uses-terms:
-- TERM-AREA
-- TERM-AREA-SUPPORT
+  - TERM-AREA
+  - TERM-AREA-SUPPORT
 provenance:
   source: 'openspec/specs/areas/spec.md (Requirement: Secondary Owner Removal)'
   confidence: high

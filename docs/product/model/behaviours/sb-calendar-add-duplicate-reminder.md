@@ -2,7 +2,7 @@
 id: SB-CALENDAR-ADD-DUPLICATE-REMINDER
 type: structured-behaviour
 title: "A second reminder with the same offset is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-MANAGE-PLAN-REMINDERS"
   - "BR-CALENDAR-REMINDER-OFFSET-UNIQUE"

@@ -2,7 +2,7 @@
 id: FR-FAMILY-HOUSEHOLD-SETTINGS
 type: functional-requirement
 title: "Configure household-wide settings"
-status: draft
+status: active
 derived-from:
   - UC-FAMILY-CONFIGURE-HOUSEHOLD-SETTINGS
   - BR-FAMILY-MANAGERS-ADMINISTER

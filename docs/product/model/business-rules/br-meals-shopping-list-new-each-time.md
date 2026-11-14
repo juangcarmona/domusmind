@@ -2,9 +2,7 @@
 id: "BR-MEALS-SHOPPING-LIST-NEW-EACH-TIME"
 type: "business-rule"
 title: "Each derivation creates a new list owned by Lists"
-status: "draft"
-applies-to:
-  - "UC-MEALS-DERIVE-SHOPPING-LIST"
+status: "active"
 uses-terms:
   - "TERM-SHOPPING-LIST-DERIVATION"
   - "TERM-LIST"

@@ -2,7 +2,7 @@
 id: UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR
 type: use-case
 title: "Disconnect an external calendar"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

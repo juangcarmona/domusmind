@@ -2,7 +2,7 @@
 id: SB-CALENDAR-CONNECT-DUPLICATE-ACCOUNT
 type: structured-behaviour
 title: "Connecting the same Outlook account twice is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-CONNECT-OUTLOOK"
   - "BR-CALENDAR-ONE-CONNECTION-PER-ACCOUNT"

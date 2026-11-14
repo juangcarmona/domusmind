@@ -2,7 +2,7 @@
 id: UC-CALENDAR-SYNC-EXTERNAL-CALENDAR
 type: use-case
 title: "Sync an external calendar now"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

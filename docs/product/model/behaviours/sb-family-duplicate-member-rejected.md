@@ -2,7 +2,7 @@
 id: SB-FAMILY-DUPLICATE-MEMBER-REJECTED
 type: structured-behaviour
 title: "A person with an existing identity is rejected"
-status: draft
+status: active
 illustrates:
   - BR-FAMILY-PERSON-UNIQUE-IN-HOUSEHOLD
 given:

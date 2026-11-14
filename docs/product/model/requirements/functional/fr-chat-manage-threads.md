@@ -2,7 +2,7 @@
 id: FR-CHAT-MANAGE-THREADS
 type: functional-requirement
 title: Create and use household conversation threads
-status: draft
+status: active
 derived-from:
   - UC-CHAT-USE-CONVERSATIONS
   - BR-CHAT-MEMBER-ACCESS

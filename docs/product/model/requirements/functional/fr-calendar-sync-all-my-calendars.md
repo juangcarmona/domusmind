@@ -2,7 +2,7 @@
 id: FR-CALENDAR-SYNC-ALL-MY-CALENDARS
 type: functional-requirement
 title: "Sync all of a member's calendars at once"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
 verification:

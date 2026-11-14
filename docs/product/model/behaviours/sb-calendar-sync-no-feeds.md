@@ -2,7 +2,7 @@
 id: SB-CALENDAR-SYNC-NO-FEEDS
 type: structured-behaviour
 title: "A sync with no selected calendars does nothing"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
   - "BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT"

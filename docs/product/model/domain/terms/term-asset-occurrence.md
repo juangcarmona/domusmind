@@ -2,7 +2,7 @@
 id: TERM-ASSET-OCCURRENCE
 type: domain-term
 title: Obligation Occurrence
-status: draft
+status: active
 defined-in: BC-HOUSEHOLD-ASSETS
 ---
 ## Definition

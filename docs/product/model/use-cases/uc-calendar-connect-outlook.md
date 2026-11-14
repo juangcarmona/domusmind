@@ -2,7 +2,7 @@
 id: UC-CALENDAR-CONNECT-OUTLOOK
 type: use-case
 title: "Connect an Outlook account"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

@@ -2,7 +2,7 @@
 id: FR-LISTS-OPEN-LIST
 type: functional-requirement
 title: "Show a list's full content, unchecked first"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-OPEN-LIST
 verification:

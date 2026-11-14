@@ -2,7 +2,7 @@
 id: "FR-RECIPES-LIBRARY-SURFACE"
 type: "functional-requirement"
 title: "Standalone recipe library surface"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-RECIPES-BROWSE-LIBRARY"
   - "UC-RECIPES-VIEW-RECIPE"

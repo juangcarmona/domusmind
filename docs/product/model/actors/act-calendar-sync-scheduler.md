@@ -2,7 +2,7 @@
 id: ACT-CALENDAR-SYNC-SCHEDULER
 type: actor
 title: Calendar Sync Scheduler
-status: draft
+status: active
 actor-kind: scheduled-process
 provenance:
   source: docs/_legacy/01_system/system-spec.md (Sync, pull-based, manual and hourly scheduled refresh); recovery question Q-0003

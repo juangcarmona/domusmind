@@ -2,7 +2,7 @@
 id: QR-ASSETS-HOUSEHOLD-PRIVACY
 type: quality-requirement
 title: Enforce household authorization for asset data and paperwork
-status: draft
+status: active
 quality-attribute: "security"
 applies-to:
   - BC-HOUSEHOLD-ASSETS

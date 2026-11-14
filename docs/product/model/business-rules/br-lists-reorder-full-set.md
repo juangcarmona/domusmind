@@ -2,9 +2,7 @@
 id: BR-LISTS-REORDER-FULL-SET
 type: business-rule
 title: "Reordering replaces the whole order and carries no meaning"
-status: draft
-applies-to:
-  - UC-LISTS-REORDER-ITEMS
+status: active
 uses-terms:
   - TERM-LIST-ITEM
   - TERM-ITEM-IMPORTANCE

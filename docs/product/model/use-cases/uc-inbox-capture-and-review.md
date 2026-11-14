@@ -2,7 +2,7 @@
 id: UC-INBOX-CAPTURE-AND-REVIEW
 type: use-case
 title: Capture and review a household note
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-INBOX
@@ -12,6 +12,7 @@ uses-terms:
   - TERM-INBOX-ITEM
   - TERM-INBOX-PROPOSAL
 ---
+
 ## Goal
 
 Record a household thought or assistant action request and, when useful, turn it into an explicitly approved action in an existing product area.
@@ -44,9 +45,11 @@ The member has unstructured household information they want to capture or act on
 
 - A person without household access cannot read or act on its Inbox items.
 - An incomplete or invalid proposal is not applied; the owning area reports the correction needed.
+- If an approved action fails without applying its household change, the proposal returns to Pending with its details and failure reason. The member can correct it and explicitly approve it again. It is not retried automatically.
 - A List Item proposal for a private or archived list the member cannot edit is not applied.
 
 ## Postconditions
 
 - The Inbox item and its proposal decisions remain available for household review.
 - Only explicitly approved proposals that pass their owning area's rules can change household state.
+- An Applied proposal cannot execute its action again.

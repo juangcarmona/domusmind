@@ -2,10 +2,7 @@
 id: BR-CALENDAR-NO-CONCURRENT-SYNC
 type: business-rule
 title: "A connection never syncs twice at the same time"
-status: draft
-applies-to:
-  - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
-  - "UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS"
+status: active
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-SYNC"
   - "TERM-EXTERNAL-CALENDAR-CONNECTION"

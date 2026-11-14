@@ -1,14 +1,14 @@
 ---
 id: FR-AREAS-ARCHIVE-AREA
 type: functional-requirement
-title: Archive an Area
-status: draft
+title: Archived Areas remain available in the archived view
+status: active
 derived-from:
-- UC-AREAS-ARCHIVE-AREA
+  - UC-AREAS-ARCHIVE-AREA
 verification:
-- scenario-ref: SB-AREAS-ARCHIVE-AREA
+  - scenario-ref: SB-AREAS-ARCHIVE-AREA
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: "openspec/specs/areas/spec.md (Requirement: Area Archiving); interview: product owner decision Q-0013 (E-0158)"
   confidence: high
@@ -21,4 +21,4 @@ The product MUST let the household archive an Area. An archived Area MUST be ret
 
 ## Rationale
 
-Areas fall out of use without their history being lost (observed: openspec/specs/areas/spec.md, Area Archiving). The domain code has no archived state yet; tasks and routines lose their reference to an archived Area (decided: Q-0010; BR-TASKS-ARCHIVED-AREA-CLEARED) (observed: src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs).
+Areas fall out of use without their history being lost (observed: openspec/specs/areas/spec.md, Area Archiving). ResponsibilityDomain.Archive now records the archived state; tasks and routines lose their reference to an archived Area (decided: Q-0010; BR-TASKS-ARCHIVED-AREA-CLEARED) (observed: src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs).

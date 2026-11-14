@@ -2,7 +2,7 @@
 id: QR-LISTS-FRICTIONLESS-CAPTURE
 type: quality-requirement
 title: "Capturing list items is faster than remembering them"
-status: draft
+status: active
 quality-attribute: "usability"
 applies-to:
   - UC-LISTS-ADD-ITEM

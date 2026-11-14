@@ -2,7 +2,7 @@
 id: QR-ASSETS-RECURRENCE-AND-HISTORY
 type: quality-requirement
 title: Keep recurrence progression and recorded history correct
-status: draft
+status: active
 quality-attribute: "reliability"
 applies-to:
   - BC-HOUSEHOLD-ASSETS

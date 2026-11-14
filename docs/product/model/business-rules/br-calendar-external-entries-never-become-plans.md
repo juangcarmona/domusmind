@@ -2,14 +2,9 @@
 id: BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS
 type: business-rule
 title: "External calendar data never becomes household plans"
-status: draft
+status: active
 applies-to:
-  - "BC-CALENDAR"
-  - "UC-CALENDAR-CONNECT-OUTLOOK"
-  - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
-  - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
-  - "UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS"
-  - "UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR"
+  - BC-CALENDAR
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-ENTRY"
   - "TERM-PLAN"

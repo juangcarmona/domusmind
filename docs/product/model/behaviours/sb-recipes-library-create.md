@@ -2,7 +2,7 @@
 id: "SB-RECIPES-LIBRARY-CREATE"
 type: "structured-behaviour"
 title: "A recipe created from the library appears in it"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-CREATE-RECIPE"
 given:

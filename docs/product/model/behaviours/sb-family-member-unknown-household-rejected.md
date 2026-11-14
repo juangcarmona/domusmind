@@ -2,7 +2,7 @@
 id: SB-FAMILY-MEMBER-UNKNOWN-HOUSEHOLD-REJECTED
 type: structured-behaviour
 title: "A person cannot be added to a missing household"
-status: draft
+status: active
 illustrates:
   - BR-FAMILY-PERSON-UNIQUE-IN-HOUSEHOLD
 when: "A person is submitted for a household that does not exist"

@@ -2,7 +2,7 @@
 id: FR-FAMILY-UPDATE-MEMBER-DETAILS
 type: functional-requirement
 title: "Update people's core details"
-status: draft
+status: active
 derived-from:
   - UC-FAMILY-UPDATE-MEMBER-DETAILS
   - BR-FAMILY-MANAGERS-ADMINISTER

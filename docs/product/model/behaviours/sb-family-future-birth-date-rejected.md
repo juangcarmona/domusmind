@@ -2,7 +2,7 @@
 id: SB-FAMILY-FUTURE-BIRTH-DATE-REJECTED
 type: structured-behaviour
 title: "A future birth date is rejected"
-status: draft
+status: active
 illustrates:
   - BR-FAMILY-BIRTH-DATE-IN-PAST
 when: "A person's details are submitted with a birth date in the future"

@@ -2,7 +2,7 @@
 id: "TERM-MEAL-SLOT"
 type: "domain-term"
 title: "Meal Slot"
-status: "draft"
+status: "active"
 defined-in: "BC-MEAL-PLANNING"
 synonyms:
   - "MealSlot"

@@ -2,7 +2,7 @@
 id: SB-CALENDAR-CATCH-UP-ON-AGENDA-OPEN
 type: structured-behaviour
 title: "Opening one's Agenda catches up a stale connection"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS"
   - "UC-AGENDA-VIEW-MEMBER-AGENDA"

@@ -2,7 +2,7 @@
 id: SB-LISTS-SET-REPEAT-ONLY
 type: structured-behaviour
 title: "A repeat rule alone is enough to appear in the Agenda"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-SCHEDULE-ITEM
   - BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT

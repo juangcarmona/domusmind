@@ -2,7 +2,7 @@
 id: UC-LISTS-SEE-ITEMS-IN-AGENDA
 type: use-case
 title: "See dated list items in the Agenda"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

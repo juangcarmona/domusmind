@@ -2,7 +2,7 @@
 id: SB-CALENDAR-REFRESH-SKIP-FRESH
 type: structured-behaviour
 title: "A recently synced connection is skipped"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS"
 given:

@@ -26,19 +26,19 @@ A household SHALL be created with a name as the only required input.
 
 On creation, the household receives a stable, unique identifier that never changes. The person who creates it is added as its first manager. The household starts with no pets or relationships.
 
-<!-- pdac:cite id="FR-FAMILY-CREATE-HOUSEHOLD" digest="sha256:071bfc92159082ffe20b6f4f332dab2b475a9a962315a844b53c3b3b13a36817" -->
+<!-- pdac:cite id="FR-FAMILY-CREATE-HOUSEHOLD" digest="sha256:8259a48f65b5d686938dfafadf21a74b76f15ce51047e2881fc5ec38904e1550" -->
 
-<!-- pdac:cite id="UC-FAMILY-CREATE-HOUSEHOLD" digest="sha256:851a62a8666aa15cfc022e27ba7f4829fb95d0118f2b20e818ce7cf5e8f593a5" -->
+<!-- pdac:cite id="UC-FAMILY-CREATE-HOUSEHOLD" digest="sha256:d79fa3c1d0ad710640ec508b6ea112a666ba571d4d4aa4c803811eb3e260c84f" -->
 
-<!-- pdac:cite id="BR-FAMILY-HOUSEHOLD-NAME-REQUIRED" digest="sha256:facc4fa128293ee83eddc9dd383492d43892f6027551a91c08ecd1f0bccb1f93" -->
+<!-- pdac:cite id="BR-FAMILY-HOUSEHOLD-NAME-REQUIRED" digest="sha256:3504ade28734b53d8d9d302bc629955c1501531e1dfa0623647020b63ff1e435" -->
 
-<!-- pdac:cite id="BR-FAMILY-PERSON-UNIQUE-IN-HOUSEHOLD" digest="sha256:ff68e8eb9bbbb83f788bb468a009dd2835b6721c9fa991fda8cfe9ed84930aee" -->
+<!-- pdac:cite id="BR-FAMILY-PERSON-UNIQUE-IN-HOUSEHOLD" digest="sha256:3f0596b6442473217955638b2a9fb8792fcaedb11444ae99d1bb7fde6dc27ec4" -->
 
-<!-- pdac:cite id="TERM-HOUSEHOLD" digest="sha256:f71aa38813b387bc9962f78a716ad33a144b8b754494e9dd560afab3e5520a98" -->
+<!-- pdac:cite id="TERM-HOUSEHOLD" digest="sha256:87493c2e4c72087ed204e99a656f157b648b7f2b5ad636e825bb6edd90716f76" -->
 
-<!-- pdac:cite id="SB-FAMILY-HOUSEHOLD-CREATED" digest="sha256:6f2155301aa61ff8a00e01aa8f4c4127593f59ca1f89410dcc46294cb9add82d" -->
+<!-- pdac:cite id="SB-FAMILY-HOUSEHOLD-CREATED" digest="sha256:1cf2fc581b8c12c785168444da9715949845d2fa1a079ddc54b21a8827566c64" -->
 
-<!-- pdac:cite id="SB-FAMILY-HOUSEHOLD-EMPTY-NAME-REJECTED" digest="sha256:b3f7c3dc8db89694942f1672cf70e2994c8b0c929e715ad645bd75bcdcab48f0" -->
+<!-- pdac:cite id="SB-FAMILY-HOUSEHOLD-EMPTY-NAME-REJECTED" digest="sha256:bf57d00fcf2852ff88ba981166339cbb2114e7bd2cf93d3a68f156db689f04b2" -->
 
 #### Scenario: Household is created
 
@@ -65,25 +65,25 @@ Valid roles are: `Adult`, `Child`, `Pet`. Only an adult may be designated as a m
 
 Optional inputs: birth date, notes.
 
-<!-- pdac:cite id="FR-FAMILY-ADD-MEMBER" digest="sha256:5426d5a58aa9cecdb5834017e1e3502de59daf5d00b15b313a42847faaa604af" -->
+<!-- pdac:cite id="FR-FAMILY-ADD-MEMBER" digest="sha256:1294e656772c13fe0e8d8b8bb56d09efe6ffcd20cdd352e542b6ad6c96a00059" -->
 
-<!-- pdac:cite id="UC-FAMILY-ADD-MEMBER" digest="sha256:2ebb408fcc96b56804358ac8104f1733cbcaeb37544608d3e4fb030cd178944b" -->
+<!-- pdac:cite id="UC-FAMILY-ADD-MEMBER" digest="sha256:d352cbec06451a5b905c06fc15363baa2a770d93f112a301dea00929135d1f8f" -->
 
-<!-- pdac:cite id="BR-FAMILY-PERSON-NEEDS-NAME-AND-ROLE" digest="sha256:2fb3454c04e677212f4a1984e55b7a10a8d37c8b5202c974fbb3b2dec24ba518" -->
+<!-- pdac:cite id="BR-FAMILY-PERSON-NEEDS-NAME-AND-ROLE" digest="sha256:656ea11d4202921e61a0e7475f50b82df70d9960eb3f767c47b26f6300fb550a" -->
 
-<!-- pdac:cite id="BR-FAMILY-PERSON-UNIQUE-IN-HOUSEHOLD" digest="sha256:ff68e8eb9bbbb83f788bb468a009dd2835b6721c9fa991fda8cfe9ed84930aee" -->
+<!-- pdac:cite id="BR-FAMILY-PERSON-UNIQUE-IN-HOUSEHOLD" digest="sha256:3f0596b6442473217955638b2a9fb8792fcaedb11444ae99d1bb7fde6dc27ec4" -->
 
-<!-- pdac:cite id="TERM-MEMBER" digest="sha256:77bc7d6cc27b0d2a5593bad66f4d0dc8b66c13cd30b6757cacf9abccec937121" -->
+<!-- pdac:cite id="TERM-MEMBER" digest="sha256:6b2abffcb7d53ec82da1f9f1f0ef2bc8dfe4ffd3fff37e45b0c9382b81f40e1a" -->
 
-<!-- pdac:cite id="TERM-MEMBER-ROLE" digest="sha256:e109ef46ac8bb6549b51c0017367fca4df999d8b66d08373bf1cca82d9c2c475" -->
+<!-- pdac:cite id="TERM-MEMBER-ROLE" digest="sha256:cc11a50db080d5fd2bbad00b3d42595ed9bac7b9201499da2c9afdff2e93f563" -->
 
-<!-- pdac:cite id="SB-FAMILY-MEMBER-ADDED" digest="sha256:464c27f949f9bc0e59baddeeabd8ecb2b38bff185a65f9fef799119153bbc4cf" -->
+<!-- pdac:cite id="SB-FAMILY-MEMBER-ADDED" digest="sha256:44f4ed434788ee330be3c8683ac1bac5de71d21a8de1a7cc713a93407bf01279" -->
 
-<!-- pdac:cite id="SB-FAMILY-DUPLICATE-MEMBER-REJECTED" digest="sha256:36287efaae249207b0ab31f3a6b2434f3c89249db4cd6f33eda95c652684352e" -->
+<!-- pdac:cite id="SB-FAMILY-DUPLICATE-MEMBER-REJECTED" digest="sha256:bba14e81897a06d9fac45d5710b26eea027cf434618adeb74d47e48572064741" -->
 
-<!-- pdac:cite id="SB-FAMILY-INVALID-ROLE-REJECTED" digest="sha256:5d95412afc930d72158a3d7fe280b787892b5dbf8e678008b38160b2ff454892" -->
+<!-- pdac:cite id="SB-FAMILY-INVALID-ROLE-REJECTED" digest="sha256:fb3254e788b856fd2cb8ef03e8db535b0ff078b59b4853f48900131c0b5e843f" -->
 
-<!-- pdac:cite id="SB-FAMILY-MEMBER-UNKNOWN-HOUSEHOLD-REJECTED" digest="sha256:560d8bbd212e4eedaafeaed93719a03bc66340b2f347657bb535372063489b7f" -->
+<!-- pdac:cite id="SB-FAMILY-MEMBER-UNKNOWN-HOUSEHOLD-REJECTED" digest="sha256:c42ef6ffc1ecaf310c032100e99162d5e931036e861a9b8be02eb6c2066d499a" -->
 
 #### Scenario: A member is added to the household
 
@@ -132,11 +132,11 @@ A household SHALL be able to remove an existing member.
 
 A removed member cannot participate in new relationships. Removing a member does not cascade into other contexts — those contexts reference by ID and must handle identity resolution independently.
 
-<!-- pdac:cite id="BR-FAMILY-OWNS-HOUSEHOLD-STRUCTURE" digest="sha256:661a8bfff912e490d64710e11b333119cb4143fdf597ca2672523e0bd7fae034" -->
+<!-- pdac:cite id="BR-FAMILY-OWNS-HOUSEHOLD-STRUCTURE" digest="sha256:063379cd34cc983d03c1d12919164e3908c4584dffa4afc08907b0f5449dbac5" -->
 
-<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:589d9a2df048a4686422fa8cb77e36fc4d8d14aea5cd6049145c1a764101820d" -->
+<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:30c81e45dccad3cf83e793889e39e979c6e0d753ecf7fed1f41fd9c06f6cd0df" -->
 
-<!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
+<!-- pdac:cite id="BC-FAMILY" digest="sha256:1b48c9a4b2eba0dfb34314f7afbe1b5801e4f8c41e0ab5a586a9e7da57f7ee4f" -->
 
 #### Scenario: A member is removed from the household
 
@@ -153,23 +153,23 @@ A household manager SHALL be able to update a member's full name, role, and opti
 
 Members may edit their own profile details through a separate profile update path.
 
-<!-- pdac:cite id="FR-FAMILY-UPDATE-MEMBER-DETAILS" digest="sha256:60ffad3045fb6e837afd501f62a73bf93feadcb2a5b253bfa378f4ff2b74f6af" -->
+<!-- pdac:cite id="FR-FAMILY-UPDATE-MEMBER-DETAILS" digest="sha256:70f4398cbff6667b04a7eba73866734a1534e15e49e72bfd1f034e415b8288fc" -->
 
-<!-- pdac:cite id="UC-FAMILY-UPDATE-MEMBER-DETAILS" digest="sha256:02ea0e682c88a9b50ec75e9f82aaf888ae5bcf959853e2e691375f4593706a23" -->
+<!-- pdac:cite id="UC-FAMILY-UPDATE-MEMBER-DETAILS" digest="sha256:92f23ecfe017412c989248ea46ce2ec45929c8d67ec422db4cf3d36aa792fb6e" -->
 
-<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:589d9a2df048a4686422fa8cb77e36fc4d8d14aea5cd6049145c1a764101820d" -->
+<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:30c81e45dccad3cf83e793889e39e979c6e0d753ecf7fed1f41fd9c06f6cd0df" -->
 
-<!-- pdac:cite id="BR-FAMILY-BIRTH-DATE-IN-PAST" digest="sha256:e0115d380b63512e91e99a3a38a7ced5ee1bf2bb170ef5a073ca4b7a584b07b8" -->
+<!-- pdac:cite id="BR-FAMILY-BIRTH-DATE-IN-PAST" digest="sha256:c25c71fbb27dfc096b85fd80d24bef2910fb48f95d6315fee2dbdcfa7d5e9565" -->
 
-<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:d82d2bd934fc9835545ea9c22211213496ad48160b287fe1c750ee41a56d0108" -->
+<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:9e4e0dad11e4c8cb94efdebca7ef64b3dd6c21db313e05dbadaaf7f3807075fd" -->
 
-<!-- pdac:cite id="TERM-MANAGER" digest="sha256:46aaea84ab16cbd95b7f0bc5ad3415fc44661a875903bf6a5be91e6635df2536" -->
+<!-- pdac:cite id="TERM-MANAGER" digest="sha256:a6debc0d573e79f332ebb681bdaa81c3dbe9616b2301579d004ac2e0d5c4f55b" -->
 
-<!-- pdac:cite id="SB-FAMILY-MANAGER-UPDATES-MEMBER" digest="sha256:6656d7d70669825cb2950c5f8d18d95d0ba25f1e4361df58b29cfd3f2c120e53" -->
+<!-- pdac:cite id="SB-FAMILY-MANAGER-UPDATES-MEMBER" digest="sha256:bb4775801d4e1c3dd9c4e44799d2e527d5ef1234d96ca3a0c4150223e5d1c7f1" -->
 
-<!-- pdac:cite id="SB-FAMILY-NON-MANAGER-UPDATE-REJECTED" digest="sha256:e4fa8ba6ba6b802bc5a914c5b46b7e59b5496e6b2e34cbba8bdb7ad1471ea3cb" -->
+<!-- pdac:cite id="SB-FAMILY-NON-MANAGER-UPDATE-REJECTED" digest="sha256:712385fedaad18d8958e6244613d027090b275873f8e50aa212336b9ff96cbf8" -->
 
-<!-- pdac:cite id="SB-FAMILY-FUTURE-BIRTH-DATE-REJECTED" digest="sha256:4c9c89bc305863769d6b96dfcd10e19dfc7a879076382857af9399bd038178b8" -->
+<!-- pdac:cite id="SB-FAMILY-FUTURE-BIRTH-DATE-REJECTED" digest="sha256:afd80ffb177ffddf17807754a37168e874a9d22138d7d089af8a7fc8cc3aecef" -->
 
 #### Scenario: Manager updates a member's name and role
 
@@ -212,15 +212,15 @@ A member SHALL be able to update their own optional contact details: preferred n
 
 Managers may also update any member's profile details.
 
-<!-- pdac:cite id="FR-FAMILY-UPDATE-MEMBER-PROFILE" digest="sha256:02beed02db0914578e148c0eb2bf0bbf17915facd8ce2173e0f1f2329e6b8cdf" -->
+<!-- pdac:cite id="FR-FAMILY-UPDATE-MEMBER-PROFILE" digest="sha256:419440e8bcc608a59676f0c052ac846a101b07ff3a405544918164a9d3dc1394" -->
 
-<!-- pdac:cite id="UC-FAMILY-UPDATE-MEMBER-DETAILS" digest="sha256:02ea0e682c88a9b50ec75e9f82aaf888ae5bcf959853e2e691375f4593706a23" -->
+<!-- pdac:cite id="UC-FAMILY-UPDATE-MEMBER-DETAILS" digest="sha256:92f23ecfe017412c989248ea46ce2ec45929c8d67ec422db4cf3d36aa792fb6e" -->
 
-<!-- pdac:cite id="TERM-MEMBER-PROFILE" digest="sha256:2d384c7f86fe4dfaca088537c1ec827ef85b38268c48716dec1e1fe50c15d18e" -->
+<!-- pdac:cite id="TERM-MEMBER-PROFILE" digest="sha256:4f9eca4718b2c44620f39092dfda4752c728803b678fd3b138b1148ef16ea728" -->
 
-<!-- pdac:cite id="ACT-HOUSEHOLD-MEMBER" digest="sha256:18173726b69715b42a2c09ddd0c09876f486d1abefd93c3131e2cb0d6c4df860" -->
+<!-- pdac:cite id="ACT-HOUSEHOLD-MEMBER" digest="sha256:15b65c1c587d35c6e28a20522a70a619060adda71cdb22dc0851a3812a8e2ec4" -->
 
-<!-- pdac:cite id="SB-FAMILY-MEMBER-UPDATES-OWN-PROFILE" digest="sha256:c4a52f54a9c1bd9a88ca976f5c469536413f65c664d4f95100248d37d77c26b6" -->
+<!-- pdac:cite id="SB-FAMILY-MEMBER-UPDATES-OWN-PROFILE" digest="sha256:3da1acb0e59ff82769e4a1e2fb2ec20b48c1634627b17e53d44f7890b3b51e70" -->
 
 #### Scenario: Member updates their own profile
 
@@ -258,35 +258,39 @@ Rules:
 - A replaced, revoked or used link cannot be accepted
 - Disabling access denies existing and new DomusMind sessions without changing the provider account
 
-<!-- pdac:cite id="UC-FAMILY-ACCEPT-ACCESS-INVITATION" digest="sha256:15b97d91e39ce4d69d8467e468fbaec0a4e4522829f8f6c4c99fd44028742eed" -->
-<!-- pdac:cite id="UC-FAMILY-MANAGE-INVITATION" digest="sha256:0d683ece47ef3a5e1c4faebd710b6fb52bdc771c880180c00c83050ed79e19c6" -->
-<!-- pdac:cite id="BR-OIDC-IDENTITY-BOUND-TO-ACCESS" digest="sha256:fe8b835e5ecd65e4617579e887254942616f265fc9ea887bf32708214e59fa26" -->
+<!-- pdac:cite id="UC-FAMILY-ACCEPT-ACCESS-INVITATION" digest="sha256:5d6d3a380233f8af29fa1123cb5d826315ac7161fa7f410b9510557039965088" -->
+<!-- pdac:cite id="UC-FAMILY-MANAGE-INVITATION" digest="sha256:05454d9ba1eddb527901ff4b00f47d7f02e60be1543ba00838f42c32a09f5e29" -->
+<!-- pdac:cite id="BR-OIDC-IDENTITY-BOUND-TO-ACCESS" digest="sha256:6c34260aff83b573ced0b3f499f0d119fff78dd623b71b901d0db73f0b6a712a" -->
 
-<!-- pdac:cite id="FR-FAMILY-MANAGE-MEMBER-ACCESS" digest="sha256:e01eaebdfaeb83a20e4fae93ca4921ba5cc7ecc53738120939cd75875ee65bdc" -->
+<!-- pdac:cite id="FR-FAMILY-MANAGE-MEMBER-ACCESS" digest="sha256:8f212abe93106982250378c2a8efb7026a2016c779277f008bc6e40a5353c7e6" -->
+<!-- pdac:cite id="LC-MEMBER-ACCESS" digest="sha256:269f3f6a625fafe2c95a6f09a5970ce14c74ce53cc82df7e9d9b6e6f7e6e3034" -->
+<!-- pdac:cite id="SB-FAMILY-ACCEPT-ACCESS-INVITATION" digest="sha256:1f4b4bbffcc58618f9514438d64e929520731cfd4ec3b9a142e92b398dfa8d28" -->
+<!-- pdac:cite id="SB-FAMILY-REVOKE-ACCESS-INVITATION" digest="sha256:00bee891da3ca28a5bad85eb473169ad6e029a02610a341fdb06497284c01eef" -->
+<!-- pdac:cite id="SB-FAMILY-REPLACE-ACCESS-INVITATION" digest="sha256:8fdbc1b1e4cec734fe76d174cc65cbc4ebdd198fdd1c7247cefd4598ed2df77b" -->
 
-<!-- pdac:cite id="UC-FAMILY-PROVISION-MEMBER-ACCESS" digest="sha256:7e9f4d1e423f2087757f80068dfbf0bd71a0b1ea3d33b42e4c01d4f618f6ed60" -->
+<!-- pdac:cite id="UC-FAMILY-PROVISION-MEMBER-ACCESS" digest="sha256:1eddf2b7a223190aeaecb11ca414ea41cfd8db45eaf8603632e567d7eb80e927" -->
 
-<!-- pdac:cite id="UC-FAMILY-DISABLE-MEMBER-ACCESS" digest="sha256:fed9768e22af9d50e00f635e4f9469596b7cd2ef7ae0cb30275b2d771cad3928" -->
+<!-- pdac:cite id="UC-FAMILY-DISABLE-MEMBER-ACCESS" digest="sha256:39a4cdac86168482a1a1a2cdb7e6d0443de293110d29a23fc2a6d91647ab52f5" -->
 
-<!-- pdac:cite id="UC-FAMILY-ENABLE-MEMBER-ACCESS" digest="sha256:81ed353808fb9530dfe79549ad8e6404de135a6a4fd4a9dda4b4433b8ed81671" -->
+<!-- pdac:cite id="UC-FAMILY-ENABLE-MEMBER-ACCESS" digest="sha256:9b11a6d17c359c8d206298a4e0e760012b71bcbd67c248cf56f6db7d32134bd3" -->
 
-<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:589d9a2df048a4686422fa8cb77e36fc4d8d14aea5cd6049145c1a764101820d" -->
+<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:30c81e45dccad3cf83e793889e39e979c6e0d753ecf7fed1f41fd9c06f6cd0df" -->
 
-<!-- pdac:cite id="BR-FAMILY-MANAGER-KEEPS-OWN-ACCESS" digest="sha256:4f68a000c29cb72c86d999067ead084acd50dcf35dcaa40c4672ee4f394035c0" -->
+<!-- pdac:cite id="BR-FAMILY-MANAGER-KEEPS-OWN-ACCESS" digest="sha256:faa4e77941164ccae0e3a5ad45d8ba3ec3712a2d6b0179c8a4cbbb0352f41b1d" -->
 
-<!-- pdac:cite id="BR-FAMILY-PET-RESTRICTIONS" digest="sha256:bb6786787a592043220d16abdba4e60d0260c2c8597351c67e41cb24fe53d9ba" -->
+<!-- pdac:cite id="BR-FAMILY-PET-RESTRICTIONS" digest="sha256:7cb38e97316b489c3507fbbfaa456247122efb0c220d01fa0787024ce0ba9efe" -->
 
-<!-- pdac:cite id="TERM-MEMBER-ACCESS" digest="sha256:215b756825d3f4cd80d0649ff4fd58d167e6de88cfab73d8534cd3d9a1c05e12" -->
+<!-- pdac:cite id="TERM-MEMBER-ACCESS" digest="sha256:0070e81c6cc9c4e9bf23c261719710c20db7563eaf584782092918ca26137de7" -->
 
-<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:d82d2bd934fc9835545ea9c22211213496ad48160b287fe1c750ee41a56d0108" -->
+<!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:9e4e0dad11e4c8cb94efdebca7ef64b3dd6c21db313e05dbadaaf7f3807075fd" -->
 
-<!-- pdac:cite id="SB-FAMILY-MANAGER-PROVISIONS-ACCESS" digest="sha256:6c3183ad4bbc95c99288eeb5813faa3f4f7d9f80f433ec158185a0872491df9d" -->
+<!-- pdac:cite id="SB-FAMILY-MANAGER-PROVISIONS-ACCESS" digest="sha256:0ef10ae6003bf66194ba59688b5d01866afa82e2689446f18ff19d2cb1efc21d" -->
 
-<!-- pdac:cite id="SB-FAMILY-MANAGER-DISABLES-ACCESS" digest="sha256:13ba06074c9050e14587c11a21f5b07969e068414bd234fbc5f132a801930a33" -->
+<!-- pdac:cite id="SB-FAMILY-MANAGER-DISABLES-ACCESS" digest="sha256:35f4bb201a26b47adace38e26e1e3e96105cf4d2dab5b873e3ad87a79480251c" -->
 
-<!-- pdac:cite id="SB-FAMILY-MANAGER-ENABLES-ACCESS" digest="sha256:c0fa5208d278db6694fe9bdd9cdc0702631842fe2a23b794d0aec7801557c6b0" -->
+<!-- pdac:cite id="SB-FAMILY-MANAGER-ENABLES-ACCESS" digest="sha256:a2eed462052385e1d70f25044088d9748cedfa6babdffd76210e70833fc92205" -->
 
-<!-- pdac:cite id="SB-FAMILY-PET-ACCESS-REJECTED" digest="sha256:f1fed230ba7bc8ed33bcd49f58bc64e6d6d5d3d70440a7cff1f39494d06233c0" -->
+<!-- pdac:cite id="SB-FAMILY-PET-ACCESS-REJECTED" digest="sha256:8c88a669e58064ed8ce4aa0b14b32470a402b7d8cde3c964a19a69b35705460b" -->
 
 #### Scenario: Manager provisions access for a member
 
@@ -377,19 +381,19 @@ Pets in V1:
 - may be added as event participants (e.g. vet appointments)
 - appear in the member directory as a distinct group after adults and children
 
-<!-- pdac:cite id="FR-FAMILY-REGISTER-PET" digest="sha256:0d762688d45680d0048ed5c38f880774d6fadc4e22dee2b12a514802cb470c77" -->
+<!-- pdac:cite id="FR-FAMILY-REGISTER-PET" digest="sha256:b8c358e73810cc515d425504148ec62318245b1a6bcf1b320267fd5e8b16c104" -->
 
-<!-- pdac:cite id="UC-FAMILY-REGISTER-PET" digest="sha256:5382e2200582435cdb113ff8baad906050250e6deee7c67f7c0a5c64c00cd4dc" -->
+<!-- pdac:cite id="UC-FAMILY-REGISTER-PET" digest="sha256:004a2cdf0e5d6371a6a491cab790e79ad12ba3a3b7563366f6b646f3ac743958" -->
 
-<!-- pdac:cite id="BR-FAMILY-PET-RESTRICTIONS" digest="sha256:bb6786787a592043220d16abdba4e60d0260c2c8597351c67e41cb24fe53d9ba" -->
+<!-- pdac:cite id="BR-FAMILY-PET-RESTRICTIONS" digest="sha256:7cb38e97316b489c3507fbbfaa456247122efb0c220d01fa0787024ce0ba9efe" -->
 
-<!-- pdac:cite id="TERM-PET" digest="sha256:5ac955dda87a76f7851192ffdb474d3baf7b1a82757c17f095017b3d4f5ce55b" -->
+<!-- pdac:cite id="TERM-PET" digest="sha256:16bebdff01978d3c6944ba1d53cd4eeca2decdce19ff5dec6974d5bd28aebea9" -->
 
-<!-- pdac:cite id="BR-FAMILY-DIRECTORY-ORDER" digest="sha256:750b94ea238912c06a816c58f3638afa817f69ae6457b7810f3c4e2ac1c018b3" -->
+<!-- pdac:cite id="BR-FAMILY-DIRECTORY-ORDER" digest="sha256:ba044177544fe96f1ba1690c992c4b5ecdf6a8b0757f078b27094cf9661049d6" -->
 
-<!-- pdac:cite id="SB-FAMILY-PET-ADDED" digest="sha256:8eebb83891510e8758e183c8ee45aea5c2a1e5be4a673d88bcc52ded797a396e" -->
+<!-- pdac:cite id="SB-FAMILY-PET-ADDED" digest="sha256:5b27a9005f13cb148c7ce0720e07b6c145e3522351fb931c0fb2152f7a67988d" -->
 
-<!-- pdac:cite id="SB-FAMILY-PET-ACCESS-REJECTED" digest="sha256:f1fed230ba7bc8ed33bcd49f58bc64e6d6d5d3d70440a7cff1f39494d06233c0" -->
+<!-- pdac:cite id="SB-FAMILY-PET-ACCESS-REJECTED" digest="sha256:8c88a669e58064ed8ce4aa0b14b32470a402b7d8cde3c964a19a69b35705460b" -->
 
 #### Scenario: A pet is added to the household
 
@@ -430,11 +434,11 @@ A household SHALL be able to define a structural relationship between two of its
 
 Relationships connect two distinct members of the same household. Relationship types and management behavior remain deferred with this V1.1 capability.
 
-<!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
+<!-- pdac:cite id="BC-FAMILY" digest="sha256:1b48c9a4b2eba0dfb34314f7afbe1b5801e4f8c41e0ab5a586a9e7da57f7ee4f" -->
 
-<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:589d9a2df048a4686422fa8cb77e36fc4d8d14aea5cd6049145c1a764101820d" -->
+<!-- pdac:cite id="BR-FAMILY-MANAGERS-ADMINISTER" digest="sha256:30c81e45dccad3cf83e793889e39e979c6e0d753ecf7fed1f41fd9c06f6cd0df" -->
 
-<!-- pdac:cite id="BR-FAMILY-OWNS-HOUSEHOLD-STRUCTURE" digest="sha256:661a8bfff912e490d64710e11b333119cb4143fdf597ca2672523e0bd7fae034" -->
+<!-- pdac:cite id="BR-FAMILY-OWNS-HOUSEHOLD-STRUCTURE" digest="sha256:063379cd34cc983d03c1d12919164e3908c4584dffa4afc08907b0f5449dbac5" -->
 
 #### Scenario: A relationship is assigned between two members
 
@@ -476,15 +480,15 @@ The directory is ordered: Adults first, then Children, then Pets. Within each gr
 
 The directory includes server-computed access flags. Clients must not re-derive permission or access state from raw fields.
 
-<!-- pdac:cite id="FR-FAMILY-MEMBER-DIRECTORY" digest="sha256:5b37af39b18fe5310ef69335a23e89cc24b2e79ebe0e1cf76ec60e77138cb52e" -->
+<!-- pdac:cite id="FR-FAMILY-MEMBER-DIRECTORY" digest="sha256:543c87a84a5ed1f97abdb2f19498adcc5b43b68f2a491e96681e9313bb8d5f36" -->
 
-<!-- pdac:cite id="UC-FAMILY-VIEW-MEMBER-DIRECTORY" digest="sha256:aae017ca2a22732c1705d869394aec7bd7b5112addde5aafcc689622cb005f40" -->
+<!-- pdac:cite id="UC-FAMILY-VIEW-MEMBER-DIRECTORY" digest="sha256:d176dcfdbbfc80a27ec30322a6051462125b0c85b7f231a1ddc59ba96502d631" -->
 
-<!-- pdac:cite id="BR-FAMILY-DIRECTORY-ORDER" digest="sha256:750b94ea238912c06a816c58f3638afa817f69ae6457b7810f3c4e2ac1c018b3" -->
+<!-- pdac:cite id="BR-FAMILY-DIRECTORY-ORDER" digest="sha256:ba044177544fe96f1ba1690c992c4b5ecdf6a8b0757f078b27094cf9661049d6" -->
 
-<!-- pdac:cite id="TERM-MEMBER-DIRECTORY" digest="sha256:585b936b6a37773a3aba6af87bd15a1a1d0650672fad3e850a3f16b9d6ca2bc0" -->
+<!-- pdac:cite id="TERM-MEMBER-DIRECTORY" digest="sha256:f93bcde0d68fc37932221b95b153b602d3a68ac3b72c119f0d277518a3c7de0f" -->
 
-<!-- pdac:cite id="ACT-HOUSEHOLD-MEMBER" digest="sha256:18173726b69715b42a2c09ddd0c09876f486d1abefd93c3131e2cb0d6c4df860" -->
+<!-- pdac:cite id="ACT-HOUSEHOLD-MEMBER" digest="sha256:15b65c1c587d35c6e28a20522a70a619060adda71cdb22dc0851a3812a8e2ec4" -->
 
 #### Scenario: Directory entries are shown in the defined order
 
@@ -540,11 +544,11 @@ The Family context SHALL be the sole owner of household structure.
 
 No other context may create, modify, or remove members, pets, or relationships. Other contexts reference family entities by ID only. Cross-context reactions happen through domain events.
 
-<!-- pdac:cite id="FR-FAMILY-IDENTITY-BOUNDARY" digest="sha256:f33de9aaebe308d06ca7cef4af60ceaa5fac65e1109bb40add0ab767a32c47a3" -->
+<!-- pdac:cite id="FR-FAMILY-IDENTITY-BOUNDARY" digest="sha256:0cc09f6a5c86dffaa94214e9272fad2e47097d70df0f8a058d42aa8909a4f6f6" -->
 
-<!-- pdac:cite id="BR-FAMILY-OWNS-HOUSEHOLD-STRUCTURE" digest="sha256:661a8bfff912e490d64710e11b333119cb4143fdf597ca2672523e0bd7fae034" -->
+<!-- pdac:cite id="BR-FAMILY-OWNS-HOUSEHOLD-STRUCTURE" digest="sha256:063379cd34cc983d03c1d12919164e3908c4584dffa4afc08907b0f5449dbac5" -->
 
-<!-- pdac:cite id="BC-FAMILY" digest="sha256:3bf7d1e482866302ac3725ac77eed6a5f37cebf2ba60a99323a37194c8f187ae" -->
+<!-- pdac:cite id="BC-FAMILY" digest="sha256:1b48c9a4b2eba0dfb34314f7afbe1b5801e4f8c41e0ab5a586a9e7da57f7ee4f" -->
 
 #### Scenario: Cross-context activity does not change household identity
 

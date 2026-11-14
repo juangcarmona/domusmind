@@ -2,21 +2,21 @@
 id: SB-AREAS-TRANSFER-OWNERSHIP
 type: structured-behaviour
 title: Transferring an Area hands ownership to another person
-status: draft
+status: active
 illustrates:
-- UC-AREAS-ASSIGN-OWNER
-- BR-AREAS-SINGLE-OWNER
+  - UC-AREAS-ASSIGN-OWNER
+  - BR-AREAS-SINGLE-OWNER
 given:
-- An Area has an Owner
-- Another person of the household exists
+  - An Area has an Owner
+  - Another person of the household exists
 when: The household transfers ownership to the other person
 then:
-- The other person becomes the Owner
-- The previous Owner no longer holds the Owner role
-- The Area remains active
+  - The other person becomes the Owner
+  - The previous Owner no longer holds the Owner role
+  - The Area remains active
 uses-terms:
-- TERM-RESPONSIBILITY-TRANSFER
-- TERM-AREA-OWNER
+  - TERM-RESPONSIBILITY-TRANSFER
+  - TERM-AREA-OWNER
 provenance:
   source: 'openspec/specs/areas/spec.md (scenario: Household transfers Area ownership)'
   confidence: high

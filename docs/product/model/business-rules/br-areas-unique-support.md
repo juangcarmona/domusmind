@@ -2,12 +2,10 @@
 id: BR-AREAS-UNIQUE-SUPPORT
 type: business-rule
 title: A person is listed as Support of an Area at most once
-status: draft
-applies-to:
-- UC-AREAS-ADD-SUPPORT
+status: active
 uses-terms:
-- TERM-AREA
-- TERM-AREA-SUPPORT
+  - TERM-AREA
+  - TERM-AREA-SUPPORT
 provenance:
   source: openspec/specs/areas/spec.md (Secondary Owner Assignment); docs/_legacy/04_contexts/responsibilities.md (Role Consistency); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs (AssignSecondaryOwner)
   confidence: high

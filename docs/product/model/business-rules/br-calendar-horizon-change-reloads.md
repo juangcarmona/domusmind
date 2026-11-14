@@ -2,10 +2,7 @@
 id: BR-CALENDAR-HORIZON-CHANGE-RELOADS
 type: business-rule
 title: "Changing the horizon or selection reloads affected calendars"
-status: draft
-applies-to:
-  - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
-  - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
+status: active
 uses-terms:
   - "TERM-SYNC-HORIZON"
   - "TERM-EXTERNAL-CALENDAR-FEED"

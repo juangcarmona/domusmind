@@ -2,7 +2,7 @@
 id: SB-TASKS-RESCHEDULE-PENDING
 type: structured-behaviour
 title: Pending task rescheduled
-status: draft
+status: active
 illustrates:
   - UC-TASKS-RESCHEDULE-TASK
 given:

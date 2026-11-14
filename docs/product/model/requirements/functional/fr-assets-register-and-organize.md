@@ -2,7 +2,7 @@
 id: FR-ASSETS-REGISTER-AND-ORGANIZE
 type: functional-requirement
 title: Register and organize household-managed things
-status: draft
+status: active
 derived-from:
   - UC-ASSETS-REGISTER-AND-ORGANIZE
 verification:

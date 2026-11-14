@@ -2,7 +2,7 @@
 id: SB-CALENDAR-DISCONNECT-UNKNOWN
 type: structured-behaviour
 title: "Disconnecting a non-existent connection is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR"
 given:

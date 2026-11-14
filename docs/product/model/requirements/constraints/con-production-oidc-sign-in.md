@@ -2,7 +2,7 @@
 id: CON-PRODUCTION-OIDC-SIGN-IN
 type: constraint
 title: Production sign-in uses a configured OIDC provider
-status: draft
+status: active
 uses-terms:
   - TERM-MEMBER-ACCESS
 ---

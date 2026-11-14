@@ -4,13 +4,13 @@ Each kind of truth has one home.
 
 | Home | Holds | Changes through |
 | --- | --- | --- |
-| [`product/`](product/README.md) | The product model: actors, journeys, use cases, rules, terms, bounded contexts and requirements (ProductShape) | A Product Change under `product/changes/`, validated with `prodshape validate` |
+| [`product/`](product/README.md) | Household actors, journeys, use cases, rules, terms, lifecycles, structured behaviours and requirements (ProductShape) | A Product Change under `product/changes/`, validated with `prodshape validate` |
 | [`design/`](design/README.md) | UI guidance for each surface and the public site, subordinate to the product model | Ordinary edits |
 | [`architecture/`](architecture/README.md) | How the system realises the product: arc42, twelve sections | Ordinary edits; product-dependent statements cite the model |
 | [`adr/`](adr/README.md) | Architecture decision records | A new ADR; accepted records are not rewritten |
 | [`devops.md`](devops.md) | Versioning, release, CI workflows and required checks | Ordinary edits |
 
-Behaviour specs live in [`openspec/specs/`](../openspec/specs), bound to the product model by citations. The Product Snapshot, a browsable page of the whole model, is attached to every run of the `product-snapshot` workflow.
+Behaviour specs live in [`openspec/specs/`](../openspec/specs), bound to the product model by citations. The Product Explorer is attached to every run of the `product-snapshot` workflow.
 
 ## History
 

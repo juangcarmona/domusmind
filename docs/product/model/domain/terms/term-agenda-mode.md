@@ -2,7 +2,7 @@
 id: TERM-AGENDA-MODE
 type: domain-term
 title: "Agenda Mode"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Time mode"

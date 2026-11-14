@@ -1,25 +1,28 @@
 ---
 id: SB-FAMILY-MANAGER-DISABLES-ACCESS
 type: structured-behaviour
-title: "A manager disables a person's access"
-status: draft
+title: A manager disables a person's access
+status: active
 illustrates:
   - UC-FAMILY-DISABLE-MEMBER-ACCESS
 given:
-  - "A person has Active access"
-  - "The requester is a manager"
-  - "The person is not the requesting manager"
-when: "Access is disabled"
+  - A person has Active access
+  - The requester is a manager
+  - The person is not the requesting manager
+when: Access is disabled
 then:
-  - "The person's access becomes Disabled"
-  - "Existing and new DomusMind sessions cannot use the household"
-  - "The provider account and person remain unchanged"
+  - The person's access becomes Disabled
+  - Existing and new DomusMind sessions cannot use the household
+  - The provider account and person remain unchanged
 uses-terms:
   - TERM-MEMBER-ACCESS
 provenance:
-  source: "openspec/specs/family/spec.md (Member Access Provisioning, scenario \"Manager disables a member's access\")"
+  source: openspec/specs/family/spec.md (Member Access Provisioning, scenario "Manager disables a member's access")
   confidence: high
   recovered-from: documentation
+covers-transition:
+  lifecycle: LC-MEMBER-ACCESS
+  transition: DISABLE
 ---
 
 ## Intent

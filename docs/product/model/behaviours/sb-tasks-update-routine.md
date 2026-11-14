@@ -2,7 +2,7 @@
 id: SB-TASKS-UPDATE-ROUTINE
 type: structured-behaviour
 title: Routine definition updated
-status: draft
+status: active
 illustrates:
   - UC-TASKS-UPDATE-ROUTINE
 given:

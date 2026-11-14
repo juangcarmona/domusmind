@@ -2,7 +2,7 @@
 id: "BC-MEAL-PLANNING"
 type: "bounded-context"
 title: "Meal Planning"
-status: "draft"
+status: "active"
 provenance:
   source: "openspec/specs/meal-planning/spec.md (Purpose); docs/_legacy/04_contexts/meal-planning.md (Purpose, Bounded Context Boundary, Integration sections); docs/_legacy/00_product/surfaces/meal-planning.md (Purpose, Role); corroborated by src/backend/DomusMind.Domain/MealPlanning/**; interview: product owner decision Q-0035 (E-0158); interview: product owner decision Q-0056 (E-0158); interview: product owner decision Q-0039 (E-0158); interview: product owner decision Q-0040 (E-0158)"
   confidence: "medium"

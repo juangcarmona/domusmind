@@ -2,7 +2,7 @@
 id: UC-LISTS-REORDER-ITEMS
 type: use-case
 title: "Reorder a list's items"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

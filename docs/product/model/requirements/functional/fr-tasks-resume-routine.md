@@ -2,7 +2,7 @@
 id: FR-TASKS-RESUME-ROUTINE
 type: functional-requirement
 title: Resume a paused routine
-status: draft
+status: active
 derived-from:
   - UC-TASKS-RESUME-ROUTINE
   - BR-TASKS-PAUSE-RESUME

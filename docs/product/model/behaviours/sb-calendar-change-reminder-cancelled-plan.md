@@ -2,7 +2,7 @@
 id: SB-CALENDAR-CHANGE-REMINDER-CANCELLED-PLAN
 type: structured-behaviour
 title: "Reminders on a cancelled plan cannot be changed"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-MANAGE-PLAN-REMINDERS"
   - "BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED"

@@ -2,7 +2,7 @@
 id: TERM-ASSISTANT-RESPONSE
 type: domain-term
 title: Assistant response
-status: draft
+status: active
 defined-in: BC-CHATS
 synonyms: []
 uses-terms:

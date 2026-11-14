@@ -2,7 +2,7 @@
 id: FR-LISTS-ITEM-IMPORTANCE
 type: functional-requirement
 title: "Mark items as important"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-SET-ITEM-IMPORTANCE
   - BR-LISTS-IMPORTANCE-BINARY

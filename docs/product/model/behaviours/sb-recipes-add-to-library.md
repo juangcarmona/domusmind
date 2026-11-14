@@ -2,7 +2,7 @@
 id: "SB-RECIPES-ADD-TO-LIBRARY"
 type: "structured-behaviour"
 title: "A recipe with a new name joins the library and can be planned"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-CREATE-RECIPE"
 given:

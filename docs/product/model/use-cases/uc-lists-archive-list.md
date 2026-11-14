@@ -2,7 +2,7 @@
 id: UC-LISTS-ARCHIVE-LIST
 type: use-case
 title: "Archive a list"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

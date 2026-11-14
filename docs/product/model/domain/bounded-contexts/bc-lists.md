@@ -2,7 +2,7 @@
 id: BC-LISTS
 type: bounded-context
 title: "Lists"
-status: draft
+status: active
 provenance:
   source: "openspec/specs/lists/spec.md (Purpose); docs/_legacy/04_contexts/shared-lists.md (Purpose, Responsibilities, Boundaries With Other Contexts); docs/_legacy/00_product/surfaces/lists.md (Conceptual Model, Household Boundaries); corroborated by src/backend/DomusMind.Domain/Lists/**; interview: product owner decision Q-0026 (E-0158); interview: product owner decision Q-0027 (E-0158); interview: product owner decision Q-0028 (E-0158); interview: product owner decision Q-0029 (E-0158); interview: product owner decision Q-0031 (E-0158)"
   confidence: "high"

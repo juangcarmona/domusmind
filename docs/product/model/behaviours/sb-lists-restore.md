@@ -1,23 +1,26 @@
 ---
 id: SB-LISTS-RESTORE
 type: structured-behaviour
-title: "Restoring a list brings it back unchanged"
-status: draft
+title: Restoring a list brings it back unchanged
+status: active
 illustrates:
   - UC-LISTS-RESTORE-LIST
   - BR-LISTS-ARCHIVE-STATE
 given:
-  - "an archived list exists"
-when: "a person restores it"
+  - an archived list exists
+when: a person restores it
 then:
-  - "the list is again among the active lists"
-  - "all its items are in the same state as when it was archived"
+  - the list is again among the active lists
+  - all its items are in the same state as when it was archived
 uses-terms:
   - TERM-ARCHIVED-LIST
 provenance:
   source: "openspec/specs/lists/spec.md (Requirement: List Restore; Scenario: Household restores an archived list)"
-  confidence: "high"
-  recovered-from: "documentation"
+  confidence: high
+  recovered-from: documentation
+covers-transition:
+  lifecycle: LC-LIST
+  transition: RESTORE
 ---
 
 ## Intent

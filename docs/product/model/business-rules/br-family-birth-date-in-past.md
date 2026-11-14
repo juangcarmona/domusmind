@@ -2,9 +2,7 @@
 id: BR-FAMILY-BIRTH-DATE-IN-PAST
 type: business-rule
 title: "A birth date must be in the past"
-status: draft
-applies-to:
-  - UC-FAMILY-UPDATE-MEMBER-DETAILS
+status: active
 uses-terms:
   - TERM-MEMBER
 provenance:

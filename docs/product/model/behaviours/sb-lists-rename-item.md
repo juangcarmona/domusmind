@@ -2,7 +2,7 @@
 id: SB-LISTS-RENAME-ITEM
 type: structured-behaviour
 title: "Renaming an item leaves its other capabilities unchanged"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-UPDATE-ITEM
 given:

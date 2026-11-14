@@ -2,7 +2,7 @@
 id: FR-LISTS-RESTORE-LIST
 type: functional-requirement
 title: "Restore an archived list unchanged"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-RESTORE-LIST
   - BR-LISTS-ARCHIVE-STATE

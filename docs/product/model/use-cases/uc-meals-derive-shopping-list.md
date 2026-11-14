@@ -2,7 +2,7 @@
 id: "UC-MEALS-DERIVE-SHOPPING-LIST"
 type: "use-case"
 title: "Generate a shopping list from the week's meals"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

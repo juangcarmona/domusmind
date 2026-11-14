@@ -2,9 +2,7 @@
 id: BR-ASSISTANT-PROVIDER-FALLBACK
 type: business-rule
 title: Assistant fallback is ordered and limited to provider failures
-status: draft
-applies-to:
-  - UC-ASSISTANT-CONFIGURE-PROVIDERS
+status: active
 uses-terms:
   - TERM-ASSISTANT-PROVIDER-TARGET
 ---

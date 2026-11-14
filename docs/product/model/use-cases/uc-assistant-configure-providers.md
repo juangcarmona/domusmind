@@ -2,7 +2,7 @@
 id: UC-ASSISTANT-CONFIGURE-PROVIDERS
 type: use-case
 title: Configure the household assistant provider route
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MANAGER
 supporting-actors: []
 bounded-context: BC-CHATS

@@ -2,7 +2,7 @@
 id: SB-LISTS-REORDER-MISMATCH-REJECTED
 type: structured-behaviour
 title: "A reorder that omits an item is rejected"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-REORDER-ITEMS
   - BR-LISTS-REORDER-FULL-SET

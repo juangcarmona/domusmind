@@ -2,7 +2,7 @@
 id: SB-LISTS-STAR-IDEMPOTENT
 type: structured-behaviour
 title: "Starring an already starred item is harmless"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-SET-ITEM-IMPORTANCE
   - BR-LISTS-IMPORTANCE-BINARY

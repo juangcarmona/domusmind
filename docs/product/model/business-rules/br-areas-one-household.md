@@ -2,13 +2,12 @@
 id: BR-AREAS-ONE-HOUSEHOLD
 type: business-rule
 title: An Area belongs to exactly one household
-status: draft
+status: active
 applies-to:
-- BC-RESPONSIBILITIES
-- UC-AREAS-CREATE-AREA
+  - BC-RESPONSIBILITIES
 uses-terms:
-- TERM-AREA
-- TERM-HOUSEHOLD
+  - TERM-AREA
+  - TERM-HOUSEHOLD
 provenance:
   source: openspec/specs/areas/spec.md (Purpose, Area Creation); docs/_legacy/04_contexts/responsibilities.md (Invariants); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs
   confidence: high

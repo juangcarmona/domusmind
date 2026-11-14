@@ -2,7 +2,7 @@
 id: UC-ASSETS-COMPLETE-OBLIGATION
 type: use-case
 title: Record an obligation outcome and asset history
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 bounded-context: BC-HOUSEHOLD-ASSETS
 governed-by:

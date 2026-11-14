@@ -2,7 +2,7 @@
 id: "SB-MEALS-UNLOCK-AND-CHANGE-SLOT"
 type: "structured-behaviour"
 title: "Unlocking and changing a locked slot happen in one change"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-UPDATE-SLOT"
   - "BR-MEALS-LOCKED-SLOT"

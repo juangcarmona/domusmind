@@ -2,7 +2,7 @@
 id: SB-CALENDAR-DESELECT-FEED
 type: structured-behaviour
 title: "A deselected calendar stops appearing"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
   - "BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT"

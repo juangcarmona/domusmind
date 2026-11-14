@@ -2,7 +2,7 @@
 id: TERM-TASK-ORIGIN
 type: domain-term
 title: Task Origin
-status: draft
+status: active
 defined-in: BC-TASKS
 synonyms:
   - TaskOrigin

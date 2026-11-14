@@ -12,7 +12,8 @@ ID: PREFIX-NAME, named after the thing it identifies, with no sequence number. A
 Business rule: durable product knowledge that governs behaviour. A rule used by multiple
 use cases or requirements must be independently identifiable, not hidden in stories,
 acceptance criteria, UI validation, code or tests.
-applies-to: journeys, use cases or bounded contexts governed by this rule.
+applies-to: broader journey or bounded-context scope governed by this rule.
+Use Case.governed-by authors the specific rule/use-case association.
 uses-terms (optional): TERM ids whose definitions interpreting this rule requires.
 provenance (optional): the evidence behind recovered knowledge. Set it on recovered
 (brownfield) artifacts; leave it unset when authoring from intent. It records evidence,

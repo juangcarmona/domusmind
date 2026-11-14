@@ -2,7 +2,7 @@
 id: FR-TASKS-RENAME-TASK
 type: functional-requirement
 title: Rename an open task
-status: draft
+status: active
 derived-from:
   - UC-TASKS-RENAME-TASK
   - BR-TASKS-TITLE-REQUIRED

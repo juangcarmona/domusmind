@@ -2,7 +2,7 @@
 id: SB-CALENDAR-CONNECT-MISSING-ACCESS
 type: structured-behaviour
 title: "Connecting without the required access is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-CONNECT-OUTLOOK"
   - "BR-CALENDAR-OUTLOOK-REQUIRED-ACCESS"

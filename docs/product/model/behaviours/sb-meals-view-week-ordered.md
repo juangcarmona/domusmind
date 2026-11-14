@@ -2,7 +2,7 @@
 id: "SB-MEALS-VIEW-WEEK-ORDERED"
 type: "structured-behaviour"
 title: "Viewing a week returns every slot in day and meal-type order"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-VIEW-PLAN"
   - "BR-MEALS-MEAL-TYPE-ORDER"

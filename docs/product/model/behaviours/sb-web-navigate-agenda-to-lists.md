@@ -2,7 +2,7 @@
 id: SB-WEB-NAVIGATE-AGENDA-TO-LISTS
 type: structured-behaviour
 title: "Moving from the Agenda to Lists keeps the shell"
-status: draft
+status: active
 illustrates:
   - "UC-WEB-MOVE-BETWEEN-SURFACES"
 given:

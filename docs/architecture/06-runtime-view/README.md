@@ -43,7 +43,7 @@ The authenticated capture request stores the raw note in the Inbox aggregate fir
 ![Capture and interpret an Inbox note](./diagrams/capture-and-interpret-an-inbox-note.png)
 <!-- diagram-source: ./diagrams/capture-and-interpret-an-inbox-note.mmd sha256:a60c4b6933ac5443392cde13a62a2cd75e21e0e54779a3a19b782d3b481d435e png-sha256:126be7b77078fe604ca6cb69f2f63da25ec0e6c77c62b9d8d8be5826a1e5a558 -->
 
-The member's approval command changes one Inbox aggregate and emits `InboxProposalApproved`. Its synchronous domain-event reaction dispatches the normal Calendar or Tasks command, then marks the proposal applied. The owning area handler repeats household authorization and input validation. The event writer keeps all aggregate and event-log writes in one PostgreSQL transaction, so a failed action leaves the proposal pending and creates no Plan or Task. Rejected proposals update only Inbox state. <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:7c54cc5879964502757faea971dacd03b841305ae6166d64072cde41aea1303f" -->
+The member's approval command changes one Inbox aggregate and emits `InboxProposalApproved`. Its synchronous domain-event reaction dispatches the normal Calendar or Tasks command, then marks the proposal applied. The owning area handler repeats household authorization and input validation. The event writer keeps all aggregate and event-log writes in one PostgreSQL transaction, so a failed action leaves the proposal pending and creates no Plan or Task. Rejected proposals update only Inbox state. <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:4cefc25292234d58d9972915de22d8811ee3bb7b3989512d161482347dc0b267" -->
 
 ## Household conversation and explicit assistant request
 
@@ -51,10 +51,10 @@ The Chats controller reads the authenticated user and dispatches commands and qu
 
 For a complete action request in a household thread, the assistant message raises `AssistantProposalRequested`. The Inbox-owned reaction stores an unreviewed proposal linked to the originating Chat message. It does not call a Calendar or Lists command. A private-thread request never raises this event. On explicit approval, Inbox dispatches the normal command owned by Calendar or Lists, then marks its proposal applied. The Chat message, event and Inbox reaction participate in the event writer's transaction.
 
-<!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:af9ab2889fe4bb5b9168f43d0725874432354e723000b96ae0d732fd8ffc597b" -->
-<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:f1a488d642604dbe43c9e465683fa2602b7f027d5618c4c4d3ac7e73cc29e8be" -->
-<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:6f46b897ec17ba34fa6027cdfa95a01a41d176d06edb4e69daced913c924bdc8" -->
-<!-- pdac:cite id="QR-ASSISTANT-PROVIDER-PRIVACY" digest="sha256:769c170bfea0d620610f7d331581c0c5c7685f962bcaba4060442dba5a2eb4b2" -->
+<!-- pdac:cite id="FR-CHAT-ASK-ASSISTANT" digest="sha256:db3f154f813d074cac902e755f3af966bcf889ac6ddc7356927eeb79eedc3a11" -->
+<!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8655bde49845f4278b7ad37baeab11421c4ae263138f278a4a902d6aef1fcee8" -->
+<!-- pdac:cite id="FR-ASSISTANT-CONFIGURE-PROVIDERS" digest="sha256:cbc68a46b1c8cdec569c82e15ae1ae4de01a615795e09a8f543c24e2ad215d99" -->
+<!-- pdac:cite id="QR-ASSISTANT-PROVIDER-PRIVACY" digest="sha256:17c1d2b4e0e56c4edea6f365bf389d232ba0772e52dd327c8b9ae907b7e2d614" -->
 
 ![Household conversation and explicit assistant request](./diagrams/household-conversation-and-explicit-assistant-request.png)
 <!-- diagram-source: ./diagrams/household-conversation-and-explicit-assistant-request.mmd sha256:92c2110689f629413b9bdc72f4105de37814f57e024f0d956f07966ac7b60700 png-sha256:6deeb6c896ac08e5c8d582b0374d61a1f5ba7faa82db7a5d25d8058012cfcdd5 -->
@@ -75,7 +75,7 @@ Meal Planning emits `ShoppingListRequested` after checking household access and 
 ### Notable Interactions
 
 - The new list is a regular `SharedList` from the moment it exists and is linked back to the meal plan through its untyped link fields. Meal Planning stores the requested list id and derivation version; Lists owns creation and item contents.
-  <!-- pdac:cite id="BR-MEALS-SHOPPING-LIST-NEW-EACH-TIME" digest="sha256:66bbb87ee56438054657395a8491fb49c3b1c8b4ded3b5451c8c3933b50f08e1" -->
+  <!-- pdac:cite id="BR-MEALS-SHOPPING-LIST-NEW-EACH-TIME" digest="sha256:8799a109481010d97e95891dd9e7e523839db1adc0b59770f05f44bd40b7ac70" -->
 - A repeated delivery uses the same list id from the event. The Lists handler finds the existing list and returns without creating duplicate rows or events.
 
 ### Failure Behavior
@@ -85,15 +85,15 @@ The originating MealPlan, `ShoppingListRequested` row, new `SharedList`, and its
 ## Calendar subscription access
 
 Subscription management uses authenticated REST commands and queries. A feed request carries its bearer secret in the URL, resolves only a stored token hash, rejects revoked or expired subscriptions, projects scoped Plans into ICS, and records successful access metadata in the subscription aggregate and event log. The route uses a parameterized template so request telemetry identifies the endpoint without needing the token value.
-<!-- pdac:cite id="FR-CALENDAR-MANAGE-SUBSCRIPTIONS" digest="sha256:be31d2356bcd4166ed05806ff0acb55dd0fb3b610bc92c3857bd562b47b0d5b7" -->
-<!-- pdac:cite id="FR-CALENDAR-SERVE-SUBSCRIPTION-FEED" digest="sha256:99590c81c57bf55ed7f7fbfb9fa0ae8f00e6559176ef6c9d7aa8b4ed043f7a6c" -->
+<!-- pdac:cite id="FR-CALENDAR-MANAGE-SUBSCRIPTIONS" digest="sha256:d6628e5804a8e959841593a3a5b86044b264a42b170ee6b1233c7e6e9ebd6f61" -->
+<!-- pdac:cite id="FR-CALENDAR-SERVE-SUBSCRIPTION-FEED" digest="sha256:bc9e6ff594f9ef7ba062d7e02e5f50b42b20f7407ef9c9bbf0c5b1a6b011a454" -->
 
 ![Calendar subscription access](./diagrams/calendar-subscription-access.png)
 <!-- diagram-source: ./diagrams/calendar-subscription-access.mmd sha256:a8b06d7b79ccc28ba741b25929158c5c81f11854dddd9d3b1650486c4f702188 png-sha256:05d018fc0c2010eefe55e11a6a5d47a30fb142b5631a293362839120a5f99ef2 -->
 
 The application never persists the raw URL. Listing is owner-scoped and returns access metadata only; revocation changes the subscription and is appended to the event log. Feed URLs are bearer credentials and must not be included in application logs.
-<!-- pdac:cite id="BR-CALENDAR-SUBSCRIPTION-ACCESS" digest="sha256:f23e6df00c9fa568487a80d9a9aabcbb42cad4892c2307a8925fe1ee4a786da3" -->
-<!-- pdac:cite id="QR-CALENDAR-SUBSCRIPTION-SECURITY" digest="sha256:e1d9579e065244b2ee489c776fe6a3cf2ffd3c586666b7f2b9127101d64bd62f" -->
+<!-- pdac:cite id="BR-CALENDAR-SUBSCRIPTION-ACCESS" digest="sha256:f7db6fc0557ada6415b104ae666d440ece7d3752dab4dcbcfff063274ce987d5" -->
+<!-- pdac:cite id="QR-CALENDAR-SUBSCRIPTION-SECURITY" digest="sha256:e7404164d86baa68d2cc524cdb77da384d83aa22a4449f5cf94b4bf8caa02147" -->
 
 ## Agenda read projection
 
@@ -105,23 +105,23 @@ The Agenda is assembled at read time; it has no stored projection and no event s
 ### Notable Interactions
 
 - Each source module stays the owner of its entries; the projection is read-only and the web app edits an entry by navigating to its owning surface, which calls that module's commands.
-  <!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:652b5a6581672dfbabf8e5da42d010cc34d51bbcbf5b2bc73fac9273bb631337" -->
+  <!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:a3c72a044c52c99808fa103720f30e8737d55fc1f7c9b6d7cc78e56c7539359c" -->
 - Imported external entries are added only to the row of the member who owns the connection.
-  <!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:b1dcb8fae830badbc584fe2a2e8b3ec117053470d9123391b2fa0d69f6bc9e69" -->
+  <!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY" digest="sha256:c1f6a0090e071a7cbca68eb2f1b200e68156542ace4fe9a8ca0223f3aa71df32" -->
 - Recurring routines and repeating list items are expanded into occurrences in the query (`Application/Temporal`), not stored as occurrences.
 - Meal Planning is not part of the grid. A separate meal-plan agenda query exists (`Features/MealPlanning/GetMealPlansForAgenda`) and a member agenda query exists (`Features/Calendar/GetMemberAgenda`), but the web app calls neither, so meals do not appear in the Agenda today.
-  <!-- pdac:cite id="FR-MEALS-AGENDA-PROJECTION" digest="sha256:14542a51f00845c388cd4e159f50674eca6d349656eacac4935fa63b064cd244" -->
+  <!-- pdac:cite id="FR-MEALS-AGENDA-PROJECTION" digest="sha256:c647b93ceb2e80493b6ea0d5df2ab49ac174e5623a111df1a57cf0e03633561c" -->
 
 ## External calendar sync with Outlook
 
 External calendars are ingested one way, from Microsoft Graph into Calendar-owned integration records, with delegated per-member access ([ADR-0003](../../adr/0003-use-delegated-graph-auth-for-outlook-calendar-ingestion.md)).
 
-<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:a631bcb19c09716b7cbee7b25563b55eec7ca4287de67c84cb1081144d29deb9" -->
+<!-- pdac:cite id="CON-CALENDAR-OUTLOOK-PULL-ONLY" digest="sha256:c575d9e19b4520f13a09facea0c1196b6a42ec1f4554865cdb470485d46eb4b0" -->
 
 Two triggers converge on the same command: a member's manual sync from Settings, and the `ExternalCalendarRefreshWorker` hosted service, which wakes every 300 seconds and selects up to 10 due connections (scheduled refresh enabled, not disconnected or auth-expired, next sync time reached, no live lease). The worker selects the most overdue connections first; connections without a next-sync timestamp come first, and connection id breaks ties. It dispatches the sync for each with a small random delay. Each connection's next sync is scheduled from its own interval, 60 minutes by default.
 
-<!-- pdac:cite id="FR-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:2e4013f14b0b0d3092f017991253bd2441931459bd1db5b24d0bc5a6c00dc423" -->
-<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:4a820cb4807164b225e417fbb59c0b4cba8a5b188bde26f1821e62a258b2aeb4" -->
+<!-- pdac:cite id="FR-CALENDAR-SYNC-EXTERNAL-CALENDAR" digest="sha256:786617e80baa09464aa3e3c5588a596444e4963880d8be17a3e48288d6fd6925" -->
+<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:ba16ad06b77cfb02dcfcbee49418c1a7bf18251f91c4bf5858a6209cf87e59b4" -->
 
 ![External calendar sync with Outlook](./diagrams/external-calendar-sync-with-outlook.png)
 <!-- diagram-source: ./diagrams/external-calendar-sync-with-outlook.mmd sha256:9274b138840b39099be08329a29d878e8a7264cc901215dbc29424452dbb942d png-sha256:f84b3693de4d1af37bdb6acfbb5ad98cc5f0e1ced2020db5470514f561e663da -->
@@ -129,7 +129,7 @@ Two triggers converge on the same command: a member's manual sync from Settings,
 ### Notable Interactions
 
 - The lease stored on the connection prevents a connection from syncing twice at once, whether the second trigger is manual or scheduled; a manual sync during a running one is rejected as in progress.
-  <!-- pdac:cite id="BR-CALENDAR-NO-CONCURRENT-SYNC" digest="sha256:85649c4ba718266f5043e7a39f97fef18f3cdaec34b67e91bdb207cedb87974b" -->
+  <!-- pdac:cite id="BR-CALENDAR-NO-CONCURRENT-SYNC" digest="sha256:cb91537c8a00c86ee5a8efeb0ae78ae4d5c94f112a9f7445c4792e78295b0d78" -->
 - The first sync of a feed loads the sync window computed from the connection's horizon; later syncs use the Graph delta token. Changing the horizon invalidates every feed's delta state so the next run reloads the window.
 - Imported entries are stored only as Calendar integration records and never create native plans.
 - The catch-up sync on sign-in or on opening a member's Agenda is not implemented: the API exposes a sync-all endpoint for a member, but the web app never calls it.
@@ -151,7 +151,7 @@ Authentication is local to the API and separate from household membership ([ADR-
 ### Notable Interactions
 
 - The authenticated principal is an auth user, not a household member. Which households a user may act in is resolved per command or query from the user-to-household access table by `FamilyAuthorizationService`; a member is linked to an auth user only through an optional account id on the member.
-  <!-- pdac:cite id="TERM-MEMBER-ACCESS" digest="sha256:215b756825d3f4cd80d0649ff4fd58d167e6de88cfab73d8534cd3d9a1c05e12" -->
+  <!-- pdac:cite id="TERM-MEMBER-ACCESS" digest="sha256:0070e81c6cc9c4e9bf23c261719710c20db7563eaf584782092918ca26137de7" -->
 - On load, the web app validates its stored access token with `/api/auth/me`; if that fails it exchanges the refresh token once, which rotates it (the old one is revoked), and otherwise clears the session. There is no refresh on a 401 during normal use.
 
 ### Failure Behavior

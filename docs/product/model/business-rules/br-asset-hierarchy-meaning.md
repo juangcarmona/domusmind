@@ -2,7 +2,7 @@
 id: BR-ASSET-HIERARCHY-MEANING
 type: business-rule
 title: Asset containment does not imply ownership or responsibility
-status: draft
+status: active
 ---
 ## Rule
 

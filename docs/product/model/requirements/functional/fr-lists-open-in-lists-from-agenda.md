@@ -2,7 +2,7 @@
 id: FR-LISTS-OPEN-IN-LISTS-FROM-AGENDA
 type: functional-requirement
 title: "Open a projected list item in Lists"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-SEE-ITEMS-IN-AGENDA
   - BR-AGENDA-PROJECTION-READ-ONLY

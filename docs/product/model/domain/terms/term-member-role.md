@@ -2,7 +2,7 @@
 id: TERM-MEMBER-ROLE
 type: domain-term
 title: "Person Role"
-status: draft
+status: active
 defined-in: BC-FAMILY
 synonyms:
   - "Member Role"

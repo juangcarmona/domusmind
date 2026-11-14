@@ -2,7 +2,7 @@
 id: SB-AGENDA-MEMBER-LIST-ITEMS-READ-ONLY
 type: structured-behaviour
 title: "Projected list items are not editable from the Agenda"
-status: draft
+status: active
 illustrates:
   - "UC-AGENDA-VIEW-MEMBER-AGENDA"
   - "UC-AGENDA-INSPECT-ENTRY"

@@ -2,9 +2,7 @@
 id: BR-FAMILY-MANAGER-KEEPS-OWN-ACCESS
 type: business-rule
 title: "A manager cannot disable their own access"
-status: draft
-applies-to:
-  - UC-FAMILY-DISABLE-MEMBER-ACCESS
+status: active
 uses-terms:
   - TERM-MANAGER
   - TERM-MEMBER-ACCESS

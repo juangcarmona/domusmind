@@ -2,7 +2,7 @@
 id: UC-LISTS-BROWSE-LISTS
 type: use-case
 title: "Browse the household's lists"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

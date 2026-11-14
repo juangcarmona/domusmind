@@ -2,7 +2,7 @@
 id: FR-ASSETS-AGENDA-PROJECTION
 type: functional-requirement
 title: Project asset due information into Agenda
-status: draft
+status: active
 derived-from:
   - UC-ASSETS-MANAGE-OBLIGATION
   - UC-ASSETS-REVIEW-HOUSEHOLD-ASSETS

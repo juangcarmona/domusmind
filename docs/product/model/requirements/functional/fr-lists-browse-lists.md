@@ -2,7 +2,7 @@
 id: FR-LISTS-BROWSE-LISTS
 type: functional-requirement
 title: "Show the household's active lists with unchecked counts"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-BROWSE-LISTS
 verification:

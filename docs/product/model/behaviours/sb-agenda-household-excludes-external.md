@@ -2,7 +2,7 @@
 id: SB-AGENDA-HOUSEHOLD-EXCLUDES-EXTERNAL
 type: structured-behaviour
 title: "Imported external entries never appear in household scope"
-status: draft
+status: active
 illustrates:
   - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
   - "BR-CALENDAR-EXTERNAL-ENTRIES-OWNER-SCOPE-ONLY"

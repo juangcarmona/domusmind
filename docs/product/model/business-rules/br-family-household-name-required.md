@@ -2,10 +2,7 @@
 id: BR-FAMILY-HOUSEHOLD-NAME-REQUIRED
 type: business-rule
 title: "A household needs a name"
-status: draft
-applies-to:
-  - UC-FAMILY-CREATE-HOUSEHOLD
-  - UC-FAMILY-CONFIGURE-HOUSEHOLD-SETTINGS
+status: active
 uses-terms:
   - TERM-HOUSEHOLD
 provenance:

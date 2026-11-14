@@ -2,17 +2,17 @@
 id: FR-AREAS-CREATE-WORK-FROM-AREA
 type: functional-requirement
 title: Start new work from an Area
-status: draft
+status: active
 derived-from:
-- UC-AREAS-CREATE-WORK-FROM-AREA
+  - UC-AREAS-CREATE-WORK-FROM-AREA
 verification:
-- scenario: Choosing New task on an Area owned by Ana opens the task form with that Area and Ana as assignee already filled in
+  - scenario: Choosing New task on an Area owned by Ana opens the task form with that Area and Ana as assignee already filled in
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
-- TERM-TASK
-- TERM-ROUTINE
-- TERM-PLAN
+  - TERM-AREA
+  - TERM-AREA-OWNER
+  - TERM-TASK
+  - TERM-ROUTINE
+  - TERM-PLAN
 provenance:
   source: docs/_legacy/00_product/surfaces/areas.md (Inspector, Interaction)
   confidence: medium

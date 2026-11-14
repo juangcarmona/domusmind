@@ -2,7 +2,7 @@
 id: TERM-MEMBER-PROFILE
 type: domain-term
 title: "Person Profile"
-status: draft
+status: active
 defined-in: BC-FAMILY
 synonyms:
   - "Member Profile"

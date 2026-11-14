@@ -2,7 +2,7 @@
 id: SB-LISTS-SEQUENTIAL-CAPTURE
 type: structured-behaviour
 title: "Several items can be captured in a row without interruption"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-ADD-ITEM
   - BR-LISTS-NEW-ITEM-UNCHECKED-APPENDED

@@ -2,7 +2,7 @@
 id: "SB-RECIPES-UPDATE"
 type: "structured-behaviour"
 title: "Editing a recipe replaces its details and refreshes its update time"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-UPDATE-RECIPE"
 given:

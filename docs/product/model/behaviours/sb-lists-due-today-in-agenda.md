@@ -2,7 +2,7 @@
 id: SB-LISTS-DUE-TODAY-IN-AGENDA
 type: structured-behaviour
 title: "An item due today appears in today's Agenda with its list origin"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-SEE-ITEMS-IN-AGENDA
   - BR-LISTS-AGENDA-PROJECTION

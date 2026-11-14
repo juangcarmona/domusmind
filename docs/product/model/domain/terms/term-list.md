@@ -2,7 +2,7 @@
 id: TERM-LIST
 type: domain-term
 title: "List"
-status: draft
+status: active
 defined-in: BC-LISTS
 synonyms:
   - "Shared List"

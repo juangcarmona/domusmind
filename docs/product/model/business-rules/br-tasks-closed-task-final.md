@@ -2,13 +2,7 @@
 id: BR-TASKS-CLOSED-TASK-FINAL
 type: business-rule
 title: Completed and cancelled tasks are final
-status: draft
-applies-to:
-  - UC-TASKS-COMPLETE-TASK
-  - UC-TASKS-CANCEL-TASK
-  - UC-TASKS-RESCHEDULE-TASK
-  - UC-TASKS-ASSIGN-TASK
-  - UC-TASKS-RENAME-TASK
+status: active
 uses-terms:
   - TERM-TASK
   - TERM-TASK-STATUS

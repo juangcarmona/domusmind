@@ -2,10 +2,7 @@
 id: BR-ASSET-RECURRENCE-DUE-STATE
 type: business-rule
 title: Asset obligations retain one pending due cycle
-status: draft
-applies-to:
-  - UC-ASSETS-MANAGE-OBLIGATION
-  - UC-ASSETS-COMPLETE-OBLIGATION
+status: active
 uses-terms:
   - TERM-ASSET-OBLIGATION
   - TERM-ASSET-OCCURRENCE

@@ -2,7 +2,7 @@
 id: "FR-MEALS-AGENDA-PROJECTION"
 type: "functional-requirement"
 title: "Show meals in the Agenda"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-MEALS-SEE-MEALS-IN-AGENDA"
   - "BR-MEALS-AGENDA-PROJECTION"

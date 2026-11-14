@@ -2,7 +2,7 @@
 id: UC-FAMILY-CONFIGURE-HOUSEHOLD-SETTINGS
 type: use-case
 title: "Configure household settings"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MANAGER
 supporting-actors: []
 bounded-context: BC-FAMILY

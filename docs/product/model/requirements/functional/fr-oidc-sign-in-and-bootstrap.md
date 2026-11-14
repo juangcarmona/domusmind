@@ -2,7 +2,7 @@
 id: FR-OIDC-SIGN-IN-AND-BOOTSTRAP
 type: functional-requirement
 title: Initialize and sign in with authorized external identity
-status: draft
+status: active
 derived-from:
   - UC-INITIALIZE-INSTALLATION
   - UC-SIGN-IN-WITH-OIDC

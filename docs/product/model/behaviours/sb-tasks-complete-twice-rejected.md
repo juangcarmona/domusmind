@@ -2,7 +2,7 @@
 id: SB-TASKS-COMPLETE-TWICE-REJECTED
 type: structured-behaviour
 title: Completed task cannot be completed again
-status: draft
+status: active
 illustrates:
   - UC-TASKS-COMPLETE-TASK
   - BR-TASKS-CLOSED-TASK-FINAL

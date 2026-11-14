@@ -2,10 +2,7 @@
 id: "BR-MEALS-SLOT-SOURCE-CONSISTENCY"
 type: "business-rule"
 title: "A slot's content matches its meal source"
-status: "draft"
-applies-to:
-  - "UC-MEALS-UPDATE-SLOT"
-  - "UC-MEALS-CREATE-TEMPLATE"
+status: "active"
 uses-terms:
   - "TERM-MEAL-SLOT"
   - "TERM-MEAL-SOURCE"

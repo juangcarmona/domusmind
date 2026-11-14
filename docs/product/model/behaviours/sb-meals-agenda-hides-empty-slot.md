@@ -2,7 +2,7 @@
 id: "SB-MEALS-AGENDA-HIDES-EMPTY-SLOT"
 type: "structured-behaviour"
 title: "An Unplanned slot without notes does not appear in the Agenda"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-SEE-MEALS-IN-AGENDA"
   - "BR-MEALS-AGENDA-PROJECTION"

@@ -2,7 +2,7 @@
 id: SB-LISTS-CHECK-ITEM
 type: structured-behaviour
 title: "Checking an item keeps it in the list"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-TOGGLE-ITEM
   - BR-LISTS-TOGGLE-PRESERVES-ITEM

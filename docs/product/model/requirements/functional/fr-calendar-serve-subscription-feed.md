@@ -2,7 +2,7 @@
 id: FR-CALENDAR-SERVE-SUBSCRIPTION-FEED
 type: functional-requirement
 title: Serve a read-only calendar subscription feed
-status: draft
+status: active
 derived-from:
   - UC-CALENDAR-READ-SUBSCRIPTION-FEED
   - BR-CALENDAR-SUBSCRIPTION-ACCESS

@@ -2,7 +2,7 @@
 id: FR-TASKS-ASSIGN-TASK
 type: functional-requirement
 title: Assign a task to one person
-status: draft
+status: active
 derived-from:
   - UC-TASKS-ASSIGN-TASK
   - BR-TASKS-ASSIGNEE-IN-HOUSEHOLD

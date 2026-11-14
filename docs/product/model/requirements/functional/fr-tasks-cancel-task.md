@@ -2,7 +2,7 @@
 id: FR-TASKS-CANCEL-TASK
 type: functional-requirement
 title: Cancel an open task
-status: draft
+status: active
 derived-from:
   - UC-TASKS-CANCEL-TASK
   - BR-TASKS-CLOSED-TASK-FINAL

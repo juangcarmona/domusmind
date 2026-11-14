@@ -2,7 +2,7 @@
 id: BR-TASKS-DISTINCT-EXECUTION-MODELS
 type: business-rule
 title: Tasks, list items and plans stay distinct
-status: draft
+status: active
 applies-to:
   - BC-TASKS
 uses-terms:

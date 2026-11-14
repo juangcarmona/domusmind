@@ -2,7 +2,7 @@
 id: UC-TASKS-COMPLETE-TASK
 type: use-case
 title: Complete a task
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

@@ -2,7 +2,7 @@
 id: TERM-CHAT-THREAD
 type: domain-term
 title: Chat thread
-status: draft
+status: active
 defined-in: BC-CHATS
 synonyms: []
 uses-terms: []

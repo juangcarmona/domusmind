@@ -2,7 +2,7 @@
 id: "UC-RECIPES-MANAGE-INGREDIENTS"
 type: "use-case"
 title: "Edit a recipe's ingredients"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

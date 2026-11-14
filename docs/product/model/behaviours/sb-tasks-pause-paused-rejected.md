@@ -2,7 +2,7 @@
 id: SB-TASKS-PAUSE-PAUSED-REJECTED
 type: structured-behaviour
 title: Paused routine cannot be paused again
-status: draft
+status: active
 illustrates:
   - UC-TASKS-PAUSE-ROUTINE
   - BR-TASKS-PAUSE-RESUME

@@ -2,7 +2,7 @@
 id: SB-CALENDAR-SCHEDULE-PLAN-MINIMUM
 type: structured-behaviour
 title: "A plan is scheduled with only a title and a start"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-SCHEDULE-PLAN"
   - "BR-CALENDAR-PLAN-REQUIRES-TITLE-AND-START"

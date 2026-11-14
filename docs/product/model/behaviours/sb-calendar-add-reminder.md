@@ -2,7 +2,7 @@
 id: SB-CALENDAR-ADD-REMINDER
 type: structured-behaviour
 title: "A reminder is added to a plan"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-MANAGE-PLAN-REMINDERS"
 given:

@@ -2,7 +2,7 @@
 id: FR-LISTS-SET-ITEM-TIMING
 type: functional-requirement
 title: "Give items a due date, reminder or repeat"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-SCHEDULE-ITEM
   - BR-LISTS-TEMPORAL-FIELDS-INDEPENDENT

@@ -2,7 +2,7 @@
 id: "SB-MEALS-CLEAR-SLOT"
 type: "structured-behaviour"
 title: "Clearing a slot returns it to Unplanned without removing it"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-UPDATE-SLOT"
   - "BR-MEALS-FULL-SLOT-GRID"

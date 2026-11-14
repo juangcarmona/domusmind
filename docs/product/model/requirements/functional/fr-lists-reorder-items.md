@@ -2,7 +2,7 @@
 id: FR-LISTS-REORDER-ITEMS
 type: functional-requirement
 title: "Set the display order of a list's items"
-status: draft
+status: active
 derived-from:
   - UC-LISTS-REORDER-ITEMS
   - BR-LISTS-REORDER-FULL-SET

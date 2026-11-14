@@ -2,10 +2,8 @@
 id: BR-FAMILY-PET-RESTRICTIONS
 type: business-rule
 title: "Pets do not act in the product"
-status: draft
+status: active
 applies-to:
-  - UC-FAMILY-REGISTER-PET
-  - UC-FAMILY-PROVISION-MEMBER-ACCESS
   - BC-FAMILY
 uses-terms:
   - TERM-PET

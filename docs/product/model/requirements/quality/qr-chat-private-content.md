@@ -2,7 +2,7 @@
 id: QR-CHAT-PRIVATE-CONTENT
 type: quality-requirement
 title: Protect private conversation content
-status: draft
+status: active
 quality-attribute: confidentiality
 applies-to:
   - UC-CHAT-USE-CONVERSATIONS

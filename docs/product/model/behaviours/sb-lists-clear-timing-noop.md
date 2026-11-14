@@ -2,7 +2,7 @@
 id: SB-LISTS-CLEAR-TIMING-NOOP
 type: structured-behaviour
 title: "Clearing timing on an item without any is safe"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-CLEAR-ITEM-SCHEDULE
 given:

@@ -2,7 +2,7 @@
 id: SB-TASKS-CREATE-WEEKLY-ROUTINE
 type: structured-behaviour
 title: Weekly household routine created
-status: draft
+status: active
 illustrates:
   - UC-TASKS-CREATE-ROUTINE
   - BR-TASKS-ROUTINES-PROJECTED

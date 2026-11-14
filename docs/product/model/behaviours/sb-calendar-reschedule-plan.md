@@ -2,7 +2,7 @@
 id: SB-CALENDAR-RESCHEDULE-PLAN
 type: structured-behaviour
 title: "Rescheduling keeps participants and other details"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-RESCHEDULE-PLAN"
 given:

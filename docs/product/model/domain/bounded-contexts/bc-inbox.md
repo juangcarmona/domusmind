@@ -2,7 +2,7 @@
 id: BC-INBOX
 type: bounded-context
 title: Inbox
-status: draft
+status: active
 provenance:
   source: "GitHub issue #17; proposed scope for CHG-INBOX-ASSISTED-CAPTURE"
   confidence: high

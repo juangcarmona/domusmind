@@ -1,21 +1,21 @@
 ---
 id: UC-CALENDAR-VIEW-EXTERNAL-CALENDAR-CONNECTIONS
 type: use-case
-title: "Review external calendar connections and their status"
-status: draft
-primary-actor: "ACT-HOUSEHOLD-MEMBER"
+title: Review external calendar connections and their status
+status: active
+primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
-bounded-context: "BC-CALENDAR"
+bounded-context: BC-CALENDAR
 governed-by:
-  - "BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS"
+  - BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS
 uses-terms:
-  - "TERM-EXTERNAL-CALENDAR-CONNECTION"
-  - "TERM-EXTERNAL-CALENDAR-FEED"
-  - "TERM-SYNC-HORIZON"
+  - TERM-EXTERNAL-CALENDAR-CONNECTION
+  - TERM-EXTERNAL-CALENDAR-FEED
+  - TERM-SYNC-HORIZON
 provenance:
-  source: "docs/_legacy/06_interfaces/external-calendar-api.md (List member connections, Get connection detail); docs/_legacy/06_interfaces/external-calendar-contract-model-catalog.md (connection Status values); src/backend/DomusMind.Domain/Calendar/ExternalConnections/ExternalCalendarConnection.cs; interview: product owner decision Q-0049 (E-0158); interview: product owner decision Q-0048 (E-0158)"
-  confidence: "medium"
-  recovered-from: "documentation"
+  source: 'docs/_legacy/06_interfaces/external-calendar-api.md (List member connections, Get connection detail); docs/_legacy/06_interfaces/external-calendar-contract-model-catalog.md (connection Status values); src/backend/DomusMind.Domain/Calendar/ExternalConnections/ExternalCalendarConnection.cs; interview: product owner decision Q-0049 (E-0158); interview: product owner decision Q-0048 (E-0158); product owner, 2026-11-14: "Las tres recomendadas" (CHG-STATE-MODEL-COMPLETION)'
+  confidence: medium
+  recovered-from: documentation
 ---
 
 ## Goal
@@ -33,7 +33,7 @@ The person opens the integrations part of their settings (observed: external-cal
 ## Main Flow
 
 1. The person opens their connections.
-2. DomusMind lists each connection with its provider, account and label, number of selected calendars, horizon, refresh settings, last successful sync, status (one of the code's connection statuses, decided: Q-0049), whether a sync is running and the last error (observed: external-calendar-api.md).
+2. DomusMind lists each connection with its provider, account and label, number of selected calendars, horizon, refresh settings, last successful sync, status (one of the seven product states in FR-CALENDAR-SHOW-CONNECTION-STATUS, decided in CHG-STATE-MODEL-COMPLETION), whether a sync is running and the last error (observed: external-calendar-api.md).
 3. The person opens one connection to see its selected and available provider calendars and each calendar's sync window (observed: external-calendar-api.md, Get connection detail).
 
 ## Alternative Flows

@@ -2,7 +2,7 @@
 id: BR-PRODUCT-HOUSEHOLD-LANGUAGE
 type: business-rule
 title: "Household-facing text uses household words, not model words"
-status: draft
+status: active
 applies-to:
   - "BC-FAMILY"
   - "BC-RESPONSIBILITIES"

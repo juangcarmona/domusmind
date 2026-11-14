@@ -2,7 +2,7 @@
 id: UC-TASKS-CREATE-TASK
 type: use-case
 title: Create a task
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

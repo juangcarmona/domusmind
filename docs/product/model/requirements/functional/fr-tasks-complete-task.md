@@ -2,7 +2,7 @@
 id: FR-TASKS-COMPLETE-TASK
 type: functional-requirement
 title: Complete an open task
-status: draft
+status: active
 derived-from:
   - UC-TASKS-COMPLETE-TASK
   - BR-TASKS-CLOSED-TASK-FINAL

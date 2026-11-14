@@ -2,10 +2,7 @@
 id: "BR-RECIPES-TOTAL-TIME"
 type: "business-rule"
 title: "Total recipe time is the sum of preparation and cook time"
-status: "draft"
-applies-to:
-  - "UC-RECIPES-CREATE-RECIPE"
-  - "UC-RECIPES-UPDATE-RECIPE"
+status: "active"
 uses-terms:
   - "TERM-RECIPE"
 provenance:

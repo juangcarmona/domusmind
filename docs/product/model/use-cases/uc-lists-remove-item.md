@@ -2,11 +2,12 @@
 id: UC-LISTS-REMOVE-ITEM
 type: use-case
 title: "Remove an item from a list"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS
-governed-by: []
+governed-by:
+  - BR-LISTS-ARCHIVED-READ-ONLY
 uses-terms:
   - TERM-LIST-ITEM
   - TERM-PROJECTED-LIST-ITEM

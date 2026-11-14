@@ -2,17 +2,17 @@
 id: FR-AREAS-TRANSFER-OWNERSHIP
 type: functional-requirement
 title: Transfer ownership of an Area explicitly
-status: draft
+status: active
 derived-from:
-- UC-AREAS-ASSIGN-OWNER
-- BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE
-- BR-AREAS-SAME-HOUSEHOLD-PEOPLE
+  - UC-AREAS-ASSIGN-OWNER
+  - BR-AREAS-EXPLICIT-OWNERSHIP-CHANGE
+  - BR-AREAS-SAME-HOUSEHOLD-PEOPLE
 verification:
-- scenario-ref: SB-AREAS-TRANSFER-OWNERSHIP
-- scenario-ref: SB-AREAS-REJECT-OUTSIDE-TRANSFER
+  - scenario-ref: SB-AREAS-TRANSFER-OWNERSHIP
+  - scenario-ref: SB-AREAS-REJECT-OUTSIDE-TRANSFER
 uses-terms:
-- TERM-AREA
-- TERM-RESPONSIBILITY-TRANSFER
+  - TERM-AREA
+  - TERM-RESPONSIBILITY-TRANSFER
 provenance:
   source: "openspec/specs/areas/spec.md (Requirement: Responsibility Transfer; Notes); interview: product owner decision Q-0012 (E-0158)"
   confidence: high

@@ -2,10 +2,7 @@
 id: BR-TASKS-PEOPLE-SCOPE-NEEDS-TARGETS
 type: business-rule
 title: A routine for specific people must name them
-status: draft
-applies-to:
-  - UC-TASKS-CREATE-ROUTINE
-  - UC-TASKS-UPDATE-ROUTINE
+status: active
 uses-terms:
   - TERM-ROUTINE
   - TERM-ROUTINE-SCOPE

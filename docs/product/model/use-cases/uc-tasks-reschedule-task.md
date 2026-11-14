@@ -2,7 +2,7 @@
 id: UC-TASKS-RESCHEDULE-TASK
 type: use-case
 title: Reschedule a task
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

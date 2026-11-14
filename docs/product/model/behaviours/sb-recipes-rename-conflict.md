@@ -2,7 +2,7 @@
 id: "SB-RECIPES-RENAME-CONFLICT"
 type: "structured-behaviour"
 title: "Renaming a recipe to another recipe's name is rejected"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-UPDATE-RECIPE"
   - "BR-RECIPES-NAME-UNIQUE"

@@ -2,9 +2,7 @@
 id: BR-LISTS-IMPORTANCE-BINARY
 type: business-rule
 title: "Importance is a binary, independent flag"
-status: draft
-applies-to:
-  - UC-LISTS-SET-ITEM-IMPORTANCE
+status: active
 uses-terms:
   - TERM-ITEM-IMPORTANCE
 provenance:

@@ -2,17 +2,17 @@
 id: FR-AREAS-OWNERSHIP-VISIBILITY
 type: functional-requirement
 title: Show ownership gaps first
-status: draft
+status: active
 derived-from:
-- UC-AREAS-REVIEW-OWNERSHIP
+  - UC-AREAS-REVIEW-OWNERSHIP
 verification:
-- scenario-ref: SB-AREAS-UNOWNED-FIRST
-- scenario-ref: SB-AREAS-GAP-INDICATOR
+  - scenario-ref: SB-AREAS-UNOWNED-FIRST
+  - scenario-ref: SB-AREAS-GAP-INDICATOR
 uses-terms:
-- TERM-AREA
-- TERM-OWNERSHIP-GAP
-- TERM-AREA-OWNER
-- TERM-AREA-SUPPORT
+  - TERM-AREA
+  - TERM-OWNERSHIP-GAP
+  - TERM-AREA-OWNER
+  - TERM-AREA-SUPPORT
 provenance:
   source: 'openspec/specs/areas/spec.md (Requirement: Ownership Visibility); docs/_legacy/00_product/surfaces/areas.md (Default View, Main List)'
   confidence: high

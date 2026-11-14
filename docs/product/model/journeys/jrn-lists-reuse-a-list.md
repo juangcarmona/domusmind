@@ -2,7 +2,7 @@
 id: JRN-LISTS-REUSE-A-LIST
 type: journey
 title: "Reuse a household list across occasions"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 steps:
   - use-case: "UC-LISTS-CREATE-LIST"

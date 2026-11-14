@@ -2,7 +2,7 @@
 id: "SB-RECIPES-UPDATE-INGREDIENT"
 type: "structured-behaviour"
 title: "Changing an ingredient's quantity or unit keeps its name"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-MANAGE-INGREDIENTS"
 given:

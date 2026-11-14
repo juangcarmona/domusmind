@@ -2,13 +2,7 @@
 id: BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED
 type: business-rule
 title: "A cancelled plan cannot be changed"
-status: draft
-applies-to:
-  - "UC-CALENDAR-CANCEL-PLAN"
-  - "UC-CALENDAR-RESCHEDULE-PLAN"
-  - "UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS"
-  - "UC-CALENDAR-EDIT-PLAN-DETAILS"
-  - "UC-CALENDAR-MANAGE-PLAN-REMINDERS"
+status: active
 uses-terms:
   - "TERM-PLAN"
 provenance:

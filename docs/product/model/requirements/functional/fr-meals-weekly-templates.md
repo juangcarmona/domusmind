@@ -2,7 +2,7 @@
 id: "FR-MEALS-WEEKLY-TEMPLATES"
 type: "functional-requirement"
 title: "Weekly meal templates"
-status: "draft"
+status: "active"
 derived-from:
   - "UC-MEALS-CREATE-TEMPLATE"
   - "UC-MEALS-UPDATE-TEMPLATE"

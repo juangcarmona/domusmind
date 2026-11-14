@@ -2,7 +2,7 @@
 id: UC-SIGN-IN-WITH-OIDC
 type: use-case
 title: Sign in through the configured identity provider
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 governed-by:

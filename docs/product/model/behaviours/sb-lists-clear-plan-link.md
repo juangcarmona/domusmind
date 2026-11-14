@@ -2,7 +2,7 @@
 id: SB-LISTS-CLEAR-PLAN-LINK
 type: structured-behaviour
 title: "Clearing a list's plan link leaves its items untouched"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-UPDATE-LIST
   - BR-LISTS-CONTEXT-LINKS-INFORMATIONAL

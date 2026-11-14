@@ -2,7 +2,7 @@
 id: FR-CALENDAR-MANAGE-PLAN-PARTICIPANTS
 type: functional-requirement
 title: "Add and remove plan participants"
-status: draft
+status: active
 derived-from:
   - "UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS"
   - "BR-CALENDAR-PARTICIPANT-UNIQUE"

@@ -2,7 +2,7 @@
 id: SB-FAMILY-INVALID-ROLE-REJECTED
 type: structured-behaviour
 title: "A person with an unknown role is rejected"
-status: draft
+status: active
 illustrates:
   - BR-FAMILY-PERSON-NEEDS-NAME-AND-ROLE
 when: "A person is submitted with a role outside Adult, Child and Pet"

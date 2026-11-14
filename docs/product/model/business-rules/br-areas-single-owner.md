@@ -2,12 +2,10 @@
 id: BR-AREAS-SINGLE-OWNER
 type: business-rule
 title: An Area has at most one Owner
-status: draft
-applies-to:
-- UC-AREAS-ASSIGN-OWNER
+status: active
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
+  - TERM-AREA
+  - TERM-AREA-OWNER
 provenance:
   source: openspec/specs/areas/spec.md (Primary Owner Assignment, Responsibility Transfer); docs/_legacy/04_contexts/responsibilities.md (Invariants); src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs
   confidence: high

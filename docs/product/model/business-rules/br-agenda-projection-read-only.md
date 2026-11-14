@@ -2,14 +2,7 @@
 id: BR-AGENDA-PROJECTION-READ-ONLY
 type: business-rule
 title: "Items projected into the Agenda are read-only there and owned by their source area"
-status: draft
-applies-to:
-  - "UC-AGENDA-VIEW-HOUSEHOLD-AGENDA"
-  - "UC-AGENDA-VIEW-MEMBER-AGENDA"
-  - "UC-AGENDA-INSPECT-ENTRY"
-  - "UC-LISTS-SEE-ITEMS-IN-AGENDA"
-  - "UC-MEALS-SEE-MEALS-IN-AGENDA"
-  - "UC-TASKS-SEE-WORK-IN-AGENDA"
+status: active
 uses-terms:
   - "TERM-AGENDA"
   - "TERM-HOUSEHOLD-TIMELINE"

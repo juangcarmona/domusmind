@@ -2,9 +2,7 @@
 id: "BR-MEALS-LOCKED-SLOT"
 type: "business-rule"
 title: "A locked slot changes only when unlocked in the same change"
-status: "draft"
-applies-to:
-  - "UC-MEALS-UPDATE-SLOT"
+status: "active"
 uses-terms:
   - "TERM-MEAL-SLOT"
 provenance:

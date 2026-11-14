@@ -2,7 +2,7 @@
 id: SB-CALENDAR-ADD-DUPLICATE-PARTICIPANT
 type: structured-behaviour
 title: "Adding the same participant twice is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-MANAGE-PLAN-PARTICIPANTS"
   - "BR-CALENDAR-PARTICIPANT-UNIQUE"

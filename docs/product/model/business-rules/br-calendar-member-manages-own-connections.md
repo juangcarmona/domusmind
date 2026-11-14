@@ -2,14 +2,7 @@
 id: BR-CALENDAR-MEMBER-MANAGES-OWN-CONNECTIONS
 type: business-rule
 title: "People manage only their own external calendar connections; managers see others' status"
-status: draft
-applies-to:
-  - "UC-CALENDAR-CONNECT-OUTLOOK"
-  - "UC-CALENDAR-CONFIGURE-EXTERNAL-CALENDAR"
-  - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
-  - "UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR"
-  - "UC-CALENDAR-VIEW-EXTERNAL-CALENDAR-CONNECTIONS"
-  - "UC-CALENDAR-REVIEW-HOUSEHOLD-CONNECTION-STATUS"
+status: active
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-CONNECTION"
   - "TERM-MANAGER"

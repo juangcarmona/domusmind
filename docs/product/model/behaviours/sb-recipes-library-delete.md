@@ -2,7 +2,7 @@
 id: "SB-RECIPES-LIBRARY-DELETE"
 type: "structured-behaviour"
 title: "A recipe deleted from the library disappears from the list"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-DELETE-RECIPE"
 given:

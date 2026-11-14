@@ -2,7 +2,7 @@
 id: UC-LISTS-OPEN-LIST
 type: use-case
 title: "Open a list"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

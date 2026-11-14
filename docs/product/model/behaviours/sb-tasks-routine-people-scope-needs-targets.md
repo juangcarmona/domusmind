@@ -2,7 +2,7 @@
 id: SB-TASKS-ROUTINE-PEOPLE-SCOPE-NEEDS-TARGETS
 type: structured-behaviour
 title: People-scoped routine without people is rejected
-status: draft
+status: active
 illustrates:
   - UC-TASKS-CREATE-ROUTINE
   - BR-TASKS-PEOPLE-SCOPE-NEEDS-TARGETS

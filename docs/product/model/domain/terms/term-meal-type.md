@@ -2,7 +2,7 @@
 id: "TERM-MEAL-TYPE"
 type: "domain-term"
 title: "Meal Type"
-status: "draft"
+status: "active"
 defined-in: "BC-MEAL-PLANNING"
 synonyms:
   - "MealType"

@@ -2,7 +2,7 @@
 id: SB-CALENDAR-SCHEDULE-PLAN-END-BEFORE-START
 type: structured-behaviour
 title: "A plan ending before it starts is rejected"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-SCHEDULE-PLAN"
   - "BR-CALENDAR-PLAN-END-AFTER-START"

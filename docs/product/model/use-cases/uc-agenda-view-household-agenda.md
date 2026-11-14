@@ -2,7 +2,7 @@
 id: UC-AGENDA-VIEW-HOUSEHOLD-AGENDA
 type: use-case
 title: "See the household Agenda"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-CALENDAR"

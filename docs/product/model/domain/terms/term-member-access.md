@@ -2,7 +2,7 @@
 id: TERM-MEMBER-ACCESS
 type: domain-term
 title: "Person Access"
-status: draft
+status: active
 defined-in: BC-FAMILY
 synonyms:
   - "Member Access"

@@ -2,7 +2,7 @@
 id: FR-CALENDAR-MANAGE-SUBSCRIPTIONS
 type: functional-requirement
 title: Manage private calendar subscriptions
-status: draft
+status: active
 derived-from:
   - UC-CALENDAR-MANAGE-SUBSCRIPTIONS
   - BR-CALENDAR-SUBSCRIPTION-ACCESS

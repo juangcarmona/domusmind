@@ -2,7 +2,7 @@
 id: "SB-MEALS-APPLY-TEMPLATE-DELETED-RECIPE"
 type: "structured-behaviour"
 title: "A template referencing a deleted recipe cannot be applied"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-APPLY-TEMPLATE"
   - "BR-MEALS-TEMPLATE-SNAPSHOT"

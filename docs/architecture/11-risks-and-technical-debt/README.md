@@ -13,7 +13,7 @@ Entries are ordered by priority. **Debt** is an observed condition in the reposi
 The approved product requires production OIDC sign-in and authorization through a
 bound provider identity. The current implementation is listed below as a delivery gap.
 
-<!-- pdac:cite id="CON-PRODUCTION-OIDC-SIGN-IN" digest="sha256:cdd9d1ae4655bdf9de6a2d57f7b27074acb10ab2ae300220fdf82f82e67c9ff7" -->
+<!-- pdac:cite id="CON-PRODUCTION-OIDC-SIGN-IN" digest="sha256:eb9059ccb8ca63b54036bb940fc2b5c472e06357b2e2084a9ad7900c88b490a3" -->
 
 | Risk or debt | Architectural impact | Evidence | Priority | Mitigation or decision |
 | --- | --- | --- | --- | --- |
@@ -59,20 +59,20 @@ Each gap below is a missing operation, invariant or client call. The product art
 
 Lists have no privacy state; every list is visible to the whole family ([`SharedList.cs`](../../../src/backend/DomusMind.Domain/Lists/SharedList.cs)).
 
-<!-- pdac:cite id="FR-LISTS-PRIVATE-LIST" digest="sha256:825ff8f3be841b73cae76621c39cfd78921322cd056211fce5d0789287bac123" -->
+<!-- pdac:cite id="FR-LISTS-PRIVATE-LIST" digest="sha256:e657bc7ca8eaf2f90ba10a7dfcf6535f2d8b9c07d9e0f3397e3dac1b053f72ff" -->
 
 The routine kind still required by the create and update routine handlers has no counterpart in the product's routine definition.
 
-<!-- pdac:cite id="FR-TASKS-CREATE-ROUTINE" digest="sha256:b9390e584d6706d601fc674e6b000f9c94da1966898fe7152f965d7cff3a2eb6" -->
+<!-- pdac:cite id="FR-TASKS-CREATE-ROUTINE" digest="sha256:a3a40147d3e2cc80d9bc822f878d5ef81d91f9f3a3e77255921ec0cd42ce5ae6" -->
 
 Shopping-list derivation is delivered, but by a command that writes into the Lists module directly rather than through a Lists reaction.
 
-<!-- pdac:cite id="FR-MEALS-SHOPPING-LIST-DERIVATION" digest="sha256:bb9dc8626edf5e2bca7ec7a3d6de5d6d06eba9856b28540ee7b09f50c9ca1030" -->
+<!-- pdac:cite id="FR-MEALS-SHOPPING-LIST-DERIVATION" digest="sha256:b80be8ac1ed40f2e58ff5d426c5fcdff0c93c3826ffc5907d595f6349287635b" -->
 
 Recipe management is delivered while its OpenSpec change remains active.
 
-<!-- pdac:cite id="FR-RECIPES-LIBRARY" digest="sha256:702c8c7996f89cc2fd0f678d4a163db664aae0ca384e742133ad8cdd9001bcfc" -->
+<!-- pdac:cite id="FR-RECIPES-LIBRARY" digest="sha256:1340dae095e80b3c9ea2f47bb1780af2e6ae2acbd28baeb5750cd532bd02d34d" -->
 
 External calendars refresh only through the background worker and manual sync; the web app never triggers the catch-up sync endpoint on sign-in or when the Agenda opens ([`ExternalCalendarRefreshWorker.cs`](../../../src/backend/DomusMind.Infrastructure/BackgroundJobs/Calendar/ExternalCalendarRefreshWorker.cs), [`externalCalendarApi.ts`](../../../src/web/app/src/api/externalCalendarApi.ts)).
 
-<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:4a820cb4807164b225e417fbb59c0b4cba8a5b188bde26f1821e62a258b2aeb4" -->
+<!-- pdac:cite id="FR-CALENDAR-BACKGROUND-REFRESH" digest="sha256:ba16ad06b77cfb02dcfcbee49418c1a7bf18251f91c4bf5858a6209cf87e59b4" -->

@@ -2,17 +2,17 @@
 id: UC-AREAS-CREATE-WORK-FROM-AREA
 type: use-case
 title: Create a task, routine or plan from an Area
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-RESPONSIBILITIES
 governed-by: []
 uses-terms:
-- TERM-AREA
-- TERM-AREA-OWNER
-- TERM-TASK
-- TERM-ROUTINE
-- TERM-PLAN
+  - TERM-AREA
+  - TERM-AREA-OWNER
+  - TERM-TASK
+  - TERM-ROUTINE
+  - TERM-PLAN
 provenance:
   source: docs/_legacy/00_product/surfaces/areas.md (Inspector, Interaction); openspec/specs/areas/spec.md (Cross-Context Referencing)
   confidence: medium

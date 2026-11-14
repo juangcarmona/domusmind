@@ -2,7 +2,7 @@
 id: FR-TASKS-CREATE-ROUTINE
 type: functional-requirement
 title: Define a recurring routine
-status: draft
+status: active
 derived-from:
   - UC-TASKS-CREATE-ROUTINE
   - BR-TASKS-VALID-ROUTINE-RECURRENCE

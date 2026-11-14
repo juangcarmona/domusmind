@@ -1,20 +1,20 @@
 ---
 id: FR-CALENDAR-CANCEL-PLAN
 type: functional-requirement
-title: "Cancel a plan"
-status: draft
+title: Cancelled Plans remain in history and leave active planning
+status: active
 derived-from:
-  - "UC-CALENDAR-CANCEL-PLAN"
-  - "BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED"
+  - UC-CALENDAR-CANCEL-PLAN
+  - BR-CALENDAR-CANCELLED-PLAN-IS-CLOSED
 verification:
-  - scenario-ref: "SB-CALENDAR-CANCEL-PLAN"
-  - scenario-ref: "SB-CALENDAR-CANCEL-CANCELLED-PLAN"
+  - scenario-ref: SB-CALENDAR-CANCEL-PLAN
+  - scenario-ref: SB-CALENDAR-CANCEL-CANCELLED-PLAN
 uses-terms:
-  - "TERM-PLAN"
+  - TERM-PLAN
 provenance:
-  source: "openspec/specs/calendar/spec.md (Event Cancellation); src/backend/DomusMind.Domain/Calendar/CalendarEvent.cs (Cancel)"
-  confidence: "high"
-  recovered-from: "documentation"
+  source: openspec/specs/calendar/spec.md (Event Cancellation); src/backend/DomusMind.Domain/Calendar/CalendarEvent.cs (Cancel)
+  confidence: high
+  recovered-from: documentation
 ---
 
 ## Requirement

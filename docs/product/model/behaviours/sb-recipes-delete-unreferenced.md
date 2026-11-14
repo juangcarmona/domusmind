@@ -2,7 +2,7 @@
 id: "SB-RECIPES-DELETE-UNREFERENCED"
 type: "structured-behaviour"
 title: "Deleting a recipe no Active plan uses removes it"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-DELETE-RECIPE"
   - "BR-RECIPES-DELETE-GUARD"

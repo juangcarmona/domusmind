@@ -2,7 +2,7 @@
 id: FR-AGENDA-INSPECT-ENTRY
 type: functional-requirement
 title: "Inspect an entry in place"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-INSPECT-ENTRY"
   - "BR-AGENDA-PROJECTION-READ-ONLY"

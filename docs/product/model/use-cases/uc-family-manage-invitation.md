@@ -2,7 +2,7 @@
 id: UC-FAMILY-MANAGE-INVITATION
 type: use-case
 title: Manage a pending access invitation
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MANAGER
 supporting-actors: []
 bounded-context: BC-FAMILY

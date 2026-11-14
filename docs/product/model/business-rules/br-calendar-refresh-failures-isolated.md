@@ -2,9 +2,7 @@
 id: BR-CALENDAR-REFRESH-FAILURES-ISOLATED
 type: business-rule
 title: "One connection's refresh failure does not block others"
-status: draft
-applies-to:
-  - "UC-CALENDAR-REFRESH-EXTERNAL-CALENDARS"
+status: active
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-SYNC"
 provenance:

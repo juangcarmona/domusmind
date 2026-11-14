@@ -2,7 +2,7 @@
 id: "TERM-MEAL-PLAN"
 type: "domain-term"
 title: "Meal Plan"
-status: "draft"
+status: "active"
 defined-in: "BC-MEAL-PLANNING"
 synonyms:
   - "MealPlan"

@@ -2,7 +2,7 @@
 id: "UC-RECIPES-UPDATE-RECIPE"
 type: "use-case"
 title: "Edit a recipe"
-status: "draft"
+status: "active"
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 supporting-actors: []
 bounded-context: "BC-MEAL-PLANNING"

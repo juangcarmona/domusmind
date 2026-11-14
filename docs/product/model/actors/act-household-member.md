@@ -2,7 +2,7 @@
 id: ACT-HOUSEHOLD-MEMBER
 type: actor
 title: Household Member
-status: draft
+status: active
 actor-kind: human
 provenance:
   source: "docs/_legacy/00_product/strategy.md (Target Audience, Value Proposition); openspec/specs/family/spec.md (Member, system access); recovery question Q-0003; interview: product owner decision Q-0023 (E-0158); interview: product owner decision Q-0024 (E-0158); interview: product owner decision Q-0025 (E-0158)"

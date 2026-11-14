@@ -2,7 +2,7 @@
 id: QR-ASSETS-SEARCH-AND-RESPONSIVENESS
 type: quality-requirement
 title: Make household assets and next actions easy to find
-status: draft
+status: active
 quality-attribute: "usability"
 applies-to:
   - JRN-ASSETS-KEEP-HOUSEHOLD-READY

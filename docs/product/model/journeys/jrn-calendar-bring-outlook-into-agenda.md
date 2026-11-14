@@ -2,7 +2,7 @@
 id: JRN-CALENDAR-BRING-OUTLOOK-INTO-AGENDA
 type: journey
 title: "Bring my Outlook calendar into my Agenda"
-status: draft
+status: active
 primary-actor: "ACT-HOUSEHOLD-MEMBER"
 steps:
   - use-case: "UC-CALENDAR-CONNECT-OUTLOOK"

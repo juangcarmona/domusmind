@@ -2,7 +2,7 @@
 id: SB-LISTS-CLEAR-TIMING
 type: structured-behaviour
 title: "Clearing timing takes an item out of the Agenda and keeps the rest"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-CLEAR-ITEM-SCHEDULE
   - BR-LISTS-AGENDA-PROJECTION

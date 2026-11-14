@@ -2,7 +2,7 @@
 id: FR-WEB-COUNTS-AND-COMPRESSED-COMPLETION
 type: functional-requirement
 title: "Show relevance counts up front and compress what is done"
-status: draft
+status: active
 derived-from:
   - "UC-LISTS-BROWSE-LISTS"
   - "UC-LISTS-OPEN-LIST"

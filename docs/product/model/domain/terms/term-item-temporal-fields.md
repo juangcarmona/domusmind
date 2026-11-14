@@ -2,7 +2,7 @@
 id: TERM-ITEM-TEMPORAL-FIELDS
 type: domain-term
 title: "Item Temporal Fields"
-status: draft
+status: active
 defined-in: BC-LISTS
 synonyms:
   - "temporal capability"

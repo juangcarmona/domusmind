@@ -2,7 +2,7 @@
 id: "TERM-RECIPE"
 type: "domain-term"
 title: "Recipe"
-status: "draft"
+status: "active"
 defined-in: "BC-MEAL-PLANNING"
 synonyms:
   - "Recipe"

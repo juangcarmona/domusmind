@@ -2,7 +2,7 @@
 id: SB-CALENDAR-CONNECT-OUTLOOK
 type: structured-behaviour
 title: "A member connects an Outlook account"
-status: draft
+status: active
 illustrates:
   - "UC-CALENDAR-CONNECT-OUTLOOK"
   - "BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS"

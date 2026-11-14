@@ -2,7 +2,7 @@
 id: "SB-RECIPES-VIEW-DETAIL"
 type: "structured-behaviour"
 title: "Viewing a recipe shows all its details and ingredients"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-VIEW-RECIPE"
 given:

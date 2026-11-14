@@ -2,9 +2,7 @@
 id: BR-LISTS-TOGGLE-PRESERVES-ITEM
 type: business-rule
 title: "Checking or unchecking an item changes only its checked state"
-status: draft
-applies-to:
-  - UC-LISTS-TOGGLE-ITEM
+status: active
 uses-terms:
   - TERM-CHECKED-ITEM
   - TERM-ITEM-TEMPORAL-FIELDS

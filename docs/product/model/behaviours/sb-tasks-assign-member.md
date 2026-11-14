@@ -2,7 +2,7 @@
 id: SB-TASKS-ASSIGN-MEMBER
 type: structured-behaviour
 title: Task assigned to a person
-status: draft
+status: active
 illustrates:
   - UC-TASKS-ASSIGN-TASK
 given:

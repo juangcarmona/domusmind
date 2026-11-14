@@ -1,31 +1,31 @@
 ---
 id: TERM-EXTERNAL-CALENDAR-SYNC
 type: domain-term
-title: "External Calendar Sync"
-status: draft
-defined-in: "BC-CALENDAR"
+title: External Calendar Sync
+status: active
+defined-in: BC-CALENDAR
 synonyms:
-  - "Synchronization"
-  - "Sync now"
-  - "Catch-up sync"
-  - "Background refresh"
-  - "Rehydration"
+  - Synchronization
+  - Sync now
+  - Catch-up sync
+  - Background refresh
+  - Rehydration
 uses-terms:
-  - "TERM-EXTERNAL-CALENDAR-CONNECTION"
-  - "TERM-EXTERNAL-CALENDAR-FEED"
-  - "TERM-SYNC-HORIZON"
-  - "TERM-EXTERNAL-CALENDAR-ENTRY"
+  - TERM-EXTERNAL-CALENDAR-CONNECTION
+  - TERM-EXTERNAL-CALENDAR-FEED
+  - TERM-SYNC-HORIZON
+  - TERM-EXTERNAL-CALENDAR-ENTRY
 provenance:
-  source: "openspec/specs/calendar/spec.md (External Calendar Synchronization, Background Feed Refresh); docs/_legacy/04_contexts/calendar.md (Sync Rule, Recovery Rule); docs/_legacy/06_interfaces/external-calendar-contract-model-catalog.md (Reason values)"
-  confidence: "high"
-  recovered-from: "documentation"
+  source: 'openspec/specs/calendar/spec.md (External Calendar Synchronization, Background Feed Refresh); docs/_legacy/04_contexts/calendar.md (Sync Rule, Recovery Rule); docs/_legacy/06_interfaces/external-calendar-contract-model-catalog.md (Reason values); product owner, 2026-11-14: "Las tres recomendadas" (CHG-STATE-MODEL-COMPLETION)'
+  confidence: high
+  recovered-from: documentation
 ---
 
 ## Definition
 
 Pulling new, updated and deleted occurrences from each selected feed of a connection, within the sync horizon. It is incremental when valid sync state exists and otherwise a fresh bounded load of the horizon (observed: calendar spec, External Calendar Synchronization).
 
-A sync happens for one of three reasons: **manual** (the person asks), **catch-up** (at sign-in, or when the person opens their Member-scope Agenda, and a connection is stale) and **scheduled** (the background refresh, hourly by default) (observed: calendar spec, Background Feed Refresh; contract-model-catalog, Reason). **Rehydration** is the fresh reload that follows a horizon change or invalid sync state (observed: calendar spec).
+A sync happens for one of three reasons: **manual** (the person asks), **catch-up** (at sign-in, or when the person opens their Member-scope Agenda, and a connection is stale) and **scheduled** (the background refresh, hourly by default) (observed: calendar spec, Background Feed Refresh; contract-model-catalog, Reason). **Rehydration** is the fresh reload that follows a horizon change or invalid sync state (observed: calendar spec). It runs within the connection's Syncing state and does not create a separate Rehydrating product state (CHG-STATE-MODEL-COMPLETION).
 
 ## Distinguish From
 

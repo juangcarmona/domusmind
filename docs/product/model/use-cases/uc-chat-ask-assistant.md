@@ -2,7 +2,7 @@
 id: UC-CHAT-ASK-ASSISTANT
 type: use-case
 title: A household member asks the Chats assistant
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 bounded-context: BC-CHATS
 governed-by:

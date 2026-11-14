@@ -2,7 +2,7 @@
 id: SB-LISTS-CLEAR-QUANTITY
 type: structured-behaviour
 title: "Clearing an item's quantity"
-status: draft
+status: active
 illustrates:
   - UC-LISTS-UPDATE-ITEM
 given:

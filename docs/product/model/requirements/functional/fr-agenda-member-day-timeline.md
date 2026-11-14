@@ -2,7 +2,7 @@
 id: FR-AGENDA-MEMBER-DAY-TIMELINE
 type: functional-requirement
 title: "Show a person's day as a timeline"
-status: draft
+status: active
 derived-from:
   - "UC-AGENDA-VIEW-MEMBER-AGENDA"
 verification:

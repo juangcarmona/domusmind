@@ -2,7 +2,7 @@
 id: SB-FAMILY-MEMBER-UPDATES-OWN-PROFILE
 type: structured-behaviour
 title: "A person updates their own profile"
-status: draft
+status: active
 illustrates:
   - UC-FAMILY-UPDATE-MEMBER-DETAILS
 given:

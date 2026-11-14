@@ -2,7 +2,7 @@
 id: UC-LISTS-UPDATE-LIST
 type: use-case
 title: "Rename or re-link a list"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS
@@ -10,6 +10,7 @@ governed-by:
   - BR-LISTS-LIST-NAME-REQUIRED
   - BR-LISTS-CONTEXT-LINKS-INFORMATIONAL
   - BR-LISTS-PLAN-LINK-DOES-NOT-PROJECT
+  - BR-LISTS-ITEM-IS-NOT-A-TASK
 uses-terms:
   - TERM-LIST
   - TERM-LIST-KIND

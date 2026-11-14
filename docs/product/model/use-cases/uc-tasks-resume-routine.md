@@ -2,7 +2,7 @@
 id: UC-TASKS-RESUME-ROUTINE
 type: use-case
 title: Resume a routine
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-TASKS

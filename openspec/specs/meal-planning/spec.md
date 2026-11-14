@@ -10,21 +10,21 @@ A meal plan represents the household's intended meals for one calendar week. Rec
 
 Meal Planning is scoped to the household — not to individual members — and is optimized for low-effort reuse over from-scratch planning.
 
-<!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:3e2d211a42325e9e719480512210f6ec9c5255f4fa647518cae3598e2bd6e835" -->
+<!-- pdac:cite id="BC-MEAL-PLANNING" digest="sha256:bb3de4faf9d7ae3434d0db4180f005236ef81bc3ab84875aaa364e97ac3e66bd" -->
 
-<!-- pdac:cite id="BR-MEALS-HOUSEHOLD-SCOPED-MEALS" digest="sha256:0b82c4ba89f1570e491171ecd6cbf6cd8b98be75e2608073314111316ae03578" -->
+<!-- pdac:cite id="BR-MEALS-HOUSEHOLD-SCOPED-MEALS" digest="sha256:ef16950ff7825bfa0a1af1d5492432640c6f8ab77987aa3bf0fd4b20ca6aaa26" -->
 
-<!-- pdac:cite id="JRN-MEALS-PLAN-THE-WEEK" digest="sha256:8a5e4f5dc8677bdcb01c98b79c3667423193e5ce5b188a870ba7340bf230c389" -->
+<!-- pdac:cite id="JRN-MEALS-PLAN-THE-WEEK" digest="sha256:1ca92afdde559b5b4dc74423673bace6d67c62a826e7474e5321f033cb15b887" -->
 
 <!-- pdac:cite id="QR-MEALS-LOW-EFFORT-PLANNING" digest="sha256:4791efc078efb88dccaddd5efad2ef16055fe6c61c8bd618f7c331bf3d0ec3da" -->
 
-<!-- pdac:cite id="TERM-MEAL-PLAN" digest="sha256:2c36b02dbd255e1ac153a444a95b6f8d7355b6e3089be3ada49cd3dad0820655" -->
+<!-- pdac:cite id="TERM-MEAL-PLAN" digest="sha256:8c7a85c9b75cec9a89206b938f18e09ff3ad0e373eef27c41e164c3068d4b886" -->
 
-<!-- pdac:cite id="TERM-RECIPE" digest="sha256:a0a6852e2fe6cc29247e1d0cf8e2159cea630e420d1f40adc5458c02a4e7fcd1" -->
+<!-- pdac:cite id="TERM-RECIPE" digest="sha256:3c619b3dae05589a60edac9f0ed0b63a78a963b1070a73cb6c4c5b76e9a570b4" -->
 
-<!-- pdac:cite id="TERM-WEEKLY-TEMPLATE" digest="sha256:156bfda95386163b06873898df7db200ef7e0f0e7baab114e37d6b0d4963d7af" -->
+<!-- pdac:cite id="TERM-WEEKLY-TEMPLATE" digest="sha256:1c5972bfe3fcdc9462f102729b7f57cc8a9ca7da47ea8d1b4511e6119d325b62" -->
 
-<!-- pdac:cite id="TERM-SHOPPING-LIST-DERIVATION" digest="sha256:b33b4e40ecae229e5851c7ba275f246ff64fe44b475d5be3d79481dcb18fd802" -->
+<!-- pdac:cite id="TERM-SHOPPING-LIST-DERIVATION" digest="sha256:a398f0ca78bcfa341bc725cf81fbc6d5aefc7023d819b0535fbfac4f59e0f07f" -->
 
 ---
 
@@ -42,25 +42,25 @@ A new meal plan is created in Draft status.
 
 Only one Active plan may exist per family per week.
 
-<!-- pdac:cite id="FR-MEALS-CREATE-PLAN" digest="sha256:2f8f41b21e548a7d878c13ae6e409668d8ac35a551021b67f7803b6a8c1696e8" -->
+<!-- pdac:cite id="FR-MEALS-CREATE-PLAN" digest="sha256:b4ea95c07c8b56290b7d3d92e67a7ebc82290e2b8bef4e5314d0a17c726b1dd5" -->
 
-<!-- pdac:cite id="UC-MEALS-CREATE-PLAN" digest="sha256:90229296d130334f0312ab047c9cde02a46b9037833d181e32f0cf220f57f52a" -->
+<!-- pdac:cite id="UC-MEALS-CREATE-PLAN" digest="sha256:66ac90fb2f2596dc8da7299347b9a99411dfe406c769f49eeb2d5a0f409b15bd" -->
 
-<!-- pdac:cite id="BR-MEALS-FULL-SLOT-GRID" digest="sha256:9284b58a711674cab442d4b027a35df1afd178ce648c47a2abf9a5627e35d3c7" -->
+<!-- pdac:cite id="BR-MEALS-FULL-SLOT-GRID" digest="sha256:9e8aba8fb1cf802ae62731e77d2aefcd1c341fc52511fa39403944e4105cea93" -->
 
-<!-- pdac:cite id="BR-MEALS-WEEK-DEFINITION" digest="sha256:e56b5b1091b3e0f23fb0a34acc76fbdbf582492ac9f97249ec2589712feef07c" -->
+<!-- pdac:cite id="BR-MEALS-WEEK-DEFINITION" digest="sha256:96e848fe098b66954584cfe940defa059796b6349c8f7ef84f13792838a783e2" -->
 
-<!-- pdac:cite id="BR-MEALS-ONE-PLAN-PER-WEEK" digest="sha256:33f78b7ccfa17bb1ce989cfe645563df04874c9652751ff9ff35af38b43980e4" -->
+<!-- pdac:cite id="BR-MEALS-ONE-PLAN-PER-WEEK" digest="sha256:79b515e0a731c9cccbf80f2561e44b2a485e421fafad348fb14da69c8af34163" -->
 
-<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:0fe85a5dcd5dc774757a21d49f082cfa1d682a691a7effd635884f893ed1a82d" -->
+<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:5fa200b2cfb67f04c6205fc17a7d4b8b1463ff75f79af75891ae8337a93c605d" -->
 
-<!-- pdac:cite id="TERM-MEAL-SLOT" digest="sha256:e1022c9568cb86661d3811030bac6e6296518e04db2b37748c98176abc39a01a" -->
+<!-- pdac:cite id="TERM-MEAL-SLOT" digest="sha256:9d2b20a39139b8f48ecd3b251fcba7a961e4004669fb2512051859cd7d9038a8" -->
 
-<!-- pdac:cite id="TERM-MEAL-TYPE" digest="sha256:f22d542a1f5beb9048900ce2c4360011043e7f8c3b16f58294387cbb56c116cc" -->
+<!-- pdac:cite id="TERM-MEAL-TYPE" digest="sha256:02ab71683e9a86620e98abdcd7109fec5a50cba3baed85d430dc84f32f3b64c3" -->
 
-<!-- pdac:cite id="SB-MEALS-CREATE-PLAN-FOR-WEEK" digest="sha256:ea84622871238a8bacb2a1a50aaee6bb1434a31f6e7784bbcc44deb29b800271" -->
+<!-- pdac:cite id="SB-MEALS-CREATE-PLAN-FOR-WEEK" digest="sha256:cdb8a8e3b9a811c32f06a2b2871448d8b464fac176dde6e9ddef21c6a9949401" -->
 
-<!-- pdac:cite id="SB-MEALS-CREATE-PLAN-EXISTING-WEEK" digest="sha256:7c71b93857cbdef272de8a00517545b64f8b668160a6ca3e4fe225bba2f38ea8" -->
+<!-- pdac:cite id="SB-MEALS-CREATE-PLAN-EXISTING-WEEK" digest="sha256:ddf128c1f5e3c1e0f407ce9d3a49e3aa6ec73372882465893e2b6ea4764b2670" -->
 
 <!-- pdac-drift ids="BR-MEALS-ONE-PLAN-PER-WEEK, FR-MEALS-CREATE-PLAN" summary="Spec limits only Active plans to one per family and week; the model allows at most one meal plan of any status per week, so a Draft and an Active plan never coexist (decided: Q-0034)" -->
 
@@ -84,19 +84,24 @@ Only one Active plan may exist per family per week.
 
 A meal plan progresses through a defined lifecycle: Draft → Active → Completed.
 
-A Draft plan is being set up. It is not yet the household's working plan for the week. An Active plan is the household's working plan for the week. A Completed plan is read-only and represents a past week.
+A Draft plan is being set up. It is not yet the household's working plan for the week. An Active plan is the household's working plan for the week. A Completed plan is a week explicitly closed by a household member and is read-only.
 
-Transition to Active must occur before the plan is treated as the household's working plan. Transition to Completed prevents all mutation.
+Activation SHALL be an explicit household action before the plan is treated as the working plan. A household member SHALL be able to choose Finish week on an Active plan to make it Completed and read-only. The calendar week ending SHALL NOT complete the plan automatically. A Completed plan SHALL NOT reopen.
 
-<!-- pdac:cite id="FR-MEALS-PLAN-LIFECYCLE" digest="sha256:3e17a946d9445ec9a37bdc8bd76127f5b7eabacbffba92e794ec0b88ab04d220" -->
+<!-- pdac:cite id="FR-MEALS-PLAN-LIFECYCLE" digest="sha256:9ec1d5d8d61d286af237b3b1654e44ae5ace5f568ec7a63aa4757678b02b2b7f" -->
+<!-- pdac:cite id="LC-MEAL-PLAN" digest="sha256:9784fc0abf30456337a94f1e1a90a26cf0681d40a53b528d27326e4c9c6adcea" -->
+<!-- pdac:cite id="UC-MEALS-COMPLETE-PLAN" digest="sha256:cdd6abb43d60048cf809ac6eb2da61b4fc8e473eb01b285de5a3de079fe494c8" -->
+<!-- pdac:cite id="SB-MEALS-COMPLETE-PLAN" digest="sha256:08951950b7877671ee1cb346b9314809f85446da13b0e2c2d2a20d933933dff4" -->
+<!-- pdac:cite id="SB-MEALS-WEEK-END-KEEPS-ACTIVE" digest="sha256:52edaef6b36ef08e15b1866eaff69269b21585f4bce42e67704a50bed3e01225" -->
+<!-- pdac:cite id="SB-MEALS-COMPLETED-PLAN-CANNOT-REOPEN" digest="sha256:f6f7e44250fdd98460c8f86d009a5c8188c5ef80e0ba4f55bd9eef9503387bcb" -->
 
-<!-- pdac:cite id="UC-MEALS-PROMOTE-PLAN" digest="sha256:cd089a6ab40e0e2f21f77d12dc706f62787ec58ecd4dee1947683a8c95258d7a" -->
+<!-- pdac:cite id="UC-MEALS-PROMOTE-PLAN" digest="sha256:b26eecfdff35bb0f581dd955e0960ccc97969c86f451c03d7779b57679eb3c1d" -->
 
-<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:0fe85a5dcd5dc774757a21d49f082cfa1d682a691a7effd635884f893ed1a82d" -->
+<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:5fa200b2cfb67f04c6205fc17a7d4b8b1463ff75f79af75891ae8337a93c605d" -->
 
-<!-- pdac:cite id="TERM-MEAL-PLAN-STATUS" digest="sha256:c2ccc55684994f91de79b4de0675ac21b7feb923fe92f5477780c1d4ffcf2f05" -->
+<!-- pdac:cite id="TERM-MEAL-PLAN-STATUS" digest="sha256:cfa9f2bb625b6ebbccae3befb45dedc39166e7ad295a4914fe33b24607f9e7f6" -->
 
-<!-- pdac:cite id="SB-MEALS-PROMOTE-TO-ACTIVE" digest="sha256:23323c98b838fe88998219eba385bfbb5573244a0663a28f5c9d859871babb27" -->
+<!-- pdac:cite id="SB-MEALS-PROMOTE-TO-ACTIVE" digest="sha256:00c29e33224aa20f29bfdcd053e2d751e458c2e1a7c741aa72b3d7fbc6574282" -->
 
 #### Scenario: Plan is promoted from Draft to Active
 
@@ -104,6 +109,26 @@ Transition to Active must occur before the plan is treated as the household's wo
 - WHEN the household promotes it to Active
 - THEN the plan becomes the Active plan for that family and week
 - AND no other Active plan may exist for the same family and week
+
+#### Scenario: Member finishes a meal-planning week
+
+- GIVEN a household member can access an Active meal plan
+- WHEN the member chooses Finish week
+- THEN the plan becomes Completed
+- AND its content remains available as read-only history
+
+#### Scenario: Week ending does not complete a plan
+
+- GIVEN a meal plan is Active and no member has chosen Finish week
+- WHEN the calendar week ends
+- THEN the plan remains Active
+
+#### Scenario: Completed plan cannot reopen
+
+- GIVEN a meal plan is Completed
+- WHEN a member attempts to reopen it
+- THEN the request is refused
+- AND the plan remains Completed and read-only
 
 ---
 
@@ -123,31 +148,32 @@ Each slot may also carry optional notes, an `isOptional` flag (non-binding meal,
 
 Slot structure is fixed at plan creation. This operation updates content only, not structure.
 
-<!-- pdac:cite id="FR-MEALS-SLOT-ASSIGNMENT" digest="sha256:bdd7b16540e780306ee6d7a6787ee483f0b7d4ae2a781b473fc1847d91edf487" -->
+<!-- pdac:cite id="FR-MEALS-SLOT-ASSIGNMENT" digest="sha256:7c02ee787691996b2cafed0e60c636487f906536247d3f5960e2beb8c18d786b" -->
 
-<!-- pdac:cite id="UC-MEALS-UPDATE-SLOT" digest="sha256:717756771462a30e271a209fda42ebbdbad3244f7544420f05079851a42bd301" -->
+<!-- pdac:cite id="UC-MEALS-UPDATE-SLOT" digest="sha256:a659fa4c170ec938919501335736ec5ea87ea35c81cc207d793db62e5a6c9d74" -->
 
-<!-- pdac:cite id="BR-MEALS-LOCKED-SLOT" digest="sha256:679838c99e1dd8907940112c9a2d2655c6a48c798f85e6bcc858a429f1309879" -->
+<!-- pdac:cite id="BR-MEALS-LOCKED-SLOT" digest="sha256:42078088f75a852c312c635a114bdd36a4a8f9dd99ebc945abb6eee2412f3cfd" -->
 
-<!-- pdac:cite id="BR-MEALS-SLOT-SOURCE-CONSISTENCY" digest="sha256:03a34f37b2869c29bd8b77693533f108cf4583a5307698f03a8306b85bf4df42" -->
+<!-- pdac:cite id="BR-MEALS-SLOT-SOURCE-CONSISTENCY" digest="sha256:01a7eacd0c659a25a57c818911d9f22659e7431a262a8d271ecca389033516ad" -->
 
-<!-- pdac:cite id="BR-MEALS-FULL-SLOT-GRID" digest="sha256:9284b58a711674cab442d4b027a35df1afd178ce648c47a2abf9a5627e35d3c7" -->
+<!-- pdac:cite id="BR-MEALS-FULL-SLOT-GRID" digest="sha256:9e8aba8fb1cf802ae62731e77d2aefcd1c341fc52511fa39403944e4105cea93" -->
 
-<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:0fe85a5dcd5dc774757a21d49f082cfa1d682a691a7effd635884f893ed1a82d" -->
+<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:5fa200b2cfb67f04c6205fc17a7d4b8b1463ff75f79af75891ae8337a93c605d" -->
 
-<!-- pdac:cite id="TERM-MEAL-SLOT" digest="sha256:e1022c9568cb86661d3811030bac6e6296518e04db2b37748c98176abc39a01a" -->
+<!-- pdac:cite id="TERM-MEAL-SLOT" digest="sha256:9d2b20a39139b8f48ecd3b251fcba7a961e4004669fb2512051859cd7d9038a8" -->
 
-<!-- pdac:cite id="TERM-MEAL-SOURCE" digest="sha256:7656aa69693865849d0cc5d725175254399d26175a51c72d983e3ddfbaf0657c" -->
+<!-- pdac:cite id="TERM-MEAL-SOURCE" digest="sha256:56aae694f8d61a548820236be6b3ad413dfd25881d95ca3a9fb37465c74794a7" -->
 
-<!-- pdac:cite id="SB-MEALS-ASSIGN-RECIPE-TO-SLOT" digest="sha256:032e468fc5297acb1121b41068358e535a7a18b47f0fbab049861bbc97832b50" -->
+<!-- pdac:cite id="SB-MEALS-ASSIGN-RECIPE-DRAFT" digest="sha256:3507447df3332c09a80b1f84599da4cb8d954bf2d6119d45db76ed876bb9e606" -->
+<!-- pdac:cite id="SB-MEALS-ASSIGN-RECIPE-ACTIVE" digest="sha256:5dabd0c7cbd087636db467f44c2ec264d5633513a8b47d41617478bf31a2bbc6" -->
 
-<!-- pdac:cite id="SB-MEALS-CLEAR-SLOT" digest="sha256:9ab179639c7385b523ae8562492d3d87488993e4500faefbee15f608491d2b49" -->
+<!-- pdac:cite id="SB-MEALS-CLEAR-SLOT" digest="sha256:d98aa580c0172fd881adb4cd60f116bc6f71bf115a0d043e156e600226d7fc4b" -->
 
-<!-- pdac:cite id="SB-MEALS-LOCKED-SLOT-REJECTED" digest="sha256:1c8460ad00e627f29831b3551f6b2548cffe9458209cebc46ca25a730aa1b93a" -->
+<!-- pdac:cite id="SB-MEALS-LOCKED-SLOT-REJECTED" digest="sha256:1dfe17e272d3c09200f41ccab0e6bf219c3e770ef7232c987e9f927643e8fc4c" -->
 
-<!-- pdac:cite id="SB-MEALS-UNLOCK-AND-CHANGE-SLOT" digest="sha256:d671d74a5abd011a69c732a2af6434f448ee76302b9953b2110d51ab37e6db9f" -->
+<!-- pdac:cite id="SB-MEALS-UNLOCK-AND-CHANGE-SLOT" digest="sha256:fd3d0381f1f1d61e63e257240f436d852cc75a7e9a41b3b5785a4919fbce5f24" -->
 
-<!-- pdac:cite id="SB-MEALS-COMPLETED-PLAN-REJECTS-CHANGE" digest="sha256:748b452ae3bcdd5e414ec9507ce1658d18855f7f9a084b8123b5bb9831c396c1" -->
+<!-- pdac:cite id="SB-MEALS-COMPLETED-PLAN-REJECTS-CHANGE" digest="sha256:0921f8b53e4f37e808c5b7afa96cd591ade940a41097e5f654dba0cd4e82a4b4" -->
 
 #### Scenario: Household assigns a recipe to a slot
 
@@ -195,15 +221,15 @@ The response includes all 35 slots in day-then-meal-type order, including Unplan
 
 The plan may be retrieved by plan identifier or by family + week start.
 
-<!-- pdac:cite id="FR-MEALS-VIEW-PLAN" digest="sha256:48a9c335929f16e463648cb2d7c6614ac4bea9d8787546a45f5ae54419fa7182" -->
+<!-- pdac:cite id="FR-MEALS-VIEW-PLAN" digest="sha256:e5cc4ed01313a4b447c75dd5ced3068f866ec6b6187aecf21a0beb19222cd404" -->
 
-<!-- pdac:cite id="UC-MEALS-VIEW-PLAN" digest="sha256:84705ec7d88371f7bec6fe27e892952749481a0a4c2558f90bd5fa8dd9ee800c" -->
+<!-- pdac:cite id="UC-MEALS-VIEW-PLAN" digest="sha256:3ef4f20651e6ffa416f797c98f3ed02aa81698cf7921d3102f4feaa6f347959b" -->
 
-<!-- pdac:cite id="BR-MEALS-MEAL-TYPE-ORDER" digest="sha256:95b12cbd508b2e4794aec496141af92f6a7e858840436b249bce0dec118276a9" -->
+<!-- pdac:cite id="BR-MEALS-MEAL-TYPE-ORDER" digest="sha256:9d61e77141750d98778a1c4f1abafbd707dc0787c27148cedb24b5d2b0a2a429" -->
 
-<!-- pdac:cite id="SB-MEALS-VIEW-WEEK-ORDERED" digest="sha256:ba847ad6166aaef57f1e483bee2e2822560dd7e9b75f1104c20c1924366aa7be" -->
+<!-- pdac:cite id="SB-MEALS-VIEW-WEEK-ORDERED" digest="sha256:568230584a7dabd3640ba2eb7131d1fcf37fda3d12c53011d9136d475eb8bb18" -->
 
-<!-- pdac:cite id="SB-MEALS-VIEW-RECIPE-SLOT-DETAILS" digest="sha256:9f9c04d90b99a8b2acec8a8a8bd45c36da7149dfc2ad2cc4b56ea524731b6a40" -->
+<!-- pdac:cite id="SB-MEALS-VIEW-RECIPE-SLOT-DETAILS" digest="sha256:fdeefa683b681a069d124ef05223f9730f017fde1d62ea5c8e6b34f469ec85ac" -->
 
 #### Scenario: Household views the current week's meal plan
 
@@ -232,43 +258,43 @@ A recipe may not be deleted if it is currently referenced by any active meal pla
 
 Recipes may be updated after creation; ingredients can be added or modified.
 
-<!-- pdac:cite id="FR-RECIPES-LIBRARY" digest="sha256:702c8c7996f89cc2fd0f678d4a163db664aae0ca384e742133ad8cdd9001bcfc" -->
+<!-- pdac:cite id="FR-RECIPES-LIBRARY" digest="sha256:1340dae095e80b3c9ea2f47bb1780af2e6ae2acbd28baeb5750cd532bd02d34d" -->
 
-<!-- pdac:cite id="UC-RECIPES-CREATE-RECIPE" digest="sha256:c9aba5e8213215812c9767138d04130ab2fa2875d493c7a72f060f8cbd2b6e35" -->
+<!-- pdac:cite id="UC-RECIPES-CREATE-RECIPE" digest="sha256:b1982c4e6063006dac46caf79a882dbb237450836e34795ea7dd1751b8ce02a8" -->
 
-<!-- pdac:cite id="UC-RECIPES-BROWSE-LIBRARY" digest="sha256:457336010457babd21f0b02fee26cef2f00e543726236d9e802629ed8f98833f" -->
+<!-- pdac:cite id="UC-RECIPES-BROWSE-LIBRARY" digest="sha256:fbcff790cf18adf9b802721d066aafff3e01dcd239d62fb5ff197f8e629837e9" -->
 
-<!-- pdac:cite id="BR-RECIPES-NAME-UNIQUE" digest="sha256:566fe524fa65c59602ade22e42e52cf55d27b6682382bf6c92db1e86f0710150" -->
+<!-- pdac:cite id="BR-RECIPES-NAME-UNIQUE" digest="sha256:54fe88bd63ffb8100bf3dbb97bf05c0275a1dfcc89645b9659c013783a93e7a8" -->
 
-<!-- pdac:cite id="BR-RECIPES-INGREDIENT-NAME-UNIQUE" digest="sha256:e2c4c7915e08a7cd51d1c20b7af3bb4776ead0f8073329d3856d0724f9e7e7f1" -->
+<!-- pdac:cite id="BR-RECIPES-INGREDIENT-NAME-UNIQUE" digest="sha256:49bf51a252a84807602bd53fcbbe8754840772a71957f7108738501f3cc4e0a0" -->
 
-<!-- pdac:cite id="BR-RECIPES-TOTAL-TIME" digest="sha256:077e3fa243bd6ee0b3f2495bcd15b8321145f05a98359628b0716a7e2a8d3340" -->
+<!-- pdac:cite id="BR-RECIPES-TOTAL-TIME" digest="sha256:6a507e94619fa4a98cb67c168864e0acf6e037852123b0283d56a0b350766ff1" -->
 
-<!-- pdac:cite id="BR-RECIPES-ALLOWED-MEAL-TYPES" digest="sha256:4b2522790207b70224c50687e2a59dc8261512ae7154781dfcf7185f2986f20f" -->
+<!-- pdac:cite id="BR-RECIPES-ALLOWED-MEAL-TYPES" digest="sha256:d5576dfc67764576f0e2d0f681e4c56655eb6be09ff5e5ed95b3c1fc87241f3a" -->
 
-<!-- pdac:cite id="FR-RECIPES-DELETE" digest="sha256:cb195db1bf181dfd62617a60604b4438d2ea9d476d78dbb62fe8c68fc96089a6" -->
+<!-- pdac:cite id="FR-RECIPES-DELETE" digest="sha256:7ad724d99da2ba8bd340eedddcf5d47e338caef5ccfecbf0a3628252da8e6015" -->
 
-<!-- pdac:cite id="UC-RECIPES-DELETE-RECIPE" digest="sha256:b9dabcfacb713eefa11031b17c4992a5eb43a220c2eae3662a9b5bb96de11a85" -->
+<!-- pdac:cite id="UC-RECIPES-DELETE-RECIPE" digest="sha256:47bb5bbb4aaa4ff7c6a788ca533d974aa3fa9561177752b8ca6dfc7c55ff8b56" -->
 
-<!-- pdac:cite id="BR-RECIPES-DELETE-GUARD" digest="sha256:974103e77810c33d6bd1ecae8266284a454470810f64eb426758fbcda52b8e89" -->
+<!-- pdac:cite id="BR-RECIPES-DELETE-GUARD" digest="sha256:2e15467fd305be37d291774e1e09606ef41448d1713b4f98d5ff2cbce2ada86e" -->
 
-<!-- pdac:cite id="FR-RECIPES-UPDATE" digest="sha256:b9a2910eede27b053d5a6ef69a9353774eca4f2410fadc76647c818b50d12fbd" -->
+<!-- pdac:cite id="FR-RECIPES-UPDATE" digest="sha256:beed777fe2618300d42fcb98eb5e6193fc8c62aa1e05a00957e43ed27ed57d83" -->
 
-<!-- pdac:cite id="UC-RECIPES-UPDATE-RECIPE" digest="sha256:6825e998420a1234fc86e999215f082e17c4796a7ea709d40d20818b02b0a8bd" -->
+<!-- pdac:cite id="UC-RECIPES-UPDATE-RECIPE" digest="sha256:0fb0ec3cf0b3ef1ad1159d45b722e6be18e00d694f7290a93b9a29f5a26c27f5" -->
 
-<!-- pdac:cite id="FR-RECIPES-INGREDIENTS" digest="sha256:7059e97cd2eeaaf68396610bb1f2b4c6a382615c1491df62a94506dce8e70a71" -->
+<!-- pdac:cite id="FR-RECIPES-INGREDIENTS" digest="sha256:82e9ab23dc511501d2a8f51222e43dc395c8f99365dd238e91dabebae50b745b" -->
 
-<!-- pdac:cite id="UC-RECIPES-MANAGE-INGREDIENTS" digest="sha256:e46fd68c79fa8d3e690b955ba261bc0853f23fa28a9ae42853f1017faf7fb9cd" -->
+<!-- pdac:cite id="UC-RECIPES-MANAGE-INGREDIENTS" digest="sha256:1aa4b2786d2d9f085881e2c21e1b3622f14f13f9ea52a1813f0a93e319712f00" -->
 
-<!-- pdac:cite id="TERM-RECIPE" digest="sha256:a0a6852e2fe6cc29247e1d0cf8e2159cea630e420d1f40adc5458c02a4e7fcd1" -->
+<!-- pdac:cite id="TERM-RECIPE" digest="sha256:3c619b3dae05589a60edac9f0ed0b63a78a963b1070a73cb6c4c5b76e9a570b4" -->
 
-<!-- pdac:cite id="TERM-INGREDIENT" digest="sha256:856986e747f9963a266837a7aced64b419cb5e0e31b02af7503dcd6785aecbe5" -->
+<!-- pdac:cite id="TERM-INGREDIENT" digest="sha256:e70048c508c2ac43cbd9797dc538c97f9240f658fc0cffcd73c937c64c1586d8" -->
 
-<!-- pdac:cite id="SB-RECIPES-ADD-TO-LIBRARY" digest="sha256:996027c711dbc9b8672ea360f56f03685cdee2486d8f76b2ac57e756a75f6abb" -->
+<!-- pdac:cite id="SB-RECIPES-ADD-TO-LIBRARY" digest="sha256:f02f677488f7b736528b92f93c5e40a54e38d6ade8505ae78324eb1f3791ed04" -->
 
-<!-- pdac:cite id="SB-RECIPES-DUPLICATE-NAME-REJECTED" digest="sha256:93b9280f5809d13a6db3abc8c9c0926093f881c3b335733479ae11f28d0ae3bb" -->
+<!-- pdac:cite id="SB-RECIPES-DUPLICATE-NAME-REJECTED" digest="sha256:7ce386f0fa1bf75160900e054f7400b4009413d1207a94052909f4042b93592a" -->
 
-<!-- pdac:cite id="SB-RECIPES-RESTRICTED-MEAL-TYPE-HIDDEN" digest="sha256:9b4c3469f79df26d76e65bff3e37928f17658561178468cfd92c5017edaf4653" -->
+<!-- pdac:cite id="SB-RECIPES-RESTRICTED-MEAL-TYPE-HIDDEN" digest="sha256:5722d8a4be68d567d3d6e61116b25eb872ae1b469a58676624eddb0fe5a387e6" -->
 
 #### Scenario: Household adds a recipe to the library
 
@@ -300,19 +326,19 @@ A weekly template captures a set of slot assignments (day + meal type combinatio
 
 Templates may be updated after creation; slot assignments can be added or modified.
 
-<!-- pdac:cite id="FR-MEALS-WEEKLY-TEMPLATES" digest="sha256:3f289e4c8bceb3b2d6f20572c5c40559ec350888e2f1a582ab378ec1ce95bf32" -->
+<!-- pdac:cite id="FR-MEALS-WEEKLY-TEMPLATES" digest="sha256:2eba7b562fe2c1e7c81c462a0a3279f0bf8becd39cb4f147516761100f64dece" -->
 
-<!-- pdac:cite id="UC-MEALS-CREATE-TEMPLATE" digest="sha256:fde61ac64d4360498beb08890137a72cda38af8c08813c1bfc700021fffc943a" -->
+<!-- pdac:cite id="UC-MEALS-CREATE-TEMPLATE" digest="sha256:a815c4bccb4dbc71768fb42f3b5cac822eda8cc8ceb42580d152f01364c5d068" -->
 
 <!-- pdac:cite id="UC-MEALS-UPDATE-TEMPLATE" digest="sha256:581e4601dd6ad2ad141fc08f86be5e68e97e87d62c79067db2c4b08994e20fa1" -->
 
-<!-- pdac:cite id="BR-MEALS-TEMPLATE-NAME-UNIQUE" digest="sha256:971364e46b10d13f7a261b28d94dc71be2a70b5de50d084246a959414f39a75f" -->
+<!-- pdac:cite id="BR-MEALS-TEMPLATE-NAME-UNIQUE" digest="sha256:80e26b29a89dc804d1fa24bfd2d2c6a7a8a661ba3dbafd314aaaec18917f8d90" -->
 
-<!-- pdac:cite id="TERM-WEEKLY-TEMPLATE" digest="sha256:156bfda95386163b06873898df7db200ef7e0f0e7baab114e37d6b0d4963d7af" -->
+<!-- pdac:cite id="TERM-WEEKLY-TEMPLATE" digest="sha256:1c5972bfe3fcdc9462f102729b7f57cc8a9ca7da47ea8d1b4511e6119d325b62" -->
 
-<!-- pdac:cite id="SB-MEALS-CREATE-TEMPLATE" digest="sha256:8a24875c2fd4a6d21fcafd244f254009b113f362a99dda75651e93f08d8b72c7" -->
+<!-- pdac:cite id="SB-MEALS-CREATE-TEMPLATE" digest="sha256:b098dd5c4e44ec2e6efba492a27e9cc9723812f7f2fc43427da59a06690bfae7" -->
 
-<!-- pdac:cite id="SB-MEALS-TEMPLATE-DUPLICATE-NAME-REJECTED" digest="sha256:7917eb781000d9d22b45ce38d5bb526e613c3a2194e514afa8d82c8ce8e4a482" -->
+<!-- pdac:cite id="SB-MEALS-TEMPLATE-DUPLICATE-NAME-REJECTED" digest="sha256:d59adc6867efd50812a1f3a854803a323103fed1cdf9ed6a4511afa6f1acc751" -->
 
 #### Scenario: Household creates a weekly template
 
@@ -341,19 +367,19 @@ If a plan already exists for the target week, the existing plan is returned and 
 
 After a template is applied, individual slots may still be modified.
 
-<!-- pdac:cite id="FR-MEALS-APPLY-TEMPLATE" digest="sha256:dd0cf3384f7b3f143fd0b5a0917b8c3b9e44726ec441a21ec4e40cbc13b893c7" -->
+<!-- pdac:cite id="FR-MEALS-APPLY-TEMPLATE" digest="sha256:bd1bff7939cc76096b2e6a88d0364fe00ea1e877ac55e8909033abd163b49597" -->
 
-<!-- pdac:cite id="UC-MEALS-APPLY-TEMPLATE" digest="sha256:4e52ed74581ae767a0cd1e482b0fd72e47135573e27809473fd8cbc0a08e4d73" -->
+<!-- pdac:cite id="UC-MEALS-APPLY-TEMPLATE" digest="sha256:2d62181e6fc6fe0dedc0d942713adf63104020c991ef3db8b32acc114d53ce66" -->
 
-<!-- pdac:cite id="BR-MEALS-TEMPLATE-SNAPSHOT" digest="sha256:51758a705775463e55f2847c9f201e4db76c34bf5794e3d7d3ac1a006b31f058" -->
+<!-- pdac:cite id="BR-MEALS-TEMPLATE-SNAPSHOT" digest="sha256:796a58fc2dbc6b961509b790f8c39fdd2fa9062d5844b804f99e054ff2466639" -->
 
-<!-- pdac:cite id="BR-MEALS-ONE-PLAN-PER-WEEK" digest="sha256:33f78b7ccfa17bb1ce989cfe645563df04874c9652751ff9ff35af38b43980e4" -->
+<!-- pdac:cite id="BR-MEALS-ONE-PLAN-PER-WEEK" digest="sha256:79b515e0a731c9cccbf80f2561e44b2a485e421fafad348fb14da69c8af34163" -->
 
-<!-- pdac:cite id="SB-MEALS-APPLY-TEMPLATE-EMPTY-WEEK" digest="sha256:cb8f93dfacaff4b5b16e00c3d5e6231e974153be59e93a50e51605bac3a26812" -->
+<!-- pdac:cite id="SB-MEALS-APPLY-TEMPLATE-EMPTY-WEEK" digest="sha256:60cfa7964f9a06a5898414ac9de2eb95c146f1bb44397b58c26e3fa980dfa45c" -->
 
-<!-- pdac:cite id="SB-MEALS-APPLY-TEMPLATE-DELETED-RECIPE" digest="sha256:07500678227787c1cb7ddd1c9ab8c9ca03d7dc8b441fd5fdd70473b6c14e5a2b" -->
+<!-- pdac:cite id="SB-MEALS-APPLY-TEMPLATE-DELETED-RECIPE" digest="sha256:28262f1a33526ec57c83279b5c9e40104afa0e8966855980e1d295cd16edf5d1" -->
 
-<!-- pdac:cite id="SB-MEALS-APPLY-TEMPLATE-EXISTING-WEEK" digest="sha256:77e899378f73c5d3a120c7b2a99f6f8d90b91bce07a468f4971632bc0ecdeebf" -->
+<!-- pdac:cite id="SB-MEALS-APPLY-TEMPLATE-EXISTING-WEEK" digest="sha256:ad2d3e00904d05e58fc37d3489f927009b424dd3713089a323acbf2ce739a1ea" -->
 
 #### Scenario: Household applies a template to an empty week
 
@@ -390,17 +416,17 @@ If no source plan exists for the preceding week, the operation returns a recover
 
 This operation is distinct from applying a template. Templates are named, reusable patterns; copy-from-week is ad-hoc reuse.
 
-<!-- pdac:cite id="FR-MEALS-COPY-PREVIOUS-WEEK" digest="sha256:033b3430be56c3c1f4e147ba355d3f64847d5ec0efd7b5d3ca0c2816cce697bb" -->
+<!-- pdac:cite id="FR-MEALS-COPY-PREVIOUS-WEEK" digest="sha256:74b8f1780a8074d9b9b7ece1f173baeea40d5271577fd12b92eb5b34ae71bab6" -->
 
-<!-- pdac:cite id="UC-MEALS-COPY-PREVIOUS-WEEK" digest="sha256:de1df289dda02ed7e59d0207cd8bb128c726ac8bb367dbd3d356e6c779edce55" -->
+<!-- pdac:cite id="UC-MEALS-COPY-PREVIOUS-WEEK" digest="sha256:1afa37619a41616c6389f594c9cb4364ff6e6bdacc7c5744d3e15fbc0ae62ec6" -->
 
-<!-- pdac:cite id="BR-MEALS-COPY-EXCLUDES-SHOPPING-LIST" digest="sha256:468c20678fbd91cbd71882086f740dc5d5295a7f81c568e0d90cadc1475423d2" -->
+<!-- pdac:cite id="BR-MEALS-COPY-EXCLUDES-SHOPPING-LIST" digest="sha256:cbba531e4d36c7e9ce8717af57727391a51c6ae791eef0959b3a43e95afbe036" -->
 
-<!-- pdac:cite id="BR-MEALS-ONE-PLAN-PER-WEEK" digest="sha256:33f78b7ccfa17bb1ce989cfe645563df04874c9652751ff9ff35af38b43980e4" -->
+<!-- pdac:cite id="BR-MEALS-ONE-PLAN-PER-WEEK" digest="sha256:79b515e0a731c9cccbf80f2561e44b2a485e421fafad348fb14da69c8af34163" -->
 
-<!-- pdac:cite id="SB-MEALS-COPY-PREVIOUS-WEEK" digest="sha256:41cb2816f1ac59fc130f9c885b9f2110d1a0e61bc6381dbc4ba700eca1575332" -->
+<!-- pdac:cite id="SB-MEALS-COPY-PREVIOUS-WEEK" digest="sha256:6b66af89bc9d08aec95c5a2191cf81d11aae9e7c7313d70b477f4750cbbad269" -->
 
-<!-- pdac:cite id="SB-MEALS-COPY-NO-PREVIOUS-PLAN" digest="sha256:3233c22157a745903d9aa3409ffe8289f436622e98047779293516579a0caa0c" -->
+<!-- pdac:cite id="SB-MEALS-COPY-NO-PREVIOUS-PLAN" digest="sha256:2664cab7e6941b3671f4baae2347617a20428b02f30f5c5b7dcff1e5b101d661" -->
 
 #### Scenario: Household copies the previous week's plan
 
@@ -432,23 +458,23 @@ The resulting shopping list is a first-class List in the Lists context. Meal Pla
 
 At least one Recipe-type slot must be assigned in the plan for derivation to proceed.
 
-<!-- pdac:cite id="FR-MEALS-SHOPPING-LIST-DERIVATION" digest="sha256:bb9dc8626edf5e2bca7ec7a3d6de5d6d06eba9856b28540ee7b09f50c9ca1030" -->
+<!-- pdac:cite id="FR-MEALS-SHOPPING-LIST-DERIVATION" digest="sha256:b80be8ac1ed40f2e58ff5d426c5fcdff0c93c3826ffc5907d595f6349287635b" -->
 
-<!-- pdac:cite id="UC-MEALS-DERIVE-SHOPPING-LIST" digest="sha256:725ca067d0627c4778a7b2255e912140d1b0a676e6d7c38b5230b4bb5a5a8515" -->
+<!-- pdac:cite id="UC-MEALS-DERIVE-SHOPPING-LIST" digest="sha256:303aa9be7ed639ffbf4f8e4d202984c84439d3ddc61c1facc3c10a00f5bafc7f" -->
 
-<!-- pdac:cite id="BR-MEALS-SHOPPING-LIST-REQUIRES-RECIPE" digest="sha256:70c83fa014c2bb4eac1481cd105c3ca00d9f8c07e1b79d70d18907c0f4dad97e" -->
+<!-- pdac:cite id="BR-MEALS-SHOPPING-LIST-REQUIRES-RECIPE" digest="sha256:f3fe88b6db2c19f271054f44d9a3b59b72294f96d60393aac13e36a996c2f9b8" -->
 
-<!-- pdac:cite id="BR-MEALS-SHOPPING-LIST-CONSOLIDATION" digest="sha256:18621048d247b368f03bd298723acce625e2abe5798623b6f1de9f9b9b619873" -->
+<!-- pdac:cite id="BR-MEALS-SHOPPING-LIST-CONSOLIDATION" digest="sha256:f0adea452cccbb8dce850f9bb2466376978361834fb832ee97668e8b8f772c8f" -->
 
-<!-- pdac:cite id="BR-MEALS-SHOPPING-LIST-NEW-EACH-TIME" digest="sha256:66bbb87ee56438054657395a8491fb49c3b1c8b4ded3b5451c8c3933b50f08e1" -->
+<!-- pdac:cite id="BR-MEALS-SHOPPING-LIST-NEW-EACH-TIME" digest="sha256:8799a109481010d97e95891dd9e7e523839db1adc0b59770f05f44bd40b7ac70" -->
 
-<!-- pdac:cite id="TERM-SHOPPING-LIST-DERIVATION" digest="sha256:b33b4e40ecae229e5851c7ba275f246ff64fe44b475d5be3d79481dcb18fd802" -->
+<!-- pdac:cite id="TERM-SHOPPING-LIST-DERIVATION" digest="sha256:a398f0ca78bcfa341bc725cf81fbc6d5aefc7023d819b0535fbfac4f59e0f07f" -->
 
-<!-- pdac:cite id="SB-MEALS-SHOPPING-LIST-FROM-PLAN" digest="sha256:5fce46ba76e46703b9a8bcabc3d66937592ea41ce29587ea458cbbdccc04d8cc" -->
+<!-- pdac:cite id="SB-MEALS-SHOPPING-LIST-FROM-PLAN" digest="sha256:e2d159d0fbbc1552242ef9913ddbd004ebd136a6b122a05bcfe8f35a1d35518a" -->
 
-<!-- pdac:cite id="SB-MEALS-SHOPPING-LIST-RE-REQUEST" digest="sha256:f01e18c9d385300d401d3b464de0cdd2311bdeefe93e0050a54916fc1f2ea2ad" -->
+<!-- pdac:cite id="SB-MEALS-SHOPPING-LIST-RE-REQUEST" digest="sha256:156cfd06d47fc2b2946bb88004b230ba889d7f2408aeeea7433f0fd192e9195f" -->
 
-<!-- pdac:cite id="SB-MEALS-SHOPPING-LIST-NO-RECIPES" digest="sha256:37af68c42dee3dec4e79b5d9a0faa59b3db3224b3f34be35ec8c871a3d787a42" -->
+<!-- pdac:cite id="SB-MEALS-SHOPPING-LIST-NO-RECIPES" digest="sha256:894109c2d98337fa2ba7d2d0213dcb89382fc6bfc60b897fe938054eae4ee329" -->
 
 #### Scenario: Household requests a shopping list from an active plan
 
@@ -481,17 +507,17 @@ Meal slots project into the Agenda surface as non-timed household-level entries.
 
 Slots with `mealSourceType = Unplanned` and no notes are not projected. Projected slots are read-only in the Agenda — editing occurs only in the Meal Planning surface.
 
-<!-- pdac:cite id="FR-MEALS-AGENDA-PROJECTION" digest="sha256:14542a51f00845c388cd4e159f50674eca6d349656eacac4935fa63b064cd244" -->
+<!-- pdac:cite id="FR-MEALS-AGENDA-PROJECTION" digest="sha256:c647b93ceb2e80493b6ea0d5df2ab49ac174e5623a111df1a57cf0e03633561c" -->
 
-<!-- pdac:cite id="UC-MEALS-SEE-MEALS-IN-AGENDA" digest="sha256:818716e263b257f7532b94022abf4464ddf4fe54e02b4e9e95de01b5d73ac668" -->
+<!-- pdac:cite id="UC-MEALS-SEE-MEALS-IN-AGENDA" digest="sha256:08bdb9e168b619bde9e0966da74899d2f183db8ae80f1ee965546224c112d3d9" -->
 
-<!-- pdac:cite id="BR-MEALS-AGENDA-PROJECTION" digest="sha256:1b3f980477d116ba46ef6addf9e8a1b6aaeeefe5de1560bb9097a092c6b6aa6d" -->
+<!-- pdac:cite id="BR-MEALS-AGENDA-PROJECTION" digest="sha256:fecf2e8fbd7fdf7674ba5f7d8870727b2d53f87d2da15c73e0bed19ffb4af998" -->
 
-<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:652b5a6581672dfbabf8e5da42d010cc34d51bbcbf5b2bc73fac9273bb631337" -->
+<!-- pdac:cite id="BR-AGENDA-PROJECTION-READ-ONLY" digest="sha256:a3c72a044c52c99808fa103720f30e8737d55fc1f7c9b6d7cc78e56c7539359c" -->
 
-<!-- pdac:cite id="SB-MEALS-AGENDA-SHOWS-ASSIGNED-MEAL" digest="sha256:924a7853fae063e0f6713b40a2f463060e02971c1a2e1d696a7189d5161879bc" -->
+<!-- pdac:cite id="SB-MEALS-AGENDA-SHOWS-ASSIGNED-MEAL" digest="sha256:a40268ca794a6a5d985fec6059d791c737a26fe70c48296e704d6ebe00a429d9" -->
 
-<!-- pdac:cite id="SB-MEALS-AGENDA-HIDES-EMPTY-SLOT" digest="sha256:0571354f6d33fda0a0c17ce28e02892fd8e5bf0fd4f97cff7cf952815fe7e0df" -->
+<!-- pdac:cite id="SB-MEALS-AGENDA-HIDES-EMPTY-SLOT" digest="sha256:166d44d656e04d272674ff758073da6fbbcbcb60a625daa7d67a2c863e3efef6" -->
 
 #### Scenario: Assigned meal slot appears in the Agenda
 
@@ -510,19 +536,17 @@ Slots with `mealSourceType = Unplanned` and no notes are not projected. Projecte
 
 ## Notes
 
-### Ambiguity: Active plan promotion timing
+### Resolved: Explicit activation
 
-The context document states a plan may be promoted to Active "explicitly, or automatically when the week begins." The automatic promotion rule is marked as TBD. The current spec treats promotion as explicit only.
-
-<!-- pdac-drift ids="BR-MEALS-PLAN-LIFECYCLE, FR-MEALS-PLAN-LIFECYCLE, UC-MEALS-PROMOTE-PLAN" summary="Note keeps automatic promotion when the week begins as an open TBD; the model decided activation is an explicit household action only and automatic promotion is not current product (decided: Q-0033)" -->
+Activation is an explicit household action under Q-0033. A calendar week boundary does not activate a Draft plan.
 
 ### Resolved: Mutation on Draft vs. Active plans
 
 Both Draft and Active plans allow slot mutation. Only Completed plans prevent mutation. The source `update-meal-slot` feature spec contained a contradictory precondition; the intent documented in the same file ("Draft plans allow mutation; Completed plans do not") is treated as the authoritative statement.
 
-### Future behavior: Completed transition
+### Resolved: Manual completion
 
-The `Completed` status is defined in the domain model to prevent modeling debt but its transition trigger is not yet specified. It is included in the spec as a lifecycle state; scenarios for Completed transition are intentionally absent.
+The owner approved manual Finish week, no automatic weekly closure and no reopening of Completed plans on 2026-11-14 (CHG-STATE-MODEL-COMPLETION). This is accepted product intent; it does not claim the missing commands have been delivered.
 
 ### Partial specification: Shopping list unit consolidation
 

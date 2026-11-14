@@ -2,7 +2,7 @@
 id: ACT-HOUSEHOLD-MANAGER
 type: actor
 title: Household Manager
-status: draft
+status: active
 actor-kind: human
 provenance:
   source: "openspec/specs/family/spec.md (Member manager flag, Member Access Management, Update Member); recovery question Q-0003; interview: product owner decision Q-0022 (E-0158); interview: product owner decision Q-0023 (E-0158); interview: product owner decision Q-0024 (E-0158); interview: product owner decision Q-0025 (E-0158)"

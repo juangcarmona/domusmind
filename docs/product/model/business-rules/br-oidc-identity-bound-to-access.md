@@ -2,11 +2,7 @@
 id: BR-OIDC-IDENTITY-BOUND-TO-ACCESS
 type: business-rule
 title: External identity grants access only after an authorized binding
-status: draft
-applies-to:
-  - UC-INITIALIZE-INSTALLATION
-  - UC-SIGN-IN-WITH-OIDC
-  - UC-FAMILY-ACCEPT-ACCESS-INVITATION
+status: active
 uses-terms:
   - TERM-MEMBER-ACCESS
 ---

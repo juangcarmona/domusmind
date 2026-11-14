@@ -2,10 +2,7 @@
 id: "BR-RECIPES-INGREDIENT-NAME-UNIQUE"
 type: "business-rule"
 title: "Ingredient names are unique within a recipe"
-status: "draft"
-applies-to:
-  - "UC-RECIPES-CREATE-RECIPE"
-  - "UC-RECIPES-MANAGE-INGREDIENTS"
+status: "active"
 uses-terms:
   - "TERM-INGREDIENT"
   - "TERM-RECIPE"

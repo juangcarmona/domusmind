@@ -2,12 +2,9 @@
 id: BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY
 type: business-rule
 title: "Imported external calendar entries are read-only"
-status: draft
+status: active
 applies-to:
-  - "BC-CALENDAR"
-  - "UC-CALENDAR-SYNC-EXTERNAL-CALENDAR"
-  - "UC-AGENDA-VIEW-MEMBER-AGENDA"
-  - "UC-AGENDA-INSPECT-ENTRY"
+  - BC-CALENDAR
 uses-terms:
   - "TERM-EXTERNAL-CALENDAR-ENTRY"
 provenance:

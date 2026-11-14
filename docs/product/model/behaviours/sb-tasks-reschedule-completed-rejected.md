@@ -2,7 +2,7 @@
 id: SB-TASKS-RESCHEDULE-COMPLETED-REJECTED
 type: structured-behaviour
 title: Completed task cannot be rescheduled
-status: draft
+status: active
 illustrates:
   - UC-TASKS-RESCHEDULE-TASK
   - BR-TASKS-CLOSED-TASK-FINAL

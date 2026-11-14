@@ -2,7 +2,7 @@
 id: "SB-MEALS-CREATE-TEMPLATE"
 type: "structured-behaviour"
 title: "Creating a named template adds it to the household's templates"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-CREATE-TEMPLATE"
 given:

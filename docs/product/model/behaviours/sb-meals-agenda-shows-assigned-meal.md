@@ -2,7 +2,7 @@
 id: "SB-MEALS-AGENDA-SHOWS-ASSIGNED-MEAL"
 type: "structured-behaviour"
 title: "An assigned meal appears in that day's Agenda as a household entry"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-MEALS-SEE-MEALS-IN-AGENDA"
   - "BR-MEALS-AGENDA-PROJECTION"

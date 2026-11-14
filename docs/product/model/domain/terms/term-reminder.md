@@ -2,7 +2,7 @@
 id: TERM-REMINDER
 type: domain-term
 title: "Reminder"
-status: draft
+status: active
 defined-in: "BC-CALENDAR"
 synonyms:
   - "Reminder Offset"

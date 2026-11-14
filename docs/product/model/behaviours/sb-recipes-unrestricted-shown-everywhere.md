@@ -2,7 +2,7 @@
 id: "SB-RECIPES-UNRESTRICTED-SHOWN-EVERYWHERE"
 type: "structured-behaviour"
 title: "A recipe without meal-type restriction is offered for any slot"
-status: "draft"
+status: "active"
 illustrates:
   - "UC-RECIPES-BROWSE-LIBRARY"
   - "BR-RECIPES-ALLOWED-MEAL-TYPES"

@@ -2,15 +2,15 @@
 id: UC-AREAS-ARCHIVE-AREA
 type: use-case
 title: Archive an Area
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-RESPONSIBILITIES
 governed-by:
-- BR-AREAS-ANY-MEMBER-MANAGES
-- BR-TASKS-ARCHIVED-AREA-CLEARED
+  - BR-AREAS-ANY-MEMBER-MANAGES
+  - BR-TASKS-ARCHIVED-AREA-CLEARED
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: "openspec/specs/areas/spec.md (Area Archiving); docs/_legacy/04_contexts/responsibilities.md (Commands); docs/_legacy/00_product/surfaces/areas.md (Interaction); interview: product owner decision Q-0010 (E-0158); interview: product owner decision Q-0013 (E-0158); interview: product owner decision Q-0014 (E-0158)"
   confidence: high
@@ -47,4 +47,4 @@ None stated by the sources.
 
 The Area is archived and retained. Tasks and routines that referenced it lose their Area reference (decided: Q-0010).
 
-Archiving an Area is current product intent (decided: Q-0013), although the domain code has no archived state yet (observed: src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs); reactivating or deleting an Area is not specified (observed: openspec/specs/areas/spec.md, Notes).
+Archiving an Area is current product intent (decided: Q-0013), and ResponsibilityDomain.Archive now records that state (observed: src/backend/DomusMind.Domain/Responsibilities/ResponsibilityDomain.cs); reactivating or deleting an Area is not specified (observed: openspec/specs/areas/spec.md, Notes).

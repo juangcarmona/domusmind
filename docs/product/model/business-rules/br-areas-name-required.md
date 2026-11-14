@@ -2,12 +2,9 @@
 id: BR-AREAS-NAME-REQUIRED
 type: business-rule
 title: An Area must have a name of at most 100 characters
-status: draft
-applies-to:
-- UC-AREAS-CREATE-AREA
-- UC-AREAS-RENAME-AREA
+status: active
 uses-terms:
-- TERM-AREA
+  - TERM-AREA
 provenance:
   source: openspec/specs/areas/spec.md (Area Creation); src/backend/DomusMind.Domain/Responsibilities/ValueObjects/ResponsibilityAreaName.cs
   confidence: high

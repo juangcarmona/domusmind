@@ -2,9 +2,7 @@
 id: "BR-MEALS-MEAL-TYPE-ORDER"
 type: "business-rule"
 title: "Meal plan views follow day order then meal-type order"
-status: "draft"
-applies-to:
-  - "UC-MEALS-VIEW-PLAN"
+status: "active"
 uses-terms:
   - "TERM-MEAL-TYPE"
   - "TERM-MEAL-SLOT"

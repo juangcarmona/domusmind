@@ -2,7 +2,7 @@
 id: FR-ASSETS-RECORD-HISTORY
 type: functional-requirement
 title: Preserve asset outcomes, records and actual costs
-status: draft
+status: active
 derived-from:
   - UC-ASSETS-COMPLETE-OBLIGATION
   - UC-ASSETS-REGISTER-AND-ORGANIZE

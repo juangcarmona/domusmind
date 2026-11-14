@@ -2,7 +2,7 @@
 id: BC-CHATS
 type: bounded-context
 title: Chats
-status: draft
+status: active
 ---
 ## Responsibility
 

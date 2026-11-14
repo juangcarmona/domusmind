@@ -2,7 +2,7 @@
 id: UC-LISTS-SCHEDULE-ITEM
 type: use-case
 title: "Give an item a due date, reminder or repeat"
-status: draft
+status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 supporting-actors: []
 bounded-context: BC-LISTS

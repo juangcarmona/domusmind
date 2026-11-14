@@ -2,7 +2,7 @@
 id: TERM-ITEM-REPEAT-RULE
 type: domain-term
 title: "Item Repeat Rule"
-status: draft
+status: active
 defined-in: BC-LISTS
 synonyms:
   - "repeat"
