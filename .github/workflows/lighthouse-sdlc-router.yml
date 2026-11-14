@@ -97,7 +97,7 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: e6ea62ab0184f517ab2653d3a91c3a90a1d8b567
@@ -142,7 +142,7 @@ jobs:
       contents: read
       issues: read
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: e6ea62ab0184f517ab2653d3a91c3a90a1d8b567
@@ -200,7 +200,7 @@ jobs:
       worker: ${{ steps.route.outputs.worker }}
       integration_request: ${{ steps.route.outputs.integration_request }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: e6ea62ab0184f517ab2653d3a91c3a90a1d8b567
@@ -257,7 +257,7 @@ jobs:
       LIGHTHOUSE_STAGE: ${{ needs.route.outputs.stage }}
       LIGHTHOUSE_WORKER: ${{ needs.route.outputs.worker }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: e6ea62ab0184f517ab2653d3a91c3a90a1d8b567
@@ -322,7 +322,7 @@ jobs:
       LIGHTHOUSE_AUTOMATION_ENABLED: ${{ vars.LIGHTHOUSE_AUTOMATION_ENABLED }}
       LIGHTHOUSE_EPIC_ENABLED: ${{ vars.LIGHTHOUSE_EPIC_ENABLED }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: e6ea62ab0184f517ab2653d3a91c3a90a1d8b567
