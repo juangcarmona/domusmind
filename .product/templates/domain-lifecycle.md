@@ -23,7 +23,7 @@ transitions:
 uses-terms: []
 ---
 
-<!-- Authoring reference for PDAC v1alpha2. Inspect the current field contract
+<!-- Authoring reference for PDaC v1alpha2. Inspect the current field contract
 with prodshape schema domain-lifecycle. Local state and transition IDs belong
 to this lifecycle. An operation that is refused does not cover a transition. -->
 
