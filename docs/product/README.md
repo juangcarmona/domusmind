@@ -1,7 +1,7 @@
 # Product definition
 
 DomusMind's product definition describes how people coordinate their household.
-It uses the PDAC `v1alpha2` contract, checked by the ProductShape version in the
+It uses the PDaC `v1alpha2` contract, checked by the ProductShape version in the
 root lockfile.
 
 ## Read the model
@@ -18,6 +18,11 @@ to the rules, states and examples that explain the behavior.
 | [Domain lifecycles](model/domain/lifecycles/) | The states a concept can enter and its permitted transitions |
 | [Structured behaviours](model/behaviours/) | Concrete examples of context, one stimulus and observable results |
 | [Requirements](model/requirements/) | Product obligations and their verification examples |
+
+Requirements and use cases have a many-to-many relationship: one requirement can
+span several use cases, and one use case can support several requirements.
+Their relationships follow product meaning. Titles and identifiers do not set
+their cardinality.
 
 An event can be the stimulus or an observable result of a behavior. A lifecycle
 records the resulting state transition. A structured behaviour can refer to that

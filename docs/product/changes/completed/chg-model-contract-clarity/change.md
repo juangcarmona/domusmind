@@ -646,7 +646,7 @@ Artifacts accepted through the merged initial recovery and subsequent Product Ch
 
 ## Rationale
 
-Juan requested a clearer product model, preserving its accepted behavior, and explicitly instructed: "Implement the proposed plan." The accepted plan includes artifact status review, canonical relationships and progressive adoption of PDAC v1alpha2. The initial baseline was accepted in PR #122; later merged changes retain their own acceptance records. This change clarifies that accepted intent and preserves every existing rule/use-case association. It does not raise the confidence of recovered knowledge.
+Juan requested a clearer product model, preserving its accepted behavior, and explicitly instructed: "Implement the proposed plan." The accepted plan includes artifact status review, canonical relationships and progressive adoption of PDaC v1alpha2. The initial baseline was accepted in PR #122; later merged changes retain their own acceptance records. This change clarifies that accepted intent and preserves every existing rule/use-case association. It does not raise the confidence of recovered knowledge.
 
 ## Affected Product Areas
 
