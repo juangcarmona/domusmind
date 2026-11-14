@@ -52,7 +52,7 @@ Only one Active plan may exist per family per week.
 
 <!-- pdac:cite id="BR-MEALS-ONE-PLAN-PER-WEEK" digest="sha256:79b515e0a731c9cccbf80f2561e44b2a485e421fafad348fb14da69c8af34163" -->
 
-<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:2ef77d2a9bddb9b70267efcf0437b4da02dd0564d335132a699692f30f349e7f" -->
+<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:5fa200b2cfb67f04c6205fc17a7d4b8b1463ff75f79af75891ae8337a93c605d" -->
 
 <!-- pdac:cite id="TERM-MEAL-SLOT" digest="sha256:9d2b20a39139b8f48ecd3b251fcba7a961e4004669fb2512051859cd7d9038a8" -->
 
@@ -84,19 +84,24 @@ Only one Active plan may exist per family per week.
 
 A meal plan progresses through a defined lifecycle: Draft → Active → Completed.
 
-A Draft plan is being set up. It is not yet the household's working plan for the week. An Active plan is the household's working plan for the week. A Completed plan is read-only and represents a past week.
+A Draft plan is being set up. It is not yet the household's working plan for the week. An Active plan is the household's working plan for the week. A Completed plan is a week explicitly closed by a household member and is read-only.
 
-Transition to Active must occur before the plan is treated as the household's working plan. Transition to Completed prevents all mutation.
+Activation SHALL be an explicit household action before the plan is treated as the working plan. A household member SHALL be able to choose Finish week on an Active plan to make it Completed and read-only. The calendar week ending SHALL NOT complete the plan automatically. A Completed plan SHALL NOT reopen.
 
-<!-- pdac:cite id="FR-MEALS-PLAN-LIFECYCLE" digest="sha256:0cb76be9f01cd720fbec9478b35e99182d96992ed93c628407a46407e9dc3bb4" -->
+<!-- pdac:cite id="FR-MEALS-PLAN-LIFECYCLE" digest="sha256:9ec1d5d8d61d286af237b3b1654e44ae5ace5f568ec7a63aa4757678b02b2b7f" -->
+<!-- pdac:cite id="LC-MEAL-PLAN" digest="sha256:9784fc0abf30456337a94f1e1a90a26cf0681d40a53b528d27326e4c9c6adcea" -->
+<!-- pdac:cite id="UC-MEALS-COMPLETE-PLAN" digest="sha256:cdd6abb43d60048cf809ac6eb2da61b4fc8e473eb01b285de5a3de079fe494c8" -->
+<!-- pdac:cite id="SB-MEALS-COMPLETE-PLAN" digest="sha256:08951950b7877671ee1cb346b9314809f85446da13b0e2c2d2a20d933933dff4" -->
+<!-- pdac:cite id="SB-MEALS-WEEK-END-KEEPS-ACTIVE" digest="sha256:52edaef6b36ef08e15b1866eaff69269b21585f4bce42e67704a50bed3e01225" -->
+<!-- pdac:cite id="SB-MEALS-COMPLETED-PLAN-CANNOT-REOPEN" digest="sha256:f6f7e44250fdd98460c8f86d009a5c8188c5ef80e0ba4f55bd9eef9503387bcb" -->
 
 <!-- pdac:cite id="UC-MEALS-PROMOTE-PLAN" digest="sha256:b26eecfdff35bb0f581dd955e0960ccc97969c86f451c03d7779b57679eb3c1d" -->
 
-<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:2ef77d2a9bddb9b70267efcf0437b4da02dd0564d335132a699692f30f349e7f" -->
+<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:5fa200b2cfb67f04c6205fc17a7d4b8b1463ff75f79af75891ae8337a93c605d" -->
 
-<!-- pdac:cite id="TERM-MEAL-PLAN-STATUS" digest="sha256:8771ab7cdffe66d265ba863bfd83723d03cd29ba69b9bbf968ccc7637f42f397" -->
+<!-- pdac:cite id="TERM-MEAL-PLAN-STATUS" digest="sha256:cfa9f2bb625b6ebbccae3befb45dedc39166e7ad295a4914fe33b24607f9e7f6" -->
 
-<!-- pdac:cite id="SB-MEALS-PROMOTE-TO-ACTIVE" digest="sha256:d8cf84525ff2e7dea7470908615529bd84dc380dde0c07ed538d52427150b9f3" -->
+<!-- pdac:cite id="SB-MEALS-PROMOTE-TO-ACTIVE" digest="sha256:00c29e33224aa20f29bfdcd053e2d751e458c2e1a7c741aa72b3d7fbc6574282" -->
 
 #### Scenario: Plan is promoted from Draft to Active
 
@@ -104,6 +109,26 @@ Transition to Active must occur before the plan is treated as the household's wo
 - WHEN the household promotes it to Active
 - THEN the plan becomes the Active plan for that family and week
 - AND no other Active plan may exist for the same family and week
+
+#### Scenario: Member finishes a meal-planning week
+
+- GIVEN a household member can access an Active meal plan
+- WHEN the member chooses Finish week
+- THEN the plan becomes Completed
+- AND its content remains available as read-only history
+
+#### Scenario: Week ending does not complete a plan
+
+- GIVEN a meal plan is Active and no member has chosen Finish week
+- WHEN the calendar week ends
+- THEN the plan remains Active
+
+#### Scenario: Completed plan cannot reopen
+
+- GIVEN a meal plan is Completed
+- WHEN a member attempts to reopen it
+- THEN the request is refused
+- AND the plan remains Completed and read-only
 
 ---
 
@@ -133,7 +158,7 @@ Slot structure is fixed at plan creation. This operation updates content only, n
 
 <!-- pdac:cite id="BR-MEALS-FULL-SLOT-GRID" digest="sha256:9e8aba8fb1cf802ae62731e77d2aefcd1c341fc52511fa39403944e4105cea93" -->
 
-<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:2ef77d2a9bddb9b70267efcf0437b4da02dd0564d335132a699692f30f349e7f" -->
+<!-- pdac:cite id="BR-MEALS-PLAN-LIFECYCLE" digest="sha256:5fa200b2cfb67f04c6205fc17a7d4b8b1463ff75f79af75891ae8337a93c605d" -->
 
 <!-- pdac:cite id="TERM-MEAL-SLOT" digest="sha256:9d2b20a39139b8f48ecd3b251fcba7a961e4004669fb2512051859cd7d9038a8" -->
 
@@ -148,7 +173,7 @@ Slot structure is fixed at plan creation. This operation updates content only, n
 
 <!-- pdac:cite id="SB-MEALS-UNLOCK-AND-CHANGE-SLOT" digest="sha256:fd3d0381f1f1d61e63e257240f436d852cc75a7e9a41b3b5785a4919fbce5f24" -->
 
-<!-- pdac:cite id="SB-MEALS-COMPLETED-PLAN-REJECTS-CHANGE" digest="sha256:e72b100827c44739ff2100673f0adbfaeb76ccba7ecca3fc5ee1aa76343b35fd" -->
+<!-- pdac:cite id="SB-MEALS-COMPLETED-PLAN-REJECTS-CHANGE" digest="sha256:0921f8b53e4f37e808c5b7afa96cd591ade940a41097e5f654dba0cd4e82a4b4" -->
 
 #### Scenario: Household assigns a recipe to a slot
 
@@ -511,19 +536,17 @@ Slots with `mealSourceType = Unplanned` and no notes are not projected. Projecte
 
 ## Notes
 
-### Ambiguity: Active plan promotion timing
+### Resolved: Explicit activation
 
-The context document states a plan may be promoted to Active "explicitly, or automatically when the week begins." The automatic promotion rule is marked as TBD. The current spec treats promotion as explicit only.
-
-<!-- pdac-drift ids="BR-MEALS-PLAN-LIFECYCLE, FR-MEALS-PLAN-LIFECYCLE, UC-MEALS-PROMOTE-PLAN" summary="Note keeps automatic promotion when the week begins as an open TBD; the model decided activation is an explicit household action only and automatic promotion is not current product (decided: Q-0033)" -->
+Activation is an explicit household action under Q-0033. A calendar week boundary does not activate a Draft plan.
 
 ### Resolved: Mutation on Draft vs. Active plans
 
 Both Draft and Active plans allow slot mutation. Only Completed plans prevent mutation. The source `update-meal-slot` feature spec contained a contradictory precondition; the intent documented in the same file ("Draft plans allow mutation; Completed plans do not") is treated as the authoritative statement.
 
-### Future behavior: Completed transition
+### Resolved: Manual completion
 
-The `Completed` status is defined in the domain model to prevent modeling debt but its transition trigger is not yet specified. It is included in the spec as a lifecycle state; scenarios for Completed transition are intentionally absent.
+The owner approved manual Finish week, no automatic weekly closure and no reopening of Completed plans on 2026-11-14 (CHG-STATE-MODEL-COMPLETION). This is accepted product intent; it does not claim the missing commands have been delivered.
 
 ### Partial specification: Shopping list unit consolidation
 

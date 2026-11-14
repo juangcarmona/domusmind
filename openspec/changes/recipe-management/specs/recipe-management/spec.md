@@ -77,7 +77,7 @@ A recipe SHALL NOT be deleted if it is currently referenced by any slot in an Ac
 
 <!-- pdac:cite id="BR-RECIPES-DELETE-GUARD" digest="sha256:2e15467fd305be37d291774e1e09606ef41448d1713b4f98d5ff2cbce2ada86e" -->
 
-<!-- pdac:cite id="TERM-MEAL-PLAN-STATUS" digest="sha256:8771ab7cdffe66d265ba863bfd83723d03cd29ba69b9bbf968ccc7637f42f397" -->
+<!-- pdac:cite id="TERM-MEAL-PLAN-STATUS" digest="sha256:cfa9f2bb625b6ebbccae3befb45dedc39166e7ad295a4914fe33b24607f9e7f6" -->
 
 <!-- pdac:cite id="SB-RECIPES-DELETE-UNREFERENCED" digest="sha256:53b1008265453ebea65d33af2b302c4c36f6b4a7c03ea221a33bce0807a40c3d" -->
 

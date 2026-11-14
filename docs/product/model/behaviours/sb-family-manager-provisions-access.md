@@ -20,6 +20,9 @@ provenance:
   source: openspec/specs/family/spec.md (Member Access Provisioning, scenario "Manager provisions access for a member")
   confidence: high
   recovered-from: documentation
+covers-transition:
+  lifecycle: LC-MEMBER-ACCESS
+  transition: INVITE
 ---
 
 ## Intent

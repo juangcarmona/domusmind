@@ -12,37 +12,31 @@ states:
     title: Healthy
   - id: SYNCING
     title: Syncing
-  - id: NEEDS-ATTENTION
-    title: Needs attention
   - id: PARTIAL-FAILURE
     title: Partial failure
   - id: FAILED
     title: Failed
   - id: AUTH-EXPIRED
     title: Authorization expired
-  - id: REHYDRATING
-    title: Rehydrating
   - id: DISCONNECTED
     title: Disconnected
     terminal: true
 transitions:
   - id: START-SYNC
     title: Start a synchronization
-    from: &a3
+    from:
       - PENDING-INITIAL-SYNC
       - HEALTHY
       - SYNCING
-      - NEEDS-ATTENTION
       - PARTIAL-FAILURE
       - FAILED
       - AUTH-EXPIRED
-      - REHYDRATING
     to: SYNCING
     trigger: An authorized sync request acquires the connection lease
     initiated-by:
       - ACT-HOUSEHOLD-MEMBER
       - ACT-CALENDAR-SYNC-SCHEDULER
-    governed-by: &a1
+    governed-by:
       - BR-CALENDAR-NO-CONCURRENT-SYNC
       - BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT
     realized-by:
@@ -54,8 +48,10 @@ transitions:
       - SYNCING
     to: HEALTHY
     trigger: The sync completes without feed errors
-    governed-by: *a1
-    realized-by: &a2
+    governed-by:
+      - BR-CALENDAR-NO-CONCURRENT-SYNC
+      - BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT
+    realized-by:
       - UC-CALENDAR-SYNC-EXTERNAL-CALENDAR
   - id: SYNC-PARTIAL-FAILURE
     title: Keep successful feeds and report failed feeds
@@ -63,16 +59,22 @@ transitions:
       - SYNCING
     to: PARTIAL-FAILURE
     trigger: Some selected feeds succeed and others fail
-    governed-by: *a1
-    realized-by: *a2
+    governed-by:
+      - BR-CALENDAR-NO-CONCURRENT-SYNC
+      - BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT
+    realized-by:
+      - UC-CALENDAR-SYNC-EXTERNAL-CALENDAR
   - id: SYNC-FAILURE
     title: Report a failed synchronization
     from:
       - SYNCING
     to: FAILED
     trigger: All selected feeds fail or an unexpected sync error occurs
-    governed-by: *a1
-    realized-by: *a2
+    governed-by:
+      - BR-CALENDAR-NO-CONCURRENT-SYNC
+      - BR-CALENDAR-ONLY-SELECTED-FEEDS-IMPORT
+    realized-by:
+      - UC-CALENDAR-SYNC-EXTERNAL-CALENDAR
   - id: AUTH-EXPIRED
     title: Report expired provider authorization
     from:
@@ -81,10 +83,17 @@ transitions:
     trigger: The provider access token cannot be refreshed
     governed-by:
       - BR-CALENDAR-OUTLOOK-REQUIRED-ACCESS
-    realized-by: *a2
+    realized-by:
+      - UC-CALENDAR-SYNC-EXTERNAL-CALENDAR
   - id: DISCONNECT
     title: Disconnect an external account
-    from: *a3
+    from:
+      - PENDING-INITIAL-SYNC
+      - HEALTHY
+      - SYNCING
+      - PARTIAL-FAILURE
+      - FAILED
+      - AUTH-EXPIRED
     to: DISCONNECTED
     trigger: The owner disconnects the connection
     initiated-by:
@@ -95,7 +104,7 @@ transitions:
     realized-by:
       - UC-CALENDAR-DISCONNECT-EXTERNAL-CALENDAR
 provenance:
-  source: TERM-EXTERNAL-CALENDAR-CONNECTION; FR-CALENDAR-SHOW-CONNECTION-STATUS; product owner decision Q-0049; src/backend/DomusMind.Domain/Calendar/ExternalConnections/ExternalCalendarConnection.cs; src/backend/DomusMind.Domain/Calendar/ExternalConnections/ExternalCalendarConnectionStatus.cs; src/backend/DomusMind.Application/Features/Calendar/SyncExternalCalendarConnection/SyncExternalCalendarConnectionCommandHandler.cs
+  source: 'TERM-EXTERNAL-CALENDAR-CONNECTION; FR-CALENDAR-SHOW-CONNECTION-STATUS; product owner decision Q-0049; src/backend/DomusMind.Domain/Calendar/ExternalConnections/ExternalCalendarConnection.cs; src/backend/DomusMind.Domain/Calendar/ExternalConnections/ExternalCalendarConnectionStatus.cs; src/backend/DomusMind.Application/Features/Calendar/SyncExternalCalendarConnection/SyncExternalCalendarConnectionCommandHandler.cs; product owner, 2026-11-14: "Las tres recomendadas" (CHG-STATE-MODEL-COMPLETION)'
   confidence: medium
   recovered-from: documentation
 ---
@@ -110,7 +119,7 @@ The connection belongs to its member. Only selected feeds within the horizon are
 
 ## State Semantics
 
-New connections await an initial sync. Healthy records a successful sync; Syncing records work in progress. Partial failure keeps successful feed results and reports failures. Failed reports a failed attempt. Authorization expired means provider access needs attention. Disconnected ends the local connection. Needs attention and Rehydrating remain accepted status names under Q-0049; the inspected sync handler has no transition into them.
+New connections await an initial sync. Healthy records a successful sync; Syncing records work in progress. Partial failure keeps successful feed results and reports failures. Failed reports a failed attempt. Authorization expired means provider access needs attention. Disconnected ends the local connection. The product catalog has seven states: Pending initial sync, Healthy, Syncing, Partial failure, Failed, Authorization expired and Disconnected. A full reload runs within Syncing. Failures show their reason under Failed or Authorization expired.
 
 ## Transition Semantics
 
@@ -118,4 +127,4 @@ A manual or scheduled request starts synchronization. Completion records success
 
 ## Boundaries
 
-No trigger for Needs attention or Rehydrating is invented here. The current sync handler records AuthExpired and then its outer exception handler can record Failed; that implementation discrepancy remains an engineering follow-up. This lifecycle expresses the accepted distinction and does not claim that the discrepancy is fixed. Creation establishes the initial state and is not represented as a transition from an imaginary state.
+The owner retired Needs attention and Rehydrating as independent product states, superseding that part of Q-0049 (CHG-STATE-MODEL-COMPLETION). The existing domain enum still contains those names; this Product Change does not migrate runtime contracts. The current sync handler records AuthExpired and then its outer exception handler can record Failed; that implementation discrepancy remains an engineering follow-up. This lifecycle expresses the accepted distinction and does not claim that the discrepancy is fixed. Creation establishes the initial state and is not represented as a transition from an imaginary state.

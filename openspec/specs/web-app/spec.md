@@ -684,11 +684,11 @@ A member SHALL be able to connect, configure, sync, and disconnect their Outlook
 
 Each connection row shows: provider label, account email, included calendar count, sync horizon, last sync time, and current status.
 
-<!-- pdac:cite id="FR-WEB-CALENDAR-CONNECTIONS-SECTION" digest="sha256:ff32c9662d1c32f4f33d0046caa1ca98db89157e0c27e2d6bd763622bd665f0a" -->
+<!-- pdac:cite id="FR-WEB-CALENDAR-CONNECTIONS-SECTION" digest="sha256:d49c335c70915632294a3f75f2f048cfdd3626f6bff176d33a5dbd62c5a6f9bc" -->
 
 <!-- pdac:cite id="FR-WEB-CONFIRM-DISCONNECT" digest="sha256:1cbeb290a7623298a0504c813901a94e5f7e4d678de0dd33b13e9b659f85d640" -->
 
-<!-- pdac:cite id="FR-CALENDAR-SHOW-CONNECTION-STATUS" digest="sha256:ebea42ca547efc3df187cfb4e96c667c5f0421336e08dec667a693dbcb2b7403" -->
+<!-- pdac:cite id="FR-CALENDAR-SHOW-CONNECTION-STATUS" digest="sha256:49e6cb0c06c0278bef22fced1c67a24cc388fdbe533f10582bc25acd308bf39e" -->
 
 <!-- pdac:cite id="FR-CALENDAR-SYNC-ALL-MY-CALENDARS" digest="sha256:00d6307f6e04781deae485202279fadb2c0840b08267d96f71e1d8c40f3fc62b" -->
 

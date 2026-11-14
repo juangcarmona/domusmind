@@ -50,9 +50,15 @@ Inbox SHALL support interpretation of captured notes and supported action reques
 
 Each proposal is reviewed, refined, approved or rejected independently. Approval invokes the owning Calendar, Tasks or Lists behavior and still follows its authorization and validation rules. Rejection or leaving a proposal pending does not change household state.
 
-<!-- pdac:cite id="FR-INBOX-REVIEW" digest="sha256:43daf3b67ffad7bd4dd93b39939359941b955f0e449d04f4dab5cd5ca04e3422" -->
+If an approved action fails without applying its household change, the proposal SHALL return to Pending with its details retained and its failure reason visible. The member SHALL be able to correct it and explicitly approve it again. The product SHALL NOT retry the action automatically or execute an Applied proposal again.
 
-<!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:92d34d343ebc239e46c834106ac81dc978c2f014b9ae1e5574786cc82da7821e" -->
+<!-- pdac:cite id="FR-INBOX-REVIEW" digest="sha256:38d5e9eae4b9ca17bf8f545451fc58bea64d06318c9d65e4ff3dd7d1385e8147" -->
+<!-- pdac:cite id="LC-INBOX-PROPOSAL" digest="sha256:6a279f3f478b30f7097d5ad9356fe3cd391905b302d9a7b82e88e0c47e494599" -->
+<!-- pdac:cite id="SB-INBOX-RECOVER-UNAPPLIED-FAILURE" digest="sha256:d29471982db39e2242bcfa80ead88d8be75256147350babdd540779a4e25c537" -->
+<!-- pdac:cite id="SB-INBOX-REAPPROVE-CORRECTED-PROPOSAL" digest="sha256:006ae048f59dc44279436be42da03ccef19167c1e3172dd8cbde8641f9a50520" -->
+<!-- pdac:cite id="SB-INBOX-APPLIED-PROPOSAL-CANNOT-EXECUTE-AGAIN" digest="sha256:1648350c0aae8c7c8419cfe297fea3da7eea2f4197d46a1898d30c593974f704" -->
+
+<!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:4cefc25292234d58d9972915de22d8811ee3bb7b3989512d161482347dc0b267" -->
 
 #### Scenario: Member rejects a proposal
 
@@ -93,3 +99,27 @@ Each proposal is reviewed, refined, approved or rejected independently. Approval
 - GIVEN an Inbox item has a valid update proposal for an existing List Item the member may edit
 - WHEN the member approves the proposal
 - THEN Lists updates only the proposed fields through its normal behavior
+
+#### Scenario: Failed unapplied action returns for correction
+
+- GIVEN a proposal is Executing after explicit approval
+- AND its owning-area action fails without applying the household change
+- WHEN the failed attempt is reported
+- THEN the proposal is Pending with its details retained
+- AND the member sees the failure reason
+- AND no automatic retry occurs
+
+#### Scenario: Member approves a corrected proposal
+
+- GIVEN a failed unapplied proposal is Pending
+- AND an authorized member has corrected its details
+- WHEN the member explicitly approves the corrected proposal
+- THEN the proposal enters execution through its owning area
+- AND the owning area checks its current authorization and validation rules
+
+#### Scenario: Applied proposal cannot execute again
+
+- GIVEN a proposal is Applied and linked to its successful result
+- WHEN a member attempts to execute it again
+- THEN the owning-area action is not invoked again
+- AND the proposal remains Applied with its existing result

@@ -262,7 +262,11 @@ Rules:
 <!-- pdac:cite id="UC-FAMILY-MANAGE-INVITATION" digest="sha256:05454d9ba1eddb527901ff4b00f47d7f02e60be1543ba00838f42c32a09f5e29" -->
 <!-- pdac:cite id="BR-OIDC-IDENTITY-BOUND-TO-ACCESS" digest="sha256:6c34260aff83b573ced0b3f499f0d119fff78dd623b71b901d0db73f0b6a712a" -->
 
-<!-- pdac:cite id="FR-FAMILY-MANAGE-MEMBER-ACCESS" digest="sha256:47e0ea395954818d06db2c72cd7fee5b8f50cc24080212297796936e7f97edce" -->
+<!-- pdac:cite id="FR-FAMILY-MANAGE-MEMBER-ACCESS" digest="sha256:8f212abe93106982250378c2a8efb7026a2016c779277f008bc6e40a5353c7e6" -->
+<!-- pdac:cite id="LC-MEMBER-ACCESS" digest="sha256:269f3f6a625fafe2c95a6f09a5970ce14c74ce53cc82df7e9d9b6e6f7e6e3034" -->
+<!-- pdac:cite id="SB-FAMILY-ACCEPT-ACCESS-INVITATION" digest="sha256:1f4b4bbffcc58618f9514438d64e929520731cfd4ec3b9a142e92b398dfa8d28" -->
+<!-- pdac:cite id="SB-FAMILY-REVOKE-ACCESS-INVITATION" digest="sha256:00bee891da3ca28a5bad85eb473169ad6e029a02610a341fdb06497284c01eef" -->
+<!-- pdac:cite id="SB-FAMILY-REPLACE-ACCESS-INVITATION" digest="sha256:8fdbc1b1e4cec734fe76d174cc65cbc4ebdd198fdd1c7247cefd4598ed2df77b" -->
 
 <!-- pdac:cite id="UC-FAMILY-PROVISION-MEMBER-ACCESS" digest="sha256:1eddf2b7a223190aeaecb11ca414ea41cfd8db45eaf8603632e567d7eb80e927" -->
 
@@ -280,11 +284,11 @@ Rules:
 
 <!-- pdac:cite id="ACT-HOUSEHOLD-MANAGER" digest="sha256:9e4e0dad11e4c8cb94efdebca7ef64b3dd6c21db313e05dbadaaf7f3807075fd" -->
 
-<!-- pdac:cite id="SB-FAMILY-MANAGER-PROVISIONS-ACCESS" digest="sha256:099af453e80ea446cad19a2659a9e7e1803f777ae127225e832667c532073129" -->
+<!-- pdac:cite id="SB-FAMILY-MANAGER-PROVISIONS-ACCESS" digest="sha256:0ef10ae6003bf66194ba59688b5d01866afa82e2689446f18ff19d2cb1efc21d" -->
 
-<!-- pdac:cite id="SB-FAMILY-MANAGER-DISABLES-ACCESS" digest="sha256:b80811021daa3ee3159ecfe532fe2cb12acaa7acaa4b1ab040b2f29440453f7a" -->
+<!-- pdac:cite id="SB-FAMILY-MANAGER-DISABLES-ACCESS" digest="sha256:35f4bb201a26b47adace38e26e1e3e96105cf4d2dab5b873e3ad87a79480251c" -->
 
-<!-- pdac:cite id="SB-FAMILY-MANAGER-ENABLES-ACCESS" digest="sha256:b0d6d518e4d13135a03d682a8897691b49ce06b12a90e6d1f87820402130738a" -->
+<!-- pdac:cite id="SB-FAMILY-MANAGER-ENABLES-ACCESS" digest="sha256:a2eed462052385e1d70f25044088d9748cedfa6babdffd76210e70833fc92205" -->
 
 <!-- pdac:cite id="SB-FAMILY-PET-ACCESS-REJECTED" digest="sha256:8c88a669e58064ed8ce4aa0b14b32470a402b7d8cde3c964a19a69b35705460b" -->
 

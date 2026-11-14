@@ -9,7 +9,7 @@ steps:
   - use-case: UC-INBOX-CAPTURE-AND-REVIEW
   - use-case: UC-CALENDAR-SCHEDULE-PLAN
 provenance:
-  source: UC-CHAT-ASK-ASSISTANT; UC-INBOX-CAPTURE-AND-REVIEW; BR-CHAT-ASSISTANT-READ-ONLY; BR-INBOX-REVIEW-AND-EXECUTION; CHG-CONVERSATIONAL-ASSISTANT
+  source: 'UC-CHAT-ASK-ASSISTANT; UC-INBOX-CAPTURE-AND-REVIEW; BR-CHAT-ASSISTANT-READ-ONLY; BR-INBOX-REVIEW-AND-EXECUTION; CHG-CONVERSATIONAL-ASSISTANT; product owner, 2026-11-14: "Las tres recomendadas" (CHG-STATE-MODEL-COMPLETION)'
   confidence: high
   recovered-from: documentation
 ---
@@ -35,7 +35,7 @@ The member has access to a household Chat thread, Inbox and the Calendar action.
 - The member can refine, reject or leave the proposal pending.
 - Supported Plan updates and List Item additions or updates use their owning area's action at step 4.
 - A private Chat request is not copied. The member chooses what to enter in Inbox.
-- An invalid or unauthorized action is not applied. Recovery after execution failure remains unspecified in the accepted model.
+- An invalid or unauthorized action is not applied. A failed, unapplied action returns the proposal to Pending with its reason. The member may correct and explicitly approve it again; an Applied proposal cannot execute again.
 
 ## Completion Conditions
 

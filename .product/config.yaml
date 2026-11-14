@@ -15,5 +15,6 @@ extensions:
       consumer-roots:
         - openspec
         - docs/architecture
+        - docs/design
         - src
         - tests

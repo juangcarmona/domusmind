@@ -89,5 +89,7 @@ and the use case explains its context and flow. A structured behaviour gives one
 context, one stimulus and outcomes that hold together; split alternative actions
 or outcomes into separate examples.
 
-The [model review](reviews/2026-11-13-model-clarity.md) records the lifecycle rollout,
-the review of all 181 original examples and the remaining owner questions.
+The [model review](reviews/2026-11-13-model-clarity.md) records the initial lifecycle
+rollout and the review of all 181 original examples. The
+[state decisions](reviews/2026-11-14-state-decisions.md) record the approved follow-up
+for access, meal completion, Inbox recovery and calendar states.

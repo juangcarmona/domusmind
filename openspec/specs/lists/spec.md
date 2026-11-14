@@ -245,7 +245,7 @@ A household SHALL be able to add a new item to an active list with only a name.
 A new item is always created in an unchecked state. Optional fields at creation: quantity and note. Items are appended in stable order — each new item receives the next position. Importance and temporal fields are not set at item creation; they are applied through dedicated operations after creation. An assistant may stage an addition as an Inbox proposal, but Lists changes only after an authorized member approves it.
 
 <!-- pdac:cite id="FR-INBOX-INTERPRET" digest="sha256:8655bde49845f4278b7ad37baeab11421c4ae263138f278a4a902d6aef1fcee8" -->
-<!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:92d34d343ebc239e46c834106ac81dc978c2f014b9ae1e5574786cc82da7821e" -->
+<!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:4cefc25292234d58d9972915de22d8811ee3bb7b3989512d161482347dc0b267" -->
 
 <!-- pdac:cite id="FR-LISTS-ADD-ITEM" digest="sha256:31ca6047288c0e531133f611eda3ba2b8c142fc5d991cc0015103929474a2ff3" -->
 

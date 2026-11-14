@@ -1,7 +1,7 @@
 ---
 id: FR-FAMILY-MANAGE-MEMBER-ACCESS
 type: functional-requirement
-title: "Managers control people's access"
+title: Managers control people's access
 status: active
 derived-from:
   - UC-FAMILY-PROVISION-MEMBER-ACCESS
@@ -12,19 +12,20 @@ derived-from:
   - BR-FAMILY-MANAGERS-ADMINISTER
   - BR-FAMILY-MANAGER-KEEPS-OWN-ACCESS
 verification:
-  - scenario-ref: "SB-FAMILY-MANAGER-PROVISIONS-ACCESS"
-  - scenario-ref: "SB-FAMILY-MANAGER-DISABLES-ACCESS"
-  - scenario-ref: "SB-FAMILY-MANAGER-ENABLES-ACCESS"
-  - scenario-ref: "SB-FAMILY-PET-ACCESS-REJECTED"
-  - scenario: "A manager tries to disable their own access and the product rejects it"
-  - scenario: "A manager replaces a pending invitation link, and the old link can no longer be accepted"
-  - scenario: "A manager revokes a pending invitation link and it can no longer be accepted"
-  - scenario: "An invited person with a mismatched or unverified provider email cannot accept"
+  - scenario-ref: SB-FAMILY-MANAGER-PROVISIONS-ACCESS
+  - scenario-ref: SB-FAMILY-MANAGER-DISABLES-ACCESS
+  - scenario-ref: SB-FAMILY-MANAGER-ENABLES-ACCESS
+  - scenario-ref: SB-FAMILY-PET-ACCESS-REJECTED
+  - scenario: A manager tries to disable their own access and the product rejects it
+  - scenario: An invited person with a mismatched or unverified provider email cannot accept
+  - scenario-ref: SB-FAMILY-ACCEPT-ACCESS-INVITATION
+  - scenario-ref: SB-FAMILY-REVOKE-ACCESS-INVITATION
+  - scenario-ref: SB-FAMILY-REPLACE-ACCESS-INVITATION
 uses-terms:
   - TERM-MEMBER-ACCESS
   - TERM-MANAGER
 provenance:
-  source: "openspec/specs/family/spec.md (Member Access Provisioning); docs/_legacy/04_contexts/family-member-management.md (MemberAccessStatus, Permission rules)"
+  source: openspec/specs/family/spec.md (Member Access Provisioning); docs/_legacy/04_contexts/family-member-management.md (MemberAccessStatus, Permission rules)
   confidence: high
   recovered-from: documentation
 ---

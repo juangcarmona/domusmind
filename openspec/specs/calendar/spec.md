@@ -377,7 +377,7 @@ Connecting establishes a delegated external calendar connection. Connection requ
 
 <!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-NEVER-BECOME-PLANS" digest="sha256:f538589cc3d3dd54bfc8539b59e38f13f87b49547cf25e651e8ce2906810583e" -->
 
-<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-CONNECTION" digest="sha256:1767194797bbc765747ba93591e40552d12a1667a5a5c2086c827c7bb0c3bc8d" -->
+<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-CONNECTION" digest="sha256:71fd7f91ddaeb838b698bee045adaad8e95f3790cd3637633ab0fb9ff4af6671" -->
 
 <!-- pdac:cite id="TERM-SYNC-HORIZON" digest="sha256:d5e8c5b396642312a552935a31f6134a752040f75fb821ceb329e545f6aac81f" -->
 
@@ -409,6 +409,21 @@ Connecting establishes a delegated external calendar connection. Connection requ
 - THEN the connection is rejected
 
 ---
+
+### Requirement: External Calendar Connection Health
+
+<!-- pdac:cite id="FR-CALENDAR-SHOW-CONNECTION-STATUS" digest="sha256:49e6cb0c06c0278bef22fced1c67a24cc388fdbe533f10582bc25acd308bf39e" -->
+<!-- pdac:cite id="LC-EXTERNAL-CALENDAR-CONNECTION" digest="sha256:04f6d9502ca9d27cab5239ef3a179979ad42aa0a2b4cf67d11d87916f80ce7ec" -->
+<!-- pdac:cite id="SB-CALENDAR-FULL-RELOAD-STAYS-SYNCING" digest="sha256:5c47b53b4138ee73b15324084013653997f70ab972d86903c35951afd4bb76e6" -->
+
+A member SHALL see each connection's product status and its last error when present. The status catalog is Pending initial sync, Healthy, Syncing, Partial failure, Failed, Authorization expired and Disconnected. Failed and Authorization expired SHALL carry the failure reason. A full reload SHALL run within Syncing; Needs attention and Rehydrating are not separate product states (CHG-STATE-MODEL-COMPLETION).
+
+#### Scenario: Full reload retains the sync progress state
+
+- GIVEN a connection is Syncing and its incremental sync state is invalid
+- WHEN the connection loads the selected calendars for its configured horizon
+- THEN the connection remains Syncing while the full reload runs
+- AND no separate Rehydrating product state is shown
 
 ### Requirement: External Calendar Configuration
 
@@ -521,7 +536,7 @@ Synchronization imports new, updated, and deleted occurrences from each selected
 
 <!-- pdac:cite id="BR-CALENDAR-EXTERNAL-ENTRIES-READ-ONLY" digest="sha256:0a46d8c63e8a5ca97a1757e7ed3e0528c2c10779a63621783793131b2bf55522" -->
 
-<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-SYNC" digest="sha256:668fedd678fe9a2235b9bcebabf155ff3d18fdfdfb36e224f939daf41be97e99" -->
+<!-- pdac:cite id="TERM-EXTERNAL-CALENDAR-SYNC" digest="sha256:2e1eed83b3396992d892883d9f0efd7616821812d36bd069f085960f95756bea" -->
 
 <!-- pdac:cite id="SB-CALENDAR-MANUAL-SYNC" digest="sha256:d2bb53909bbecb5dff7cfdc073dbd4f73fda69653322c0044b6785aadd914c3e" -->
 

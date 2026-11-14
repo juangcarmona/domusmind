@@ -7,6 +7,7 @@ uses-terms:
   - TERM-INBOX-ITEM
   - TERM-INBOX-PROPOSAL
 ---
+
 ## Rule
 
 - Capturing or interpreting an Inbox item MUST NOT create or change a Plan, Task, List Item, or other household record.
@@ -16,6 +17,9 @@ uses-terms:
 - An approved proposal MUST still pass the owning area's authorization and validation rules, including List privacy and write permissions.
 - The original note remains distinguishable from interpreted fields and from any record created by an approved proposal.
 - An assistant action request from a private Chat MUST NOT be copied into the household Inbox.
+
+- If an approved area action fails without applying its household change, the proposal MUST return to Pending, retain its details and show the failure reason. The member MUST be able to correct it and explicitly approve it again.
+- Failed proposals MUST NOT retry automatically. A proposal that is already Applied MUST NOT execute its action again.
 
 ## Rationale
 

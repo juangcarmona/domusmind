@@ -43,7 +43,7 @@ The authenticated capture request stores the raw note in the Inbox aggregate fir
 ![Capture and interpret an Inbox note](./diagrams/capture-and-interpret-an-inbox-note.png)
 <!-- diagram-source: ./diagrams/capture-and-interpret-an-inbox-note.mmd sha256:a60c4b6933ac5443392cde13a62a2cd75e21e0e54779a3a19b782d3b481d435e png-sha256:126be7b77078fe604ca6cb69f2f63da25ec0e6c77c62b9d8d8be5826a1e5a558 -->
 
-The member's approval command changes one Inbox aggregate and emits `InboxProposalApproved`. Its synchronous domain-event reaction dispatches the normal Calendar or Tasks command, then marks the proposal applied. The owning area handler repeats household authorization and input validation. The event writer keeps all aggregate and event-log writes in one PostgreSQL transaction, so a failed action leaves the proposal pending and creates no Plan or Task. Rejected proposals update only Inbox state. <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:92d34d343ebc239e46c834106ac81dc978c2f014b9ae1e5574786cc82da7821e" -->
+The member's approval command changes one Inbox aggregate and emits `InboxProposalApproved`. Its synchronous domain-event reaction dispatches the normal Calendar or Tasks command, then marks the proposal applied. The owning area handler repeats household authorization and input validation. The event writer keeps all aggregate and event-log writes in one PostgreSQL transaction, so a failed action leaves the proposal pending and creates no Plan or Task. Rejected proposals update only Inbox state. <!-- pdac:cite id="BR-INBOX-REVIEW-AND-EXECUTION" digest="sha256:4cefc25292234d58d9972915de22d8811ee3bb7b3989512d161482347dc0b267" -->
 
 ## Household conversation and explicit assistant request
 

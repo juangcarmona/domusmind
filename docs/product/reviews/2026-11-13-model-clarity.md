@@ -1,5 +1,10 @@
 # Product model review — 13 November 2026
 
+The [14 November follow-up](2026-11-14-state-decisions.md) resolves Meal Plan
+completion, Inbox failure recovery and the two calendar state entry questions,
+and adds the native access lifecycle. The counts and pending questions below
+describe this earlier review snapshot.
+
 ## What changed
 
 The original 640 tracked model files represented 630 product artifacts and 10 directory placeholders. The graph was connected, and all 181 structured behaviours were used by requirements. The file count did not establish duplication.
