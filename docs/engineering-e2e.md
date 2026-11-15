@@ -7,6 +7,8 @@ The workflow starts an ephemeral PostgreSQL service, runs the API and Vite app,
 and uses only generated household names and credentials in that disposable
 database.
 
+The [complete Structured Behaviour assessment](engineering-e2e-assessment.md) records the accepted inventory, partial existing assertions, lifecycle obligations and remaining E2E gaps for #329. It is a source-bound assessment, not a passing execution report.
+
 ## Initial journey selection
 
 | Journey | Product source | Browser evidence |
