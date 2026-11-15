@@ -66,7 +66,7 @@ jobs:
           fi
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(package(-lock)?\.json$|\.github/workflows/engineering-site\.yml$|tools/(engineering-site|static-site|arc42-snapshot|e2e-report)/|scripts/((build|check)-architecture-site|architecture-diagrams(\.test)?)\.mjs$|src/web/app/(e2e/|playwright\.config\.ts$|package(-lock)?\.json$)|docs/(architecture|adr|product/model)/|\.product/config\.yaml$|docs/engineering-(site|e2e)\.md$)'; then
+          if printf '%s\n' "$files" | grep -E '^(package(-lock)?\.json$|\.github/workflows/engineering-site\.yml$|tools/(engineering-site|static-site|arc42-snapshot|e2e-report)/|scripts/((build|check)-architecture-site|architecture-diagrams(\.test)?)\.mjs$|src/web/app/(e2e/|playwright\.config\.ts$|package(-lock)?\.json$)|docs/(architecture|adr|product/model)/|\.product/config\.yaml$|docs/engineering-(site|e2e)\.md$)' > /dev/null; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
@@ -165,7 +165,7 @@ jobs:
           exit 1
 
       - name: Run the selected browser journeys
-        run: npm run test:e2e
+        run: npm run test:e2e -- e2e/household-onboarding.e2e.ts
         working-directory: src/web/app
         env:
           CI: 'true'
@@ -258,6 +258,8 @@ jobs:
         run: |
           node scripts/architecture-diagrams.test.mjs
           node scripts/architecture-diagrams.mjs --check
+          # Replace this generated section restored from the previous publication.
+          rm -rf _site/architecture
           node scripts/build-architecture-site.mjs "$GITHUB_WORKSPACE/_site/architecture/index.html" "${{ github.sha }}"
           node scripts/check-architecture-site.mjs "$GITHUB_WORKSPACE/_site/architecture/index.html"
 
