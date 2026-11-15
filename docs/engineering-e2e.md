@@ -9,10 +9,6 @@ database.
 
 The [complete Structured Behaviour assessment](engineering-e2e-assessment.md) records the accepted inventory, partial existing assertions, lifecycle obligations and remaining E2E gaps for #329. It is a source-bound assessment, not a passing execution report.
 
-The [complete Structured Behaviour assessment](engineering-e2e-assessment.md) records the accepted inventory, partial existing assertions, lifecycle obligations and remaining E2E gaps for #329. It is a source-bound assessment, not a passing execution report.
-
-The [complete Structured Behaviour assessment](engineering-e2e-assessment.md) records the accepted inventory, partial existing assertions, lifecycle obligations and remaining E2E gaps for #329. It is a source-bound assessment, not a passing execution report.
-
 ## Initial journey selection
 
 | Journey | Product source | Browser evidence |
