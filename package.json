@@ -5,8 +5,8 @@
   "devDependencies": {
     "@arcshape/cli": "0.4.0",
     "@fission-ai/openspec": "1.16.0",
-    "@juangcarmona/lighthouse": "0.13.11",
-    "@juangcarmona/lighthouse-sdlc": "0.24.0",
+    "@juangcarmona/lighthouse": "0.13.12",
+    "@juangcarmona/lighthouse-sdlc": "0.24.1",
     "@juangcarmona/lighthouse-ui": "0.2.1",
     "@prodshape/cli": "0.26.0"
   },
