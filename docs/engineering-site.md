@@ -30,6 +30,8 @@ combined site. This lets later site sections, such as nightly browser reports,
 be updated without replacing the other published sections. The workflow uses a
 single non-cancelling publisher concurrency group; it needs only GitHub's Pages
 deployment token and short-lived OIDC token, not a stored publishing secret.
+The restored generated `/architecture/` section is removed immediately before
+ArcShape rebuilds it, so a previous reader format cannot block regeneration.
 
 ## One-time GitHub setup
 

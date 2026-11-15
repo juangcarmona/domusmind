@@ -15,10 +15,14 @@ export function collectTests(suites = []) {
       for (const spec of specs) {
         for (const test of spec.tests ?? []) {
           const result = (test.results ?? []).at(-1);
-          const status = test.status ?? result?.status ?? 'missing';
+          const status = !result ? 'missing'
+            : test.status === 'flaky' ? 'inconclusive'
+            : test.status === 'unexpected' || ['failed', 'timedOut', 'interrupted'].includes(result.status) ? 'failed'
+            : result.status === 'skipped' ? 'skipped'
+            : result.status === 'passed' ? 'passed' : 'inconclusive';
           rows.push({
             title: [...titles, spec.title, test.title].filter(Boolean).join(' › '),
-            status: status === 'expected' ? 'passed' : status === 'unexpected' ? 'failed' : status,
+            status,
             duration: result?.duration ?? 0,
             attachments: (result?.attachments ?? []).map(({ name, contentType, path }) => ({ name, contentType, path })),
           });
@@ -44,19 +48,26 @@ export async function prepareReport({ resultsPath, htmlReportDirectory, evidence
     sourceReportError = error.message;
   }
 
-  const outcome = tests.length === 0 ? 'missing-evidence' : tests.every((test) => test.status === 'expected' || test.status === 'passed') ? 'passed' : 'failed';
+  let outcome = tests.some((test) => test.status === 'failed') ? 'failed'
+    : tests.length === 0 || tests.some((test) => test.status === 'missing') ? 'missing-evidence'
+    : tests.every((test) => test.status === 'passed') ? 'passed' : 'inconclusive';
+
+  if (tests.length > 0) {
+    try {
+      await readFile(join(htmlReportDirectory, 'index.html'));
+      await cp(htmlReportDirectory, join(output, 'playwright'), { recursive: true });
+    } catch {
+      sourceReportError = 'Playwright HTML report was not produced.';
+      if (outcome !== 'failed') outcome = 'missing-evidence';
+    }
+  }
+  try { await cp(evidenceDirectory, join(output, 'evidence'), { recursive: true }); } catch { /* Missing screenshots are reflected by the empty evidence folder. */ }
   await writeFile(join(output, 'latest.json'), `${JSON.stringify({ ...metadata, outcome, journeyCount: tests.length }, null, 2)}\n`);
   await writeFile(join(output, 'results.json'), `${JSON.stringify({ metadata, outcome, sourceReportError, tests }, null, 2)}\n`);
 
-  if (tests.length > 0) {
-    try { await cp(htmlReportDirectory, join(output, 'playwright'), { recursive: true }); }
-    catch { sourceReportError = 'Playwright HTML report was not produced.'; }
-  }
-  try { await cp(evidenceDirectory, join(output, 'evidence'), { recursive: true }); } catch { /* Missing screenshots are reflected by the empty evidence folder. */ }
-
   const rows = tests.map((test) => `<tr><td>${escapeHtml(test.title)}</td><td>${escapeHtml(test.status)}</td><td>${Math.round(test.duration)} ms</td></tr>`).join('\n');
   const reportLink = tests.length > 0 && sourceReportError === null ? '<p><a href="playwright/index.html">Open the detailed Playwright report</a></p>' : '';
-  const warning = outcome === 'missing-evidence' ? '<p role="alert">No journeys were recorded. This report does not represent a successful run.</p>' : '';
+  const warning = outcome === 'missing-evidence' ? `<p role="alert">${tests.length === 0 ? 'No journeys were recorded.' : 'Required report evidence is missing.'} This report does not represent a successful run.</p>` : '';
   const html = `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>DomusMind E2E report</title><style>body{font:16px system-ui,sans-serif;max-width:960px;margin:3rem auto;padding:0 1rem;color:#332d43}h1{color:#493a6b}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:.65rem;border-bottom:1px solid #ddd}code{overflow-wrap:anywhere}.failed,[role=alert]{color:#a1223b}</style><h1>DomusMind browser report</h1><p class="${outcome}"><strong>${escapeHtml(outcome.toUpperCase())}</strong> · ${tests.length} journey record(s)</p>${warning}<dl><dt>Commit</dt><dd><code>${escapeHtml(metadata.commitSha)}</code></dd><dt>Workflow run</dt><dd><a href="${escapeHtml(metadata.runUrl)}">${escapeHtml(metadata.runId)}</a></dd><dt>Created (UTC)</dt><dd>${escapeHtml(metadata.createdAt)}</dd></dl>${reportLink}<table><thead><tr><th>Journey</th><th>Outcome</th><th>Duration</th></tr></thead><tbody>${rows}</tbody></table></html>`;
   await writeFile(join(output, 'index.html'), `${html}\n`);
   return { outcome, journeyCount: tests.length, publishable: true };
@@ -101,7 +112,7 @@ if (process.argv[1] && resolve(process.argv[1]) === new URL(import.meta.url).pat
     const metadata = JSON.parse(await readFile(metadataPath, 'utf8'));
     const result = await prepareReport({ resultsPath, htmlReportDirectory: htmlDirectory, evidenceDirectory, outputDirectory, metadata });
     process.stdout.write(`${JSON.stringify(result)}\n`);
-    if (result.outcome === 'missing-evidence') process.exitCode = 1;
+    if (result.outcome !== 'passed') process.exitCode = 1;
   } else if (command === 'publish' && args.length >= 3) {
     const [siteDirectory, reportDirectory, runKey, retention] = args;
     const result = await addReportToSite(siteDirectory, reportDirectory, { runKey, retention: Number(retention ?? 14) });

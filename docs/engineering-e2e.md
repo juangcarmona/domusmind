@@ -7,6 +7,14 @@ The workflow starts an ephemeral PostgreSQL service, runs the API and Vite app,
 and uses only generated household names and credentials in that disposable
 database.
 
+The household job explicitly selects `e2e/household-onboarding.e2e.ts`; the
+development BFF workflow selects its own suite in the Aspire/Keycloak
+environment. An unavailable BFF environment is therefore not included as a
+skipped test in the household report. A selected skipped or flaky test remains
+inconclusive, and an absent result or HTML report is missing evidence. Failed,
+inconclusive and missing-evidence reports are retained and fail the report gate;
+they never count as passing verification.
+
 The [complete Structured Behaviour assessment](engineering-e2e-assessment.md) records the accepted inventory, partial existing assertions, lifecycle obligations and remaining E2E gaps for #329. It is a source-bound assessment, not a passing execution report.
 
 ## Initial journey selection
