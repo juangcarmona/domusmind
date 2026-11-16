@@ -8,13 +8,9 @@ on:
   # relevant the job is skipped, and a skipped check run satisfies the
   # requirement.
   pull_request:
-    branches: [ main ]
+    branches: [main, 'lighthouse/epic-*']
   push:
-    branches: [ main ]
-    paths:
-      - 'src/backend/**'
-      - 'tests/backend/**'
-      - 'DomusMind.slnx'
+    branches: [main, 'lighthouse/epic-*', 'lighthouse/verification-*']
   workflow_dispatch:
 
 jobs:
@@ -43,7 +39,7 @@ jobs:
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
             --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(src/backend/|tests/backend/|DomusMind\.slnx$|\.github/workflows/backend-ci\.yml$)'; then
+          if printf '%s\n' "$files" | grep -E '^(src/backend/|tests/backend/|DomusMind\.slnx$|\.github/workflows/backend-ci\.yml$)' > /dev/null; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"

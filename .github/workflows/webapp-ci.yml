@@ -4,12 +4,9 @@ on:
   # See the note in backend-ci.yml: no path filter, gated on `changes` instead,
   # so the required check always reports.
   pull_request:
-    branches: [main]
+    branches: [main, 'lighthouse/epic-*']
   push:
-    branches: [main]
-    paths:
-      - 'src/web/app/**'
-      - '.github/workflows/webapp-ci.yml'
+    branches: [main, 'lighthouse/epic-*', 'lighthouse/verification-*']
   workflow_dispatch:
 
 jobs:
@@ -38,7 +35,7 @@ jobs:
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
             --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(src/web/app/|\.github/workflows/webapp-ci\.yml$)'; then
+          if printf '%s\n' "$files" | grep -E '^(src/web/app/|\.github/workflows/webapp-ci\.yml$)' > /dev/null; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
