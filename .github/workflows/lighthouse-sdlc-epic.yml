@@ -56,7 +56,7 @@ jobs:
     env:
       LIGHTHOUSE_ISSUE: ${{ inputs.issue }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           repository: juangcarmona/lighthouse
           ref: 157c078635ceb17e36a4ff792c072cf02222f7f6
