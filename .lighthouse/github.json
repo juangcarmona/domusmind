@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "profileVersion": 1,
+  "repository": "juangcarmona/domusmind",
+  "intake": "preserve",
+  "requiredChecks": [
+    {
+      "context": "Validate Astro site",
+      "integrationId": 15368
+    },
+    {
+      "context": "backend build",
+      "integrationId": 15368
+    },
+    {
+      "context": "webapp build",
+      "integrationId": 15368
+    },
+    {
+      "context": "Analyze (csharp)",
+      "integrationId": 15368
+    },
+    {
+      "context": "Analyze (javascript-typescript)",
+      "integrationId": 15368
+    }
+  ],
+  "requiredApprovals": 0,
+  "evidenceBranch": "process/retrospectives",
+  "releaseWorkflowReady": false,
+  "overrides": {
+    "repository.allow_merge_commit": {
+      "value": null,
+      "reason": "Preserve the existing repository merge methods."
+    },
+    "repository.allow_rebase_merge": {
+      "value": null,
+      "reason": "Preserve the existing repository merge methods."
+    },
+    "repository.allow_auto_merge": {
+      "value": null,
+      "reason": "Completion uses explicit native merge decisions; preserve the repository setting."
+    },
+    "repository.delete_branch_on_merge": {
+      "value": null,
+      "reason": "Retain the shared epic branch and existing branch cleanup policy."
+    },
+    "actions.workflow": {
+      "value": null,
+      "reason": "Preserve the existing operator-reviewed workflow permissions."
+    },
+    "releases.immutable": {
+      "value": null,
+      "reason": "Release governance is outside epic CI adoption."
+    },
+    "rules.main": {
+      "value": null,
+      "reason": "Retain classic main protection with its five checks; bind each to GitHub Actions."
+    },
+    "rules.evidence": {
+      "value": null,
+      "reason": "Retain the existing append-only process/retrospectives ruleset."
+    }
+  },
+  "completion": {
+    "publishEvidence": true,
+    "postMergeWorkflows": [
+      "backend-ci.yml",
+      "webapp-ci.yml",
+      "public-site-ci.yml",
+      "codeql.yml"
+    ]
+  }
+}

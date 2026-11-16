@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contractVersion": 1,
-  "routerDigest": "dfdb4c03f583833db66fa6e44db41ac57a2bb05f6c1e922da65268e85a694ff7",
+  "routerDigest": "6d0bb6e2fb652163404a9378bc9213de1dc1f8465dbdf790ed496f0075b6b590",
   "stages": [
     "triage",
     "refine",
@@ -11,7 +11,9 @@
     "review"
   ],
   "autoImplement": true,
-  "completionEnabled": false,
+  "completionEnabled": true,
   "productChangeEnabled": false,
-  "backgroundWorkflows": []
+  "backgroundWorkflows": [
+    "lighthouse-sdlc-epic.yml"
+  ]
 }

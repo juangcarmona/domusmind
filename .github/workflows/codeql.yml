@@ -2,15 +2,11 @@ name: codeql
 
 on:
   push:
-    branches: [main]
-    paths:
-      - 'src/backend/**'
-      - 'src/web/app/**'
-      - 'tests/backend/**'
+    branches: [main, 'lighthouse/epic-*', 'lighthouse/verification-*']
   # See the note in backend-ci.yml: no path filter on pull requests, gated on
   # `changes` instead, so the required Analyze checks always report.
   pull_request:
-    branches: [main]
+    branches: [main, 'lighthouse/epic-*']
   schedule:
     - cron: '30 6 * * 1'
   workflow_dispatch:
@@ -46,7 +42,7 @@ jobs:
           files=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/files" \
             --paginate --jq '.[].filename')
           echo "$files"
-          if printf '%s\n' "$files" | grep -qE '^(src/backend/|src/web/app/|tests/backend/|\.github/workflows/codeql\.yml$)'; then
+          if printf '%s\n' "$files" | grep -E '^(src/backend/|src/web/app/|tests/backend/|\.github/workflows/codeql\.yml$)' > /dev/null; then
             echo "relevant=true" >> "$GITHUB_OUTPUT"
           else
             echo "relevant=false" >> "$GITHUB_OUTPUT"
