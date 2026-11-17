@@ -7,6 +7,8 @@ quality-attribute: "security"
 applies-to:
   - BC-HOUSEHOLD-ASSETS
   - UC-ASSETS-REGISTER-AND-ORGANIZE
+  - UC-ASSETS-ARCHIVE
+  - UC-ASSETS-RESTORE
   - UC-ASSETS-REVIEW-HOUSEHOLD-ASSETS
 verification:
   - scenario: "Cross-household authorization and document-reference integration tests prove that unauthorized members cannot enumerate assets, obligations or history; a household member without an explicit document grant cannot view its metadata, and source content retains its own access check."

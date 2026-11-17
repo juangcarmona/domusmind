@@ -5,6 +5,8 @@ title: Review household things, upcoming responsibilities and history
 status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 bounded-context: BC-HOUSEHOLD-ASSETS
+governed-by:
+  - BR-ASSET-ARCHIVE-AND-RESTORE
 uses-terms:
   - TERM-ASSET
   - TERM-ASSET-DOCUMENT
@@ -32,6 +34,7 @@ The member is authorized for the household.
 ## Alternative Flows
 
 - A member opens history or documents without any obligation currently due.
+- An authorized member consults an Archived Asset read-only. Explicit restoration through UC-ASSETS-RESTORE is available before ordinary editing and use resume; document-specific grants and source authorization still apply.
 - A member follows explicit related Task, Calendar plan or List references to the owning surface.
 
 ## Failure Conditions
