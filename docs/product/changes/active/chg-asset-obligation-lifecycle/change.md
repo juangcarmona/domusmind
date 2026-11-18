@@ -2,7 +2,7 @@
 id: CHG-ASSET-OBLIGATION-LIFECYCLE
 type: product-change
 title: Define asset obligation and occurrence lifecycle actions
-status: draft
+status: approved
 base-revision: f857ed15ed50bb5bf8f6e08356c7d0d65c6d5094
 operations:
   add:
@@ -109,30 +109,28 @@ Accepted Asset Obligation prose describes suspension, cancellation and occurrenc
 
 ## Intended Product Outcome
 
-The recommended future state distinguishes Active, Suspended, Cancelled and Finished obligations and Pending, Completed, Skipped and Cancelled cycles. Temporary suspension preserves the pending date; explicit reactivation retains any overdue state. Cancellation is terminal and distinct from an explicit skip. A resolved one-time requirement is Finished. Recurring outcomes retain the accepted recurrence progression and create only one next Pending cycle. Refused actions, exact retries and competing outcomes preserve one durable result and cannot act on a later cycle accidentally.
+The accepted future state distinguishes Active, Suspended, Cancelled and Finished obligations and Pending, Completed, Skipped and Cancelled cycles. Temporary suspension preserves the pending date; explicit reactivation retains any overdue state. Cancellation is terminal and distinct from an explicit skip. A resolved one-time requirement is Finished. Recurring outcomes retain the accepted recurrence progression and create only one next Pending cycle. Refused actions, exact retries and competing outcomes preserve one durable result and cannot act on a later cycle accidentally.
 
 Asset archive blocks obligation mutation while retaining states and dates. Restoration does not silently reactivate a separately Suspended obligation. Only Active obligations on Active Assets contribute actionable due information; consultation and existing history remain available under authorization.
 
-These are proposed recommendations pending the questions below. No answer, product approval or application is implied by this draft.
 
 ## Rationale
 
 A temporary pause, cancellation and a completed one-time requirement have different household meanings. Explicit lifecycle rules prevent forgotten overdue cycles, invented skipped work and changed historical outcomes. Existing monthly last-day, completion-relative and bounded-history rules remain authoritative and unchanged.
 
+On 18 November 2026 the product owner approved the complete proposal and its application, answering “Si a las 4” to the request to apply the four recommended rules and resume child #358. The decisions authorize reactivation with the retained pending date, terminal cancellation without an invented completion or skip, terminal resolution of a one-time requirement, and the Archived Asset obligation guard. The proposed future-state artifacts reviewed in commit `6af016450f0554b799c174a7a6b38c05bbc779f6` are unchanged.
+
 ## Affected Product Areas
 
-Asset obligation and occurrence states, lifecycle actions, actionable due projection eligibility and preservation of household history. Existing household authorization and independent work ownership remain unchanged. The graph review and conscious exclusions are recorded in proposal.md.
+Asset obligation and occurrence states, lifecycle actions, actionable due projection eligibility and preservation of household history. Existing household authorization and independent work ownership remain unchanged. The eight source-bound unaffected entries in this change account for direct graph impact. The Assets context, existing history and document requirements, household journey, recurrence rule and ownership constraint retain their existing meaning; no new correction, document or independent-work lifecycle is selected.
 
 ## Open Questions
 
-- Q1: May a Suspended obligation be explicitly reactivated with its unchanged pending date and any overdue state, while completion, skip and rescheduling are refused during suspension? Recommended: yes.
-- Q2: Is cancellation terminal, closing the current pending cycle as Cancelled without an implied completion or skip, while preserving prior history and requiring a new obligation for a new requirement? Recommended: yes.
-- Q3: Does completion or explicit skip finish a one-time obligation terminally, with no new pending cycle, while recurring obligations advance once and remain Active? Recommended: yes.
-- Q4: Does Asset archive block new obligation definitions and lifecycle mutations without changing obligation states or due dates, with restoration retaining any overdue date and never reactivating a separately Suspended obligation? Recommended: yes.
+None.
 
 ## Product Acceptance
 
-The owner has selected the temporary-suspension, terminal-cancellation, one-time-resolution and Asset-archive rules. The two lifecycles declare their source states, transitions and terminal states. Structured behaviours express permitted actions, refusals, exact retries, conflicting outcomes and retention of pending dates and history. No recommendation is treated as an accepted rule until the open decisions are resolved and the Product Change is approved.
+The owner has selected the temporary-suspension, terminal-cancellation, one-time-resolution and Asset-archive rules. The two lifecycles declare their source states, transitions and terminal states. Structured behaviours express permitted actions, refusals, exact retries, conflicting outcomes and retention of pending dates and history.
 
 ## Out of Scope
 
