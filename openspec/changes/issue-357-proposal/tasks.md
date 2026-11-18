@@ -8,10 +8,10 @@
 
 ## 2. Persistence and application
 
-- [ ] 2.1 Persist assets and locations with an additive migration; verify round-trip and lifecycle preservation tests.
-- [ ] 2.2 Implement authorized registration, editing, lookup, archive and restore with same-household relationship checks and concurrency-safe cycle rejection; verify isolation and hierarchy tests.
+- [x] 2.1 Persist assets and locations with an additive migration; verify round-trip and lifecycle preservation tests.
+- [x] 2.2 Implement authorized registration, editing, lookup, archive and restore with same-household relationship checks and concurrency-safe cycle rejection; verify isolation and hierarchy tests.
 
 ## 3. API and integration
 
-- [ ] 3.1 Expose explicit contracts and thin endpoints; verify authorization and lifecycle through API tests.
+- [x] 3.1 Expose explicit contracts and thin endpoints; verify authorization and lifecycle through API tests.
 - [ ] 3.2 Run required repository checks and verify product-derived lifecycle and structured-behaviour coverage.

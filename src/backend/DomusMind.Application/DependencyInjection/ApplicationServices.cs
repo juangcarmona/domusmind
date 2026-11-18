@@ -1,3 +1,5 @@
+using DomusMind.Application.Features.HouseholdAssets;
+using DomusMind.Contracts.HouseholdAssets;
 ﻿using DomusMind.Application.Abstractions.Messaging;
 using DomusMind.Application.Features.Auth.ChangePassword;
 using DomusMind.Application.Features.Auth.GetCurrentUser;
@@ -323,6 +325,17 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<UpdateRecipeIngredientCommand, UpdateRecipeIngredientResponse>, UpdateRecipeIngredientCommandHandler>();
         services.AddScoped<ICommandHandler<RemoveRecipeIngredientCommand, RemoveRecipeIngredientResponse>, RemoveRecipeIngredientCommandHandler>();
         services.AddScoped<IQueryHandler<GetRecipeDetailQuery, GetRecipeDetailResponse?>, GetRecipeDetailQueryHandler>();
+
+        // Household asset identity, organization and lifecycle.
+        services.AddScoped<ICommandHandler<RegisterAssetCommand, AssetResponse>, RegisterAssetCommandHandler>();
+        services.AddScoped<ICommandHandler<UpdateAssetCommand, AssetResponse>, UpdateAssetCommandHandler>();
+        services.AddScoped<ICommandHandler<ArchiveAssetCommand, AssetResponse>, ArchiveAssetCommandHandler>();
+        services.AddScoped<ICommandHandler<RestoreAssetCommand, AssetResponse>, RestoreAssetCommandHandler>();
+        services.AddScoped<ICommandHandler<RegisterAssetLocationCommand, AssetLocationResponse>, RegisterAssetLocationCommandHandler>();
+        services.AddScoped<IQueryHandler<GetAssetQuery, AssetResponse>, GetAssetQueryHandler>();
+        services.AddScoped<IQueryHandler<GetAssetsQuery, IReadOnlyList<AssetResponse>>, GetAssetsQueryHandler>();
+        services.AddScoped<IQueryHandler<GetAssetLocationsQuery, IReadOnlyList<AssetLocationResponse>>, GetAssetLocationsQueryHandler>();
+        services.AddScoped<IQueryHandler<GetAssetCategoriesQuery, IReadOnlyList<string>>, GetAssetCategoriesQueryHandler>();
 
         return services;
     }

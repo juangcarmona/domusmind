@@ -20,7 +20,11 @@ public sealed class AssetLocation : AggregateRoot<AssetLocationId>
     }
 
     public static AssetLocation Create(AssetLocationId id, FamilyId familyId, string name, string? address = null)
-        => new(id, familyId, name, address);
+    {
+        var location = new AssetLocation(id, familyId, name, address);
+        location.RaiseDomainEvent(new AssetLocationRegistered(id.Value, familyId.Value, DateTime.UtcNow));
+        return location;
+    }
 
     public void Update(string name, string? address)
     {

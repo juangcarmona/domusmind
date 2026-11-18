@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -24,6 +24,10 @@
     <ProjectReference Include="..\..\..\src\backend\DomusMind.Api\DomusMind.Api.csproj" />
     <ProjectReference Include="..\..\..\src\backend\DomusMind.Application\DomusMind.Application.csproj" />
     <ProjectReference Include="..\..\..\src\backend\DomusMind.Contracts\DomusMind.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../Shared/AssetPostgreSqlFixture.cs" Link="HouseholdAssets/AssetPostgreSqlFixture.cs" />
   </ItemGroup>
 
 </Project>
