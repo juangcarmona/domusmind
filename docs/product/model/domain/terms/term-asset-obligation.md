@@ -5,6 +5,7 @@ title: Asset Obligation
 status: active
 defined-in: BC-HOUSEHOLD-ASSETS
 ---
+
 ## Definition
 
 A persistent requirement associated with an Asset that may be due once or repeatedly, such as an inspection, renewal or service.
@@ -16,3 +17,5 @@ An obligation is not the Task that performs work, a Routine that describes recur
 ## Usage
 
 An obligation defines its due rule and lifecycle, and may reference responsibility or an optional explicit execution record. Agenda may project its due state. Completion, skip, suspension and cancellation must preserve defined history.
+
+The lifecycle distinguishes Active, Suspended, Cancelled and Finished. Suspension is reversible and preserves the pending date; cancellation and one-time completion or skip are terminal for the requirement under BR-ASSET-OBLIGATION-LIFECYCLE.

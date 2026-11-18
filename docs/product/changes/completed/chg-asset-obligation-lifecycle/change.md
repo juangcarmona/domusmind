@@ -2,7 +2,7 @@
 id: CHG-ASSET-OBLIGATION-LIFECYCLE
 type: product-change
 title: Define asset obligation and occurrence lifecycle actions
-status: approved
+status: applied
 base-revision: f857ed15ed50bb5bf8f6e08356c7d0d65c6d5094
 operations:
   add:
