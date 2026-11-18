@@ -37,6 +37,7 @@ public static class InfrastructureServices
         services.AddScoped<IQueryDispatcher, QueryDispatcher>();
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         services.AddScoped<IEventLogWriter, EventLogWriter>();
+        services.AddScoped<IAssetMutationLock, AssetMutationLock>();
         services.AddHttpClient(nameof(OllamaInboxInterpreter)).ConfigureHttpClient(client =>
             client.Timeout = TimeSpan.FromMinutes(2));
         services.AddHttpClient(nameof(OpenAiCompatibleInboxInterpreter)).ConfigureHttpClient(client =>
