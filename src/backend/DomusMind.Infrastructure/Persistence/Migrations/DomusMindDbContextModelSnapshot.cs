@@ -17,7 +17,7 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.12")
+                .HasAnnotation("ProductVersion", "10.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -702,6 +702,102 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.HasIndex("FamilyId");
 
                     b.ToTable("family_members", (string)null);
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.HouseholdAssets.Asset", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("category");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_archived");
+
+                    b.Property<Guid?>("LocationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("location_id");
+
+                    b.Property<string>("Make")
+                        .HasColumnType("text")
+                        .HasColumnName("make");
+
+                    b.Property<string>("ManagementBasis")
+                        .HasColumnType("text")
+                        .HasColumnName("management_basis");
+
+                    b.Property<string>("Model")
+                        .HasColumnType("text")
+                        .HasColumnName("model");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<Guid?>("ParentAssetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("parent_asset_id");
+
+                    b.Property<Guid?>("ResponsibleAreaId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("responsible_area_id");
+
+                    b.Property<Guid?>("ResponsibleMemberId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("responsible_member_id");
+
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("text")
+                        .HasColumnName("serial_number");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasColumnName("version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId", "IsArchived");
+
+                    b.HasIndex("FamilyId", "LocationId");
+
+                    b.HasIndex("FamilyId", "ParentAssetId");
+
+                    b.ToTable("household_assets", (string)null);
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.HouseholdAssets.AssetLocation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text")
+                        .HasColumnName("address");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("household_asset_locations", (string)null);
                 });
 
             modelBuilder.Entity("DomusMind.Domain.Inbox.InboxItem", b =>
@@ -1755,6 +1851,21 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasForeignKey("FamilyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.HouseholdAssets.Asset", b =>
+                {
+                    b.HasOne("DomusMind.Domain.HouseholdAssets.AssetLocation", null)
+                        .WithMany()
+                        .HasForeignKey("FamilyId", "LocationId")
+                        .HasPrincipalKey("FamilyId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("DomusMind.Domain.HouseholdAssets.Asset", null)
+                        .WithMany()
+                        .HasForeignKey("FamilyId", "ParentAssetId")
+                        .HasPrincipalKey("FamilyId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("DomusMind.Domain.Inbox.InboxItem", b =>
