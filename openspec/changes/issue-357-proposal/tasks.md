@@ -14,4 +14,4 @@
 ## 3. API and integration
 
 - [x] 3.1 Expose explicit contracts and thin endpoints; verify authorization and lifecycle through API tests.
-- [ ] 3.2 Run required repository checks and verify product-derived lifecycle and structured-behaviour coverage.
+- [x] 3.2 Run required repository checks and verify product-derived lifecycle and structured-behaviour coverage.

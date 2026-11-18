@@ -43,3 +43,26 @@ Introduce additive tables with scoped indexes and safe rollback only when the ne
 ## Verification
 
 Set `DOMUSMIND_TEST_POSTGRES` to a disposable PostgreSQL connection string and run `npm run verify`. The asset API tests use a test-only authentication handler with the real current-user accessor, family-access service, MVC routing, mediator, handlers, event writer and PostgreSQL persistence. Persistence tests observe the competing backend waiting on a real advisory lock, verify rollback on stale writes, and compare identity, details, references and existing event payloads across archive and restore. Tests isolate their schemas and remove them afterward. When PostgreSQL is absent they explicitly skip; skipped persistence tests are not evidence of qualification.
+
+## Product-derived verification
+
+The PostgreSQL-backed API and persistence tests verify the accepted lifecycle and structured behaviours below. Existing audit entries represent preserved history; this slice does not create Asset Records or obligations.
+
+<!-- pdac:cite id="LC-ASSET" digest="sha256:81cc4efd987b4c4c1403e08c3d72eeb8063388b0bebb5cbe1170a339f68843dc" -->
+<!-- pdac:cite id="BR-ASSET-HIERARCHY-MEANING" digest="sha256:4d785768b17ab6fc76fc89eee795c35fee3ea0e6d966b77666b97bd5f9968d77" -->
+<!-- pdac:cite id="SB-ASSET-ARCHIVED-CONSULTATION" digest="sha256:7cc4530a1321749e8ecc62dba66736c4f6b208e77f7c30784081781ec4917ba2" -->
+<!-- pdac:cite id="SB-ASSET-ARCHIVED-READ-ONLY" digest="sha256:c989b82f947730a882e75770c6af744f184af07b98e7ff5efbdbb41d4302f6a1" -->
+<!-- pdac:cite id="SB-ASSET-ARCHIVED-WITH-HISTORY" digest="sha256:87a5a52ff338e8318ee02e723b92e27f566394bae6826d6f884678a160b70181" -->
+<!-- pdac:cite id="SB-ASSET-ARCHIVED-WITHOUT-HISTORY" digest="sha256:13e362236f4386a659402d14f1acdeab5067506cb924619a15e35c05b517b8a3" -->
+<!-- pdac:cite id="SB-ASSET-REGISTERED-ACTIVE" digest="sha256:7e3e5231a6bd654c764a0012d5f75076710897766eb1c5a8a9d8a76227531f73" -->
+<!-- pdac:cite id="SB-ASSET-RESTORED" digest="sha256:188664a26028b0038607d817185de747fee03418886b178831a201cbfd0b3fc7" -->
+<!-- pdac:cite id="SB-ASSET-UNAUTHORIZED-ARCHIVE" digest="sha256:1443af4134fbbf621270e8ef51fc0b556b953285efc9004a4af4f1d873cdc2ab" -->
+<!-- pdac:cite id="SB-ASSET-UNAUTHORIZED-RESTORE" digest="sha256:058d431a9a590488853e86e66b960200894afe12a49740564a1b4bf992535f8c" -->
+
+| Product scenario | Executable evidence |
+| --- | --- |
+| Registered Active; archive without records | `HouseholdAssetsApiTests.RequiredDetailsAndCategoryShortlistAreValidated` |
+| Archive with existing history; archived consultation; restore | `AssetPersistenceTests.ArchiveRestoreRoundTripPreservesReferencesHistoryAndOtherAssets` and `HouseholdAssetsApiTests.LifecycleUsesRealAuthorizationAndPreservesIdentityDetailsReferencesAndHistory` |
+| Archived read-only | Lifecycle API test, domain organization test and stale tracked edit persistence test |
+| Unauthorized archive / restore | Lifecycle API test and cross-household API test |
+| Separate household relationships and containment | Shared-location API test, cross-household API test and concurrent opposite reparenting persistence test |
