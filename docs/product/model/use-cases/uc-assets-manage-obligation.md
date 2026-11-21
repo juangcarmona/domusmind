@@ -6,11 +6,13 @@ status: active
 primary-actor: ACT-HOUSEHOLD-MEMBER
 bounded-context: BC-HOUSEHOLD-ASSETS
 governed-by:
-  - BR-ASSET-RECURRENCE-DUE-STATE
+- BR-ASSET-RECURRENCE-DUE-STATE
+- BR-ASSET-OBLIGATION-LIFECYCLE
 uses-terms:
-  - TERM-ASSET
-  - TERM-ASSET-OBLIGATION
+- TERM-ASSET
+- TERM-ASSET-OBLIGATION
 ---
+
 ## Goal
 
 Remember a persistent requirement associated with an Asset and see when it is due.
@@ -21,7 +23,7 @@ A member identifies a one-time or recurring inspection, service, renewal or othe
 
 ## Preconditions
 
-The member is authorized to manage the household Asset.
+The member is authorized to manage the household Asset. New definitions and lifecycle mutations require an Active Asset; an Archived Asset permits consultation only.
 
 ## Main Flow
 
@@ -32,7 +34,7 @@ The member is authorized to manage the household Asset.
 
 ## Alternative Flows
 
-- Member may suspend or cancel an obligation while preserving prior history.
+- Member may suspend an Active obligation, explicitly reactivate a Suspended obligation with its unchanged pending date, or cancel an Active or Suspended obligation terminally, under BR-ASSET-OBLIGATION-LIFECYCLE.
 - Usage-meter recurrence is not available in the initial scope.
 
 ## Failure Conditions

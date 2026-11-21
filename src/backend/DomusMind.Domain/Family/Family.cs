@@ -12,6 +12,7 @@ public sealed class Family : AggregateRoot<FamilyId>
     public string? PrimaryLanguageCode { get; private set; }
     public string? FirstDayOfWeek { get; private set; }
     public string? DateFormatPreference { get; private set; }
+    public string? TimeZoneId { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
     public IReadOnlyCollection<FamilyMember> Members => _members.AsReadOnly();
 
@@ -28,6 +29,17 @@ public sealed class Family : AggregateRoot<FamilyId>
         var family = new Family(id, name, primaryLanguageCode, createdAtUtc);
         family.RaiseDomainEvent(new FamilyCreated(Guid.NewGuid(), id.Value, createdAtUtc));
         return family;
+    }
+
+    public void ConfigureInitialTimeZone(string timeZoneId)
+    {
+        if (string.IsNullOrWhiteSpace(timeZoneId)) throw new ArgumentException("A household timezone is required.");
+        try { TimeZoneInfo.FindSystemTimeZoneById(timeZoneId); }
+        catch (Exception ex) when (ex is TimeZoneNotFoundException or InvalidTimeZoneException)
+        { throw new ArgumentException("The household timezone is invalid.", nameof(timeZoneId), ex); }
+        if (TimeZoneId is not null && TimeZoneId != timeZoneId)
+            throw new InvalidOperationException("Changing an established household timezone is not supported yet.");
+        TimeZoneId = timeZoneId;
     }
 
     public void UpdateSettings(FamilyName name, string? primaryLanguageCode, string? firstDayOfWeek, string? dateFormatPreference, DateTime updatedAtUtc)

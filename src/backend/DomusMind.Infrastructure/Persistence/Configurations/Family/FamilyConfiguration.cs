@@ -40,6 +40,8 @@ public sealed class FamilyConfiguration : IEntityTypeConfiguration<Domain.Family
             .HasColumnName("date_format_preference")
             .HasMaxLength(20);
 
+        builder.Property(f => f.TimeZoneId).HasColumnName("time_zone_id").IsConcurrencyToken();
+
         builder.Property(f => f.CreatedAtUtc)
             .HasColumnName("created_at_utc")
             .IsRequired();
