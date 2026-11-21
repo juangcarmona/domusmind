@@ -624,6 +624,11 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(10)")
                         .HasColumnName("primary_language_code");
 
+                    b.Property<string>("TimeZoneId")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text")
+                        .HasColumnName("time_zone_id");
+
                     b.HasKey("Id");
 
                     b.ToTable("families", (string)null);
@@ -798,6 +803,145 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("household_asset_locations", (string)null);
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.HouseholdAssets.AssetObligation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("AssetId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("asset_id");
+
+                    b.Property<Guid>("DefinitionOperationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("definition_operation_id");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
+                    b.Property<DateOnly>("InitialDueDate")
+                        .HasColumnType("date")
+                        .HasColumnName("initial_due_date");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("state");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasColumnName("version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FamilyId", "AssetId");
+
+                    b.HasIndex("FamilyId", "DefinitionOperationId")
+                        .IsUnique();
+
+                    b.ToTable("asset_obligations", (string)null);
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.HouseholdAssets.AssetOccurrence", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateOnly?>("CompletedDate")
+                        .HasColumnType("date")
+                        .HasColumnName("completed_date");
+
+                    b.Property<DateOnly>("DueDate")
+                        .HasColumnType("date")
+                        .HasColumnName("due_date");
+
+                    b.Property<Guid>("ObligationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("obligation_id");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("state");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("asset_occurrences", (string)null);
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.HouseholdAssets.ObligationOperation", b =>
+                {
+                    b.Property<Guid>("ObligationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("obligation_id");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("action");
+
+                    b.Property<Guid>("CycleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("cycle_id");
+
+                    b.Property<DateOnly>("PreviousDueDate")
+                        .HasColumnType("date")
+                        .HasColumnName("previous_due_date");
+
+                    b.Property<DateTime>("RecordedAtUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("recorded_at_utc");
+
+                    b.Property<DateOnly?>("RequestedDate")
+                        .HasColumnType("date")
+                        .HasColumnName("requested_date");
+
+                    b.Property<DateOnly?>("ResultCompletedDate")
+                        .HasColumnType("date")
+                        .HasColumnName("result_completed_date");
+
+                    b.Property<DateOnly>("ResultDueDate")
+                        .HasColumnType("date")
+                        .HasColumnName("result_due_date");
+
+                    b.Property<Guid?>("ResultNextCycleId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("result_next_cycle_id");
+
+                    b.Property<DateOnly?>("ResultNextDueDate")
+                        .HasColumnType("date")
+                        .HasColumnName("result_next_due_date");
+
+                    b.Property<string>("ResultObligationState")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("result_obligation_state");
+
+                    b.Property<string>("ResultOccurrenceState")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("result_occurrence_state");
+
+                    b.HasKey("ObligationId", "Id");
+
+                    b.HasIndex("ObligationId", "CycleId");
+
+                    b.ToTable("asset_obligation_operations", (string)null);
                 });
 
             modelBuilder.Entity("DomusMind.Domain.Inbox.InboxItem", b =>
@@ -1868,6 +2012,66 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("DomusMind.Domain.HouseholdAssets.AssetObligation", b =>
+                {
+                    b.HasOne("DomusMind.Domain.HouseholdAssets.Asset", null)
+                        .WithMany()
+                        .HasForeignKey("FamilyId", "AssetId")
+                        .HasPrincipalKey("FamilyId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.OwnsOne("DomusMind.Domain.HouseholdAssets.ObligationRecurrence", "Recurrence", b1 =>
+                        {
+                            b1.Property<Guid>("AssetObligationId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Kind")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("recurrence");
+
+                            b1.Property<int>("Months")
+                                .HasColumnType("integer")
+                                .HasColumnName("interval_months");
+
+                            b1.HasKey("AssetObligationId");
+
+                            b1.ToTable("asset_obligations");
+
+                            b1.WithOwner()
+                                .HasForeignKey("AssetObligationId");
+                        });
+
+                    b.Navigation("Recurrence")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.HouseholdAssets.AssetOccurrence", b =>
+                {
+                    b.HasOne("DomusMind.Domain.HouseholdAssets.AssetObligation", null)
+                        .WithMany("Occurrences")
+                        .HasForeignKey("ObligationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.HouseholdAssets.ObligationOperation", b =>
+                {
+                    b.HasOne("DomusMind.Domain.HouseholdAssets.AssetObligation", null)
+                        .WithMany("Operations")
+                        .HasForeignKey("ObligationId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DomusMind.Domain.HouseholdAssets.AssetOccurrence", null)
+                        .WithMany()
+                        .HasForeignKey("ObligationId", "CycleId")
+                        .HasPrincipalKey("ObligationId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DomusMind.Domain.Inbox.InboxItem", b =>
                 {
                     b.OwnsMany("DomusMind.Domain.Inbox.InboxProposal", "Proposals", b1 =>
@@ -2210,6 +2414,13 @@ namespace DomusMind.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("DomusMind.Domain.Family.Family", b =>
                 {
                     b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("DomusMind.Domain.HouseholdAssets.AssetObligation", b =>
+                {
+                    b.Navigation("Occurrences");
+
+                    b.Navigation("Operations");
                 });
 
             modelBuilder.Entity("DomusMind.Domain.Lists.SharedList", b =>

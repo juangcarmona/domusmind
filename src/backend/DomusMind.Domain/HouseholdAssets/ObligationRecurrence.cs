@@ -3,15 +3,15 @@ namespace DomusMind.Domain.HouseholdAssets;
 /// <summary>Calculates the next household-local due date without generating future cycles.</summary>
 public sealed class ObligationRecurrence
 {
-    private enum RecurrenceKind { OneTime, MonthlyLastDay, CompletionRelative }
+    public enum RecurrenceKind { OneTime, MonthlyLastDay, CompletionRelative }
 
-    private readonly RecurrenceKind kind;
-    private readonly int months;
+    public RecurrenceKind Kind { get; private set; }
+    public int Months { get; private set; }
 
     private ObligationRecurrence(RecurrenceKind kind, int months = 0)
     {
-        this.kind = kind;
-        this.months = months;
+        Kind = kind;
+        Months = months;
     }
 
     public static ObligationRecurrence OneTime() => new(RecurrenceKind.OneTime);
@@ -26,9 +26,9 @@ public sealed class ObligationRecurrence
     /// <summary>A skip advances from the pending date; completion-relative work advances from completion.</summary>
     public DateOnly? Next(DateOnly pendingDate, DateOnly? completionDate)
     {
-        if (kind == RecurrenceKind.OneTime) return null;
-        if (kind == RecurrenceKind.CompletionRelative)
-            return (completionDate ?? pendingDate).AddMonths(months);
+        if (Kind == RecurrenceKind.OneTime) return null;
+        if (Kind == RecurrenceKind.CompletionRelative)
+            return (completionDate ?? pendingDate).AddMonths(Months);
 
         var nextMonth = new DateOnly(pendingDate.Year, pendingDate.Month, 1).AddMonths(1);
         return new DateOnly(nextMonth.Year, nextMonth.Month, DateTime.DaysInMonth(nextMonth.Year, nextMonth.Month));

@@ -143,7 +143,8 @@ public sealed class AssetPersistenceTests(AssetPostgreSqlFixture fixture) : ICla
         {
             await using var db = isolated.CreateContext();
             var migrations = db.Database.GetMigrations().ToArray();
-            var previous = migrations[^2];
+            var foundation = Array.FindIndex(migrations, x => x.EndsWith("_AddHouseholdAssetFoundation", StringComparison.Ordinal));
+            var previous = migrations[foundation - 1];
             var migrator = db.GetService<IMigrator>();
             await migrator.MigrateAsync(previous);
             await db.Database.MigrateAsync();
@@ -153,7 +154,7 @@ public sealed class AssetPersistenceTests(AssetPostgreSqlFixture fixture) : ICla
             var error = await Assert.ThrowsAsync<PostgresException>(() => migrator.MigrateAsync(previous));
             Assert.Equal("P0001", error.SqlState);
             Assert.Equal("Preserve this", (await db.Set<Asset>().AsNoTracking().SingleAsync(x => x.Id == id)).Name);
-            Assert.Equal(migrations[^1], (await db.Database.GetAppliedMigrationsAsync()).Last());
+            Assert.Equal(migrations[foundation], (await db.Database.GetAppliedMigrationsAsync()).Last());
         }
         finally { await isolated.DisposeAsync(); }
     }

@@ -83,12 +83,25 @@ public sealed class UpdateFamilySettingsCommandHandler
         if (family is null)
             throw new FamilyException(FamilyErrorCode.FamilyNotFound, "Family was not found.");
 
+        if (command.TimeZoneId is not null)
+        {
+            var manager = await _dbContext.Set<Domain.Family.Family>().AsNoTracking()
+                .Where(x => x.Id == FamilyId.From(command.FamilyId))
+                .AnyAsync(x => x.Members.Any(m => m.AuthUserId == command.RequestedByUserId && m.IsManager), cancellationToken);
+            if (!manager) throw new FamilyException(FamilyErrorCode.AccessDenied, "Only household managers configure the household timezone.");
+            try { family.ConfigureInitialTimeZone(command.TimeZoneId); }
+            catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+            { throw new FamilyException(FamilyErrorCode.InvalidInput, ex.Message); }
+        }
+
         var name = FamilyName.Create(command.Name);
         var now = DateTime.UtcNow;
 
         family.UpdateSettings(name, languageCode, command.FirstDayOfWeek, command.DateFormatPreference, now);
 
-        await _eventLogWriter.WriteAsync([family], cancellationToken);
+        try { await _eventLogWriter.WriteAsync([family], cancellationToken); }
+        catch (DbUpdateConcurrencyException)
+        { throw new FamilyException(FamilyErrorCode.InvalidInput, "Household settings changed. Reload before editing."); }
         family.ClearDomainEvents();
 
         return new UpdateFamilySettingsResponse(
@@ -96,6 +109,6 @@ public sealed class UpdateFamilySettingsCommandHandler
             family.Name.Value,
             family.PrimaryLanguageCode,
             family.FirstDayOfWeek,
-            family.DateFormatPreference);
+            family.DateFormatPreference, family.TimeZoneId);
     }
 }
