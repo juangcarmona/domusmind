@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contractVersion": 1,
-  "routerDigest": "6d0bb6e2fb652163404a9378bc9213de1dc1f8465dbdf790ed496f0075b6b590",
+  "routerDigest": "06eef8724d824cadd076040e2ec0c29c596a7ebba6ac98028fb0134ea0194c30",
   "stages": [
     "triage",
     "refine",

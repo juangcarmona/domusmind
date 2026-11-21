@@ -12,7 +12,7 @@ on:
         required: true
         default: reconcile
         type: choice
-        options: [reconcile, refine-child, register-pr, recover-publication, ready-child, accept-child, publish-aggregate, ready-aggregate, accept-aggregate]
+        options: [reconcile, adopt-product, refine-child, register-pr, recover-publication, ready-child, accept-child, publish-aggregate, ready-aggregate, accept-aggregate]
       child:
         description: Child issue number for PR registration or acceptance
         required: false
@@ -37,6 +37,14 @@ on:
         description: Approved current epic branch SHA
         required: false
         type: string
+      product-change:
+        description: Completed Product Change directory to verify and use as child source
+        required: false
+        type: string
+      product-approval:
+        description: Unedited owner approval comment on the exact product PR head
+        required: false
+        type: string
 concurrency:
   group: lighthouse-issue-${{ inputs.issue }}
   cancel-in-progress: false
@@ -59,7 +67,7 @@ jobs:
       - uses: actions/checkout@v5
         with:
           repository: juangcarmona/lighthouse
-          ref: 157c078635ceb17e36a4ff792c072cf02222f7f6
+          ref: 1741b4c4cc0cb84f480f976ef27a61ee9f24015f
           path: .lighthouse-harness
           persist-credentials: false
       - uses: actions/setup-node@v5
@@ -68,12 +76,53 @@ jobs:
       - name: Install the pinned harness
         working-directory: .lighthouse-harness
         run: npm ci --ignore-scripts
+      - name: Check out the product replay baseline
+        if: inputs.action == 'adopt-product'
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.base }}
+          path: .lighthouse-product-source
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install the pinned product replay provider
+        if: inputs.action == 'adopt-product'
+        working-directory: .lighthouse-harness
+        run: npm install --ignore-scripts --no-save --package-lock=false @prodshape/core@0.25.0
       - name: Reconcile native child issues
         env:
           GH_TOKEN: ${{ github.token }}
           LIGHTHOUSE_CI_APP_CLIENT_ID: ${{ vars.LIGHTHOUSE_CI_APP_CLIENT_ID }}
           LIGHTHOUSE_CI_APP_PRIVATE_KEY: ${{ secrets.LIGHTHOUSE_CI_APP_PRIVATE_KEY }}
-        run: node .lighthouse-harness/src/packages/sdlc/src/epic-native.mjs
+        run: |
+          node --input-type=module <<'JS'
+          import { resolve } from 'node:path';
+          import { pathToFileURL } from 'node:url';
+          const request = globalThis.fetch;
+          let requests = 0;
+          const completedAttempts = new Map();
+          globalThis.fetch = async (...args) => {
+            // Only completed run-attempt identities are immutable; authority and checks stay fresh.
+            const url = String(args[0]);
+            const terminal = url.startsWith(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/`)
+              && /\/actions\/runs\/[1-9][0-9]*\/attempts\/[1-9][0-9]*$/.test(url)
+              && (args[1]?.method ?? 'GET') === 'GET' && args[1]?.body === undefined;
+            if (terminal && completedAttempts.has(url)) return completedAttempts.get(url).clone();
+            requests++;
+            const response = await request(...args);
+            if (!response.ok) {
+              const rate = {};
+              for (const name of ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-ratelimit-used', 'x-ratelimit-reset', 'retry-after']) {
+                const value = response.headers.get(name);
+                if (value !== null && /^\d{1,16}$/.test(value)) rate[name] = Number(value);
+              }
+              console.error(JSON.stringify({ event: 'github-http-failure', status: response.status, requests, rate }));
+            }
+            if (terminal && response.ok && (await response.clone().json()).status === 'completed') completedAttempts.set(url, response.clone());
+            return response;
+          };
+          process.argv[1] = resolve('.lighthouse-harness/src/packages/sdlc/src/epic-native.mjs');
+          await import(pathToFileURL(process.argv[1]).href);
+          JS
       - name: Preserve the epic journal
         if: always() && inputs.action != 'accept-aggregate' && inputs.action != 'recover-publication'
         uses: actions/upload-artifact@v7
