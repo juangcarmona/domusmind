@@ -93,7 +93,28 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           LIGHTHOUSE_CI_APP_CLIENT_ID: ${{ vars.LIGHTHOUSE_CI_APP_CLIENT_ID }}
           LIGHTHOUSE_CI_APP_PRIVATE_KEY: ${{ secrets.LIGHTHOUSE_CI_APP_PRIVATE_KEY }}
-        run: node .lighthouse-harness/src/packages/sdlc/src/epic-native.mjs
+        run: |
+          node --input-type=module <<'JS'
+          import { resolve } from 'node:path';
+          import { pathToFileURL } from 'node:url';
+          const request = globalThis.fetch;
+          let requests = 0;
+          globalThis.fetch = async (...args) => {
+            requests++;
+            const response = await request(...args);
+            if (!response.ok) {
+              const rate = {};
+              for (const name of ['x-ratelimit-limit', 'x-ratelimit-remaining', 'x-ratelimit-used', 'x-ratelimit-reset', 'retry-after']) {
+                const value = response.headers.get(name);
+                if (value !== null && /^\d{1,16}$/.test(value)) rate[name] = Number(value);
+              }
+              console.error(JSON.stringify({ event: 'github-http-failure', status: response.status, requests, rate }));
+            }
+            return response;
+          };
+          process.argv[1] = resolve('.lighthouse-harness/src/packages/sdlc/src/epic-native.mjs');
+          await import(pathToFileURL(process.argv[1]).href);
+          JS
       - name: Preserve the epic journal
         if: always() && inputs.action != 'accept-aggregate' && inputs.action != 'recover-publication'
         uses: actions/upload-artifact@v7
