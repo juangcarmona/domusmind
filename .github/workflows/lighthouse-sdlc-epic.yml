@@ -99,7 +99,14 @@ jobs:
           import { pathToFileURL } from 'node:url';
           const request = globalThis.fetch;
           let requests = 0;
+          const completedAttempts = new Map();
           globalThis.fetch = async (...args) => {
+            // Only completed run-attempt identities are immutable; authority and checks stay fresh.
+            const url = String(args[0]);
+            const terminal = url.startsWith(`https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/`)
+              && /\/actions\/runs\/[1-9][0-9]*\/attempts\/[1-9][0-9]*$/.test(url)
+              && (args[1]?.method ?? 'GET') === 'GET' && args[1]?.body === undefined;
+            if (terminal && completedAttempts.has(url)) return completedAttempts.get(url).clone();
             requests++;
             const response = await request(...args);
             if (!response.ok) {
@@ -110,6 +117,7 @@ jobs:
               }
               console.error(JSON.stringify({ event: 'github-http-failure', status: response.status, requests, rate }));
             }
+            if (terminal && response.ok && (await response.clone().json()).status === 'completed') completedAttempts.set(url, response.clone());
             return response;
           };
           process.argv[1] = resolve('.lighthouse-harness/src/packages/sdlc/src/epic-native.mjs');
