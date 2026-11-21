@@ -174,7 +174,7 @@ public sealed class FamiliesController : ControllerBase
                     request.Name,
                     request.PrimaryLanguageCode,
                     request.FirstDayOfWeek,
-                    request.DateFormatPreference),
+                    request.DateFormatPreference, request.TimeZoneId),
                 cancellationToken);
 
             return Ok(response);

@@ -9,4 +9,4 @@ public sealed record UpdateFamilySettingsCommand(
     string Name,
     string? PrimaryLanguageCode,
     string? FirstDayOfWeek,
-    string? DateFormatPreference) : ICommand<UpdateFamilySettingsResponse>;
+    string? DateFormatPreference, string? TimeZoneId = null) : ICommand<UpdateFamilySettingsResponse>;

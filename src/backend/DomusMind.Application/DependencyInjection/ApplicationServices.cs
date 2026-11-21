@@ -326,6 +326,9 @@ public static class ApplicationServices
         services.AddScoped<ICommandHandler<RemoveRecipeIngredientCommand, RemoveRecipeIngredientResponse>, RemoveRecipeIngredientCommandHandler>();
         services.AddScoped<IQueryHandler<GetRecipeDetailQuery, GetRecipeDetailResponse?>, GetRecipeDetailQueryHandler>();
 
+        services.AddScoped<ICommandHandler<DefineAssetObligationCommand, ObligationDefinedResponse>, DefineAssetObligationCommandHandler>();
+        services.AddScoped<ICommandHandler<ActOnAssetObligationCommand, ObligationOperationResponse>, ActOnAssetObligationCommandHandler>();
+        services.AddScoped<IQueryHandler<GetAssetObligationsQuery, IReadOnlyList<AssetObligationResponse>>, GetAssetObligationsQueryHandler>();
         // Household asset identity, organization and lifecycle.
         services.AddScoped<ICommandHandler<RegisterAssetCommand, AssetResponse>, RegisterAssetCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateAssetCommand, AssetResponse>, UpdateAssetCommandHandler>();

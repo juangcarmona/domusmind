@@ -5,6 +5,7 @@ title: Obligation Occurrence
 status: active
 defined-in: BC-HOUSEHOLD-ASSETS
 ---
+
 ## Definition
 
 A bounded historical or current instance of an Asset Obligation's due cycle, retained when the household records an explicit lifecycle action such as completion, skip or reschedule.
@@ -16,3 +17,5 @@ An occurrence is not an indefinitely pre-created future calendar event or an ind
 ## Usage
 
 Future due state should be calculated or projected from the obligation without unbounded materialization. Persisted occurrence history must be idempotent and retain its relation to the obligation and any resulting record.
+
+Its lifecycle distinguishes Pending, Completed, Skipped and Cancelled. Rescheduling preserves the Pending identity and records its date change. Due and overdue are derived conditions of Pending, not additional terminal outcomes.
